@@ -45,7 +45,7 @@ export const target: string = env.ASPNETCORE_HTTPS_PORT
   ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}`
   : env.ASPNETCORE_URLS
     ? env.ASPNETCORE_URLS.split(";")[0]
-    : "https://localhost:9256";
+    : "http://localhost:9255";
 
 console.log(target);
 
@@ -60,9 +60,5 @@ export default defineConfig({
   server: {
     host: target,
     port: 53912,
-    https: {
-      key: fs.readFileSync(keyFilePath),
-      cert: fs.readFileSync(certFilePath),
-    },
   },
 });
