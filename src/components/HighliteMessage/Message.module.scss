@@ -1,0 +1,159 @@
+/* General CSS Setup */
+
+:root {
+  --color: #ff0000 #ff0000 transparent transparent;
+  --calculated-height: calc(100vh / 29);
+  --span-width: 100ch;
+}
+
+.badge {
+  height: var(--calculated-height);
+  margin-right: 1%;
+  max-height: var(--calculated-height);
+  max-width: var(--calculated-height);
+  width: var(--calculated-height);
+}
+
+.icons {
+  align-items: center;
+  display: flex;
+  margin-right: 5px;
+  overflow: visible;
+  white-space: nowrap;
+  width: auto;
+}
+
+.emote {
+  margin-left: 3px;
+  margin-right: 3px;
+  height: 2.7vh;
+}
+
+.emotes {
+  display: inline;
+  float: left;
+  vertical-align: baseline;
+  height: auto;
+  white-space: pre-wrap;
+  overflow: visible;
+  text-align: left;
+}
+
+// body {
+//   margin: 0;
+//   height: 100vh;
+//   display: flex;
+//   justify-content: flex-end;
+//   align-items: flex-end;
+// }
+
+/* container */
+#container {
+  position: relative;
+  bottom: 0;
+  right: 0;
+}
+
+/* CSS talk bubble */
+.talk-bubble {
+  margin: 40px;
+  display: inline-block;
+  position: absolute;
+  bottom: 30vh;
+  right: 8vh;
+  width: min-content;
+  height: auto;
+  text-wrap: balance;
+  background-color: lightyellow;
+
+  .talktext {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 1rem;
+
+    p {
+      margin: 0;
+      text-align: -webkit-left;
+      line-height: normal;
+    }
+  }
+}
+
+.round {
+  border-radius: 30px;
+}
+
+.buble-image {
+  position: absolute;
+  right: 0;
+  bottom: -5px;
+  margin: 0;
+
+  > img {
+    max-width: 250px;
+    max-height: 250px;
+    width: 250px;
+    height: 250px;
+    margin: 0;
+  }
+}
+
+/* talk bubble contents */
+.talktext {
+  padding: 1em;
+  text-align: left;
+  line-height: 1.5em;
+  display: inline-flex;
+
+  div.emotes {
+    /* remove webkit p margins */
+    font-family: "Ubuntu-Italic", "Lucida Sans", helvetica, sans;
+    font-size: 2.7vh;
+    line-height: normal;
+    width: 250px;
+    height: 200px;
+    margin-left: 1vh;
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+    text-align: center;
+    align-items: center;
+    display: flex;
+  }
+
+  p {
+    /* remove webkit p margins */
+    font-family: "Ubuntu-Italic", "Lucida Sans", helvetica, sans;
+    font-size: 2.7vh;
+    text-wrap: avoid;
+    text-align: center;
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+  }
+}
+
+.bubble {
+  --r: 1em; /* the radius */
+  --t: 1.5em; /* the size of the tail */
+
+  max-width: 650px;
+  padding: 1em;
+  border-inline: var(--t) solid #0000;
+  border-radius: calc(var(--r) + var(--t)) / var(--r);
+  mask:
+    radial-gradient(100% 100% at var(--_p) 0, #0000 99%, #000 102%) var(--_p)
+      100% / var(--t) var(--t) no-repeat,
+    linear-gradient(#000 0 0) padding-box;
+  color: #fff;
+  bottom: 25%;
+  right: 280px;
+  position: absolute;
+  width: min-content;
+}
+
+.right {
+  --_p: 100%;
+  border-bottom-right-radius: 0 0;
+  place-self: end;
+}

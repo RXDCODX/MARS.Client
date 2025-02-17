@@ -1,0 +1,1 @@
+export { FumoFriday } from "./FumoFriday";
