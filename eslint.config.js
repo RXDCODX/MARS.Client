@@ -20,7 +20,12 @@ export default tseslint.config(
       prettier: prettier,
     },
     rules: {
-      "prettier/prettier": "warn",
+      "prettier/prettier": [
+        "warn",
+        {
+          endOfLine: "auto",
+        },
+      ],
     },
   },
   ...fixupConfigRules({
