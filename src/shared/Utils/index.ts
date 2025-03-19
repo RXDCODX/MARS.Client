@@ -4,6 +4,7 @@ import parse from "html-react-parser";
 import useTwitchStore from "../twitchStore/twitchStore";
 import { ChatMessage, MediaInfo } from "../api/generated/baza";
 import { HelixChatBadgeSet } from "@twurple/api";
+import { EmoteParser } from "@mkody/twitch-emoticons";
 
 export { BigTextBlockForVoice } from "./BigTexts/BigTextBlockForVoice";
 export { BigTextBlockForAudio } from "./BigTexts/BigTextBlockForAudio";
@@ -168,6 +169,22 @@ export function replaceBadges(
   if (typeof result === "string") {
     return undefined;
   }
+
+  return result;
+}
+
+export function getEmojisSrcFromText(text: string){
+  const fetcher = useTwitchStore((state) => state.fetcher);
+
+  if(!fetcher){
+    return undefined;
+  }
+
+  const client = new EmoteParser(fetcher, {template: "{link}"});
+  const messages = text.split(" ");
+  const result = messages.map((message) => {
+    return client.parse(message);
+  });
 
   return result;
 }

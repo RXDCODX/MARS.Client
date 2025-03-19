@@ -314,6 +314,44 @@
         ],
         "responses": { }
       }
+    },
+    "/hubs/TelegramusHub/MakeScreenParticles": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "particles",
+            "in": "query",
+            "schema": {
+              "enum": [
+                "Confetty",
+                "Fireworks"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/TelegramusHub/MakeScreenEmojisParticles": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "userInput",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
     }
   },
   "components": {

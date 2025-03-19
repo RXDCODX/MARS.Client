@@ -84,6 +84,8 @@ export default function PyroAlerts() {
       {messages.map((message) => {
         if (!message) return null;
 
+        debugger;
+
         const { fileInfo } = message.mediaInfo;
         const callback = () => remove(message);
 

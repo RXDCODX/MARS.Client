@@ -5,6 +5,7 @@ import HighliteMessage from "../components/HighliteMessage/HighliteMessage";
 import PyroAlerts from "../components/PyroAlerts/PyroAlerts";
 import TikTok from "../components/TikTok/TikTok";
 import WaifuAlerts from "../components/WaifuAlerts/WaifuAlerts";
+import Manager from "../components/ScreenParticles/Manager";
 
 /** Приватные роуты. */
 const PrivateRoutes = () => {
@@ -16,6 +17,7 @@ const PrivateRoutes = () => {
         <Route path="/fumofriday" element={<FumoFriday />} />
         <Route path="/tiktok" element={<TikTok />} />
         <Route path="/highlite" element={<HighliteMessage />} />
+        <Route path="/confetti" element={<Manager />} />
 
         <Route path="*" element={<Navigate to="/pyroalerts" />} />
       </Routes>

@@ -58,6 +58,7 @@ export function BigTextBlockForAudio({ mediaInfo }: Props) {
             flexWrap: "nowrap",
             alignItems: "stretch",
           }}
+          max={2000}
         >
           {emotesSplits[0]}
         </Textfit>
@@ -84,6 +85,7 @@ export function BigTextBlockForAudio({ mediaInfo }: Props) {
             flexWrap: "nowrap",
             alignItems: "stretch",
           }}
+          max={2000}
         >
           {is2Exists ? emotesSplits[1] : ""}
         </Textfit>

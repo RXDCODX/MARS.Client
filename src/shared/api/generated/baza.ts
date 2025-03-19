@@ -210,6 +210,11 @@ export interface StringStringKeyValuePair {
     value: string | undefined;
 }
 
+export enum TelegramusHubMakeScreenParticlesCreateParamsParticlesEnum {
+    Confetty = "Confetty",
+    Fireworks = "Fireworks",
+}
+
 export interface TwitchLibMessage {
     badges: StringStringKeyValuePair[] | undefined;
     botUsername: string | undefined;
