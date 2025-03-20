@@ -1,6 +1,8 @@
 import confetti from "canvas-confetti";
 import { useEffect, useState } from "react";
 import { getEmojisSrcFromText } from "../../shared/Utils";
+import useTwitchStore from "../../shared/twitchStore/twitchStore";
+import ReactCanvasConfetti from "react-canvas-confetti";
 
 interface imageData {
   src: string;
@@ -48,28 +50,50 @@ interface Props {
   scalar?: number;
 }
 
-// async function getBase64(url: string) {
-//   const xhr = new XMLHttpRequest();
-//   xhr.onload = function () {
-//     var reader = new FileReader();
-//     reader.onloadend = function () {
-//       return reader.result;
-//     };
-//     reader.readAsDataURL(xhr.response);
-//   };
-//   xhr.open("GET", url);
-//   xhr.responseType = "blob";
-//   xhr.send();
-// }
+async function getBase64(url: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      if (xhr.status === 200) {
+        const reader = new FileReader();
+        reader.onloadend = function () {
+          if (reader.result) {
+            resolve(reader.result.toString());
+          } else {
+            reject(new Error("Failed to read file"));
+          }
+        };
+        reader.onerror = function () {
+          reject(new Error("Failed to read file"));
+        };
+        reader.readAsDataURL(xhr.response);
+      } else {
+        reject(new Error(`Failed to load file: ${xhr.statusText}`));
+      }
+    };
+    xhr.onerror = function () {
+      reject(new Error("Failed to send request"));
+    };
+    xhr.open("GET", url);
+    xhr.responseType = "blob";
+    xhr.send();
+  });
+}
 
-const ConfettiImage = ({ input, scalar = 1 }: Props) => {
+const ConfettiImage = ({ input, scalar = 2 }: Props) => {
   const [shapes, setShapes] = useState<Array<any>>([]);
-  const [images, _] = useState(getEmojisSrcFromText(input));
+  const fetcher = useTwitchStore((state) => state.fetcher);
+  if (!fetcher) {
+    return undefined;
+  }
+  const [images, _] = useState(getEmojisSrcFromText(input, fetcher));
 
   useEffect(() => {
     if (images?.length && images.length > 0) {
       images.forEach(async (image) => {
-        const aa = await shapeFromImage({ src: image, scalar });
+        debugger;
+        const base64 = await getBase64(image);
+        const aa = await shapeFromImage({ src: base64, scalar });
         setShapes((prev) => [...prev, aa]);
       });
     }
@@ -85,12 +109,12 @@ const ConfettiImage = ({ input, scalar = 1 }: Props) => {
         startVelocity: 40,
         shapes,
         scalar,
-        particleCount: 50,
+        particleCount: 200,
       });
     }
   }, [shapes, scalar]);
 
-  return null;
+  return <ReactCanvasConfetti></ReactCanvasConfetti>;
 };
 
 export default ConfettiImage;

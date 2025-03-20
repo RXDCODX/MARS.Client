@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { SignalRContext } from "../../app";
 import { TelegramusHubMakeScreenParticlesCreateParamsParticlesEnum } from "../../shared/api/generated/baza";
-import Confetty from "./Confetty";
-import Firework from "./Firework";
+import { Confettyv2 } from "./Confetty";
 import EmojiParticles from "./EmojiParticles";
+import Firework from "./Firework";
 
 interface base {
   id: number;
@@ -42,15 +42,21 @@ export default function Manager() {
     [],
   );
 
+  const removeMessage = useCallback((id: number) => {
+    setMessages((prev) => {
+      return prev.filter((message) => message.id !== id);
+    })
+  }, []);
+
   return (
     <>
       {messages.length > 0 &&
         messages.map((message) => {
           switch (message.type) {
             case TelegramusHubMakeScreenParticlesCreateParamsParticlesEnum.Confetty:
-              return <Confetty key={message.id} />;
+              return <Confettyv2 key={message.id} callback={() => removeMessage(message.id)} />;
             case TelegramusHubMakeScreenParticlesCreateParamsParticlesEnum.Fireworks:
-              return <Firework key={message.id} />;
+              return <Firework key={message.id} callback={() => removeMessage(message.id)} />;
           }
         })}
       {emojis.length > 0 &&

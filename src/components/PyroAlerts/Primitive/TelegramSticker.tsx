@@ -4,9 +4,9 @@ import { CSSProperties, useEffect, useState } from "react";
 // eslint-disable-next-line no-restricted-imports
 import react from "react";
 
-import styles from "./Media.module.scss";
 import { MediaDto } from "../../../shared/api/generated/baza";
 import { replaceEmotes } from "../../../shared/Utils";
+import styles from "./Media.module.scss";
 
 const Player = createComponent({
   elementClass: TGSPlayer,
@@ -53,7 +53,7 @@ export default function TelegramSticker({
         style={{ width: "320px", height: "320px" }}
         background="transparent"
       />
-      <div className="sticker-text">{replaceEmotes(textInfo.text)}</div>
+      <div className="sticker-text">{replaceEmotes({ text: textInfo.text })}</div>
     </div>
   );
 }

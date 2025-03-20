@@ -2,19 +2,26 @@ import { JSX } from "react";
 import { Container, Row } from "react-bootstrap";
 import { Textfit } from "react-textfit";
 
+import { replaceEmotes } from "..";
 import { MediaDto } from "../../api/generated/baza";
 import styles from "./BigTextStyles.module.scss";
-import { replaceEmotes } from "..";
+import useTwitchStore from "../../twitchStore/twitchStore";
 
 interface Props {
   mediaInfo: MediaDto;
 }
 
 export function BigTextBlockForAudio({ mediaInfo }: Props) {
+  const parser = useTwitchStore((state) => state.parser);
+  const fetcher = useTwitchStore((state) => state.fetcher);
   const text = mediaInfo.mediaInfo.textInfo.text;
 
   if (text === null && text === "") {
-    return null;
+    return undefined;
+  }
+
+  if (!parser || !fetcher) {
+    return undefined;
   }
 
   const splits = text?.split("=");
@@ -32,7 +39,7 @@ export function BigTextBlockForAudio({ mediaInfo }: Props) {
   for (let i = 0; i < splits.length; i++) {
     splits[i] = splits[i].trim();
     if (splits[i]) {
-      const result = replaceEmotes(splits[i]);
+      const result = replaceEmotes({ text: splits[i], fetcher, parser });
       if (result) {
         emotesSplits[i] = result;
       }

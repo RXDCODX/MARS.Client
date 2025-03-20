@@ -1,19 +1,23 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import parse from "html-react-parser";
 
-import useTwitchStore from "../twitchStore/twitchStore";
-import { ChatMessage, MediaInfo } from "../api/generated/baza";
+import { EmoteFetcher, EmoteParser } from "@mkody/twitch-emoticons";
 import { HelixChatBadgeSet } from "@twurple/api";
-import { EmoteParser } from "@mkody/twitch-emoticons";
+import { ChatMessage, MediaInfo } from "../api/generated/baza";
 
-export { BigTextBlockForVoice } from "./BigTexts/BigTextBlockForVoice";
 export { BigTextBlockForAudio } from "./BigTexts/BigTextBlockForAudio";
+export { BigTextBlockForVoice } from "./BigTexts/BigTextBlockForVoice";
 export { FullText } from "./FullText/FullText";
 
-export function replaceEmotes(text?: string) {
-  const parser = useTwitchStore((state) => state.parser);
-  const fetcher = useTwitchStore((state) => state.fetcher);
-
+export function replaceEmotes({
+  text,
+  parser,
+  fetcher,
+}: {
+  text?: string;
+  parser: EmoteParser;
+  fetcher: EmoteFetcher;
+}) {
   if (text) {
     if (parser) {
       console.log(fetcher?.emotes);
@@ -173,14 +177,15 @@ export function replaceBadges(
   return result;
 }
 
-export function getEmojisSrcFromText(text: string){
-  const fetcher = useTwitchStore((state) => state.fetcher);
-
-  if(!fetcher){
+export function getEmojisSrcFromText(text: string, fetcher: EmoteFetcher) {
+  if (!fetcher) {
     return undefined;
   }
 
-  const client = new EmoteParser(fetcher, {template: "{link}"});
+  const client = new EmoteParser(fetcher, {
+    template: "{link}",
+    match: /(\w+)+?/g,
+  });
   const messages = text.split(" ");
   const result = messages.map((message) => {
     return client.parse(message);
