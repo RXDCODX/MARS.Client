@@ -1,4 +1,4 @@
-import { useCallback, useReducer, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { SignalRContext } from "../../app";
 import Announce from "../../shared/Utils/Announce/Announce";
@@ -9,72 +9,51 @@ import {
   MediaFileInfoTypeEnum,
 } from "../../shared/api/generated/baza";
 
-enum StateStatus {
-  add,
-  remove,
-}
-
-interface State {
-  messages: (MediaDto | undefined)[];
-}
-
-function reducer(
-  state: State,
-  action: { type: StateStatus; mediaInfo?: MediaDto },
-): State {
-  const md = action.mediaInfo;
-
-  switch (action.type) {
-    case StateStatus.add:
-      return { messages: [...state.messages, md] };
-
-    case StateStatus.remove:
-      return {
-        messages: state.messages.filter(
-          (m) => m!.mediaInfo.id != md!.mediaInfo.id,
-        ),
-      };
-  }
-}
-
 export default function PyroAlerts() {
   document.title = "PyroAlerts";
 
-  const initState: State = {
-    messages: [],
-  };
-  const [{ messages }, dispatch] = useReducer(reducer, initState);
+  const [messages, setMessages] = useState<MediaDto[]>([]);
   const [announced, setAnnounced] = useState(false);
-  const [count, setCount] = useState(0);
 
   SignalRContext.useSignalREffect(
     "alert",
-    (message) => {
+    (message: MediaDto) => {
       const parsedMessage: MediaDto = { ...message };
-      parsedMessage.mediaInfo.fileInfo.localFilePath =
-        import.meta.env.VITE_BASE_PATH +
-        parsedMessage.mediaInfo.fileInfo.localFilePath;
+      parsedMessage.mediaInfo.fileInfo.filePath = parsedMessage.mediaInfo
+        .fileInfo.isLocalFile
+        ? import.meta.env.VITE_BASE_PATH +
+          parsedMessage.mediaInfo.fileInfo.filePath
+        : parsedMessage.mediaInfo.fileInfo.filePath;
 
       console.log(parsedMessage);
-      setCount(count + 1);
-      add(parsedMessage);
+      setMessages((prev) => [...prev, parsedMessage]);
     },
     [],
   );
 
-  const add = useCallback(
-    (mediaInfo: MediaDto) => {
-      dispatch({ type: StateStatus.add, mediaInfo });
+  SignalRContext.useSignalREffect(
+    "alerts",
+    (messages: MediaDto[]) => {
+      messages.forEach((m) => {
+        const parsedMessage: MediaDto = { ...m };
+        parsedMessage.mediaInfo.fileInfo.filePath = parsedMessage.mediaInfo
+          .fileInfo.isLocalFile
+          ? import.meta.env.VITE_BASE_PATH +
+            parsedMessage.mediaInfo.fileInfo.filePath
+          : parsedMessage.mediaInfo.fileInfo.filePath;
+
+        console.log(parsedMessage);
+        setMessages((prev) => [...prev, parsedMessage]);
+      });
     },
-    [dispatch],
+    [],
   );
 
-  const remove = useCallback(
-    (mediaInfo: MediaDto) => {
-      dispatch({ type: StateStatus.remove, mediaInfo });
-    },
-    [dispatch],
-  );
+  const remove = useCallback((message: MediaDto) => {
+    setMessages((prev) =>
+      prev.filter((m) => m.mediaInfo.id !== message.mediaInfo.id),
+    );
+  }, []);
 
   return (
     <>
@@ -83,8 +62,6 @@ export default function PyroAlerts() {
       )}
       {messages.map((message) => {
         if (!message) return null;
-
-        debugger;
 
         const { fileInfo } = message.mediaInfo;
         const callback = () => remove(message);

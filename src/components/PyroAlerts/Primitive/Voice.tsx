@@ -25,7 +25,7 @@ export function Voice({ mediaInfo, callback }: Props) {
         ref={audioElement}
         controls={false}
         onEnded={() => callback()}
-        src={mediaInfo.mediaInfo.fileInfo.localFilePath}
+        src={mediaInfo.mediaInfo.fileInfo.filePath}
       />
     </>
   );

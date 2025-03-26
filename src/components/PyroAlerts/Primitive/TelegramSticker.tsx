@@ -7,6 +7,7 @@ import react from "react";
 import { MediaDto } from "../../../shared/api/generated/baza";
 import { replaceEmotes } from "../../../shared/Utils";
 import styles from "./Media.module.scss";
+import useTwitchStore from "../../../shared/twitchStore/twitchStore";
 
 const Player = createComponent({
   elementClass: TGSPlayer,
@@ -31,6 +32,12 @@ export default function TelegramSticker({
     textInfo,
     fileInfo,
   } = MediaInfo.mediaInfo;
+  const fetcher = useTwitchStore((state) => state.fetcher);
+  const parser = useTwitchStore((state) => state.parser);
+
+  if (!fetcher || !parser) {
+    return null;
+  }
 
   useEffect(() => {
     setTimeout(() => callBack(), metaInfo.duration * 1000);
@@ -49,11 +56,13 @@ export default function TelegramSticker({
       <Player
         autoplay
         loop
-        src={fileInfo.localFilePath}
+        src={fileInfo.filePath}
         style={{ width: "320px", height: "320px" }}
         background="transparent"
       />
-      <div className="sticker-text">{replaceEmotes({ text: textInfo.text })}</div>
+      <div className="sticker-text">
+        {replaceEmotes({ text: textInfo.text, fetcher, parser })}
+      </div>
     </div>
   );
 }

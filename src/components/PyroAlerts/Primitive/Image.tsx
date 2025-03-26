@@ -33,7 +33,7 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
       {positionInfo.isProportion ? (
         <img
           id={id}
-          src={fileInfo.localFilePath}
+          src={fileInfo.filePath}
           key={id}
           alt={"IMAGE ERROR"}
           className={styles.media}
@@ -48,11 +48,12 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
       ) : (
         <img
           id={id}
-          src={fileInfo.localFilePath}
+          src={fileInfo.filePath}
           key={id}
           alt={"IMAGE ERROR"}
           className={styles.media}
           style={style}
+
           onLoad={(event) => {
             const cords = getCoordinates(event.currentTarget, mediaInfo);
             const rotation = getRandomRotation(mediaInfo);

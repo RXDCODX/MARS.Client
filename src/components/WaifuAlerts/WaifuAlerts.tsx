@@ -179,18 +179,6 @@ export default function WaifuAlerts() {
     }
   }, [prizes, currentMessage]);
 
-  useEffect(() => {
-    if (currentMessage) {
-      console.log(
-        "############################################################",
-      );
-      console.log(currentMessage);
-      console.log(prizes);
-      console.log(isRouletted);
-      console.log(rouletteIndex);
-    }
-  }, [prizes, isRouletted, rouletteIndex, currentMessage]);
-
   return (
     <>
       {!announced && (

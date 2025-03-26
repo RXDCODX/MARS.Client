@@ -29,9 +29,8 @@ export function Audio({ mediaInfo, callback }: Props) {
         onCanPlay={(event) => {
           event.currentTarget?.play();
         }}
-        crossOrigin="anonymous"
       >
-        <source src={fileInfo.localFilePath} />
+        <source src={fileInfo.filePath} />
       </audio>
     </div>
   );

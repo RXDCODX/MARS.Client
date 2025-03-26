@@ -6,7 +6,12 @@ import { SignalRContext } from "../../app";
 import { ChatMessage, Image } from "../../shared/api/generated/baza";
 import animate from "../../shared/styles/animate.module.scss";
 import useTwitchStore from "../../shared/twitchStore/twitchStore";
-import { getRandomColor, replaceBadges } from "../../shared/Utils";
+import {
+  getNotWhiteColor,
+  isVideo,
+  isWhiteColor,
+  replaceBadges,
+} from "../../shared/Utils";
 import styles from "./Message.module.scss";
 
 enum StateStatus {
@@ -14,7 +19,7 @@ enum StateStatus {
   remove,
 }
 
-interface HighliteMessageProps {
+export interface HighliteMessageProps {
   message: ChatMessage;
   color: string;
   faceImage: Image;
@@ -96,38 +101,6 @@ export default function Message() {
     dispatch({ type: StateStatus.remove, messageProps: message });
   }, []);
 
-  const isWhiteColor = useCallback((color: string) => {
-    if (color === "white") {
-      return true;
-    }
-
-    if (color === "#ffffff") {
-      return true;
-    }
-
-    if (color === "rgb(255, 255, 255)") {
-      return true;
-    }
-  }, []);
-
-  const getNotWhiteColor = useCallback(() => {
-    while (true) {
-      const color: string = getRandomColor();
-
-      if (!isWhiteColor(color)) {
-        return color;
-      }
-    }
-  }, [isWhiteColor]);
-
-  const isVideo = useCallback(
-    () =>
-      (currentMessage?.faceImage.url?.includes(".mp4") ||
-        currentMessage?.faceImage.url?.includes(".webm")) ??
-      false,
-    [currentMessage],
-  );
-
   return (
     <>
       {currentMessage && (
@@ -140,7 +113,7 @@ export default function Message() {
           ref={divHard}
         >
           <div className={styles["buble-image"]}>
-            {!isVideo() && (
+            {!isVideo(currentMessage) && (
               <img
                 alt="Image"
                 src={
@@ -161,7 +134,7 @@ export default function Message() {
                 }}
               />
             )}
-            {isVideo() && (
+            {isVideo(currentMessage) && (
               <video
                 src={
                   import.meta.env.VITE_BASE_PATH + currentMessage.faceImage.url

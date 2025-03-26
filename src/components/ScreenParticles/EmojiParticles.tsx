@@ -91,7 +91,6 @@ const ConfettiImage = ({ input, scalar = 2 }: Props) => {
   useEffect(() => {
     if (images?.length && images.length > 0) {
       images.forEach(async (image) => {
-        debugger;
         const base64 = await getBase64(image);
         const aa = await shapeFromImage({ src: base64, scalar });
         setShapes((prev) => [...prev, aa]);

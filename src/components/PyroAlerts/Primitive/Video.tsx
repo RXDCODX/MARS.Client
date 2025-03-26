@@ -50,7 +50,7 @@ export function Video({ MediaInfo, callback }: Props) {
     <div id={id} className={styles.media} style={baseStyles}>
       <video
         ref={player}
-        src={fileInfo.localFilePath}
+        src={fileInfo.filePath}
         controls={false}
         autoPlay
         style={{

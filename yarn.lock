@@ -299,6 +299,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@d-fischer/connection@npm:^9.0.0":
+  version: 9.0.0
+  resolution: "@d-fischer/connection@npm:9.0.0"
+  dependencies:
+    "@d-fischer/isomorphic-ws": "npm:^7.0.0"
+    "@d-fischer/logger": "npm:^4.2.1"
+    "@d-fischer/shared-utils": "npm:^3.5.0"
+    "@d-fischer/typed-event-emitter": "npm:^3.3.0"
+    "@types/ws": "npm:^8.5.4"
+    tslib: "npm:^2.4.1"
+    ws: "npm:^8.11.0"
+  checksum: 10c0/2d2b7b233f3fc8976df3d219c70c7f535676811e088235859860778493152705d244be408cd9920bc2e3876f0ff69bb2a2d56ea73a63ec3c670fd642ef4e22cc
+  languageName: node
+  linkType: hard
+
 "@d-fischer/cross-fetch@npm:^5.0.1":
   version: 5.0.5
   resolution: "@d-fischer/cross-fetch@npm:5.0.5"
@@ -308,10 +323,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@d-fischer/deprecate@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "@d-fischer/deprecate@npm:2.0.2"
+  checksum: 10c0/1ebcce7e167e8f251fc31833d8b15f581dde6286c6e4095f049fceab9017130496fe5830b75d44e682e37d469df73d6e10e24ae035755a74b8d5dbcfcd793b66
+  languageName: node
+  linkType: hard
+
 "@d-fischer/detect-node@npm:^3.0.1":
   version: 3.0.1
   resolution: "@d-fischer/detect-node@npm:3.0.1"
   checksum: 10c0/5d318300fa893e86f8df733e2a74a54ba584d491eda2a9db31eccd399bbec13b65823f5392f1015ce4c84e7803152a5f93a9e3e737cf272be6eadb3aa6bd32e0
+  languageName: node
+  linkType: hard
+
+"@d-fischer/escape-string-regexp@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@d-fischer/escape-string-regexp@npm:5.0.0"
+  checksum: 10c0/c8314dd69acec464951572b2e7e85f3a3d64a7f2f57b757638a8b541daad07ad59bf2724505d99476611ba540c80ac120df3a974b8c50e4d5025c717f7add556
+  languageName: node
+  linkType: hard
+
+"@d-fischer/isomorphic-ws@npm:^7.0.0":
+  version: 7.0.2
+  resolution: "@d-fischer/isomorphic-ws@npm:7.0.2"
+  peerDependencies:
+    ws: ^8.2.0
+  checksum: 10c0/cb7c79bcc69e953b300d28482f9821761fa90de4f0490d257f11e515a88c24f8d316e3c4db116e4b6a63c59c5ebf268c535f6ebaada3ded843648ab16f9dd418
   languageName: node
   linkType: hard
 
@@ -344,7 +382,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@d-fischer/shared-utils@npm:^3.2.0, @d-fischer/shared-utils@npm:^3.6.1, @d-fischer/shared-utils@npm:^3.6.3":
+"@d-fischer/shared-utils@npm:^3.2.0, @d-fischer/shared-utils@npm:^3.5.0, @d-fischer/shared-utils@npm:^3.6.1, @d-fischer/shared-utils@npm:^3.6.3":
   version: 3.6.4
   resolution: "@d-fischer/shared-utils@npm:3.6.4"
   dependencies:
@@ -353,7 +391,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@d-fischer/typed-event-emitter@npm:^3.3.1":
+"@d-fischer/typed-event-emitter@npm:^3.3.0, @d-fischer/typed-event-emitter@npm:^3.3.1":
   version: 3.3.3
   resolution: "@d-fischer/typed-event-emitter@npm:3.3.3"
   dependencies:
@@ -1709,6 +1747,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@twurple/chat@npm:^7.2.1":
+  version: 7.2.1
+  resolution: "@twurple/chat@npm:7.2.1"
+  dependencies:
+    "@d-fischer/cache-decorators": "npm:^4.0.0"
+    "@d-fischer/deprecate": "npm:^2.0.2"
+    "@d-fischer/logger": "npm:^4.2.1"
+    "@d-fischer/rate-limiter": "npm:^1.0.0"
+    "@d-fischer/shared-utils": "npm:^3.6.1"
+    "@d-fischer/typed-event-emitter": "npm:^3.3.0"
+    "@twurple/common": "npm:7.2.1"
+    ircv3: "npm:^0.33.0"
+    tslib: "npm:^2.0.3"
+  peerDependencies:
+    "@twurple/auth": 7.2.1
+  checksum: 10c0/5877ad0ae5f43bf75f6f58d493aec3b741cc2640b6cd703015d2ae94bbec130ab82cc4589052ea4404d1290e4c448d2e21363eef25804e6b23456384fd00b2f3
+  languageName: node
+  linkType: hard
+
 "@twurple/common@npm:7.2.1":
   version: 7.2.1
   resolution: "@twurple/common@npm:7.2.1"
@@ -1789,6 +1846,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:*":
+  version: 22.13.11
+  resolution: "@types/node@npm:22.13.11"
+  dependencies:
+    undici-types: "npm:~6.20.0"
+  checksum: 10c0/f6ee33d36372242535c38640fe7550a6640d8a775ec19b55bfc11775b521cba072d892ca92a912332ce01b317293d645c1bf767f3f882ec719f2404a3d2a5b96
+  languageName: node
+  linkType: hard
+
 "@types/node@npm:^22.13.4":
   version: 22.13.4
   resolution: "@types/node@npm:22.13.4"
@@ -1866,6 +1932,15 @@ __metadata:
   version: 3.0.3
   resolution: "@types/warning@npm:3.0.3"
   checksum: 10c0/82c1235bd05d7f6940f80012404844e225d589ad338aa4585b231a2c8deacc695b683f4168757c82c10047b81854cbeaaeefd60536dd67bb48f8a65e20410652
+  languageName: node
+  linkType: hard
+
+"@types/ws@npm:^8.5.4":
+  version: 8.18.0
+  resolution: "@types/ws@npm:8.18.0"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10c0/a56d2e0d1da7411a1f3548ce02b51a50cbe9e23f025677d03df48f87e4a3c72e1342fbf1d12e487d7eafa8dc670c605152b61bbf9165891ec0e9694b0d3ea8d4
   languageName: node
   linkType: hard
 
@@ -4220,6 +4295,21 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ircv3@npm:^0.33.0":
+  version: 0.33.0
+  resolution: "ircv3@npm:0.33.0"
+  dependencies:
+    "@d-fischer/connection": "npm:^9.0.0"
+    "@d-fischer/escape-string-regexp": "npm:^5.0.0"
+    "@d-fischer/logger": "npm:^4.2.1"
+    "@d-fischer/shared-utils": "npm:^3.5.0"
+    "@d-fischer/typed-event-emitter": "npm:^3.3.0"
+    klona: "npm:^2.0.5"
+    tslib: "npm:^2.4.1"
+  checksum: 10c0/a2d2fce5ad94fbca8e584a16462a2d40e2aa5be7f51badad3f16b86707341f1df63b6d2a905b57233edfc2dd5e0472b7b5babc2c268fe72d7d6bda91f9be3787
+  languageName: node
+  linkType: hard
+
 "is-array-buffer@npm:^3.0.4, is-array-buffer@npm:^3.0.5":
   version: 3.0.5
   resolution: "is-array-buffer@npm:3.0.5"
@@ -4649,7 +4739,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"klona@npm:^2.0.4":
+"klona@npm:^2.0.4, klona@npm:^2.0.5":
   version: 2.0.6
   resolution: "klona@npm:2.0.6"
   checksum: 10c0/94eed2c6c2ce99f409df9186a96340558897b3e62a85afdc1ee39103954d2ebe1c1c4e9fe2b0952771771fa96d70055ede8b27962a7021406374fdb695fd4d01
@@ -4827,6 +4917,7 @@ __metadata:
     "@redux-devtools/extension": "npm:^3.3.0"
     "@twurple/api": "npm:^7.2.1"
     "@twurple/auth": "npm:^7.2.1"
+    "@twurple/chat": "npm:^7.2.1"
     "@types/node": "npm:^22.13.4"
     "@types/react": "npm:^19.0.1"
     "@types/react-dom": "npm:^19.0.1"
@@ -4857,6 +4948,7 @@ __metadata:
     react-router-dom: "npm:^7.0.1"
     react-shaders: "npm:^0.0.4"
     react-signalr: "npm:^0.2.24"
+    react-simple-animate: "npm:^3.5.3"
     react-textfit: "npm:^1.1.1"
     react-transition-group: "npm:^4.4.5"
     sass: "npm:^1.81.0"
@@ -5782,6 +5874,15 @@ __metadata:
     react: ">=16.13"
     socket.io-client: ^4.2.0
   checksum: 10c0/3d717835775f13225459abed8bcc18a8bfb733f81b152063207ae36f44c0d87e7ba054eb5addc667fa3169d27c8e4d1ccf67a5bf6ff1f8cca7423d6dca9d24cb
+  languageName: node
+  linkType: hard
+
+"react-simple-animate@npm:^3.5.3":
+  version: 3.5.3
+  resolution: "react-simple-animate@npm:3.5.3"
+  peerDependencies:
+    react-dom: ^16.8.0 || ^17 || ^18 || ^19
+  checksum: 10c0/97b12651899effaf9096a40fb107caec83ae3bbad0469c612aed07b375a915097970d9ecc93f7aa97ee9580b635f2d3ccde1f7229e4a6fdb76763777750f10e7
   languageName: node
   linkType: hard
 
@@ -7366,6 +7467,21 @@ __metadata:
     utf-8-validate:
       optional: true
   checksum: 10c0/bd7d5f4aaf04fae7960c23dcb6c6375d525e00f795dd20b9385902bd008c40a94d3db3ce97d878acc7573df852056ca546328b27b39f47609f80fb22a0a9b61d
+  languageName: node
+  linkType: hard
+
+"ws@npm:^8.11.0":
+  version: 8.18.1
+  resolution: "ws@npm:8.18.1"
+  peerDependencies:
+    bufferutil: ^4.0.1
+    utf-8-validate: ">=5.0.2"
+  peerDependenciesMeta:
+    bufferutil:
+      optional: true
+    utf-8-validate:
+      optional: true
+  checksum: 10c0/e498965d6938c63058c4310ffb6967f07d4fa06789d3364829028af380d299fe05762961742971c764973dce3d1f6a2633fe8b2d9410c9b52e534b4b882a99fa
   languageName: node
   linkType: hard
 

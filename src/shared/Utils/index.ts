@@ -4,6 +4,9 @@ import parse from "html-react-parser";
 import { EmoteFetcher, EmoteParser } from "@mkody/twitch-emoticons";
 import { HelixChatBadgeSet } from "@twurple/api";
 import { ChatMessage, MediaInfo } from "../api/generated/baza";
+import { ChatMessage as TwitchChatMessage } from "@twurple/chat";
+import { HighliteMessageProps } from "../../components/HighliteMessage/Message";
+import React from "react";
 
 export { BigTextBlockForAudio } from "./BigTexts/BigTextBlockForAudio";
 export { BigTextBlockForVoice } from "./BigTexts/BigTextBlockForVoice";
@@ -43,6 +46,23 @@ export function AddBorderToElement(info: MediaInfo): React.CSSProperties {
 }
 
 export function getRandomInt(min: number, max: number): number {
+  if (min >= -1 && max <= 1) {
+    function getRandomInRange(min: number, max: number): number {
+      // Проверяем, что min и max находятся в допустимом диапазоне
+      if (min < -1 || max > 1) {
+        throw new Error("min must be >= -1 and max must be <= 1");
+      }
+
+      // Генерируем случайное число в диапазоне [min, max)
+      const randomValue = Math.random() * (max - min) + min;
+
+      // Округляем до 3 знаков после запятой
+      return Math.round(randomValue * 1000) / 1000;
+    }
+
+    return getRandomInRange(min, max);
+  }
+
   // Создаем буфер для одного 32-битного беззнакового целого числа
   const buffer = new Uint32Array(1);
   window.crypto.getRandomValues(buffer);
@@ -136,33 +156,52 @@ export function getRandomRotation(mediaInfo: MediaInfo) {
   return returnObj;
 }
 
-export const getRandomColor = (): string => {
-  const letters = "0123456789ABCDEF";
-  let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
+export const getRandomColor = (opacity: number = 1): string => {
+  // Генерируем случайные значения для красного, зеленого и синего каналов
+  const r = Math.floor(Math.random() * 256); // Случайное число от 0 до 255
+  const g = Math.floor(Math.random() * 256); // Случайное число от 0 до 255
+  const b = Math.floor(Math.random() * 256); // Случайное число от 0 до 255
+
+  // Возвращаем цвет в формате rgba
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 };
 
 export function replaceBadges(
   badges: HelixChatBadgeSet[],
-  chatMessage: ChatMessage,
+  chatMessage: ChatMessage | TwitchChatMessage,
 ) {
-  let sub = "";
-  const text = chatMessage.message;
+  var text: string | undefined = "";
+  var sub = "";
 
-  chatMessage.badges?.forEach((b) => {
-    const set = badges.find((e) => e.id == b.key);
-    const lastVersion = set?.versions?.slice(-1);
+  if (chatMessage instanceof TwitchChatMessage) {
+    text = chatMessage.text;
 
-    if (!lastVersion) {
-      return undefined;
-    }
+    chatMessage.userInfo.badges.forEach((_, k) => {
+      const set = badges.find((e) => e.id == k);
+      const lastVersion = set?.versions?.slice(-1);
 
-    const link = lastVersion[0].getImageUrl(1);
-    sub = sub + `<img class="badge" src="${link}" type="image/png">\n`;
-  });
+      if (!lastVersion) {
+        return undefined;
+      }
+
+      const link = lastVersion[0].getImageUrl(4);
+      sub = sub + `<img class="badge" src="${link}" type="image/png">\n`;
+    });
+  } else if (chatMessage.badges !== undefined) {
+    text = chatMessage.message;
+
+    chatMessage.badges.forEach((b) => {
+      const set = badges.find((e) => e.id == b.key);
+      const lastVersion = set?.versions?.slice(-1);
+
+      if (!lastVersion) {
+        return undefined;
+      }
+
+      const link = lastVersion[0].getImageUrl(4);
+      sub = sub + `<img class="badge" src="${link}" type="image/png">\n`;
+    });
+  }
 
   if (!text) {
     return undefined;
@@ -190,6 +229,146 @@ export function getEmojisSrcFromText(text: string, fetcher: EmoteFetcher) {
   const result = messages.map((message) => {
     return client.parse(message);
   });
+
+  return result;
+}
+
+export const isWhiteColor = (color: string) => {
+  if (color === "white") {
+    return true;
+  }
+
+  if (color === "#ffffff") {
+    return true;
+  }
+
+  if (color === "rgb(255, 255, 255)") {
+    return true;
+  }
+};
+
+export const getNotWhiteColor = (opacity?: number) => {
+  while (true) {
+    const color: string = getRandomColor(opacity);
+
+    if (!isWhiteColor(color)) {
+      return color;
+    }
+  }
+};
+
+export const isVideo = (currentMessage: HighliteMessageProps) =>
+  (currentMessage?.faceImage.url?.includes(".mp4") ||
+    currentMessage?.faceImage.url?.includes(".webm")) ??
+  false;
+
+/**
+ * Конвертирует цвет из hex в rgba.
+ * @param hex - Цвет в формате hex (например, "#FF5733").
+ * @param opacity - Прозрачность (от 0 до 1).
+ * @returns Цвет в формате rgba (например, "rgba(255, 87, 51, 0.7)").
+ */
+export const hexToRgba = (hex: string, opacity: number = 1): string => {
+  // Удаляем символ #, если он есть
+  hex = hex.replace("#", "");
+
+  // Преобразуем hex в RGB
+  let r: number, g: number, b: number;
+
+  if (hex.length === 3) {
+    // Если hex в сокращенном формате (например, "#F53")
+    r = parseInt(hex[0] + hex[0], 16);
+    g = parseInt(hex[1] + hex[1], 16);
+    b = parseInt(hex[2] + hex[2], 16);
+  } else if (hex.length === 6) {
+    // Если hex в полном формате (например, "#FF5733")
+    r = parseInt(hex.substring(0, 2), 16);
+    g = parseInt(hex.substring(2, 4), 16);
+    b = parseInt(hex.substring(4, 6), 16);
+  } else {
+    throw new Error('Неверный формат hex. Используйте "#FFF" или "#FFFFFF".');
+  }
+
+  // Возвращаем цвет в формате rgba
+  return `rgba(${r}, ${g}, ${b}, ${opacity})`;
+};
+
+interface ContentPart {
+  type: "text" | "image" | "video" | "link";
+  source?: string; // только для image, video, link
+  content: string; // исходный текст или URL
+}
+
+export function parseContent(text?: string): ContentPart[] | undefined {
+  if (!text) return undefined;
+
+  text = text.trim();
+
+  const result: ContentPart[] = [];
+  let currentText: string[] = [];
+
+  // Улучшенное разбиение с очисткой невидимых символов
+  const parts = text
+    .replace(/[\u{E0000}-\u{E007F}]/gu, "")
+    .split(/\s+/)
+    .filter((part) => part.trim().length > 0);
+
+  for (const part of parts) {
+    if (part.startsWith("https://") || part.startsWith("http://")) {
+      // Добавляем накопленный текст
+      if (currentText.length > 0) {
+        result.push({
+          type: "text",
+          content: currentText.join(" "),
+        });
+        currentText = [];
+      }
+
+      // Определяем тип контента
+      if (
+        part.includes(".mp4") ||
+        part.includes(".webm") ||
+        part.includes(".ogg")
+      ) {
+        result.push({
+          type: "video",
+          source: part,
+          content: part,
+        });
+      } else if (
+        part.includes(".jpeg") ||
+        part.includes(".jpg") ||
+        part.includes(".png") ||
+        part.includes(".gif") ||
+        part.includes(".svg") ||
+        part.includes(".webp")
+      ) {
+        result.push({
+          type: "image",
+          source: part,
+          content: part,
+        });
+      } else {
+        result.push({
+          type: "link",
+          source: part,
+          content: part,
+        });
+      }
+    } else {
+      if (!!part) {
+        currentText.push(part);
+      }
+    }
+  }
+
+  // Добавляем оставшийся текст
+  if (currentText.length > 0) {
+    result.push({
+      type: "text",
+      content: currentText.join(" "),
+    });
+  }
 
   return result;
 }

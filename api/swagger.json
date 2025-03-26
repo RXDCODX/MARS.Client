@@ -772,7 +772,8 @@
         "required": [
           "extension",
           "fileName",
-          "localFilePath",
+          "filePath",
+          "isLocalFile",
           "type"
         ],
         "type": "object",
@@ -789,8 +790,11 @@
             ],
             "type": "string"
           },
-          "localFilePath": {
+          "filePath": {
             "type": "string"
+          },
+          "isLocalFile": {
+            "type": "boolean"
           },
           "fileName": {
             "type": "string"

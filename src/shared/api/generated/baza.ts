@@ -131,7 +131,8 @@ export interface MediaDto {
 export interface MediaFileInfo {
     extension: string;
     fileName: string;
-    localFilePath: string;
+    filePath: string;
+    isLocalFile: boolean;
     type: MediaFileInfoTypeEnum;
 }
 

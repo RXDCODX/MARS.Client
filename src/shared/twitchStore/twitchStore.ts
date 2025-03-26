@@ -2,6 +2,7 @@ import { EmoteFetcher, EmoteParser } from "@mkody/twitch-emoticons";
 import type {} from "@redux-devtools/extension";
 import { ApiClient, HelixChatBadgeSet } from "@twurple/api";
 import { AppTokenAuthProvider } from "@twurple/auth";
+import { ChatMessage } from "@twurple/chat";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
@@ -19,10 +20,12 @@ interface State {
   parser?: EmoteParser;
   badges: HelixChatBadgeSet[];
   twitchApiClient?: ApiClient;
+  twitchMessages: ChatMessage[];
 }
 
 const initialState: State = {
   badges: [],
+  twitchMessages: [],
 };
 
 export const useTwitchStore = create<State & Actions>()(
@@ -33,7 +36,6 @@ export const useTwitchStore = create<State & Actions>()(
         clientId,
         clientSecret,
       );
-
       Promise.all([
         // Twitch global
         fetcher.fetchTwitchEmotes(),

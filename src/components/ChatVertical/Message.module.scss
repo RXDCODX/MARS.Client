@@ -1,0 +1,75 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  min-height: 200px; /* Минимальная высота */
+  padding: 5px 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.head {
+  display: flex;
+  align-items: center; // Выравнивание по вертикали
+  margin-bottom: 5px; // Отступ между заголовком и сообщением
+}
+
+.badgesAndNickname {
+  display: flex;
+  flex-grow: 1;
+  align-items: center; // Бейджики и никнейм на одной строке
+  gap: 8px; // Расстояние между бейджиками и никнеймом
+  height: 30px;
+}
+
+.badges {
+  display: flex;
+  align-items: center;
+  gap: 4px; // Расстояние между бейджиками
+
+  > img {
+    max-height: 40px;
+    max-width: 40px;
+  }
+}
+
+.nickname {
+  display: flex;
+  max-height: 40px;
+  font-weight: bold;
+  white-space: nowrap; // Запрет переноса текста
+}
+
+.messageWrapper {
+  flex-grow: 1; // Растягивает контейнер на всю доступную высоту
+  overflow: hidden; // Скрывает содержимое, выходящее за пределы контейнера
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; // Выравнивание текста по центру по вертикали
+  justify-content: left; // Выравнивание текста по центру по горизонтали
+  min-height: 50px;
+  height: 70px;
+}
+
+.message {
+  width: 100vw; // Сообщение занимает всю ширину контейнера
+  word-wrap: break-word; // Перенос длинных слов
+  text-align: left; // Текст по центру
+  color: white;
+  flex-grow: 1;
+
+  > img {
+    overflow: hidden;
+    height: -webkit-fill-available;
+  }
+
+  > div {
+    height: 100%;
+
+    > img {
+      height: 1em;
+      width: auto;
+      object-fit: cover;
+      vertical-align: middle;
+    }
+  }
+}
