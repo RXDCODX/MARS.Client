@@ -65,6 +65,51 @@
         "responses": { }
       }
     },
+    "/hubs/TelegramusHub/MutedAlert": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "info",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/MediaDto"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/TelegramusHub/UnmuteSessions": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/TelegramusHub/Alerts": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "info",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/MediaDto"
+              }
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/TelegramusHub/UpdateWaifuPrizes": {
       "post": {
         "tags": [
@@ -864,6 +909,7 @@
           "displayName",
           "duration",
           "isLooped",
+          "priority",
           "twitchPointsCost",
           "vip"
         ],
@@ -885,6 +931,14 @@
           "duration": {
             "type": "integer",
             "format": "int32"
+          },
+          "priority": {
+            "enum": [
+              "Low",
+              "Normal",
+              "High"
+            ],
+            "type": "string"
           }
         },
         "additionalProperties": false
