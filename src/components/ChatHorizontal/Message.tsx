@@ -3,7 +3,6 @@ import styles from "./Message.module.css";
 import {
   getNotWhiteColor,
   getRandomInt,
-  hexToRgba,
   isWhiteColor,
   parseContent,
   replaceEmotes,
@@ -32,15 +31,11 @@ export const Message = ({ message }: Props) => {
   const [mainColor, ____] = useState(
     isWhiteColor(message.colorHex ?? "white")
       ? getNotWhiteColor(opacity)
-      : "white",
-  );
-  const [subColor, _____] = useState(
-    hexToRgba(message.colorHex ?? "#ffffff", opacity),
+      : message.colorHex ?? "white",
   );
   const [bg, _________] = useState(
-    `linear-gradient(${getRandomInt(0, 360)}deg, ${mainColor} , ${subColor}) border-box`,
+    `linear-gradient(125deg, ${mainColor} , transparent 75%) border-box`,
   );
-  console.log(mainColor, subColor, bg);
   const [baseStyles, setBaseStyles] = useState<React.CSSProperties>({
     visibility: "hidden",
     fontSize: fontSize + "px", // Случайный размер шрифта

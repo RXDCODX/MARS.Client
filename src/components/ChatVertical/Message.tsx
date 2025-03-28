@@ -6,12 +6,11 @@ import useTwitchStore from "../../shared/twitchStore/twitchStore";
 import { Textfit } from "react-textfit";
 import "./badge.css";
 import anime from "../../shared/styles/animate.module.scss";
+import ContentPart from "./ContentPart";
 
 interface Props {
   message: ChatMessage;
 }
-
-
 
 export function Message({ message }: Props) {
   const [handler, setHandler] = useState(true);
@@ -50,7 +49,7 @@ export function Message({ message }: Props) {
         ref={msgRef}
         className={`${styles.container} ${anime.animated} ${anime.slideInLeft}`}
         style={{
-          background: `linear-gradient(135deg, ${color}, transparent) border-box`,
+          background: `linear-gradient(100deg, ${color}, transparent 75%) border-box`,
         }}
       >
         {/* Header section with badges and nickname */}
@@ -75,61 +74,25 @@ export function Message({ message }: Props) {
         {/* Message content */}
         <div className={styles.messageWrapper}>
           {content &&
-            content.map((part) => {
-              switch (part.type) {
-                case "text":
-                  const text = replaceEmotes({
-                    text: part.content,
+            content.map((part) => (
+              <ContentPart
+                part={part}
+                className={styles.message}
+                style={{ height: 100 / content.length + "%" }}
+                convertMediaToJustLinks={
+                  !message.isVip &&
+                  !message.isBroadcaster &&
+                  !message.isModerator
+                }
+                replaceEmotes={({ text }) =>
+                  replaceEmotes({
+                    text,
                     parser: emoteParser,
                     fetcher: emoteFetcher,
-                  });
-                  return (
-                    <Textfit
-                      min={10}
-                      max={10000}
-                      mode="multi"
-                      className={styles.message}
-                    >
-                      {text}
-                    </Textfit>
-                  );
-                case "image":
-                  return (
-                    <div
-                      className={styles.message}
-                      style={{ maxHeight: 100 / content.length + "%" }}
-                    >
-                      <img src={part.content} className="image"></img>
-                    </div>
-                  );
-                case "video":
-                  return (
-                    <div
-                      className={styles.message}
-                      style={{ maxHeight: 100 / content.length + "%" }}
-                    >
-                      <video src={part.content} className="video"></video>
-                    </div>
-                  );
-                case "link":
-                  return (
-                    <div
-                      className={styles.message}
-                      style={{ maxHeight: 100 / content.length + "%" }}
-                    >
-                      <span
-                        style={{
-                          color: "rgb(51, 255, 0);",
-                          textDecoration: "underline;",
-                          textDecorationColor: "rgb(38, 0, 255);",
-                        }}
-                      >
-                        Ссылка
-                      </span>
-                    </div>
-                  );
-              }
-            })}
+                  })
+                }
+              />
+            ))}
         </div>
       </div>
     )

@@ -18,6 +18,7 @@ const getRandomColor = (): string => {
 };
 
 export default function Announce({ title, callback }: Props) {
+  document.title = title;
   const nodeRef = useRef(null);
 
   const backgroundColor = getRandomColor();

@@ -32,9 +32,9 @@ export default function ChatVertical() {
         <Announce title={"Chat Vertical"} callback={() => setAnnounced(true)} />
       )}
       <div className={styles.chatContainer}>
-          {messages.map((message) => (
-            <Message key={message.id} message={message} />
-          ))}
+        {messages.map((message) => (
+          <Message key={message.id} message={message} />
+        ))}
       </div>
     </>
   );

@@ -1,5 +1,4 @@
-import { useCallback, useState } from "react";
-
+import { useCallback, useEffect, useState } from "react";
 import { SignalRContext } from "../../app";
 import Announce from "../../shared/Utils/Announce/Announce";
 import { Audio, Image, Video, Voice } from "./Primitive";
@@ -9,49 +8,105 @@ import {
   MediaFileInfoTypeEnum,
 } from "../../shared/api/generated/baza";
 
+interface MessageProps {
+  message: MediaDto;
+  isHighPriority: boolean;
+}
+
 export default function PyroAlerts() {
   document.title = "PyroAlerts";
 
-  const [messages, setMessages] = useState<MediaDto[]>([]);
+  const [messages, setMessages] = useState<MessageProps[]>([]);
+  const [highPriorityQueue, setHighPriorityQueue] = useState<MediaDto[]>([]);
+  const [currentHighPriority, setCurrentHighPriority] =
+    useState<MediaDto | null>(null);
+  const [blockMessages, setBlockMessages] = useState<boolean>(false);
   const [announced, setAnnounced] = useState(false);
 
-  SignalRContext.useSignalREffect(
-    "alert",
+  // Обработчик для обычных алертов
+  const handleRegularAlert = useCallback(
     (message: MediaDto) => {
-      const parsedMessage: MediaDto = { ...message };
-      parsedMessage.mediaInfo.fileInfo.filePath = parsedMessage.mediaInfo
-        .fileInfo.isLocalFile
-        ? import.meta.env.VITE_BASE_PATH +
-          parsedMessage.mediaInfo.fileInfo.filePath
-        : parsedMessage.mediaInfo.fileInfo.filePath;
+      if (blockMessages) return;
 
-      console.log(parsedMessage);
-      setMessages((prev) => [...prev, parsedMessage]);
+      const parsedMessage: MediaDto = {
+        ...message,
+        mediaInfo: {
+          ...message.mediaInfo,
+          fileInfo: {
+            ...message.mediaInfo.fileInfo,
+            filePath: message.mediaInfo.fileInfo.isLocalFile
+              ? import.meta.env.VITE_BASE_PATH +
+                message.mediaInfo.fileInfo.filePath
+              : message.mediaInfo.fileInfo.filePath,
+          },
+        },
+      };
+
+      setMessages((prev) => [
+        ...prev,
+        { message: parsedMessage, isHighPriority: false },
+      ]);
     },
-    [],
+    [blockMessages],
   );
 
+  // Обработчик для высокоприоритетных алертов
+  const handleHighPriorityAlert = useCallback((message: MediaDto) => {
+    const parsedMessage: MediaDto = {
+      ...message,
+      mediaInfo: {
+        ...message.mediaInfo,
+        fileInfo: {
+          ...message.mediaInfo.fileInfo,
+          filePath: message.mediaInfo.fileInfo.isLocalFile
+            ? import.meta.env.VITE_BASE_PATH +
+              message.mediaInfo.fileInfo.filePath
+            : message.mediaInfo.fileInfo.filePath,
+        },
+      },
+    };
+
+    setBlockMessages(true);
+    setMessages([]); // Очищаем все обычные алерты
+    setHighPriorityQueue((prev) => [...prev, parsedMessage]); // Добавляем в очередь высокоприоритетных
+  }, []);
+
+  // Эффект для обработки очереди высокоприоритетных алертов
+  useEffect(() => {
+    if (highPriorityQueue.length > 0 && !currentHighPriority) {
+      // Берем первый алерт из очереди
+      const nextAlert = highPriorityQueue[0];
+      setCurrentHighPriority(nextAlert);
+
+      // Удаляем его из очереди через 2 секунды (время показа)
+      const timer = setTimeout(() => {
+        setHighPriorityQueue((prev) => prev.slice(1));
+        setCurrentHighPriority(null);
+      }, 2000);
+
+      return () => clearTimeout(timer);
+    } else if (highPriorityQueue.length === 0 && currentHighPriority === null) {
+      // Когда очередь пуста, снимаем блокировку
+      setBlockMessages(false);
+    }
+  }, [highPriorityQueue, currentHighPriority]);
+
+  // Подписки на SignalR события
+  SignalRContext.useSignalREffect("alert", handleRegularAlert, [
+    handleRegularAlert,
+  ]);
   SignalRContext.useSignalREffect(
     "alerts",
-    (messages: MediaDto[]) => {
-      messages.forEach((m) => {
-        const parsedMessage: MediaDto = { ...m };
-        parsedMessage.mediaInfo.fileInfo.filePath = parsedMessage.mediaInfo
-          .fileInfo.isLocalFile
-          ? import.meta.env.VITE_BASE_PATH +
-            parsedMessage.mediaInfo.fileInfo.filePath
-          : parsedMessage.mediaInfo.fileInfo.filePath;
-
-        console.log(parsedMessage);
-        setMessages((prev) => [...prev, parsedMessage]);
-      });
-    },
-    [],
+    (messages: MediaDto[]) => messages.forEach(handleRegularAlert),
+    [handleRegularAlert],
   );
+  SignalRContext.useSignalREffect("MutedAlert", handleHighPriorityAlert, [
+    handleHighPriorityAlert,
+  ]);
 
   const remove = useCallback((message: MediaDto) => {
     setMessages((prev) =>
-      prev.filter((m) => m.mediaInfo.id !== message.mediaInfo.id),
+      prev.filter((m) => m.message.mediaInfo.id !== message.mediaInfo.id),
     );
   }, []);
 
@@ -60,55 +115,140 @@ export default function PyroAlerts() {
       {!announced && (
         <Announce title={"PyroAlerts"} callback={() => setAnnounced(true)} />
       )}
-      {messages.map((message) => {
-        if (!message) return null;
 
-        const { fileInfo } = message.mediaInfo;
-        const callback = () => remove(message);
+      {/* Рендерим текущий высокоприоритетный алерт */}
+      {currentHighPriority && (
+        <HighPriorityAlert
+          message={currentHighPriority}
+          type={currentHighPriority.mediaInfo.fileInfo.type}
+          callback={() => {
+            SignalRContext.invoke("UnmuteSessions");
+            setHighPriorityQueue((prev) =>
+              prev.filter(
+                (m) => m.mediaInfo.id !== currentHighPriority.mediaInfo.id,
+              ),
+            );
 
-        switch (fileInfo.type) {
-          case MediaFileInfoTypeEnum.Image || MediaFileInfoTypeEnum.Gif:
-            return (
-              <Image
-                key={message.mediaInfo.id}
-                mediaInfo={message}
-                callBack={callback}
-              />
-            );
-          case MediaFileInfoTypeEnum.Video:
-            return (
-              <Video
-                key={message.mediaInfo.id}
-                MediaInfo={message}
-                callback={callback}
-              />
-            );
-          case MediaFileInfoTypeEnum.Audio:
-            return (
-              <Audio
-                key={message.mediaInfo.id}
-                mediaInfo={message}
-                callback={callback}
-              />
-            );
-          case MediaFileInfoTypeEnum.Voice:
-            return (
-              <Voice
-                key={message.mediaInfo.id}
-                mediaInfo={message}
-                callback={callback}
-              />
-            );
-          case MediaFileInfoTypeEnum.TelegramSticker:
-            return (
-              <TelegramSticker
-                key={message.mediaInfo.id}
-                mediaInfo={message}
-                callBack={callback}
-              />
-            );
-        }
-      })}
+            const newPriority = highPriorityQueue.some((e) => e)
+              ? highPriorityQueue[0]
+              : null;
+            setCurrentHighPriority(newPriority);
+          }}
+        />
+      )}
+
+      {/* Рендерим обычные алерты, если нет высокоприоритетных */}
+      {!currentHighPriority &&
+        messages.map((messageProps) => {
+          const message = messageProps.message;
+          if (!message) return null;
+
+          const { fileInfo } = message.mediaInfo;
+          const callback = () => remove(message);
+
+          switch (fileInfo.type) {
+            case MediaFileInfoTypeEnum.Image:
+            case MediaFileInfoTypeEnum.Gif:
+              return (
+                <Image
+                  key={message.mediaInfo.id}
+                  mediaInfo={message}
+                  callBack={callback}
+                />
+              );
+            case MediaFileInfoTypeEnum.Video:
+              return (
+                <Video
+                  key={message.mediaInfo.id}
+                  MediaInfo={message}
+                  callback={callback}
+                />
+              );
+            case MediaFileInfoTypeEnum.Audio:
+              return (
+                <Audio
+                  key={message.mediaInfo.id}
+                  mediaInfo={message}
+                  callback={callback}
+                />
+              );
+            case MediaFileInfoTypeEnum.Voice:
+              return (
+                <Voice
+                  key={message.mediaInfo.id}
+                  mediaInfo={message}
+                  callback={callback}
+                />
+              );
+            case MediaFileInfoTypeEnum.TelegramSticker:
+              return (
+                <TelegramSticker
+                  key={message.mediaInfo.id}
+                  mediaInfo={message}
+                  callBack={callback}
+                />
+              );
+            default:
+              return null;
+          }
+        })}
     </>
   );
+}
+
+// Компонент для отображения высокоприоритетного алерта
+function HighPriorityAlert({
+  message,
+  type,
+  callback,
+}: {
+  message: MediaDto;
+  type: MediaFileInfoTypeEnum;
+  callback: () => void;
+}) {
+  switch (type) {
+    case MediaFileInfoTypeEnum.Image:
+    case MediaFileInfoTypeEnum.Gif:
+      return (
+        <Image
+          key={message.mediaInfo.id}
+          mediaInfo={message}
+          callBack={callback}
+        />
+      );
+    case MediaFileInfoTypeEnum.Video:
+      return (
+        <Video
+          key={message.mediaInfo.id}
+          MediaInfo={message}
+          callback={callback}
+        />
+      );
+    case MediaFileInfoTypeEnum.Audio:
+      return (
+        <Audio
+          key={message.mediaInfo.id}
+          mediaInfo={message}
+          callback={callback}
+        />
+      );
+    case MediaFileInfoTypeEnum.Voice:
+      return (
+        <Voice
+          key={message.mediaInfo.id}
+          mediaInfo={message}
+          callback={callback}
+        />
+      );
+    case MediaFileInfoTypeEnum.TelegramSticker:
+      return (
+        <TelegramSticker
+          key={message.mediaInfo.id}
+          mediaInfo={message}
+          callBack={callback}
+        />
+      );
+    default:
+      return null;
+  }
 }

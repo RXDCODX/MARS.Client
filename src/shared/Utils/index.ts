@@ -293,7 +293,7 @@ export const hexToRgba = (hex: string, opacity: number = 1): string => {
   return `rgba(${r}, ${g}, ${b}, ${opacity})`;
 };
 
-interface ContentPart {
+export interface ContentPart {
   type: "text" | "image" | "video" | "link";
   source?: string; // только для image, video, link
   content: string; // исходный текст или URL
