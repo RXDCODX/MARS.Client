@@ -6,6 +6,7 @@ import TelegramSticker from "./Primitive/TelegramSticker";
 import {
   MediaDto,
   MediaFileInfoTypeEnum,
+  MediaMetaInfoPriorityEnum,
 } from "../../shared/api/generated/baza";
 
 interface MessageProps {
@@ -71,6 +72,19 @@ export default function PyroAlerts() {
     setHighPriorityQueue((prev) => [...prev, parsedMessage]); // Добавляем в очередь высокоприоритетных
   }, []);
 
+  const handleAlert = useCallback(
+    (message: MediaDto) => {
+      if (
+        message.mediaInfo.metaInfo.priority === MediaMetaInfoPriorityEnum.High
+      ) {
+        handleHighPriorityAlert(message);
+      } else {
+        handleRegularAlert(message);
+      }
+    },
+    [handleHighPriorityAlert, handleRegularAlert],
+  );
+
   // Эффект для обработки очереди высокоприоритетных алертов
   useEffect(() => {
     if (highPriorityQueue.length > 0 && !currentHighPriority) {
@@ -92,23 +106,91 @@ export default function PyroAlerts() {
   }, [highPriorityQueue, currentHighPriority]);
 
   // Подписки на SignalR события
-  SignalRContext.useSignalREffect("alert", handleRegularAlert, [
-    handleRegularAlert,
-  ]);
+  SignalRContext.useSignalREffect("alert", handleAlert, [handleAlert]);
   SignalRContext.useSignalREffect(
     "alerts",
-    (messages: MediaDto[]) => messages.forEach(handleRegularAlert),
-    [handleRegularAlert],
+    (messages: MediaDto[]) => messages.forEach(handleAlert),
+    [handleAlert],
   );
-  SignalRContext.useSignalREffect("MutedAlert", handleHighPriorityAlert, [
-    handleHighPriorityAlert,
-  ]);
 
   const remove = useCallback((message: MediaDto) => {
+    debugger;
     setMessages((prev) =>
       prev.filter((m) => m.message.mediaInfo.id !== message.mediaInfo.id),
     );
   }, []);
+
+  const removeHighPrior = useCallback((message: MediaDto) => {
+    debugger;
+    SignalRContext.invoke("UnmuteSessions");
+    setHighPriorityQueue((prev) =>
+      prev.filter((m) => m.mediaInfo.id !== message.mediaInfo.id),
+    );
+
+    const newPriority = highPriorityQueue.some((e) => e)
+      ? highPriorityQueue[0]
+      : null;
+    setCurrentHighPriority(newPriority);
+  }, []);
+
+  const HighPriorityAlert = useCallback(
+    ({
+      message,
+      type,
+      callback,
+    }: {
+      message: MediaDto;
+      type: MediaFileInfoTypeEnum;
+      callback: () => void;
+    }) => {
+      switch (type) {
+        case MediaFileInfoTypeEnum.Image:
+        case MediaFileInfoTypeEnum.Gif:
+          return (
+            <Image
+              key={message.mediaInfo.id}
+              mediaInfo={message}
+              callBack={() => callback()}
+            />
+          );
+        case MediaFileInfoTypeEnum.Video:
+          return (
+            <Video
+              key={message.mediaInfo.id}
+              MediaInfo={message}
+              callback={() => callback()}
+            />
+          );
+        case MediaFileInfoTypeEnum.Audio:
+          return (
+            <Audio
+              key={message.mediaInfo.id}
+              mediaInfo={message}
+              callback={() => callback()}
+            />
+          );
+        case MediaFileInfoTypeEnum.Voice:
+          return (
+            <Voice
+              key={message.mediaInfo.id}
+              mediaInfo={message}
+              callback={() => callback()}
+            />
+          );
+        case MediaFileInfoTypeEnum.TelegramSticker:
+          return (
+            <TelegramSticker
+              key={message.mediaInfo.id}
+              mediaInfo={message}
+              callBack={() => callback()}
+            />
+          );
+        default:
+          return null;
+      }
+    },
+    [],
+  );
 
   return (
     <>
@@ -121,19 +203,7 @@ export default function PyroAlerts() {
         <HighPriorityAlert
           message={currentHighPriority}
           type={currentHighPriority.mediaInfo.fileInfo.type}
-          callback={() => {
-            SignalRContext.invoke("UnmuteSessions");
-            setHighPriorityQueue((prev) =>
-              prev.filter(
-                (m) => m.mediaInfo.id !== currentHighPriority.mediaInfo.id,
-              ),
-            );
-
-            const newPriority = highPriorityQueue.some((e) => e)
-              ? highPriorityQueue[0]
-              : null;
-            setCurrentHighPriority(newPriority);
-          }}
+          callback={() => removeHighPrior(currentHighPriority)}
         />
       )}
 
@@ -197,58 +267,3 @@ export default function PyroAlerts() {
 }
 
 // Компонент для отображения высокоприоритетного алерта
-function HighPriorityAlert({
-  message,
-  type,
-  callback,
-}: {
-  message: MediaDto;
-  type: MediaFileInfoTypeEnum;
-  callback: () => void;
-}) {
-  switch (type) {
-    case MediaFileInfoTypeEnum.Image:
-    case MediaFileInfoTypeEnum.Gif:
-      return (
-        <Image
-          key={message.mediaInfo.id}
-          mediaInfo={message}
-          callBack={callback}
-        />
-      );
-    case MediaFileInfoTypeEnum.Video:
-      return (
-        <Video
-          key={message.mediaInfo.id}
-          MediaInfo={message}
-          callback={callback}
-        />
-      );
-    case MediaFileInfoTypeEnum.Audio:
-      return (
-        <Audio
-          key={message.mediaInfo.id}
-          mediaInfo={message}
-          callback={callback}
-        />
-      );
-    case MediaFileInfoTypeEnum.Voice:
-      return (
-        <Voice
-          key={message.mediaInfo.id}
-          mediaInfo={message}
-          callback={callback}
-        />
-      );
-    case MediaFileInfoTypeEnum.TelegramSticker:
-      return (
-        <TelegramSticker
-          key={message.mediaInfo.id}
-          mediaInfo={message}
-          callBack={callback}
-        />
-      );
-    default:
-      return null;
-  }
-}

@@ -1,14 +1,9 @@
-import { useCallback, useReducer, useState } from "react";
+import { useCallback, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { SignalRContext } from "../../app";
 import { Cirno } from "./Cirno";
 import { Reimu } from "./Reimu";
-
-enum Action {
-  add,
-  remove,
-}
 
 export interface Message {
   id: string;
@@ -16,49 +11,11 @@ export interface Message {
   color?: string;
 }
 
-interface State {
-  messages: Message[];
-  currentMessage?: Message;
-}
-
-function reducer(
-  prevState: State,
-  event: { type: Action; message: Message },
-): State {
-  switch (event.type) {
-    case Action.add:
-      if (!prevState.currentMessage) {
-        return {
-          messages: [...prevState.messages],
-          currentMessage: event.message,
-        };
-      }
-
-      return { ...prevState, messages: [...prevState.messages, event.message] };
-
-    case Action.remove: {
-      const array = prevState.messages.filter(
-        (message) => message.id != event.message.id,
-      );
-      const message = array[0] as Message | undefined;
-
-      console.log("DELETED", message, array);
-
-      return {
-        messages: array,
-        currentMessage: message,
-      };
-    }
-  }
-}
-
 export function FumoFridayController() {
-  const initState: State = {
-    messages: [],
-    currentMessage: undefined,
-  };
-
-  const [{ currentMessage }, dispatch] = useReducer(reducer, initState);
+  const [_, setMessages] = useState<Message[]>([]);
+  const [currentMessage, setCurrentMessage] = useState<Message | undefined>(
+    undefined,
+  );
   const [switcher, setSwitcher] = useState(false);
 
   SignalRContext.useSignalREffect(
@@ -71,9 +28,18 @@ export function FumoFridayController() {
     [],
   );
 
-  const handleAddEvent = useCallback((message: Message) => {
-    dispatch({ type: Action.add, message: message });
-  }, []);
+  const handleAddEvent = useCallback(
+    (message: Message) => {
+      setMessages((prevMessages) => {
+        if (!currentMessage) {
+          setCurrentMessage(message);
+          return prevMessages;
+        }
+        return [...prevMessages, message];
+      });
+    },
+    [currentMessage],
+  );
 
   const changeSwitcher = useCallback(() => {
     setSwitcher((prevSwitcher) => !prevSwitcher);
@@ -81,7 +47,11 @@ export function FumoFridayController() {
 
   const handleRemoveEvent = useCallback(
     (message: Message) => {
-      dispatch({ type: Action.remove, message: message });
+      setMessages((prevMessages) => {
+        const newMessages = prevMessages.filter((msg) => msg.id !== message.id);
+        setCurrentMessage(newMessages[0]);
+        return newMessages;
+      });
       changeSwitcher();
     },
     [changeSwitcher],

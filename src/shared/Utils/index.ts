@@ -17,23 +17,65 @@ export function replaceEmotes({
   parser,
   fetcher,
 }: {
-  text?: string;
+  text?: string | ChatMessage;
   parser: EmoteParser;
   fetcher: EmoteFetcher;
 }) {
-  if (text) {
-    if (parser) {
-      console.log(fetcher?.emotes);
-      text = parser.parse(text, 3);
-      // text = text.replaceAll(new RegExp("https", "g"), "http");
+  if (!text) {
+    return undefined;
+  }
+
+  let resultText: string = "";
+
+  if (typeof text === "string") {
+    resultText = text;
+    if (text) {
+      if (parser) {
+        console.log(fetcher?.emotes);
+        resultText = parser.parse(text, 3);
+        // text = text.replaceAll(new RegExp("https", "g"), "http");
+      }
     }
+  } else if ("message" in text && typeof text.message === "string") {
+    var message = text as ChatMessage;
+
+    if (message.message === undefined) {
+      return undefined;
+    }
+
+    resultText = message.message;
+
+    message.emoteSet?.emotes?.forEach((emote) => {
+      if (
+        emote.name === undefined ||
+        emote.imageUrl === undefined ||
+        message.message === undefined
+      ) {
+        return undefined;
+      }
+
+      resultText = message.message.replace(
+        emote.name,
+        `<img class="emote" src="${emote.imageUrl}" />`,
+      );
+    });
+
+    var newParser = new EmoteParser(fetcher, {
+      template:
+        '<img class="emote" crossorigin="anonymous" alt="{name}" src="{link}" />',
+      match: /(?<!<[^>]*)(\w+)(?![^<]*>)/g,
+    });
+
+    resultText = newParser.parse(resultText, 3);
+  } else {
+    throw new Error("Invalid message type");
   }
 
   if (!text) {
     return undefined;
   }
 
-  const result = parse(text);
+  const result = parse(resultText);
 
   return result;
 }

@@ -65,23 +65,6 @@
         "responses": { }
       }
     },
-    "/hubs/TelegramusHub/MutedAlert": {
-      "post": {
-        "tags": [
-          "TelegramusHub"
-        ],
-        "parameters": [
-          {
-            "name": "info",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/MediaDto"
-            }
-          }
-        ],
-        "responses": { }
-      }
-    },
     "/hubs/TelegramusHub/UnmuteSessions": {
       "post": {
         "tags": [

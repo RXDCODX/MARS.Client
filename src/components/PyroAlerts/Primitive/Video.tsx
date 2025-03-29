@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { Textfit } from "react-textfit";
 
 import { KeyWordText } from "../../../shared/components/KeyWordText";
@@ -11,20 +11,12 @@ interface Props {
   MediaInfo: MediaDto;
 }
 
-/**
- * Component for rendering a video with a text overlay.
- *
- * @param {Object} props Component props.
- * @param {MediaDto} props.MediaInfo Media info for the video.
- * @param {function} props.callback Callback function to be called when the video finishes playing.
- *
- * @returns {ReactElement} The rendered video component.
- */
 export function Video({ MediaInfo, callback }: Props) {
   const { fileInfo, id, positionInfo, textInfo, metaInfo } =
     MediaInfo.mediaInfo;
-
   const player = useRef<HTMLVideoElement>(null);
+  const [backupTimer, setBackupTimer] = useState<NodeJS.Timeout>();
+  const [videoProgress, setVideoProgress] = useState(0);
 
   const [baseStyles, setBaseStyles] = useState<React.CSSProperties>(
     positionInfo.isProportion
@@ -39,11 +31,74 @@ export function Video({ MediaInfo, callback }: Props) {
         },
   );
 
-  const setStyles = useCallback(
-    (styles: React.CSSProperties) => {
-      setBaseStyles(styles);
+  const handleTimeUpdate = useCallback(
+    (e: React.SyntheticEvent<HTMLVideoElement>) => {
+      const video = e.currentTarget;
+      const currentTime = video.currentTime;
+      const duration = video.duration;
+      const targetDuration = metaInfo.duration;
+
+      setVideoProgress(currentTime);
+
+      // Проверка достижения конца (с запасом 0.1 сек)
+      if (
+        duration - currentTime <= 0.1 ||
+        (targetDuration && currentTime >= targetDuration - 0.1)
+      ) {
+        callback();
+      }
     },
-    [setBaseStyles],
+    [metaInfo.duration, callback],
+  );
+
+  useEffect(() => {
+    if (!metaInfo.duration || !player.current) return;
+
+    const timer = setTimeout(
+      () => {
+        if (videoProgress >= metaInfo.duration - 0.5) {
+          callback();
+        }
+      },
+      metaInfo.duration * 1000 + 2000,
+    ); // Длительность + 2 сек буфера
+
+    setBackupTimer(timer);
+
+    return () => {
+      if (backupTimer) clearTimeout(backupTimer);
+    };
+  }, [videoProgress, metaInfo.duration, callback]);
+
+  const handleLoadedMetadata = useCallback(
+    (event: React.SyntheticEvent<HTMLVideoElement>) => {
+      const video = event.currentTarget;
+
+      if (player.current) {
+        const newCords = getCoordinates(player.current, MediaInfo.mediaInfo);
+
+        if (positionInfo.isUseOriginalWidthAndHeight) {
+          setBaseStyles((prev) => ({
+            ...prev,
+            width: video.videoWidth + "px",
+            height: video.videoHeight + "px",
+          }));
+        }
+
+        setBaseStyles((prev) => ({
+          ...prev,
+          ...newCords,
+          ...getRandomRotation(MediaInfo.mediaInfo),
+        }));
+      }
+
+      // Автовоспроизведение с обработкой ошибок
+      video.play().catch(() => {
+        video.muted = true;
+        video.play();
+      });
+    },
+    [MediaInfo.mediaInfo, positionInfo.isUseOriginalWidthAndHeight],
   );
 
   return (
@@ -59,45 +114,9 @@ export function Video({ MediaInfo, callback }: Props) {
           width: baseStyles.width,
           height: baseStyles.height,
         }}
-        onLoadedMetadata={(event) => {
-          if (player.current) {
-            const newCords = getCoordinates(
-              player.current,
-              MediaInfo.mediaInfo,
-            );
-
-            if (positionInfo.isUseOriginalWidthAndHeight) {
-              setStyles({
-                width: event.currentTarget.videoWidth + "px",
-                height: event.currentTarget.videoHeight + "px",
-              });
-            }
-
-            setStyles({
-              ...baseStyles,
-              ...newCords,
-              ...getRandomRotation(MediaInfo.mediaInfo),
-            });
-
-            console.log(baseStyles);
-          }
-
-          if (event.currentTarget.duration < metaInfo.duration) {
-            if (metaInfo.isLooped) {
-              event.currentTarget.loop = true;
-              setTimeout(() => {
-                player.current?.pause();
-                callback();
-              }, metaInfo.duration * 1000);
-            } else {
-              event.currentTarget.onended = () => callback();
-            }
-          } else {
-            event.currentTarget.onended = () => callback();
-          }
-
-          event.currentTarget.play();
-        }}
+        onError={callback}
+        onTimeUpdate={handleTimeUpdate}
+        onLoadedMetadata={handleLoadedMetadata}
       />
       <Textfit
         forceSingleModeWidth

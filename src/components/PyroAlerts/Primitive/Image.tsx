@@ -26,6 +26,7 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
   const [style, setStyle] = useState<CSSProperties>({
     maxWidth: positionInfo.width + "px",
     maxHeight: positionInfo.height + "px",
+    visibility: "hidden",
   });
 
   return (
@@ -42,8 +43,12 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
             const cords = getCoordinates(event.currentTarget, mediaInfo);
             const rotation = getRandomRotation(mediaInfo);
             const size = { ...style };
-            setStyle({ ...cords, ...rotation, ...size });
+            setStyle(() => {
+              return { ...cords, ...rotation, ...size, visibility: "visible" };
+            });
           }}
+          onError={(e) => console.log(e)}
+          onErrorCapture={(e) => console.log(e)}
         />
       ) : (
         <img
@@ -53,12 +58,15 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
           alt={"IMAGE ERROR"}
           className={styles.media}
           style={style}
-
+          onError={(e) => console.log(e)}
+          onErrorCapture={(e) => console.log(e)}
           onLoad={(event) => {
             const cords = getCoordinates(event.currentTarget, mediaInfo);
             const rotation = getRandomRotation(mediaInfo);
             const size = { ...style };
-            setStyle({ ...cords, ...rotation, ...size });
+            setStyle(() => {
+              return { ...cords, ...rotation, ...size, visibility: "visible" };
+            });
           }}
         />
       )}

@@ -1,3 +1,5 @@
+import { getRandomColor } from "../../Utils";
+
 interface Props {
   keyWordedString: string;
   keySymbol: string;
@@ -10,7 +12,7 @@ export function KeyWordedText({
   keySymbol = "#",
   keyWordedString,
   classNameForKeyWordedSpan = "key_word",
-  keyWordColor = "red",
+  keyWordColor = getRandomColor(),
   isQuouted,
 }: Props) {
   if (keySymbol.length !== 1) {

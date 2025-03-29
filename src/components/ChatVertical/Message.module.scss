@@ -19,6 +19,7 @@
   align-items: center; // Бейджики и никнейм на одной строке
   gap: 8px; // Расстояние между бейджиками и никнеймом
   height: 30px;
+  margin-bottom: 1px;
 }
 
 .badges {
@@ -47,7 +48,7 @@
   align-items: flex-start; // Выравнивание текста по центру по вертикали
   justify-content: left; // Выравнивание текста по центру по горизонтали
   min-height: 50px;
-  height: 70px;
+  height: 50px;
 }
 
 .message {

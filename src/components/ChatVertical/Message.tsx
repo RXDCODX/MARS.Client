@@ -84,9 +84,9 @@ export function Message({ message }: Props) {
                   !message.isBroadcaster &&
                   !message.isModerator
                 }
-                replaceEmotes={({ text }) =>
+                replaceEmotes={({ message }) =>
                   replaceEmotes({
-                    text,
+                    text: message,
                     parser: emoteParser,
                     fetcher: emoteFetcher,
                   })

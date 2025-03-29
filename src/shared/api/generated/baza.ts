@@ -161,9 +161,16 @@ export interface MediaMetaInfo {
     /** @format int32 */
     duration: number;
     isLooped: boolean;
+    priority: MediaMetaInfoPriorityEnum;
     /** @format int32 */
     twitchPointsCost: number;
     vip: boolean;
+}
+
+export enum MediaMetaInfoPriorityEnum {
+    Low = "Low",
+    Normal = "Normal",
+    High = "High",
 }
 
 export interface MediaPositionInfo {

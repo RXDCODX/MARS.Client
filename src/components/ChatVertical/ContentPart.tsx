@@ -1,6 +1,7 @@
 import { CSSProperties, JSX } from "react";
 import type { ContentPart } from "../../shared/Utils";
 import { Textfit } from "react-textfit";
+import { ChatMessage } from "../../shared/api/generated/baza";
 
 interface Props {
   className?: string;
@@ -8,9 +9,9 @@ interface Props {
   part: ContentPart;
   convertMediaToJustLinks: boolean;
   replaceEmotes: ({
-    text,
+    message,
   }: {
-    text?: string;
+    message?: string | ChatMessage;
   }) => string | JSX.Element | JSX.Element[] | undefined;
 }
 
@@ -24,7 +25,7 @@ export default function ContentPiece({
   if (convertMediaToJustLinks) {
     switch (part.type) {
       case "text":
-        const text = replaceEmotes({ text: part.content });
+        const text = replaceEmotes({ message: part.content });
         return (
           <Textfit
             min={10}
@@ -55,7 +56,7 @@ export default function ContentPiece({
   }
   switch (part.type) {
     case "text":
-      const text = replaceEmotes({ text: part.content });
+      const text = replaceEmotes({ message: part.content });
 
       return (
         <Textfit
