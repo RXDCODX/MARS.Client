@@ -1,0 +1,32 @@
+.linktree-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.linktree-container h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.link-card {
+  padding: 15px;
+  background: #4a4a8a;
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background 0.3s;
+}
+
+.link-card:hover {
+  background: #6a6aaa;
+}

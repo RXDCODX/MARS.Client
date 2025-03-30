@@ -1,7 +1,7 @@
 .container {
   display: flex;
   flex-direction: column;
-  min-height: 200px; /* Минимальная высота */
+  min-height: 100px; /* Минимальная высота */
   padding: 5px 10px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -18,7 +18,7 @@
   flex-grow: 1;
   align-items: center; // Бейджики и никнейм на одной строке
   gap: 8px; // Расстояние между бейджиками и никнеймом
-  height: 30px;
+  height: 50px;
   margin-bottom: 1px;
 }
 
@@ -47,8 +47,8 @@
   flex-direction: column;
   align-items: flex-start; // Выравнивание текста по центру по вертикали
   justify-content: left; // Выравнивание текста по центру по горизонтали
-  min-height: 50px;
-  height: 50px;
+  min-height: 20px;
+  height: 65px;
 }
 
 .message {

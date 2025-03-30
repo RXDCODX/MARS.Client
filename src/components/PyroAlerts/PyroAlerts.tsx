@@ -8,6 +8,7 @@ import {
   MediaFileInfoTypeEnum,
   MediaMetaInfoPriorityEnum,
 } from "../../shared/api/generated/baza";
+import { v4 as uuidv4 } from "uuid";
 
 interface MessageProps {
   message: MediaDto;
@@ -15,8 +16,6 @@ interface MessageProps {
 }
 
 export default function PyroAlerts() {
-  document.title = "PyroAlerts";
-
   const [messages, setMessages] = useState<MessageProps[]>([]);
   const [highPriorityQueue, setHighPriorityQueue] = useState<MediaDto[]>([]);
   const [currentHighPriority, setCurrentHighPriority] =
@@ -74,6 +73,7 @@ export default function PyroAlerts() {
 
   const handleAlert = useCallback(
     (message: MediaDto) => {
+      message.mediaInfo.id = uuidv4();
       if (
         message.mediaInfo.metaInfo.priority === MediaMetaInfoPriorityEnum.High
       ) {
@@ -114,14 +114,12 @@ export default function PyroAlerts() {
   );
 
   const remove = useCallback((message: MediaDto) => {
-    debugger;
     setMessages((prev) =>
       prev.filter((m) => m.message.mediaInfo.id !== message.mediaInfo.id),
     );
   }, []);
 
   const removeHighPrior = useCallback((message: MediaDto) => {
-    debugger;
     SignalRContext.invoke("UnmuteSessions");
     setHighPriorityQueue((prev) =>
       prev.filter((m) => m.mediaInfo.id !== message.mediaInfo.id),
@@ -265,5 +263,3 @@ export default function PyroAlerts() {
     </>
   );
 }
-
-// Компонент для отображения высокоприоритетного алерта

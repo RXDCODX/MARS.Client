@@ -1,7 +1,7 @@
 import { Message } from "./Message";
 import { SignalRContext } from "../../app";
 import { ChatMessage } from "../../shared/api/generated/baza";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Announce from "../../shared/Utils/Announce/Announce";
 
 export default function ChatHorizontal() {
@@ -25,6 +25,10 @@ export default function ChatHorizontal() {
     [],
   );
 
+  const remove = useCallback((message: ChatMessage) => {
+    setMessages((prev) => prev.filter((m) => m.id !== message.id));
+  },[]);
+
   return (
     <>
       {!announced && (
@@ -34,7 +38,7 @@ export default function ChatHorizontal() {
         />
       )}
       {messages.map((message) => {
-        return <Message key={message.id} message={message} />;
+        return <Message key={message.id} message={message} callback={() => remove(message)} />;
       })}
     </>
   );

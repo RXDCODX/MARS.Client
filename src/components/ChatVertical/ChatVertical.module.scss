@@ -5,4 +5,9 @@
   width: 100vw;
   overflow-y: hidden;
   gap: 2.5%; /* Отступ между сообщениями */
+  margin: 1px;
+}
+
+.chatContainer::-webkit-scrollbar {
+  display: none;
 }

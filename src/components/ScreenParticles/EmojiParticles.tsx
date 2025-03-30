@@ -1,8 +1,8 @@
-import confetti from "canvas-confetti";
-import { useEffect, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import { getEmojisSrcFromText } from "../../shared/Utils";
 import useTwitchStore from "../../shared/twitchStore/twitchStore";
-import ReactCanvasConfetti from "react-canvas-confetti";
+import { ChatMessage } from "../../shared/api/generated/baza";
+import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 
 interface imageData {
   src: string;
@@ -46,7 +46,7 @@ async function shapeFromImage(imageData: imageData) {
 }
 
 interface Props {
-  input: string;
+  input: string | ChatMessage;
   scalar?: number;
 }
 
@@ -87,6 +87,7 @@ const ConfettiImage = ({ input, scalar = 2 }: Props) => {
     return undefined;
   }
   const [images, _] = useState(getEmojisSrcFromText(input, fetcher));
+  const [element, setElement] = useState<JSX.Element | null>(null);
 
   useEffect(() => {
     if (images?.length && images.length > 0) {
@@ -100,20 +101,22 @@ const ConfettiImage = ({ input, scalar = 2 }: Props) => {
 
   useEffect(() => {
     if (shapes.length > 0) {
-      confetti({
-        spread: 360,
-        ticks: 200,
-        gravity: 0,
-        decay: 0.9,
-        startVelocity: 40,
-        shapes,
-        scalar,
-        particleCount: 200,
-      });
+      setElement(
+        <Fireworks
+          width="100%"
+          height="100%"
+          autorun={{ speed: 3, duration: 10000 }}
+          decorateOptions={() => {
+            return {
+              shapes,
+            };
+          }}
+        />,
+      );
     }
   }, [shapes, scalar]);
 
-  return <ReactCanvasConfetti></ReactCanvasConfetti>;
+  return element;
 };
 
 export default ConfettiImage;

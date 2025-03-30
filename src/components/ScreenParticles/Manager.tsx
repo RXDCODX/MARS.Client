@@ -1,6 +1,9 @@
 import { useCallback, useState } from "react";
 import { SignalRContext } from "../../app";
-import { TelegramusHubMakeScreenParticlesCreateParamsParticlesEnum } from "../../shared/api/generated/baza";
+import {
+  ChatMessage,
+  TelegramusHubMakeScreenParticlesCreateParamsParticlesEnum,
+} from "../../shared/api/generated/baza";
 import { Confettyv2 } from "./Confetty";
 import EmojiParticles from "./EmojiParticles";
 import Firework from "./Firework";
@@ -14,7 +17,7 @@ interface particles extends base {
 }
 
 interface emojis extends base {
-  input: string;
+  input: string | ChatMessage;
 }
 
 export default function Manager() {
@@ -34,8 +37,8 @@ export default function Manager() {
 
   SignalRContext.useSignalREffect(
     "MakeScreenEmojisParticles",
-    (emojiInput: string) => {
-      const newMessage = { input: emojiInput, id: count };
+    (mediaDto: ChatMessage) => {
+      const newMessage = { input: mediaDto, id: count };
       setCount(count + 1);
       setEmojis((prev) => [...prev, newMessage]);
     },
@@ -45,7 +48,7 @@ export default function Manager() {
   const removeMessage = useCallback((id: number) => {
     setMessages((prev) => {
       return prev.filter((message) => message.id !== id);
-    })
+    });
   }, []);
 
   return (
@@ -54,9 +57,19 @@ export default function Manager() {
         messages.map((message) => {
           switch (message.type) {
             case TelegramusHubMakeScreenParticlesCreateParamsParticlesEnum.Confetty:
-              return <Confettyv2 key={message.id} callback={() => removeMessage(message.id)} />;
+              return (
+                <Confettyv2
+                  key={message.id}
+                  callback={() => removeMessage(message.id)}
+                />
+              );
             case TelegramusHubMakeScreenParticlesCreateParamsParticlesEnum.Fireworks:
-              return <Firework key={message.id} callback={() => removeMessage(message.id)} />;
+              return (
+                <Firework
+                  key={message.id}
+                  callback={() => removeMessage(message.id)}
+                />
+              );
           }
         })}
       {emojis.length > 0 &&

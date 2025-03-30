@@ -76,6 +76,8 @@ export function Message({ message }: Props) {
           {content &&
             content.map((part) => (
               <ContentPart
+                message={message}
+                key={part.id}
                 part={part}
                 className={styles.message}
                 style={{ height: 100 / content.length + "%" }}

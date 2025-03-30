@@ -7,6 +7,7 @@ import { ChatMessage, MediaInfo } from "../api/generated/baza";
 import { ChatMessage as TwitchChatMessage } from "@twurple/chat";
 import { HighliteMessageProps } from "../../components/HighliteMessage/Message";
 import React from "react";
+import { v4 as randomUUID } from "uuid";
 
 export { BigTextBlockForAudio } from "./BigTexts/BigTextBlockForAudio";
 export { BigTextBlockForVoice } from "./BigTexts/BigTextBlockForVoice";
@@ -21,6 +22,7 @@ export function replaceEmotes({
   parser: EmoteParser;
   fetcher: EmoteFetcher;
 }) {
+  debugger;
   if (!text) {
     return undefined;
   }
@@ -31,7 +33,6 @@ export function replaceEmotes({
     resultText = text;
     if (text) {
       if (parser) {
-        console.log(fetcher?.emotes);
         resultText = parser.parse(text, 3);
         // text = text.replaceAll(new RegExp("https", "g"), "http");
       }
@@ -66,7 +67,7 @@ export function replaceEmotes({
       match: /(?<!<[^>]*)(\w+)(?![^<]*>)/g,
     });
 
-    resultText = newParser.parse(resultText, 3);
+    resultText = newParser.parse(resultText, 4);
   } else {
     throw new Error("Invalid message type");
   }
@@ -176,7 +177,6 @@ export function getCoordinates(
     }
   }
 
-  console.log(returnObj);
   return returnObj;
 }
 
@@ -258,21 +258,51 @@ export function replaceBadges(
   return result;
 }
 
-export function getEmojisSrcFromText(text: string, fetcher: EmoteFetcher) {
-  if (!fetcher) {
-    return undefined;
+export function getEmojisSrcFromText(
+  text: string | ChatMessage,
+  fetcher: EmoteFetcher,
+) {
+  debugger;
+  if (typeof text === "string") {
+    const client = new EmoteParser(fetcher, {
+      template: "{link}",
+      match: /(\w+)+?/g,
+    });
+    const messages = text.split(" ");
+    const result = messages.map((message) => {
+      return client.parse(message);
+    });
+    return result;
+  } else if ("message" in text && typeof text.message === "string") {
+    var message = text as ChatMessage;
+
+    if (
+      message.message === undefined ||
+      message.emoteSet === undefined ||
+      message.emoteSet.emotes === undefined
+    ) {
+      return undefined;
+    }
+
+    const urls = message.emoteSet.emotes.map((emote) => {
+      return emote.imageUrl;
+    });
+
+    const newParser = new EmoteParser(fetcher, {
+      template: "{link}",
+      match: /(?<!<[^>]*)(\w+)(?![^<]*>)/g,
+    });
+
+    const newMEssages = message.message.split(" ");
+
+    newMEssages.forEach((message) => {
+      urls.push(newParser.parse(message, 3));
+    });
+
+    return urls.filter((url) => url !== undefined);
+  } else {
+    throw new Error("text must be string or ChatMessage");
   }
-
-  const client = new EmoteParser(fetcher, {
-    template: "{link}",
-    match: /(\w+)+?/g,
-  });
-  const messages = text.split(" ");
-  const result = messages.map((message) => {
-    return client.parse(message);
-  });
-
-  return result;
 }
 
 export const isWhiteColor = (color: string) => {
@@ -336,6 +366,7 @@ export const hexToRgba = (hex: string, opacity: number = 1): string => {
 };
 
 export interface ContentPart {
+  id: string;
   type: "text" | "image" | "video" | "link";
   source?: string; // только для image, video, link
   content: string; // исходный текст или URL
@@ -362,6 +393,7 @@ export function parseContent(text?: string): ContentPart[] | undefined {
         result.push({
           type: "text",
           content: currentText.join(" "),
+          id: randomUUID(),
         });
         currentText = [];
       }
@@ -373,6 +405,8 @@ export function parseContent(text?: string): ContentPart[] | undefined {
         part.includes(".ogg")
       ) {
         result.push({
+          id: randomUUID(),
+
           type: "video",
           source: part,
           content: part,
@@ -386,12 +420,16 @@ export function parseContent(text?: string): ContentPart[] | undefined {
         part.includes(".webp")
       ) {
         result.push({
+          id: randomUUID(),
+
           type: "image",
           source: part,
           content: part,
         });
       } else {
         result.push({
+          id: randomUUID(),
+
           type: "link",
           source: part,
           content: part,
@@ -407,6 +445,8 @@ export function parseContent(text?: string): ContentPart[] | undefined {
   // Добавляем оставшийся текст
   if (currentText.length > 0) {
     result.push({
+      id: randomUUID(),
+
       type: "text",
       content: currentText.join(" "),
     });

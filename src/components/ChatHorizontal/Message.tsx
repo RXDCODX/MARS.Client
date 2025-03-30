@@ -14,9 +14,10 @@ import useTwitchStore from "../../shared/twitchStore/twitchStore";
 
 interface Props {
   message: ChatMessage;
+  callback?: () => void;
 }
 
-export const Message = ({ message }: Props) => {
+export const Message = ({ message, callback }: Props) => {
   const [handler, setHandler] = useState(true);
   const divRef = useRef<HTMLDivElement>(null);
   const parser = useTwitchStore((state) => state.parser);
@@ -25,8 +26,8 @@ export const Message = ({ message }: Props) => {
   if (!parser || !fetcher) return null;
 
   const [text] = useState(parseContent(message.message));
-  const [fontSize, _] = useState(getRandomInt(25, 72));
-  const [duration, __] = useState(fontSize * 0.35);
+  const [fontSize, _] = useState(getRandomInt(10, 40));
+  const [duration, __] = useState(fontSize * 0.7);
   const [opacity, ___] = useState(getRandomInt(0.4, 0.6));
   const [mainColor, ____] = useState(
     isWhiteColor(message.colorHex ?? "white")
@@ -99,6 +100,7 @@ export const Message = ({ message }: Props) => {
         key={message.id}
         style={style}
         className={styles.message + " " + animateStyles.animated}
+        onAnimationEnd={callback}
       >
         <div
           id={`${message.id}_nickname`}
@@ -114,7 +116,7 @@ export const Message = ({ message }: Props) => {
           {text?.map((part) => {
             switch (part.type) {
               case "text":
-                return replaceEmotes({ text: part.content, parser, fetcher });
+                return replaceEmotes({ text: message, parser, fetcher });
               case "image":
                 return <span>Ссылка</span>;
               case "link":

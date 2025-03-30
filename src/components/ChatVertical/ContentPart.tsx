@@ -7,6 +7,7 @@ interface Props {
   className?: string;
   style?: CSSProperties;
   part: ContentPart;
+  message: ChatMessage;
   convertMediaToJustLinks: boolean;
   replaceEmotes: ({
     message,
@@ -18,6 +19,7 @@ interface Props {
 export default function ContentPiece({
   part,
   style,
+  message,
   className,
   convertMediaToJustLinks,
   replaceEmotes,
@@ -25,7 +27,7 @@ export default function ContentPiece({
   if (convertMediaToJustLinks) {
     switch (part.type) {
       case "text":
-        const text = replaceEmotes({ message: part.content });
+        const text = replaceEmotes({ message: message });
         return (
           <Textfit
             min={10}
@@ -56,7 +58,7 @@ export default function ContentPiece({
   }
   switch (part.type) {
     case "text":
-      const text = replaceEmotes({ message: part.content });
+      const text = replaceEmotes({ message: message });
 
       return (
         <Textfit
@@ -72,7 +74,12 @@ export default function ContentPiece({
     case "image":
       return (
         <div className={className} style={style}>
-          <img src={part.content} className="image"></img>
+          <img
+            src={part.content}
+            className="image"
+            loading="lazy"
+            decoding="async"
+          ></img>
         </div>
       );
     case "video":

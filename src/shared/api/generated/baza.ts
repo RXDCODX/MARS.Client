@@ -162,6 +162,8 @@ export interface MediaMetaInfo {
     duration: number;
     isLooped: boolean;
     priority: MediaMetaInfoPriorityEnum;
+    /** @format uuid */
+    twitchGuid: string | undefined;
     /** @format int32 */
     twitchPointsCost: number;
     vip: boolean;

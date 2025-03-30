@@ -371,10 +371,10 @@
         ],
         "parameters": [
           {
-            "name": "userInput",
+            "name": "message",
             "in": "query",
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/ChatMessage"
             }
           }
         ],
@@ -901,6 +901,11 @@
           "twitchPointsCost": {
             "type": "integer",
             "format": "int32"
+          },
+          "twitchGuid": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
           },
           "vip": {
             "type": "boolean"
