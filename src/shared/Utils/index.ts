@@ -262,7 +262,6 @@ export function getEmojisSrcFromText(
   text: string | ChatMessage,
   fetcher: EmoteFetcher,
 ) {
-  debugger;
   if (typeof text === "string") {
     const client = new EmoteParser(fetcher, {
       template: "{link}",
@@ -285,6 +284,9 @@ export function getEmojisSrcFromText(
     }
 
     const urls = message.emoteSet.emotes.map((emote) => {
+      if (emote.name !== undefined) {
+        message.message = message.message?.replace(emote.name, "");
+      }
       return emote.imageUrl;
     });
 
@@ -293,7 +295,7 @@ export function getEmojisSrcFromText(
       match: /(?<!<[^>]*)(\w+)(?![^<]*>)/g,
     });
 
-    const newMEssages = message.message.split(" ");
+    const newMEssages = message.message.trim().split(" ");
 
     newMEssages.forEach((message) => {
       urls.push(newParser.parse(message, 3));
