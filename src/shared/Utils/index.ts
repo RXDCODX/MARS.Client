@@ -30,7 +30,7 @@ export function replaceEmotes({
   let resultText: string = "";
 
   if (typeof text === "string") {
-    resultText = text;
+    resultText = text.replace(/[\u{E0000}-\u{E007F}]/gu, "");
     if (text) {
       if (parser) {
         resultText = parser.parse(text, 3);
@@ -44,7 +44,7 @@ export function replaceEmotes({
       return undefined;
     }
 
-    resultText = message.message;
+    resultText = message.message.replace(/[\u{E0000}-\u{E007F}]/gu, "");
 
     message.emoteSet?.emotes?.forEach((emote) => {
       if (
@@ -263,6 +263,7 @@ export function getEmojisSrcFromText(
   fetcher: EmoteFetcher,
 ) {
   if (typeof text === "string") {
+    text = text.replace(/[\u{E0000}-\u{E007F}]/gu, "");
     const client = new EmoteParser(fetcher, {
       template: "{link}",
       match: /(\w+)+?/g,
@@ -282,6 +283,8 @@ export function getEmojisSrcFromText(
     ) {
       return undefined;
     }
+
+    message.message = message.message.replace(/[\u{E0000}-\u{E007F}]/gu, "");
 
     const urls = message.emoteSet.emotes.map((emote) => {
       if (emote.name !== undefined) {
