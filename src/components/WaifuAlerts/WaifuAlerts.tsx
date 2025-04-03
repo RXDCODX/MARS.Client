@@ -179,6 +179,10 @@ export default function WaifuAlerts() {
     }
   }, [prizes, currentMessage]);
 
+  useEffect(() => {
+    SignalRContext.invoke("UpdateWaifuPrizesPrizes");
+  }, []);
+
   return (
     <>
       {!announced && (

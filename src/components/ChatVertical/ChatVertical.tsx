@@ -13,7 +13,7 @@ export default function ChatVertical() {
     "newmessage",
     (id: string, message: ChatMessage) => {
       message.id ??= id;
-      setMessages((prev) => [message, ...(prev?.slice(-49) || [])]);
+      setMessages((prev) => [message, ...(prev?.slice(0, 49) || [])]);
     },
     [],
   );

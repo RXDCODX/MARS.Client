@@ -81,7 +81,7 @@ async function getBase64(url: string): Promise<string> {
   });
 }
 
-const ConfettiImage = ({ input, scalar = 5 }: Props) => {
+const ConfettiImage = ({ input, scalar = 10 }: Props) => {
   const [shapes, setShapes] = useState<Array<any>>([]);
   const fetcher = useTwitchStore((state) => state.fetcher);
   if (!fetcher) {
@@ -92,7 +92,6 @@ const ConfettiImage = ({ input, scalar = 5 }: Props) => {
 
   useEffect(() => {
     if (images?.length && images.length > 0) {
-      debugger;
       images.forEach(async (image) => {
         const base64 = await getBase64(image);
         const aa = await shapeFromImage({ src: base64, scalar });

@@ -33,7 +33,7 @@ export function replaceEmotes({
     resultText = text.replace(/[\u{E0000}-\u{E007F}]/gu, "");
     if (text) {
       if (parser) {
-        resultText = parser.parse(text, 3);
+        resultText = parser.parse(text, 1);
         // text = text.replaceAll(new RegExp("https", "g"), "http");
       }
     }
@@ -55,7 +55,7 @@ export function replaceEmotes({
         return undefined;
       }
 
-      resultText = message.message.replace(
+      resultText = resultText.replace(
         emote.name,
         `<img class="emote" src="${emote.imageUrl}" />`,
       );
@@ -67,7 +67,7 @@ export function replaceEmotes({
       match: /(?<!<[^>]*)(\w+)(?![^<]*>)/g,
     });
 
-    resultText = newParser.parse(resultText, 4);
+    resultText = newParser.parse(resultText, 1);
   } else {
     throw new Error("Invalid message type");
   }
@@ -270,7 +270,7 @@ export function getEmojisSrcFromText(
     });
     const messages = text.split(" ");
     const result = messages.map((message) => {
-      return client.parse(message);
+      return client.parse(message, 1);
     });
     return result;
   } else if ("message" in text && typeof text.message === "string") {
@@ -301,7 +301,7 @@ export function getEmojisSrcFromText(
     const newMEssages = message.message.trim().split(" ");
 
     newMEssages.forEach((message) => {
-      urls.push(newParser.parse(message, 3));
+      urls.push(newParser.parse(message, 1));
     });
 
     return urls.filter((url) => url !== undefined);

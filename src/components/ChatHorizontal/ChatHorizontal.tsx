@@ -12,7 +12,7 @@ export default function ChatHorizontal() {
     "newmessage",
     (id: string, message: ChatMessage) => {
       message.id ??= id;
-      setMessages((prev) => [...(prev?.slice(-49) || []), message]);
+      setMessages((prev) => [...(prev?.slice(0, 49) || []), message]);
     },
     [],
   );
@@ -27,7 +27,7 @@ export default function ChatHorizontal() {
 
   const remove = useCallback((message: ChatMessage) => {
     setMessages((prev) => prev.filter((m) => m.id !== message.id));
-  },[]);
+  }, []);
 
   return (
     <>
@@ -38,7 +38,13 @@ export default function ChatHorizontal() {
         />
       )}
       {messages.map((message) => {
-        return <Message key={message.id} message={message} callback={() => remove(message)} />;
+        return (
+          <Message
+            key={message.id}
+            message={message}
+            callback={() => remove(message)}
+          />
+        );
       })}
     </>
   );

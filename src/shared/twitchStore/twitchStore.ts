@@ -36,13 +36,18 @@ export const useTwitchStore = create<State & Actions>()(
         clientId,
         clientSecret,
       );
+      getBadges(client)
+        .then((badges) => set({ badges }))
+        .catch((err) => {
+          console.error(err);
+          set({ badges: [] });
+        });
+
       Promise.all([
         // Twitch global
         fetcher.fetchTwitchEmotes(),
         // Twitch channel
         fetcher.fetchTwitchEmotes(785975641),
-        // Twitch badges
-        getBadges(client),
         //BTTV global
         fetcher.fetchBTTVEmotes(),
         // BTTV channel
@@ -56,13 +61,14 @@ export const useTwitchStore = create<State & Actions>()(
         // FFZ channel
         //fetcher.fetchFFZEmotes(785975641),
       ])
-        .then(({ "2": badges }) => {
+        .then(() => {
           console.log("Emotes loaded");
-          set({ fetcher, parser, twitchApiClient: client, badges });
+          set({ fetcher, parser, twitchApiClient: client });
         })
         .catch((err) => {
           console.error("Error loading emotes...");
           console.error(err);
+          set({ fetcher, parser, twitchApiClient: client });
         });
     },
     sendMsgToPyrokxnezxz: async (msg: string) => {
