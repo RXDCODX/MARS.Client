@@ -212,21 +212,22 @@ export function replaceBadges(
   badges: HelixChatBadgeSet[],
   chatMessage: ChatMessage | TwitchChatMessage,
 ) {
+  debugger;
   var text: string | undefined = "";
   var sub = "";
 
   if (chatMessage instanceof TwitchChatMessage) {
     text = chatMessage.text;
 
-    chatMessage.userInfo.badges.forEach((_, k) => {
+    chatMessage.userInfo.badges.forEach((v, k) => {
       const set = badges.find((e) => e.id == k);
-      const lastVersion = set?.versions?.slice(-1);
+      const lastVersion = set?.versions.find((e) => e.id == v);
 
       if (!lastVersion) {
         return undefined;
       }
 
-      const link = lastVersion[0].getImageUrl(4);
+      const link = lastVersion.getImageUrl(4);
       sub = sub + `<img class="badge" src="${link}" type="image/png">\n`;
     });
   } else if (chatMessage.badges !== undefined) {
@@ -234,13 +235,13 @@ export function replaceBadges(
 
     chatMessage.badges.forEach((b) => {
       const set = badges.find((e) => e.id == b.key);
-      const lastVersion = set?.versions?.slice(-1);
+      const lastVersion = set?.versions?.find(e => e.id == b.value);
 
       if (!lastVersion) {
         return undefined;
       }
 
-      const link = lastVersion[0].getImageUrl(4);
+      const link = lastVersion.getImageUrl(4);
       sub = sub + `<img class="badge" src="${link}" type="image/png">\n`;
     });
   }

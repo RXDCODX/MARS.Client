@@ -5,13 +5,15 @@ import { KeyWordText } from "../../../shared/components/KeyWordText";
 import { getCoordinates, getRandomRotation } from "../../../shared/Utils";
 import styles from "./Media.module.scss";
 import { MediaDto } from "../../../shared/api/generated/baza";
+import { SignalRContext } from "../../../app";
 
 interface Props {
   callback: () => void;
   MediaInfo: MediaDto;
+  isHighPrior?: boolean;
 }
 
-export function Video({ MediaInfo, callback }: Props) {
+export function Video({ MediaInfo, callback, isHighPrior }: Props) {
   const { fileInfo, id, positionInfo, textInfo, metaInfo } =
     MediaInfo.mediaInfo;
   const player = useRef<HTMLVideoElement>(null);
@@ -31,6 +33,18 @@ export function Video({ MediaInfo, callback }: Props) {
         },
   );
 
+  const muteAll = useCallback(() => {
+    if (isHighPrior) {
+      SignalRContext.invoke("MuteAll");
+    }
+  }, []);
+
+  const unmuteAll = useCallback(() => {
+    if (isHighPrior) {
+      SignalRContext.invoke("UnmuteSessions");
+    }
+  }, []);
+
   const handleTimeUpdate = useCallback(
     (e: React.SyntheticEvent<HTMLVideoElement>) => {
       const video = e.currentTarget;
@@ -45,30 +59,12 @@ export function Video({ MediaInfo, callback }: Props) {
         duration - currentTime <= 0.1 ||
         (targetDuration && currentTime >= targetDuration - 0.1)
       ) {
+        unmuteAll();
         callback();
       }
     },
     [metaInfo.duration, callback],
   );
-
-  useEffect(() => {
-    if (!metaInfo.duration || !player.current) return;
-
-    const timer = setTimeout(
-      () => {
-        if (videoProgress >= metaInfo.duration - 0.5) {
-          callback();
-        }
-      },
-      metaInfo.duration * 1000 + 2000,
-    ); // Длительность + 2 сек буфера
-
-    setBackupTimer(timer);
-
-    return () => {
-      if (backupTimer) clearTimeout(backupTimer);
-    };
-  }, [videoProgress, metaInfo.duration, callback]);
 
   const handleLoadedMetadata = useCallback(
     (event: React.SyntheticEvent<HTMLVideoElement>) => {
@@ -101,6 +97,26 @@ export function Video({ MediaInfo, callback }: Props) {
     [MediaInfo.mediaInfo, positionInfo.isUseOriginalWidthAndHeight],
   );
 
+  useEffect(() => {
+    if (!metaInfo.duration || !player.current) return;
+
+    const timer = setTimeout(
+      () => {
+        if (videoProgress >= metaInfo.duration - 0.5) {
+          unmuteAll();
+          callback();
+        }
+      },
+      metaInfo.duration * 1000 + 2000,
+    ); // Длительность + 2 сек буфера
+
+    setBackupTimer(timer);
+
+    return () => {
+      if (backupTimer) clearTimeout(backupTimer);
+    };
+  }, [videoProgress, metaInfo.duration, callback]);
+
   return (
     <div id={id} className={styles.media} style={baseStyles}>
       <video
@@ -117,6 +133,7 @@ export function Video({ MediaInfo, callback }: Props) {
         onError={callback}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
+        onCanPlayThrough={muteAll}
       />
       <Textfit
         forceSingleModeWidth

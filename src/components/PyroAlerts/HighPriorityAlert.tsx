@@ -31,6 +31,7 @@ export default function HighPriorityAlert(alert: AlertDestination) {
           key={message.mediaInfo.id}
           MediaInfo={message}
           callback={() => callback()}
+          isHighPrior
         />
       );
     case MediaFileInfoTypeEnum.Audio:
@@ -39,6 +40,7 @@ export default function HighPriorityAlert(alert: AlertDestination) {
           key={message.mediaInfo.id}
           mediaInfo={message}
           callback={() => callback()}
+          isHighPrior
         />
       );
     case MediaFileInfoTypeEnum.Voice:
@@ -47,6 +49,7 @@ export default function HighPriorityAlert(alert: AlertDestination) {
           key={message.mediaInfo.id}
           mediaInfo={message}
           callback={() => callback()}
+          isHighPrior
         />
       );
     case MediaFileInfoTypeEnum.TelegramSticker:

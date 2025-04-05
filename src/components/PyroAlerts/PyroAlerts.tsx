@@ -66,7 +66,6 @@ export default function PyroAlerts() {
   }, []);
 
   const removeHighPrior = useCallback((message: MediaDto) => {
-    SignalRContext.invoke("UnmuteSessions");
     setHighPriorityQueue((prev) =>
       prev.filter((m) => m.mediaInfo.id !== message.mediaInfo.id),
     );
@@ -119,9 +118,9 @@ export default function PyroAlerts() {
 
       {/* Рендерим обычные алерты, если нет высокоприоритетных */}
       {!currentHighPriority &&
-        messages.map((messageProps) => {
-          <Alert message={messageProps} remove={remove} />;
-        })}
+        messages.map((messageProps) => (
+          <Alert message={messageProps} remove={remove} />
+        ))}
     </>
   );
 }

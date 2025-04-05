@@ -87,7 +87,7 @@ export default function Message() {
   const divHard = useRef<HTMLDivElement>(null);
 
   SignalRContext.useSignalREffect(
-    "highlite",
+    "Highlite",
     (message: ChatMessage, color: string, faceUrl: Image) => {
       dispatch({
         type: StateStatus.add,
@@ -112,6 +112,7 @@ export default function Message() {
           }
           ref={divHard}
         >
+          {/* IMAGE */}
           <div className={styles["buble-image"]}>
             {!isVideo(currentMessage) && (
               <img
@@ -159,6 +160,7 @@ export default function Message() {
               />
             )}
           </div>
+          {/* TEXT */}
           <div
             className={styles.bubble + " " + styles.right}
             style={{
@@ -167,19 +169,21 @@ export default function Message() {
           >
             <div className={styles.talktext}>
               <div className={styles.icons}>
-                {replaceBadges(badges, currentMessage.message)}
-                <p
+                <Textfit
+                  min={1}
+                  max={1500}
                   style={{
                     fontWeight: "bold",
                     color: `${currentMessage.color}`,
-                    marginRight: "1vh",
-                    marginLeft: "1vh",
                   }}
+                  mode="single"
+                  forceSingleModeWidth
+                  className={styles.name}
                 >
                   {currentMessage.message.displayName}:
-                </p>
+                </Textfit>
+                <div>{replaceBadges(badges, currentMessage.message)}</div>
               </div>
-              {/* <span className={styles.emotes}> */}
               <Textfit
                 min={1}
                 max={1500}
@@ -188,7 +192,6 @@ export default function Message() {
               >
                 {currentMessage.message.message}
               </Textfit>
-              {/* </span> */}
             </div>
           </div>
         </div>

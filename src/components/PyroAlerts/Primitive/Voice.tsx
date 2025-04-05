@@ -3,13 +3,15 @@ import { MediaDto } from "../../../shared/api/generated/baza";
 import { Container, Row } from "react-bootstrap";
 import { Textfit } from "react-textfit";
 import styles from "./Media.module.scss";
+import { SignalRContext } from "../../../app";
 
 interface Props {
   mediaInfo: MediaDto;
   callback: () => void;
+  isHighPrior?: boolean;
 }
 
-export function Voice({ mediaInfo, callback }: Props) {
+export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
   const { metaInfo, fileInfo, textInfo } = mediaInfo.mediaInfo;
   const bellSrc = import.meta.env.VITE_BASE_PATH + "Alerts/bell.wav";
   const voiceSrc = fileInfo.filePath;
@@ -18,9 +20,22 @@ export function Voice({ mediaInfo, callback }: Props) {
   const [isBellPlayed, setIsBellPlayed] = useState(false);
 
   const error = useCallback(() => {
+    unmuteAll();
     callback();
     throw Error("Failed to play audio");
   }, [callback]);
+
+  const muteAll = useCallback(() => {
+    if (isHighPrior) {
+      SignalRContext.invoke("MuteAll");
+    }
+  }, []);
+
+  const unmuteAll = useCallback(() => {
+    if (isHighPrior) {
+      SignalRContext.invoke("UnmuteSessions");
+    }
+  }, []);
 
   return (
     <>
@@ -31,13 +46,17 @@ export function Voice({ mediaInfo, callback }: Props) {
           onEnded={() => setIsBellPlayed(true)}
           onError={() => error()}
           onErrorCapture={() => error()}
+          onCanPlayThrough={muteAll}
         />
       )}
       {isBellPlayed && (
         <audio
           autoPlay
           src={voiceSrc}
-          onEnded={() => callback()}
+          onEnded={() => {
+            unmuteAll();
+            callback();
+          }}
           onError={() => error()}
           onErrorCapture={() => error()}
         />

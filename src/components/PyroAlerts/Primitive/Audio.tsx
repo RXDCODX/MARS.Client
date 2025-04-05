@@ -1,17 +1,37 @@
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { MediaDto } from "../../../shared/api/generated/baza";
 import { BigTextBlockForAudio } from "../../../shared/Utils/BigTexts/BigTextBlockForAudio";
+import { SignalRContext } from "../../../app";
 
 interface Props {
   callback: () => void;
   mediaInfo: MediaDto;
+  isHighPrior?: boolean;
 }
 
-export function Audio({ mediaInfo, callback }: Props) {
+export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
   const { fileInfo, id: Id } = mediaInfo.mediaInfo;
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const divRef = useRef<HTMLDivElement>(null);
+
+  const muteAll = useCallback(() => {
+    if (isHighPrior) {
+      SignalRContext.invoke("MuteAll");
+    }
+  }, []);
+
+  const unmuteAll = useCallback(() => {
+    if (isHighPrior) {
+      SignalRContext.invoke("UnmuteSessions");
+    }
+  }, []);
+
+  const error = useCallback(() => {
+    unmuteAll();
+    callback();
+    throw Error("Failed to play audio");
+  }, [callback]);
 
   return (
     <div ref={divRef} style={{ width: "100%" }}>
@@ -21,7 +41,9 @@ export function Audio({ mediaInfo, callback }: Props) {
         key={Id}
         ref={audioRef}
         controls={false}
+        onError={() => error()}
         onEnded={() => {
+          unmuteAll();
           setTimeout(() => {
             callback();
           }, 1000);
@@ -29,6 +51,7 @@ export function Audio({ mediaInfo, callback }: Props) {
         onCanPlay={(event) => {
           event.currentTarget?.play();
         }}
+        onCanPlayThrough={() => muteAll()}
       >
         <source src={fileInfo.filePath} />
       </audio>
