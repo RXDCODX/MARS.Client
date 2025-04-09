@@ -8,7 +8,6 @@ interface Props {
 }
 
 export default function Alert(messageProps: Props) {
-  debugger;
   const message = messageProps.message;
   if (!message) return null;
 

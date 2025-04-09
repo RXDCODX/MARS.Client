@@ -1,11 +1,14 @@
 .chatContainer {
+  position: relative;
   display: flex;
   flex-direction: column-reverse; /* Магия здесь! */
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
   overflow-y: hidden;
   gap: 2.5%; /* Отступ между сообщениями */
   margin: 1px;
+  left: 0;
+  bottom: 0;
 }
 
 .chatContainer::-webkit-scrollbar {

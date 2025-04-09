@@ -51,7 +51,7 @@ interface Props {
   scalar?: number;
 }
 
-async function getBase64(url: string): Promise<string> {
+export async function getBase64(url: string): Promise<string> {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.onload = function () {

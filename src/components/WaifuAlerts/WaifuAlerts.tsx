@@ -9,6 +9,8 @@ import Announce from "../../shared/Utils/Announce/Announce";
 import { getText, getTitle, shuffleArray, WaifuAlertProps } from "./helper";
 import styles from "./WaifuAlerts.module.scss";
 import WaifuRoulette from "./WaifuRoulette";
+import { getBase64 } from "../ScreenParticles/EmojiParticles";
+import { get } from "http";
 
 enum StateStatus {
   add,
@@ -150,7 +152,11 @@ export default function WaifuAlerts() {
 
   SignalRContext.useSignalREffect(
     "UpdateWaifuPrizes",
-    (prizes: PrizeType[]) => {
+    async (prizes: PrizeType[]) => {
+      prizes.forEach(async (prize) => {
+        prize.image = await getBase64(prize.image);
+      })
+
       dispatch({ type: StateStatus.addPrizes, prizes });
     },
     [],

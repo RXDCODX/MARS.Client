@@ -22,7 +22,6 @@ export function replaceEmotes({
   parser: EmoteParser;
   fetcher: EmoteFetcher;
 }) {
-  debugger;
   if (!text) {
     return undefined;
   }
@@ -212,7 +211,6 @@ export function replaceBadges(
   badges: HelixChatBadgeSet[],
   chatMessage: ChatMessage | TwitchChatMessage,
 ) {
-  debugger;
   var text: string | undefined = "";
   var sub = "";
 

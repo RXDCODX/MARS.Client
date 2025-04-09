@@ -35,7 +35,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
 
   const muteAll = useCallback(() => {
     if (isHighPrior) {
-      SignalRContext.invoke("MuteAll");
+      SignalRContext.invoke("MuteAll", []);
     }
   }, []);
 
@@ -71,6 +71,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
       const video = event.currentTarget;
 
       if (player.current) {
+        muteAll();
         const newCords = getCoordinates(player.current, MediaInfo.mediaInfo);
 
         if (positionInfo.isUseOriginalWidthAndHeight) {
