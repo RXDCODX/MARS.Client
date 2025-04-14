@@ -38,4 +38,5 @@ export interface WaifuAlertProps {
   waifu: Waifu;
   displayName: string;
   color?: string;
+  avatarUrl?: string;
 }

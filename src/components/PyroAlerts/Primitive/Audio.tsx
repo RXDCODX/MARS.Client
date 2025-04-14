@@ -41,7 +41,13 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
         key={Id}
         ref={audioRef}
         controls={false}
-        onError={() => error()}
+        onError={(e) => {
+          console.log(
+            "%c" + e,
+            "color: #7289DA; -webkit-text-stroke: 2px black; font-size: 72px; font-weight: bold;",
+          );
+          error();
+        }}
         onEnded={() => {
           unmuteAll();
           setTimeout(() => {

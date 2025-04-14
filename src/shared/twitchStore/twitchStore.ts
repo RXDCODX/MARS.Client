@@ -1,4 +1,4 @@
-import { EmoteFetcher, EmoteParser } from "@mkody/twitch-emoticons";
+import emoticons from "@mkody/twitch-emoticons";
 import type {} from "@redux-devtools/extension";
 import { ApiClient, HelixChatBadgeSet } from "@twurple/api";
 import { AppTokenAuthProvider } from "@twurple/auth";
@@ -16,8 +16,9 @@ interface Actions {
 }
 
 interface State {
-  fetcher?: EmoteFetcher;
-  parser?: EmoteParser;
+  fetcher?: emoticons.EmoteFetcher;
+  parser?: emoticons.EmoteParser;
+  parseToLink?: emoticons.EmoteParser;
   badges: HelixChatBadgeSet[];
   twitchApiClient?: ApiClient;
   twitchMessages: ChatMessage[];
@@ -32,7 +33,7 @@ export const useTwitchStore = create<State & Actions>()(
   devtools((set) => ({
     ...initialState,
     init: (clientId: string, clientSecret: string) => {
-      const { client, fetcher, parser } = initialization(
+      const { client, fetcher, parser, newParser } = initialization(
         clientId,
         clientSecret,
       );
@@ -50,25 +51,31 @@ export const useTwitchStore = create<State & Actions>()(
         fetcher.fetchTwitchEmotes(785975641),
         //BTTV global
         fetcher.fetchBTTVEmotes(),
-        // BTTV channel
-        //fetcher.fetchBTTVEmotes(785975641),
         // 7TV global
         fetcher.fetchSevenTVEmotes(),
         // 7TV channel
         fetcher.fetchSevenTVEmotes(785975641),
         // FFZ global
         fetcher.fetchFFZEmotes(),
-        // FFZ channel
-        //fetcher.fetchFFZEmotes(785975641),
       ])
         .then(() => {
           console.log("Emotes loaded");
-          set({ fetcher, parser, twitchApiClient: client });
+          set({
+            fetcher,
+            parser,
+            twitchApiClient: client,
+            parseToLink: newParser,
+          });
         })
         .catch((err) => {
           console.error("Error loading emotes...");
           console.error(err);
-          set({ fetcher, parser, twitchApiClient: client });
+          set({
+            fetcher,
+            parser,
+            twitchApiClient: client,
+            parseToLink: newParser,
+          });
         });
     },
     sendMsgToPyrokxnezxz: async (msg: string) => {
@@ -80,16 +87,20 @@ export const useTwitchStore = create<State & Actions>()(
 function initialization(clientId: string, clientSecret: string) {
   const provider = new AppTokenAuthProvider(clientId, clientSecret);
   const client = new ApiClient({ authProvider: provider });
-  const fetcher = new EmoteFetcher(undefined, undefined, {
+  const fetcher = new emoticons.EmoteFetcher(undefined, undefined, {
     apiClient: client,
   });
-  const parser = new EmoteParser(fetcher, {
-    template:
-      '<img class="emote" crossorigin="anonymous" alt="{name}" src="{link}" />',
+  const parser = new emoticons.EmoteParser(fetcher, {
+    template: '<img class="emote" alt="{name}" src="{link}" />',
     match: /(\w+)+?/g,
   });
 
-  return { fetcher, parser, client };
+  var newParser = new emoticons.EmoteParser(fetcher, {
+    template: '<img class="emote" alt="{name}" src="{link}" />',
+    match: /(?<!<[^>]*)(\w+)(?![^<]*>)/g,
+  });
+
+  return { fetcher, parser, client, newParser };
 }
 
 async function getBadges(apiClient: ApiClient) {

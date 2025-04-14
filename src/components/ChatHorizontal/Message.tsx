@@ -21,9 +21,8 @@ export const Message = ({ message, callback }: Props) => {
   const [handler, setHandler] = useState(true);
   const divRef = useRef<HTMLDivElement>(null);
   const parser = useTwitchStore((state) => state.parser);
-  const fetcher = useTwitchStore((state) => state.fetcher);
-
-  if (!parser || !fetcher) return null;
+  const parserToLink = useTwitchStore((state) => state.parseToLink);
+  if (!parser || !parserToLink) return null;
 
   const [text] = useState(parseContent(message.message));
   const [fontSize, _] = useState(getRandomInt(10, 40));
@@ -32,7 +31,7 @@ export const Message = ({ message, callback }: Props) => {
   const [mainColor, ____] = useState(
     isWhiteColor(message.colorHex ?? "white")
       ? getNotWhiteColor(opacity)
-      : message.colorHex ?? "white",
+      : (message.colorHex ?? "white"),
   );
   const [bg, _________] = useState(
     `linear-gradient(125deg, ${mainColor} , transparent 75%) border-box`,
@@ -116,7 +115,11 @@ export const Message = ({ message, callback }: Props) => {
           {text?.map((part) => {
             switch (part.type) {
               case "text":
-                return replaceEmotes({ text: message, parser, fetcher });
+                return replaceEmotes({
+                  text: message,
+                  parser,
+                  newParser: parserToLink,
+                });
               case "image":
                 return <span>Ссылка</span>;
               case "link":

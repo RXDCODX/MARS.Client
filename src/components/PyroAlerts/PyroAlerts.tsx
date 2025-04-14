@@ -110,6 +110,7 @@ export default function PyroAlerts() {
       {/* Рендерим текущий высокоприоритетный алерт */}
       {currentHighPriority && (
         <HighPriorityAlert
+          key={currentHighPriority.mediaInfo.id}
           message={currentHighPriority}
           type={currentHighPriority.mediaInfo.fileInfo.type}
           callback={() => removeHighPrior(currentHighPriority)}
@@ -119,7 +120,11 @@ export default function PyroAlerts() {
       {/* Рендерим обычные алерты, если нет высокоприоритетных */}
       {!currentHighPriority &&
         messages.map((messageProps) => (
-          <Alert message={messageProps} remove={remove} />
+          <Alert
+            key={messageProps.mediaInfo.id}
+            message={messageProps}
+            remove={remove}
+          />
         ))}
     </>
   );

@@ -13,14 +13,14 @@ interface Props {
 
 export function BigTextBlockForAudio({ mediaInfo }: Props) {
   const parser = useTwitchStore((state) => state.parser);
-  const fetcher = useTwitchStore((state) => state.fetcher);
+  const parserToLink = useTwitchStore((state) => state.parseToLink);
   const text = mediaInfo.mediaInfo.textInfo.text;
 
   if (text === null && text === "") {
     return undefined;
   }
 
-  if (!parser || !fetcher) {
+  if (!parser || !parserToLink) {
     return undefined;
   }
 
@@ -39,7 +39,11 @@ export function BigTextBlockForAudio({ mediaInfo }: Props) {
   for (let i = 0; i < splits.length; i++) {
     splits[i] = splits[i].trim();
     if (splits[i]) {
-      const result = replaceEmotes({ text: splits[i], fetcher, parser });
+      const result = replaceEmotes({
+        text: splits[i],
+        parser,
+        newParser: parserToLink,
+      });
       if (result) {
         emotesSplits[i] = result;
       }

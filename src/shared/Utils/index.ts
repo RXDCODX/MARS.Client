@@ -1,13 +1,14 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import parse from "html-react-parser";
 
-import { EmoteFetcher, EmoteParser } from "@mkody/twitch-emoticons";
+import emoticons from "@mkody/twitch-emoticons";
 import { HelixChatBadgeSet } from "@twurple/api";
 import { ChatMessage, MediaInfo } from "../api/generated/baza";
 import { ChatMessage as TwitchChatMessage } from "@twurple/chat";
 import { HighliteMessageProps } from "../../components/HighliteMessage/Message";
 import React from "react";
 import { v4 as randomUUID } from "uuid";
+import { addMimeTypesToImgTags } from "../MIME_types";
 
 export { BigTextBlockForAudio } from "./BigTexts/BigTextBlockForAudio";
 export { BigTextBlockForVoice } from "./BigTexts/BigTextBlockForVoice";
@@ -16,11 +17,11 @@ export { FullText } from "./FullText/FullText";
 export function replaceEmotes({
   text,
   parser,
-  fetcher,
+  newParser
 }: {
   text?: string | ChatMessage;
-  parser: EmoteParser;
-  fetcher: EmoteFetcher;
+  parser: emoticons.EmoteParser;
+  newParser: emoticons.EmoteParser;
 }) {
   if (!text) {
     return undefined;
@@ -60,13 +61,9 @@ export function replaceEmotes({
       );
     });
 
-    var newParser = new EmoteParser(fetcher, {
-      template:
-        '<img class="emote" crossorigin="anonymous" alt="{name}" src="{link}" />',
-      match: /(?<!<[^>]*)(\w+)(?![^<]*>)/g,
-    });
 
-    resultText = newParser.parse(resultText, 1);
+    const parsedText = newParser.parse(resultText);
+    resultText = addMimeTypesToImgTags(parsedText);
   } else {
     throw new Error("Invalid message type");
   }
@@ -233,7 +230,7 @@ export function replaceBadges(
 
     chatMessage.badges.forEach((b) => {
       const set = badges.find((e) => e.id == b.key);
-      const lastVersion = set?.versions?.find(e => e.id == b.value);
+      const lastVersion = set?.versions?.find((e) => e.id == b.value);
 
       if (!lastVersion) {
         return undefined;
@@ -259,14 +256,11 @@ export function replaceBadges(
 
 export function getEmojisSrcFromText(
   text: string | ChatMessage,
-  fetcher: EmoteFetcher,
+  client: emoticons.EmoteParser,
+  newParser: emoticons.EmoteParser,
 ) {
   if (typeof text === "string") {
     text = text.replace(/[\u{E0000}-\u{E007F}]/gu, "");
-    const client = new EmoteParser(fetcher, {
-      template: "{link}",
-      match: /(\w+)+?/g,
-    });
     const messages = text.split(" ");
     const result = messages.map((message) => {
       return client.parse(message, 1);
@@ -290,11 +284,6 @@ export function getEmojisSrcFromText(
         message.message = message.message?.replace(emote.name, "");
       }
       return emote.imageUrl;
-    });
-
-    const newParser = new EmoteParser(fetcher, {
-      template: "{link}",
-      match: /(?<!<[^>]*)(\w+)(?![^<]*>)/g,
     });
 
     const newMEssages = message.message.trim().split(" ");

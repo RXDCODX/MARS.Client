@@ -32,10 +32,10 @@ export default function TelegramSticker({
     textInfo,
     fileInfo,
   } = MediaInfo.mediaInfo;
-  const fetcher = useTwitchStore((state) => state.fetcher);
   const parser = useTwitchStore((state) => state.parser);
+  const parserToLInk = useTwitchStore((state) => state.parseToLink);
 
-  if (!fetcher || !parser) {
+  if (!parser || !parserToLInk) {
     return null;
   }
 
@@ -61,7 +61,11 @@ export default function TelegramSticker({
         background="transparent"
       />
       <div className="sticker-text">
-        {replaceEmotes({ text: textInfo.text, fetcher, parser })}
+        {replaceEmotes({
+          text: textInfo.text,
+          parser,
+          newParser: parserToLInk,
+        })}
       </div>
     </div>
   );

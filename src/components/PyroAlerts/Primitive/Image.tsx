@@ -58,7 +58,7 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
           alt={"IMAGE ERROR"}
           className={styles.media}
           style={style}
-          onError={(e) => console.log(e)}
+          onError={(e) => console.log("%c" + e, "color: #7289DA; -webkit-text-stroke: 2px black; font-size: 72px; font-weight: bold;")}
           onErrorCapture={(e) => console.log(e)}
           onLoad={(event) => {
             const cords = getCoordinates(event.currentTarget, mediaInfo);

@@ -18,8 +18,9 @@ export function Message({ message }: Props) {
   const [color, setColor] = useState<string>("");
   const msgRef = useRef<HTMLDivElement>(null);
   const emoteParser = useTwitchStore((state) => state.parser);
+  const emoteToLinkParser = useTwitchStore((state) => state.parseToLink);
   const emoteFetcher = useTwitchStore((state) => state.fetcher);
-  if (!emoteParser || !emoteFetcher) return null;
+  if (!emoteParser || !emoteFetcher || !emoteToLinkParser) return null;
   const [content] = useState(parseContent(message.message));
 
   useEffect(() => {
@@ -90,7 +91,7 @@ export function Message({ message }: Props) {
                   replaceEmotes({
                     text: message,
                     parser: emoteParser,
-                    fetcher: emoteFetcher,
+                    newParser: emoteToLinkParser
                   })
                 }
               />

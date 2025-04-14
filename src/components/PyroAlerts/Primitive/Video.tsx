@@ -51,12 +51,13 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
       const currentTime = video.currentTime;
       const duration = video.duration;
       const targetDuration = metaInfo.duration;
+      const isLooped = metaInfo.isLooped;
 
       setVideoProgress(currentTime);
 
       // Проверка достижения конца (с запасом 0.1 сек)
       if (
-        duration - currentTime <= 0.1 ||
+        (!isLooped && duration - currentTime <= 0.1) ||
         (targetDuration && currentTime >= targetDuration - 0.1)
       ) {
         unmuteAll();
@@ -118,6 +119,13 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
     };
   }, [videoProgress, metaInfo.duration, callback]);
 
+  useEffect(() => {
+    setTimeout(() => {
+      unmuteAll();
+      callback();
+    }, metaInfo.duration * 1000);
+  }, []);
+
   return (
     <div id={id} className={styles.media} style={baseStyles}>
       <video
@@ -125,13 +133,18 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
         src={fileInfo.filePath}
         controls={false}
         autoPlay
+        loop={metaInfo.isLooped}
         style={{
           maxWidth: baseStyles.maxWidth,
           maxHeight: baseStyles.maxHeight,
           width: baseStyles.width,
           height: baseStyles.height,
         }}
-        onError={callback}
+        onError={(e) => {
+          console.log("%c" + e, "color: #7289DA; -webkit-text-stroke: 2px black; font-size: 72px; font-weight: bold;")
+          unmuteAll();
+          callback();
+        }}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onCanPlayThrough={muteAll}

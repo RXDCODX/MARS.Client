@@ -9,6 +9,7 @@
   margin: 1px;
   left: 0;
   bottom: 0;
+  box-sizing: content-box;
 }
 
 .chatContainer::-webkit-scrollbar {

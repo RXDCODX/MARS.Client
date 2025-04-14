@@ -1,4 +1,7 @@
-import { MediaDto, MediaFileInfoTypeEnum } from "../../shared/api/generated/baza";
+import {
+  MediaDto,
+  MediaFileInfoTypeEnum,
+} from "../../shared/api/generated/baza";
 import { Audio, Image, Video, Voice } from "./Primitive";
 import TelegramSticker from "./Primitive/TelegramSticker";
 

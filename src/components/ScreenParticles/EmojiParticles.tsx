@@ -83,11 +83,14 @@ export async function getBase64(url: string): Promise<string> {
 
 const ConfettiImage = ({ input, scalar = 10 }: Props) => {
   const [shapes, setShapes] = useState<Array<any>>([]);
-  const fetcher = useTwitchStore((state) => state.fetcher);
-  if (!fetcher) {
+  const parser = useTwitchStore((state) => state.parser);
+  const parserToLink = useTwitchStore((state) => state.parseToLink);
+  if (!parser || !parserToLink) {
     return undefined;
   }
-  const [images, _] = useState(getEmojisSrcFromText(input, fetcher));
+  const [images, _] = useState(
+    getEmojisSrcFromText(input, parser, parserToLink),
+  );
   const [element, setElement] = useState<JSX.Element | null>(null);
 
   useEffect(() => {
