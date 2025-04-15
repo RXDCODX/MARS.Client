@@ -1,2 +1,2 @@
 @echo off
-yarn vite --mode production --port 9159
+yarn vite preview --mode production --port 9159
