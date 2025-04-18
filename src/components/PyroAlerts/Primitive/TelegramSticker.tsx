@@ -1,5 +1,4 @@
 import { createComponent } from "@lit/react";
-import { TGSPlayer } from "@lottiefiles/lottie-player/dist/tgs-player";
 import { CSSProperties, useEffect, useState } from "react";
 // eslint-disable-next-line no-restricted-imports
 import react from "react";
@@ -9,22 +8,26 @@ import { replaceEmotes } from "../../../shared/Utils";
 import styles from "./Media.module.scss";
 import useTwitchStore from "../../../shared/twitchStore/twitchStore";
 
-const Player = createComponent({
-  elementClass: TGSPlayer,
-  react: react,
-  tagName: "tgs-player",
-  displayName: "tgs-player",
-});
-
 interface Props {
   callBack: () => void;
   mediaInfo: MediaDto;
 }
 
-export default function TelegramSticker({
+export default async function TelegramSticker({
   mediaInfo: MediaInfo,
   callBack,
 }: Props) {
+  const { TGSPlayer } = await import(
+    "@lottiefiles/lottie-player/dist/tgs-player"
+  );
+
+  const Player = createComponent({
+    elementClass: TGSPlayer,
+    react: react,
+    tagName: "tgs-player",
+    displayName: "tgs-player",
+  });
+
   const {
     id: Id,
     metaInfo,
