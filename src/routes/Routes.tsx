@@ -20,6 +20,10 @@ const PrivateRoutes = () => {
         <Route path="/confetti" element={<Manager />} />
         <Route path="/chath" element={<ChatHorizontal />} />
         <Route path="/chatv" element={<ChatVertical />} />
+
+        <Route path="/sr/tracklist" element={} />
+        <Route path="/sr/videoscreen" element={} />
+
         <Route path="*" element={<Navigate to="/" />} />{" "}
         {/* Редирект на меню */}
       </Routes>

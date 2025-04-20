@@ -1,0 +1,24 @@
+/* ChoosePath.css */
+.choose-path {
+  display: flex;
+  height: 100vh;
+}
+
+.left-path, .right-path {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  text-decoration: none;
+  font-size: 24px;
+}
+
+.left-path {
+  background-color: green;
+}
+
+.right-path {
+  background-color: red;
+}
+
