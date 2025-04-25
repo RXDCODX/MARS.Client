@@ -7,6 +7,8 @@ import WaifuAlerts from "../components/WaifuAlerts/WaifuAlerts";
 import Manager from "../components/ScreenParticles/Manager";
 import ChatHorizontal from "../components/ChatHorizontal/ChatHorizontal";
 import ChatVertical from "../components/ChatVertical/ChatVertical";
+import { TrackList } from "../components/SoundRequest/TrackList/TrackList";
+import { VideoScreen } from "../components/SoundRequest/VideoScreen/VideoScreen";
 
 const PrivateRoutes = () => {
   return (
@@ -20,10 +22,8 @@ const PrivateRoutes = () => {
         <Route path="/confetti" element={<Manager />} />
         <Route path="/chath" element={<ChatHorizontal />} />
         <Route path="/chatv" element={<ChatVertical />} />
-
-        <Route path="/sr/tracklist" element={} />
-        <Route path="/sr/videoscreen" element={} />
-
+        <Route path="/sr/tracklist" element={<TrackList />} />
+        <Route path="/sr/videoscreen" element={<VideoScreen />} />
         <Route path="*" element={<Navigate to="/" />} />{" "}
         {/* Редирект на меню */}
       </Routes>
