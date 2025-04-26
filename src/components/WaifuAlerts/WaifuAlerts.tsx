@@ -10,7 +10,6 @@ import Announce from "../../shared/Utils/Announce/Announce";
 import { getText, getTitle, shuffleArray, WaifuAlertProps } from "./helper";
 import styles from "./WaifuAlerts.module.scss";
 import WaifuRoulette from "./WaifuRoulette";
-import { getBase64 } from "../ScreenParticles/EmojiParticles";
 import { Waifu } from "../../shared/api/generated/baza";
 import { getRandomColor } from "../../shared/Utils";
 
@@ -158,10 +157,6 @@ export default function WaifuAlerts() {
   SignalRContext.useSignalREffect(
     "UpdateWaifuPrizes",
     async (prizes: PrizeType[]) => {
-      prizes.forEach(async (prize) => {
-        prize.image = await getBase64(prize.image);
-      });
-
       dispatch({ type: StateStatus.addPrizes, prizes });
     },
     [],
@@ -197,10 +192,6 @@ export default function WaifuAlerts() {
       }
     }
   }, [currentMessage]);
-
-  useEffect(() => {
-    SignalRContext.invoke("UpdateWaifuPrizesPrizes");
-  }, []);
 
   const muteAll = useCallback(() => {
     SignalRContext.invoke("MuteAll");
