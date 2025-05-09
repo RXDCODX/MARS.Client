@@ -40,22 +40,24 @@ export const MIME_Types: Record<string, string> = {
 export function addMimeTypesToImgTags(htmlText: string): string {
   // Регулярное выражение для поиска тегов img
   const imgTagRegex = /<img\s+([^>]*?)src=["']([^"']+)["']([^>]*?)>/gi;
-  
+
   return htmlText.replace(imgTagRegex, (match, beforeSrc, src, afterSrc) => {
     // Извлекаем расширение файла из URL
-    const extension = src.split('.').pop()?.toLowerCase().split(/[#?]/)[0] || '';
-    
+    const extension =
+      src.split(".").pop()?.toLowerCase().split(/[#?]/)[0] || "";
+
+    debugger;
     // Получаем MIME-тип из нашей коллекции
-    const mimeType = MIME_Types[extension] || 'application/octet-stream';
-    
+    const mimeType = MIME_Types[extension] || "application/octet-stream";
+
     // Проверяем, есть ли уже атрибут type
     const hasTypeAttr = /type=["'][^"']*["']/i.test(match);
-    
+
     // Если атрибут type уже есть, не изменяем его
     if (hasTypeAttr) {
       return match;
     }
-    
+
     // Добавляем атрибут type
     return `<img ${beforeSrc}src="${src}" type="${mimeType}"${afterSrc}>`;
   });

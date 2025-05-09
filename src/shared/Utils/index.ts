@@ -17,12 +17,13 @@ export { FullText } from "./FullText/FullText";
 export function replaceEmotes({
   text,
   parser,
-  newParser
+  newParser,
 }: {
   text?: string | ChatMessage;
   parser: emoticons.EmoteParser;
   newParser: emoticons.EmoteParser;
 }) {
+  debugger;
   if (!text) {
     return undefined;
   }
@@ -55,12 +56,18 @@ export function replaceEmotes({
         return undefined;
       }
 
-      resultText = resultText.replace(
-        emote.name,
-        `<img class="emote" src="${emote.imageUrl}" />`,
+      resultText = resultText.replaceAll(
+        new RegExp(`(?<!<[^>]*)${escapeRegExp(emote.name)}(?![^<]*>)`, "g"),
+        `<img class="emote"
+        srcset="//static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/1.0 1x, //static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/light/2.0 2x, //static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/4.0 4x" alt="${emote.name}" 
+        loading="lazy"
+        decoding="async" />`,
       );
     });
 
+    function escapeRegExp(string: string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
 
     const parsedText = newParser.parse(resultText);
     resultText = addMimeTypesToImgTags(parsedText);

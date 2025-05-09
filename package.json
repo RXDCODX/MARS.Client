@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --mode development",
+    "prod": "vite --mode production --port 9159",
     "predeploy": "yarn vite build",
     "deploy": "gh-pages -d dist",
     "build": "tsc -b && vite build",
