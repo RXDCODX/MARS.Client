@@ -99,7 +99,7 @@ export default function PyroAlerts() {
   return (
     <>
       {!announced && (
-        <Announce title={"PyroAlerts"} callback={() => setAnnounced(true)} />
+        <Announce title={"RandomMem"} callback={() => setAnnounced(true)} />
       )}
 
       {/* Рендерим текущий высокоприоритетный алерт */}

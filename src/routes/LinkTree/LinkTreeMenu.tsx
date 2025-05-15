@@ -4,6 +4,7 @@ import "./LinktreeMenu.css"; // Стили (можно заменить на Tai
 export const LinktreeMenu = () => {
   const links = [
     { path: "/pyroalerts", name: "Pyro Alerts" },
+    { path: "/randommem", name: "RandomMem" },
     { path: "/waifu", name: "Waifu Alerts" },
     { path: "/fumofriday", name: "Fumo Friday" },
     { path: "/highlite", name: "Highlite Message" },
