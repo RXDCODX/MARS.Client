@@ -109,7 +109,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
           callback();
         }
       },
-      metaInfo.duration * 1000 + 2000,
+      metaInfo.duration * 1000 + 200,
     ); // Длительность + 2 сек буфера
 
     setBackupTimer(timer);
@@ -123,7 +123,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
     setTimeout(() => {
       unmuteAll();
       callback();
-    }, metaInfo.duration * 1000);
+    }, metaInfo.duration * 1000 + 1000);
   }, []);
 
   return (
@@ -141,7 +141,10 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
           height: baseStyles.height,
         }}
         onError={(e) => {
-          console.log("%c" + e, "color: #7289DA; -webkit-text-stroke: 2px black; font-size: 72px; font-weight: bold;")
+          console.log(
+            "%c" + e,
+            "color: #7289DA; -webkit-text-stroke: 2px black; font-size: 72px; font-weight: bold;",
+          );
           unmuteAll();
           callback();
         }}

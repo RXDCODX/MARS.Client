@@ -1,9 +1,9 @@
 import { createComponent } from "@lit/react";
 import { TGSPlayer } from "@lottiefiles/lottie-player/dist/tgs-player";
-import { CSSProperties, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 // eslint-disable-next-line no-restricted-imports
 import react from "react";
-
+import { getCoordinates, getRandomRotation } from "../../../shared/Utils";
 import { MediaDto } from "../../../shared/api/generated/baza";
 import { replaceEmotes } from "../../../shared/Utils";
 import styles from "./Media.module.scss";
@@ -22,7 +22,7 @@ interface Props {
 }
 
 export default function TelegramSticker({
-  mediaInfo: MediaInfo,
+  mediaInfo,
   callBack,
 }: Props) {
   const {
@@ -31,28 +31,54 @@ export default function TelegramSticker({
     positionInfo,
     textInfo,
     fileInfo,
-  } = MediaInfo.mediaInfo;
+  } = mediaInfo.mediaInfo;
   const parser = useTwitchStore((state) => state.parser);
   const parserToLInk = useTwitchStore((state) => state.parseToLink);
 
-  if (!parser || !parserToLInk) {
-    return null;
-  }
+  const [style, setStyle] = useState<React.CSSProperties>(
+    positionInfo.isProportion
+      ? {
+          maxWidth: positionInfo.width + "px",
+          maxHeight: positionInfo.height + "px",
+        }
+      : {
+          width: positionInfo.width + "px",
+          height: positionInfo.height + "px",
+          maxHeight: "max-content",
+        },
+  );
+
+  const elementRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setTimeout(() => callBack(), metaInfo.duration * 1000);
   }, [callBack, metaInfo.duration]);
 
-  const [cssStyles] = useState<CSSProperties>({
-    maxWidth: positionInfo.width + "px",
-    maxHeight: positionInfo.height + "px",
-    transform: positionInfo.isRotated
-      ? `rotate(${positionInfo.rotation}deg)`
-      : "",
-  });
+  useEffect(() => {
+    if (elementRef.current) {
+      const cords = getCoordinates(elementRef.current, mediaInfo.mediaInfo);
+      const rotation = getRandomRotation(mediaInfo.mediaInfo);
+      setStyle(prev => ({
+        ...prev,
+        ...cords,
+        ...rotation,
+        visibility: "visible",
+      }));
+    }
+  }, [mediaInfo.mediaInfo]);
+
+  if (!parser || !parserToLInk) {
+    return null;
+  }
 
   return (
-    <div id={Id} key={Id} className={styles.media} style={cssStyles}>
+    <div
+      id={Id}
+      key={Id}
+      className={styles.media}
+      style={style}
+      ref={elementRef}
+    >
       <Player
         autoplay
         loop

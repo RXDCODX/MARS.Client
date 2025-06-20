@@ -219,7 +219,6 @@ export default function WaifuAlerts() {
         <WaifuRoulette
           key={currentMessage.waifu.shikiId}
           callback={() => {
-            debugger;
             setIsRouletted(true);
             setRouletteIndex(-1);
           }}

@@ -30,7 +30,7 @@ export default function ContentPiece({
         const text = replaceEmotes({ message: message });
         return (
           <Textfit
-            min={10}
+            min={1}
             max={10000}
             mode="multi"
             className={className}
@@ -62,7 +62,7 @@ export default function ContentPiece({
 
       return (
         <Textfit
-          min={10}
+          min={1}
           max={10000}
           mode="multi"
           className={className}

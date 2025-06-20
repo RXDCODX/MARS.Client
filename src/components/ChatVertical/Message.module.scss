@@ -5,6 +5,7 @@
   padding: 5px 10px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-top: 1vh;
 }
 
 .head {
@@ -16,10 +17,12 @@
 .badgesAndNickname {
   display: flex;
   flex-grow: 1;
-  align-items: center; // Бейджики и никнейм на одной строке
+  align-items: stretch; // Бейджики и никнейм на одной строке
+  justify-items: stretch;
   gap: 8px; // Расстояние между бейджиками и никнеймом
   height: 50px;
   margin-bottom: 1px;
+  margin-right: 1svw;
 }
 
 .badges {
@@ -35,9 +38,13 @@
 
 .nickname {
   display: flex;
+  align-self: stretch;
+  text-align: center;
+  align-items: flex-end;
   max-height: 40px;
   font-weight: bold;
   white-space: nowrap; // Запрет переноса текста
+  width: -webkit-fill-available;
 }
 
 .messageWrapper {

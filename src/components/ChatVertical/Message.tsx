@@ -10,9 +10,10 @@ import ContentPart from "./ContentPart";
 
 interface Props {
   message: ChatMessage;
+  index: number;
 }
 
-export function Message({ message }: Props) {
+export function Message({ message, index }: Props) {
   const [handler, setHandler] = useState(true);
   const badges = useTwitchStore((state) => state.badges);
   const [color, setColor] = useState<string>("");
@@ -40,7 +41,7 @@ export function Message({ message }: Props) {
       };
       msgRef.current!.className =
         styles.container + " " + anime.animated + " " + anime.slideOutLeft;
-    }, 30 * 1000);
+    }, 30 * 100000);
   }, []);
 
   // Message component
@@ -60,10 +61,9 @@ export function Message({ message }: Props) {
               {replaceBadges(badges, message)}
             </div>
             <Textfit
-              forceSingleModeWidth
-              mode="single"
+              mode="multi"
               className={styles.nickname}
-              min={40}
+              min={1}
               style={{
                 color: message.colorHex ?? "white",
               }}

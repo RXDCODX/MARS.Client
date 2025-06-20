@@ -12,7 +12,16 @@ export default function ChatHorizontal() {
     "newmessage",
     (id: string, message: ChatMessage) => {
       message.id ??= id;
-      setMessages((prev) => [...(prev?.slice(0, 49) || []), message]);
+      setMessages((prev) => {
+        while(prev.length >= 50) {
+          prev.pop();
+        }
+        if (prev.find((m) => m.id === message.id)) {
+          return prev;
+        } else {
+          return [message, ...prev];
+        }
+      });
     },
     [],
   );
