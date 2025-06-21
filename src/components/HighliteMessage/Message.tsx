@@ -121,17 +121,20 @@ export default function Message() {
                   import.meta.env.VITE_BASE_PATH + currentMessage.faceImage.url
                 }
                 onLoad={() => {
-                  setTimeout(() => {
-                    divHard.current!.onanimationend = () => {
-                      handleRemoveEvent(currentMessage);
-                    };
-                    divHard.current!.className =
-                      styles.container +
-                      " " +
-                      animate.fadeOut +
-                      " " +
-                      animate.animated;
-                  }, 7000);
+                  setTimeout(
+                    () => {
+                      divHard.current!.onanimationend = () => {
+                        handleRemoveEvent(currentMessage);
+                      };
+                      divHard.current!.className =
+                        styles.container +
+                        " " +
+                        animate.fadeOut +
+                        " " +
+                        animate.animated;
+                    },
+                    import.meta.env.DEV ? 99999 : 7000,
+                  );
                 }}
               />
             )}
@@ -145,17 +148,20 @@ export default function Message() {
                 loop
                 muted
                 onLoadedMetadata={() => {
-                  setTimeout(() => {
-                    divHard.current!.onanimationend = () => {
-                      handleRemoveEvent(currentMessage);
-                    };
-                    divHard.current!.className =
-                      styles.container +
-                      " " +
-                      animate.fadeOut +
-                      " " +
-                      animate.animated;
-                  }, 7000);
+                  setTimeout(
+                    () => {
+                      divHard.current!.onanimationend = () => {
+                        handleRemoveEvent(currentMessage);
+                      };
+                      divHard.current!.className =
+                        styles.container +
+                        " " +
+                        animate.fadeOut +
+                        " " +
+                        animate.animated;
+                    },
+                    import.meta.env.DEV ? 99999 : 7000,
+                  );
                 }}
               />
             )}

@@ -10,10 +10,9 @@ import ContentPart from "./ContentPart";
 
 interface Props {
   message: ChatMessage;
-  index: number;
 }
 
-export function Message({ message, index }: Props) {
+export function Message({ message }: Props) {
   const [handler, setHandler] = useState(true);
   const badges = useTwitchStore((state) => state.badges);
   const [color, setColor] = useState<string>("");
@@ -35,13 +34,16 @@ export function Message({ message, index }: Props) {
       setColor("transparent");
     }
 
-    setTimeout(() => {
-      msgRef.current!.onanimationend = () => {
-        setHandler(false);
-      };
-      msgRef.current!.className =
-        styles.container + " " + anime.animated + " " + anime.slideOutLeft;
-    }, 30 * 100000);
+    setTimeout(
+      () => {
+        msgRef.current!.onanimationend = () => {
+          setHandler(false);
+        };
+        msgRef.current!.className =
+          styles.container + " " + anime.animated + " " + anime.slideOutLeft;
+      },
+      import.meta.env.DEV ? 30 * 100000 : 30 * 1000,
+    );
   }, []);
 
   // Message component
@@ -91,7 +93,7 @@ export function Message({ message, index }: Props) {
                   replaceEmotes({
                     text: message,
                     parser: emoteParser,
-                    newParser: emoteToLinkParser
+                    newParser: emoteToLinkParser,
                   })
                 }
               />

@@ -17,7 +17,7 @@ const LogLevelNames = {
 
 type LogLevel = keyof typeof LogLevelNames;
 
-const logger: ILogger = {
+export const logger: ILogger = {
   log: (level: number, message: string) => {
     if (!(level in LogLevelNames)) {
       console.log("%cUnknown level:", "color: red;", message);

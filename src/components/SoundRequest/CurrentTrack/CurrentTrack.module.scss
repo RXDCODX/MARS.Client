@@ -1,0 +1,169 @@
+// Базовые размеры для расчета относительных величин
+$base-width: 100vw;
+$base-height: 100vh;
+
+// Обертка для позиционирования
+.wrapper {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0 calc(1vh + 1vw);
+  z-index: 1000;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  gap: calc(1vh + 1vw);
+  padding: calc(0.5vh + 0.5vw);
+  background: rgba(30, 30, 30, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: calc(0.5vh + 0.5vw);
+  max-width: 100%;
+  color: white;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.coverContainer {
+  flex-shrink: 0;
+}
+
+.cover {
+  width: calc(5vh + 5vw);
+  height: calc(5vh + 5vw);
+  min-width: 50px;
+  min-height: 50px;
+  //max-width: 80px;
+  //max-height: 80px;
+  border-radius: calc(0.5vh + 0.5vw);
+  object-fit: cover;
+}
+
+.coverPlaceholder {
+  width: calc(5vh + 5vw);
+  height: calc(5vh + 5vw);
+  min-width: 50px;
+  min-height: 50px;
+  max-width: 80px;
+  max-height: 80px;
+  border-radius: calc(0.5vh + 0.5vw);
+  background: linear-gradient(135deg, #6e8efb, #a777e3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.musicIcon {
+  font-size: calc(1.5vh + 1.5vw);
+}
+
+.trackInfo {
+  flex-grow: 1;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center; // Центрируем по горизонтали
+  text-align: center; // Центрируем текст внутри элементов
+}
+
+.title {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  font-size: calc(12px + 1.5vw);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  width: 100%; // Занимаем всю доступную ширину
+}
+
+.artists {
+  display: flex;
+  justify-content: center;
+  margin: calc(0.2vh + 0.2vw) 0 calc(0.4vh + 0.4vw);
+  font-size: calc(12px + 1.5vw);
+  opacity: 0.8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%; // Занимаем всю доступную ширину
+}
+
+.progressContainer {
+  align-self: stretch;
+  height: calc(0.3vh + 0.3vw);
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: calc(0.15vh + 0.15vw);
+  margin: calc(0.4vh + 0.4vw) 0;
+  overflow: hidden;
+  min-height: 2px;
+  max-height: 4px;
+}
+
+.progressBar {
+  height: 100%;
+  background: linear-gradient(90deg, #6e8efb, #ff0000);
+  border-radius: inherit;
+  transition: width 0.3s ease;
+}
+
+.timeInfo {
+  display: flex;
+  align-self: stretch;
+  justify-content: space-between;
+  font-size: calc(0.6vh + 0.6vw);
+  opacity: 0.7;
+  font-size: calc(12px + 1.3vw);
+
+  > :first-child {
+    margin-left: calc(0.4vh + 0.4vw);
+  }
+
+  > :last-child {
+    margin-right: calc(0.4vh + 0.4vw);
+  }
+}
+
+.center-translate {
+  transform: translateX(-50%);
+}
+
+// Адаптация для очень маленьких экранов
+@media (max-width: 500px) {
+  .wrapper {
+    padding: 2vw;
+  }
+
+  .container {
+    gap: 3vw;
+  }
+
+  .title {
+    font-size: 4vw;
+  }
+
+  .artists {
+    font-size: 3.5vw;
+  }
+
+  .timeInfo {
+    font-size: 3vw;
+  }
+}
+
+// Адаптация для очень больших экранов
+@media (min-width: 1600px) {
+  .container {
+    max-width: 1600px;
+    margin: 0 auto;
+  }
+}

@@ -1,8 +1,8 @@
 {
-  "openapi": "3.0.1",
+  "openapi": "3.0.4",
   "info": {
-    "title": "MARS.Server",
-    "version": "1.0"
+    "title": "Telegramus Open Api v3",
+    "version": "v1"
   },
   "paths": {
     "/-/{controller}/endpoints": {
@@ -13,6 +13,28 @@
         "parameters": [
           {
             "name": "controller",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/memory/{escapedFileName}": {
+      "get": {
+        "tags": [
+          "PyroAlerts"
+        ],
+        "parameters": [
+          {
+            "name": "escapedFileName",
             "in": "path",
             "required": true,
             "schema": {
@@ -48,7 +70,195 @@
         }
       }
     },
-    "/hubs/TelegramusHub/Alert": {
+    "/hubs/SoundRequestHub/Ended": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "parameters": [
+          {
+            "name": "trackInfo",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/BaseTrackInfo"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/SoundRequestHub/ErrorPlaying": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "parameters": [
+          {
+            "name": "trackInfo",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/BaseTrackInfo"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/SoundRequestHub/JoinAsClient": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/SoundRequestHub/Started": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "parameters": [
+          {
+            "name": "trackInfo",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/BaseTrackInfo"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/telegramus/MuteAll": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "args",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/telegramus/OnConnectedAsync": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/telegramus/TwitchMsg": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "msg",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/telegramus/UnmuteSessions": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/TunaHub/SendPlayerData": {
+      "post": {
+        "tags": [
+          "TunaHub"
+        ],
+        "parameters": [
+          {
+            "name": "info",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/TunaMusicDTO"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/SoundBarHub/Mute": {
+      "post": {
+        "tags": [
+          "SoundBarHub"
+        ],
+        "parameters": [
+          {
+            "name": "args",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/SoundBarHub/Unmute": {
+      "post": {
+        "tags": [
+          "SoundBarHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/telegramus/AddNewWaifu": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "content",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Waifu"
+            }
+          },
+          {
+            "name": "displayName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "color",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/telegramus/Alert": {
       "post": {
         "tags": [
           "TelegramusHub"
@@ -65,15 +275,7 @@
         "responses": { }
       }
     },
-    "/hubs/TelegramusHub/UnmuteSessions": {
-      "post": {
-        "tags": [
-          "TelegramusHub"
-        ],
-        "responses": { }
-      }
-    },
-    "/hubs/TelegramusHub/Alerts": {
+    "/telegramus/Alerts": {
       "post": {
         "tags": [
           "TelegramusHub"
@@ -93,168 +295,7 @@
         "responses": { }
       }
     },
-    "/hubs/TelegramusHub/UpdateWaifuPrizes": {
-      "post": {
-        "tags": [
-          "TelegramusHub"
-        ],
-        "parameters": [
-          {
-            "name": "prizes",
-            "in": "query",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/components/schemas/PrizeType"
-              }
-            }
-          }
-        ],
-        "responses": { }
-      }
-    },
-    "/hubs/TelegramusHub/WaifuRoll": {
-      "post": {
-        "tags": [
-          "TelegramusHub"
-        ],
-        "parameters": [
-          {
-            "name": "content",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/Waifu"
-            }
-          },
-          {
-            "name": "displayName",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "color",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": { }
-      }
-    },
-    "/hubs/TelegramusHub/AddNewWaifu": {
-      "post": {
-        "tags": [
-          "TelegramusHub"
-        ],
-        "parameters": [
-          {
-            "name": "content",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/Waifu"
-            }
-          },
-          {
-            "name": "displayName",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "color",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": { }
-      }
-    },
-    "/hubs/TelegramusHub/MergeWaifu": {
-      "post": {
-        "tags": [
-          "TelegramusHub"
-        ],
-        "parameters": [
-          {
-            "name": "content",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/Waifu"
-            }
-          },
-          {
-            "name": "displayName",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "color",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": { }
-      }
-    },
-    "/hubs/TelegramusHub/FumoFriday": {
-      "post": {
-        "tags": [
-          "TelegramusHub"
-        ],
-        "parameters": [
-          {
-            "name": "displayName",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "color",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": { }
-      }
-    },
-    "/hubs/TelegramusHub/NewMessage": {
-      "post": {
-        "tags": [
-          "TelegramusHub"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "message",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/ChatMessage"
-            }
-          }
-        ],
-        "responses": { }
-      }
-    },
-    "/hubs/TelegramusHub/DeleteMessage": {
+    "/telegramus/DeleteMessage": {
       "post": {
         "tags": [
           "TelegramusHub"
@@ -271,7 +312,31 @@
         "responses": { }
       }
     },
-    "/hubs/TelegramusHub/Highlite": {
+    "/telegramus/FumoFriday": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "displayName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "color",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/telegramus/Highlite": {
       "post": {
         "tags": [
           "TelegramusHub"
@@ -302,7 +367,107 @@
         "responses": { }
       }
     },
-    "/hubs/TelegramusHub/PostTwitchInfo": {
+    "/telegramus/MakeScreenEmojisParticles": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "message",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ChatMessage"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/telegramus/MakeScreenParticles": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "particles",
+            "in": "query",
+            "schema": {
+              "enum": [
+                "Confetty",
+                "Fireworks"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/telegramus/MergeWaifu": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "content",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Waifu"
+            }
+          },
+          {
+            "name": "displayName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "avatar",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "color",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/telegramus/NewMessage": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "message",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ChatMessage"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/telegramus/PostTwitchInfo": {
       "post": {
         "tags": [
           "TelegramusHub"
@@ -326,55 +491,68 @@
         "responses": { }
       }
     },
-    "/hubs/TelegramusHub/TwitchMsg": {
+    "/telegramus/RandomMem": {
       "post": {
         "tags": [
           "TelegramusHub"
         ],
         "parameters": [
           {
-            "name": "msg",
+            "name": "mediaInfo",
             "in": "query",
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/MediaDto"
             }
           }
         ],
         "responses": { }
       }
     },
-    "/hubs/TelegramusHub/MakeScreenParticles": {
+    "/telegramus/UpdateWaifuPrizes": {
       "post": {
         "tags": [
           "TelegramusHub"
         ],
         "parameters": [
           {
-            "name": "particles",
+            "name": "prizes",
             "in": "query",
             "schema": {
-              "enum": [
-                "Confetty",
-                "Fireworks"
-              ],
-              "type": "string"
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/PrizeType"
+              }
             }
           }
         ],
         "responses": { }
       }
     },
-    "/hubs/TelegramusHub/MakeScreenEmojisParticles": {
+    "/telegramus/WaifuRoll": {
       "post": {
         "tags": [
           "TelegramusHub"
         ],
         "parameters": [
           {
-            "name": "message",
+            "name": "content",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/ChatMessage"
+              "$ref": "#/components/schemas/Waifu"
+            }
+          },
+          {
+            "name": "displayName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "color",
+            "in": "query",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -384,159 +562,283 @@
   },
   "components": {
     "schemas": {
-      "ChatMessage": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/TwitchLibMessage"
+      "BaseTrackInfo": {
+        "required": [
+          "duration",
+          "id",
+          "lastTimePlays",
+          "title",
+          "trackName",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
           },
-          {
-            "required": [
-              "bits",
-              "bitsInDollars",
-              "isBroadcaster",
-              "isFirstMessage",
-              "isHighlighted",
-              "isMe",
-              "isModerator",
-              "isPartner",
-              "isSkippingSubMode",
-              "isStaff",
-              "isSubscriber",
-              "isVip",
-              "noisy",
-              "subscribedMonthCount"
-            ],
-            "type": "object",
-            "properties": {
-              "badgeInfo": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/StringStringKeyValuePair"
-                },
-                "nullable": true,
-                "readOnly": true
-              },
-              "bits": {
-                "type": "integer",
-                "format": "int32",
-                "readOnly": true
-              },
-              "bitsInDollars": {
-                "type": "number",
-                "format": "double",
-                "readOnly": true
-              },
-              "channel": {
-                "type": "string",
-                "nullable": true,
-                "readOnly": true
-              },
-              "cheerBadge": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CheerBadge"
-                  }
-                ],
-                "nullable": true,
-                "readOnly": true
-              },
-              "customRewardId": {
-                "type": "string",
-                "nullable": true,
-                "readOnly": true
-              },
-              "emoteReplacedMessage": {
-                "type": "string",
-                "nullable": true,
-                "readOnly": true
-              },
-              "id": {
-                "type": "string",
-                "nullable": true,
-                "readOnly": true
-              },
-              "isBroadcaster": {
-                "type": "boolean",
-                "readOnly": true
-              },
-              "isFirstMessage": {
-                "type": "boolean",
-                "readOnly": true
-              },
-              "isHighlighted": {
-                "type": "boolean",
-                "readOnly": true
-              },
-              "isMe": {
-                "type": "boolean",
-                "readOnly": true
-              },
-              "isModerator": {
-                "type": "boolean",
-                "readOnly": true
-              },
-              "isSkippingSubMode": {
-                "type": "boolean",
-                "readOnly": true
-              },
-              "isSubscriber": {
-                "type": "boolean",
-                "readOnly": true
-              },
-              "isVip": {
-                "type": "boolean",
-                "readOnly": true
-              },
-              "isStaff": {
-                "type": "boolean",
-                "readOnly": true
-              },
-              "isPartner": {
-                "type": "boolean",
-                "readOnly": true
-              },
-              "message": {
-                "type": "string",
-                "nullable": true,
-                "readOnly": true
-              },
-              "noisy": {
-                "enum": [
-                  "NotSet",
-                  "True",
-                  "False"
-                ],
-                "type": "string",
-                "readOnly": true
-              },
-              "roomId": {
-                "type": "string",
-                "nullable": true,
-                "readOnly": true
-              },
-              "subscribedMonthCount": {
-                "type": "integer",
-                "format": "int32",
-                "readOnly": true
-              },
-              "tmiSentTs": {
-                "type": "string",
-                "nullable": true,
-                "readOnly": true
-              },
-              "chatReply": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ChatReply"
-                  }
-                ],
-                "nullable": true,
-                "readOnly": true
-              }
+          "trackName": {
+            "type": "string"
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "string"
             },
-            "additionalProperties": false
+            "nullable": true
+          },
+          "featAuthors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "duration": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "genre": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "url": {
+            "type": "string"
+          },
+          "lastTimePlays": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "title": {
+            "type": "string",
+            "readOnly": true
           }
-        ]
+        },
+        "additionalProperties": false
+      },
+      "ChatMessage": {
+        "required": [
+          "bits",
+          "bitsInDollars",
+          "color",
+          "isBroadcaster",
+          "isFirstMessage",
+          "isHighlighted",
+          "isMe",
+          "isModerator",
+          "isPartner",
+          "isSkippingSubMode",
+          "isStaff",
+          "isSubscriber",
+          "isTurbo",
+          "isVip",
+          "noisy",
+          "subscribedMonthCount",
+          "userType"
+        ],
+        "type": "object",
+        "properties": {
+          "badges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StringStringKeyValuePair"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "botUsername": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "color": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Color"
+              }
+            ],
+            "readOnly": true
+          },
+          "colorHex": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "emoteSet": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EmoteSet"
+              }
+            ],
+            "nullable": true,
+            "readOnly": true
+          },
+          "isTurbo": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "userId": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "userType": {
+            "enum": [
+              "Viewer",
+              "Moderator",
+              "GlobalModerator",
+              "Broadcaster",
+              "Admin",
+              "Staff"
+            ],
+            "type": "string",
+            "readOnly": true
+          },
+          "rawIrcMessage": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "badgeInfo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StringStringKeyValuePair"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "bits": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "bitsInDollars": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "channel": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "cheerBadge": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CheerBadge"
+              }
+            ],
+            "nullable": true,
+            "readOnly": true
+          },
+          "customRewardId": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "emoteReplacedMessage": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "id": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "isBroadcaster": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isFirstMessage": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isHighlighted": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isMe": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isModerator": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isSkippingSubMode": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isSubscriber": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isVip": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isStaff": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isPartner": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "noisy": {
+            "enum": [
+              "NotSet",
+              "True",
+              "False"
+            ],
+            "type": "string",
+            "readOnly": true
+          },
+          "roomId": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "subscribedMonthCount": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "tmiSentTs": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "chatReply": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ChatReply"
+              }
+            ],
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
       },
       "ChatReply": {
         "type": "object",
@@ -1031,17 +1333,6 @@
         "additionalProperties": false
       },
       "PrizeType": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/PrizeTypeAbstract"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false
-          }
-        ]
-      },
-      "PrizeTypeAbstract": {
         "required": [
           "id",
           "image",
@@ -1075,98 +1366,70 @@
         },
         "additionalProperties": false
       },
-      "TwitchLibMessage": {
+      "TunaMusicDTO": {
         "required": [
-          "color",
-          "isTurbo",
-          "userType"
+          "data"
         ],
         "type": "object",
         "properties": {
-          "badges": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/StringStringKeyValuePair"
-            },
-            "nullable": true,
-            "readOnly": true
-          },
-          "botUsername": {
-            "type": "string",
-            "nullable": true,
-            "readOnly": true
-          },
-          "color": {
+          "data": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/Color"
+                "$ref": "#/components/schemas/TunaMusicData"
               }
-            ],
-            "readOnly": true
+            ]
           },
-          "colorHex": {
+          "hostname": {
             "type": "string",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           },
-          "displayName": {
+          "timestamp": {
             "type": "string",
-            "nullable": true,
-            "readOnly": true
-          },
-          "emoteSet": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/EmoteSet"
-              }
-            ],
-            "nullable": true,
-            "readOnly": true
-          },
-          "isTurbo": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "userId": {
-            "type": "string",
-            "nullable": true,
-            "readOnly": true
-          },
-          "username": {
-            "type": "string",
-            "nullable": true,
-            "readOnly": true
-          },
-          "userType": {
-            "enum": [
-              "Viewer",
-              "Moderator",
-              "GlobalModerator",
-              "Broadcaster",
-              "Admin",
-              "Staff"
-            ],
-            "type": "string",
-            "readOnly": true
-          },
-          "rawIrcMessage": {
-            "type": "string",
-            "nullable": true,
-            "readOnly": true
+            "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "TwitchLibMessageBuilder": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/TwitchLibMessage"
+      "TunaMusicData": {
+        "required": [
+          "album_url",
+          "artists",
+          "cover",
+          "duration",
+          "progress",
+          "status",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "cover": {
+            "type": "string"
           },
-          {
-            "type": "object",
-            "additionalProperties": false
+          "title": {
+            "type": "string"
+          },
+          "artists": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "type": "string"
+          },
+          "progress": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "album_url": {
+            "type": "string"
           }
-        ]
+        },
+        "additionalProperties": false
       },
       "Waifu": {
         "required": [
@@ -1233,35 +1496,22 @@
           }
         },
         "additionalProperties": false
-      },
-      "WhisperMessage": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/TwitchLibMessage"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "messageId": {
-                "type": "string",
-                "nullable": true
-              },
-              "threadId": {
-                "type": "string",
-                "nullable": true
-              },
-              "message": {
-                "type": "string",
-                "nullable": true
-              }
-            },
-            "additionalProperties": false
-          }
-        ]
       }
     }
   },
   "tags": [
+    {
+      "name": "SoundRequestHub"
+    },
+    {
+      "name": "TelegramusHub"
+    },
+    {
+      "name": "TunaHub"
+    },
+    {
+      "name": "SoundBarHub"
+    },
     {
       "name": "TelegramusHub"
     }

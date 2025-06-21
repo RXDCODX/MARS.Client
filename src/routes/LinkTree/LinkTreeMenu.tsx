@@ -11,6 +11,7 @@ export const LinktreeMenu = () => {
     { path: "/confetti", name: "Confetti Manager" },
     { path: "/chath", name: "Horizontal Chat" },
     { path: "/chatv", name: "Vertical Chat" },
+    { path: "/sr/currenttrack", name: "SR: Current Track" },
   ];
 
   return (

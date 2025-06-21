@@ -9,17 +9,38 @@
  * ---------------------------------------------------------------
  */
 
-export type ChatMessage = TwitchLibMessage & {
+export interface BaseTrackInfo {
+    authors: string[] | undefined;
+    /** @format date-span */
+    duration: string;
+    featAuthors: string[] | undefined;
+    genre: string[] | undefined;
+    /** @format uuid */
+    id: string;
+    /** @format date-time */
+    lastTimePlays: string;
+    title: string;
+    trackName: string;
+    url: string;
+}
+
+export interface ChatMessage {
     badgeInfo: StringStringKeyValuePair[] | undefined;
+    badges: StringStringKeyValuePair[] | undefined;
     /** @format int32 */
     bits: number;
     /** @format double */
     bitsInDollars: number;
+    botUsername: string | undefined;
     channel: string | undefined;
     chatReply: ChatReply | undefined;
     cheerBadge: CheerBadge | undefined;
+    color: Color;
+    colorHex: string | undefined;
     customRewardId: string | undefined;
+    displayName: string | undefined;
     emoteReplacedMessage: string | undefined;
+    emoteSet: EmoteSet | undefined;
     id: string | undefined;
     isBroadcaster: boolean;
     isFirstMessage: boolean;
@@ -30,19 +51,33 @@ export type ChatMessage = TwitchLibMessage & {
     isSkippingSubMode: boolean;
     isStaff: boolean;
     isSubscriber: boolean;
+    isTurbo: boolean;
     isVip: boolean;
     message: string | undefined;
     noisy: ChatMessageNoisyEnum;
+    rawIrcMessage: string | undefined;
     roomId: string | undefined;
     /** @format int32 */
     subscribedMonthCount: number;
     tmiSentTs: string | undefined;
-};
+    userId: string | undefined;
+    userType: ChatMessageUserTypeEnum;
+    username: string | undefined;
+}
 
 export enum ChatMessageNoisyEnum {
     NotSet = "NotSet",
     True = "True",
     False = "False",
+}
+
+export enum ChatMessageUserTypeEnum {
+    Viewer = "Viewer",
+    Moderator = "Moderator",
+    GlobalModerator = "GlobalModerator",
+    Broadcaster = "Broadcaster",
+    Admin = "Admin",
+    Staff = "Staff",
 }
 
 export interface ChatReply {
@@ -120,6 +155,11 @@ export interface Image {
     url: string | undefined;
     /** @format int32 */
     width: number;
+}
+
+export enum MakeScreenParticlesCreateParamsParticlesEnum {
+    Confetty = "Confetty",
+    Fireworks = "Fireworks",
 }
 
 export interface MediaDto {
@@ -207,9 +247,7 @@ export interface MediaTextInfo {
     triggerWord: string | undefined;
 }
 
-export type PrizeType = PrizeTypeAbstract & object;
-
-export interface PrizeTypeAbstract {
+export interface PrizeType {
     id: string;
     image: string;
     text: string;
@@ -220,34 +258,22 @@ export interface StringStringKeyValuePair {
     value: string | undefined;
 }
 
-export enum TelegramusHubMakeScreenParticlesCreateParamsParticlesEnum {
-    Confetty = "Confetty",
-    Fireworks = "Fireworks",
+export interface TunaMusicDTO {
+    data: TunaMusicData;
+    hostname: string | undefined;
+    timestamp: string | undefined;
 }
 
-export interface TwitchLibMessage {
-    badges: StringStringKeyValuePair[] | undefined;
-    botUsername: string | undefined;
-    color: Color;
-    colorHex: string | undefined;
-    displayName: string | undefined;
-    emoteSet: EmoteSet | undefined;
-    isTurbo: boolean;
-    rawIrcMessage: string | undefined;
-    userId: string | undefined;
-    userType: TwitchLibMessageUserTypeEnum;
-    username: string | undefined;
-}
-
-export type TwitchLibMessageBuilder = TwitchLibMessage & object;
-
-export enum TwitchLibMessageUserTypeEnum {
-    Viewer = "Viewer",
-    Moderator = "Moderator",
-    GlobalModerator = "GlobalModerator",
-    Broadcaster = "Broadcaster",
-    Admin = "Admin",
-    Staff = "Staff",
+export interface TunaMusicData {
+    album_url: string;
+    artists: string[];
+    cover: string;
+    /** @format int64 */
+    duration: number;
+    /** @format int64 */
+    progress: number;
+    status: string;
+    title: string;
 }
 
 export interface Waifu {
@@ -280,9 +306,3 @@ export interface Waifu {
     /** @format date-time */
     whenAdded: string;
 }
-
-export type WhisperMessage = TwitchLibMessage & {
-    message: string | undefined;
-    messageId: string | undefined;
-    threadId: string | undefined;
-};

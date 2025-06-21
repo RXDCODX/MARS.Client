@@ -10,6 +10,7 @@ import { TrackList } from "../components/SoundRequest/TrackList/TrackList";
 import { VideoScreen } from "../components/SoundRequest/VideoScreen/VideoScreen";
 import PyroAlerts from "../components/PyroAlerts/PyroAlerts";
 import RandomMem from "../components/RandomMem/RandomMem";
+import CurrentTrackSignalRHubWrapper from "../components/SoundRequest/CurrentTrack/SignalRHubWrapper";
 
 const PrivateRoutes = () => {
   return (
@@ -26,7 +27,11 @@ const PrivateRoutes = () => {
         <Route path="/chatv" element={<ChatVertical />} />
         <Route path="/sr/tracklist" element={<TrackList />} />
         <Route path="/sr/videoscreen" element={<VideoScreen />} />
-        <Route path="*" element={<Navigate to="/" />} />{" "}
+        <Route
+          path="/sr/currenttrack"
+          element={<CurrentTrackSignalRHubWrapper />}
+        />
+        <Route path="*" element={<Navigate to="/" />} />
         {/* Редирект на меню */}
       </Routes>
     </BrowserRouter>

@@ -32,8 +32,8 @@ export default function ChatVertical() {
         <Announce title={"Chat Vertical"} callback={() => setAnnounced(true)} />
       )}
       <div className={styles.chatContainer}>
-        {messages.map((message, index) => (
-          <Message key={message.id} message={message} index={index} />
+        {messages.map((message) => (
+          <Message key={message.id} message={message} />
         ))}
       </div>
       <ScrollToBottom />

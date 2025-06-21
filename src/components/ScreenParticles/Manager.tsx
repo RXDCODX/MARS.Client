@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { SignalRContext } from "../../app";
 import {
   ChatMessage,
-  TelegramusHubMakeScreenParticlesCreateParamsParticlesEnum,
+  MakeScreenParticlesCreateParamsParticlesEnum,
 } from "../../shared/api/generated/baza";
 import { Confettyv2 } from "./Confetty";
 import EmojiParticles from "./EmojiParticles";
@@ -13,7 +13,7 @@ interface base {
 }
 
 interface particles extends base {
-  type: TelegramusHubMakeScreenParticlesCreateParamsParticlesEnum;
+  type: MakeScreenParticlesCreateParamsParticlesEnum;
 }
 
 interface emojis extends base {
@@ -27,7 +27,7 @@ export default function Manager() {
 
   SignalRContext.useSignalREffect(
     "MakeScreenParticles",
-    (type: TelegramusHubMakeScreenParticlesCreateParamsParticlesEnum) => {
+    (type: MakeScreenParticlesCreateParamsParticlesEnum) => {
       const newMessage = { type: type, id: count };
       setCount(count + 1);
       setMessages((prev) => [...prev, newMessage]);
@@ -56,14 +56,14 @@ export default function Manager() {
       {messages.length > 0 &&
         messages.map((message) => {
           switch (message.type) {
-            case TelegramusHubMakeScreenParticlesCreateParamsParticlesEnum.Confetty:
+            case MakeScreenParticlesCreateParamsParticlesEnum.Confetty:
               return (
                 <Confettyv2
                   key={message.id}
                   callback={() => removeMessage(message.id)}
                 />
               );
-            case TelegramusHubMakeScreenParticlesCreateParamsParticlesEnum.Fireworks:
+            case MakeScreenParticlesCreateParamsParticlesEnum.Fireworks:
               return (
                 <Firework
                   key={message.id}
