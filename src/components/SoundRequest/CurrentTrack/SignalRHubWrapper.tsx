@@ -1,6 +1,6 @@
-import CurrentTrack from "./CurrentTrack";
 import { logger } from "../../../app/main";
 import { SignalRContext } from ".";
+import CurrentTrackManager from "./CurrentTrackManager";
 
 export default function CurrentTrackSignalRHubWrapper() {
   return (
@@ -14,7 +14,7 @@ export default function CurrentTrackSignalRHubWrapper() {
       url={import.meta.env.VITE_BASE_PATH + "tuna"}
       logMessageContent
     >
-      <CurrentTrack />
+      <CurrentTrackManager />
     </SignalRContext.Provider>
   );
 }

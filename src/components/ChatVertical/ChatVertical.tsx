@@ -13,7 +13,16 @@ export default function ChatVertical() {
     "newmessage",
     (id: string, message: ChatMessage) => {
       message.id ??= id;
-      setMessages((prev) => [message, ...(prev?.slice(-49) || [])]); // Изменено: добавляем в конец
+      setMessages((prev) => {
+        while (prev.length >= 15) {
+          prev.pop();
+        }
+        if (prev.find((m) => m.id === message.id)) {
+          return prev;
+        } else {
+          return [message, ...prev];
+        }
+      }); // Изменено: добавляем в конец
     },
     [],
   );
