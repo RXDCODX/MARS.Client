@@ -256,15 +256,9 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
         }}
         variants={childrenVariants}
         animate={
-          animationStage === "showChildren"
+          animationStage === "showChildren" || animationStage === "idle"
             ? "visible"
-            : animationStage === "slidesCover" ||
-                animationStage === "slidesReveal" ||
-                animationStage === "slidesRevealFinal" ||
-                animationStage === "nowPlaying" ||
-                animationStage === "slidesCoverFinal"
-              ? "hidden"
-              : "visible"
+            : "hidden"
         }
         onAnimationComplete={(definition) => {
           if (definition === "visible" && animationStage === "showChildren") {
