@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useState, useMemo, useEffect } from "react";
 import { SignalRContext } from ".";
 import {
   TunaMusicData,
@@ -20,6 +20,7 @@ const defaultValue: TunaMusicData & { isDefaultValue: boolean } = {
 interface TrackInfo {
   track: TunaMusicData & { isDefaultValue: boolean };
   count: number;
+  shouldAnimate: boolean;
 }
 
 export default function CurrentTrackManager() {
@@ -27,39 +28,69 @@ export default function CurrentTrackManager() {
   const [track, setTrack] = useState<TrackInfo>({
     track: defaultValue,
     count: counter,
+    shouldAnimate: false,
   });
 
   const changeTrack = useCallback(
     (data: TunaMusicData) => {
-      setTrack({ track: { ...data, isDefaultValue: false }, count: counter });
+      // Сначала запускаем анимацию
+      setCounter((prev) => prev + 1);
+      setTrack({
+        track: { ...data, isDefaultValue: false },
+        count: counter,
+        shouldAnimate: true,
+      });
+
+      // Через время анимации меняем трек
+      setTimeout(() => {
+        setTrack((prev) => ({
+          ...prev,
+          shouldAnimate: false,
+        }));
+      }, 3500); // Общее время анимации (слайды + NOW PLAYING + финальная анимация)
     },
     [counter],
+  );
+
+  const trackKey = useMemo(
+    () =>
+      `${track.track.artists.join(", ")}-${track.track.title}-${track.count}`,
+    [track.track.artists, track.track.title, track.count],
   );
 
   SignalRContext.useSignalREffect(
     "TunaMusicInfo",
     (data: TunaMusicDTO) => {
-      if (data.data.artists.join(", ") !== track.track.artists.join(", ")) {
-        setCounter((prev) => prev + 1);
+      // Проверяем, изменился ли трек
+      const isNewTrack =
+        data.data.artists.join(", ") !== track.track.artists.join(", ") ||
+        data.data.title !== track.track.title;
+
+      if (isNewTrack) {
         changeTrack(data.data);
         return;
       }
 
-      if (data.data.title !== track.track.title) {
-        setCounter((prev) => prev + 1);
-        changeTrack(data.data);
-        return;
-      }
-
+      // Если трек тот же, просто обновляем данные без анимации
       setTrack((prev) => ({
         ...prev,
         track: { ...data.data, isDefaultValue: false },
       }));
     },
-    [],
+    [track.track.artists, track.track.title, changeTrack],
   );
 
-  return track.track.isDefaultValue ? null : (
-    <CurrentTrack track={track.track} key={track.count} />
+  useEffect(() => {
+    console.log(counter);
+  }, [counter]);
+
+  return (
+    !track.track.isDefaultValue && (
+      <CurrentTrack
+        track={track.track}
+        key={trackKey}
+        shouldAnimate={track.shouldAnimate}
+      />
+    )
   );
 }
