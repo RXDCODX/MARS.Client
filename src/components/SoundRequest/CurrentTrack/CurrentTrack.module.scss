@@ -89,6 +89,10 @@
   /* Адаптивные размеры текста */
   font-size: clamp(1.5rem, 4vw, 6rem);
   line-height: 1.2;
+
+  &:first-child{
+    color: #e2df13;
+  }
 }
 
 /* Адаптивность для мобильных устройств */
@@ -115,10 +119,10 @@
     flex-direction: row;
   }
   
-  .cover {
-    width: 30vh;
-    height: 30vh;
-  }
+  // .cover {
+  //   width: 30vh;
+  //   height: 30vh;
+  // }
 }
 
 /* Анимации */
