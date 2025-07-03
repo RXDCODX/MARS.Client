@@ -1,7 +1,7 @@
-import { TunaMusicData } from "../../../shared/api/generated/baza";
-import AnimationControl from "./Animations/AnimationControl";
-import styles from "./CurrentTrack.module.scss";
 import { Textfit } from "react-textfit";
+import { TunaMusicData } from "../../../shared/api/generated/baza";
+import AnimationControl from "./AnimationControl";
+import styles from "./CurrentTrack.module.scss";
 
 interface Props {
   track: TunaMusicData;
@@ -24,7 +24,7 @@ export default function CurrentTrack({ track, shouldAnimate = true }: Props) {
                     mode="single"
                     max={200}
                     min={20}
-                    style={{ width: '100%', height: '100%' }}
+                    style={{ width: "100%", height: "100%" }}
                   >
                     {track.artists.join(", ")}
                   </Textfit>
@@ -34,9 +34,9 @@ export default function CurrentTrack({ track, shouldAnimate = true }: Props) {
                     mode="single"
                     max={300}
                     min={30}
-                    style={{ width: '100%', height: '100%' }}
+                    style={{ width: "100%", height: "100%" }}
                   >
-                    {track.title}
+                    {track.title} 
                   </Textfit>
                 </div>
               </div>

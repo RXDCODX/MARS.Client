@@ -30,7 +30,7 @@
     "@types/react-textfit": "^1.1.4",
     "@vkid/sdk": "^2.4.0",
     "animate.css": "^4.1.1",
-    "framer-motion": "^12.19.1",
+    "framer-motion": "^12.23.0",
     "gh-pages": "^6.2.0",
     "html-react-parser": "^5.2.2",
     "react": "^19.0.0",

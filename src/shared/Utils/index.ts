@@ -3,12 +3,12 @@ import parse from "html-react-parser";
 
 import emoticons from "@mkody/twitch-emoticons";
 import { HelixChatBadgeSet } from "@twurple/api";
-import { ChatMessage, MediaInfo } from "../api/generated/baza";
 import { ChatMessage as TwitchChatMessage } from "@twurple/chat";
-import { HighliteMessageProps } from "../../components/HighliteMessage/Message";
 import React from "react";
 import { v4 as randomUUID } from "uuid";
+import { HighliteMessageProps } from "../../components/HighliteMessage/Message";
 import { addMimeTypesToImgTags } from "../MIME_types";
+import { ChatMessage, MediaInfo } from "../api/generated/baza";
 
 export { BigTextBlockForAudio } from "./BigTexts/BigTextBlockForAudio";
 export { BigTextBlockForVoice } from "./BigTexts/BigTextBlockForVoice";
@@ -128,7 +128,7 @@ export function getCoordinates(
   let elementWidth: number;
   let elementHeight: number;
 
-  if ('width' in ref && typeof ref.width === 'number') {
+  if ("width" in ref && typeof ref.width === "number") {
     // Для элементов с width/height свойствами (img, video)
     elementWidth = ref.width;
     elementHeight = ref.height;
@@ -136,7 +136,7 @@ export function getCoordinates(
     // Для div и других элементов используем offsetWidth/offsetHeight
     elementWidth = ref.offsetWidth || positionInfo.width || 0;
     elementHeight = ref.offsetHeight || positionInfo.height || 0;
-    
+
     // Если размеры не определены, устанавливаем из positionInfo
     if (!elementWidth && positionInfo.width) {
       elementWidth = positionInfo.width;
@@ -150,40 +150,42 @@ export function getCoordinates(
   if (positionInfo.randomCoordinates) {
     const maxX = Math.max(0, window.innerWidth - elementWidth);
     const maxY = Math.max(0, window.innerHeight - elementHeight);
-    
+
     returnObj.left = `${getRandomInt(0, maxX)}px`;
     returnObj.top = `${getRandomInt(0, maxY)}px`;
-    returnObj.position = 'absolute';
+    returnObj.position = "absolute";
     return returnObj;
   }
 
   // Центрирование
   if (positionInfo.isHorizontalCenter && positionInfo.isVerticallCenter) {
     return {
-      position: 'absolute',
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)',
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
     };
   }
 
   if (positionInfo.isHorizontalCenter) {
-    returnObj.position = 'absolute';
-    returnObj.left = '50%';
-    returnObj.transform = 'translateX(-50%)';
-    returnObj.top = positionInfo.yCoordinate !== undefined 
-      ? `${positionInfo.yCoordinate}px` 
-      : undefined;
+    returnObj.position = "absolute";
+    returnObj.left = "50%";
+    returnObj.transform = "translateX(-50%)";
+    returnObj.top =
+      positionInfo.yCoordinate !== undefined
+        ? `${positionInfo.yCoordinate}px`
+        : undefined;
     return returnObj;
   }
 
   if (positionInfo.isVerticallCenter) {
-    returnObj.position = 'absolute';
-    returnObj.top = '50%';
-    returnObj.transform = 'translateY(-50%)';
-    returnObj.left = positionInfo.xCoordinate !== undefined 
-      ? `${positionInfo.xCoordinate}px` 
-      : undefined;
+    returnObj.position = "absolute";
+    returnObj.top = "50%";
+    returnObj.transform = "translateY(-50%)";
+    returnObj.left =
+      positionInfo.xCoordinate !== undefined
+        ? `${positionInfo.xCoordinate}px`
+        : undefined;
     return returnObj;
   }
 
@@ -197,7 +199,7 @@ export function getCoordinates(
 
   // Если координаты заданы (явно или через центрирование) - добавляем absolute
   if (returnObj.left !== undefined || returnObj.top !== undefined) {
-    returnObj.position = 'absolute';
+    returnObj.position = "absolute";
   }
 
   return returnObj;
@@ -473,4 +475,60 @@ export function parseContent(text?: string): ContentPart[] | undefined {
   }
 
   return result;
+}
+
+export function arrayExcept<T>(
+  arr1: T[],
+  arr2: T[],
+  comparer?: (a: T, b: T) => boolean,
+): T[] {
+  // Если есть функция сравнения
+  if (comparer) {
+    const inArr1Only = arr1.filter(
+      item1 => !arr2.some(item2 => comparer(item1, item2))
+    );
+    const inArr2Only = arr2.filter(
+      item2 => !arr1.some(item1 => comparer(item1, item2))
+    );
+    return [...inArr1Only, ...inArr2Only];
+  }
+
+  // Оптимизация с использованием Set для простого сравнения
+  const set1 = new Set(arr1);
+  const set2 = new Set(arr2);
+
+  const result: T[] = [];
+  
+  // Добавляем элементы из arr1, которых нет в arr2
+  for (const item of arr1) {
+    if (!set2.has(item)) {
+      result.push(item);
+    }
+  }
+
+  // Добавляем элементы из arr2, которых нет в arr1
+  for (const item of arr2) {
+    if (!set1.has(item)) {
+      result.push(item);
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Корректирует координаты left/top так, чтобы элемент с заданными width/height не выходил за пределы окна.
+ */
+export function clampToViewport(
+  left: number,
+  top: number,
+  width: number,
+  height: number
+): { left: number; top: number } {
+  const maxLeft = Math.max(0, window.innerWidth - width);
+  const maxTop = Math.max(0, window.innerHeight - height);
+  return {
+    left: Math.max(0, Math.min(left, maxLeft)),
+    top: Math.max(0, Math.min(top, maxTop)),
+  };
 }

@@ -182,6 +182,60 @@
         "responses": { }
       }
     },
+    "/hubs/TunaHub/BeYm": {
+      "post": {
+        "tags": [
+          "TunaHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/TunaHub/GetYandexMusicTracks": {
+      "post": {
+        "tags": [
+          "TunaHub"
+        ],
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Root"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Root"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Root"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hubs/TunaHub/OnConnectedAsync": {
+      "post": {
+        "tags": [
+          "TunaHub"
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/TunaHub/SendPlayerData": {
       "post": {
         "tags": [
@@ -241,10 +295,10 @@
             }
           },
           {
-            "name": "displayName",
+            "name": "host",
             "in": "query",
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/Host"
             }
           },
           {
@@ -419,10 +473,10 @@
             }
           },
           {
-            "name": "displayName",
+            "name": "host",
             "in": "query",
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/Host"
             }
           },
           {
@@ -542,10 +596,10 @@
             }
           },
           {
-            "name": "displayName",
+            "name": "host",
             "in": "query",
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/Host"
             }
           },
           {
@@ -1005,6 +1059,125 @@
         },
         "additionalProperties": false
       },
+      "Host": {
+        "required": [
+          "hostCoolDown",
+          "hostGreetings",
+          "isPrivated",
+          "orderCount",
+          "twitchId",
+          "whenOrdered"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "twitchId": {
+            "type": "string"
+          },
+          "whenOrdered": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "waifuBrideId": {
+            "type": "string",
+            "nullable": true
+          },
+          "isPrivated": {
+            "type": "boolean"
+          },
+          "orderCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "waifuRollId": {
+            "type": "string",
+            "nullable": true
+          },
+          "whenPrivated": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "hostGreetings": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HostAutoHello"
+              }
+            ]
+          },
+          "hostCoolDown": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HostCoolDown"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "HostAutoHello": {
+        "required": [
+          "guid",
+          "hostId",
+          "time"
+        ],
+        "type": "object",
+        "properties": {
+          "guid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "hostId": {
+            "type": "string"
+          },
+          "host": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Host"
+              }
+            ],
+            "nullable": true
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "HostCoolDown": {
+        "required": [
+          "guid",
+          "hostId",
+          "time"
+        ],
+        "type": "object",
+        "properties": {
+          "guid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "hostId": {
+            "type": "string"
+          },
+          "host": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Host"
+              }
+            ],
+            "nullable": true
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
       "Image": {
         "required": [
           "byteSize",
@@ -1350,6 +1523,10 @@
             "type": "string"
           }
         },
+        "additionalProperties": false
+      },
+      "Root": {
+        "type": "object",
         "additionalProperties": false
       },
       "StringStringKeyValuePair": {

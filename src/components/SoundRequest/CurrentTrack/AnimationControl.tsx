@@ -1,7 +1,7 @@
+import { AnimatePresence, motion, Variant } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
-import { motion, AnimatePresence, Variant } from "framer-motion";
-import styles from "../CurrentTrack.module.scss";
-import AnimatedGradientBackground from "./AnimatedGradientBackground";
+import AnimatedGradientBackground from "../../../shared/Utils/Animations/AnimatedGradientBackground";
+import styles from "./CurrentTrack.module.scss";
 
 interface Props {
   children: React.ReactNode;

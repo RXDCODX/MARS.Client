@@ -7,11 +7,17 @@ import { SignalRContext } from "../../app";
 import animate from "../../shared/styles/animate.module.scss";
 import useTwitchStore from "../../shared/twitchStore/twitchStore";
 import Announce from "../../shared/Utils/Announce/Announce";
-import { getText, getTitle, shuffleArray, WaifuAlertProps } from "./helper";
+import {
+  getHusbandText,
+  getText,
+  getTitle,
+  shuffleArray,
+  WaifuAlertProps,
+} from "./helper";
 import styles from "./WaifuAlerts.module.scss";
 import WaifuRoulette from "./WaifuRoulette";
-import { Waifu } from "../../shared/api/generated/baza";
-import { getRandomColor } from "../../shared/Utils";
+import { Host, Waifu } from "../../shared/api/generated/baza";
+import { arrayExcept, getRandomColor } from "../../shared/Utils";
 
 enum StateStatus {
   add,
@@ -22,7 +28,7 @@ enum StateStatus {
 
 interface State {
   messages: WaifuAlertProps[];
-  prizes?: PrizeType[];
+  prizes: PrizeType[];
   currentMessage?: WaifuAlertProps;
   isWaifuShowing: boolean;
 }
@@ -85,9 +91,22 @@ function reducer(
       };
 
     case StateStatus.addPrizes:
+      const excepts = arrayExcept(
+        state.prizes ?? [],
+        action.prizes ?? [],
+        (a, b) => a.id === b.id,
+      );
+
+      excepts.forEach((prize) => {
+        if (prize.image) {
+          const img = new Image();
+          img.src = prize.image;
+        }
+      });
+
       return {
         ...state,
-        prizes: action.prizes,
+        prizes: [...state.prizes, ...excepts],
       };
     case StateStatus.shuffle:
       return {
@@ -98,11 +117,10 @@ function reducer(
 }
 
 export default function WaifuAlerts() {
-  document.title = "WaifuAlerts";
-
   const initState: State = {
     messages: [],
     isWaifuShowing: false,
+    prizes: [],
   };
 
   const [{ currentMessage, prizes }, dispatch] = useReducer(reducer, initState);
@@ -114,10 +132,11 @@ export default function WaifuAlerts() {
 
   SignalRContext.useSignalREffect(
     "waifuroll",
-    (message, displayName: string, color?: string) => {
+    (message: Waifu, displayName: string, host: Host, color?: string) => {
       const parsedMessage: WaifuAlertProps = {
         waifu: message,
         displayName,
+        waifuHusband: host,
         color,
       };
       handleAddEvent(parsedMessage);
@@ -141,11 +160,12 @@ export default function WaifuAlerts() {
 
   SignalRContext.useSignalREffect(
     "Mergewaifu",
-    (message: Waifu, displayName: string, avatar?: string, color?: string) => {
+    (message: Waifu, host: Host, avatar?: string, color?: string) => {
       message.isMerged = true;
       const parsedMessage: WaifuAlertProps = {
         waifu: message,
-        displayName,
+        displayName: host.name!,
+        waifuHusband: host,
         color,
         avatarUrl: avatar,
       };
@@ -187,7 +207,7 @@ export default function WaifuAlerts() {
 
   useEffect(() => {
     if (currentMessage) {
-      if (currentMessage.waifu.isMerged && !currentMessage.waifu.isAdded) {
+      if (currentMessage.waifu.isMerged || currentMessage.waifu.isAdded) {
         setIsRouletted(true);
       }
     }
@@ -224,73 +244,69 @@ export default function WaifuAlerts() {
           }}
           rouletteIndex={rouletteIndex}
           prizes={prizes || []}
-          name={currentMessage.displayName}
+          name={currentMessage.displayName!}
           color={currentMessage.color}
         />
       )}
-      {currentMessage &&
-        isRouletted &&
-        !currentMessage.waifu.isAdded &&
-        !currentMessage.waifu.isMerged && (
-          <div
-            id={currentMessage.waifu.shikiId}
-            key={currentMessage.waifu.shikiId}
-            ref={divHard}
-            className={
-              styles.baza + " " + animate.bounceIn + " " + animate.animated
-            }
-          >
-            <div className={styles["alert-box"]}>
-              <img
-                src={currentMessage.waifu.imageUrl}
-                style={{ height: "498px", width: "320px" }}
-                onLoad={() => {
-                  setTimeout(() => {
-                    divHard.current!.onanimationend = () => {
-                      handleRemoveEvent(currentMessage);
-                      setRouletteIndex(-1);
-                      setIsRouletted(false);
-                      shufflePrizesEvent();
-                    };
+      {currentMessage && isRouletted && !currentMessage.waifu.isMerged && (
+        <div
+          id={currentMessage.waifu.shikiId}
+          key={currentMessage.waifu.shikiId}
+          ref={divHard}
+          className={
+            styles.baza + " " + animate.bounceIn + " " + animate.animated
+          }
+        >
+          <div className={styles["alert-box"]}>
+            <img
+              src={currentMessage.waifu.imageUrl}
+              style={{ height: "498px", width: "320px" }}
+              onLoad={() => {
+                setTimeout(() => {
+                  divHard.current!.onanimationend = () => {
+                    handleRemoveEvent(currentMessage);
+                    setRouletteIndex(-1);
+                    setIsRouletted(false);
+                    shufflePrizesEvent();
+                  };
 
-                    divHard.current!.className =
-                      styles.baza +
-                      " " +
-                      animate.bounceOut +
-                      " " +
-                      animate.animated;
-                  }, 7000);
+                  divHard.current!.className =
+                    styles.baza +
+                    " " +
+                    animate.bounceOut +
+                    " " +
+                    animate.animated;
+                }, 7000);
+                if (!currentMessage.waifu.isAdded) {
                   sendMessage(
-                    `@${currentMessage.displayName}, ${getText(currentMessage)} ${getTitle(currentMessage)}!`,
+                    `@${currentMessage.displayName}, ${getText(currentMessage)} ${getTitle(currentMessage)}!${getHusbandText(currentMessage)}`,
                   );
-                }}
-              />
-            </div>
-            <div className={styles["alert-box"]}>
-              <span
-                className="text-shadow block-text"
-                style={{ color: "white" }}
-              >
-                <Textfit min={1} max={1500} forceSingleModeWidth>
-                  {currentMessage.displayName.toUpperCase()}
-                </Textfit>
-              </span>
-              <span
-                className="text-shadow block-text"
-                style={{ color: "cornflowerblue" }}
-              >
-                <Textfit min={1} max={1500} forceSingleModeWidth>
-                  {getText(currentMessage)}
-                </Textfit>
-              </span>
-              <span className="text-shadow block-text" style={{ color: "red" }}>
-                <Textfit min={1} max={1500} forceSingleModeWidth>
-                  {getTitle(currentMessage)}
-                </Textfit>
-              </span>
-            </div>
+                }
+              }}
+            />
           </div>
-        )}
+          <div className={styles["alert-box"]}>
+            <span className="text-shadow block-text" style={{ color: "white" }}>
+              <Textfit min={1} max={1500} forceSingleModeWidth>
+                {currentMessage.displayName.toUpperCase()}
+              </Textfit>
+            </span>
+            <span
+              className="text-shadow block-text"
+              style={{ color: "cornflowerblue" }}
+            >
+              <Textfit min={1} max={1500} forceSingleModeWidth>
+                {getText(currentMessage)}
+              </Textfit>
+            </span>
+            <span className="text-shadow block-text" style={{ color: "red" }}>
+              <Textfit min={1} max={1500} forceSingleModeWidth>
+                {getTitle(currentMessage)}
+              </Textfit>
+            </span>
+          </div>
+        </div>
+      )}
       {currentMessage && isRouletted && currentMessage.waifu.isMerged && (
         <>
           {/** Confetty */}
@@ -336,7 +352,7 @@ export default function WaifuAlerts() {
               >
                 Поздравляем{" "}
                 <span style={{ color: currentMessage.color }}>
-                  {currentMessage.displayName}
+                  {currentMessage.waifuHusband!.name!}
                 </span>{" "}
                 и{" "}
                 <span style={{ color: getRandomColor() }}>

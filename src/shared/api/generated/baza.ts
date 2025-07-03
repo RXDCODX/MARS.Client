@@ -133,6 +133,40 @@ export interface EmoteSet {
     rawEmoteSetString: string | undefined;
 }
 
+export interface Host {
+    hostCoolDown: HostCoolDown;
+    hostGreetings: HostAutoHello;
+    isPrivated: boolean;
+    name: string | undefined;
+    /** @format int64 */
+    orderCount: number;
+    twitchId: string;
+    waifuBrideId: string | undefined;
+    waifuRollId: string | undefined;
+    /** @format date-time */
+    whenOrdered: string;
+    /** @format date-time */
+    whenPrivated: string | undefined;
+}
+
+export interface HostAutoHello {
+    /** @format uuid */
+    guid: string;
+    host: Host | undefined;
+    hostId: string;
+    /** @format date-time */
+    time: string;
+}
+
+export interface HostCoolDown {
+    /** @format uuid */
+    guid: string;
+    host: Host | undefined;
+    hostId: string;
+    /** @format date-time */
+    time: string;
+}
+
 export interface Image {
     artist: any;
     /** @format int32 */
@@ -252,6 +286,8 @@ export interface PrizeType {
     image: string;
     text: string;
 }
+
+export type Root = object;
 
 export interface StringStringKeyValuePair {
     key: string | undefined;

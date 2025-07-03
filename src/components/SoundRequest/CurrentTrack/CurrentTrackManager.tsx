@@ -85,7 +85,7 @@ export default function CurrentTrackManager() {
   }, [counter]);
 
   return (
-    !track.track.isDefaultValue && (
+    !track.track.isDefaultValue && track.track.status !== "stopped" && (
       <CurrentTrack
         track={track.track}
         key={trackKey}

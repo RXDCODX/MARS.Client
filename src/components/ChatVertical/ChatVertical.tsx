@@ -1,13 +1,34 @@
-import { Message } from "./Message";
-import { SignalRContext } from "../../app";
-import { ChatMessage } from "../../shared/api/generated/baza";
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { SignalRContext } from "../../app";
 import Announce from "../../shared/Utils/Announce/Announce";
+import { ChatMessage } from "../../shared/api/generated/baza";
 import styles from "./ChatVertical.module.scss";
+import { Message } from "./Message";
 
 export default function ChatVertical() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [announced, setAnnounced] = useState(false);
+
+  // Для jump-анимации всех сообщений
+  const [jumpKey, setJumpKey] = useState(0);
+
+  // Когда появляется новое сообщение — обновляем jumpKey
+  useEffect(() => {
+    if (messages.length > 0) {
+      setJumpKey((k) => k + 1);
+    }
+  }, [messages.length]);
+
+  // ScrollToBottom после появления нового сообщения (и анимации)
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    // Ждём завершения анимации (примерно 200мс)
+    const timeout = setTimeout(() => {
+      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 250);
+    return () => clearTimeout(timeout);
+  }, [messages.length]);
 
   SignalRContext.useSignalREffect(
     "newmessage",
@@ -22,18 +43,29 @@ export default function ChatVertical() {
         } else {
           return [message, ...prev];
         }
-      }); // Изменено: добавляем в конец
+      });
     },
     [],
   );
 
+  // Плавное удаление: сначала помечаем _pendingRemove, потом реально удаляем
+  const handleDeleteMessage = (id: string) => {
+    setMessages((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, _pendingRemove: true } : m)),
+    );
+  };
+
   SignalRContext.useSignalREffect(
     "deletemessage",
     (id: string) => {
-      setMessages((prev) => prev.filter((m) => m.id !== id));
+      handleDeleteMessage(id);
     },
     [],
   );
+
+  const handleRemove = (id: string) => {
+    setMessages((prev) => prev.filter((m) => m.id !== id));
+  };
 
   return (
     <>
@@ -41,17 +73,39 @@ export default function ChatVertical() {
         <Announce title={"Chat Vertical"} callback={() => setAnnounced(true)} />
       )}
       <div className={styles.chatContainer}>
-        {messages.map((message) => (
-          <Message key={message.id} message={message} />
-        ))}
+        <AnimatePresence initial={false}>
+          {messages.map((message) => (
+            <motion.div
+              key={message.id}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                // jump-эффект для всех сообщений при появлении нового
+                scale: jumpKey ? [1, 1.05, 1] : 1,
+              }}
+              exit={{ opacity: 0, y: -40 }}
+              transition={{
+                type: "spring",
+                stiffness: 300,
+                damping: 30,
+                scale: { duration: 0.3 },
+              }}
+              layout
+            >
+              <Message
+                message={message}
+                onRemove={
+                  (message as any)._pendingRemove
+                    ? () => handleRemove(message.id!)
+                    : undefined
+                }
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
-      <ScrollToBottom />
+      <div ref={scrollRef} />
     </>
   );
-}
-
-function ScrollToBottom() {
-  const elementRef = useRef<HTMLDivElement>(null);
-  useEffect(() => elementRef.current!.scrollIntoView());
-  return <div ref={elementRef} />;
 }

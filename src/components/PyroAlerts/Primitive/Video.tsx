@@ -1,11 +1,11 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Textfit } from "react-textfit";
 
-import { KeyWordText } from "../../../shared/components/KeyWordText";
-import { getCoordinates, getRandomRotation } from "../../../shared/Utils";
-import styles from "./Media.module.scss";
-import { MediaDto } from "../../../shared/api/generated/baza";
 import { SignalRContext } from "../../../app";
+import { clampToViewport, getCoordinates, getRandomRotation } from "../../../shared/Utils";
+import { MediaDto } from "../../../shared/api/generated/baza";
+import { KeyWordText } from "../../../shared/components/KeyWordText";
+import styles from "./Media.module.scss";
 
 interface Props {
   callback: () => void;
@@ -83,10 +83,19 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
           }));
         }
 
+        // Корректируем координаты, чтобы не выходило за экран
+        const rect = video.getBoundingClientRect();
+        const width = rect.width || video.videoWidth || positionInfo.width;
+        const height = rect.height || video.videoHeight || positionInfo.height;
+        const left = parseInt((newCords.left || '0').toString());
+        const top = parseInt((newCords.top || '0').toString());
+        const clamped = clampToViewport(left, top, width, height);
+
         setBaseStyles((prev) => ({
           ...prev,
           ...newCords,
           ...getRandomRotation(MediaInfo.mediaInfo),
+          ...clamped,
         }));
       }
 

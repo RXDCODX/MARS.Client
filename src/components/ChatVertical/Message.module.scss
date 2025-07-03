@@ -1,83 +1,77 @@
 .container {
   display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  min-height: 60px;
+  padding: 5px 0;
+  gap: 1%;
+  /* background: #181818; */
+}
+
+.left {
+  width: 100%;
+  min-width: 120px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-end;
+  min-height: 40px;
+  border-radius: 12px;
+  padding: 8px 16px;
+}
+
+.right {
+  width: 50%;
+  display: flex;
   flex-direction: column;
-  min-height: 100px; /* Минимальная высота */
-  padding: 5px 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin-top: 1vh;
-}
-
-.head {
-  display: flex;
-  align-items: center; // Выравнивание по вертикали
-  margin-bottom: 5px; // Отступ между заголовком и сообщением
-}
-
-.badgesAndNickname {
-  display: flex;
-  flex-grow: 1;
-  align-items: stretch; // Бейджики и никнейм на одной строке
-  justify-items: stretch;
-  gap: 8px; // Расстояние между бейджиками и никнеймом
-  height: 50px;
-  margin-bottom: 1px;
-  margin-right: 1svw;
+  align-items: flex-start;
+  justify-content: center;
+  min-height: 40px;
+  text-align: center;
+  width: 100%;
+  font-size: 2em;
 }
 
 .badges {
   display: flex;
   align-items: center;
-  gap: 4px; // Расстояние между бейджиками
-
+  gap: 4px;
   > img {
-    max-height: 40px;
-    max-width: 40px;
+    max-height: 1.5em;
   }
 }
 
 .nickname {
-  display: flex;
-  align-self: stretch;
-  text-align: center;
-  align-items: flex-end;
-  max-height: 40px;
   font-weight: bold;
-  white-space: nowrap; // Запрет переноса текста
-  width: -webkit-fill-available;
-}
-
-.messageWrapper {
-  flex-grow: 1; // Растягивает контейнер на всю доступную высоту
-  overflow: hidden; // Скрывает содержимое, выходящее за пределы контейнера
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start; // Выравнивание текста по центру по вертикали
-  justify-content: left; // Выравнивание текста по центру по горизонтали
-  min-height: 20px;
-  height: 90px;
+  color: white;
+  font-size: 1.1em;
+  white-space: nowrap;
+  margin-left: 8px;
 }
 
 .message {
-  width: 100vw; // Сообщение занимает всю ширину контейнера
-  word-wrap: break-word; // Перенос длинных слов
-  text-align: left; // Текст по центру
+  display: inline;
+  word-wrap: break-word;
   color: white;
-  flex-grow: 1;
+  font-size: 2em;
+  text-align: center;
+}
 
-  > img {
-    overflow: hidden;
-    height: -webkit-fill-available;
-  }
+.linkStub {
+  color: #39ff14;
+  text-decoration: underline;
+  text-decoration-color: #39ff14;
+  font-weight: 500;
+}
 
-  > div {
-    height: 100%;
-
-    > img {
-      height: 1em;
-      width: auto;
-      object-fit: cover;
-      vertical-align: middle;
-    }
-  }
+.role {
+  display: inherit;
+  align-items: inherit;
+  justify-content: inherit;
+  flex-direction: inherit;
+  gap: inherit;
+  padding: inherit;
+  border-radius: 12px;
+  align-content: center;
+  flex-wrap: nowrap;
 }
