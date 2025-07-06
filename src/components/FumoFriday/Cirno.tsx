@@ -4,6 +4,7 @@ import { Textfit } from "react-textfit";
 import RainbowText from "../../shared/components/RainbowText/RainbowText";
 import { Message } from "./FumoFridayController";
 import styles from "./Styles.module.scss";
+import { getVideoPath } from "./videoAssets";
 
 interface Props {
   displayName: Message;
@@ -32,7 +33,7 @@ export function Cirno({ callback, displayName }: Props) {
         </Textfit>
         <div>
           <video
-            src={import.meta.env.VITE_BASE_PATH + "Alerts/Cirno.webm"}
+            src={getVideoPath('cirno')}
             autoPlay
             controls={false}
             style={{ maxWidth: "100%" }}

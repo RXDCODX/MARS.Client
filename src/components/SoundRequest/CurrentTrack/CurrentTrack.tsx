@@ -21,7 +21,7 @@ export default function CurrentTrack({ track, shouldAnimate = true }: Props) {
               <div className={styles.info}>
                 <div className={styles.textContainer}>
                   <Textfit
-                    mode="single"
+                    mode="multi"
                     max={200}
                     min={20}
                     style={{ width: "100%", height: "100%" }}
@@ -31,7 +31,7 @@ export default function CurrentTrack({ track, shouldAnimate = true }: Props) {
                 </div>
                 <div className={styles.textContainer}>
                   <Textfit
-                    mode="single"
+                    mode="multi"
                     max={300}
                     min={30}
                     style={{ width: "100%", height: "100%" }}

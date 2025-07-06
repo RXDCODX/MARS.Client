@@ -1,4 +1,5 @@
-html {
+/* Применяем стили только если не в Storybook */
+html:not([data-storybook]) {
   font-size: 20px;
   text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }

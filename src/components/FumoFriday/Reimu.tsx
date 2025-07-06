@@ -4,6 +4,7 @@ import { Textfit } from "react-textfit";
 import RainbowText from "../../shared/components/RainbowText/RainbowText";
 import { Message } from "./FumoFridayController";
 import styles from "./Styles.module.scss";
+import { getVideoPath } from "./videoAssets";
 
 interface Props {
   displayName: Message;
@@ -21,7 +22,7 @@ export function Reimu({ callback, displayName }: Props) {
       >
         <div>
           <video
-            src={import.meta.env.VITE_BASE_PATH + "Alerts/Reimu.webm"}
+            src={getVideoPath('reimu')}
             autoPlay
             controls={false}
             style={{ maxWidth: "100%" }}

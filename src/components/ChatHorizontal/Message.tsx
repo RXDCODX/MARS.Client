@@ -1,16 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import styles from "./Message.module.css";
+import { useAnimate } from "react-simple-animate";
 import {
-  getNotWhiteColor,
-  getRandomInt,
-  isWhiteColor,
-  parseContent,
-  replaceEmotes,
+    getNotWhiteColor,
+    getRandomInt,
+    isWhiteColor,
+    parseContent,
+    replaceEmotes,
 } from "../../shared/Utils";
 import { ChatMessage } from "../../shared/api/generated/baza";
 import animateStyles from "../../shared/styles/animate.module.scss";
-import { useAnimate } from "react-simple-animate";
 import useTwitchStore from "../../shared/twitchStore/twitchStore";
+import styles from "./Message.module.scss";
 
 interface Props {
   message: ChatMessage;
@@ -22,7 +22,8 @@ export const Message = ({ message, callback }: Props) => {
   const divRef = useRef<HTMLDivElement>(null);
   const parser = useTwitchStore((state) => state.parser);
   const parserToLink = useTwitchStore((state) => state.parseToLink);
-  if (!parser || !parserToLink) return null;
+  
+
 
   const [text] = useState(parseContent(message.message));
   const [fontSize, _] = useState(getRandomInt(10, 40));
@@ -91,6 +92,36 @@ export const Message = ({ message, callback }: Props) => {
       play(true);
     }
   }, [divRef.current?.offsetWidth]);
+
+  // Проверяем parser после определения всех переменных
+  if (!parser || !parserToLink) {
+    // Для Storybook используем упрощенный рендер
+    return (
+      handler && (
+        <div
+          ref={divRef}
+          key={message.id}
+          style={style}
+          className={styles.message + " " + animateStyles.animated}
+          onAnimationEnd={callback}
+        >
+          <div
+            id={`${message.id}_nickname`}
+            className={styles.nickname}
+            style={{ color: message.colorHex }}
+          >
+            {message.displayName}:
+          </div>
+          <div
+            className={styles.text}
+            style={{ color: "white", marginLeft: "10px" }}
+          >
+            {message.message}
+          </div>
+        </div>
+      )
+    );
+  }
 
   return (
     handler && (

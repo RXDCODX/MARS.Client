@@ -1,42 +1,60 @@
-import { Message } from "./Message";
+import { useCallback, useEffect, useState } from "react";
 import { SignalRContext } from "../../app";
-import { ChatMessage } from "../../shared/api/generated/baza";
-import { useCallback, useState } from "react";
 import Announce from "../../shared/Utils/Announce/Announce";
+import { ChatMessage } from "../../shared/api/generated/baza";
+import { Message } from "./Message";
 
-export default function ChatHorizontal() {
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+interface ChatHorizontalProps {
+  messages?: ChatMessage[];
+  onRemoveMessage?: (id: string) => void;
+}
+
+export default function ChatHorizontal({ messages: externalMessages, onRemoveMessage }: ChatHorizontalProps) {
+  const [internalMessages, setInternalMessages] = useState<ChatMessage[]>([]);
   const [announced, setAnnounced] = useState(false);
 
-  SignalRContext.useSignalREffect(
-    "newmessage",
-    (id: string, message: ChatMessage) => {
-      message.id ??= id;
-      setMessages((prev) => {
-        while(prev.length >= 50) {
-          prev.pop();
-        }
-        if (prev.find((m) => m.id === message.id)) {
-          return prev;
-        } else {
-          return [message, ...prev];
-        }
-      });
-    },
-    [],
-  );
+  // Используем внешние сообщения или внутренние
+  const messages = externalMessages !== undefined ? externalMessages : internalMessages;
+  const handleRemove = onRemoveMessage || ((id: string) => {
+    setInternalMessages((prev) => prev.filter((m) => m.id !== id));
+  });
 
-  SignalRContext.useSignalREffect(
-    "deletemessage",
-    (id: string) => {
-      setMessages((prev) => prev.filter((m) => m.id !== id));
-    },
-    [],
-  );
+
+
+  // SignalR эффекты только если не переданы внешние сообщения
+  useEffect(() => {
+    if (!externalMessages) {
+      SignalRContext.useSignalREffect(
+        "newmessage",
+        (id: string, message: ChatMessage) => {
+          message.id ??= id;
+          setInternalMessages((prev) => {
+            while(prev.length >= 50) {
+              prev.pop();
+            }
+            if (prev.find((m) => m.id === message.id)) {
+              return prev;
+            } else {
+              return [message, ...prev];
+            }
+          });
+        },
+        [],
+      );
+
+      SignalRContext.useSignalREffect(
+        "deletemessage",
+        (id: string) => {
+          setInternalMessages((prev) => prev.filter((m) => m.id !== id));
+        },
+        [],
+      );
+    }
+  }, [externalMessages]);
 
   const remove = useCallback((message: ChatMessage) => {
-    setMessages((prev) => prev.filter((m) => m.id !== message.id));
-  }, []);
+    handleRemove(message.id!);
+  }, [handleRemove]);
 
   return (
     <>

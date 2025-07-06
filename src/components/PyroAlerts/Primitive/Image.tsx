@@ -1,8 +1,8 @@
 import { CSSProperties, useEffect, useRef, useState } from "react";
 
-import { clampToViewport, getCoordinates, getRandomRotation } from "../../../shared/Utils";
-import { MediaDto } from "../../../shared/api/generated/baza";
+import { getCoordinates, getRandomRotation } from "../../../shared/Utils";
 import styles from "./Media.module.scss";
+import { MediaDto } from "../../../shared/api/generated/baza";
 
 interface Props {
   callBack: () => void;
@@ -43,14 +43,8 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
             const cords = getCoordinates(event.currentTarget, mediaInfo);
             const rotation = getRandomRotation(mediaInfo);
             const size = { ...style };
-            const rect = event.currentTarget.getBoundingClientRect();
-            const width = rect.width || positionInfo.width;
-            const height = rect.height || positionInfo.height;
-            const left = parseInt((cords.left || '0').toString());
-            const top = parseInt((cords.top || '0').toString());
-            const clamped = clampToViewport(left, top, width, height);
             setStyle(() => {
-              return { ...cords, ...rotation, ...size, ...clamped, visibility: "visible" };
+              return { ...cords, ...rotation, ...size, visibility: "visible" };
             });
           }}
           onError={(e) => console.log(e)}
@@ -70,14 +64,8 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
             const cords = getCoordinates(event.currentTarget, mediaInfo);
             const rotation = getRandomRotation(mediaInfo);
             const size = { ...style };
-            const rect = event.currentTarget.getBoundingClientRect();
-            const width = rect.width || positionInfo.width;
-            const height = rect.height || positionInfo.height;
-            const left = parseInt((cords.left || '0').toString());
-            const top = parseInt((cords.top || '0').toString());
-            const clamped = clampToViewport(left, top, width, height);
             setStyle(() => {
-              return { ...cords, ...rotation, ...size, ...clamped, visibility: "visible" };
+              return { ...cords, ...rotation, ...size, visibility: "visible" };
             });
           }}
         />

@@ -32,13 +32,15 @@ export function Message({ message, onRemove }: Props) {
   useEffect(() => {
     setTimeout(
       () => {
-        msgRef.current!.onanimationend = () => {
-          setHandler(false);
-        };
-        msgRef.current!.className =
-          styles.container + " " + anime.animated + " " + anime.zoomOut;
+        if (msgRef.current) {
+          msgRef.current.onanimationend = () => {
+            setHandler(false);
+          };
+          msgRef.current.className =
+            styles.container + " " + anime.animated + " " + anime.zoomOut;
+        }
       },
-      import.meta.env.DEV ? 30 * 100000 : 30 * 1000,
+      import.meta.env.VITE_PROD ? 30 * 1000 : 30 * 1000000,
     );
   }, [onRemove, message]);
 
@@ -60,17 +62,29 @@ export function Message({ message, onRemove }: Props) {
             <div className={styles.badges}>
               {replaceBadges(badges, message)}
             </div>
-            <div className={styles.nickname}>{message.displayName}</div>
+            <div
+              className={styles.nickname}
+              style={{ color: message.colorHex ?? "white" }}
+            >
+              {message.displayName}
+            </div>
           </div>
         </div>
         <div className={styles.right}>
-          {content.map((part) => (
-            <GradientText
-              key={part.id}
-              text={typeof part.content === "string" ? part.content : ""}
-              fontWeight={600}
-            />
-          ))}
+          {content.map((part) =>
+            message.isBroadcaster || message.isVip || message.isModerator ? (
+              <GradientText
+                key={part.id}
+                text={typeof part.content === "string" ? part.content : ""}
+                fontWeight={600}
+                speed="very-slow"
+              />
+            ) : (
+              <span key={part.id} style={{ color: "white" }}>
+                {part.content}
+              </span>
+            ),
+          )}
         </div>
       </div>
     )

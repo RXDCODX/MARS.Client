@@ -1,3 +1,6 @@
+// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
+import storybook from "eslint-plugin-storybook";
+
 //*@ts-check*
 import js from "@eslint/js";
 import globals from "globals";
@@ -12,88 +15,81 @@ import simpleImportSort from "eslint-plugin-simple-import-sort";
 import typescriptParser from "@typescript-eslint/parser";
 import react from "eslint-plugin-react";
 
-export default tseslint.config(
-  js.configs.recommended,
-  tseslint.configs.recommended,
-  {
-    plugins: {
-      prettier: prettier,
-    },
-    rules: {
-      "prettier/prettier": [
-        "warn",
-        {
-          endOfLine: "auto",
-        },
-      ],
-    },
+export default tseslint.config(js.configs.recommended, tseslint.configs.recommended, {
+  plugins: {
+    prettier: prettier,
   },
-  ...fixupConfigRules({
-    files: ["**/*.{ts,tsx}"],
-    languageOptions: {
-      ecmaVersion: "latest",
-      globals: globals.browser,
-    },
-    settings: {
-      react: {
-        version: "detect",
+  rules: {
+    "prettier/prettier": [
+      "warn",
+      {
+        endOfLine: "auto",
       },
-    },
-    plugins: {
-      "react-hooks": reactHooks,
-      "react-refresh": reactRefresh,
-      typescriptEslint,
-      "simple-import-sort": simpleImportSort,
-      react: react,
-    },
-    rules: {
-      ...reactHooks.configs.recommended.rules,
-      "unicode-bom": "error",
-      "arrow-body-style": "error",
-      "prefer-arrow-callback": "error",
-      "react/jsx-uses-react": "off",
-      "react/react-in-jsx-scope": "off",
-      "simple-import-sort/imports": "error",
-      "react/no-children-prop": "error",
-      "no-restricted-imports": [
-        "error",
-        {
-          paths: [
-            {
-              name: "react",
-              importNames: ["default"],
-              message: "Импортируйте конкретные объекты, а не весь React.",
-            },
-          ],
-        },
-      ],
-      "react-refresh/only-export-components": [
-        "error",
-        { allowConstantExport: true, endOfLine: "auto" },
-      ],
-    },
-    ignores: [
-      "src/services/*",
-      "dist/**",
-      "node_modules/**",
-      "**/*.md",
-      "build/**",
-      "vite.config.ts",
-      "obj/**",
     ],
-  }),
-  {
-    files: ["**/*.{js,ts,tsx}"],
-    languageOptions: {
-      parser: typescriptParser,
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true,
-        },
-        ecmaVersion: 11,
-        sourceType: "module",
-      },
+  },
+}, ...fixupConfigRules({
+  files: ["**/*.{ts,tsx}"],
+  languageOptions: {
+    ecmaVersion: "latest",
+    globals: globals.browser,
+  },
+  settings: {
+    react: {
+      version: "detect",
     },
   },
-  eslintConfigPrettier,
-);
+  plugins: {
+    "react-hooks": reactHooks,
+    "react-refresh": reactRefresh,
+    typescriptEslint,
+    "simple-import-sort": simpleImportSort,
+    react: react,
+  },
+  rules: {
+    ...reactHooks.configs.recommended.rules,
+    "unicode-bom": "error",
+    "arrow-body-style": "error",
+    "prefer-arrow-callback": "error",
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
+    "simple-import-sort/imports": "error",
+    "react/no-children-prop": "error",
+    "no-restricted-imports": [
+      "error",
+      {
+        paths: [
+          {
+            name: "react",
+            importNames: ["default"],
+            message: "Импортируйте конкретные объекты, а не весь React.",
+          },
+        ],
+      },
+    ],
+    "react-refresh/only-export-components": [
+      "error",
+      { allowConstantExport: true, endOfLine: "auto" },
+    ],
+  },
+  ignores: [
+    "src/services/*",
+    "dist/**",
+    "node_modules/**",
+    "**/*.md",
+    "build/**",
+    "vite.config.ts",
+    "obj/**",
+  ],
+}), {
+  files: ["**/*.{js,ts,tsx}"],
+  languageOptions: {
+    parser: typescriptParser,
+    parserOptions: {
+      ecmaFeatures: {
+        jsx: true,
+      },
+      ecmaVersion: 11,
+      sourceType: "module",
+    },
+  },
+}, eslintConfigPrettier, storybook.configs["flat/recommended"]);
