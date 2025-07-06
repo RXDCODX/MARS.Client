@@ -1,9 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { ILogger } from "react-signalr";
 
 import App from "./App.tsx";
 import { SignalRContext } from "./index.ts";
-import { ILogger } from "react-signalr";
 
 const LogLevelNames = {
   [0]: "Trace",
@@ -51,10 +51,10 @@ export const logger: ILogger = {
 };
 
 // Вспомогательные функции
-function tryParseJson(str: string): any {
+function tryParseJson(str: string) {
   try {
     // Ищем JSON в строках вида: Content: '{"protocol":"json"}'
-    const jsonMatch = str.match(/Content: '(.*?)[\u001E']/);
+    const jsonMatch = str.match("Content: '(.*?)[\u001E']");
     const jsonString = jsonMatch?.[1] || str;
 
     return JSON.parse(jsonString);

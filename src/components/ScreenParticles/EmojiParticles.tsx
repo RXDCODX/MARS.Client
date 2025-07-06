@@ -1,8 +1,9 @@
 import { JSX, useEffect, useState } from "react";
-import { getEmojisSrcFromText } from "../../shared/Utils";
-import useTwitchStore from "../../shared/twitchStore/twitchStore";
-import { ChatMessage } from "../../shared/api/generated/baza";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
+
+import { ChatMessage } from "../../shared/api/generated/baza";
+import useTwitchStore from "../../shared/twitchStore/twitchStore";
+import { getEmojisSrcFromText } from "../../shared/Utils";
 import { randomInRange } from ".";
 
 interface imageData {
@@ -110,20 +111,18 @@ const ConfettiImage = ({ input, scalar = 10 }: Props) => {
           width="100%"
           height="100%"
           autorun={{ speed: 3, duration: 10000 }}
-          decorateOptions={() => {
-            return {
-              startVelocity: 30,
-              spread: 360,
-              ticks: 60,
-              particleCount: 30,
-              shapes,
-              scalar,
-              origin: {
-                x: randomInRange(0, 1),
-                y: randomInRange(0, 1),
-              },
-            };
-          }}
+          decorateOptions={() => ({
+            startVelocity: 30,
+            spread: 360,
+            ticks: 60,
+            particleCount: 30,
+            shapes,
+            scalar,
+            origin: {
+              x: randomInRange(0, 1),
+              y: randomInRange(0, 1),
+            },
+          })}
         />,
       );
     }

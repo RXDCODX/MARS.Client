@@ -1,6 +1,6 @@
 // AnimatedGradientBackground.tsx
-import { useEffect } from "react";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 
 interface AnimatedGradientBackgroundProps {
   children: React.ReactNode;

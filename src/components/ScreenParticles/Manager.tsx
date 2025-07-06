@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react";
+
 import { SignalRContext } from "../../app";
 import {
   ChatMessage,
@@ -46,9 +47,7 @@ export default function Manager() {
   );
 
   const removeMessage = useCallback((id: number) => {
-    setMessages((prev) => {
-      return prev.filter((message) => message.id !== id);
-    });
+    setMessages((prev) => prev.filter((message) => message.id !== id));
   }, []);
 
   return (
@@ -73,9 +72,9 @@ export default function Manager() {
           }
         })}
       {emojis.length > 0 &&
-        emojis.map((message) => {
-          return <EmojiParticles key={message.id} input={message.input} />;
-        })}
+        emojis.map((message) => (
+          <EmojiParticles key={message.id} input={message.input} />
+        ))}
     </>
   );
 }

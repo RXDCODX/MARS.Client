@@ -3,11 +3,12 @@ import { TGSPlayer } from "@lottiefiles/lottie-player/dist/tgs-player";
 import { useEffect, useRef, useState } from "react";
 // eslint-disable-next-line no-restricted-imports
 import react from "react";
-import { getCoordinates, getRandomRotation } from "../../../shared/Utils";
+
 import { MediaDto } from "../../../shared/api/generated/baza";
+import useTwitchStore from "../../../shared/twitchStore/twitchStore";
+import { getCoordinates, getRandomRotation } from "../../../shared/Utils";
 import { replaceEmotes } from "../../../shared/Utils";
 import styles from "./Media.module.scss";
-import useTwitchStore from "../../../shared/twitchStore/twitchStore";
 
 const Player = createComponent({
   elementClass: TGSPlayer,
@@ -21,10 +22,7 @@ interface Props {
   mediaInfo: MediaDto;
 }
 
-export default function TelegramSticker({
-  mediaInfo,
-  callBack,
-}: Props) {
+export default function TelegramSticker({ mediaInfo, callBack }: Props) {
   const {
     id: Id,
     metaInfo,
@@ -58,7 +56,7 @@ export default function TelegramSticker({
     if (elementRef.current) {
       const cords = getCoordinates(elementRef.current, mediaInfo.mediaInfo);
       const rotation = getRandomRotation(mediaInfo.mediaInfo);
-      setStyle(prev => ({
+      setStyle((prev) => ({
         ...prev,
         ...cords,
         ...rotation,

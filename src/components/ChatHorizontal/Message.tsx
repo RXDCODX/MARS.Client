@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { useAnimate } from "react-simple-animate";
-import {
-    getNotWhiteColor,
-    getRandomInt,
-    isWhiteColor,
-    parseContent,
-    replaceEmotes,
-} from "../../shared/Utils";
+
 import { ChatMessage } from "../../shared/api/generated/baza";
 import animateStyles from "../../shared/styles/animate.module.scss";
 import useTwitchStore from "../../shared/twitchStore/twitchStore";
+import {
+  getNotWhiteColor,
+  getRandomInt,
+  isWhiteColor,
+  parseContent,
+  replaceEmotes,
+} from "../../shared/Utils";
 import styles from "./Message.module.scss";
 
 interface Props {
@@ -22,19 +23,17 @@ export const Message = ({ message, callback }: Props) => {
   const divRef = useRef<HTMLDivElement>(null);
   const parser = useTwitchStore((state) => state.parser);
   const parserToLink = useTwitchStore((state) => state.parseToLink);
-  
-
 
   const [text] = useState(parseContent(message.message));
-  const [fontSize, _] = useState(getRandomInt(10, 40));
-  const [duration, __] = useState(fontSize * 0.7);
-  const [opacity, ___] = useState(getRandomInt(0.4, 0.6));
-  const [mainColor, ____] = useState(
+  const [fontSize] = useState(getRandomInt(10, 40));
+  const [duration] = useState(fontSize * 0.7);
+  const [opacity] = useState(getRandomInt(0.4, 0.6));
+  const [mainColor] = useState(
     isWhiteColor(message.colorHex ?? "white")
       ? getNotWhiteColor(opacity)
       : (message.colorHex ?? "white"),
   );
-  const [bg, _________] = useState(
+  const [bg] = useState(
     `linear-gradient(125deg, ${mainColor} , transparent 75%) border-box`,
   );
   const [baseStyles, setBaseStyles] = useState<React.CSSProperties>({

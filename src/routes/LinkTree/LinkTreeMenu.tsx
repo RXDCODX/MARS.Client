@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
 import "./LinktreeMenu.css"; // Стили (можно заменить на Tailwind или styled-components)
+
+import { Link } from "react-router-dom";
 
 export const LinktreeMenu = () => {
   const links = [

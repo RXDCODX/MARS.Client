@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect } from "react";
+import { CSSProperties, useEffect } from "react";
 
 interface StrokeConfig {
   /** Цвет обводки текста (по умолчанию: #fff) */

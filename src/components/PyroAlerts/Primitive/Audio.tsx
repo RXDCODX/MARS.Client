@@ -1,7 +1,8 @@
 import { useCallback, useRef } from "react";
+
+import { SignalRContext } from "../../../app";
 import { MediaDto } from "../../../shared/api/generated/baza";
 import { BigTextBlockForAudio } from "../../../shared/Utils/BigTexts/BigTextBlockForAudio";
-import { SignalRContext } from "../../../app";
 
 interface Props {
   callback: () => void;

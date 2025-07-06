@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { expect } from "@storybook/test";
+
 import { KeyWordText } from "./index";
 
 const meta: Meta<typeof KeyWordText> = {

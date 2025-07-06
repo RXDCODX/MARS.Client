@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { replaceBadges } from "../../shared/Utils";
-import GradientText from "../../shared/Utils/Animations/GradientText";
+
 import { ChatMessage } from "../../shared/api/generated/baza";
 import anime from "../../shared/styles/animate.module.scss";
 import useTwitchStore from "../../shared/twitchStore/twitchStore";
+import { replaceBadges } from "../../shared/Utils";
+import GradientText from "../../shared/Utils/Animations/GradientText";
 import styles from "./Message.module.scss";
 
 interface Props {
@@ -77,7 +78,7 @@ export function Message({ message, onRemove }: Props) {
                 key={part.id}
                 text={typeof part.content === "string" ? part.content : ""}
                 fontWeight={600}
-                speed="very-slow"
+                speed="very-fast"
               />
             ) : (
               <span key={part.id} style={{ color: "white" }}>

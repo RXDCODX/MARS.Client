@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import SchoolPride from "react-canvas-confetti/dist/presets/pride";
 import { PrizeType } from "react-roulette-pro";
 import { Textfit } from "react-textfit";
-import SchoolPride from "react-canvas-confetti/dist/presets/pride";
 
 import { SignalRContext } from "../../app";
+import { Host, Waifu } from "../../shared/api/generated/baza";
 import animate from "../../shared/styles/animate.module.scss";
 import useTwitchStore from "../../shared/twitchStore/twitchStore";
+import { arrayExcept, getRandomColor } from "../../shared/Utils";
 import Announce from "../../shared/Utils/Announce/Announce";
 import {
   getHusbandText,
@@ -16,8 +18,6 @@ import {
 } from "./helper";
 import styles from "./WaifuAlerts.module.scss";
 import WaifuRoulette from "./WaifuRoulette";
-import { Host, Waifu } from "../../shared/api/generated/baza";
-import { arrayExcept, getRandomColor } from "../../shared/Utils";
 
 enum StateStatus {
   add,
@@ -314,29 +314,25 @@ export default function WaifuAlerts() {
             width="100%"
             height="100%"
             autorun={{ speed: 30, duration: 20 * 1000 }}
-            decorateOptions={(): confetti.Options => {
-              return {
-                particleCount: 2,
-                angle: 60,
-                spread: 55,
-                origin: { x: 0 },
-                colors: ["#000000", "#FF0000", "#FFFFFF"],
-              };
-            }}
+            decorateOptions={(): confetti.Options => ({
+              particleCount: 2,
+              angle: 60,
+              spread: 55,
+              origin: { x: 0 },
+              colors: ["#000000", "#FF0000", "#FFFFFF"],
+            })}
           />
           <SchoolPride
             width="100%"
             height="100%"
             autorun={{ speed: 30, duration: 20 * 1000 }}
-            decorateOptions={(): confetti.Options => {
-              return {
-                particleCount: 2,
-                angle: 120,
-                spread: 55,
-                origin: { x: 1 },
-                colors: ["#000000", "#FF0000", "#FFFFFF"],
-              };
-            }}
+            decorateOptions={(): confetti.Options => ({
+              particleCount: 2,
+              angle: 120,
+              spread: 55,
+              origin: { x: 1 },
+              colors: ["#000000", "#FF0000", "#FFFFFF"],
+            })}
           />
           {/** Images With text */}
           <div className={styles["merge-container"]}>

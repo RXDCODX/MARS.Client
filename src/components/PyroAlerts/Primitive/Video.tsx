@@ -1,11 +1,11 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Textfit } from "react-textfit";
 
+import { SignalRContext } from "../../../app";
+import { MediaDto } from "../../../shared/api/generated/baza";
 import { KeyWordText } from "../../../shared/components/KeyWordText";
 import { getCoordinates, getRandomRotation } from "../../../shared/Utils";
 import styles from "./Media.module.scss";
-import { MediaDto } from "../../../shared/api/generated/baza";
-import { SignalRContext } from "../../../app";
 
 interface Props {
   callback: () => void;
@@ -37,13 +37,13 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
     if (isHighPrior) {
       SignalRContext.invoke("MuteAll", []);
     }
-  }, []);
+  }, [isHighPrior]);
 
   const unmuteAll = useCallback(() => {
     if (isHighPrior) {
       SignalRContext.invoke("UnmuteSessions");
     }
-  }, []);
+  }, [isHighPrior]);
 
   const handleTimeUpdate = useCallback(
     (e: React.SyntheticEvent<HTMLVideoElement>) => {
@@ -64,7 +64,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
         callback();
       }
     },
-    [metaInfo.duration, callback],
+    [metaInfo.duration, callback, metaInfo.isLooped, unmuteAll],
   );
 
   const handleLoadedMetadata = useCallback(
@@ -96,7 +96,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
         video.play();
       });
     },
-    [MediaInfo.mediaInfo, positionInfo.isUseOriginalWidthAndHeight],
+    [MediaInfo.mediaInfo, positionInfo.isUseOriginalWidthAndHeight, muteAll],
   );
 
   useEffect(() => {
@@ -117,14 +117,17 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
     return () => {
       if (backupTimer) clearTimeout(backupTimer);
     };
-  }, [videoProgress, metaInfo.duration, callback]);
+  }, [videoProgress, metaInfo.duration, callback, unmuteAll, backupTimer]);
 
   useEffect(() => {
-    setTimeout(() => {
-      unmuteAll();
-      callback();
-    }, metaInfo.duration * 1000 + 1000);
-  }, []);
+    setTimeout(
+      () => {
+        unmuteAll();
+        callback();
+      },
+      metaInfo.duration * 1000 + 1000,
+    );
+  }, [callback, metaInfo.duration, unmuteAll]);
 
   return (
     <div id={id} className={styles.media} style={baseStyles}>

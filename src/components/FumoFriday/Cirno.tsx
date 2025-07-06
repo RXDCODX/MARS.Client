@@ -33,7 +33,7 @@ export function Cirno({ callback, displayName }: Props) {
         </Textfit>
         <div>
           <video
-            src={getVideoPath('cirno')}
+            src={getVideoPath("cirno")}
             autoPlay
             controls={false}
             style={{ maxWidth: "100%" }}

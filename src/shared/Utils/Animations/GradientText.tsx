@@ -1,4 +1,4 @@
-import React, { CSSProperties, useEffect } from "react";
+import { CSSProperties, useEffect } from "react";
 
 interface ShadowConfig {
   /** Цвет тени текста (по умолчанию: rgba(0, 0, 0, 0.3)) */
@@ -13,7 +13,7 @@ interface ShadowConfig {
   enabled?: boolean;
 }
 
-type SpeedPreset = 'very-slow' | 'slow' | 'normal' | 'fast' | 'very-fast';
+type SpeedPreset = "very-slow" | "slow" | "normal" | "fast" | "very-fast";
 
 interface GradientTextProps {
   text: string;
@@ -46,7 +46,7 @@ const GradientText: React.FC<GradientTextProps> = ({
     "#ff9900",
     "#ff00cc",
   ],
-  speed = 'normal',
+  speed = "normal",
   fontSize = "inherit",
   fontWeight = "normal",
   className = "",
@@ -61,11 +61,11 @@ const GradientText: React.FC<GradientTextProps> = ({
   // Функция для получения значения скорости из пресета
   const getSpeedValue = (preset: SpeedPreset): number => {
     const presets = {
-      'very-slow': 40,
-      'slow': 25,
-      'normal': 15,
-      'fast': 8,
-      'very-fast': 3
+      "very-slow": 40,
+      slow: 25,
+      normal: 15,
+      fast: 8,
+      "very-fast": 3,
     };
     return presets[preset];
   };
@@ -97,7 +97,7 @@ const GradientText: React.FC<GradientTextProps> = ({
     WebkitTextFillColor: "transparent",
     color: "transparent",
     display: "inline-block",
-    textShadow: shadow.enabled 
+    textShadow: shadow.enabled
       ? `${shadow.offsetX}px ${shadow.offsetY}px ${shadow.blur}px ${shadow.color}`
       : "none",
   };

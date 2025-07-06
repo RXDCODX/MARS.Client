@@ -1,20 +1,21 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import PageName from './PageName';
+import type { Meta, StoryObj } from "@storybook/react";
+
+import PageName from "./PageName";
 
 const meta: Meta<typeof PageName> = {
-  title: 'Components/PageName',
+  title: "Components/PageName",
   component: PageName,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
     docs: {
       description: {
-        component: 'Компонент для отображения названия страницы.',
+        component: "Компонент для отображения названия страницы.",
       },
     },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
-    title: { control: 'text' },
+    title: { control: "text" },
   },
 };
 
@@ -23,24 +24,24 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
-    title: 'Главная страница',
+    title: "Главная страница",
   },
 };
 
 export const LongName: Story = {
   args: {
-    title: 'Очень длинное название страницы для демонстрации',
+    title: "Очень длинное название страницы для демонстрации",
   },
 };
 
 export const ShortName: Story = {
   args: {
-    title: 'Чат',
+    title: "Чат",
   },
 };
 
 export const WithSpecialCharacters: Story = {
   args: {
-    title: 'Страница с символами: !@#$%^&*()',
+    title: "Страница с символами: !@#$%^&*()",
   },
-}; 
+};

@@ -1,5 +1,6 @@
 import { AnimatePresence, motion, Variant } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
+
 import AnimatedGradientBackground from "../../../shared/Utils/Animations/AnimatedGradientBackground";
 import styles from "./CurrentTrack.module.scss";
 
@@ -121,8 +122,7 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
   };
 
   return (
-    <AnimatedGradientBackground
-    >
+    <AnimatedGradientBackground>
       {/* Верхний слайд */}
       <motion.div
         className={styles.slide}

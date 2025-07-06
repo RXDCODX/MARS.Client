@@ -13,7 +13,7 @@ export interface Message {
 }
 
 export function FumoFridayController() {
-  const [_, setMessages] = useState<Message[]>([]);
+  const [, setMessages] = useState<Message[]>([]);
   const [currentMessage, setCurrentMessage] = useState<Message | undefined>(
     undefined,
   );
@@ -63,18 +63,18 @@ export function FumoFridayController() {
     const testMessage: Message = {
       id: uuidv4(),
       message: "Test User",
-      color: "#ff6b6b"
+      color: "#ff6b6b",
     };
     handleAddEvent(testMessage);
   }, [handleAddEvent]);
 
   // Делаем функцию play доступной глобально для тестирования
-  (window as any).testFumoFriday = play;
+  (window as unknown as { testFumoFriday: typeof play }).testFumoFriday = play;
 
   return (
     <>
       <div className={styles.testControls}>
-        <button 
+        <button
           onClick={play}
           className={styles.testButton}
           disabled={!!currentMessage}
@@ -82,7 +82,7 @@ export function FumoFridayController() {
           Test FumoFriday Alert
         </button>
       </div>
-      
+
       {currentMessage && switcher && (
         <Reimu
           key={currentMessage.id}

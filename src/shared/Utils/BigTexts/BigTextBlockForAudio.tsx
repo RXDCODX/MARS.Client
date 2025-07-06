@@ -2,10 +2,10 @@ import { JSX } from "react";
 import { Container, Row } from "react-bootstrap";
 import { Textfit } from "react-textfit";
 
-import { replaceEmotes } from "..";
 import { MediaDto } from "../../api/generated/baza";
-import styles from "./BigTextStyles.module.scss";
 import useTwitchStore from "../../twitchStore/twitchStore";
+import { replaceEmotes } from "..";
+import styles from "./BigTextStyles.module.scss";
 
 interface Props {
   mediaInfo: MediaDto;

@@ -1,8 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+
 import { SignalRContext } from "../../app";
-import Announce from "../../shared/Utils/Announce/Announce";
 import { ChatMessage } from "../../shared/api/generated/baza";
+import Announce from "../../shared/Utils/Announce/Announce";
 import styles from "./ChatVertical.module.scss";
 import { Message } from "./Message";
 
@@ -11,17 +12,21 @@ interface ChatVerticalProps {
   onRemoveMessage?: (id: string) => void;
 }
 
-export default function ChatVertical({ messages: externalMessages, onRemoveMessage }: ChatVerticalProps) {
+export default function ChatVertical({
+  messages: externalMessages,
+  onRemoveMessage,
+}: ChatVerticalProps) {
   const [internalMessages, setInternalMessages] = useState<ChatMessage[]>([]);
   const [announced, setAnnounced] = useState(false);
 
   // Используем внешние сообщения или внутренние
-  const messages = externalMessages !== undefined ? externalMessages : internalMessages;
-  const handleRemove = onRemoveMessage || ((id: string) => {
-    setInternalMessages((prev) => prev.filter((m) => m.id !== id));
-  });
-
-
+  const messages =
+    externalMessages !== undefined ? externalMessages : internalMessages;
+  const handleRemove =
+    onRemoveMessage ||
+    ((id: string) => {
+      setInternalMessages((prev) => prev.filter((m) => m.id !== id));
+    });
 
   // Для jump-анимации всех сообщений
   const [jumpKey, setJumpKey] = useState(0);
@@ -44,42 +49,40 @@ export default function ChatVertical({ messages: externalMessages, onRemoveMessa
   }, [messages.length]);
 
   // SignalR эффекты только если не переданы внешние сообщения
-  useEffect(() => {
-    if (!externalMessages) {
-      SignalRContext.useSignalREffect(
-        "newmessage",
-        (id: string, message: ChatMessage) => {
-          message.id ??= id;
-          setInternalMessages((prev) => {
-            while (prev.length >= 15) {
-              prev.pop();
-            }
-            if (prev.find((m) => m.id === message.id)) {
-              return prev;
-            } else {
-              return [message, ...prev];
-            }
-          });
-        },
-        [],
-      );
+  if (!externalMessages) {
+    SignalRContext.useSignalREffect(
+      "NewMessage",
+      (id: string, message: ChatMessage) => {
+        message.id ??= id;
+        setInternalMessages((prev) => {
+          while (prev.length >= 15) {
+            prev.pop();
+          }
+          if (prev.find((m) => m.id === message.id)) {
+            return prev;
+          } else {
+            return [message, ...prev];
+          }
+        });
+      },
+      [],
+    );
 
-      // Плавное удаление: сначала помечаем _pendingRemove, потом реально удаляем
-      const handleDeleteMessage = (id: string) => {
-        setInternalMessages((prev) =>
-          prev.map((m) => (m.id === id ? { ...m, _pendingRemove: true } : m)),
-        );
-      };
-
-      SignalRContext.useSignalREffect(
-        "deletemessage",
-        (id: string) => {
-          handleDeleteMessage(id);
-        },
-        [],
+    // Плавное удаление: сначала помечаем _pendingRemove, потом реально удаляем
+    const handleDeleteMessage = (id: string) => {
+      setInternalMessages((prev) =>
+        prev.map((m) => (m.id === id ? { ...m, _pendingRemove: true } : m)),
       );
-    }
-  }, [externalMessages]);
+    };
+
+    SignalRContext.useSignalREffect(
+      "deletemessage",
+      (id: string) => {
+        handleDeleteMessage(id);
+      },
+      [],
+    );
+  }
 
   return (
     <>

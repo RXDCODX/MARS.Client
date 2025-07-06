@@ -1,6 +1,7 @@
 import { CSSProperties } from "react";
-import type { ContentPart } from "../../shared/Utils";
+
 import { ChatMessage } from "../../shared/api/generated/baza";
+import type { ContentPart } from "../../shared/Utils";
 
 interface Props {
   className?: string;

@@ -1,4 +1,5 @@
 import { Textfit } from "react-textfit";
+
 import { TunaMusicData } from "../../../shared/api/generated/baza";
 import AnimationControl from "./AnimationControl";
 import styles from "./CurrentTrack.module.scss";
@@ -36,7 +37,7 @@ export default function CurrentTrack({ track, shouldAnimate = true }: Props) {
                     min={30}
                     style={{ width: "100%", height: "100%" }}
                   >
-                    {track.title} 
+                    {track.title}
                   </Textfit>
                 </div>
               </div>

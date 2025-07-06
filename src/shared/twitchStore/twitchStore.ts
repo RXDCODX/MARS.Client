@@ -95,7 +95,7 @@ function initialization(clientId: string, clientSecret: string) {
     match: /(\w+)+?/g,
   });
 
-  var newParser = new emoticons.EmoteParser(fetcher, {
+  const newParser = new emoticons.EmoteParser(fetcher, {
     template: '<img class="emote" alt="{name}" src="{link}" />',
     match: /(?<!<[^>]*)(\w+)(?![^<]*>)/g,
   });

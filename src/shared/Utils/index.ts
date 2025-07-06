@@ -1,14 +1,12 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import parse from "html-react-parser";
-
 import emoticons from "@mkody/twitch-emoticons";
 import { HelixChatBadgeSet } from "@twurple/api";
 import { ChatMessage as TwitchChatMessage } from "@twurple/chat";
-import React from "react";
+import parse from "html-react-parser";
 import { v4 as randomUUID } from "uuid";
+
 import { HighliteMessageProps } from "../../components/HighliteMessage/Message";
-import { addMimeTypesToImgTags } from "../MIME_types";
 import { ChatMessage, MediaInfo } from "../api/generated/baza";
+import { addMimeTypesToImgTags } from "../MIME_types";
 
 export { BigTextBlockForAudio } from "./BigTexts/BigTextBlockForAudio";
 export { BigTextBlockForVoice } from "./BigTexts/BigTextBlockForVoice";
@@ -38,7 +36,7 @@ export function replaceEmotes({
       }
     }
   } else if ("message" in text && typeof text.message === "string") {
-    var message = text as ChatMessage;
+    const message = text as ChatMessage;
 
     if (message.message === undefined) {
       return undefined;
@@ -237,8 +235,8 @@ export function replaceBadges(
   badges: HelixChatBadgeSet[],
   chatMessage: ChatMessage | TwitchChatMessage,
 ) {
-  var text: string | undefined = "";
-  var sub = "";
+  let text: string | undefined = "";
+  let sub = "";
 
   if (chatMessage instanceof TwitchChatMessage) {
     text = chatMessage.text;
@@ -291,12 +289,10 @@ export function getEmojisSrcFromText(
   if (typeof text === "string") {
     text = text.replace(/[\u{E0000}-\u{E007F}]/gu, "");
     const messages = text.split(" ");
-    const result = messages.map((message) => {
-      return client.parse(message, 1);
-    });
+    const result = messages.map((message) => client.parse(message, 1));
     return result;
   } else if ("message" in text && typeof text.message === "string") {
-    var message = text as ChatMessage;
+    const message = text as ChatMessage;
 
     if (
       message.message === undefined ||
@@ -458,7 +454,7 @@ export function parseContent(text?: string): ContentPart[] | undefined {
         });
       }
     } else {
-      if (!!part) {
+      if (part) {
         currentText.push(part);
       }
     }
@@ -485,10 +481,10 @@ export function arrayExcept<T>(
   // Если есть функция сравнения
   if (comparer) {
     const inArr1Only = arr1.filter(
-      item1 => !arr2.some(item2 => comparer(item1, item2))
+      (item1) => !arr2.some((item2) => comparer(item1, item2)),
     );
     const inArr2Only = arr2.filter(
-      item2 => !arr1.some(item1 => comparer(item1, item2))
+      (item2) => !arr1.some((item1) => comparer(item1, item2)),
     );
     return [...inArr1Only, ...inArr2Only];
   }
@@ -498,7 +494,7 @@ export function arrayExcept<T>(
   const set2 = new Set(arr2);
 
   const result: T[] = [];
-  
+
   // Добавляем элементы из arr1, которых нет в arr2
   for (const item of arr1) {
     if (!set2.has(item)) {
@@ -523,7 +519,7 @@ export function clampToViewport(
   left: number,
   top: number,
   width: number,
-  height: number
+  height: number,
 ): { left: number; top: number } {
   const maxLeft = Math.max(0, window.innerWidth - width);
   const maxTop = Math.max(0, window.innerHeight - height);

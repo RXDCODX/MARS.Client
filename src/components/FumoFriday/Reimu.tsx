@@ -15,14 +15,14 @@ export function Reimu({ callback, displayName }: Props) {
   const [show, setShow] = useState<boolean>(true);
 
   return (
-    <div className={styles['box-container']}>
+    <div className={styles["box-container"]}>
       <div
         className={styles.container}
         style={{ visibility: show ? "visible" : "hidden" }}
       >
         <div>
           <video
-            src={getVideoPath('reimu')}
+            src={getVideoPath("reimu")}
             autoPlay
             controls={false}
             style={{ maxWidth: "100%" }}

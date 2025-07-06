@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import { SignalRContext } from "../../app";
-import Announce from "../../shared/Utils/Announce/Announce";
 import {
   MediaDto,
   MediaMetaInfoPriorityEnum,
 } from "../../shared/api/generated/baza";
-import { v4 as uuidv4 } from "uuid";
-import HighPriorityAlert from "./HighPriorityAlert";
+import Announce from "../../shared/Utils/Announce/Announce";
 import Alert from "./Alert";
+import HighPriorityAlert from "./HighPriorityAlert";
 
 export default function PyroAlerts() {
   const [messages, setMessages] = useState<MediaDto[]>([]);

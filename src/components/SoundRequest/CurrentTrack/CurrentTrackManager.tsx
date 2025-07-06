@@ -1,9 +1,10 @@
-import { useCallback, useState, useMemo, useEffect } from "react";
-import { SignalRContext } from ".";
+import { useCallback, useEffect, useMemo, useState } from "react";
+
 import {
   TunaMusicData,
   TunaMusicDTO,
 } from "../../../shared/api/generated/baza";
+import { SignalRContext } from ".";
 import CurrentTrack from "./CurrentTrack";
 
 const defaultValue: TunaMusicData & { isDefaultValue: boolean } = {
@@ -85,7 +86,8 @@ export default function CurrentTrackManager() {
   }, [counter]);
 
   return (
-    !track.track.isDefaultValue && track.track.status !== "stopped" && (
+    !track.track.isDefaultValue &&
+    track.track.status !== "stopped" && (
       <CurrentTrack
         track={track.track}
         key={trackKey}

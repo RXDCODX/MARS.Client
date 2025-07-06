@@ -1,9 +1,13 @@
-import { useState } from 'react';
-import { createTestMessageSet } from '../../shared/Utils/testMessageUtils';
-import { ChatMessage } from '../../shared/api/generated/baza';
+import { useState } from "react";
+
+import { ChatMessage } from "../../shared/api/generated/baza";
+import { createTestMessageSet } from "../../shared/Utils/testMessageUtils";
 
 interface MessageManagerProps {
-  children: (messages: ChatMessage[], removeMessage: (id: string) => void) => React.ReactNode;
+  children: (
+    messages: ChatMessage[],
+    removeMessage: (id: string) => void,
+  ) => React.ReactNode;
 }
 
 export function MessageManager({ children }: MessageManagerProps) {
@@ -11,8 +15,8 @@ export function MessageManager({ children }: MessageManagerProps) {
   const [messageCount, setMessageCount] = useState(0);
 
   const generateMessages = () => {
-    const newMessages = createTestMessageSet('demo', messageCount);
-    
+    const newMessages = createTestMessageSet("demo", messageCount);
+
     newMessages.forEach((msg, index) => {
       setTimeout(() => {
         setMessages((prev) => {
@@ -28,7 +32,7 @@ export function MessageManager({ children }: MessageManagerProps) {
       }, index * 200);
     });
 
-    setMessageCount(prev => prev + newMessages.length);
+    setMessageCount((prev) => prev + newMessages.length);
   };
 
   const removeMessage = (id: string) => {
@@ -36,21 +40,21 @@ export function MessageManager({ children }: MessageManagerProps) {
   };
 
   return (
-    <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+    <div style={{ position: "relative", width: "100%", height: "100%" }}>
       <button
         onClick={generateMessages}
         style={{
-          position: 'absolute',
-          top: '20px',
-          right: '20px',
+          position: "absolute",
+          top: "20px",
+          right: "20px",
           zIndex: 1000,
-          padding: '10px 20px',
-          backgroundColor: '#4CAF50',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-          fontSize: '16px'
+          padding: "10px 20px",
+          backgroundColor: "#4CAF50",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+          fontSize: "16px",
         }}
       >
         Generate Messages
@@ -58,4 +62,4 @@ export function MessageManager({ children }: MessageManagerProps) {
       {children(messages, removeMessage)}
     </div>
   );
-} 
+}

@@ -1,4 +1,8 @@
-import { ChatMessage, ChatMessageNoisyEnum, ChatMessageUserTypeEnum } from '../api/generated/baza';
+import {
+  ChatMessage,
+  ChatMessageNoisyEnum,
+  ChatMessageUserTypeEnum,
+} from "../api/generated/baza";
 
 /**
  * Создает тестовое сообщение чата с базовыми параметрами
@@ -10,7 +14,7 @@ export function createTestMessage(
   colorHex: string,
   isVip: boolean = false,
   isModerator: boolean = false,
-  isBroadcaster: boolean = false
+  isBroadcaster: boolean = false,
 ): ChatMessage {
   return {
     id,
@@ -28,7 +32,17 @@ export function createTestMessage(
     channel: undefined,
     chatReply: undefined,
     cheerBadge: undefined,
-    color: { a: 255, b: 0, g: 0, r: 255, isEmpty: false, isKnownColor: true, isNamedColor: false, isSystemColor: false, name: 'Red' },
+    color: {
+      a: 255,
+      b: 0,
+      g: 0,
+      r: 255,
+      isEmpty: false,
+      isKnownColor: true,
+      isNamedColor: false,
+      isSystemColor: false,
+      name: "Red",
+    },
     customRewardId: undefined,
     emoteReplacedMessage: undefined,
     emoteSet: undefined,
@@ -54,33 +68,104 @@ export function createTestMessage(
 /**
  * Создает набор тестовых сообщений для демонстрации
  */
-export function createTestMessageSet(prefix: string, startIndex: number): ChatMessage[] {
+export function createTestMessageSet(
+  prefix: string,
+  startIndex: number,
+): ChatMessage[] {
   return [
-    createTestMessage(`${prefix}-${startIndex}`, 'Привет всем! 👋', 'User1', '#ff0000'),
-    createTestMessage(`${prefix}-${startIndex + 1}`, 'Как дела?', 'User2', '#00ff00', true),
-    createTestMessage(`${prefix}-${startIndex + 2}`, 'Отличный стрим!', 'Moderator', '#0000ff', false, true),
-    createTestMessage(`${prefix}-${startIndex + 3}`, 'Спасибо за стрим! 🎮', 'Broadcaster', '#ffff00', false, false, true),
+    createTestMessage(
+      `${prefix}-${startIndex}`,
+      "Привет всем! 👋",
+      "User1",
+      "#ff0000",
+    ),
+    createTestMessage(
+      `${prefix}-${startIndex + 1}`,
+      "Как дела?",
+      "User2",
+      "#00ff00",
+      true,
+    ),
+    createTestMessage(
+      `${prefix}-${startIndex + 2}`,
+      "Отличный стрим!",
+      "Moderator",
+      "#0000ff",
+      false,
+      true,
+    ),
+    createTestMessage(
+      `${prefix}-${startIndex + 3}`,
+      "Спасибо за стрим! 🎮",
+      "Broadcaster",
+      "#ffff00",
+      false,
+      false,
+      true,
+    ),
   ];
 }
 
 /**
  * Создает быстрый набор тестовых сообщений
  */
-export function createFastTestMessageSet(prefix: string, startIndex: number): ChatMessage[] {
+export function createFastTestMessageSet(
+  prefix: string,
+  startIndex: number,
+): ChatMessage[] {
   return [
-    createTestMessage(`${prefix}-${startIndex}`, 'Быстрое сообщение! ⚡', 'FastUser', '#ff6600'),
-    createTestMessage(`${prefix}-${startIndex + 1}`, 'Еще одно! 🚀', 'SpeedUser', '#ff0066', true),
-    createTestMessage(`${prefix}-${startIndex + 2}`, 'Третье сообщение! 🎯', 'ThirdUser', '#00ffff', false, true),
+    createTestMessage(
+      `${prefix}-${startIndex}`,
+      "Быстрое сообщение! ⚡",
+      "FastUser",
+      "#ff6600",
+    ),
+    createTestMessage(
+      `${prefix}-${startIndex + 1}`,
+      "Еще одно! 🚀",
+      "SpeedUser",
+      "#ff0066",
+      true,
+    ),
+    createTestMessage(
+      `${prefix}-${startIndex + 2}`,
+      "Третье сообщение! 🎯",
+      "ThirdUser",
+      "#00ffff",
+      false,
+      true,
+    ),
   ];
 }
 
 /**
  * Создает демо набор тестовых сообщений
  */
-export function createDemoTestMessageSet(prefix: string, startIndex: number): ChatMessage[] {
+export function createDemoTestMessageSet(
+  prefix: string,
+  startIndex: number,
+): ChatMessage[] {
   return [
-    createTestMessage(`${prefix}-${startIndex}`, 'Привет всем! 👋', 'User1', '#ff0000'),
-    createTestMessage(`${prefix}-${startIndex + 1}`, 'Как дела?', 'User2', '#00ff00', true),
-    createTestMessage(`${prefix}-${startIndex + 2}`, 'Отличный стрим!', 'Moderator', '#0000ff', false, true),
+    createTestMessage(
+      `${prefix}-${startIndex}`,
+      "Привет всем! 👋",
+      "User1",
+      "#ff0000",
+    ),
+    createTestMessage(
+      `${prefix}-${startIndex + 1}`,
+      "Как дела?",
+      "User2",
+      "#00ff00",
+      true,
+    ),
+    createTestMessage(
+      `${prefix}-${startIndex + 2}`,
+      "Отличный стрим!",
+      "Moderator",
+      "#0000ff",
+      false,
+      true,
+    ),
   ];
-} 
+}
