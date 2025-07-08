@@ -118,6 +118,7 @@ export function getRandomInt(min: number, max: number): number {
 export function getCoordinates(
   ref: HTMLImageElement | HTMLVideoElement | HTMLDivElement,
   info: MediaInfo,
+  isInWindow: boolean = true,
 ): React.CSSProperties {
   const returnObj: React.CSSProperties = {};
   const { positionInfo } = info;
@@ -126,73 +127,115 @@ export function getCoordinates(
   let elementWidth: number;
   let elementHeight: number;
 
-  if ("width" in ref && typeof ref.width === "number") {
-    // Для элементов с width/height свойствами (img, video)
-    elementWidth = ref.width;
-    elementHeight = ref.height;
-  } else {
-    // Для div и других элементов используем offsetWidth/offsetHeight
-    elementWidth = ref.offsetWidth || positionInfo.width || 0;
-    elementHeight = ref.offsetHeight || positionInfo.height || 0;
+  // Для div и других элементов используем offsetWidth/offsetHeight
+  elementWidth = ref.offsetWidth || positionInfo.width || 0;
+  elementHeight = ref.offsetHeight || positionInfo.height || 0;
 
-    // Если размеры не определены, устанавливаем из positionInfo
-    if (!elementWidth && positionInfo.width) {
-      elementWidth = positionInfo.width;
-    }
-    if (!elementHeight && positionInfo.height) {
-      elementHeight = positionInfo.height;
-    }
+  // Если размеры не определены, устанавливаем из positionInfo
+  if (!elementWidth && positionInfo.width) {
+    elementWidth = positionInfo.width;
+  }
+  if (!elementHeight && positionInfo.height) {
+    elementHeight = positionInfo.height;
   }
 
   // Случайный вариант позиционирования
   if (positionInfo.randomCoordinates) {
     const maxX = Math.max(0, window.innerWidth - elementWidth);
     const maxY = Math.max(0, window.innerHeight - elementHeight);
-
-    returnObj.left = `${getRandomInt(0, maxX)}px`;
-    returnObj.top = `${getRandomInt(0, maxY)}px`;
+    let left = getRandomInt(0, maxX);
+    let top = getRandomInt(0, maxY);
+    if (!isInWindow) {
+      left = getRandomInt(0, window.innerWidth);
+      top = getRandomInt(0, window.innerHeight);
+    }
+    returnObj.left = `${left}px`;
+    returnObj.top = `${top}px`;
     returnObj.position = "absolute";
     return returnObj;
   }
 
   // Центрирование
   if (positionInfo.isHorizontalCenter && positionInfo.isVerticallCenter) {
-    return {
+    let style: React.CSSProperties = {
       position: "absolute",
       top: "50%",
       left: "50%",
       transform: "translate(-50%, -50%)",
     };
+    if (isInWindow) {
+      // Проверяем, не выходит ли элемент за границы окна
+      style = {
+        ...style,
+        maxWidth: `${window.innerWidth}px`,
+        maxHeight: `${window.innerHeight}px`,
+      };
+    }
+    return style;
   }
 
   if (positionInfo.isHorizontalCenter) {
+    let top =
+      positionInfo.yCoordinate !== undefined ? positionInfo.yCoordinate : 0;
+    // Если явно задан yCoordinate, не учитываем isInWindow
+    if (positionInfo.yCoordinate === undefined && isInWindow) {
+      // Корректируем top, чтобы элемент не выходил за границы
+      if (top + elementHeight / 2 > window.innerHeight) {
+        top = window.innerHeight - elementHeight / 2;
+      }
+      if (top - elementHeight / 2 < 0) {
+        top = elementHeight / 2;
+      }
+    }
     returnObj.position = "absolute";
     returnObj.left = "50%";
     returnObj.transform = "translateX(-50%)";
-    returnObj.top =
-      positionInfo.yCoordinate !== undefined
-        ? `${positionInfo.yCoordinate}px`
-        : undefined;
+    returnObj.top = `${top}px`;
     return returnObj;
   }
 
   if (positionInfo.isVerticallCenter) {
+    let left =
+      positionInfo.xCoordinate !== undefined ? positionInfo.xCoordinate : 0;
+    // Если явно задан xCoordinate, не учитываем isInWindow
+    if (positionInfo.xCoordinate === undefined && isInWindow) {
+      // Корректируем left, чтобы элемент не выходил за границы
+      if (left + elementWidth / 2 > window.innerWidth) {
+        left = window.innerWidth - elementWidth / 2;
+      }
+      if (left - elementWidth / 2 < 0) {
+        left = elementWidth / 2;
+      }
+    }
     returnObj.position = "absolute";
     returnObj.top = "50%";
     returnObj.transform = "translateY(-50%)";
-    returnObj.left =
-      positionInfo.xCoordinate !== undefined
-        ? `${positionInfo.xCoordinate}px`
-        : undefined;
+    returnObj.left = `${left}px`;
     return returnObj;
   }
 
   // Явное задание координат (без центрирования)
   if (positionInfo.xCoordinate !== undefined) {
-    returnObj.left = `${positionInfo.xCoordinate}px`;
+    let left = positionInfo.xCoordinate;
+    if (isInWindow) {
+      if (left + elementWidth > window.innerWidth) {
+        left = window.innerWidth - elementWidth;
+      }
+      if (left < 0) left = 0;
+    }
+    returnObj.left = `${left}px`;
+    returnObj.position = "absolute";
   }
   if (positionInfo.yCoordinate !== undefined) {
-    returnObj.top = `${positionInfo.yCoordinate}px`;
+    let top = positionInfo.yCoordinate;
+    if (isInWindow) {
+      if (top + elementHeight > window.innerHeight) {
+        top = window.innerHeight - elementHeight;
+      }
+      if (top < 0) top = 0;
+    }
+    returnObj.top = `${top}px`;
+    returnObj.position = "absolute";
   }
 
   // Если координаты заданы (явно или через центрирование) - добавляем absolute

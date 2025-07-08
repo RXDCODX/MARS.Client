@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect } from "@storybook/test";
+import { expect } from "storybook/test";
 
 import HighliteMessage from "./HighliteMessage";
+import HighliteMessageStorybookWrapper from "./HighliteMessageStorybookWrapper";
 
 const meta: Meta<typeof HighliteMessage> = {
   title: "Chat/HighliteMessage",
@@ -18,17 +19,9 @@ const meta: Meta<typeof HighliteMessage> = {
   tags: ["autodocs"],
   decorators: [
     (Story) => (
-      <div
-        style={{
-          width: "100vw",
-          height: "100vh",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
+      <HighliteMessageStorybookWrapper>
         <Story />
-      </div>
+      </HighliteMessageStorybookWrapper>
     ),
   ],
 };

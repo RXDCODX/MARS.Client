@@ -20,16 +20,29 @@ export default function CurrentTrack({ track, shouldAnimate = true }: Props) {
             </div>
             <div className={styles.trackinfo}>
               <div className={styles.info}>
-                <div className={styles.textContainer}>
-                  <Textfit mode="single" max={300} min={20}>
-                    {track.artists.join(", ")}
-                  </Textfit>
-                </div>
-                <div className={styles.textContainer}>
-                  <Textfit mode="single" max={200} min={30}>
-                    {track.title}
-                  </Textfit>
-                </div>
+                <Textfit
+                  mode="single"
+                  className={styles.textContainer}
+                  max={9999}
+                  min={20}
+                  style={{
+                    width: "100%",
+                    textAlign: "end",
+                  }}
+                >
+                  {track.artists.join(", ")}
+                </Textfit>
+                <Textfit
+                  mode="single"
+                  className={styles.textContainer}
+                  max={9999}
+                  min={30}
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  {track.title}
+                </Textfit>
               </div>
             </div>
           </div>

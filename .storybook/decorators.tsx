@@ -1,14 +1,15 @@
 // eslint-disable-next-line no-restricted-imports
-import React, { type ComponentType, useEffect } from "react";
+import React, { useEffect } from "react";
 
-// Декоратор для добавления атрибута Storybook
-export const WithStorybookAttribute = ({ Story }: { Story: ComponentType }) => {
-  useEffect(() => {
-    document.documentElement.setAttribute("data-storybook", "true");
-    return () => {
-      document.documentElement.removeAttribute("data-storybook");
-    };
-  }, []);
-
-  return <Story />;
+export const withStorybookAttribute = (Story) => {
+  const Wrapper = (props) => {
+    useEffect(() => {
+      document.documentElement.setAttribute("data-storybook", "true");
+      return () => {
+        document.documentElement.removeAttribute("data-storybook");
+      };
+    }, []);
+    return <Story {...props} />;
+  };
+  return <Wrapper />;
 };

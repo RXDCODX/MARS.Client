@@ -1,14 +1,16 @@
-import type { Preview } from '@storybook/react-vite';
-import './storybook-global.scss';
-import { withStorybookAttribute } from './decorators';
+import "./storybook-global.scss";
+
+import type { Preview } from "@storybook/react-vite";
+
+import { withStorybookAttribute } from "./decorators";
 
 const preview: Preview = {
   decorators: [withStorybookAttribute],
   parameters: {
     controls: {
       matchers: {
-       color: /(background|color)$/i,
-       date: /Date$/i,
+        color: /(background|color)$/i,
+        date: /Date$/i,
       },
     },
 
@@ -16,23 +18,23 @@ const preview: Preview = {
       // 'todo' - show a11y violations in the test UI only
       // 'error' - fail CI on a11y violations
       // 'off' - skip a11y checks entirely
-      test: 'todo'
+      test: "todo",
     },
 
     backgrounds: {
-      default: 'dark',
+      default: "dark",
       values: [
         {
-          name: 'dark',
-          value: '#000000',
+          name: "dark",
+          value: "#000000",
         },
         {
-          name: 'light',
-          value: '#ffffff',
+          name: "light",
+          value: "#ffffff",
         },
         {
-          name: 'gradient',
-          value: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          name: "gradient",
+          value: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
         },
       ],
     },
@@ -40,12 +42,12 @@ const preview: Preview = {
 
   globalTypes: {
     theme: {
-      description: 'Global theme for components',
-      defaultValue: 'dark',
+      description: "Global theme for components",
+      defaultValue: "dark",
       toolbar: {
-        title: 'Theme',
-        icon: 'circlehollow',
-        items: ['light', 'dark'],
+        title: "Theme",
+        icon: "circlehollow",
+        items: ["light", "dark"],
         dynamicTitle: true,
       },
     },

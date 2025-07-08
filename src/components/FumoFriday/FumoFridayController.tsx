@@ -73,15 +73,18 @@ export function FumoFridayController() {
 
   return (
     <>
-      <div className={styles.testControls}>
-        <button
-          onClick={play}
-          className={styles.testButton}
-          disabled={!!currentMessage}
-        >
-          Test FumoFriday Alert
-        </button>
-      </div>
+      {window?.location?.hostname === "localhost" &&
+        window?.parent?.location?.pathname?.includes("iframe.html") && (
+          <div className={styles.testControls}>
+            <button
+              onClick={play}
+              className={styles.testButton}
+              disabled={!!currentMessage}
+            >
+              Test FumoFriday Alert
+            </button>
+          </div>
+        )}
 
       {currentMessage && switcher && (
         <Reimu
