@@ -7,6 +7,8 @@ import Announce from "../../shared/Utils/Announce/Announce";
 import styles from "./ChatVertical.module.scss";
 import { Message } from "./Message";
 
+type ChatMessageWithPending = ChatMessage & { _pendingRemove?: boolean };
+
 interface ChatVerticalProps {
   messages?: ChatMessage[];
   onRemoveMessage?: (id: string) => void;
@@ -48,41 +50,41 @@ export default function ChatVertical({
     return () => clearTimeout(timeout);
   }, [messages.length]);
 
-  // SignalR эффекты только если не переданы внешние сообщения
-  if (!externalMessages) {
-    SignalRContext.useSignalREffect(
-      "NewMessage",
-      (id: string, message: ChatMessage) => {
-        message.id ??= id;
-        setInternalMessages((prev) => {
-          while (prev.length >= 15) {
-            prev.pop();
-          }
-          if (prev.find((m) => m.id === message.id)) {
-            return prev;
-          } else {
-            return [message, ...prev];
-          }
-        });
-      },
-      [],
-    );
+  SignalRContext.useSignalREffect(
+    "NewMessage",
+    (id: string, message: ChatMessage) => {
+      if (externalMessages) {
+        return null;
+      }
+      message.id ??= id;
+      setInternalMessages((prev) => {
+        while (prev.length >= 15) {
+          prev.pop();
+        }
+        if (prev.find((m) => m.id === message.id)) {
+          return prev;
+        } else {
+          return [message, ...prev];
+        }
+      });
+    },
+    [],
+  );
 
-    // Плавное удаление: сначала помечаем _pendingRemove, потом реально удаляем
-    const handleDeleteMessage = (id: string) => {
-      setInternalMessages((prev) =>
-        prev.map((m) => (m.id === id ? { ...m, _pendingRemove: true } : m)),
-      );
-    };
-
-    SignalRContext.useSignalREffect(
-      "deletemessage",
-      (id: string) => {
-        handleDeleteMessage(id);
-      },
-      [],
+  // Плавное удаление: сначала помечаем _pendingRemove, потом реально удаляем
+  const handleDeleteMessage = (id: string) => {
+    setInternalMessages((prev) =>
+      prev.map((m) => (m.id === id ? { ...m, _pendingRemove: true } : m)),
     );
-  }
+  };
+
+  SignalRContext.useSignalREffect(
+    "deletemessage",
+    (id: string) => {
+      handleDeleteMessage(id);
+    },
+    [],
+  );
 
   return (
     <>
@@ -91,7 +93,7 @@ export default function ChatVertical({
       )}
       <div className={styles.chatContainer}>
         <AnimatePresence initial={false}>
-          {messages.map((message) => (
+          {internalMessages.map((message: ChatMessageWithPending) => (
             <motion.div
               key={message.id}
               initial={{ opacity: 0, y: 40 }}
@@ -113,7 +115,7 @@ export default function ChatVertical({
               <Message
                 message={message}
                 onRemove={
-                  (message as any)._pendingRemove
+                  (message as { _pendingRemove?: boolean })._pendingRemove
                     ? () => handleRemove(message.id!)
                     : undefined
                 }

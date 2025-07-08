@@ -1,6 +1,8 @@
 import { resolve } from "path";
 import { generateApi } from "swagger-typescript-api";
 import process from "process";
+import { codegen } from "swagger-axios-codegen";
+import fs from "fs";
 
 const params = {
   input: resolve(process.cwd(), "./api/swagger.json"),
@@ -12,22 +14,32 @@ const params = {
     tabWidth: 4,
     printWidth: 160,
   },
-  generateClient: false,
+  generateClient: true,
   sortTypes: true,
   extractEnums: true,
   codeGenConstructs: (constructs) => ({
     ...constructs,
-    NullValue: () => "undefined", // Заменяем null на undefined
+    NullValue: () => "undefined",
     TypeField: ({ readonly, key, value }) => {
-      // Обрабатываем nullable типы в полях
       const finalValue = value.includes(" | null")
-        ? value.replace(" | null", " | undefined") // Заменяем null на undefined
+        ? value.replace(" | null", " | undefined")
         : value;
-      return [...(readonly ? ["readonly "] : []), key, ": ", finalValue].join(
-        "",
-      );
+      return [...(readonly ? ["readonly "] : []), key, ": ", finalValue].join("");
     },
   }),
 };
 
-generateApi(params);
+generateApi(params).then(() => {
+  // Читаем swagger.json как объект
+  const swaggerJsonPath = resolve(process.cwd(), "./api/swagger.json");
+  const swaggerSource = JSON.parse(fs.readFileSync(swaggerJsonPath, "utf-8"));
+  codegen({
+    methodNameMode: "operationId",
+    source: swaggerSource,
+    outputDir: resolve(process.cwd(), "./src/shared/api/generated/"),
+    fileName: "axios-client.ts",
+    useStaticMethod: true,
+    modelMode: "interface",
+    strictNullChecks: true,
+  });
+});

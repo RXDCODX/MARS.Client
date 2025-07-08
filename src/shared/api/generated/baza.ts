@@ -11,6 +11,7 @@
 
 export interface BaseTrackInfo {
     authors: string[] | undefined;
+    domain: BaseTrackInfoDomainEnum;
     /** @format date-span */
     duration: string;
     featAuthors: string[] | undefined;
@@ -22,6 +23,15 @@ export interface BaseTrackInfo {
     title: string;
     trackName: string;
     url: string;
+    yandexSpecificInfo: YandexTrackAdditionalInfo | undefined;
+}
+
+export enum BaseTrackInfoDomainEnum {
+    None = "None",
+    Youtube = "Youtube",
+    SoundCloud = "SoundCloud",
+    YandexMusic = "YandexMusic",
+    VkMusic = "VkMusic",
 }
 
 export interface ChatMessage {
@@ -281,6 +291,20 @@ export interface MediaTextInfo {
     triggerWord: string | undefined;
 }
 
+export interface PlayerState {
+    currentTrack: BaseTrackInfo | undefined;
+    /** @format date-span */
+    currentTrackDuration: string | undefined;
+    /** @format uuid */
+    id: string;
+    isMuted: boolean;
+    isPaused: boolean;
+    isStoped: boolean;
+    nextTrack: BaseTrackInfo | undefined;
+    /** @format int32 */
+    volume: number;
+}
+
 export interface PrizeType {
     id: string;
     image: string;
@@ -288,6 +312,36 @@ export interface PrizeType {
 }
 
 export type Root = object;
+
+export interface ServiceInfo {
+    configuration: Record<string, any>;
+    description: string;
+    displayName: string;
+    isEnabled: boolean;
+    /** @format date-time */
+    lastActivity: string | undefined;
+    name: string;
+    /** @format date-time */
+    startTime: string | undefined;
+    status: ServiceInfoStatusEnum;
+}
+
+export enum ServiceInfoStatusEnum {
+    Running = "Running",
+    Stopped = "Stopped",
+    Starting = "Starting",
+    Stopping = "Stopping",
+    Error = "Error",
+    Unknown = "Unknown",
+}
+
+export interface ServiceLog {
+    exception: string | undefined;
+    level: string;
+    message: string;
+    /** @format date-time */
+    timestamp: string;
+}
 
 export interface StringStringKeyValuePair {
     key: string | undefined;
@@ -310,6 +364,18 @@ export interface TunaMusicData {
     progress: number;
     status: string;
     title: string;
+}
+
+export interface UserRequestedTrack {
+    /** @format uuid */
+    id: string;
+    /** @format int32 */
+    order: number;
+    requestedTrack: BaseTrackInfo;
+    /** @format uuid */
+    requestedTrackId: string;
+    twitchDisplayName: string | undefined;
+    twitchId: string;
 }
 
 export interface Waifu {
@@ -341,4 +407,9 @@ export interface Waifu {
     shikiId: string;
     /** @format date-time */
     whenAdded: string;
+}
+
+export interface YandexTrackAdditionalInfo {
+    mp3TrackUrl: string | undefined;
+    artworkUrl: string | undefined;
 }

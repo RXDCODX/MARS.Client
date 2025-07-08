@@ -49,6 +49,309 @@
         }
       }
     },
+    "/api/ServiceManager/status": {
+      "get": {
+        "tags": [
+          "ServiceManager"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "enum": [
+                      "Running",
+                      "Stopped",
+                      "Starting",
+                      "Stopping",
+                      "Error",
+                      "Unknown"
+                    ],
+                    "type": "string"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "enum": [
+                      "Running",
+                      "Stopped",
+                      "Starting",
+                      "Stopping",
+                      "Error",
+                      "Unknown"
+                    ],
+                    "type": "string"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "enum": [
+                      "Running",
+                      "Stopped",
+                      "Starting",
+                      "Stopping",
+                      "Error",
+                      "Unknown"
+                    ],
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ServiceManager/service/{serviceName}": {
+      "get": {
+        "tags": [
+          "ServiceManager"
+        ],
+        "parameters": [
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceInfo"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceInfo"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ServiceManager/service/{serviceName}/start": {
+      "post": {
+        "tags": [
+          "ServiceManager"
+        ],
+        "parameters": [
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ServiceManager/service/{serviceName}/stop": {
+      "post": {
+        "tags": [
+          "ServiceManager"
+        ],
+        "parameters": [
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ServiceManager/service/{serviceName}/restart": {
+      "post": {
+        "tags": [
+          "ServiceManager"
+        ],
+        "parameters": [
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ServiceManager/service/{serviceName}/logs": {
+      "get": {
+        "tags": [
+          "ServiceManager"
+        ],
+        "parameters": [
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceLog"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceLog"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceLog"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ServiceManager/service/{serviceName}/active": {
+      "post": {
+        "tags": [
+          "ServiceManager"
+        ],
+        "parameters": [
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ServiceManager/services": {
+      "get": {
+        "tags": [
+          "ServiceManager"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceInfo"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceInfo"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/twitchtoken": {
       "get": {
         "tags": [
@@ -70,21 +373,29 @@
         }
       }
     },
-    "/hubs/SoundRequestHub/Ended": {
+    "/hubs/SoundRequestHub/AddTrackToQueue": {
       "post": {
         "tags": [
           "SoundRequestHub"
         ],
         "parameters": [
           {
-            "name": "trackInfo",
+            "name": "track",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/BaseTrackInfo"
+              "$ref": "#/components/schemas/UserRequestedTrack"
             }
           }
         ],
-        "responses": { }
+        "responses": {}
+      }
+    },
+    "/hubs/SoundRequestHub/Ended": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": {}
       }
     },
     "/hubs/SoundRequestHub/ErrorPlaying": {
@@ -92,16 +403,122 @@
         "tags": [
           "SoundRequestHub"
         ],
+        "responses": {}
+      }
+    },
+    "/hubs/SoundRequestHub/GetHistory": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
         "parameters": [
           {
-            "name": "trackInfo",
+            "name": "count",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/BaseTrackInfo"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
-        "responses": { }
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BaseTrackInfo"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BaseTrackInfo"
+                  }
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BaseTrackInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hubs/SoundRequestHub/GetPlayerState": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerState"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerState"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerState"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hubs/SoundRequestHub/GetQueue": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserRequestedTrack"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserRequestedTrack"
+                  }
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserRequestedTrack"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/hubs/SoundRequestHub/JoinAsClient": {
@@ -109,7 +526,65 @@
         "tags": [
           "SoundRequestHub"
         ],
-        "responses": { }
+        "responses": {}
+      }
+    },
+    "/hubs/SoundRequestHub/Mute": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": {}
+      }
+    },
+    "/hubs/SoundRequestHub/Pause": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": {}
+      }
+    },
+    "/hubs/SoundRequestHub/Play": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": {}
+      }
+    },
+    "/hubs/SoundRequestHub/Resume": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": {}
+      }
+    },
+    "/hubs/SoundRequestHub/SetVolume": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "parameters": [
+          {
+            "name": "volume",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {}
+      }
+    },
+    "/hubs/SoundRequestHub/Skip": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": {}
       }
     },
     "/hubs/SoundRequestHub/Started": {
@@ -117,16 +592,23 @@
         "tags": [
           "SoundRequestHub"
         ],
-        "parameters": [
-          {
-            "name": "trackInfo",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/BaseTrackInfo"
-            }
-          }
+        "responses": {}
+      }
+    },
+    "/hubs/SoundRequestHub/Stop": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
         ],
-        "responses": { }
+        "responses": {}
+      }
+    },
+    "/hubs/SoundRequestHub/Unmute": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": {}
       }
     },
     "/telegramus/MuteAll": {
@@ -146,7 +628,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/telegramus/OnConnectedAsync": {
@@ -154,7 +636,7 @@
         "tags": [
           "TelegramusHub"
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/telegramus/TwitchMsg": {
@@ -171,7 +653,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/telegramus/UnmuteSessions": {
@@ -179,7 +661,7 @@
         "tags": [
           "TelegramusHub"
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/hubs/TunaHub/BeYm": {
@@ -187,7 +669,7 @@
         "tags": [
           "TunaHub"
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/hubs/TunaHub/GetYandexMusicTracks": {
@@ -233,7 +715,7 @@
         "tags": [
           "TunaHub"
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/hubs/TunaHub/SendPlayerData": {
@@ -250,7 +732,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/hubs/SoundBarHub/Mute": {
@@ -270,7 +752,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/hubs/SoundBarHub/Unmute": {
@@ -278,7 +760,7 @@
         "tags": [
           "SoundBarHub"
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/telegramus/AddNewWaifu": {
@@ -295,10 +777,10 @@
             }
           },
           {
-            "name": "host",
+            "name": "displayName",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Host"
+              "type": "string"
             }
           },
           {
@@ -309,7 +791,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/telegramus/Alert": {
@@ -326,7 +808,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/telegramus/Alerts": {
@@ -346,7 +828,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/telegramus/DeleteMessage": {
@@ -363,7 +845,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/telegramus/FumoFriday": {
@@ -387,7 +869,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/telegramus/Highlite": {
@@ -418,7 +900,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/telegramus/MakeScreenEmojisParticles": {
@@ -435,7 +917,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/telegramus/MakeScreenParticles": {
@@ -456,7 +938,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/telegramus/MergeWaifu": {
@@ -494,7 +976,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/telegramus/NewMessage": {
@@ -518,7 +1000,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/telegramus/PostTwitchInfo": {
@@ -542,7 +1024,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/telegramus/RandomMem": {
@@ -559,7 +1041,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/telegramus/UpdateWaifuPrizes": {
@@ -579,7 +1061,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     },
     "/telegramus/WaifuRoll": {
@@ -596,7 +1078,14 @@
             }
           },
           {
-            "name": "host",
+            "name": "displayName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "waifuHusband",
             "in": "query",
             "schema": {
               "$ref": "#/components/schemas/Host"
@@ -610,7 +1099,7 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {}
       }
     }
   },
@@ -618,6 +1107,7 @@
     "schemas": {
       "BaseTrackInfo": {
         "required": [
+          "domain",
           "duration",
           "id",
           "lastTimePlays",
@@ -665,6 +1155,24 @@
           "lastTimePlays": {
             "type": "string",
             "format": "date-time"
+          },
+          "domain": {
+            "enum": [
+              "None",
+              "Youtube",
+              "SoundCloud",
+              "YandexMusic",
+              "VkMusic"
+            ],
+            "type": "string"
+          },
+          "yandexSpecificInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YandexTrackAdditionalInfo"
+              }
+            ],
+            "nullable": true
           },
           "title": {
             "type": "string",
@@ -1505,6 +2013,57 @@
         },
         "additionalProperties": false
       },
+      "PlayerState": {
+        "required": [
+          "id",
+          "isMuted",
+          "isPaused",
+          "isStoped",
+          "volume"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "currentTrack": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BaseTrackInfo"
+              }
+            ],
+            "nullable": true
+          },
+          "nextTrack": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BaseTrackInfo"
+              }
+            ],
+            "nullable": true
+          },
+          "currentTrackDuration": {
+            "type": "string",
+            "format": "date-span",
+            "nullable": true
+          },
+          "isPaused": {
+            "type": "boolean"
+          },
+          "isMuted": {
+            "type": "boolean"
+          },
+          "isStoped": {
+            "type": "boolean"
+          },
+          "volume": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "PrizeType": {
         "required": [
           "id",
@@ -1527,6 +2086,82 @@
       },
       "Root": {
         "type": "object",
+        "additionalProperties": false
+      },
+      "ServiceInfo": {
+        "required": [
+          "configuration",
+          "description",
+          "displayName",
+          "isEnabled",
+          "name",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "Running",
+              "Stopped",
+              "Starting",
+              "Stopping",
+              "Error",
+              "Unknown"
+            ],
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastActivity": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "configuration": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        },
+        "additionalProperties": false
+      },
+      "ServiceLog": {
+        "required": [
+          "level",
+          "message",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "level": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "exception": {
+            "type": "string",
+            "nullable": true
+          }
+        },
         "additionalProperties": false
       },
       "StringStringKeyValuePair": {
@@ -1608,6 +2243,45 @@
         },
         "additionalProperties": false
       },
+      "UserRequestedTrack": {
+        "required": [
+          "id",
+          "order",
+          "requestedTrack",
+          "requestedTrackId",
+          "twitchId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "twitchDisplayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "twitchId": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "requestedTrackId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "requestedTrack": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BaseTrackInfo"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
       "Waifu": {
         "required": [
           "age",
@@ -1670,6 +2344,20 @@
           },
           "isAdded": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "YandexTrackAdditionalInfo": {
+        "type": "object",
+        "properties": {
+          "artworkUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "mp3TrackUrl": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

@@ -90,7 +90,7 @@ function reducer(
         isWaifuShowing: false,
       };
 
-    case StateStatus.addPrizes:
+    case StateStatus.addPrizes: {
       const excepts = arrayExcept(
         state.prizes ?? [],
         action.prizes ?? [],
@@ -108,11 +108,13 @@ function reducer(
         ...state,
         prizes: [...state.prizes, ...excepts],
       };
-    case StateStatus.shuffle:
+    }
+    case StateStatus.shuffle: {
       return {
         ...state,
         prizes: shuffleArray(state.prizes ?? []),
       };
+    }
   }
 }
 
@@ -227,7 +229,7 @@ export default function WaifuAlerts() {
       handleRemoveEvent(currentMessage);
       throw Error("Failed to play audio");
     },
-    [currentMessage],
+    [unmuteAll],
   );
 
   return (
@@ -384,7 +386,7 @@ export default function WaifuAlerts() {
             onCanPlay={(event) => {
               try {
                 event.currentTarget?.play();
-              } catch (e) {
+              } catch {
                 event.currentTarget.muted = true;
                 event.currentTarget?.play();
               }

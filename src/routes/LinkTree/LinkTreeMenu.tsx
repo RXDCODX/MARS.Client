@@ -13,6 +13,7 @@ export const LinktreeMenu = () => {
     { path: "/chath", name: "Horizontal Chat" },
     { path: "/chatv", name: "Vertical Chat" },
     { path: "/sr/currenttrack", name: "SR: Current Track" },
+    { path: "/main", name: "Main Page" },
   ];
 
   return (

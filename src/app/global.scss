@@ -8,3 +8,46 @@ html:not([data-storybook]) {
   height: 100%;
   margin: 5px 5px;
 }
+
+:root {
+  --main-bg: #fff;
+  --main-text: #222;
+  --table-bg: #fff;
+  --table-header-bg: #f8f9fa;
+  --table-border: #dee2e6;
+  --accent: #0d6efd;
+}
+
+body[data-theme='dark'] {
+  --main-bg: #181a1b;
+  --main-text: #e0e0e0;
+  --table-bg: #23272b;
+  --table-header-bg: #23272b;
+  --table-border: #343a40;
+  --accent: #0d6efd;
+  background: var(--main-bg) !important;
+  color: var(--main-text) !important;
+}
+
+body {
+  background: var(--main-bg);
+  color: var(--main-text);
+  transition: background 0.2s, color 0.2s;
+}
+
+.table, .table-bordered, .table-sm, .table-hover {
+  background: var(--table-bg) !important;
+  color: var(--main-text) !important;
+  border-color: var(--table-border) !important;
+}
+.table thead {
+  background: var(--table-header-bg) !important;
+  color: var(--main-text) !important;
+}
+.table th, .table td {
+  border-color: var(--table-border) !important;
+}
+
+.btn-primary, .btn-info, .btn-success, .btn-danger, .btn-warning {
+  color: #fff !important;
+}
