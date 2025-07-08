@@ -1,35 +1,45 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { LinktreeMenu } from "./LinkTree/LinkTreeMenu"; // Импортируем новый компонент
+
+import ChatHorizontal from "../components/ChatHorizontal/ChatHorizontal";
+import ChatVertical from "../components/ChatVertical/ChatVertical";
 import { FumoFriday } from "../components/FumoFriday";
 import HighliteMessage from "../components/HighliteMessage/HighliteMessage";
 import PyroAlerts from "../components/PyroAlerts/PyroAlerts";
-import WaifuAlerts from "../components/WaifuAlerts/WaifuAlerts";
+import RandomMem from "../components/RandomMem/RandomMem";
 import Manager from "../components/ScreenParticles/Manager";
-import ChatHorizontal from "../components/ChatHorizontal/ChatHorizontal";
-import ChatVertical from "../components/ChatVertical/ChatVertical";
+import ServerViewer from "../components/ServerViewer/ServerViewer";
+import ServiceDetails from "../components/ServerViewer/ServiceDetails";
+import CurrentTrackSignalRHubWrapper from "../components/SoundRequest/CurrentTrack/SignalRHubWrapper";
+import WaifuAlerts from "../components/WaifuAlerts/WaifuAlerts";
+import { LinktreeMenu } from "./LinkTree/LinkTreeMenu"; // Импортируем новый компонент
 
-const PrivateRoutes = () => {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LinktreeMenu />} /> {/* Главное меню */}
-        <Route path="/pyroalerts" element={<PyroAlerts />} />
-        <Route path="/waifu" element={<WaifuAlerts />} />
-        <Route path="/fumofriday" element={<FumoFriday />} />
-        <Route path="/highlite" element={<HighliteMessage />} />
-        <Route path="/confetti" element={<Manager />} />
-        <Route path="/chath" element={<ChatHorizontal />} />
-        <Route path="/chatv" element={<ChatVertical />} />
-
-        <Route path="/sr/tracklist" element={} />
-        <Route path="/sr/videoscreen" element={} />
-
-        <Route path="*" element={<Navigate to="/" />} />{" "}
-        {/* Редирект на меню */}
-      </Routes>
-    </BrowserRouter>
-  );
-};
+const PrivateRoutes = () => (
+  <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<LinktreeMenu />} /> {/* Главное меню */}
+      <Route path="/pyroalerts" element={<PyroAlerts />} />
+      <Route path="/randommem" element={<RandomMem />} />
+      <Route path="/waifu" element={<WaifuAlerts />} />
+      <Route path="/fumofriday" element={<FumoFriday />} />
+      <Route path="/highlite" element={<HighliteMessage />} />
+      <Route path="/confetti" element={<Manager />} />
+      <Route path="/chath" element={<ChatHorizontal />} />
+      <Route path="/chatv" element={<ChatVertical />} />
+      <Route
+        path="/sr/currenttrack"
+        element={<CurrentTrackSignalRHubWrapper />}
+      />
+      <Route path="/main" element={<ServerViewer />} />
+      <Route path="/services" element={<ServerViewer />} />
+      <Route
+        path="/services/details"
+        element={<ServiceDetails onClose={() => window.history.back()} />}
+      />
+      <Route path="*" element={<Navigate to="/" />} />
+      {/* Редирект на меню */}
+    </Routes>
+  </BrowserRouter>
+);
 
 PrivateRoutes.displayName = "PrivateRoutes";
 

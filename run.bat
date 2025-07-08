@@ -1,2 +1,5 @@
 @echo off
-yarn vite preview --mode production --port 9159
+
+yarn build
+
+yarn serve -s dist -l 9159

@@ -9,17 +9,48 @@
  * ---------------------------------------------------------------
  */
 
-export type ChatMessage = TwitchLibMessage & {
+export interface BaseTrackInfo {
+    authors: string[] | undefined;
+    domain: BaseTrackInfoDomainEnum;
+    /** @format date-span */
+    duration: string;
+    featAuthors: string[] | undefined;
+    genre: string[] | undefined;
+    /** @format uuid */
+    id: string;
+    /** @format date-time */
+    lastTimePlays: string;
+    title: string;
+    trackName: string;
+    url: string;
+    yandexSpecificInfo: YandexTrackAdditionalInfo | undefined;
+}
+
+export enum BaseTrackInfoDomainEnum {
+    None = "None",
+    Youtube = "Youtube",
+    SoundCloud = "SoundCloud",
+    YandexMusic = "YandexMusic",
+    VkMusic = "VkMusic",
+}
+
+export interface ChatMessage {
     badgeInfo: StringStringKeyValuePair[] | undefined;
+    badges: StringStringKeyValuePair[] | undefined;
     /** @format int32 */
     bits: number;
     /** @format double */
     bitsInDollars: number;
+    botUsername: string | undefined;
     channel: string | undefined;
     chatReply: ChatReply | undefined;
     cheerBadge: CheerBadge | undefined;
+    color: Color;
+    colorHex: string | undefined;
     customRewardId: string | undefined;
+    displayName: string | undefined;
     emoteReplacedMessage: string | undefined;
+    emoteSet: EmoteSet | undefined;
     id: string | undefined;
     isBroadcaster: boolean;
     isFirstMessage: boolean;
@@ -30,19 +61,33 @@ export type ChatMessage = TwitchLibMessage & {
     isSkippingSubMode: boolean;
     isStaff: boolean;
     isSubscriber: boolean;
+    isTurbo: boolean;
     isVip: boolean;
     message: string | undefined;
     noisy: ChatMessageNoisyEnum;
+    rawIrcMessage: string | undefined;
     roomId: string | undefined;
     /** @format int32 */
     subscribedMonthCount: number;
     tmiSentTs: string | undefined;
-};
+    userId: string | undefined;
+    userType: ChatMessageUserTypeEnum;
+    username: string | undefined;
+}
 
 export enum ChatMessageNoisyEnum {
     NotSet = "NotSet",
     True = "True",
     False = "False",
+}
+
+export enum ChatMessageUserTypeEnum {
+    Viewer = "Viewer",
+    Moderator = "Moderator",
+    GlobalModerator = "GlobalModerator",
+    Broadcaster = "Broadcaster",
+    Admin = "Admin",
+    Staff = "Staff",
 }
 
 export interface ChatReply {
@@ -98,6 +143,40 @@ export interface EmoteSet {
     rawEmoteSetString: string | undefined;
 }
 
+export interface Host {
+    hostCoolDown: HostCoolDown;
+    hostGreetings: HostAutoHello;
+    isPrivated: boolean;
+    name: string | undefined;
+    /** @format int64 */
+    orderCount: number;
+    twitchId: string;
+    waifuBrideId: string | undefined;
+    waifuRollId: string | undefined;
+    /** @format date-time */
+    whenOrdered: string;
+    /** @format date-time */
+    whenPrivated: string | undefined;
+}
+
+export interface HostAutoHello {
+    /** @format uuid */
+    guid: string;
+    host: Host | undefined;
+    hostId: string;
+    /** @format date-time */
+    time: string;
+}
+
+export interface HostCoolDown {
+    /** @format uuid */
+    guid: string;
+    host: Host | undefined;
+    hostId: string;
+    /** @format date-time */
+    time: string;
+}
+
 export interface Image {
     artist: any;
     /** @format int32 */
@@ -120,6 +199,11 @@ export interface Image {
     url: string | undefined;
     /** @format int32 */
     width: number;
+}
+
+export enum MakeScreenParticlesCreateParamsParticlesEnum {
+    Confetty = "Confetty",
+    Fireworks = "Fireworks",
 }
 
 export interface MediaDto {
@@ -207,12 +291,56 @@ export interface MediaTextInfo {
     triggerWord: string | undefined;
 }
 
-export type PrizeType = PrizeTypeAbstract & object;
+export interface PlayerState {
+    currentTrack: BaseTrackInfo | undefined;
+    /** @format date-span */
+    currentTrackDuration: string | undefined;
+    /** @format uuid */
+    id: string;
+    isMuted: boolean;
+    isPaused: boolean;
+    isStoped: boolean;
+    nextTrack: BaseTrackInfo | undefined;
+    /** @format int32 */
+    volume: number;
+}
 
-export interface PrizeTypeAbstract {
+export interface PrizeType {
     id: string;
     image: string;
     text: string;
+}
+
+export type Root = object;
+
+export interface ServiceInfo {
+    configuration: Record<string, any>;
+    description: string;
+    displayName: string;
+    isEnabled: boolean;
+    /** @format date-time */
+    lastActivity: string | undefined;
+    name: string;
+    /** @format date-time */
+    startTime: string | undefined;
+    status: ServiceInfoStatusEnum;
+}
+
+export enum ServiceInfoStatusEnum {
+    Running = "Running",
+    Stopped = "Stopped",
+    Starting = "Starting",
+    Stopping = "Stopping",
+    Error = "Error",
+    Unknown = "Unknown",
+}
+
+export interface ServiceLog {
+    exception: string | undefined;
+    level: string;
+    message: string;
+    /** @format date-time */
+    timestamp: string;
 }
 
 export interface StringStringKeyValuePair {
@@ -220,34 +348,34 @@ export interface StringStringKeyValuePair {
     value: string | undefined;
 }
 
-export enum TelegramusHubMakeScreenParticlesCreateParamsParticlesEnum {
-    Confetty = "Confetty",
-    Fireworks = "Fireworks",
+export interface TunaMusicDTO {
+    data: TunaMusicData;
+    hostname: string | undefined;
+    timestamp: string | undefined;
 }
 
-export interface TwitchLibMessage {
-    badges: StringStringKeyValuePair[] | undefined;
-    botUsername: string | undefined;
-    color: Color;
-    colorHex: string | undefined;
-    displayName: string | undefined;
-    emoteSet: EmoteSet | undefined;
-    isTurbo: boolean;
-    rawIrcMessage: string | undefined;
-    userId: string | undefined;
-    userType: TwitchLibMessageUserTypeEnum;
-    username: string | undefined;
+export interface TunaMusicData {
+    album_url: string;
+    artists: string[];
+    cover: string;
+    /** @format int64 */
+    duration: number;
+    /** @format int64 */
+    progress: number;
+    status: string;
+    title: string;
 }
 
-export type TwitchLibMessageBuilder = TwitchLibMessage & object;
-
-export enum TwitchLibMessageUserTypeEnum {
-    Viewer = "Viewer",
-    Moderator = "Moderator",
-    GlobalModerator = "GlobalModerator",
-    Broadcaster = "Broadcaster",
-    Admin = "Admin",
-    Staff = "Staff",
+export interface UserRequestedTrack {
+    /** @format uuid */
+    id: string;
+    /** @format int32 */
+    order: number;
+    requestedTrack: BaseTrackInfo;
+    /** @format uuid */
+    requestedTrackId: string;
+    twitchDisplayName: string | undefined;
+    twitchId: string;
 }
 
 export interface Waifu {
@@ -281,8 +409,7 @@ export interface Waifu {
     whenAdded: string;
 }
 
-export type WhisperMessage = TwitchLibMessage & {
-    message: string | undefined;
-    messageId: string | undefined;
-    threadId: string | undefined;
-};
+export interface YandexTrackAdditionalInfo {
+    mp3TrackUrl: string | undefined;
+    artworkUrl: string | undefined;
+}

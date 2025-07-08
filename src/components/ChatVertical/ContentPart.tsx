@@ -1,106 +1,48 @@
-import { CSSProperties, JSX } from "react";
-import type { ContentPart } from "../../shared/Utils";
-import { Textfit } from "react-textfit";
+import { CSSProperties } from "react";
+
 import { ChatMessage } from "../../shared/api/generated/baza";
+import type { ContentPart } from "../../shared/Utils";
 
 interface Props {
   className?: string;
   style?: CSSProperties;
   part: ContentPart;
   message: ChatMessage;
-  convertMediaToJustLinks: boolean;
-  replaceEmotes: ({
-    message,
-  }: {
-    message?: string | ChatMessage;
-  }) => string | JSX.Element | JSX.Element[] | undefined;
 }
 
-export default function ContentPiece({
-  part,
-  style,
-  message,
-  className,
-  convertMediaToJustLinks,
-  replaceEmotes,
-}: Props) {
-  if (convertMediaToJustLinks) {
-    switch (part.type) {
-      case "text":
-        const text = replaceEmotes({ message: message });
-        return (
-          <Textfit
-            min={10}
-            max={10000}
-            mode="multi"
-            className={className}
-            style={style}
-          >
-            {text}
-          </Textfit>
-        );
-
-      default:
-        return (
-          <div className={className} style={style}>
-            <span
-              style={{
-                color: "rgb(51, 255, 0);",
-                textDecoration: "underline;",
-                textDecorationColor: "rgb(38, 0, 255);",
-              }}
-            >
-              Ссылка
-            </span>
-          </div>
-        );
+// Функция для замены ссылок в тексте на 'ссылка' с нужным стилем
+function replaceLinksWithStub(text: string) {
+  // Простейший паттерн для ссылок (http/https/ftp)
+  const urlRegex = /(https?:\/\/[^\s]+|ftp:\/\/[^\s]+)/gi;
+  return text.split(urlRegex).map((part, idx) => {
+    if (urlRegex.test(part)) {
+      return (
+        <span key={idx} className="linkStub">
+          ссылка
+        </span>
+      );
     }
-  }
-  switch (part.type) {
-    case "text":
-      const text = replaceEmotes({ message: message });
+    return part;
+  });
+}
 
-      return (
-        <Textfit
-          min={10}
-          max={10000}
-          mode="multi"
-          className={className}
-          style={style}
-        >
-          {text}
-        </Textfit>
-      );
-    case "image":
-      return (
-        <div className={className} style={style}>
-          <img
-            src={part.content}
-            className="image"
-            loading="lazy"
-            decoding="async"
-          ></img>
-        </div>
-      );
-    case "video":
-      return (
-        <div className={className} style={style}>
-          <video src={part.content} className="video"></video>
-        </div>
-      );
-    case "link":
-      return (
-        <div className={className} style={style}>
-          <span
-            style={{
-              color: "rgb(51, 255, 0);",
-              textDecoration: "underline;",
-              textDecorationColor: "rgb(38, 0, 255);",
-            }}
-          >
-            Ссылка
-          </span>
-        </div>
-      );
+export default function ContentPart({ part, style, className }: Props) {
+  if (part.type === "text") {
+    return (
+      <div className={className} style={style}>
+        {replaceLinksWithStub(
+          typeof part.content === "string" ? part.content : "",
+        )}
+      </div>
+    );
   }
+  if (part.type === "link") {
+    return (
+      <span className={`linkStub ${className ?? ""}`.trim()} style={style}>
+        ссылка
+      </span>
+    );
+  }
+  // Всё остальное не рендерим
+  return null;
 }

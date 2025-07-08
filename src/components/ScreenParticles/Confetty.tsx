@@ -1,8 +1,8 @@
+import { useEffect } from "react";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 import SchoolPride from "react-canvas-confetti/dist/presets/pride";
 
 import { randomInRange } from ".";
-import { useEffect } from "react";
 const defaultOptions: confetti.Options = {
   spread: randomInRange(50, 70),
   particleCount: randomInRange(50, 100),
@@ -65,7 +65,7 @@ interface Props {
   callback: () => void;
 }
 
-export function Confettyv1({} : Props) {
+export function Confettyv1({}: Props) {
   const randomVariant = variants[Math.floor(Math.random() * variants.length)];
 
   return (
@@ -91,29 +91,25 @@ export function Confettyv2({ callback }: Props) {
         width="100%"
         height="100%"
         autorun={{ speed: 30, duration }}
-        decorateOptions={(): confetti.Options => {
-          return {
-            particleCount: 2,
-            angle: 60,
-            spread: 55,
-            origin: { x: 0 },
-            colors: ["#000000", "#FF0000", "#FFFFFF"],
-          };
-        }}
+        decorateOptions={(): confetti.Options => ({
+          particleCount: 2,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: ["#000000", "#FF0000", "#FFFFFF"],
+        })}
       />
       <SchoolPride
         width="100%"
         height="100%"
         autorun={{ speed: 30, duration }}
-        decorateOptions={(): confetti.Options => {
-          return {
-            particleCount: 2,
-            angle: 120,
-            spread: 55,
-            origin: { x: 1 },
-            colors: ["#000000", "#FF0000", "#FFFFFF"],
-          };
-        }}
+        decorateOptions={(): confetti.Options => ({
+          particleCount: 2,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: ["#000000", "#FF0000", "#FFFFFF"],
+        })}
       />
     </>
   );

@@ -1,9 +1,10 @@
 import { useCallback, useState } from "react";
-import { MediaDto } from "../../../shared/api/generated/baza";
 import { Container, Row } from "react-bootstrap";
 import { Textfit } from "react-textfit";
-import styles from "./Media.module.scss";
+
 import { SignalRContext } from "../../../app";
+import { MediaDto } from "../../../shared/api/generated/baza";
+import styles from "./Media.module.scss";
 
 interface Props {
   mediaInfo: MediaDto;

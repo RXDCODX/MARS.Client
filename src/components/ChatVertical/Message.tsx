@@ -1,101 +1,91 @@
 import { useEffect, useRef, useState } from "react";
+
 import { ChatMessage } from "../../shared/api/generated/baza";
-import styles from "./Message.module.scss";
-import { parseContent, replaceBadges, replaceEmotes } from "../../shared/Utils";
-import useTwitchStore from "../../shared/twitchStore/twitchStore";
-import { Textfit } from "react-textfit";
-import "./badge.css";
 import anime from "../../shared/styles/animate.module.scss";
-import ContentPart from "./ContentPart";
+import useTwitchStore from "../../shared/twitchStore/twitchStore";
+import { replaceBadges } from "../../shared/Utils";
+import GradientText from "../../shared/Utils/Animations/GradientText";
+import styles from "./Message.module.scss";
 
 interface Props {
   message: ChatMessage;
+  onRemove?: () => void;
 }
 
-export function Message({ message }: Props) {
+function getRoleColor(message: ChatMessage) {
+  if (message.isVip) return "#e005b9"; // pink
+  if (message.isBroadcaster) return "#e10d00"; // red
+  if (message.isModerator) return "#00ad03"; // green
+  return "transparent";
+}
+
+export function Message({ message, onRemove }: Props) {
   const [handler, setHandler] = useState(true);
   const badges = useTwitchStore((state) => state.badges);
-  const [color, setColor] = useState<string>("");
+  const [content] = useState(
+    message.message
+      ? [{ id: "0", type: "text" as const, content: message.message }]
+      : [],
+  );
+  const roleColor = getRoleColor(message);
   const msgRef = useRef<HTMLDivElement>(null);
-  const emoteParser = useTwitchStore((state) => state.parser);
-  const emoteToLinkParser = useTwitchStore((state) => state.parseToLink);
-  const emoteFetcher = useTwitchStore((state) => state.fetcher);
-  if (!emoteParser || !emoteFetcher || !emoteToLinkParser) return null;
-  const [content] = useState(parseContent(message.message));
 
   useEffect(() => {
-    if (message.isVip) {
-      setColor("#e005b9"); //pink
-    } else if (message.isBroadcaster) {
-      setColor("#e10d00"); // red
-    } else if (message.isModerator) {
-      setColor("#00ad03"); //green
-    } else {
-      setColor("transparent");
-    }
+    setTimeout(
+      () => {
+        if (msgRef.current) {
+          msgRef.current.onanimationend = () => {
+            setHandler(false);
+          };
+          msgRef.current.className =
+            styles.container + " " + anime.animated + " " + anime.zoomOut;
+        }
+      },
+      import.meta.env.VITE_PROD ? 30 * 1000 : 30 * 1000000,
+    );
+  }, [onRemove, message]);
 
-    setTimeout(() => {
-      msgRef.current!.onanimationend = () => {
-        setHandler(false);
-      };
-      msgRef.current!.className =
-        styles.container + " " + anime.animated + " " + anime.slideOutLeft;
-    }, 30 * 1000);
-  }, []);
-
-  // Message component
   return (
     handler && (
       <div
         ref={msgRef}
-        className={`${styles.container} ${anime.animated} ${anime.slideInLeft}`}
-        style={{
-          background: `linear-gradient(100deg, ${color}, transparent 75%) border-box`,
-        }}
+        className={`${styles.container} ${anime.animated} ${anime.fadeInUp}`}
+        style={{ animationDuration: "1s" }}
       >
-        {/* Header section with badges and nickname */}
-        <div className={styles.head}>
-          <div className={styles.badgesAndNickname}>
+        <div
+          className={styles.left}
+          style={{ borderRadius: 12, padding: "8px 16px" }}
+        >
+          <div
+            className={styles.role}
+            style={{ background: roleColor ?? "white" }}
+          >
             <div className={styles.badges}>
               {replaceBadges(badges, message)}
             </div>
-            <Textfit
-              forceSingleModeWidth
-              mode="single"
+            <div
               className={styles.nickname}
-              min={40}
-              style={{
-                color: message.colorHex ?? "white",
-              }}
+              style={{ color: message.colorHex ?? "white" }}
             >
               {message.displayName}
-            </Textfit>
+            </div>
           </div>
         </div>
-        {/* Message content */}
-        <div className={styles.messageWrapper}>
-          {content &&
-            content.map((part) => (
-              <ContentPart
-                message={message}
+        <div className={styles.right}>
+          {content.map((part) =>
+            message.isBroadcaster || message.isVip || message.isModerator ? (
+              <GradientText
                 key={part.id}
-                part={part}
-                className={styles.message}
-                style={{ height: 100 / content.length + "%" }}
-                convertMediaToJustLinks={
-                  !message.isVip &&
-                  !message.isBroadcaster &&
-                  !message.isModerator
-                }
-                replaceEmotes={({ message }) =>
-                  replaceEmotes({
-                    text: message,
-                    parser: emoteParser,
-                    newParser: emoteToLinkParser
-                  })
-                }
+                text={typeof part.content === "string" ? part.content : ""}
+                fontWeight={600}
+                speed="very-fast"
               />
-            ))}
+            ) : (
+              <span key={part.id} style={{ color: "white" }}>
+                {part.content}
+              </span>
+            ),
+          )}
         </div>
       </div>
     )

@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import { SignalRContext } from "../../app";
 import { Cirno } from "./Cirno";
 import { Reimu } from "./Reimu";
+import styles from "./Styles.module.scss";
 
 export interface Message {
   id: string;
@@ -12,7 +13,7 @@ export interface Message {
 }
 
 export function FumoFridayController() {
-  const [_, setMessages] = useState<Message[]>([]);
+  const [, setMessages] = useState<Message[]>([]);
   const [currentMessage, setCurrentMessage] = useState<Message | undefined>(
     undefined,
   );
@@ -57,8 +58,34 @@ export function FumoFridayController() {
     [changeSwitcher],
   );
 
+  // Экспортируем функцию play для внешнего использования
+  const play = useCallback(() => {
+    const testMessage: Message = {
+      id: uuidv4(),
+      message: "Test User",
+      color: "#ff6b6b",
+    };
+    handleAddEvent(testMessage);
+  }, [handleAddEvent]);
+
+  // Делаем функцию play доступной глобально для тестирования
+  (window as unknown as { testFumoFriday: typeof play }).testFumoFriday = play;
+
   return (
     <>
+      {window?.location?.hostname === "localhost" &&
+        window?.parent?.location?.pathname?.includes("iframe.html") && (
+          <div className={styles.testControls}>
+            <button
+              onClick={play}
+              className={styles.testButton}
+              disabled={!!currentMessage}
+            >
+              Test FumoFriday Alert
+            </button>
+          </div>
+        )}
+
       {currentMessage && switcher && (
         <Reimu
           key={currentMessage.id}

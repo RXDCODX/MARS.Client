@@ -18,10 +18,19 @@ const getRandomColor = (): string => {
 };
 
 export default function Announce({ title, callback }: Props) {
-  document.title = title;
   const nodeRef = useRef(null);
+  // Цвет фиксируется на маунте
+  const [backgroundColor] = useState(getRandomColor);
 
-  const backgroundColor = getRandomColor();
+  // Отключить в Storybook
+  if (
+    typeof window !== "undefined" &&
+    window.location.href.includes("storybook")
+  ) {
+    return null;
+  }
+
+  document.title = title;
 
   const defaultStyle: CSSProperties = {
     position: "absolute" /* Абсолютное позиционирование */,

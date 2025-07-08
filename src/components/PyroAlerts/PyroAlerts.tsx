@@ -1,13 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+
 import { SignalRContext } from "../../app";
-import Announce from "../../shared/Utils/Announce/Announce";
 import {
   MediaDto,
   MediaMetaInfoPriorityEnum,
 } from "../../shared/api/generated/baza";
-import { v4 as uuidv4 } from "uuid";
-import HighPriorityAlert from "./HighPriorityAlert";
+import Announce from "../../shared/Utils/Announce/Announce";
 import Alert from "./Alert";
+import HighPriorityAlert from "./HighPriorityAlert";
 
 export default function PyroAlerts() {
   const [messages, setMessages] = useState<MediaDto[]>([]);
@@ -18,43 +19,28 @@ export default function PyroAlerts() {
 
   const handleAlert = useCallback((message: MediaDto) => {
     message.mediaInfo.id = uuidv4();
+    const parsedMessage: MediaDto = {
+      ...message,
+      mediaInfo: {
+        ...message.mediaInfo,
+        fileInfo: {
+          ...message.mediaInfo.fileInfo,
+          filePath: message.mediaInfo.fileInfo.isLocalFile
+            ? import.meta.env.VITE_BASE_PATH +
+              message.mediaInfo.fileInfo.filePath
+            : message.mediaInfo.fileInfo.filePath,
+        },
+      },
+    };
 
     switch (message.mediaInfo.metaInfo.priority) {
       case MediaMetaInfoPriorityEnum.High:
-        const parsedMessage: MediaDto = {
-          ...message,
-          mediaInfo: {
-            ...message.mediaInfo,
-            fileInfo: {
-              ...message.mediaInfo.fileInfo,
-              filePath: message.mediaInfo.fileInfo.isLocalFile
-                ? import.meta.env.VITE_BASE_PATH +
-                  message.mediaInfo.fileInfo.filePath
-                : message.mediaInfo.fileInfo.filePath,
-            },
-          },
-        };
-
         setHighPriorityQueue((prev) => [...prev, parsedMessage]); // Добавляем в очередь высокоприоритетных
         setMessages([]);
         break;
       case MediaMetaInfoPriorityEnum.Low:
       case MediaMetaInfoPriorityEnum.Normal:
-        const coolMessage: MediaDto = {
-          ...message,
-          mediaInfo: {
-            ...message.mediaInfo,
-            fileInfo: {
-              ...message.mediaInfo.fileInfo,
-              filePath: message.mediaInfo.fileInfo.isLocalFile
-                ? import.meta.env.VITE_BASE_PATH +
-                  message.mediaInfo.fileInfo.filePath
-                : message.mediaInfo.fileInfo.filePath,
-            },
-          },
-        };
-
-        setMessages((prev) => [...prev, coolMessage]);
+        setMessages((prev) => [...prev, parsedMessage]);
         break;
     }
   }, []);
@@ -65,16 +51,19 @@ export default function PyroAlerts() {
     );
   }, []);
 
-  const removeHighPrior = useCallback((message: MediaDto) => {
-    setHighPriorityQueue((prev) =>
-      prev.filter((m) => m.mediaInfo.id !== message.mediaInfo.id),
-    );
+  const removeHighPrior = useCallback(
+    (message: MediaDto) => {
+      setHighPriorityQueue((prev) =>
+        prev.filter((m) => m.mediaInfo.id !== message.mediaInfo.id),
+      );
 
-    const newPriority = highPriorityQueue.some((e) => e)
-      ? highPriorityQueue[0]
-      : null;
-    setCurrentHighPriority(newPriority);
-  }, []);
+      const newPriority = highPriorityQueue.some((e) => e)
+        ? highPriorityQueue[0]
+        : null;
+      setCurrentHighPriority(newPriority);
+    },
+    [highPriorityQueue],
+  );
 
   // Эффект для обработки очереди высокоприоритетных алертов
   useEffect(() => {

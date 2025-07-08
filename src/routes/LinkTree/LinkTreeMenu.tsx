@@ -1,15 +1,19 @@
-import { Link } from "react-router-dom";
 import "./LinktreeMenu.css"; // Стили (можно заменить на Tailwind или styled-components)
+
+import { Link } from "react-router-dom";
 
 export const LinktreeMenu = () => {
   const links = [
     { path: "/pyroalerts", name: "Pyro Alerts" },
+    { path: "/randommem", name: "RandomMem" },
     { path: "/waifu", name: "Waifu Alerts" },
     { path: "/fumofriday", name: "Fumo Friday" },
     { path: "/highlite", name: "Highlite Message" },
     { path: "/confetti", name: "Confetti Manager" },
     { path: "/chath", name: "Horizontal Chat" },
     { path: "/chatv", name: "Vertical Chat" },
+    { path: "/sr/currenttrack", name: "SR: Current Track" },
+    { path: "/main", name: "Main Page" },
   ];
 
   return (

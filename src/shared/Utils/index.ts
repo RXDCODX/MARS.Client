@@ -1,13 +1,11 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import parse from "html-react-parser";
-
 import emoticons from "@mkody/twitch-emoticons";
 import { HelixChatBadgeSet } from "@twurple/api";
-import { ChatMessage, MediaInfo } from "../api/generated/baza";
 import { ChatMessage as TwitchChatMessage } from "@twurple/chat";
-import { HighliteMessageProps } from "../../components/HighliteMessage/Message";
-import React from "react";
+import parse from "html-react-parser";
 import { v4 as randomUUID } from "uuid";
+
+import { HighliteMessageProps } from "../../components/HighliteMessage/Message";
+import { ChatMessage, MediaInfo } from "../api/generated/baza";
 import { addMimeTypesToImgTags } from "../MIME_types";
 
 export { BigTextBlockForAudio } from "./BigTexts/BigTextBlockForAudio";
@@ -17,7 +15,7 @@ export { FullText } from "./FullText/FullText";
 export function replaceEmotes({
   text,
   parser,
-  newParser
+  newParser,
 }: {
   text?: string | ChatMessage;
   parser: emoticons.EmoteParser;
@@ -38,7 +36,7 @@ export function replaceEmotes({
       }
     }
   } else if ("message" in text && typeof text.message === "string") {
-    var message = text as ChatMessage;
+    const message = text as ChatMessage;
 
     if (message.message === undefined) {
       return undefined;
@@ -55,12 +53,18 @@ export function replaceEmotes({
         return undefined;
       }
 
-      resultText = resultText.replace(
-        emote.name,
-        `<img class="emote" src="${emote.imageUrl}" />`,
+      resultText = resultText.replaceAll(
+        new RegExp(`(?<!<[^>]*)${escapeRegExp(emote.name)}(?![^<]*>)`, "g"),
+        `<img class="emote"
+        srcset="//static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/1.0 1x, //static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/light/2.0 2x, //static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/4.0 4x" alt="${emote.name}" 
+        loading="lazy"
+        decoding="async" />`,
       );
     });
 
+    function escapeRegExp(string: string) {
+      return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
 
     const parsedText = newParser.parse(resultText);
     resultText = addMimeTypesToImgTags(parsedText);
@@ -112,65 +116,131 @@ export function getRandomInt(min: number, max: number): number {
 }
 
 export function getCoordinates(
-  ref: HTMLImageElement | HTMLVideoElement,
+  ref: HTMLImageElement | HTMLVideoElement | HTMLDivElement,
   info: MediaInfo,
+  isInWindow: boolean = true,
 ): React.CSSProperties {
-  let returnObj: React.CSSProperties = {};
+  const returnObj: React.CSSProperties = {};
+  const { positionInfo } = info;
 
-  if (info?.positionInfo.randomCoordinates) {
-    if (!ref?.width) {
-      ref.width = info.positionInfo.width;
-      ref.height = info.positionInfo.height;
+  // Получаем размеры элемента в зависимости от его типа
+  let elementWidth: number;
+  let elementHeight: number;
+
+  // Для div и других элементов используем offsetWidth/offsetHeight
+  elementWidth = ref.offsetWidth || positionInfo.width || 0;
+  elementHeight = ref.offsetHeight || positionInfo.height || 0;
+
+  // Если размеры не определены, устанавливаем из positionInfo
+  if (!elementWidth && positionInfo.width) {
+    elementWidth = positionInfo.width;
+  }
+  if (!elementHeight && positionInfo.height) {
+    elementHeight = positionInfo.height;
+  }
+
+  // Случайный вариант позиционирования
+  if (positionInfo.randomCoordinates) {
+    const maxX = Math.max(0, window.innerWidth - elementWidth);
+    const maxY = Math.max(0, window.innerHeight - elementHeight);
+    let left = getRandomInt(0, maxX);
+    let top = getRandomInt(0, maxY);
+    if (!isInWindow) {
+      left = getRandomInt(0, window.innerWidth);
+      top = getRandomInt(0, window.innerHeight);
     }
+    returnObj.left = `${left}px`;
+    returnObj.top = `${top}px`;
+    returnObj.position = "absolute";
+    return returnObj;
+  }
 
-    const getXLong = window.innerWidth - ref.width;
-    const getYLong = window.innerHeight - ref.height;
-    const randomX = getRandomInt(
-      0,
-      isNaN(getXLong) ? window.innerWidth : getXLong,
-    );
-    const randomY = getRandomInt(
-      0,
-      isNaN(getYLong) ? window.innerHeight : getYLong,
-    );
-
-    returnObj.left = `${randomX >= 1 ? randomX : 0}px`;
-    returnObj.top = `${randomY >= 1 ? randomY : 0}px`;
-  } else {
-    if (
-      info?.positionInfo.isHorizontalCenter &&
-      info?.positionInfo.isVerticallCenter
-    ) {
-      returnObj = {
-        ...returnObj,
-        margin: 0,
-        position: "absolute",
-        top: "50%",
-        left: "50%",
-        msTransform: "translate(-50%, -50%)",
-        transform: "translate(-50%, -50%)",
-      };
-    } else if (info?.positionInfo.isHorizontalCenter) {
-      returnObj = {
-        ...returnObj,
-        margin: 0,
-        position: "absolute",
-        left: "50%",
-        msTransform: "translateX(-50%)",
-        transform: "translateX(-50%)",
-        top: info.positionInfo.yCoordinate + "px",
-      };
-    } else if (info?.positionInfo.isVerticallCenter) {
-      returnObj = {
-        ...returnObj,
-        margin: 0,
-        position: "absolute",
-        top: "50%",
-        msTransform: "translateY(-50%)",
-        transform: "translateY(-50%)",
-        left: info.positionInfo.xCoordinate + "px",
+  // Центрирование
+  if (positionInfo.isHorizontalCenter && positionInfo.isVerticallCenter) {
+    let style: React.CSSProperties = {
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+    };
+    if (isInWindow) {
+      // Проверяем, не выходит ли элемент за границы окна
+      style = {
+        ...style,
+        maxWidth: `${window.innerWidth}px`,
+        maxHeight: `${window.innerHeight}px`,
       };
     }
+    return style;
+  }
+
+  if (positionInfo.isHorizontalCenter) {
+    let top =
+      positionInfo.yCoordinate !== undefined ? positionInfo.yCoordinate : 0;
+    // Если явно задан yCoordinate, не учитываем isInWindow
+    if (positionInfo.yCoordinate === undefined && isInWindow) {
+      // Корректируем top, чтобы элемент не выходил за границы
+      if (top + elementHeight / 2 > window.innerHeight) {
+        top = window.innerHeight - elementHeight / 2;
+      }
+      if (top - elementHeight / 2 < 0) {
+        top = elementHeight / 2;
+      }
+    }
+    returnObj.position = "absolute";
+    returnObj.left = "50%";
+    returnObj.transform = "translateX(-50%)";
+    returnObj.top = `${top}px`;
+    return returnObj;
+  }
+
+  if (positionInfo.isVerticallCenter) {
+    let left =
+      positionInfo.xCoordinate !== undefined ? positionInfo.xCoordinate : 0;
+    // Если явно задан xCoordinate, не учитываем isInWindow
+    if (positionInfo.xCoordinate === undefined && isInWindow) {
+      // Корректируем left, чтобы элемент не выходил за границы
+      if (left + elementWidth / 2 > window.innerWidth) {
+        left = window.innerWidth - elementWidth / 2;
+      }
+      if (left - elementWidth / 2 < 0) {
+        left = elementWidth / 2;
+      }
+    }
+    returnObj.position = "absolute";
+    returnObj.top = "50%";
+    returnObj.transform = "translateY(-50%)";
+    returnObj.left = `${left}px`;
+    return returnObj;
+  }
+
+  // Явное задание координат (без центрирования)
+  if (positionInfo.xCoordinate !== undefined) {
+    let left = positionInfo.xCoordinate;
+    if (isInWindow) {
+      if (left + elementWidth > window.innerWidth) {
+        left = window.innerWidth - elementWidth;
+      }
+      if (left < 0) left = 0;
+    }
+    returnObj.left = `${left}px`;
+    returnObj.position = "absolute";
+  }
+  if (positionInfo.yCoordinate !== undefined) {
+    let top = positionInfo.yCoordinate;
+    if (isInWindow) {
+      if (top + elementHeight > window.innerHeight) {
+        top = window.innerHeight - elementHeight;
+      }
+      if (top < 0) top = 0;
+    }
+    returnObj.top = `${top}px`;
+    returnObj.position = "absolute";
+  }
+
+  // Если координаты заданы (явно или через центрирование) - добавляем absolute
+  if (returnObj.left !== undefined || returnObj.top !== undefined) {
+    returnObj.position = "absolute";
   }
 
   return returnObj;
@@ -208,8 +278,8 @@ export function replaceBadges(
   badges: HelixChatBadgeSet[],
   chatMessage: ChatMessage | TwitchChatMessage,
 ) {
-  var text: string | undefined = "";
-  var sub = "";
+  let text: string | undefined = "";
+  let sub = "";
 
   if (chatMessage instanceof TwitchChatMessage) {
     text = chatMessage.text;
@@ -223,7 +293,7 @@ export function replaceBadges(
       }
 
       const link = lastVersion.getImageUrl(4);
-      sub = sub + `<img class="badge" src="${link}" type="image/png">\n`;
+      sub = sub + `<img class="badge_pa" src="${link}" type="image/png">\n`;
     });
   } else if (chatMessage.badges !== undefined) {
     text = chatMessage.message;
@@ -237,7 +307,7 @@ export function replaceBadges(
       }
 
       const link = lastVersion.getImageUrl(4);
-      sub = sub + `<img class="badge" src="${link}" type="image/png">\n`;
+      sub = sub + `<img class="badge_pa" src="${link}" type="image/png">\n`;
     });
   }
 
@@ -262,12 +332,10 @@ export function getEmojisSrcFromText(
   if (typeof text === "string") {
     text = text.replace(/[\u{E0000}-\u{E007F}]/gu, "");
     const messages = text.split(" ");
-    const result = messages.map((message) => {
-      return client.parse(message, 1);
-    });
+    const result = messages.map((message) => client.parse(message, 1));
     return result;
   } else if ("message" in text && typeof text.message === "string") {
-    var message = text as ChatMessage;
+    const message = text as ChatMessage;
 
     if (
       message.message === undefined ||
@@ -429,7 +497,7 @@ export function parseContent(text?: string): ContentPart[] | undefined {
         });
       }
     } else {
-      if (!!part) {
+      if (part) {
         currentText.push(part);
       }
     }
@@ -446,4 +514,60 @@ export function parseContent(text?: string): ContentPart[] | undefined {
   }
 
   return result;
+}
+
+export function arrayExcept<T>(
+  arr1: T[],
+  arr2: T[],
+  comparer?: (a: T, b: T) => boolean,
+): T[] {
+  // Если есть функция сравнения
+  if (comparer) {
+    const inArr1Only = arr1.filter(
+      (item1) => !arr2.some((item2) => comparer(item1, item2)),
+    );
+    const inArr2Only = arr2.filter(
+      (item2) => !arr1.some((item1) => comparer(item1, item2)),
+    );
+    return [...inArr1Only, ...inArr2Only];
+  }
+
+  // Оптимизация с использованием Set для простого сравнения
+  const set1 = new Set(arr1);
+  const set2 = new Set(arr2);
+
+  const result: T[] = [];
+
+  // Добавляем элементы из arr1, которых нет в arr2
+  for (const item of arr1) {
+    if (!set2.has(item)) {
+      result.push(item);
+    }
+  }
+
+  // Добавляем элементы из arr2, которых нет в arr1
+  for (const item of arr2) {
+    if (!set1.has(item)) {
+      result.push(item);
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Корректирует координаты left/top так, чтобы элемент с заданными width/height не выходил за пределы окна.
+ */
+export function clampToViewport(
+  left: number,
+  top: number,
+  width: number,
+  height: number,
+): { left: number; top: number } {
+  const maxLeft = Math.max(0, window.innerWidth - width);
+  const maxTop = Math.max(0, window.innerHeight - height);
+  return {
+    left: Math.max(0, Math.min(left, maxLeft)),
+    top: Math.max(0, Math.min(top, maxTop)),
+  };
 }

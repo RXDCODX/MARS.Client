@@ -1,16 +1,19 @@
+// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
+import storybook from "eslint-plugin-storybook";
+
 //*@ts-check*
-import js from "@eslint/js";
-import globals from "globals";
-import reactHooks from "eslint-plugin-react-hooks";
-import reactRefresh from "eslint-plugin-react-refresh";
-import tseslint from "typescript-eslint";
 import { fixupConfigRules } from "@eslint/compat";
+import js from "@eslint/js";
+import typescriptEslint from "@typescript-eslint/eslint-plugin";
+import typescriptParser from "@typescript-eslint/parser";
 import eslintConfigPrettier from "eslint-config-prettier";
 import prettier from "eslint-plugin-prettier"; // Import the Prettier plugin
-import typescriptEslint from "@typescript-eslint/eslint-plugin";
-import simpleImportSort from "eslint-plugin-simple-import-sort";
-import typescriptParser from "@typescript-eslint/parser";
 import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
+import globals from "globals";
+import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   js.configs.recommended,
@@ -69,7 +72,7 @@ export default tseslint.config(
       ],
       "react-refresh/only-export-components": [
         "error",
-        { allowConstantExport: true, endOfLine: "auto" },
+        { allowConstantExport: true },
       ],
     },
     ignores: [
@@ -96,4 +99,5 @@ export default tseslint.config(
     },
   },
   eslintConfigPrettier,
+  storybook.configs["flat/recommended"],
 );
