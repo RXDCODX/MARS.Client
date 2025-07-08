@@ -11,14 +11,16 @@ import {
   parseContent,
   replaceEmotes,
 } from "../../shared/Utils";
+import GradientText from "../../shared/Utils/Animations/GradientText";
 import styles from "./Message.module.scss";
 
 interface Props {
   message: ChatMessage;
   callback?: () => void;
+  slotTop?: number; // добавлен проп для вертикального позиционирования
 }
 
-export const Message = ({ message, callback }: Props) => {
+export const Message = ({ message, callback, slotTop }: Props) => {
   const [handler, setHandler] = useState(true);
   const divRef = useRef<HTMLDivElement>(null);
   const parser = useTwitchStore((state) => state.parser);
@@ -45,6 +47,7 @@ export const Message = ({ message, callback }: Props) => {
         ? bg
         : undefined,
     margin: fontSize / 10 + "px",
+    top: slotTop !== undefined ? slotTop + "px" : undefined, // если slotTop передан — используем его
   });
   const [divOffset, setDivOffset] = useState(0);
   const { play, style } = useAnimate({
@@ -68,14 +71,13 @@ export const Message = ({ message, callback }: Props) => {
       Math.random() * (window.innerHeight - elem.offsetHeight),
     );
 
-    // Устанавливаем анимацию через inline-стили
     setBaseStyles({
       ...baseStyles,
-      top: randPosY + "px",
+      top: slotTop !== undefined ? slotTop + "px" : randPosY + "px",
       visibility: "visible",
       left: window.outerWidth + "px",
     });
-  }, [message.id]);
+  }, [message.id, baseStyles, slotTop]);
 
   useEffect(() => {
     if (divRef.current && divRef.current.offsetWidth) {
@@ -90,7 +92,7 @@ export const Message = ({ message, callback }: Props) => {
     if (divOffset !== 0) {
       play(true);
     }
-  }, [divRef.current?.offsetWidth]);
+  }, [divRef.current?.offsetWidth, divOffset, play]);
 
   // Проверяем parser после определения всех переменных
   if (!parser || !parserToLink) {
@@ -142,7 +144,21 @@ export const Message = ({ message, callback }: Props) => {
           className={styles.text}
           style={{ color: "white", marginLeft: "10px" }}
         >
-          {text?.map((part) => {
+          {text?.map((part, idx) => {
+            if (message.isBroadcaster || message.isVip || message.isModerator) {
+              return (
+                <GradientText
+                  key={idx}
+                  text={
+                    typeof part.content === "string"
+                      ? part.content
+                      : (message.message ?? "")
+                  }
+                  fontWeight={600}
+                  speed="very-fast"
+                />
+              );
+            }
             switch (part.type) {
               case "text":
                 return replaceEmotes({
@@ -151,11 +167,11 @@ export const Message = ({ message, callback }: Props) => {
                   newParser: parserToLink,
                 });
               case "image":
-                return <span>Ссылка</span>;
+                return <span key={idx}>Ссылка</span>;
               case "link":
-                return <span>Ссылка</span>;
+                return <span key={idx}>Ссылка</span>;
               case "video":
-                return <span>Ссылка</span>;
+                return <span key={idx}>Ссылка</span>;
             }
           })}
         </div>

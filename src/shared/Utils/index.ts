@@ -293,7 +293,7 @@ export function replaceBadges(
       }
 
       const link = lastVersion.getImageUrl(4);
-      sub = sub + `<img class="badge" src="${link}" type="image/png">\n`;
+      sub = sub + `<img class="badge_pa" src="${link}" type="image/png">\n`;
     });
   } else if (chatMessage.badges !== undefined) {
     text = chatMessage.message;
@@ -307,7 +307,7 @@ export function replaceBadges(
       }
 
       const link = lastVersion.getImageUrl(4);
-      sub = sub + `<img class="badge" src="${link}" type="image/png">\n`;
+      sub = sub + `<img class="badge_pa" src="${link}" type="image/png">\n`;
     });
   }
 
