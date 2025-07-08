@@ -17,14 +17,13 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "18"
-          cache: "yarn"
+          node-version: "20"
 
       - name: Install Yarn
         run: npm install -g yarn
 
-      - name: Set Yarn Version
-        run: yarn set version latest
+      - name: Yarn 4.9.2
+        run: yarn set version 4.9.2
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
