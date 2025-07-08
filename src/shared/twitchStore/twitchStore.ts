@@ -30,7 +30,7 @@ const initialState: State = {
 };
 
 export const useTwitchStore = create<State & Actions>()(
-  devtools((set) => ({
+  devtools((set, get) => ({
     ...initialState,
     init: (clientId: string, clientSecret: string) => {
       const { client, fetcher, parser, newParser } = initialization(
@@ -77,6 +77,12 @@ export const useTwitchStore = create<State & Actions>()(
             parseToLink: newParser,
           });
         });
+    },
+    setBadges: (badges: HelixChatBadgeSet[]) => set({ badges }),
+    parse: (text: string, size?: number) => {
+      const parser = get().parser ?? get().parseToLink;
+      if (!parser) return text;
+      return parser.parse(text, size);
     },
     sendMsgToPyrokxnezxz: async (msg: string) => {
       await SignalRContext.invoke("TwitchMsg", msg);
