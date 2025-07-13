@@ -5,6 +5,7 @@ import anime from "../../shared/styles/animate.module.scss";
 import useTwitchStore from "../../shared/twitchStore/twitchStore";
 import { replaceBadges } from "../../shared/Utils";
 import GradientText from "../../shared/Utils/Animations/GradientText";
+import { CSS_ANIMATION_CONFIG } from "./animationTimings";
 import styles from "./Message.module.scss";
 
 interface Props {
@@ -31,18 +32,15 @@ export function Message({ message, onRemove }: Props) {
   const msgRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setTimeout(
-      () => {
-        if (msgRef.current) {
-          msgRef.current.onanimationend = () => {
-            setHandler(false);
-          };
-          msgRef.current.className =
-            styles.container + " " + anime.animated + " " + anime.zoomOut;
-        }
-      },
-      import.meta.env.VITE_PROD ? 30 * 1000 : 30 * 1000000,
-    );
+    setTimeout(() => {
+      if (msgRef.current) {
+        msgRef.current.onanimationend = () => {
+          setHandler(false);
+        };
+        msgRef.current.className =
+          styles.container + " " + anime.animated + " " + anime.zoomOut;
+      }
+    }, 30 * 1000);
   }, [onRemove, message]);
 
   return (
@@ -50,7 +48,7 @@ export function Message({ message, onRemove }: Props) {
       <div
         ref={msgRef}
         className={`${styles.container} ${anime.animated} ${anime.fadeInUp}`}
-        style={{ animationDuration: "1s" }}
+        style={{ animationDuration: CSS_ANIMATION_CONFIG.fadeInUp.duration }}
       >
         <div
           className={styles.left}

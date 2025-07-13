@@ -4,6 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { SignalRContext } from "../../app";
 import { ChatMessage } from "../../shared/api/generated/baza";
 import Announce from "../../shared/Utils/Announce/Announce";
+import {
+  FRAMER_MOTION_CONFIG,
+  SCROLL_CONFIG,
+  SCROLL_TIMEOUT,
+} from "./animationTimings";
 import styles from "./ChatVertical.module.scss";
 import { Message } from "./Message";
 
@@ -43,10 +48,12 @@ export default function ChatVertical({
   // ScrollToBottom после появления нового сообщения (и анимации)
   const scrollRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    // Ждём завершения анимации (примерно 200мс)
+    // Ждём завершения всех анимаций (время берется из animationTimings.ts)
     const timeout = setTimeout(() => {
-      scrollRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 250);
+      if (scrollRef.current) {
+        scrollRef.current.scrollIntoView(SCROLL_CONFIG);
+      }
+    }, SCROLL_TIMEOUT);
     return () => clearTimeout(timeout);
   }, [messages.length]);
 
@@ -104,12 +111,7 @@ export default function ChatVertical({
                 scale: jumpKey ? [1, 1.05, 1] : 1,
               }}
               exit={{ opacity: 0, y: -40 }}
-              transition={{
-                type: "spring",
-                stiffness: 300,
-                damping: 30,
-                scale: { duration: 0.3 },
-              }}
+              transition={FRAMER_MOTION_CONFIG}
               layout
             >
               <Message

@@ -21,7 +21,7 @@ export default function CurrentTrack({ track, shouldAnimate = true }: Props) {
             <div className={styles.trackinfo}>
               <div className={styles.info}>
                 <Textfit
-                  mode="single"
+                  mode="multi"
                   className={styles.textContainer}
                   max={9999}
                   min={20}
@@ -33,7 +33,7 @@ export default function CurrentTrack({ track, shouldAnimate = true }: Props) {
                   {track.artists.join(", ")}
                 </Textfit>
                 <Textfit
-                  mode="single"
+                  mode="multi"
                   className={styles.textContainer}
                   max={9999}
                   min={30}

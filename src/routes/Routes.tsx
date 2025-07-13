@@ -13,6 +13,13 @@ import CurrentTrackSignalRHubWrapper from "../components/SoundRequest/CurrentTra
 import WaifuAlerts from "../components/WaifuAlerts/WaifuAlerts";
 import { LinktreeMenu } from "./LinkTree/LinkTreeMenu"; // Импортируем новый компонент
 
+// Компонент-обертка для страницы деталей сервиса
+const ServiceDetailsPage = () => (
+  <div style={{ padding: "20px" }}>
+    <ServiceDetails onClose={() => window.history.back()} />
+  </div>
+);
+
 const PrivateRoutes = () => (
   <BrowserRouter>
     <Routes>
@@ -31,10 +38,7 @@ const PrivateRoutes = () => (
       />
       <Route path="/main" element={<ServerViewer />} />
       <Route path="/services" element={<ServerViewer />} />
-      <Route
-        path="/services/details"
-        element={<ServiceDetails onClose={() => window.history.back()} />}
-      />
+      <Route path="/services/details" element={<ServiceDetailsPage />} />
       <Route path="*" element={<Navigate to="/" />} />
       {/* Редирект на меню */}
     </Routes>

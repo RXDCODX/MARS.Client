@@ -23,10 +23,7 @@ export default function Announce({ title, callback }: Props) {
   const [backgroundColor] = useState(getRandomColor);
 
   // Отключить в Storybook
-  if (
-    typeof window !== "undefined" &&
-    window.location.href.includes("storybook")
-  ) {
+  if (import.meta.env.VITE_STATE === "book") {
     return null;
   }
 

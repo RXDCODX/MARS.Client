@@ -2,7 +2,7 @@
 
 interface ImportMetaEnv {
   readonly VITE_BASE_PATH: string;
-  readonly VITE_PROD: boolean;
+  readonly VITE_API_BASE_URL: string;
 }
 
 interface ImportMeta {

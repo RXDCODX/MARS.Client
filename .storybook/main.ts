@@ -28,5 +28,9 @@ const config: StorybookConfig = {
 
     return config;
   },
+  env: (config) => ({
+    ...config,
+    VITE_STATE: "book",
+  }),
 };
 export default config;

@@ -9,7 +9,7 @@ import {
 import { Message } from "./Message";
 
 const meta: Meta<typeof Message> = {
-  title: "Chat/Message",
+  title: "Chat/ChatHorizontal/Message",
   component: Message,
   parameters: {
     layout: "centered",
