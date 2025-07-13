@@ -1,6 +1,7 @@
+import { useCallback } from "react";
 import {
-  MediaDto,
-  MediaFileInfoTypeEnum,
+    MediaDto,
+    MediaFileInfoTypeEnum,
 } from "../../shared/api/generated/baza";
 import { Audio, Image, Video, Voice } from "./Primitive";
 import TelegramSticker from "./Primitive/TelegramSticker";
@@ -13,7 +14,7 @@ export interface AlertDestination {
 
 export default function HighPriorityAlert(alert: AlertDestination) {
   const message = alert.message;
-  const callback = alert.callback;
+  const callback = useCallback(() => alert.callback(), [alert.callback]);
 
   switch (alert.type) {
     case MediaFileInfoTypeEnum.Image:
@@ -22,7 +23,7 @@ export default function HighPriorityAlert(alert: AlertDestination) {
         <Image
           key={message.mediaInfo.id}
           mediaInfo={message}
-          callBack={() => callback()}
+          callBack={callback}
         />
       );
     case MediaFileInfoTypeEnum.Video:
@@ -30,7 +31,7 @@ export default function HighPriorityAlert(alert: AlertDestination) {
         <Video
           key={message.mediaInfo.id}
           MediaInfo={message}
-          callback={() => callback()}
+          callback={callback}
           isHighPrior
         />
       );
@@ -39,7 +40,7 @@ export default function HighPriorityAlert(alert: AlertDestination) {
         <Audio
           key={message.mediaInfo.id}
           mediaInfo={message}
-          callback={() => callback()}
+          callback={callback}
           isHighPrior
         />
       );
@@ -48,7 +49,7 @@ export default function HighPriorityAlert(alert: AlertDestination) {
         <Voice
           key={message.mediaInfo.id}
           mediaInfo={message}
-          callback={() => callback()}
+          callback={callback}
           isHighPrior
         />
       );
@@ -57,7 +58,7 @@ export default function HighPriorityAlert(alert: AlertDestination) {
         <TelegramSticker
           key={message.mediaInfo.id}
           mediaInfo={message}
-          callBack={() => callback()}
+          callBack={callback}
         />
       );
     default:

@@ -53,16 +53,14 @@ export default function PyroAlerts() {
 
   const removeHighPrior = useCallback(
     (message: MediaDto) => {
-      setHighPriorityQueue((prev) =>
-        prev.filter((m) => m.mediaInfo.id !== message.mediaInfo.id),
-      );
-
-      const newPriority = highPriorityQueue.some((e) => e)
-        ? highPriorityQueue[0]
-        : null;
-      setCurrentHighPriority(newPriority);
+      setHighPriorityQueue((prev) => {
+        prev = prev.filter((m) => m.mediaInfo.id !== message.mediaInfo.id);
+        const newPriority = prev.some((e) => e) ? prev[0] : null;
+        setCurrentHighPriority(newPriority);
+        return prev;
+      });
     },
-    [highPriorityQueue],
+    [setHighPriorityQueue],
   );
 
   // Эффект для обработки очереди высокоприоритетных алертов

@@ -1,3 +1,5 @@
+import { useCallback } from "react";
+
 import {
   MediaDto,
   MediaFileInfoTypeEnum,
@@ -12,10 +14,16 @@ interface Props {
 
 export default function Alert(messageProps: Props) {
   const message = messageProps.message;
-  if (!message) return null;
+
+  if (!message) {
+    throw new Error("Message is required");
+  }
 
   const { fileInfo } = message.mediaInfo;
-  const callback = () => messageProps.remove(message);
+  const callback = useCallback(
+    () => messageProps.remove(message),
+    [message, messageProps],
+  );
 
   switch (fileInfo.type) {
     case MediaFileInfoTypeEnum.Image:

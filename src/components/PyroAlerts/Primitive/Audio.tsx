@@ -18,21 +18,21 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
 
   const muteAll = useCallback(() => {
     if (isHighPrior) {
-      SignalRContext.invoke("MuteAll");
+      SignalRContext.invoke("MuteAll", []);
     }
-  }, []);
+  }, [isHighPrior]);
 
   const unmuteAll = useCallback(() => {
     if (isHighPrior) {
       SignalRContext.invoke("UnmuteSessions");
     }
-  }, []);
+  }, [isHighPrior]);
 
   const error = useCallback(() => {
     unmuteAll();
     callback();
     throw Error("Failed to play audio");
-  }, [callback]);
+  }, [callback, unmuteAll]);
 
   return (
     <div ref={divRef} style={{ width: "100%" }}>

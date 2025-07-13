@@ -1,5 +1,4 @@
 import { JSX } from "react";
-import { Container, Row } from "react-bootstrap";
 import { Textfit } from "react-textfit";
 
 import { MediaDto } from "../../api/generated/baza";
@@ -53,8 +52,8 @@ export function BigTextBlockForAudio({ mediaInfo }: Props) {
   const is2Exists = splits[1] != undefined && emotesSplits[1] != undefined;
 
   return (
-    <Container className={styles.grid}>
-      <Row className={styles.grid_cell}>
+    <div className={styles.grid}>
+      <div className={styles.grid_cell}>
         <Textfit
           forceSingleModeWidth
           style={{
@@ -73,11 +72,11 @@ export function BigTextBlockForAudio({ mediaInfo }: Props) {
         >
           {emotesSplits[0]}
         </Textfit>
-      </Row>
-      <Row className={styles.grid_cell}></Row>
-      <Row className={styles.grid_cell}></Row>
-      <Row className={styles.grid_cell}></Row>
-      <Row
+      </div>
+      <div className={styles.grid_cell}></div>
+      <div className={styles.grid_cell}></div>
+      <div className={styles.grid_cell}></div>
+      <div
         className={
           styles.grid_cell + ` down-cell ${is2Exists ? " bg-black" : ""}`
         }
@@ -100,7 +99,7 @@ export function BigTextBlockForAudio({ mediaInfo }: Props) {
         >
           {is2Exists ? emotesSplits[1] : ""}
         </Textfit>
-      </Row>
-    </Container>
+      </div>
+    </div>
   );
 }

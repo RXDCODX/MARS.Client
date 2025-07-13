@@ -1,5 +1,4 @@
 import { useCallback, useState } from "react";
-import { Container, Row } from "react-bootstrap";
 import { Textfit } from "react-textfit";
 
 import { SignalRContext } from "../../../app";
@@ -20,23 +19,23 @@ export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
 
   const [isBellPlayed, setIsBellPlayed] = useState(false);
 
-  const error = useCallback(() => {
-    unmuteAll();
-    callback();
-    throw Error("Failed to play audio");
-  }, [callback]);
-
-  const muteAll = useCallback(() => {
-    if (isHighPrior) {
-      SignalRContext.invoke("MuteAll");
-    }
-  }, []);
-
   const unmuteAll = useCallback(() => {
     if (isHighPrior) {
       SignalRContext.invoke("UnmuteSessions");
     }
-  }, []);
+  }, [isHighPrior]);
+
+  const error = useCallback(() => {
+    unmuteAll();
+    callback();
+    throw Error("Failed to play audio");
+  }, [callback, unmuteAll]);
+
+  const muteAll = useCallback(() => {
+    if (isHighPrior) {
+      SignalRContext.invoke("MuteAll", []);
+    }
+  }, [isHighPrior]);
 
   return (
     <>
@@ -63,22 +62,22 @@ export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
         />
       )}
       {
-        <Container className={styles.container}>
-          <Row className={styles.block}>
+        <div className={styles.container}>
+          <div className={styles.block}>
             <Textfit forceSingleModeWidth max={2000} min={1}>
               всем тихо
             </Textfit>
-          </Row>
-          <Row className={styles.block_image}>
+          </div>
+          <div className={styles.block_image}>
             <img src={import.meta.env.VITE_BASE_PATH + "Alerts/mute.png"} />
-          </Row>
-          <Row className={styles.block}>
+          </div>
+          <div className={styles.block}>
             <Textfit forceSingleModeWidth max={2000} min={1}>
               Сейчас говорит <img className="emote" src={imageSrc} />
               {metaInfo.displayName}
             </Textfit>
-          </Row>
-        </Container>
+          </div>
+        </div>
       }
     </>
   );

@@ -216,7 +216,7 @@ export default function WaifuAlerts() {
   }, [currentMessage]);
 
   const muteAll = useCallback(() => {
-    SignalRContext.invoke("MuteAll");
+    SignalRContext.invoke("MuteAll", []);
   }, []);
 
   const unmuteAll = useCallback(() => {

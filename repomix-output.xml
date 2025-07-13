@@ -7499,7 +7499,7 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
 
   const muteAll = useCallback(() => {
     if (isHighPrior) {
-      SignalRContext.invoke("MuteAll");
+      SignalRContext.invoke("MuteAll", []);
     }
   }, []);
 
@@ -7657,7 +7657,7 @@ export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
 
   const muteAll = useCallback(() => {
     if (isHighPrior) {
-      SignalRContext.invoke("MuteAll");
+      SignalRContext.invoke("MuteAll", []);
     }
   }, []);
 
@@ -10936,7 +10936,7 @@ export default function WaifuAlerts() {
   }, [currentMessage]);
 
   const muteAll = useCallback(() => {
-    SignalRContext.invoke("MuteAll");
+    SignalRContext.invoke("MuteAll", []);
   }, []);
 
   const unmuteAll = useCallback(() => {
