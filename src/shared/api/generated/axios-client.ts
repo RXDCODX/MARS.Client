@@ -1,11 +1,12 @@
 /** Generate by swagger-axios-codegen */
-// @ts-nocheck
-/* eslint-disable */
 
 /** Generate by swagger-axios-codegen */
 /* eslint-disable */
 // @ts-nocheck
-import axiosStatic, { type AxiosInstance, type AxiosRequestConfig } from 'axios';
+import axiosStatic, {
+  type AxiosInstance,
+  type AxiosRequestConfig,
+} from "axios";
 
 export interface IRequestOptions extends AxiosRequestConfig {
   /**
@@ -43,7 +44,11 @@ export interface ServiceOptions {
 export const serviceOptions: ServiceOptions = {};
 
 // Instance selector
-export function axios(configs: IRequestConfig, resolve: (p: any) => void, reject: (p: any) => void): Promise<any> {
+export function axios(
+  configs: IRequestConfig,
+  resolve: (p: any) => void,
+  reject: (p: any) => void,
+): Promise<any> {
   if (serviceOptions.axios) {
     return serviceOptions.axios
       .request(configs)
@@ -54,26 +59,31 @@ export function axios(configs: IRequestConfig, resolve: (p: any) => void, reject
         reject(err);
       });
   } else {
-    throw new Error('please inject yourself instance like axios  ');
+    throw new Error("please inject yourself instance like axios  ");
   }
 }
 
-export function getConfigs(method: string, contentType: string, url: string, options: any): IRequestConfig {
+export function getConfigs(
+  method: string,
+  contentType: string,
+  url: string,
+  options: any,
+): IRequestConfig {
   const configs: IRequestConfig = {
     loading: serviceOptions.loading,
     showError: serviceOptions.showError,
     ...options,
     method,
-    url
+    url,
   };
   configs.headers = {
     ...options.headers,
-    'Content-Type': contentType
+    "Content-Type": contentType,
   };
   return configs;
 }
 
-export const basePath = '';
+export const basePath = "";
 
 export interface IList<T> extends Array<T> {}
 export interface List<T> extends Array<T> {}
@@ -775,49 +785,49 @@ export interface YandexTrackAdditionalInfo {
   mp3TrackUrl?: string;
 }
 export enum EnumBaseTrackInfoDomain {
-  'None' = 'None',
-  'Youtube' = 'Youtube',
-  'SoundCloud' = 'SoundCloud',
-  'YandexMusic' = 'YandexMusic',
-  'VkMusic' = 'VkMusic'
+  "None" = "None",
+  "Youtube" = "Youtube",
+  "SoundCloud" = "SoundCloud",
+  "YandexMusic" = "YandexMusic",
+  "VkMusic" = "VkMusic",
 }
 export type CombinedYandexSpecificInfoTypes = YandexTrackAdditionalInfo;
 export type CombinedColorTypes = Color;
 export type CombinedEmoteSetTypes = EmoteSet;
 export enum EnumChatMessageUserType {
-  'Viewer' = 'Viewer',
-  'Moderator' = 'Moderator',
-  'GlobalModerator' = 'GlobalModerator',
-  'Broadcaster' = 'Broadcaster',
-  'Admin' = 'Admin',
-  'Staff' = 'Staff'
+  "Viewer" = "Viewer",
+  "Moderator" = "Moderator",
+  "GlobalModerator" = "GlobalModerator",
+  "Broadcaster" = "Broadcaster",
+  "Admin" = "Admin",
+  "Staff" = "Staff",
 }
 export type CombinedCheerBadgeTypes = CheerBadge;
 export enum EnumChatMessageNoisy {
-  'NotSet' = 'NotSet',
-  'True' = 'True',
-  'False' = 'False'
+  "NotSet" = "NotSet",
+  "True" = "True",
+  "False" = "False",
 }
 export type CombinedChatReplyTypes = ChatReply;
 export enum EnumCheerBadgeColor {
-  'Gray' = 'Gray',
-  'Purple' = 'Purple',
-  'Green' = 'Green',
-  'Blue' = 'Blue',
-  'Red' = 'Red'
+  "Gray" = "Gray",
+  "Purple" = "Purple",
+  "Green" = "Green",
+  "Blue" = "Blue",
+  "Red" = "Red",
 }
 export type CombinedHostGreetingsTypes = HostAutoHello;
 export type CombinedHostCoolDownTypes = HostCoolDown;
 export type CombinedHostTypes = Host;
 export type CombinedMediaInfoTypes = MediaInfo;
 export enum EnumMediaFileInfoType {
-  'None' = 'None',
-  'Image' = 'Image',
-  'Audio' = 'Audio',
-  'Video' = 'Video',
-  'TelegramSticker' = 'TelegramSticker',
-  'Voice' = 'Voice',
-  'Gif' = 'Gif'
+  "None" = "None",
+  "Image" = "Image",
+  "Audio" = "Audio",
+  "Video" = "Video",
+  "TelegramSticker" = "TelegramSticker",
+  "Voice" = "Voice",
+  "Gif" = "Gif",
 }
 export type CombinedTextInfoTypes = MediaTextInfo;
 export type CombinedFileInfoTypes = MediaFileInfo;
@@ -825,19 +835,19 @@ export type CombinedPositionInfoTypes = MediaPositionInfo;
 export type CombinedMetaInfoTypes = MediaMetaInfo;
 export type CombinedStylesInfoTypes = MediaStylesInfo;
 export enum EnumMediaMetaInfoPriority {
-  'Low' = 'Low',
-  'Normal' = 'Normal',
-  'High' = 'High'
+  "Low" = "Low",
+  "Normal" = "Normal",
+  "High" = "High",
 }
 export type CombinedCurrentTrackTypes = BaseTrackInfo;
 export type CombinedNextTrackTypes = BaseTrackInfo;
 export enum EnumServiceInfoStatus {
-  'Running' = 'Running',
-  'Stopped' = 'Stopped',
-  'Starting' = 'Starting',
-  'Stopping' = 'Stopping',
-  'Error' = 'Error',
-  'Unknown' = 'Unknown'
+  "Running" = "Running",
+  "Stopped" = "Stopped",
+  "Starting" = "Starting",
+  "Stopping" = "Stopping",
+  "Error" = "Error",
+  "Unknown" = "Unknown",
 }
 export type CombinedDataTypes = TunaMusicData;
 export type CombinedRequestedTrackTypes = BaseTrackInfo;

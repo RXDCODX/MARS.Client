@@ -105,12 +105,21 @@ export default function ChatHorizontal({
       const newSlots = [...prevSlots];
       let changed = false;
       const newMessageSlotMap = { ...messageSlotMap };
+      // Собираем индексы всех свободных слотов
+      const freeIndices = newSlots
+        .map((s, idx) => (s === null ? idx : null))
+        .filter((v) => v !== null) as number[];
+      // Для каждого сообщения из очереди выбираем случайный свободный слот
       queue.forEach((msg) => {
-        const freeIdx = newSlots.findIndex((s) => s === null);
-        if (freeIdx !== -1) {
+        if (freeIndices.length === 0) return;
+        const randIdx = Math.floor(Math.random() * freeIndices.length);
+        const freeIdx = freeIndices[randIdx];
+        if (freeIdx !== undefined) {
           newSlots[freeIdx] = msg.id!;
           newMessageSlotMap[msg.id!] = freeIdx;
           changed = true;
+          // Удаляем этот индекс из списка свободных
+          freeIndices.splice(randIdx, 1);
         }
       });
       if (changed) {

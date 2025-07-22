@@ -17,6 +17,7 @@ const params = {
   generateClient: true,
   sortTypes: true,
   extractEnums: true,
+
   codeGenConstructs: (constructs) => ({
     ...constructs,
     NullValue: () => "undefined",
@@ -24,7 +25,9 @@ const params = {
       const finalValue = value.includes(" | null")
         ? value.replace(" | null", " | undefined")
         : value;
-      return [...(readonly ? ["readonly "] : []), key, ": ", finalValue].join("");
+      return [...(readonly ? ["readonly "] : []), key, ": ", finalValue].join(
+        "",
+      );
     },
   }),
 };
@@ -41,5 +44,10 @@ generateApi(params).then(() => {
     useStaticMethod: true,
     modelMode: "interface",
     strictNullChecks: true,
+    prettier: {
+      trailingComma: "all",
+      tabWidth: 4,
+      printWidth: 160,
+    },
   });
 });
