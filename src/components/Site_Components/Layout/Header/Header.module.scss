@@ -1,0 +1,191 @@
+.header {
+  background: var(--primary-gradient) !important;
+  box-shadow: var(--bs-box-shadow-lg);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--bs-border-color-translucent);
+  
+  .navbar-brand {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--bs-white) !important;
+    text-shadow: var(--text-shadow-medium);
+    
+    i {
+      font-size: 1.8rem;
+      margin-right: 0.5rem;
+      text-shadow: var(--text-shadow-medium);
+    }
+  }
+  
+  .navbar-nav {
+    .nav-link {
+      color: rgba(255, 255, 255, 0.9) !important;
+      font-weight: 500;
+      text-shadow: var(--text-shadow-light);
+      transition: all 0.3s ease;
+      
+      &:hover {
+        color: var(--bs-white) !important;
+        transform: translateY(-1px);
+        text-shadow: var(--text-shadow-medium);
+      }
+    }
+  }
+}
+
+.logo {
+  text-decoration: none;
+  color: var(--bs-white);
+  text-shadow: var(--text-shadow-medium);
+}
+
+// Кастомные дропдауны
+.dropdownContainer {
+  position: relative;
+  display: inline-block;
+  margin-right: 1rem;
+}
+
+.dropdownButton {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  text-shadow: var(--text-shadow-light);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  
+  &:hover {
+    color: var(--bs-white) !important;
+    transform: translateY(-1px);
+    text-shadow: var(--text-shadow-medium);
+  }
+}
+
+.dropdownMenu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: var(--bs-card-bg);
+  border-radius: 12px;
+  box-shadow: var(--bs-box-shadow-lg);
+  border: 1px solid var(--bs-border-color);
+  min-width: 200px;
+  padding: 8px 0;
+  margin-top: 8px;
+  z-index: 1000;
+  animation: dropdownFadeIn 0.3s ease;
+}
+
+.dropdownItem {
+  position: relative;
+  
+  a {
+    display: block;
+    padding: 12px 20px;
+    color: var(--bs-body-color) !important;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-shadow: var(--text-shadow-light);
+    
+    &:hover {
+      background: var(--bs-light);
+      color: var(--bs-primary) !important;
+      transform: translateX(5px);
+      text-shadow: var(--text-shadow-medium);
+    }
+  }
+}
+
+.subDropdownContainer {
+  position: relative;
+}
+
+.subDropdownButton {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 12px 20px;
+  color: var(--bs-body-color) !important;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  text-shadow: var(--text-shadow-light);
+  
+  &:hover {
+    background: var(--bs-light);
+    color: var(--bs-primary) !important;
+    text-shadow: var(--text-shadow-medium);
+  }
+}
+
+.subDropdownMenu {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  background: var(--bs-card-bg);
+  border-radius: 12px;
+  box-shadow: var(--bs-box-shadow-lg);
+  border: 1px solid var(--bs-border-color);
+  min-width: 180px;
+  padding: 8px 0;
+  z-index: 1001;
+  animation: subDropdownFadeIn 0.3s ease;
+}
+
+.subDropdownItem {
+  display: block;
+  padding: 10px 20px;
+  color: var(--bs-body-color) !important;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  text-shadow: var(--text-shadow-light);
+  
+  &:hover {
+    background: var(--bs-light);
+    color: var(--bs-primary) !important;
+    transform: translateX(5px);
+    text-shadow: var(--text-shadow-medium);
+  }
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes subDropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+// Адаптивность
+@media (max-width: 768px) {
+  .dropdownMenu {
+    min-width: 160px;
+  }
+  
+  .subDropdownMenu {
+    min-width: 140px;
+  }
+} 

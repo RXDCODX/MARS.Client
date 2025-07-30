@@ -2,7 +2,7 @@ import {
   ChatMessage,
   ChatMessageNoisyEnum,
   ChatMessageUserTypeEnum,
-} from "../api/generated/baza";
+} from "../../shared/api/generated/Api";
 
 /**
  * Создает тестовое сообщение чата с базовыми параметрами

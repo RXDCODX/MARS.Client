@@ -1,0 +1,307 @@
+.navbar {
+  background: var(--primary-gradient);
+  box-shadow: var(--bs-box-shadow-lg);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+}
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--bs-white);
+  font-weight: 700;
+  font-size: 1.5rem;
+  text-shadow: var(--text-shadow-medium);
+}
+
+.logoIcon {
+  font-size: 2rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.logoText {
+  text-shadow: var(--text-shadow-medium);
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 12px;
+  color: var(--bs-white);
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--bs-border-color-translucent);
+  text-shadow: var(--text-shadow-light);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: var(--bs-box-shadow-lg);
+    text-shadow: var(--text-shadow-medium);
+  }
+
+  &.active {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: var(--bs-border-color-translucent);
+    box-shadow: var(--bs-box-shadow-lg);
+    transform: translateY(-2px);
+    text-shadow: var(--text-shadow-medium);
+  }
+}
+
+.tabIcon {
+  font-size: 1.1rem;
+}
+
+.tabLabel {
+  white-space: nowrap;
+}
+
+// OBS Components Section
+.obsSection {
+  position: relative;
+}
+
+.obsDropdown {
+  position: relative;
+}
+
+.obsButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 12px;
+  color: var(--bs-white);
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--bs-border-color-translucent);
+  text-shadow: var(--text-shadow-light);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+    box-shadow: var(--bs-box-shadow-lg);
+    text-shadow: var(--text-shadow-medium);
+  }
+}
+
+.obsIcon {
+  font-size: 1.1rem;
+}
+
+.obsLabel {
+  white-space: nowrap;
+}
+
+.arrow {
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  background: var(--bs-card-bg);
+  border-radius: 12px;
+  box-shadow: var(--bs-box-shadow-lg);
+  min-width: 200px;
+  padding: 8px 0;
+  margin-top: 0;
+  opacity: 0;
+  transform: translateY(-10px);
+  animation: dropdownFadeIn 0.3s ease forwards;
+  border: 1px solid var(--bs-border-color);
+  z-index: 1001;
+}
+
+.dropdownItem {
+  position: relative;
+}
+
+.dropdownLink {
+  display: block;
+  padding: 12px 20px;
+  color: var(--bs-body-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  text-shadow: var(--text-shadow-light);
+  
+  &:hover {
+    background: var(--bs-light);
+    color: var(--bs-primary);
+    transform: translateX(5px);
+    text-shadow: var(--text-shadow-medium);
+  }
+}
+
+.subDropdownContainer {
+  position: relative;
+}
+
+.subDropdownButton {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 12px 20px;
+  color: var(--bs-body-color);
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all 0.2s ease;
+  text-shadow: var(--text-shadow-light);
+  
+  &:hover {
+    background: var(--bs-light);
+    color: var(--bs-primary);
+    text-shadow: var(--text-shadow-medium);
+  }
+}
+
+.subDropdown {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  background: var(--bs-card-bg);
+  border-radius: 12px;
+  box-shadow: var(--bs-box-shadow-lg);
+  min-width: 180px;
+  padding: 8px 0;
+  opacity: 0;
+  transform: translateX(-10px);
+  animation: subDropdownFadeIn 0.3s ease forwards;
+  border: 1px solid var(--bs-border-color);
+}
+
+.subDropdownItem {
+  .subDropdownLink {
+    display: block;
+    padding: 10px 20px;
+    color: var(--bs-body-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-shadow: var(--text-shadow-light);
+    
+    &:hover {
+      background: var(--bs-light);
+      color: var(--bs-primary);
+      transform: translateX(5px);
+      text-shadow: var(--text-shadow-medium);
+    }
+  }
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes subDropdownFadeIn {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--bs-white);
+  font-weight: 500;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--bs-border-color-translucent);
+  text-shadow: var(--text-shadow-light);
+}
+
+.userIcon {
+  font-size: 1.2rem;
+}
+
+.userName {
+  font-size: 0.9rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 10px;
+    height: 60px;
+  }
+
+  .logoText {
+    display: none;
+  }
+
+  .tabLabel {
+    display: none;
+  }
+
+  .tab {
+    padding: 10px 12px;
+  }
+
+  .obsLabel {
+    display: none;
+  }
+
+  .obsButton {
+    padding: 10px 12px;
+  }
+
+  .dropdown {
+    min-width: 160px;
+  }
+
+  .subDropdown {
+    min-width: 140px;
+  }
+
+  .userName {
+    display: none;
+  }
+} 

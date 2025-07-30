@@ -1,0 +1,274 @@
+// Переменные для новой верстки
+$primary-color: #3F00FF;
+$secondary-color: #FFFFFF;
+$background-color: rgba(0, 0, 0, 0.8);
+$border-color: #3F00FF;
+$border-radius: 12px;
+$shadow-blur: 8px;
+$transition-duration: 0.3s;
+
+// Размеры элементов
+$header-height: 60px;
+$player-bar-height: 80px;
+$score-size: 60px;
+$flag-size: 24px;
+$spacing: 16px;
+
+// Шрифты
+$font-family: 'Bahnschrift', 'Arial', sans-serif;
+$font-size-large: 24px;
+$font-size-medium: 18px;
+$font-size-small: 14px;
+
+// Базовые стили
+.scoreboardContainer {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  font-family: $font-family;
+  text-transform: uppercase;
+  overflow: hidden;
+}
+
+// Заголовок турнира с режимом боя
+.tournamentHeader {
+  position: absolute;
+  top: $spacing;
+  left: 50%;
+  transform: translateX(-50%);
+  background: $background-color;
+  border: 2px solid $border-color;
+  border-radius: $border-radius;
+  padding: $spacing $spacing * 2;
+  box-shadow: 0 4px 20px rgba($primary-color, 0.4);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  
+  h1 {
+    margin: 0;
+    font-size: $font-size-large;
+    font-weight: 600;
+    color: $secondary-color;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+  
+  .fightMode {
+    margin: 0;
+    font-size: $font-size-small;
+    font-weight: 600;
+    color: $secondary-color;
+    text-align: center;
+    letter-spacing: 1px;
+    opacity: 0.9;
+  }
+}
+
+// Контейнер для игроков
+.playersContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 0 $spacing * 4;
+}
+
+// Бар игрока
+.playerBar {
+  flex: 0 1 auto;
+  width: 500px;
+  height: $player-bar-height;
+  background: $background-color;
+  border: 2px solid $border-color;
+  border-radius: $border-radius;
+  display: flex;
+  align-items: center;
+  padding: 0 $spacing;
+  box-shadow: 0 4px 20px rgba($primary-color, 0.4);
+}
+
+// Левый игрок
+.playerLeft {
+  @extend .playerBar;
+  flex-direction: row;
+  
+  .playerInfo {
+    order: 1;
+    flex: 1;
+    text-align: right;
+    padding-right: $spacing;
+  }
+  
+  .score {
+    order: 2;
+  }
+  
+  .flag {
+    order: 3;
+    margin-left: $spacing;
+  }
+}
+
+// Правый игрок
+.playerRight {
+  @extend .playerBar;
+  flex-direction: row;
+  
+  .playerInfo {
+    order: 3;
+    flex: 1;
+    text-align: left;
+    padding-left: $spacing;
+  }
+  
+  .score {
+    order: 2;
+  }
+  
+  .flag {
+    order: 1;
+    margin-right: $spacing;
+  }
+}
+
+// Информация об игроке
+.playerInfo {
+  h2 {
+    margin: 0 0 4px 0;
+    font-size: $font-size-medium;
+    font-weight: 600;
+    color: $secondary-color;
+    line-height: 1.2;
+  }
+  
+  .playerTag {
+    color: $primary-color;
+    font-weight: 700;
+  }
+  
+  .playerSponsor {
+    font-size: $font-size-small;
+    color: rgba($secondary-color, 0.7);
+    margin-top: 2px;
+  }
+}
+
+// Счет
+.score {
+  width: $score-size;
+  height: $score-size;
+  background: linear-gradient(135deg, $primary-color, darken($primary-color, 15%));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba($primary-color, 0.5);
+  
+  h3 {
+    margin: 0;
+    font-size: $font-size-large;
+    font-weight: 700;
+    color: $secondary-color;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Флаг
+.flag {
+  width: 40px;
+  height: 25px;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  flex-shrink: 0;
+  
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+// Статусы игроков
+.winner {
+  border-color: #00FF00;
+  box-shadow: 0 4px 20px rgba(#00FF00, 0.6);
+  
+  .score {
+    background: linear-gradient(135deg, #00FF00, darken(#00FF00, 15%));
+    box-shadow: 0 4px 15px rgba(#00FF00, 0.6);
+  }
+}
+
+.loser {
+  border-color: #FF0000;
+  box-shadow: 0 4px 20px rgba(#FF0000, 0.4);
+  opacity: 0.7;
+}
+
+// Анимации
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+.fadeInUp {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+// Адаптивность
+@media (max-width: 1200px) {
+  .playersContainer {
+    padding: 0 $spacing * 2;
+  }
+  
+  .playerBar {
+    width: 450px;
+  }
+}
+
+@media (max-width: 768px) {
+  .playersContainer {
+    flex-direction: column;
+    gap: $spacing;
+    padding: 0 $spacing;
+  }
+  
+  .playerBar {
+    width: 100%;
+    height: 60px;
+  }
+  
+  .tournamentHeader h1 {
+    font-size: $font-size-medium;
+  }
+  
+  .score h3 {
+    font-size: $font-size-medium;
+  }
+} 

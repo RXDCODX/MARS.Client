@@ -1,0 +1,144 @@
+.container {
+  background: var(--bs-card-bg);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--bs-box-shadow);
+  border: 1px solid var(--bs-border-color);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--bs-border-color);
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--bs-body-color);
+    margin: 0;
+    text-shadow: var(--text-shadow-light);
+  }
+}
+
+.refreshButton {
+  background: var(--bs-light);
+  border: 1px solid var(--bs-border-color);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--bs-body-color);
+  text-shadow: var(--text-shadow-light);
+
+  &:hover {
+    background: var(--bs-card-bg);
+    box-shadow: var(--bs-box-shadow);
+  }
+}
+
+.logs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.log {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--bs-border-color);
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateX(4px);
+    box-shadow: var(--bs-box-shadow);
+  }
+}
+
+.logHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.logIcon {
+  font-size: 1.2rem;
+}
+
+.logInfo {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logService {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--bs-body-color);
+  text-shadow: var(--text-shadow-light);
+}
+
+.logTimestamp {
+  font-size: 0.8rem;
+  color: var(--bs-body-color);
+  text-shadow: var(--text-shadow-light);
+}
+
+.logMessage {
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--bs-body-color);
+  text-shadow: var(--text-shadow-light);
+}
+
+// Уровни логов
+.info {
+  background: var(--bs-info-light);
+  border-color: var(--bs-info);
+}
+
+.warning {
+  background: var(--bs-warning-light);
+  border-color: var(--bs-warning);
+}
+
+.error {
+  background: var(--bs-danger-light);
+  border-color: var(--bs-danger);
+}
+
+.debug {
+  background: var(--bs-gray-100);
+  border-color: var(--bs-gray-400);
+}
+
+.footer {
+  padding-top: 16px;
+  border-top: 1px solid var(--bs-border-color);
+}
+
+.viewAllButton {
+  width: 100%;
+  padding: 12px;
+  background: var(--primary-gradient);
+  color: var(--bs-white);
+  border: none;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-shadow: var(--text-shadow-medium);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--bs-box-shadow-lg);
+  }
+} 

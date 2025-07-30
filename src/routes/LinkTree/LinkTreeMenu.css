@@ -8,7 +8,7 @@
 .linktree-container h1 {
   font-size: 24px;
   margin-bottom: 20px;
-  color: white;
+  color: var(--bs-white);
 }
 
 .links-grid {
@@ -22,14 +22,14 @@
 
 .link-card {
   padding: 15px;
-  background: #4a4a8a;
+  background: var(--bs-primary);
   width: 51%;
-  color: white;
+  color: var(--bs-white);
   text-decoration: none;
   border-radius: 8px;
   transition: background 0.3s;
 }
 
 .link-card:hover {
-  background: #6a6aaa;
+  background: var(--bs-secondary);
 }

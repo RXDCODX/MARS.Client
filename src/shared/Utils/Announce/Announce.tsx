@@ -5,7 +5,7 @@ import { Textfit } from "react-textfit";
 
 interface Props {
   title: string;
-  callback: () => void;
+  callback?: () => void;
 }
 
 const getRandomColor = (): string => {
@@ -90,26 +90,36 @@ export default function Announce({ title, callback }: Props) {
   };
 
   return (
-    <FadeOut duration={2000} delay={3000} callback={callback}>
-      <div ref={nodeRef} style={defaultStyle} className="announce">
-        <Textfit
-          id="announce"
-          forceSingleModeWidth
-          min={1}
-          max={1500}
-          style={{
-            width: "100%",
-            height: "100%",
-            alignItems: "center",
-            display: "flex",
-            justifySelf: "center",
-            alignSelf: "center",
-            justifyContent: "center",
-          }}
-        >
-          {title}
-        </Textfit>
-      </div>
-    </FadeOut>
+    <>
+      <FadeOut
+        duration={2000}
+        delay={3000}
+        callback={() => {
+          if (callback) {
+            callback();
+          }
+        }}
+      >
+        <div ref={nodeRef} style={defaultStyle} className="announce">
+          <Textfit
+            id="announce"
+            forceSingleModeWidth
+            min={1}
+            max={1500}
+            style={{
+              width: "100%",
+              height: "100%",
+              alignItems: "center",
+              display: "flex",
+              justifySelf: "center",
+              alignSelf: "center",
+              justifyContent: "center",
+            }}
+          >
+            {title}
+          </Textfit>
+        </div>
+      </FadeOut>
+    </>
   );
 }

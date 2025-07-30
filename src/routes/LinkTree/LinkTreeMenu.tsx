@@ -14,6 +14,7 @@ export const LinktreeMenu = () => {
     { path: "/chatv", name: "Vertical Chat" },
     { path: "/sr/currenttrack", name: "SR: Current Track" },
     { path: "/main", name: "Main Page" },
+    { path: "/ui/index.html", name: "Swagger UI", reload: true },
   ];
 
   return (
@@ -21,7 +22,12 @@ export const LinktreeMenu = () => {
       <h1>Choose a Component</h1>
       <div className="links-grid">
         {links.map((link) => (
-          <Link key={link.path} to={link.path} className="link-card">
+          <Link
+            key={link.path}
+            to={link.path}
+            className="link-card"
+            reloadDocument={link.reload}
+          >
             {link.name}
           </Link>
         ))}

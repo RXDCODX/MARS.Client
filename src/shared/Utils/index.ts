@@ -4,8 +4,8 @@ import { ChatMessage as TwitchChatMessage } from "@twurple/chat";
 import parse from "html-react-parser";
 import { v4 as randomUUID } from "uuid";
 
-import { HighliteMessageProps } from "../../components/HighliteMessage/Message";
-import { ChatMessage, MediaInfo } from "../api/generated/baza";
+import { HighliteMessageProps } from "../../components/OBS_Components/HighliteMessage/Message";
+import { ChatMessage, MediaInfo } from "../api/generated/Api";
 import { addMimeTypesToImgTags } from "../MIME_types";
 
 export { BigTextBlockForAudio } from "./BigTexts/BigTextBlockForAudio";

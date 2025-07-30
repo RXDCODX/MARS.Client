@@ -16,7 +16,8 @@ interface ShadowConfig {
 type SpeedPreset = "very-slow" | "slow" | "normal" | "fast" | "very-fast";
 
 interface GradientTextProps {
-  text: string;
+  text?: string; // теперь опционально
+  children?: React.ReactNode; // новый способ
   colors?: string[];
   speed?: SpeedPreset;
   fontSize?: string;
@@ -27,6 +28,7 @@ interface GradientTextProps {
 
 const GradientText: React.FC<GradientTextProps> = ({
   text,
+  children,
   colors = [
     "#ff00cc",
     "#cc00ff",
@@ -89,26 +91,37 @@ const GradientText: React.FC<GradientTextProps> = ({
     fontSize,
     fontWeight,
     backgroundImage: `linear-gradient(90deg, ${colors.join(", ")})`,
-    backgroundSize: `${colors.length * 200}% 100%`, // Увеличиваем для плавности
+    backgroundSize: `${colors.length * 200}% 100%`,
     animation: `gradientShift ${speedValue}s linear infinite`,
     WebkitBackgroundClip: "text",
     backgroundClip: "text",
     MozBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
     color: "transparent",
-    display: "inline-block",
+    display: "inline-flex",
+    alignItems: "center",
     textShadow: shadow.enabled
       ? `${shadow.offsetX}px ${shadow.offsetY}px ${shadow.blur}px ${shadow.color}`
       : "none",
   };
 
+  // Старый способ: если передан text (старый способ) — рендерим как раньше
+  if (typeof text === "string" && !children) {
+    return (
+      <span
+        className={`gradient-text ${className}`}
+        style={gradientStyle}
+        aria-label={text}
+      >
+        {text}
+      </span>
+    );
+  }
+
+  // Новый способ: children — рендерим как есть, чтобы emoji (img) были частью текста
   return (
-    <span
-      className={`gradient-text ${className}`}
-      style={gradientStyle}
-      aria-label={text}
-    >
-      {text}
+    <span className={`gradient-text ${className}`} style={gradientStyle}>
+      {children}
     </span>
   );
 };

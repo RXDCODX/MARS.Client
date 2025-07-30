@@ -13,7 +13,10 @@ const config: StorybookConfig = {
     name: "@storybook/react-vite",
     options: {},
   },
-  staticDirs: ["../public", "../src/components/FumoFriday/FumosVideos"],
+  staticDirs: [
+    "../public",
+    "../src/components/OBS_Components/FumoFriday/FumosVideos",
+  ],
   viteFinal: async (config) => {
     // Настройка для GitHub Pages
     if (config.base === undefined) {

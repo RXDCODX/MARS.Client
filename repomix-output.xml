@@ -120,7 +120,7 @@ src/routes/ErrorPage.tsx
 src/routes/LinkTree/LinkTreeMenu.css
 src/routes/LinkTree/LinkTreeMenu.tsx
 src/routes/Routes.tsx
-src/shared/api/generated/baza.ts
+src/shared/api/generated/Api.ts
 src/shared/components/KeyWordText/index.ts
 src/shared/components/KeyWordText/KeyWordedText.tsx
 src/shared/components/PageName/PageName.tsx
@@ -5243,7 +5243,7 @@ export function Reimu({ callback, displayName }: Props) {
 import {
   MediaDto,
   MediaFileInfoTypeEnum,
-} from "../../shared/api/generated/baza";
+} from "../../shared/api/generated/Api";
 import { Audio, Image, Video, Voice } from "./Primitive";
 import TelegramSticker from "./Primitive/TelegramSticker";
 
@@ -5386,7 +5386,7 @@ import Announce from "../../shared/Utils/Announce/Announce";
 import {
   MediaDto,
   MediaMetaInfoPriorityEnum,
-} from "../../shared/api/generated/baza";
+} from "../../shared/api/generated/Api";
 import { v4 as uuidv4 } from "uuid";
 import HighPriorityAlert from "../PyroAlerts/HighPriorityAlert";
 import Alert from "../PyroAlerts/Alert";
@@ -5658,7 +5658,7 @@ import { SignalRContext } from ".";
 import {
   TunaMusicData,
   TunaMusicDTO,
-} from "../../../shared/api/generated/baza";
+} from "../../../shared/api/generated/Api";
 import CurrentTrack from "./CurrentTrack";
 
 const defaultValue: TunaMusicData & { isDefaultValue: boolean } = {
@@ -5775,7 +5775,7 @@ export default function CurrentTrackSignalRHubWrapper() {
 </file>
 
 <file path="src/components/WaifuAlerts/helper.ts">
-import { Waifu } from "../../shared/api/generated/baza";
+import { Waifu } from "../../shared/api/generated/Api";
 
 export function shuffleArray<T>(array: T[]): T[] {
   // Копируем исходный массив, чтобы не изменять его
@@ -6181,7 +6181,7 @@ import { Container, Row } from "react-bootstrap";
 import { Textfit } from "react-textfit";
 
 import styles from "./aa.module.scss";
-import { MediaDto } from "../../api/generated/baza";
+import { MediaDto } from "../../api/generated/Api";
 import { useCallback, useState } from "react";
 
 interface Props {
@@ -6760,7 +6760,7 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
 </file>
 
 <file path="src/components/SoundRequest/CurrentTrack/CurrentTrack.tsx">
-import { TunaMusicData } from "../../../shared/api/generated/baza";
+import { TunaMusicData } from "../../../shared/api/generated/Api";
 import AnimationControl from "./Animations/AnimationControl";
 import styles from "./CurrentTrack.module.scss";
 import { Textfit } from "react-textfit";
@@ -6894,7 +6894,7 @@ export default defineConfig({
 <file path="src/components/ChatHorizontal/ChatHorizontal.tsx">
 import { Message } from "./Message";
 import { SignalRContext } from "../../app";
-import { ChatMessage } from "../../shared/api/generated/baza";
+import { ChatMessage } from "../../shared/api/generated/Api";
 import { useCallback, useState } from "react";
 import Announce from "../../shared/Utils/Announce/Announce";
 
@@ -6964,7 +6964,7 @@ import {
   parseContent,
   replaceEmotes,
 } from "../../shared/Utils";
-import { ChatMessage } from "../../shared/api/generated/baza";
+import { ChatMessage } from "../../shared/api/generated/Api";
 import animateStyles from "../../shared/styles/animate.module.scss";
 import { useAnimate } from "react-simple-animate";
 import useTwitchStore from "../../shared/twitchStore/twitchStore";
@@ -7096,7 +7096,7 @@ export const Message = ({ message, callback }: Props) => {
 import { CSSProperties, JSX } from "react";
 import type { ContentPart } from "../../shared/Utils";
 import { Textfit } from "react-textfit";
-import { ChatMessage } from "../../shared/api/generated/baza";
+import { ChatMessage } from "../../shared/api/generated/Api";
 
 interface Props {
   className?: string;
@@ -7207,7 +7207,7 @@ import { Textfit } from "react-textfit";
 import { useShallow } from "zustand/react/shallow";
 
 import { SignalRContext } from "../../app";
-import { ChatMessage, Image } from "../../shared/api/generated/baza";
+import { ChatMessage, Image } from "../../shared/api/generated/Api";
 import animate from "../../shared/styles/animate.module.scss";
 import useTwitchStore from "../../shared/twitchStore/twitchStore";
 import {
@@ -7415,7 +7415,7 @@ export default function Message() {
 import {
   MediaDto,
   MediaFileInfoTypeEnum,
-} from "../../shared/api/generated/baza";
+} from "../../shared/api/generated/Api";
 import { Audio, Image, Video, Voice } from "./Primitive";
 import TelegramSticker from "./Primitive/TelegramSticker";
 
@@ -7481,7 +7481,7 @@ export default function Alert(messageProps: Props) {
 
 <file path="src/components/PyroAlerts/Primitive/Audio.tsx">
 import { useCallback, useRef } from "react";
-import { MediaDto } from "../../../shared/api/generated/baza";
+import { MediaDto } from "../../../shared/api/generated/Api";
 import { BigTextBlockForAudio } from "../../../shared/Utils/BigTexts/BigTextBlockForAudio";
 import { SignalRContext } from "../../../app";
 
@@ -7553,7 +7553,7 @@ import { CSSProperties, useEffect, useRef, useState } from "react";
 
 import { getCoordinates, getRandomRotation } from "../../../shared/Utils";
 import styles from "./Media.module.scss";
-import { MediaDto } from "../../../shared/api/generated/baza";
+import { MediaDto } from "../../../shared/api/generated/Api";
 
 interface Props {
   callBack: () => void;
@@ -7629,7 +7629,7 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
 
 <file path="src/components/PyroAlerts/Primitive/Voice.tsx">
 import { useCallback, useState } from "react";
-import { MediaDto } from "../../../shared/api/generated/baza";
+import { MediaDto } from "../../../shared/api/generated/Api";
 import { Container, Row } from "react-bootstrap";
 import { Textfit } from "react-textfit";
 import styles from "./Media.module.scss";
@@ -7720,7 +7720,7 @@ import { SignalRContext } from "../../app";
 import {
   ChatMessage,
   MakeScreenParticlesCreateParamsParticlesEnum,
-} from "../../shared/api/generated/baza";
+} from "../../shared/api/generated/Api";
 import { Confettyv2 } from "./Confetty";
 import EmojiParticles from "./EmojiParticles";
 import Firework from "./Firework";
@@ -8057,7 +8057,7 @@ import { Container, Row } from "react-bootstrap";
 import { Textfit } from "react-textfit";
 
 import { replaceEmotes } from "..";
-import { MediaDto } from "../../api/generated/baza";
+import { MediaDto } from "../../api/generated/Api";
 import styles from "./BigTextStyles.module.scss";
 import useTwitchStore from "../../twitchStore/twitchStore";
 
@@ -8253,7 +8253,7 @@ import { useEffect, useRef, useState } from "react";
 // eslint-disable-next-line no-restricted-imports
 import react from "react";
 import { getCoordinates, getRandomRotation } from "../../../shared/Utils";
-import { MediaDto } from "../../../shared/api/generated/baza";
+import { MediaDto } from "../../../shared/api/generated/Api";
 import { replaceEmotes } from "../../../shared/Utils";
 import styles from "./Media.module.scss";
 import useTwitchStore from "../../../shared/twitchStore/twitchStore";
@@ -8475,7 +8475,7 @@ createRoot(document.getElementById("root")!).render(
 <file path="src/components/ChatVertical/ChatVertical.tsx">
 import { Message } from "./Message";
 import { SignalRContext } from "../../app";
-import { ChatMessage } from "../../shared/api/generated/baza";
+import { ChatMessage } from "../../shared/api/generated/Api";
 import { useEffect, useRef, useState } from "react";
 import Announce from "../../shared/Utils/Announce/Announce";
 import styles from "./ChatVertical.module.scss";
@@ -8532,7 +8532,7 @@ function ScrollToBottom() {
 }
 </file>
 
-<file path="src/shared/api/generated/baza.ts">
+<file path="src/shared/api/generated/Api.ts">
 /* eslint-disable */
 /* tslint:disable */
 /*
@@ -10459,7 +10459,7 @@ export interface Waifu {
 
 <file path="src/components/ChatVertical/Message.tsx">
 import { useEffect, useRef, useState } from "react";
-import { ChatMessage } from "../../shared/api/generated/baza";
+import { ChatMessage } from "../../shared/api/generated/Api";
 import styles from "./Message.module.scss";
 import { parseContent, replaceBadges, replaceEmotes } from "../../shared/Utils";
 import useTwitchStore from "../../shared/twitchStore/twitchStore";
@@ -10572,7 +10572,7 @@ import { Textfit } from "react-textfit";
 import { KeyWordText } from "../../../shared/components/KeyWordText";
 import { getCoordinates, getRandomRotation } from "../../../shared/Utils";
 import styles from "./Media.module.scss";
-import { MediaDto } from "../../../shared/api/generated/baza";
+import { MediaDto } from "../../../shared/api/generated/Api";
 import { SignalRContext } from "../../../app";
 
 interface Props {
@@ -10752,7 +10752,7 @@ import Announce from "../../shared/Utils/Announce/Announce";
 import { getText, getTitle, shuffleArray, WaifuAlertProps } from "./helper";
 import styles from "./WaifuAlerts.module.scss";
 import WaifuRoulette from "./WaifuRoulette";
-import { Waifu } from "../../shared/api/generated/baza";
+import { Waifu } from "../../shared/api/generated/Api";
 import { getRandomColor } from "../../shared/Utils";
 
 enum StateStatus {
@@ -11136,7 +11136,7 @@ export default function WaifuAlerts() {
 import { JSX, useEffect, useState } from "react";
 import { getEmojisSrcFromText } from "../../shared/Utils";
 import useTwitchStore from "../../shared/twitchStore/twitchStore";
-import { ChatMessage } from "../../shared/api/generated/baza";
+import { ChatMessage } from "../../shared/api/generated/Api";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 import { randomInRange } from ".";
 
@@ -11277,7 +11277,7 @@ import Announce from "../../shared/Utils/Announce/Announce";
 import {
   MediaDto,
   MediaMetaInfoPriorityEnum,
-} from "../../shared/api/generated/baza";
+} from "../../shared/api/generated/Api";
 import { v4 as uuidv4 } from "uuid";
 import HighPriorityAlert from "./HighPriorityAlert";
 import Alert from "./Alert";
