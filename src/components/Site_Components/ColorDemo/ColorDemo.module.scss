@@ -1,0 +1,144 @@
+.colorDemo {
+  padding: 2rem;
+  border-radius: 8px;
+  margin: 2rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.section {
+  margin-bottom: 2rem;
+  
+  h3 {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+}
+
+.colorGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  
+  > div {
+    padding: 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
+  }
+}
+
+.colorBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60px;
+  font-weight: 600;
+  border: 1px solid var(--site-border-primary);
+}
+
+.buttonGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--site-shadow-medium);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.shadowGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.shadowBox {
+  padding: 2rem;
+  border-radius: 8px;
+  background-color: var(--site-bg-card);
+  border: 1px solid var(--site-border-primary);
+  text-align: center;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.cssClassGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+  
+  > div {
+    padding: 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    border: 1px solid var(--site-border-primary);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--site-shadow-light);
+    }
+  }
+}
+
+.themeInfo {
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid var(--site-border-primary);
+  
+  p {
+    margin: 0.5rem 0;
+    
+    &:first-child {
+      margin-top: 0;
+    }
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Адаптивность
+@media (max-width: 768px) {
+  .colorDemo {
+    padding: 1rem;
+    margin: 1rem;
+  }
+  
+  .colorGrid,
+  .buttonGrid,
+  .shadowGrid,
+  .cssClassGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .button {
+    padding: 1rem;
+  }
+} 

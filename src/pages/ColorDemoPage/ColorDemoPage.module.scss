@@ -1,0 +1,106 @@
+.colorDemoPage {
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 3rem;
+  padding: 2rem;
+  border-radius: 12px;
+  text-align: center;
+  
+  h1 {
+    margin-bottom: 1rem;
+    font-size: 2.5rem;
+    font-weight: 700;
+  }
+  
+  p {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+.themeInfo {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  background-color: var(--site-bg-secondary);
+  border: 1px solid var(--site-border-primary);
+  
+  strong {
+    color: var(--site-text-accent);
+  }
+}
+
+.infoSection {
+  margin-top: 3rem;
+  padding: 2rem;
+  border-radius: 12px;
+  
+  h2 {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+  }
+}
+
+.usageExamples {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.example {
+  h3 {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
+  pre {
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid var(--site-border-primary);
+    overflow-x: auto;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    
+    code {
+      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    }
+  }
+}
+
+// Адаптивность
+@media (max-width: 768px) {
+  .colorDemoPage {
+    padding: 1rem;
+  }
+  
+  .header {
+    padding: 1.5rem;
+    
+    h1 {
+      font-size: 2rem;
+    }
+    
+    p {
+      font-size: 1rem;
+    }
+  }
+  
+  .usageExamples {
+    grid-template-columns: 1fr;
+  }
+  
+  .example pre {
+    padding: 1rem;
+    font-size: 0.8rem;
+  }
+} 

@@ -1,7 +1,9 @@
+import "./global.scss";
+
+import { ThemeProvider } from "../contexts/ThemeContext";
 import Routes from "../routes/Routes";
 import useTwitchStore from "../shared/twitchStore/twitchStore";
 import { SignalRContext } from ".";
-import { ThemeProvider } from "../contexts/ThemeContext";
 
 function App() {
   const init = useTwitchStore((state) => state.init);

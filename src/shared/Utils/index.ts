@@ -12,6 +12,10 @@ export { BigTextBlockForAudio } from "./BigTexts/BigTextBlockForAudio";
 export { BigTextBlockForVoice } from "./BigTexts/BigTextBlockForVoice";
 export { FullText } from "./FullText/FullText";
 
+// Экспорт утилит для цветовых переменных сайта
+export { useSiteColors } from "./useSiteColors";
+export type * from "./siteColors.types";
+
 export function replaceEmotes({
   text,
   parser,

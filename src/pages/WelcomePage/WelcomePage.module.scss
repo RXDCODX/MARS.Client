@@ -4,10 +4,11 @@
 
 // Hero Section
 .hero {
-  background: var(--primary-gradient);
-  color: var(--bs-white);
+  background-color: var(--site-bg-secondary);
+  color: var(--site-text-primary);
   position: relative;
   overflow: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
 
   &::before {
     content: '';
@@ -47,10 +48,11 @@
   margin: 0 0 20px 0;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  text-shadow: var(--text-shadow-medium);
+  text-shadow: var(--site-shadow-medium);
+  color: var(--site-text-primary);
   
   .highlight {
-    background: linear-gradient(45deg, #ffd700, #ffed4e);
+    background: linear-gradient(45deg, var(--site-text-accent), var(--site-text-accent));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -72,7 +74,8 @@
   opacity: 0.9;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  text-shadow: var(--text-shadow-light);
+  text-shadow: var(--site-shadow-light);
+  color: var(--site-text-secondary);
   
   @media (max-width: 768px) {
     font-size: 1.1rem;
@@ -88,21 +91,21 @@
 }
 
 .primaryButton {
-  background: linear-gradient(45deg, #ffd700, #ffed4e);
-  color: var(--bs-dark);
+  background: linear-gradient(45deg, var(--site-bg-accent), var(--site-bg-accent));
+  color: var(--site-text-light);
   padding: 15px 30px;
   border-radius: 50px;
   text-decoration: none;
   font-weight: 600;
   font-size: 1.1rem;
   transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+  box-shadow: var(--site-shadow-medium);
   white-space: nowrap;
-  text-shadow: var(--text-shadow-light);
+  text-shadow: var(--site-shadow-light);
   
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+    box-shadow: var(--site-shadow-heavy);
   }
   
   @media (max-width: 480px) {
@@ -112,20 +115,20 @@
 }
 
 .secondaryButton {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--bs-white);
+  background: var(--site-bg-tertiary);
+  color: var(--site-text-primary);
   padding: 15px 30px;
   border-radius: 50px;
   text-decoration: none;
   font-weight: 600;
   font-size: 1.1rem;
   transition: all 0.3s ease;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid var(--site-border-primary);
   white-space: nowrap;
-  text-shadow: var(--text-shadow-light);
+  text-shadow: var(--site-shadow-light);
   
   &:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--site-hover-bg);
     transform: translateY(-3px);
   }
   
@@ -143,15 +146,16 @@
 }
 
 .floatingCard {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--site-bg-card);
   backdrop-filter: blur(10px);
   margin-top: 2em;
   border-radius: 20px;
   padding: 40px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--site-border-primary);
   animation: float 6s ease-in-out infinite;
   position: relative;
   z-index: 1;
+  box-shadow: var(--site-shadow-medium);
 }
 
 .cardContent {
@@ -166,14 +170,16 @@
     font-size: 1.5rem;
     margin: 0 0 15px 0;
     font-weight: 600;
-    text-shadow: var(--text-shadow-light);
+    text-shadow: var(--site-shadow-light);
+    color: var(--site-text-primary);
   }
   
   p {
     margin: 0;
     opacity: 0.8;
     line-height: 1.5;
-    text-shadow: var(--text-shadow-light);
+    text-shadow: var(--site-shadow-light);
+    color: var(--site-text-secondary);
   }
 }
 
@@ -184,7 +190,7 @@
 
 // Floating Card Section
 .floatingCardSection {
-  background: var(--primary-gradient);
+  background: var(--site-bg-secondary);
   padding: 60px 0;
   position: relative;
   margin-top: -100px;
@@ -194,7 +200,7 @@
 // Features Section
 .features {
   padding: 100px 0;
-  background: var(--bs-body-bg);
+  background: var(--site-bg-primary);
 }
 
 .container {
@@ -210,24 +216,24 @@
   font-size: 2.5rem;
   font-weight: 700;
   margin: 0 0 20px 0;
-  color: var(--bs-body-color);
+  color: var(--site-text-primary);
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
   max-width: 100%;
-  text-shadow: var(--text-shadow-medium);
+  text-shadow: var(--site-shadow-medium);
 }
 
 .sectionSubtitle {
   text-align: center;
   font-size: 1.2rem;
-  color: var(--bs-body-color);
+  color: var(--site-text-secondary);
   margin: 0 0 60px 0;
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
   max-width: 100%;
-  text-shadow: var(--text-shadow-light);
+  text-shadow: var(--site-shadow-light);
 }
 
 .featuresGrid {
@@ -237,19 +243,19 @@
 }
 
 .featureCard {
-  background: var(--bs-card-bg);
+  background: var(--site-bg-card);
   padding: 40px 30px;
   border-radius: 20px;
-  box-shadow: var(--bs-box-shadow);
+  box-shadow: var(--site-shadow-light);
   transition: all 0.3s ease;
   text-align: center;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  border: 1px solid var(--bs-border-color);
+  border: 1px solid var(--site-border-primary);
   
   &:hover {
     transform: translateY(-10px);
-    box-shadow: var(--bs-box-shadow-lg);
+    box-shadow: var(--site-shadow-medium);
   }
 }
 
@@ -262,41 +268,41 @@
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0 0 15px 0;
-  color: var(--bs-body-color);
+  color: var(--site-text-primary);
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
   max-width: 100%;
-  text-shadow: var(--text-shadow-light);
+  text-shadow: var(--site-shadow-light);
 }
 
 .featureDescription {
-  color: var(--bs-body-color);
+  color: var(--site-text-secondary);
   line-height: 1.6;
   margin: 0 0 20px 0;
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
   max-width: 100%;
-  text-shadow: var(--text-shadow-light);
+  text-shadow: var(--site-shadow-light);
 }
 
 .featureLink {
-  color: var(--bs-primary);
+  color: var(--site-text-accent);
   text-decoration: none;
   font-weight: 600;
   transition: all 0.3s ease;
-  text-shadow: var(--text-shadow-light);
+  text-shadow: var(--site-shadow-light);
   
   &:hover {
-    color: var(--bs-secondary);
+    color: var(--site-text-accent);
   }
 }
 
 // OBS Components Section
 .obsSection {
   padding: 100px 0;
-  background: var(--bs-card-bg);
+  background: var(--site-bg-secondary);
 }
 
 .componentsGrid {
@@ -306,7 +312,7 @@
 }
 
 .componentCard {
-  background: var(--bs-light);
+  background: var(--site-bg-tertiary);
   padding: 30px;
   border-radius: 15px;
   text-decoration: none;
@@ -318,10 +324,10 @@
   overflow-wrap: break-word;
   
   &:hover {
-    background: var(--bs-card-bg);
-    border-color: var(--bs-primary);
+    background: var(--site-bg-card);
+    border-color: var(--site-border-accent);
     transform: translateY(-5px);
-    box-shadow: var(--bs-box-shadow-lg);
+    box-shadow: var(--site-shadow-medium);
   }
 }
 
@@ -329,23 +335,23 @@
   font-size: 1.3rem;
   font-weight: 600;
   margin: 0 0 10px 0;
-  color: var(--bs-body-color);
+  color: var(--site-text-primary);
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
   max-width: 100%;
-  text-shadow: var(--text-shadow-light);
+  text-shadow: var(--site-shadow-light);
 }
 
 .componentDescription {
-  color: var(--bs-body-color);
+  color: var(--site-text-secondary);
   margin: 0;
   line-height: 1.5;
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
   max-width: 100%;
-  text-shadow: var(--text-shadow-light);
+  text-shadow: var(--site-shadow-light);
 }
 
 .componentArrow {
@@ -353,7 +359,7 @@
   top: 30px;
   right: 30px;
   font-size: 1.5rem;
-  color: var(--bs-primary);
+  color: var(--site-text-accent);
   transition: transform 0.3s ease;
 }
 
@@ -363,8 +369,8 @@
 
 // CTA Section
 .cta {
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-  color: var(--bs-white);
+  background: var(--site-bg-accent);
+  color: var(--site-text-light);
   padding: 100px 0;
   text-align: center;
 }
@@ -377,7 +383,8 @@
   overflow-wrap: break-word;
   hyphens: auto;
   max-width: 100%;
-  text-shadow: var(--text-shadow-medium);
+  text-shadow: var(--site-shadow-medium);
+  color: var(--site-text-light);
 }
 
 .ctaSubtitle {
@@ -388,7 +395,8 @@
   overflow-wrap: break-word;
   hyphens: auto;
   max-width: 100%;
-  text-shadow: var(--text-shadow-light);
+  text-shadow: var(--site-shadow-light);
+  color: var(--site-text-light);
 }
 
 .ctaButtons {
@@ -399,36 +407,36 @@
 }
 
 .ctaPrimaryButton {
-  background: linear-gradient(45deg, #ffd700, #ffed4e);
-  color: var(--bs-dark);
+  background: var(--site-bg-primary);
+  color: var(--site-text-primary);
   padding: 15px 30px;
   border-radius: 50px;
   text-decoration: none;
   font-weight: 600;
   font-size: 1.1rem;
   transition: all 0.3s ease;
-  text-shadow: var(--text-shadow-light);
+  text-shadow: var(--site-shadow-light);
   
   &:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.4);
+    box-shadow: var(--site-shadow-medium);
   }
 }
 
 .ctaSecondaryButton {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--bs-white);
+  background: var(--site-bg-tertiary);
+  color: var(--site-text-primary);
   padding: 15px 30px;
   border-radius: 50px;
   text-decoration: none;
   font-weight: 600;
   font-size: 1.1rem;
   transition: all 0.3s ease;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  text-shadow: var(--text-shadow-light);
+  border: 2px solid var(--site-border-primary);
+  text-shadow: var(--site-shadow-light);
   
   &:hover {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--site-hover-bg);
     transform: translateY(-3px);
   }
 }

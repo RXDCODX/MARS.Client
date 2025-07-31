@@ -1,42 +1,51 @@
 .header {
-  background: var(--primary-gradient) !important;
-  box-shadow: var(--bs-box-shadow-lg);
+  background-color: var(--site-bg-secondary) !important;
+  box-shadow: var(--site-shadow-medium);
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--bs-border-color-translucent);
+  border-bottom: 1px solid var(--site-border-primary);
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  z-index: 1030;
   
   .navbar-brand {
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--bs-white) !important;
-    text-shadow: var(--text-shadow-medium);
+    color: var(--site-text-primary) !important;
+    text-shadow: var(--site-shadow-light);
+    white-space: nowrap;
     
     i {
       font-size: 1.8rem;
       margin-right: 0.5rem;
-      text-shadow: var(--text-shadow-medium);
+      text-shadow: var(--site-shadow-light);
     }
   }
   
   .navbar-nav {
+    align-items: center;
+    
     .nav-link {
-      color: rgba(255, 255, 255, 0.9) !important;
+      color: var(--site-text-primary) !important;
       font-weight: 500;
-      text-shadow: var(--text-shadow-light);
+      text-shadow: var(--site-shadow-light);
       transition: all 0.3s ease;
       
       &:hover {
-        color: var(--bs-white) !important;
+        color: var(--site-text-accent) !important;
         transform: translateY(-1px);
-        text-shadow: var(--text-shadow-medium);
+        text-shadow: var(--site-shadow-medium);
       }
     }
+  }
+  
+  .navbar-collapse {
+    justify-content: space-between;
   }
 }
 
 .logo {
   text-decoration: none;
-  color: var(--bs-white);
-  text-shadow: var(--text-shadow-medium);
+  color: var(--site-text-primary);
+  text-shadow: var(--site-shadow-light);
 }
 
 // Кастомные дропдауны
@@ -49,19 +58,19 @@
 .dropdownButton {
   background: none;
   border: none;
-  color: rgba(255, 255, 255, 0.9) !important;
+  color: var(--site-text-primary) !important;
   font-weight: 500;
   padding: 0.5rem 1rem;
-  text-shadow: var(--text-shadow-light);
+  text-shadow: var(--site-shadow-light);
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
   cursor: pointer;
   
   &:hover {
-    color: var(--bs-white) !important;
+    color: var(--site-text-accent) !important;
     transform: translateY(-1px);
-    text-shadow: var(--text-shadow-medium);
+    text-shadow: var(--site-shadow-medium);
   }
 }
 
@@ -69,34 +78,45 @@
   position: absolute;
   top: 100%;
   left: 0;
-  background: var(--bs-card-bg);
+  background: var(--site-bg-card) !important;
   border-radius: 12px;
-  box-shadow: var(--bs-box-shadow-lg);
-  border: 1px solid var(--bs-border-color);
+  box-shadow: var(--site-shadow-medium);
+  border: 1px solid var(--site-border-primary);
   min-width: 200px;
   padding: 8px 0;
   margin-top: 8px;
   z-index: 1000;
   animation: dropdownFadeIn 0.3s ease;
+  list-style: none;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .dropdownItem {
   position: relative;
+  margin: 0;
+  padding: 0;
+  background: var(--site-bg-card) !important;
+  border-radius: 8px;
+  overflow: hidden;
   
   a {
     display: block;
     padding: 12px 20px;
-    color: var(--bs-body-color) !important;
+    color: var(--site-text-primary) !important;
     text-decoration: none;
     font-weight: 500;
     transition: all 0.2s ease;
-    text-shadow: var(--text-shadow-light);
+    text-shadow: var(--site-shadow-light);
+    white-space: nowrap;
     
     &:hover {
-      background: var(--bs-light);
-      color: var(--bs-primary) !important;
+      background: var(--site-hover-bg);
+      color: var(--site-text-accent) !important;
       transform: translateX(5px);
-      text-shadow: var(--text-shadow-medium);
+      text-shadow: var(--site-shadow-medium);
     }
   }
 }
@@ -110,19 +130,22 @@
   background: none;
   border: none;
   padding: 12px 20px;
-  color: var(--bs-body-color) !important;
+  color: var(--site-text-primary) !important;
   font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
   transition: all 0.2s ease;
-  text-shadow: var(--text-shadow-light);
+  text-shadow: var(--site-shadow-light);
+  white-space: nowrap;
+  border-radius: 8px;
+  margin: 0 4px;
   
   &:hover {
-    background: var(--bs-light);
-    color: var(--bs-primary) !important;
-    text-shadow: var(--text-shadow-medium);
+    background: var(--site-hover-bg);
+    color: var(--site-text-accent) !important;
+    text-shadow: var(--site-shadow-medium);
   }
 }
 
@@ -130,30 +153,38 @@
   position: absolute;
   left: 100%;
   top: 0;
-  background: var(--bs-card-bg);
+  background: var(--site-bg-card);
   border-radius: 12px;
-  box-shadow: var(--bs-box-shadow-lg);
-  border: 1px solid var(--bs-border-color);
+  box-shadow: var(--site-shadow-medium);
+  border: 1px solid var(--site-border-primary);
   min-width: 180px;
   padding: 8px 0;
   z-index: 1001;
   animation: subDropdownFadeIn 0.3s ease;
+  list-style: none;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .subDropdownItem {
   display: block;
   padding: 10px 20px;
-  color: var(--bs-body-color) !important;
+  color: var(--site-text-primary) !important;
   text-decoration: none;
   font-weight: 500;
   transition: all 0.2s ease;
-  text-shadow: var(--text-shadow-light);
+  text-shadow: var(--site-shadow-light);
+  white-space: nowrap;
+  border-radius: 8px;
+  margin: 0 4px;
   
   &:hover {
-    background: var(--bs-light);
-    color: var(--bs-primary) !important;
+    background: var(--site-hover-bg);
+    color: var(--site-text-accent) !important;
     transform: translateX(5px);
-    text-shadow: var(--text-shadow-medium);
+    text-shadow: var(--site-shadow-medium);
   }
 }
 
@@ -183,9 +214,59 @@
 @media (max-width: 768px) {
   .dropdownMenu {
     min-width: 160px;
+    max-width: 200px;
   }
   
   .subDropdownMenu {
     min-width: 140px;
+    max-width: 180px;
   }
+  
+  .dropdownButton {
+    max-width: 150px;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .dropdownMenu {
+    min-width: 140px;
+    max-width: 180px;
+  }
+  
+  .subDropdownMenu {
+    min-width: 120px;
+    max-width: 160px;
+  }
+  
+  .dropdownButton {
+    max-width: 120px;
+    font-size: 0.85rem;
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+// Дополнительные стили для улучшения отображения
+.dropdownContainer {
+  &:hover .dropdownMenu {
+    display: block;
+  }
+}
+
+// Исправление для переполнения текста
+.dropdownButton {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+// Улучшение отображения иконок
+.dropdownButton i {
+  margin-left: 4px;
+  transition: transform 0.2s ease;
+}
+
+.dropdownContainer:hover .dropdownButton i {
+  transform: rotate(180deg);
 } 

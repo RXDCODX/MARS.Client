@@ -71,6 +71,60 @@ html:not([data-storybook]) {
   --bs-danger-dark: #721c24;
   --bs-info-light: #cff4fc;
   --bs-info-dark: #055160;
+  
+  // ===== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ДЛЯ КОМПОНЕНТОВ САЙТА =====
+  // Цвета текста (автоматически инвертируются в темной теме)
+  --site-text-primary: #212529;
+  --site-text-secondary: #6c757d;
+  --site-text-muted: #adb5bd;
+  --site-text-light: #ffffff;
+  --site-text-dark: #000000;
+  --site-text-accent: #667eea;
+  --site-text-success: #198754;
+  --site-text-warning: #ffc107;
+  --site-text-danger: #dc3545;
+  --site-text-info: #0dcaf0;
+  
+  // Цвета фонов (автоматически инвертируются в темной теме)
+  --site-bg-primary: #ffffff;
+  --site-bg-secondary: #f8f9fa;
+  --site-bg-tertiary: #e9ecef;
+  --site-bg-card: #ffffff;
+  --site-bg-overlay: rgba(255, 255, 255, 0.9);
+  --site-bg-accent: #667eea;
+  --site-bg-success: #d1e7dd;
+  --site-bg-warning: #fff3cd;
+  --site-bg-danger: #f8d7da;
+  --site-bg-info: #cff4fc;
+  
+  // Цвета границ (автоматически инвертируются в темной теме)
+  --site-border-primary: #dee2e6;
+  --site-border-secondary: #adb5bd;
+  --site-border-accent: #667eea;
+  --site-border-success: #198754;
+  --site-border-warning: #ffc107;
+  --site-border-danger: #dc3545;
+  --site-border-info: #0dcaf0;
+  
+  // Цвета теней (автоматически инвертируются в темной теме)
+  --site-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --site-shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.15);
+  --site-shadow-heavy: 0 10px 15px rgba(0, 0, 0, 0.2);
+  --site-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  
+  // Цвета для ховер эффектов
+  --site-hover-bg: rgba(0, 0, 0, 0.05);
+  --site-hover-text: #495057;
+  --site-hover-border: #adb5bd;
+  
+  // Цвета для фокуса
+  --site-focus-ring: rgba(102, 126, 234, 0.25);
+  --site-focus-border: #667eea;
+  
+  // Цвета для скроллбаров
+  --site-scrollbar-track: #f8f9fa;
+  --site-scrollbar-thumb: #adb5bd;
+  --site-scrollbar-thumb-hover: #6c757d;
 }
 
 [data-bs-theme="dark"] {
@@ -136,6 +190,60 @@ html:not([data-storybook]) {
   --bs-danger-dark: #f8d7da;
   --bs-info-light: #055160;
   --bs-info-dark: #cff4fc;
+  
+  // ===== ИНВЕРТИРОВАННЫЕ ПЕРЕМЕННЫЕ ДЛЯ КОМПОНЕНТОВ САЙТА В ТЕМНОЙ ТЕМЕ =====
+  // Цвета текста (инвертированы)
+  --site-text-primary: #f8f9fa;
+  --site-text-secondary: #adb5bd;
+  --site-text-muted: #6c757d;
+  --site-text-light: #000000;
+  --site-text-dark: #ffffff;
+  --site-text-accent: #7c8df8;
+  --site-text-success: #20c997;
+  --site-text-warning: #ffc107;
+  --site-text-danger: #dc3545;
+  --site-text-info: #0dcaf0;
+  
+  // Цвета фонов (инвертированы)
+  --site-bg-primary: #212529;
+  --site-bg-secondary: #343a40;
+  --site-bg-tertiary: #495057;
+  --site-bg-card: #343a40;
+  --site-bg-overlay: rgba(33, 37, 41, 0.9);
+  --site-bg-accent: #7c8df8;
+  --site-bg-success: #0f5132;
+  --site-bg-warning: #664d03;
+  --site-bg-danger: #721c24;
+  --site-bg-info: #055160;
+  
+  // Цвета границ (инвертированы)
+  --site-border-primary: #495057;
+  --site-border-secondary: #6c757d;
+  --site-border-accent: #7c8df8;
+  --site-border-success: #20c997;
+  --site-border-warning: #ffc107;
+  --site-border-danger: #dc3545;
+  --site-border-info: #0dcaf0;
+  
+  // Цвета теней (инвертированы)
+  --site-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --site-shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --site-shadow-heavy: 0 10px 15px rgba(0, 0, 0, 0.5);
+  --site-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  
+  // Цвета для ховер эффектов (инвертированы)
+  --site-hover-bg: rgba(255, 255, 255, 0.05);
+  --site-hover-text: #ced4da;
+  --site-hover-border: #6c757d;
+  
+  // Цвета для фокуса (инвертированы)
+  --site-focus-ring: rgba(124, 141, 248, 0.25);
+  --site-focus-border: #7c8df8;
+  
+  // Цвета для скроллбаров (инвертированы)
+  --site-scrollbar-track: #343a40;
+  --site-scrollbar-thumb: #6c757d;
+  --site-scrollbar-thumb-hover: #adb5bd;
 }
 
 // Устаревшие переменные для совместимости
@@ -309,4 +417,172 @@ h1, h2, h3, h4, h5, h6, p, span, div {
 
 .bg-card {
   background-color: var(--bs-card-bg) !important;
+}
+
+/* ===== УТИЛИТЫ ДЛЯ КОМПОНЕНТОВ САЙТА ===== */
+/* Утилиты для текста */
+.site-text-primary {
+  color: var(--site-text-primary) !important;
+}
+
+.site-text-secondary {
+  color: var(--site-text-secondary) !important;
+}
+
+.site-text-muted {
+  color: var(--site-text-muted) !important;
+}
+
+.site-text-light {
+  color: var(--site-text-light) !important;
+}
+
+.site-text-dark {
+  color: var(--site-text-dark) !important;
+}
+
+.site-text-accent {
+  color: var(--site-text-accent) !important;
+}
+
+.site-text-success {
+  color: var(--site-text-success) !important;
+}
+
+.site-text-warning {
+  color: var(--site-text-warning) !important;
+}
+
+.site-text-danger {
+  color: var(--site-text-danger) !important;
+}
+
+.site-text-info {
+  color: var(--site-text-info) !important;
+}
+
+/* Утилиты для фонов */
+.site-bg-primary {
+  background-color: var(--site-bg-primary) !important;
+}
+
+.site-bg-secondary {
+  background-color: var(--site-bg-secondary) !important;
+}
+
+.site-bg-tertiary {
+  background-color: var(--site-bg-tertiary) !important;
+}
+
+.site-bg-card {
+  background-color: var(--site-bg-card) !important;
+}
+
+.site-bg-overlay {
+  background-color: var(--site-bg-overlay) !important;
+}
+
+.site-bg-accent {
+  background-color: var(--site-bg-accent) !important;
+}
+
+.site-bg-success {
+  background-color: var(--site-bg-success) !important;
+}
+
+.site-bg-warning {
+  background-color: var(--site-bg-warning) !important;
+}
+
+.site-bg-danger {
+  background-color: var(--site-bg-danger) !important;
+}
+
+.site-bg-info {
+  background-color: var(--site-bg-info) !important;
+}
+
+/* Утилиты для границ */
+.site-border-primary {
+  border-color: var(--site-border-primary) !important;
+}
+
+.site-border-secondary {
+  border-color: var(--site-border-secondary) !important;
+}
+
+.site-border-accent {
+  border-color: var(--site-border-accent) !important;
+}
+
+.site-border-success {
+  border-color: var(--site-border-success) !important;
+}
+
+.site-border-warning {
+  border-color: var(--site-border-warning) !important;
+}
+
+.site-border-danger {
+  border-color: var(--site-border-danger) !important;
+}
+
+.site-border-info {
+  border-color: var(--site-border-info) !important;
+}
+
+/* Утилиты для теней */
+.site-shadow-light {
+  box-shadow: var(--site-shadow-light) !important;
+}
+
+.site-shadow-medium {
+  box-shadow: var(--site-shadow-medium) !important;
+}
+
+.site-shadow-heavy {
+  box-shadow: var(--site-shadow-heavy) !important;
+}
+
+.site-shadow-inset {
+  box-shadow: var(--site-shadow-inset) !important;
+}
+
+/* Утилиты для ховер эффектов */
+.site-hover-bg:hover {
+  background-color: var(--site-hover-bg) !important;
+}
+
+.site-hover-text:hover {
+  color: var(--site-hover-text) !important;
+}
+
+.site-hover-border:hover {
+  border-color: var(--site-hover-border) !important;
+}
+
+/* Утилиты для фокуса */
+.site-focus-ring:focus {
+  box-shadow: 0 0 0 0.2rem var(--site-focus-ring) !important;
+}
+
+.site-focus-border:focus {
+  border-color: var(--site-focus-border) !important;
+}
+
+/* Утилиты для скроллбаров */
+.site-scrollbar {
+  scrollbar-color: var(--site-scrollbar-thumb) var(--site-scrollbar-track) !important;
+}
+
+.site-scrollbar::-webkit-scrollbar-track {
+  background: var(--site-scrollbar-track) !important;
+}
+
+.site-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--site-scrollbar-thumb) !important;
+}
+
+.site-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--site-scrollbar-thumb-hover) !important;
 }
