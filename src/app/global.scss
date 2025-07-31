@@ -82,7 +82,7 @@ html:not([data-storybook]) {
   --site-text-accent: #667eea;
   --site-text-success: #198754;
   --site-text-warning: #ffc107;
-  --site-text-danger: #dc3545;
+  --site-text-danger: #eb263a;
   --site-text-info: #0dcaf0;
   
   // Цвета фонов (автоматически инвертируются в темной теме)
@@ -92,9 +92,9 @@ html:not([data-storybook]) {
   --site-bg-card: #ffffff;
   --site-bg-overlay: rgba(255, 255, 255, 0.9);
   --site-bg-accent: #667eea;
-  --site-bg-success: #d1e7dd;
-  --site-bg-warning: #fff3cd;
-  --site-bg-danger: #f8d7da;
+  --site-bg-success: #00ff8c;
+  --site-bg-warning: #fbff00;
+  --site-bg-danger: #c50010;
   --site-bg-info: #cff4fc;
   
   // Цвета границ (автоматически инвертируются в темной теме)
@@ -102,7 +102,7 @@ html:not([data-storybook]) {
   --site-border-secondary: #adb5bd;
   --site-border-accent: #667eea;
   --site-border-success: #198754;
-  --site-border-warning: #ffc107;
+  --site-border-warning: #eeff07;
   --site-border-danger: #dc3545;
   --site-border-info: #0dcaf0;
   
@@ -201,7 +201,7 @@ html:not([data-storybook]) {
   --site-text-accent: #7c8df8;
   --site-text-success: #20c997;
   --site-text-warning: #ffc107;
-  --site-text-danger: #dc3545;
+  --site-text-danger: #d40015;
   --site-text-info: #0dcaf0;
   
   // Цвета фонов (инвертированы)
@@ -212,8 +212,8 @@ html:not([data-storybook]) {
   --site-bg-overlay: rgba(33, 37, 41, 0.9);
   --site-bg-accent: #7c8df8;
   --site-bg-success: #0f5132;
-  --site-bg-warning: #664d03;
-  --site-bg-danger: #721c24;
+  --site-bg-warning: #dfa700;
+  --site-bg-danger: #ff2137;
   --site-bg-info: #055160;
   
   // Цвета границ (инвертированы)
@@ -221,7 +221,7 @@ html:not([data-storybook]) {
   --site-border-secondary: #6c757d;
   --site-border-accent: #7c8df8;
   --site-border-success: #20c997;
-  --site-border-warning: #ffc107;
+  --site-border-warning: #daff07;
   --site-border-danger: #dc3545;
   --site-border-info: #0dcaf0;
   

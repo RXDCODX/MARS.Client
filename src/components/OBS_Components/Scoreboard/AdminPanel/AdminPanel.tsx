@@ -3,6 +3,8 @@ import { Col, Container, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 import { logger } from "../../../../app/main";
+import { useSiteColors } from "../../../../shared/Utils/useSiteColors";
+import ThemeToggle from "../../../ThemeToggle";
 import { ScoreboardSignalRContext } from "../ScoreboardContext";
 import ActionButtons from "./ActionButtons";
 import styles from "./AdminPanel.module.scss";
@@ -10,11 +12,12 @@ import ColorPresetCard from "./ColorPresetCard";
 import LayoutCard from "./LayoutCard";
 import MetaPanel from "./MetaPanel";
 import PlayerCard from "./PlayerCard";
-import { useAdminState } from "./useAdminState";
 import { defaultLayout } from "./types";
+import { useAdminState } from "./useAdminState";
 import VisibilityCard from "./VisibilityCard";
 
 const AdminPanelContent = () => {
+  const colors = useSiteColors();
   const {
     player1,
     player2,
@@ -35,12 +38,24 @@ const AdminPanelContent = () => {
   } = useAdminState();
 
   // Подписка на SignalR события для получения обновлений от других клиентов
-  ScoreboardSignalRContext.useSignalREffect("ReceiveState", handleReceiveState, []);
-  ScoreboardSignalRContext.useSignalREffect("StateUpdated", handleReceiveState, []);
-  ScoreboardSignalRContext.useSignalREffect("VisibilityChanged", (isVisible: boolean) => {
-    // Обновляем видимость без вызова setVisibility, чтобы избежать рекурсии
-    console.log("Visibility changed from server:", isVisible);
-  }, []);
+  ScoreboardSignalRContext.useSignalREffect(
+    "ReceiveState",
+    handleReceiveState,
+    [],
+  );
+  ScoreboardSignalRContext.useSignalREffect(
+    "StateUpdated",
+    handleReceiveState,
+    [],
+  );
+  ScoreboardSignalRContext.useSignalREffect(
+    "VisibilityChanged",
+    (isVisible: boolean) => {
+      // Обновляем видимость без вызова setVisibility, чтобы избежать рекурсии
+      console.log("Visibility changed from server:", isVisible);
+    },
+    [],
+  );
 
   // Редирект на админку при открытии с телефона
   const navigate = useNavigate();
@@ -60,7 +75,28 @@ const AdminPanelContent = () => {
   };
 
   return (
-    <Container className={`py-4 admin-panel ${styles.adminPanel}`}>
+    <Container
+      className={`py-4 admin-panel ${styles.adminPanel}`}
+      style={{
+        backgroundColor: colors.background.primary,
+        color: colors.text.primary,
+      }}
+    >
+      {/* Header с переключателем темы */}
+      <Row className="mb-4 align-items-center">
+        <Col xs={12} md={8}>
+          <h2
+            className={styles.adminTitle}
+            style={colors.utils.getTextStyle("primary")}
+          >
+            Админ панель скорборда
+          </h2>
+        </Col>
+        <Col xs={12} md={4} className="d-flex justify-content-end">
+          <ThemeToggle variant="admin" size="md" />
+        </Col>
+      </Row>
+
       {/* Visibility Panel и Meta Panel в один ряд с одинаковой шириной */}
       <Row className="mb-4">
         <Col xs={12} md={6} lg={6}>
@@ -77,10 +113,10 @@ const AdminPanelContent = () => {
       </Row>
 
       {/* Layout Panel */}
-      <LayoutCard 
-        layout={layout} 
-        onLayoutChange={setLayout} 
-        onReset={() => setLayout(defaultLayout)} 
+      <LayoutCard
+        layout={layout}
+        onLayoutChange={setLayout}
+        onReset={() => setLayout(defaultLayout)}
       />
 
       {/* Color Preset Panel */}
@@ -262,7 +298,7 @@ const AdminPanel = () => (
     }}
     logger={logger}
     withCredentials={false}
-    url={import.meta.env.VITE_BASE_PATH + "scoreboard"}
+    url={import.meta.env.VITE_BASE_PATH + "scoreboardhub"}
     logMessageContent
   >
     <AdminPanelContent />

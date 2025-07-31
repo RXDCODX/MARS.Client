@@ -1,10 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useState } from "react";
-import { logger } from "../../../app/main";
 
-import { ScoreboardSignalRContext } from "./ScoreboardContext";
-import { LayoutSettings, defaultLayout } from "./AdminPanel/types";
+import { logger } from "../../../app/main";
+import { defaultLayout, LayoutSettings } from "./AdminPanel/types";
 import styles from "./Scoreboard.module.scss";
+import { ScoreboardSignalRContext } from "./ScoreboardContext";
 
 type Player = {
   name: string;
@@ -109,11 +109,23 @@ const ScoreboardContent: React.FC = () => {
   }, []);
 
   // Подключение к SignalR хабу
-  ScoreboardSignalRContext.useSignalREffect("ReceiveState", handleReceiveState, []);
-  ScoreboardSignalRContext.useSignalREffect("StateUpdated", handleReceiveState, []);
-  ScoreboardSignalRContext.useSignalREffect("VisibilityChanged", (isVisible: boolean) => {
-    setIsVisible(isVisible);
-  }, []);
+  ScoreboardSignalRContext.useSignalREffect(
+    "ReceiveState",
+    handleReceiveState,
+    [],
+  );
+  ScoreboardSignalRContext.useSignalREffect(
+    "StateUpdated",
+    handleReceiveState,
+    [],
+  );
+  ScoreboardSignalRContext.useSignalREffect(
+    "VisibilityChanged",
+    (isVisible: boolean) => {
+      setIsVisible(isVisible);
+    },
+    [],
+  );
 
   if (!isVisible) {
     return null;
@@ -189,7 +201,7 @@ const ScoreboardContent: React.FC = () => {
                 {meta.title}
               </h1>
               {shouldShowFightMode() && (
-                <div 
+                <div
                   className={styles.fightMode}
                   style={{ color: colors.fightModeColor }}
                 >
@@ -200,8 +212,8 @@ const ScoreboardContent: React.FC = () => {
           )}
 
           {/* Контейнер игроков */}
-          <motion.div 
-            className={styles.playersContainer} 
+          <motion.div
+            className={styles.playersContainer}
             variants={itemVariants}
             style={{
               position: "absolute",
@@ -229,7 +241,10 @@ const ScoreboardContent: React.FC = () => {
                   {player1.final === "winner" && "[W] "}
                   {player1.final === "loser" && "[L] "}
                   {layout.showTags && isValidTag(player1.tag) && (
-                    <span className={styles.playerTag} style={{ color: colors.mainColor }}>
+                    <span
+                      className={styles.playerTag}
+                      style={{ color: colors.mainColor }}
+                    >
                       {player1.tag}
                     </span>
                   )}
@@ -237,26 +252,22 @@ const ScoreboardContent: React.FC = () => {
                   {player1.name}
                 </h2>
                 {layout.showSponsors && player1.sponsor && (
-                  <div className={styles.playerSponsor}>
-                    {player1.sponsor}
-                  </div>
+                  <div className={styles.playerSponsor}>{player1.sponsor}</div>
                 )}
               </div>
 
-              <div 
+              <div
                 className={styles.score}
                 style={{
                   width: `${layout.scoreSize}px`,
                   height: `${layout.scoreSize}px`,
                 }}
               >
-                <h3 style={{ color: colors.scoreColor }}>
-                  {player1.score}
-                </h3>
+                <h3 style={{ color: colors.scoreColor }}>{player1.score}</h3>
               </div>
 
               {layout.showFlags && player1.flag && player1.flag !== "none" && (
-                <div 
+                <div
                   className={styles.flag}
                   style={{
                     width: `${layout.flagSize}px`,
@@ -288,7 +299,7 @@ const ScoreboardContent: React.FC = () => {
               }}
             >
               {layout.showFlags && player2.flag && player2.flag !== "none" && (
-                <div 
+                <div
                   className={styles.flag}
                   style={{
                     width: `${layout.flagSize}px`,
@@ -305,16 +316,14 @@ const ScoreboardContent: React.FC = () => {
                 </div>
               )}
 
-              <div 
+              <div
                 className={styles.score}
                 style={{
                   width: `${layout.scoreSize}px`,
                   height: `${layout.scoreSize}px`,
                 }}
               >
-                <h3 style={{ color: colors.scoreColor }}>
-                  {player2.score}
-                </h3>
+                <h3 style={{ color: colors.scoreColor }}>{player2.score}</h3>
               </div>
 
               <div className={styles.playerInfo}>
@@ -324,15 +333,16 @@ const ScoreboardContent: React.FC = () => {
                   {player2.name}
                   {layout.showTags && isValidTag(player2.tag) && " | "}
                   {layout.showTags && isValidTag(player2.tag) && (
-                    <span className={styles.playerTag} style={{ color: colors.mainColor }}>
+                    <span
+                      className={styles.playerTag}
+                      style={{ color: colors.mainColor }}
+                    >
                       {player2.tag}
                     </span>
                   )}
                 </h2>
                 {layout.showSponsors && player2.sponsor && (
-                  <div className={styles.playerSponsor}>
-                    {player2.sponsor}
-                  </div>
+                  <div className={styles.playerSponsor}>{player2.sponsor}</div>
                 )}
               </div>
             </motion.div>
@@ -343,21 +353,19 @@ const ScoreboardContent: React.FC = () => {
   );
 };
 
-const Scoreboard: React.FC = () => {
-  return (
-    <ScoreboardSignalRContext.Provider
-      automaticReconnect={true}
-      onError={(error) => new Promise((resolve) => resolve(console.log(error)))}
-      onClosed={(event) => console.log(event)}
-      onOpen={(event) => console.log(event)}
-      logger={logger}
-      withCredentials={false}
-      url={import.meta.env.VITE_BASE_PATH + "scoreboard"}
-      logMessageContent
-    >
-      <ScoreboardContent />
-    </ScoreboardSignalRContext.Provider>
-  );
-};
+const Scoreboard: React.FC = () => (
+  <ScoreboardSignalRContext.Provider
+    automaticReconnect={true}
+    onError={(error) => new Promise((resolve) => resolve(console.log(error)))}
+    onClosed={(event) => console.log(event)}
+    onOpen={(event) => console.log(event)}
+    logger={logger}
+    withCredentials={false}
+    url={import.meta.env.VITE_BASE_PATH + "scoreboardhub"}
+    logMessageContent
+  >
+    <ScoreboardContent />
+  </ScoreboardSignalRContext.Provider>
+);
 
 export default Scoreboard;

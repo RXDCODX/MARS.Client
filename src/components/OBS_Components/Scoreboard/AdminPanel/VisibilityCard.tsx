@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Card, Form } from "react-bootstrap";
 import { Clock, Eye, EyeSlash, PlayCircle } from "react-bootstrap-icons";
+import { useSiteColors } from "../../../../shared/Utils/useSiteColors";
 
 type VisibilityCardProps = {
   isVisible: boolean;
@@ -15,6 +16,7 @@ const VisibilityCard: React.FC<VisibilityCardProps> = ({
   animationDuration = 500, // По умолчанию 500мс
   onAnimationDurationChange,
 }) => {
+  const colors = useSiteColors();
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isShowing, setIsShowing] = useState(false); // Новое состояние для отслеживания действия показа
   const [pageOpenTime] = useState<number>(Date.now());
@@ -122,9 +124,9 @@ const VisibilityCard: React.FC<VisibilityCardProps> = ({
     <Card
       className="shadow-lg p-3 mb-4"
       style={{
-        background: "#1a1d23",
+        backgroundColor: colors.background.card,
         borderRadius: 18,
-        border: "2px solid #dc3545",
+        border: `2px solid ${colors.border.danger}`,
         height: "100%",
       }}
     >
@@ -132,13 +134,13 @@ const VisibilityCard: React.FC<VisibilityCardProps> = ({
         <div>
           <div className="d-flex flex-column align-items-center mb-3 gap-2 text-center">
             {isVisible ? (
-              <Eye color="#dc3545" size={20} />
+              <Eye color={colors.text.danger} size={20} />
             ) : (
-              <EyeSlash color="#dc3545" size={20} />
+              <EyeSlash color={colors.text.danger} size={20} />
             )}
             <span
               className="fw-bold text-uppercase"
-              style={{ color: "#dc3545", letterSpacing: 1, fontSize: 14 }}
+              style={{ color: colors.text.danger, letterSpacing: 1, fontSize: 14 }}
             >
               Видимость
             </span>
@@ -148,14 +150,15 @@ const VisibilityCard: React.FC<VisibilityCardProps> = ({
           <div className="d-flex align-items-center gap-3 mb-4 justify-content-center">
             <Button
               variant={isVisible ? "danger" : "success"}
-              className="fw-bold py-2 px-3 text-white"
+              className="fw-bold py-2 px-3"
               style={{
                 fontSize: 14,
-                background: isVisible ? "#dc3545" : "#198754",
+                backgroundColor: isVisible ? colors.background.danger : colors.background.success,
+                color: colors.text.light,
                 border: "none",
                 boxShadow: isVisible
-                  ? "0 2px 8px #dc354555"
-                  : "0 2px 8px #19875455",
+                  ? `0 2px 8px ${colors.background.danger}55`
+                  : `0 2px 8px ${colors.background.success}55`,
                 position: "relative",
                 minWidth: 120,
                 opacity: shouldDisableButton ? 0.5 : 1,
@@ -190,8 +193,12 @@ const VisibilityCard: React.FC<VisibilityCardProps> = ({
             {/* Input для времени анимации с кнопками */}
             <div className="d-flex flex-column align-items-center gap-1">
               <Form.Label
-                className="text-white fw-bold mb-1"
-                style={{ fontSize: 11, margin: 0 }}
+                className="fw-bold mb-1"
+                style={{ 
+                  fontSize: 11, 
+                  margin: 0,
+                  color: colors.text.primary 
+                }}
               >
                 Анимация (мс)
               </Form.Label>
@@ -211,22 +218,25 @@ const VisibilityCard: React.FC<VisibilityCardProps> = ({
                 >
                   -
                 </Button>
-                <Form.Control
-                  type="number"
-                  value={animationDuration}
-                  onChange={handleAnimationDurationChange}
-                  min={100}
-                  max={10000}
-                  step={100}
-                  size="sm"
-                  className="bg-dark text-white border-danger border-2 fw-bold rounded-3 text-center"
-                  style={{
-                    fontSize: 12,
-                    width: 80,
-                    height: 32,
-                  }}
-                  placeholder="800"
-                />
+                                 <Form.Control
+                   type="number"
+                   value={animationDuration}
+                   onChange={handleAnimationDurationChange}
+                   min={100}
+                   max={10000}
+                   step={100}
+                   size="sm"
+                   className="border-danger border-2 fw-bold rounded-3 text-center"
+                   style={{
+                     fontSize: 12,
+                     width: 80,
+                     height: 32,
+                     backgroundColor: colors.background.card,
+                     color: colors.text.primary,
+                     borderColor: colors.border.danger,
+                   }}
+                   placeholder="800"
+                 />
                 <Button
                   variant="outline-danger"
                   size="sm"
@@ -252,48 +262,40 @@ const VisibilityCard: React.FC<VisibilityCardProps> = ({
           {" "}
           {/* Removed mt-auto, added align-items-center */}
           {/* Время последнего обновления */}
-          <div
-            className="d-flex align-items-center gap-2 text-center"
-            style={{ fontSize: 13, color: "#ffffff" }}
-          >
-            {" "}
-            {/* Increased font size, changed color */}
-            <Clock size={14} color="#dc3545" />{" "}
-            {/* Increased icon size, added color */}
-            <span className="fw-bold">
-              Обновлено: {formatTime(lastUpdateTime)}
-            </span>{" "}
-            {/* Added fw-bold */}
-          </div>
-          {/* Время открытия страницы */}
-          <div
-            className="d-flex align-items-center gap-2 text-center"
-            style={{ fontSize: 13, color: "#ffffff" }}
-          >
-            {" "}
-            {/* Increased font size, changed color */}
-            <PlayCircle size={14} color="#dc3545" />{" "}
-            {/* Increased icon size, added color */}
-            <span className="fw-bold">
-              Открыто: {formatPageOpenTime()}
-            </span>{" "}
-            {/* Added fw-bold */}
-          </div>
+                     <div
+             className="d-flex align-items-center gap-2 text-center"
+             style={{ fontSize: 13, color: colors.text.primary }}
+           >
+             <Clock size={14} color={colors.text.danger} />
+             <span className="fw-bold">
+               Обновлено: {formatTime(lastUpdateTime)}
+             </span>
+           </div>
+           {/* Время открытия страницы */}
+           <div
+             className="d-flex align-items-center gap-2 text-center"
+             style={{ fontSize: 13, color: colors.text.primary }}
+           >
+             <PlayCircle size={14} color={colors.text.danger} />
+             <span className="fw-bold">
+               Открыто: {formatPageOpenTime()}
+             </span>
+           </div>
           {/* Статус панели */}
           <div className="text-center mt-2">
             {" "}
             {/* Added mt-2 */}
-            <small
-              className="fw-bold"
-              style={{
-                fontSize: 12,
-                color: isVisible ? "#28a745" : "#dc3545", // Dynamic color
-                textTransform: "uppercase",
-                letterSpacing: 0.5,
-              }}
-            >
-              {isVisible ? "Панель видна" : "Панель скрыта"}
-            </small>
+                         <small
+               className="fw-bold"
+               style={{
+                 fontSize: 12,
+                 color: isVisible ? colors.text.success : colors.text.danger,
+                 textTransform: "uppercase",
+                 letterSpacing: 0.5,
+               }}
+             >
+               {isVisible ? "Панель видна" : "Панель скрыта"}
+             </small>
           </div>
         </div>
       </Card.Body>

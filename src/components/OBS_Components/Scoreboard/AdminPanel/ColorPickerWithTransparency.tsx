@@ -74,7 +74,7 @@ const ColorPickerWithTransparency: React.FC<
         value={value}
         onChange={handleTextChange}
         placeholder={placeholder}
-        className="bg-dark text-white border-primary border-2 fw-bold rounded-3"
+        className="text-white border-primary border-2 fw-bold rounded-3"
         style={{ fontSize: 12 }}
       />
       <Button

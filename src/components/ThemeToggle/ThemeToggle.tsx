@@ -3,15 +3,42 @@ import { Button } from 'react-bootstrap';
 import { useTheme } from '../../contexts/ThemeContext';
 import styles from './ThemeToggle.module.scss';
 
-const ThemeToggle: React.FC = () => {
+interface ThemeToggleProps {
+  variant?: 'default' | 'admin';
+  size?: 'sm' | 'md' | 'lg';
+}
+
+const ThemeToggle: React.FC<ThemeToggleProps> = ({ 
+  variant = 'default', 
+  size = 'sm' 
+}) => {
   const { theme, toggleTheme } = useTheme();
+
+  const getButtonVariant = () => {
+    if (variant === 'admin') {
+      return 'outline-secondary';
+    }
+    return theme === 'light' ? 'outline-dark' : 'outline-light';
+  };
+
+  const getButtonSize = () => {
+    switch (size) {
+      case 'md': return 'md';
+      case 'lg': return 'lg';
+      default: return 'sm';
+    }
+  };
+
+  const getButtonClass = () => {
+    return variant === 'admin' ? styles.adminThemeToggle : styles.themeToggle;
+  };
 
   return (
     <Button
-      variant={theme === 'light' ? 'outline-dark' : 'outline-light'}
-      size="sm"
+      variant={getButtonVariant()}
+      size={getButtonSize()}
       onClick={toggleTheme}
-      className={styles.themeToggle}
+      className={getButtonClass()}
       title={`Переключить на ${theme === 'light' ? 'темную' : 'светлую'} тему`}
     >
       {theme === 'light' ? (

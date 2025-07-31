@@ -16,7 +16,7 @@ export const countries: Country[] = Object.entries(countriesData).map(
 // Функция для получения пути к флагу
 export const getFlagPath = (countryCode: string): string => {
   if (!countryCode) return "";
-  return `/assets/flags/${countryCode.toLowerCase()}.svg`;
+  return `/flags/${countryCode.toLowerCase()}.svg`;
 };
 
 // Функция для поиска стран по названию

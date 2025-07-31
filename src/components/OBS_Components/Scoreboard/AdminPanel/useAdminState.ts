@@ -60,8 +60,8 @@ export const useAdminState = () => {
           ScoreboardSignalRContext.connection.state !==
             HubConnectionState.Connected
         ) {
-          console.error("SignalR connection not available");
-          return false;
+          console.log("SignalR connection not available, using local state only");
+          return true; // Возвращаем true для локальной работы
         }
 
         // Устанавливаем флаг обновления для предотвращения рекурсии
@@ -76,7 +76,7 @@ export const useAdminState = () => {
       } catch (error) {
         console.error(`Error sending ${method}:`, error);
         setIsUpdating(false);
-        return false;
+        return true; // Возвращаем true для локальной работы даже при ошибке
       }
     },
     [],
@@ -187,13 +187,7 @@ export const useAdminState = () => {
 
       // Отправляем состояние на сервер
       const serverState = createServerState(updatedPlayer);
-      const success = await sendToServer("UpdateState", serverState);
-
-      if (!success) {
-        // Если отправка не удалась, откатываем изменения
-        setPlayer1State(player1);
-        console.error("Failed to update player1, reverting changes");
-      }
+      await sendToServer("UpdateState", serverState);
     },
     [player1, createServerState, sendToServer],
   );
@@ -206,13 +200,7 @@ export const useAdminState = () => {
 
       // Отправляем состояние на сервер
       const serverState = createServerState(undefined, updatedPlayer);
-      const success = await sendToServer("UpdateState", serverState);
-
-      if (!success) {
-        // Если отправка не удалась, откатываем изменения
-        setPlayer2State(player2);
-        console.error("Failed to update player2, reverting changes");
-      }
+      await sendToServer("UpdateState", serverState);
     },
     [player2, createServerState, sendToServer],
   );
@@ -225,13 +213,7 @@ export const useAdminState = () => {
 
       // Отправляем состояние на сервер
       const serverState = createServerState(undefined, undefined, updatedMeta);
-      const success = await sendToServer("UpdateState", serverState);
-
-      if (!success) {
-        // Если отправка не удалась, откатываем изменения
-        setMetaState(meta);
-        console.error("Failed to update meta, reverting changes");
-      }
+      await sendToServer("UpdateState", serverState);
     },
     [meta, createServerState, sendToServer],
   );
@@ -239,13 +221,7 @@ export const useAdminState = () => {
   const setVisibility = useCallback(
     async (isVisible: boolean) => {
       setIsVisibleState(isVisible); // Оптимистичное обновление
-      const success = await sendToServer("SetVisibility", isVisible);
-
-      if (!success) {
-        // Если отправка не удалась, откатываем изменения
-        setIsVisibleState(!isVisible);
-        console.error("Failed to update visibility, reverting changes");
-      }
+      await sendToServer("SetVisibility", isVisible);
     },
     [sendToServer],
   );
@@ -257,15 +233,9 @@ export const useAdminState = () => {
       // Отправляем полное состояние на сервер
       const serverState = createServerState();
       serverState.animationDuration = duration;
-      const success = await sendToServer("UpdateState", serverState);
-
-      if (!success) {
-        // Если отправка не удалась, откатываем изменения
-        setAnimationDurationState(animationDuration);
-        console.error("Failed to update animation duration, reverting changes");
-      }
+      await sendToServer("UpdateState", serverState);
     },
-    [createServerState, sendToServer, animationDuration],
+    [createServerState, sendToServer],
   );
 
   const setState = useCallback(
@@ -277,11 +247,7 @@ export const useAdminState = () => {
       setIsVisibleState(state.isVisible);
 
       const serverState = createServerState();
-      const success = await sendToServer("UpdateState", serverState);
-
-      if (!success) {
-        console.error("Failed to update state");
-      }
+      await sendToServer("UpdateState", serverState);
     },
     [createServerState, sendToServer],
   );
@@ -308,14 +274,7 @@ export const useAdminState = () => {
 
     // Отправляем полное состояние на сервер
     const serverState = createServerState(newPlayer1, newPlayer2);
-    const success = await sendToServer("UpdateState", serverState);
-
-    if (!success) {
-      // Если отправка не удалась, откатываем изменения
-      setPlayer1State(player1);
-      setPlayer2State(player2);
-      console.error("Failed to swap players, reverting changes");
-    }
+    await sendToServer("UpdateState", serverState);
   }, [player1, player2, createServerState, sendToServer]);
 
   const reset = useCallback(async () => {
@@ -360,11 +319,7 @@ export const useAdminState = () => {
     setIsVisibleState(initialState.isVisible);
     setAnimationDurationState(initialState.animationDuration ?? 1000);
 
-    const success = await sendToServer("UpdateState", initialState);
-
-    if (!success) {
-      console.error("Failed to reset state");
-    }
+    await sendToServer("UpdateState", initialState);
   }, [sendToServer]);
 
   // Обработчик изменения цветов
@@ -384,11 +339,7 @@ export const useAdminState = () => {
       // Отправляем полное состояние на сервер
       const serverState = createServerState();
       serverState.colors = currentColors;
-      const success = await sendToServer("UpdateState", serverState);
-
-      if (!success) {
-        console.error("Failed to update colors");
-      }
+      await sendToServer("UpdateState", serverState);
     },
     [createServerState, sendToServer],
   );
@@ -401,13 +352,7 @@ export const useAdminState = () => {
       // Отправляем полное состояние на сервер
       const serverState = createServerState();
       serverState.layout = updatedLayout;
-      const success = await sendToServer("UpdateState", serverState);
-
-      if (!success) {
-        // Если отправка не удалась, откатываем изменения
-        setLayoutState(layout);
-        console.error("Failed to update layout, reverting changes");
-      }
+      await sendToServer("UpdateState", serverState);
     },
     [layout, createServerState, sendToServer],
   );

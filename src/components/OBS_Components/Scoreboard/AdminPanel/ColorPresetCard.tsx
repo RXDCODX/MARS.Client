@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { Palette } from "react-bootstrap-icons";
 
+import { useSiteColors } from "../../../../shared/Utils/useSiteColors";
 import ColorPickerWithTransparency from "./ColorPickerWithTransparency";
 import { ColorPreset, defaultPreset } from "./types";
 
@@ -10,6 +11,7 @@ type ColorPresetCardProps = {
 };
 
 const ColorPresetCard: React.FC<ColorPresetCardProps> = ({ onColorChange }) => {
+  const colors = useSiteColors();
   const [customColors, setCustomColors] = useState(defaultPreset);
 
   const colorPresets: ColorPreset[] = [
@@ -97,19 +99,19 @@ const ColorPresetCard: React.FC<ColorPresetCardProps> = ({ onColorChange }) => {
 
   return (
     <Card
-      className="shadow-lg p-4 mb-4"
+      className="shadow-lg p-4 mb-4 text-center"
       style={{
-        background: "#1a1d23",
+        backgroundColor: colors.background.card,
         borderRadius: 18,
-        border: "2px solid #6f42c1",
+        border: `2px solid ${colors.border.accent}`,
       }}
     >
       <Card.Body>
         <div className="d-flex flex-column align-items-center mb-3 gap-2 text-center">
-          <Palette color="#6f42c1" size={22} />
+          <Palette color={colors.text.accent} size={22} />
           <span
             className="fw-bold text-uppercase"
-            style={{ color: "#6f42c1", letterSpacing: 1 }}
+            style={{ color: colors.text.accent, letterSpacing: 1 }}
           >
             Color Presets
           </span>
@@ -117,7 +119,9 @@ const ColorPresetCard: React.FC<ColorPresetCardProps> = ({ onColorChange }) => {
 
         {/* Пресеты цветов */}
         <div className="mb-4">
-          <h6 className="text-white fw-bold mb-3">Presets:</h6>
+          <h6 className="fw-bold mb-3" style={{ color: colors.text.primary }}>
+            Presets:
+          </h6>
           <div className="d-flex flex-wrap justify-content-center gap-2">
             {colorPresets.map((preset) => (
               <Button
@@ -140,11 +144,16 @@ const ColorPresetCard: React.FC<ColorPresetCardProps> = ({ onColorChange }) => {
 
         {/* Кастомные цвета */}
         <div>
-          <h6 className="text-white fw-bold mb-3">Custom Colors:</h6>
+          <h6 className="fw-bold mb-3" style={{ color: colors.text.primary }}>
+            Custom Colors:
+          </h6>
           <Row className="g-3 d-flex justify-content-center">
             <Col xs={6} md={3}>
               <Form.Group>
-                <Form.Label className="text-white fw-bold small">
+                <Form.Label
+                  className="fw-bold small"
+                  style={{ color: colors.text.primary }}
+                >
                   Main Color (Tags & Glow)
                 </Form.Label>
                 <ColorPickerWithTransparency
@@ -158,7 +167,10 @@ const ColorPresetCard: React.FC<ColorPresetCardProps> = ({ onColorChange }) => {
             </Col>
             <Col xs={6} md={3}>
               <Form.Group>
-                <Form.Label className="text-white fw-bold small">
+                <Form.Label
+                  className="fw-bold small"
+                  style={{ color: colors.text.primary }}
+                >
                   Player Names
                 </Form.Label>
                 <ColorPickerWithTransparency
@@ -172,7 +184,10 @@ const ColorPresetCard: React.FC<ColorPresetCardProps> = ({ onColorChange }) => {
             </Col>
             <Col xs={6} md={3}>
               <Form.Group>
-                <Form.Label className="text-white fw-bold small">
+                <Form.Label
+                  className="fw-bold small"
+                  style={{ color: colors.text.primary }}
+                >
                   Tournament Title
                 </Form.Label>
                 <ColorPickerWithTransparency
@@ -186,7 +201,10 @@ const ColorPresetCard: React.FC<ColorPresetCardProps> = ({ onColorChange }) => {
             </Col>
             <Col xs={6} md={3}>
               <Form.Group>
-                <Form.Label className="text-white fw-bold small">
+                <Form.Label
+                  className="fw-bold small"
+                  style={{ color: colors.text.primary }}
+                >
                   Fight Mode
                 </Form.Label>
                 <ColorPickerWithTransparency
@@ -200,7 +218,10 @@ const ColorPresetCard: React.FC<ColorPresetCardProps> = ({ onColorChange }) => {
             </Col>
             <Col xs={6} md={3}>
               <Form.Group>
-                <Form.Label className="text-white fw-bold small">
+                <Form.Label
+                  className="fw-bold small"
+                  style={{ color: colors.text.primary }}
+                >
                   Score Color
                 </Form.Label>
                 <ColorPickerWithTransparency
@@ -214,7 +235,10 @@ const ColorPresetCard: React.FC<ColorPresetCardProps> = ({ onColorChange }) => {
             </Col>
             <Col xs={6} md={3}>
               <Form.Group>
-                <Form.Label className="text-white fw-bold small">
+                <Form.Label
+                  className="fw-bold small"
+                  style={{ color: colors.text.primary }}
+                >
                   Background
                 </Form.Label>
                 <ColorPickerWithTransparency
@@ -228,7 +252,10 @@ const ColorPresetCard: React.FC<ColorPresetCardProps> = ({ onColorChange }) => {
             </Col>
             <Col xs={6} md={3}>
               <Form.Group>
-                <Form.Label className="text-white fw-bold small">
+                <Form.Label
+                  className="fw-bold small"
+                  style={{ color: colors.text.primary }}
+                >
                   Border Color
                 </Form.Label>
                 <ColorPickerWithTransparency
