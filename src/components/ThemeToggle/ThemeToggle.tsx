@@ -1,37 +1,37 @@
-import React from 'react';
-import { Button } from 'react-bootstrap';
-import { useTheme } from '../../contexts/ThemeContext';
-import styles from './ThemeToggle.module.scss';
+import { Button } from "react-bootstrap";
+
+import { useTheme } from "../../contexts/ThemeContext";
+import styles from "./ThemeToggle.module.scss";
 
 interface ThemeToggleProps {
-  variant?: 'default' | 'admin';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "default" | "admin";
+  size?: "sm" | "md" | "lg";
 }
 
-const ThemeToggle: React.FC<ThemeToggleProps> = ({ 
-  variant = 'default', 
-  size = 'sm' 
+const ThemeToggle: React.FC<ThemeToggleProps> = ({
+  variant = "default",
+  size = "sm",
 }) => {
   const { theme, toggleTheme } = useTheme();
 
   const getButtonVariant = () => {
-    if (variant === 'admin') {
-      return 'outline-secondary';
+    if (variant === "admin") {
+      return "outline-secondary";
     }
-    return theme === 'light' ? 'outline-dark' : 'outline-light';
+    return theme === "light" ? "outline-dark" : "outline-light";
   };
 
   const getButtonSize = () => {
     switch (size) {
-      case 'md': return 'md';
-      case 'lg': return 'lg';
-      default: return 'sm';
+      case "lg":
+        return "lg";
+      default:
+        return "sm";
     }
   };
 
-  const getButtonClass = () => {
-    return variant === 'admin' ? styles.adminThemeToggle : styles.themeToggle;
-  };
+  const getButtonClass = () =>
+    variant === "admin" ? styles.adminThemeToggle : styles.themeToggle;
 
   return (
     <Button
@@ -39,9 +39,9 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
       size={getButtonSize()}
       onClick={toggleTheme}
       className={getButtonClass()}
-      title={`Переключить на ${theme === 'light' ? 'темную' : 'светлую'} тему`}
+      title={`Переключить на ${theme === "light" ? "темную" : "светлую"} тему`}
     >
-      {theme === 'light' ? (
+      {theme === "light" ? (
         <>
           <i className="bi bi-moon-fill"></i>
           <span className="ms-1 d-none d-sm-inline">Темная</span>
@@ -56,4 +56,4 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
   );
 };
 
-export default ThemeToggle; 
+export default ThemeToggle;

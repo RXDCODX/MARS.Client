@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import ThemeToggle from "../../../ThemeToggle";
 import { useSiteColors } from "../../../../shared/Utils/useSiteColors";
+import ThemeToggle from "../../../ThemeToggle";
 import styles from "./Header.module.scss";
 
 const Header: React.FC = () => {
@@ -66,13 +66,16 @@ const Header: React.FC = () => {
     setActiveSubDropdown(null);
   };
 
-  const handleSubDropdownToggle = (subDropdownName: string) => {
-    setActiveSubDropdown(
-      activeSubDropdown === subDropdownName ? null : subDropdownName,
-    );
+  const handleMouseLeave = () => {
+    setActiveDropdown(null);
+    setActiveSubDropdown(null);
   };
 
-  const handleMouseLeave = () => {
+  const handleMainDropdownMouseLeave = () => {
+    setActiveDropdown(null);
+  };
+
+  const handleLinkClick = () => {
     setActiveDropdown(null);
     setActiveSubDropdown(null);
   };
@@ -89,7 +92,12 @@ const Header: React.FC = () => {
       }}
     >
       <Container>
-        <Navbar.Brand as={Link} to="/" className={styles.logo} style={colors.utils.getTextStyle('primary')}>
+        <Navbar.Brand
+          as={Link}
+          to="/"
+          className={styles.logo}
+          style={colors.utils.getTextStyle("primary")}
+        >
           <i className="bi bi-rocket-takeoff me-2"></i>
           MARS Client
         </Navbar.Brand>
@@ -103,7 +111,7 @@ const Header: React.FC = () => {
                 className={styles.dropdownButton}
                 onClick={() => handleDropdownToggle("site")}
                 onMouseEnter={() => setActiveDropdown("site")}
-                style={colors.utils.getTextStyle('primary')}
+                style={colors.utils.getTextStyle("primary")}
               >
                 Страницы сайта <i className="bi bi-chevron-down ms-1"></i>
               </button>
@@ -118,14 +126,15 @@ const Header: React.FC = () => {
                   }}
                 >
                   {sitePages.map((item, index) => (
-                    <Link
-                      key={index}
-                      to={item.path}
-                      className={styles.dropdownItem}
-                      style={colors.utils.getTextStyle('primary')}
-                    >
-                      {item.label}
-                    </Link>
+                    <div key={index} className={styles.dropdownItem}>
+                      <Link
+                        to={item.path}
+                        onClick={handleLinkClick}
+                        style={colors.utils.getTextStyle("primary")}
+                      >
+                        {item.label}
+                      </Link>
+                    </div>
                   ))}
                 </div>
               )}
@@ -137,14 +146,14 @@ const Header: React.FC = () => {
                 className={styles.dropdownButton}
                 onClick={() => handleDropdownToggle("obs")}
                 onMouseEnter={() => setActiveDropdown("obs")}
-                style={colors.utils.getTextStyle('primary')}
+                style={colors.utils.getTextStyle("primary")}
               >
                 OBS Компоненты <i className="bi bi-chevron-down ms-1"></i>
               </button>
               {activeDropdown === "obs" && (
                 <div
                   className={styles.dropdownMenu}
-                  onMouseLeave={handleMouseLeave}
+                  onMouseLeave={handleMainDropdownMouseLeave}
                   style={{
                     backgroundColor: colors.background.card,
                     border: `1px solid ${colors.border.primary}`,
@@ -154,23 +163,30 @@ const Header: React.FC = () => {
                   {obsComponents.map((item, index) => (
                     <div key={index} className={styles.dropdownItem}>
                       {item.children ? (
-                        <div className={styles.subDropdownContainer}>
+                        <div
+                          className={styles.subDropdownContainer}
+                          onMouseEnter={() =>
+                            setActiveSubDropdown(`obs-${index}`)
+                          }
+                          onMouseLeave={() => setActiveSubDropdown(null)}
+                        >
                           <button
                             className={styles.subDropdownButton}
-                            onClick={() =>
-                              handleSubDropdownToggle(`obs-${index}`)
-                            }
                             onMouseEnter={() =>
                               setActiveSubDropdown(`obs-${index}`)
                             }
-                            style={colors.utils.getTextStyle('primary')}
+                            style={colors.utils.getTextStyle("primary")}
                           >
                             {item.label}{" "}
                             <i className="bi bi-chevron-right ms-1"></i>
                           </button>
                           {activeSubDropdown === `obs-${index}` && (
-                            <div 
+                            <div
                               className={styles.subDropdownMenu}
+                              onMouseEnter={() =>
+                                setActiveSubDropdown(`obs-${index}`)
+                              }
+                              onMouseLeave={() => setActiveSubDropdown(null)}
                               style={{
                                 backgroundColor: colors.background.card,
                                 border: `1px solid ${colors.border.primary}`,
@@ -178,20 +194,30 @@ const Header: React.FC = () => {
                               }}
                             >
                               {item.children.map((child, childIndex) => (
-                                <Link
+                                <div
                                   key={childIndex}
-                                  to={child.path}
                                   className={styles.subDropdownItem}
-                                  style={colors.utils.getTextStyle('primary')}
                                 >
-                                  {child.label}
-                                </Link>
+                                  <Link
+                                    to={child.path}
+                                    onClick={handleLinkClick}
+                                    style={colors.utils.getTextStyle("primary")}
+                                  >
+                                    {child.label}
+                                  </Link>
+                                </div>
                               ))}
                             </div>
                           )}
                         </div>
                       ) : (
-                        <Link to={item.children || "#"} style={colors.utils.getTextStyle('primary')}>{item.label}</Link>
+                        <Link
+                          to="#"
+                          onClick={handleLinkClick}
+                          style={colors.utils.getTextStyle("primary")}
+                        >
+                          {item.label}
+                        </Link>
                       )}
                     </div>
                   ))}
@@ -205,7 +231,7 @@ const Header: React.FC = () => {
                 className={styles.dropdownButton}
                 onClick={() => handleDropdownToggle("control")}
                 onMouseEnter={() => setActiveDropdown("control")}
-                style={colors.utils.getTextStyle('primary')}
+                style={colors.utils.getTextStyle("primary")}
               >
                 Панель управления <i className="bi bi-chevron-down ms-1"></i>
               </button>
@@ -220,14 +246,15 @@ const Header: React.FC = () => {
                   }}
                 >
                   {controlRoomPages.map((item, index) => (
-                    <Link
-                      key={index}
-                      to={item.path}
-                      className={styles.dropdownItem}
-                      style={colors.utils.getTextStyle('primary')}
-                    >
-                      {item.label}
-                    </Link>
+                    <div key={index} className={styles.dropdownItem}>
+                      <Link
+                        to={item.path}
+                        onClick={handleLinkClick}
+                        style={colors.utils.getTextStyle("primary")}
+                      >
+                        {item.label}
+                      </Link>
+                    </div>
                   ))}
                 </div>
               )}

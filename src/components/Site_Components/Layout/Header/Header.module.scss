@@ -92,6 +92,7 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  white-space: nowrap;
 }
 
 .dropdownItem {
@@ -100,7 +101,7 @@
   padding: 0;
   background: var(--site-bg-card) !important;
   border-radius: 8px;
-  overflow: hidden;
+  overflow: visible; /* Разрешаем поддропдаунам выходить за границы */
   
   a {
     display: block;
@@ -117,6 +118,7 @@
       color: var(--site-text-accent) !important;
       transform: translateX(5px);
       text-shadow: var(--site-shadow-medium);
+      text-decoration: none;
     }
   }
 }
@@ -147,6 +149,17 @@
     color: var(--site-text-accent) !important;
     text-shadow: var(--site-shadow-medium);
   }
+  
+  i {
+    font-size: 0.8rem;
+    opacity: 0.8;
+    transition: all 0.2s ease;
+  }
+  
+  &:hover i {
+    opacity: 1;
+    transform: translateX(2px);
+  }
 }
 
 .subDropdownMenu {
@@ -157,7 +170,8 @@
   border-radius: 12px;
   box-shadow: var(--site-shadow-medium);
   border: 1px solid var(--site-border-primary);
-  min-width: 180px;
+  min-width: 200px;
+  max-width: 250px;
   padding: 8px 0;
   z-index: 1001;
   animation: subDropdownFadeIn 0.3s ease;
@@ -166,6 +180,8 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
+  white-space: normal; /* Разрешаем перенос текста */
+  overflow: hidden; /* Скрываем текст, выходящий за границы */
 }
 
 .subDropdownItem {
@@ -176,18 +192,22 @@
   font-weight: 500;
   transition: all 0.2s ease;
   text-shadow: var(--site-shadow-light);
-  white-space: nowrap;
+  white-space: normal; /* Разрешаем перенос текста */
   border-radius: 8px;
   margin: 0 4px;
+  overflow: hidden; /* Скрываем текст, выходящий за границы */
+  text-overflow: ellipsis; /* Добавляем многоточие для длинного текста */
   
   &:hover {
     background: var(--site-hover-bg);
     color: var(--site-text-accent) !important;
     transform: translateX(5px);
     text-shadow: var(--site-shadow-medium);
+    text-decoration: none;
   }
 }
 
+// Анимации
 @keyframes dropdownFadeIn {
   from {
     opacity: 0;
@@ -215,11 +235,13 @@
   .dropdownMenu {
     min-width: 160px;
     max-width: 200px;
+    width: auto;
   }
   
   .subDropdownMenu {
-    min-width: 140px;
-    max-width: 180px;
+    min-width: 160px;
+    max-width: 200px;
+    width: auto;
   }
   
   .dropdownButton {
@@ -235,8 +257,8 @@
   }
   
   .subDropdownMenu {
-    min-width: 120px;
-    max-width: 160px;
+    min-width: 140px;
+    max-width: 180px;
   }
   
   .dropdownButton {
@@ -244,12 +266,26 @@
     font-size: 0.85rem;
     padding: 0.4rem 0.8rem;
   }
+  
+  .navbar-brand {
+    font-size: 1.2rem;
+    
+    i {
+      font-size: 1.4rem;
+    }
+  }
 }
 
 // Дополнительные стили для улучшения отображения
 .dropdownContainer {
   &:hover .dropdownMenu {
     display: block;
+  }
+  
+  // Предотвращение ломания колонок
+  .dropdownMenu {
+    min-width: max-content;
+    width: auto;
   }
 }
 
@@ -265,8 +301,38 @@
 .dropdownButton i {
   margin-left: 4px;
   transition: transform 0.2s ease;
+  font-size: 0.8rem;
+  opacity: 0.8;
 }
 
 .dropdownContainer:hover .dropdownButton i {
   transform: rotate(180deg);
+  opacity: 1;
+}
+
+// Унификация стилей для всех ссылок в дропдаунах
+.dropdownMenu a,
+.subDropdownMenu a {
+  text-decoration: none !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  
+  &:hover {
+    text-decoration: none !important;
+  }
+}
+
+// Предотвращение ломания колонок и переполнения
+.dropdownContainer {
+  .dropdownMenu {
+    overflow: visible; /* Разрешаем поддропдаунам выходить за границы */
+    word-wrap: break-word;
+    word-break: keep-all;
+  }
+  
+  .subDropdownMenu {
+    overflow: visible !important; /* Разрешаем поддропдаунам выходить за границы */
+    word-wrap: break-word;
+    word-break: keep-all;
+  }
 } 

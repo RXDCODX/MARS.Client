@@ -28,6 +28,10 @@ div#root {
   text-align: center;
 }
 
+.textShadow {
+  text-shadow: var(--text-shadow-heavy) !important;
+}
+
 .roulette-name-text {
   display: flex;
   flex-direction: column;

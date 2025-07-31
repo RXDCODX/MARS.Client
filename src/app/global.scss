@@ -1,6 +1,6 @@
 // Bootstrap CSS
-@use '../styles/bootstrap';
-@import 'bootstrap-icons/font/bootstrap-icons.css';
+@use "../styles/bootstrap";
+@import "bootstrap-icons/font/bootstrap-icons.css";
 
 /* Применяем стили только если не в Storybook */
 html:not([data-storybook]) {
@@ -14,7 +14,7 @@ html:not([data-storybook]) {
   --bs-primary-rgb: 102, 126, 234;
   --bs-secondary: #764ba2;
   --bs-secondary-rgb: 118, 75, 162;
-  
+
   // Дополнительные цвета
   --bs-success: #198754;
   --bs-info: #0dcaf0;
@@ -22,33 +22,41 @@ html:not([data-storybook]) {
   --bs-danger: #dc3545;
   --bs-light: #f8f9fa;
   --bs-dark: #212529;
-  
+
   // Фоновые цвета
   --bs-body-bg: #ffffff;
   --bs-body-color: #212529;
   --bs-body-bg-rgb: 255, 255, 255;
   --bs-body-color-rgb: 33, 37, 41;
-  
+
   // Цвета компонентов
   --bs-card-bg: #ffffff;
   --bs-card-border-color: rgba(0, 0, 0, 0.125);
   --bs-border-color: #dee2e6;
   --bs-border-color-translucent: rgba(0, 0, 0, 0.125);
-  
+
   // Тени
   --bs-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
   --bs-box-shadow-sm: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.075);
   --bs-box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
-  
+
   // Тени для текста
   --text-shadow-light: 0 1px 2px rgba(0, 0, 0, 0.1);
   --text-shadow-medium: 0 2px 4px rgba(0, 0, 0, 0.15);
   --text-shadow-heavy: 0 4px 8px rgba(0, 0, 0, 0.2);
-  
+
   // Градиенты
-  --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
-  --primary-gradient: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-secondary) 100%);
-  
+  --bs-gradient: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0)
+  );
+  --primary-gradient: linear-gradient(
+    135deg,
+    var(--bs-primary) 0%,
+    var(--bs-secondary) 100%
+  );
+
   // Дополнительные цвета для тем
   --bs-white: #ffffff;
   --bs-black: #000000;
@@ -61,7 +69,7 @@ html:not([data-storybook]) {
   --bs-gray-700: #495057;
   --bs-gray-800: #343a40;
   --bs-gray-900: #212529;
-  
+
   // Цвета для статусов
   --bs-success-light: #d1e7dd;
   --bs-success-dark: #0f5132;
@@ -71,7 +79,7 @@ html:not([data-storybook]) {
   --bs-danger-dark: #721c24;
   --bs-info-light: #cff4fc;
   --bs-info-dark: #055160;
-  
+
   // ===== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ДЛЯ КОМПОНЕНТОВ САЙТА =====
   // Цвета текста (автоматически инвертируются в темной теме)
   --site-text-primary: #212529;
@@ -84,7 +92,7 @@ html:not([data-storybook]) {
   --site-text-warning: #ffc107;
   --site-text-danger: #eb263a;
   --site-text-info: #0dcaf0;
-  
+
   // Цвета фонов (автоматически инвертируются в темной теме)
   --site-bg-primary: #ffffff;
   --site-bg-secondary: #f8f9fa;
@@ -96,7 +104,7 @@ html:not([data-storybook]) {
   --site-bg-warning: #fbff00;
   --site-bg-danger: #c50010;
   --site-bg-info: #cff4fc;
-  
+
   // Цвета границ (автоматически инвертируются в темной теме)
   --site-border-primary: #dee2e6;
   --site-border-secondary: #adb5bd;
@@ -105,22 +113,22 @@ html:not([data-storybook]) {
   --site-border-warning: #eeff07;
   --site-border-danger: #dc3545;
   --site-border-info: #0dcaf0;
-  
+
   // Цвета теней (автоматически инвертируются в темной теме)
   --site-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
   --site-shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.15);
   --site-shadow-heavy: 0 10px 15px rgba(0, 0, 0, 0.2);
   --site-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-  
+
   // Цвета для ховер эффектов
   --site-hover-bg: rgba(0, 0, 0, 0.05);
   --site-hover-text: #495057;
   --site-hover-border: #adb5bd;
-  
+
   // Цвета для фокуса
   --site-focus-ring: rgba(102, 126, 234, 0.25);
   --site-focus-border: #667eea;
-  
+
   // Цвета для скроллбаров
   --site-scrollbar-track: #f8f9fa;
   --site-scrollbar-thumb: #adb5bd;
@@ -133,7 +141,7 @@ html:not([data-storybook]) {
   --bs-primary-rgb: 124, 141, 248;
   --bs-secondary: #9b6bc7;
   --bs-secondary-rgb: 155, 107, 199;
-  
+
   // Дополнительные цвета для темной темы
   --bs-success: #20c997;
   --bs-info: #0dcaf0;
@@ -141,33 +149,41 @@ html:not([data-storybook]) {
   --bs-danger: #dc3545;
   --bs-light: #343a40;
   --bs-dark: #f8f9fa;
-  
+
   // Фоновые цвета для темной темы
   --bs-body-bg: #212529;
   --bs-body-color: #f8f9fa;
   --bs-body-bg-rgb: 33, 37, 41;
   --bs-body-color-rgb: 248, 249, 250;
-  
+
   // Цвета компонентов для темной темы
   --bs-card-bg: #343a40;
   --bs-card-border-color: rgba(255, 255, 255, 0.125);
   --bs-border-color: #495057;
   --bs-border-color-translucent: rgba(255, 255, 255, 0.125);
-  
+
   // Тени для темной темы
   --bs-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
   --bs-box-shadow-sm: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.3);
   --bs-box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.5);
-  
+
   // Тени для текста в темной теме
   --text-shadow-light: 0 1px 2px rgba(0, 0, 0, 0.3);
   --text-shadow-medium: 0 2px 4px rgba(0, 0, 0, 0.4);
   --text-shadow-heavy: 0 4px 8px rgba(0, 0, 0, 0.5);
-  
+
   // Градиенты для темной темы
-  --bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
-  --primary-gradient: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-secondary) 100%);
-  
+  --bs-gradient: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0)
+  );
+  --primary-gradient: linear-gradient(
+    135deg,
+    var(--bs-primary) 0%,
+    var(--bs-secondary) 100%
+  );
+
   // Дополнительные цвета для темной темы
   --bs-white: #f8f9fa;
   --bs-black: #ffffff;
@@ -180,7 +196,7 @@ html:not([data-storybook]) {
   --bs-gray-700: #dee2e6;
   --bs-gray-800: #e9ecef;
   --bs-gray-900: #f8f9fa;
-  
+
   // Цвета для статусов в темной теме
   --bs-success-light: #0f5132;
   --bs-success-dark: #d1e7dd;
@@ -190,7 +206,7 @@ html:not([data-storybook]) {
   --bs-danger-dark: #f8d7da;
   --bs-info-light: #055160;
   --bs-info-dark: #cff4fc;
-  
+
   // ===== ИНВЕРТИРОВАННЫЕ ПЕРЕМЕННЫЕ ДЛЯ КОМПОНЕНТОВ САЙТА В ТЕМНОЙ ТЕМЕ =====
   // Цвета текста (инвертированы)
   --site-text-primary: #f8f9fa;
@@ -203,7 +219,7 @@ html:not([data-storybook]) {
   --site-text-warning: #ffc107;
   --site-text-danger: #d40015;
   --site-text-info: #0dcaf0;
-  
+
   // Цвета фонов (инвертированы)
   --site-bg-primary: #212529;
   --site-bg-secondary: #343a40;
@@ -215,7 +231,7 @@ html:not([data-storybook]) {
   --site-bg-warning: #dfa700;
   --site-bg-danger: #ff2137;
   --site-bg-info: #055160;
-  
+
   // Цвета границ (инвертированы)
   --site-border-primary: #495057;
   --site-border-secondary: #6c757d;
@@ -224,22 +240,22 @@ html:not([data-storybook]) {
   --site-border-warning: #daff07;
   --site-border-danger: #dc3545;
   --site-border-info: #0dcaf0;
-  
+
   // Цвета теней (инвертированы)
   --site-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.3);
   --site-shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.4);
   --site-shadow-heavy: 0 10px 15px rgba(0, 0, 0, 0.5);
   --site-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.3);
-  
+
   // Цвета для ховер эффектов (инвертированы)
   --site-hover-bg: rgba(255, 255, 255, 0.05);
   --site-hover-text: #ced4da;
   --site-hover-border: #6c757d;
-  
+
   // Цвета для фокуса (инвертированы)
   --site-focus-ring: rgba(124, 141, 248, 0.25);
   --site-focus-border: #7c8df8;
-  
+
   // Цвета для скроллбаров (инвертированы)
   --site-scrollbar-track: #343a40;
   --site-scrollbar-thumb: #6c757d;
@@ -256,44 +272,63 @@ html:not([data-storybook]) {
   --accent: var(--bs-primary);
 }
 
-body[data-theme='dark'] {
+body[data-theme="dark"] {
   --main-bg: var(--bs-body-bg);
   --main-text: var(--bs-body-color);
   --table-bg: var(--bs-card-bg);
   --table-header-bg: var(--bs-light);
   --table-border: var(--bs-border-color);
   --accent: var(--bs-primary);
-  background: var(--bs-body-bg) !important;
   color: var(--bs-body-color) !important;
 }
 
 body {
-  background: var(--bs-body-bg);
   color: var(--bs-body-color) !important;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-// Глобальное правило для всех текстовых элементов
-* {
-  color: var(--bs-body-color) !important;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 // Исключения для элементов с собственными цветами
-.btn-primary, .btn-info, .btn-success, .btn-danger, .btn-warning,
-.badge, .alert, .text-primary, .text-secondary, .text-success, 
-.text-info, .text-warning, .text-danger, .text-light, .text-dark,
-.text-muted, .text-white, .text-black,
-.navbar-brand, .navbar-nav .nav-link,
-.dropdown-menu, .dropdown-item,
-.nav-link, .nav-item, .navbar-nav,
-.form-control, .form-label, .form-text,
-.list-group-item, .breadcrumb-item,
+.btn-primary,
+.btn-info,
+.btn-success,
+.btn-danger,
+.btn-warning,
+.badge,
+.alert,
+.text-primary,
+.text-secondary,
+.text-success,
+.text-info,
+.text-warning,
+.text-danger,
+.text-light,
+.text-dark,
+.text-muted,
+.text-white,
+.text-black,
+.navbar-brand,
+.navbar-nav .nav-link,
+.dropdown-menu,
+.dropdown-item,
+.nav-link,
+.nav-item,
+.navbar-nav,
+.form-control,
+.form-label,
+.form-text,
+.list-group-item,
+.breadcrumb-item,
 .pagination .page-link {
   color: inherit !important;
 }
 
 // Глобальные стили для таблиц
-.table, .table-bordered, .table-sm, .table-hover {
+.table,
+.table-bordered,
+.table-sm,
+.table-hover {
   background: var(--bs-card-bg) !important;
   color: var(--bs-body-color) !important;
   border-color: var(--bs-border-color) !important;
@@ -304,18 +339,28 @@ body {
   color: var(--bs-body-color) !important;
 }
 
-.table th, .table td {
+.table th,
+.table td {
   border-color: var(--bs-border-color) !important;
 }
 
 // Стили для кнопок
-.btn-primary, .btn-info, .btn-success, .btn-danger, .btn-warning {
+.btn-primary,
+.btn-info,
+.btn-success,
+.btn-danger,
+.btn-warning {
   color: #fff !important;
   text-shadow: var(--text-shadow-light);
 }
 
 // Глобальные стили для текста с тенями
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   text-shadow: var(--text-shadow-light);
 }
 
@@ -330,7 +375,15 @@ body {
 }
 
 /* Глобальные стили для текста */
-h1, h2, h3, h4, h5, h6, p, span, div {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div {
   word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;

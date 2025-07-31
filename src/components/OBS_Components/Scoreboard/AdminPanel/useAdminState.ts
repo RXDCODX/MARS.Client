@@ -5,19 +5,20 @@ import { ScoreboardDto } from "../../../../shared/api/generated/Api";
 import { ScoreboardSignalRContext } from "../ScoreboardContext";
 import {
   ColorPreset,
-  LayoutSettings,
   defaultLayout,
+  LayoutSettings,
   MetaInfo,
   MetaInfoWithTimestamp,
   Player,
   PlayerWithTimestamp,
   ScoreboardState,
 } from "./types";
+import { useUpdateControl } from "./useUpdateControl";
 
 export const useAdminState = () => {
-  // Флаг для предотвращения рекурсии при получении обновлений от сервера
-  const [isUpdating, setIsUpdating] = useState<boolean>(false);
-  
+  // Используем новый хук для контроля обновлений
+  const updateControl = useUpdateControl();
+
   const [player1, setPlayer1State] = useState<PlayerWithTimestamp>({
     name: "Daigo Umehara",
     sponsor: "Red Bull",
@@ -53,33 +54,42 @@ export const useAdminState = () => {
 
   // Функция для безопасной отправки данных на сервер
   const sendToServer = useCallback(
-    async (method: string, data: ScoreboardDto | boolean) => {
+    async (
+      method: string,
+      data: ScoreboardDto | boolean,
+      updateId?: string,
+    ) => {
       try {
         if (
           !ScoreboardSignalRContext.connection ||
           ScoreboardSignalRContext.connection.state !==
             HubConnectionState.Connected
         ) {
-          console.log("SignalR connection not available, using local state only");
-          return true; // Возвращаем true для локальной работы
+          console.log(
+            "SignalR connection not available, using local state only",
+          );
+          return true;
         }
 
-        // Устанавливаем флаг обновления для предотвращения рекурсии
-        setIsUpdating(true);
+        // Используем новый контроль обновлений
+        if (!updateControl.startUpdate(updateId)) {
+          return false;
+        }
+
         console.log(`Sending ${method}:`, data);
         await ScoreboardSignalRContext.invoke(method, data);
         console.log(`Successfully sent ${method}`);
-        
-        // Сбрасываем флаг через небольшую задержку
-        setTimeout(() => setIsUpdating(false), 100);
+
+        // Завершаем обновление
+        updateControl.finishUpdate(updateId);
         return true;
       } catch (error) {
         console.error(`Error sending ${method}:`, error);
-        setIsUpdating(false);
-        return true; // Возвращаем true для локальной работы даже при ошибке
+        updateControl.finishUpdate(updateId);
+        return false;
       }
     },
-    [],
+    [updateControl],
   );
 
   // Функция для преобразования состояния в формат, ожидаемый сервером
@@ -128,128 +138,160 @@ export const useAdminState = () => {
         layout,
       };
     },
-    [player1, player2, meta, isVisible, animationDuration],
+    [player1, player2, meta, isVisible, animationDuration, layout],
   );
 
-  const handleReceiveState = (state: ScoreboardState) => {
-    const now = Date.now();
-    console.log("Received state from server:", state);
+  const handleReceiveState = useCallback(
+    (state: ScoreboardState) => {
+      const now = Date.now();
+      console.log("Received state from server:", state);
 
-    // Игнорируем обновления, если мы сами отправляем данные на сервер
-    if (isUpdating) {
-      console.log("Ignoring server update while local update is in progress");
-      return;
-    }
+      // Используем новый контроль обновлений для проверки
+      if (updateControl.shouldIgnoreUpdate(now)) {
+        return;
+      }
 
-    // Обновляем состояние игроков, проверяя только timestamp последнего редактирования
-    setPlayer1State((prev) => {
-      // Если локальное изменение было больше 500мс назад, обновляем с сервера
-      const shouldUpdate = !prev._lastEdit || prev._lastEdit < now - 500;
-      return shouldUpdate
-        ? { ...state.player1, _lastEdit: prev._lastEdit, _receivedAt: now }
-        : prev;
-    });
+      // Обновляем состояние игроков, проверяя timestamp последнего редактирования
+      setPlayer1State((prev) => {
+        // Если локальное изменение было больше 1 секунды назад, обновляем с сервера
+        const shouldUpdate = !prev._lastEdit || prev._lastEdit < now - 1000;
+        if (shouldUpdate) {
+          console.log("Updating player1 from server");
+          return {
+            ...state.player1,
+            _lastEdit: prev._lastEdit,
+            _receivedAt: now,
+          };
+        }
+        console.log("Keeping local player1 state");
+        return prev;
+      });
 
-    setPlayer2State((prev) => {
-      const shouldUpdate = !prev._lastEdit || prev._lastEdit < now - 500;
-      return shouldUpdate
-        ? { ...state.player2, _lastEdit: prev._lastEdit, _receivedAt: now }
-        : prev;
-    });
+      setPlayer2State((prev) => {
+        const shouldUpdate = !prev._lastEdit || prev._lastEdit < now - 1000;
+        if (shouldUpdate) {
+          console.log("Updating player2 from server");
+          return {
+            ...state.player2,
+            _lastEdit: prev._lastEdit,
+            _receivedAt: now,
+          };
+        }
+        console.log("Keeping local player2 state");
+        return prev;
+      });
 
-    setMetaState((prev) => {
-      const shouldUpdate = !prev._lastEdit || prev._lastEdit < now - 500;
-      return shouldUpdate
-        ? { ...state.meta, _lastEdit: prev._lastEdit, _receivedAt: now }
-        : prev;
-    });
+      setMetaState((prev) => {
+        const shouldUpdate = !prev._lastEdit || prev._lastEdit < now - 1000;
+        if (shouldUpdate) {
+          console.log("Updating meta from server");
+          return { ...state.meta, _lastEdit: prev._lastEdit, _receivedAt: now };
+        }
+        console.log("Keeping local meta state");
+        return prev;
+      });
 
-    // Обновляем видимость без проверки timestamp, так как это глобальное состояние
-    setIsVisibleState(state.isVisible);
+      // Обновляем видимость без проверки timestamp, так как это глобальное состояние
+      setIsVisibleState(state.isVisible);
 
-    // Обновляем время анимации
-    if (state.animationDuration) {
-      setAnimationDurationState(state.animationDuration);
-    }
+      // Обновляем время анимации
+      if (state.animationDuration) {
+        setAnimationDurationState(state.animationDuration);
+      }
 
-    // Обновляем настройки макета, если они есть в состоянии
-    if (state.layout) {
-      setLayoutState(state.layout);
-    }
-  };
+      // Обновляем настройки макета, если они есть в состоянии
+      if (state.layout) {
+        setLayoutState(state.layout);
+      }
+    },
+    [updateControl],
+  );
 
   // Методы для отправки данных с timestamp
   const setPlayer1 = useCallback(
     async (playerUpdate: Partial<Player>) => {
       const now = Date.now();
+      const updateId = updateControl.generateUpdateId();
       const updatedPlayer = { ...player1, ...playerUpdate, _lastEdit: now };
-      setPlayer1State(updatedPlayer); // Оптимистичное обновление
+
+      // Оптимистичное обновление
+      setPlayer1State(updatedPlayer);
 
       // Отправляем состояние на сервер
       const serverState = createServerState(updatedPlayer);
-      await sendToServer("UpdateState", serverState);
+      await sendToServer("UpdateState", serverState, updateId);
     },
-    [player1, createServerState, sendToServer],
+    [player1, createServerState, sendToServer, updateControl],
   );
 
   const setPlayer2 = useCallback(
     async (playerUpdate: Partial<Player>) => {
       const now = Date.now();
+      const updateId = updateControl.generateUpdateId();
       const updatedPlayer = { ...player2, ...playerUpdate, _lastEdit: now };
-      setPlayer2State(updatedPlayer); // Оптимистичное обновление
+
+      // Оптимистичное обновление
+      setPlayer2State(updatedPlayer);
 
       // Отправляем состояние на сервер
       const serverState = createServerState(undefined, updatedPlayer);
-      await sendToServer("UpdateState", serverState);
+      await sendToServer("UpdateState", serverState, updateId);
     },
-    [player2, createServerState, sendToServer],
+    [player2, createServerState, sendToServer, updateControl],
   );
 
   const setMeta = useCallback(
     async (metaUpdate: Partial<MetaInfo>) => {
       const now = Date.now();
+      const updateId = updateControl.generateUpdateId();
       const updatedMeta = { ...meta, ...metaUpdate, _lastEdit: now };
-      setMetaState(updatedMeta); // Оптимистичное обновление
+
+      // Оптимистичное обновление
+      setMetaState(updatedMeta);
 
       // Отправляем состояние на сервер
       const serverState = createServerState(undefined, undefined, updatedMeta);
-      await sendToServer("UpdateState", serverState);
+      await sendToServer("UpdateState", serverState, updateId);
     },
-    [meta, createServerState, sendToServer],
+    [meta, createServerState, sendToServer, updateControl],
   );
 
   const setVisibility = useCallback(
     async (isVisible: boolean) => {
+      const updateId = updateControl.generateUpdateId();
       setIsVisibleState(isVisible); // Оптимистичное обновление
-      await sendToServer("SetVisibility", isVisible);
+      await sendToServer("SetVisibility", isVisible, updateId);
     },
-    [sendToServer],
+    [sendToServer, updateControl],
   );
 
   const setAnimationDuration = useCallback(
     async (duration: number) => {
+      const updateId = updateControl.generateUpdateId();
       setAnimationDurationState(duration); // Оптимистичное обновление
 
       // Отправляем полное состояние на сервер
       const serverState = createServerState();
       serverState.animationDuration = duration;
-      await sendToServer("UpdateState", serverState);
+      await sendToServer("UpdateState", serverState, updateId);
     },
-    [createServerState, sendToServer],
+    [createServerState, sendToServer, updateControl],
   );
 
   const setState = useCallback(
     async (state: ScoreboardState) => {
       const now = Date.now();
-      setPlayer1State({ ...state.player1, _lastEdit: now }); // Оптимистичное обновление
-      setPlayer2State({ ...state.player2, _lastEdit: now }); // Оптимистичное обновление
-      setMetaState({ ...state.meta, _lastEdit: now }); // Оптимистичное обновление
+      const updateId = updateControl.generateUpdateId();
+
+      setPlayer1State({ ...state.player1, _lastEdit: now });
+      setPlayer2State({ ...state.player2, _lastEdit: now });
+      setMetaState({ ...state.meta, _lastEdit: now });
       setIsVisibleState(state.isVisible);
 
       const serverState = createServerState();
-      await sendToServer("UpdateState", serverState);
+      await sendToServer("UpdateState", serverState, updateId);
     },
-    [createServerState, sendToServer],
+    [createServerState, sendToServer, updateControl],
   );
 
   const getState = useCallback(async () => {
@@ -267,18 +309,21 @@ export const useAdminState = () => {
   // Вспомогательные функции
   const swapPlayers = useCallback(async () => {
     const now = Date.now();
+    const updateId = updateControl.generateUpdateId();
     const newPlayer1 = { ...player2, _lastEdit: now };
     const newPlayer2 = { ...player1, _lastEdit: now };
+
     setPlayer1State(newPlayer1);
     setPlayer2State(newPlayer2);
 
     // Отправляем полное состояние на сервер
     const serverState = createServerState(newPlayer1, newPlayer2);
-    await sendToServer("UpdateState", serverState);
-  }, [player1, player2, createServerState, sendToServer]);
+    await sendToServer("UpdateState", serverState, updateId);
+  }, [player1, player2, createServerState, sendToServer, updateControl]);
 
   const reset = useCallback(async () => {
     const now = Date.now();
+    const updateId = updateControl.generateUpdateId();
     const initialState = {
       player1: {
         name: "Player 1",
@@ -319,12 +364,13 @@ export const useAdminState = () => {
     setIsVisibleState(initialState.isVisible);
     setAnimationDurationState(initialState.animationDuration ?? 1000);
 
-    await sendToServer("UpdateState", initialState);
-  }, [sendToServer]);
+    await sendToServer("UpdateState", initialState, updateId);
+  }, [sendToServer, updateControl]);
 
   // Обработчик изменения цветов
   const handleColorChange = useCallback(
     async (colorUpdate: Partial<ColorPreset>) => {
+      const updateId = updateControl.generateUpdateId();
       const currentColors = {
         mainColor: "#3F00FF",
         playerNamesColor: "#ffffff",
@@ -339,26 +385,24 @@ export const useAdminState = () => {
       // Отправляем полное состояние на сервер
       const serverState = createServerState();
       serverState.colors = currentColors;
-      await sendToServer("UpdateState", serverState);
+      await sendToServer("UpdateState", serverState, updateId);
     },
-    [createServerState, sendToServer],
+    [createServerState, sendToServer, updateControl],
   );
 
   const setLayout = useCallback(
     async (layoutUpdate: Partial<LayoutSettings>) => {
+      const updateId = updateControl.generateUpdateId();
       const updatedLayout = { ...layout, ...layoutUpdate };
       setLayoutState(updatedLayout);
 
       // Отправляем полное состояние на сервер
       const serverState = createServerState();
       serverState.layout = updatedLayout;
-      await sendToServer("UpdateState", serverState);
+      await sendToServer("UpdateState", serverState, updateId);
     },
-    [layout, createServerState, sendToServer],
+    [layout, createServerState, sendToServer, updateControl],
   );
-
-  // Подписки на SignalR события теперь находятся в AdminPanel.tsx
-  // для лучшего контроля и предотвращения рекурсии
 
   return {
     player1,

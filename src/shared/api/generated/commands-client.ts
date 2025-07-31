@@ -1,5 +1,5 @@
 // Клиент для контроллера Commands
-import { HttpClient } from './types';
+import { HttpClient } from "./types";
 
 // Экспортируем только методы для этого контроллера
 export class CommandsService {

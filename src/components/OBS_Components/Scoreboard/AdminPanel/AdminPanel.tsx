@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
@@ -12,7 +12,7 @@ import ColorPresetCard from "./ColorPresetCard";
 import LayoutCard from "./LayoutCard";
 import MetaPanel from "./MetaPanel";
 import PlayerCard from "./PlayerCard";
-import { defaultLayout } from "./types";
+import { defaultLayout, MetaInfo, Player } from "./types";
 import { useAdminState } from "./useAdminState";
 import VisibilityCard from "./VisibilityCard";
 
@@ -37,23 +37,35 @@ const AdminPanelContent = () => {
     handleReceiveState,
   } = useAdminState();
 
-  // Подписка на SignalR события для получения обновлений от других клиентов
+  // Реф для отслеживания последнего обновления
+  const lastUpdateRef = useRef<number>(0);
+
+  // Единая подписка на SignalR события для получения обновлений от других клиентов
   ScoreboardSignalRContext.useSignalREffect(
     "ReceiveState",
-    handleReceiveState,
-    [],
+    useCallback(
+      (state) => {
+        const now = Date.now();
+        // Дополнительная защита от слишком частых обновлений
+        if (now - lastUpdateRef.current < 100) {
+          console.log("Ignoring too frequent update");
+          return;
+        }
+        lastUpdateRef.current = now;
+        handleReceiveState(state);
+      },
+      [handleReceiveState],
+    ),
+    [handleReceiveState],
   );
-  ScoreboardSignalRContext.useSignalREffect(
-    "StateUpdated",
-    handleReceiveState,
-    [],
-  );
+
+  // Отдельная подписка на изменения видимости
   ScoreboardSignalRContext.useSignalREffect(
     "VisibilityChanged",
-    (isVisible: boolean) => {
-      // Обновляем видимость без вызова setVisibility, чтобы избежать рекурсии
+    useCallback((isVisible: boolean) => {
       console.log("Visibility changed from server:", isVisible);
-    },
+      // Видимость обновляется через handleReceiveState, поэтому здесь ничего не делаем
+    }, []),
     [],
   );
 
@@ -65,14 +77,54 @@ const AdminPanelContent = () => {
     }
   }, [navigate]);
 
-  const handleSwapNames = async () => {
+  // Дебаунсинг для обработчиков событий
+  const debouncedSetPlayer1 = useCallback(
+    (update: Partial<Player>) => {
+      const now = Date.now();
+      if (now - lastUpdateRef.current < 50) {
+        console.log("Debouncing player1 update");
+        return;
+      }
+      lastUpdateRef.current = now;
+      setPlayer1(update);
+    },
+    [setPlayer1],
+  );
+
+  const debouncedSetPlayer2 = useCallback(
+    (update: Partial<Player>) => {
+      const now = Date.now();
+      if (now - lastUpdateRef.current < 50) {
+        console.log("Debouncing player2 update");
+        return;
+      }
+      lastUpdateRef.current = now;
+      setPlayer2(update);
+    },
+    [setPlayer2],
+  );
+
+  const debouncedSetMeta = useCallback(
+    (update: Partial<MetaInfo>) => {
+      const now = Date.now();
+      if (now - lastUpdateRef.current < 50) {
+        console.log("Debouncing meta update");
+        return;
+      }
+      lastUpdateRef.current = now;
+      setMeta(update);
+    },
+    [setMeta],
+  );
+
+  const handleSwapNames = useCallback(async () => {
     try {
       await setPlayer1({ ...player1, name: player2.name });
       await setPlayer2({ ...player2, name: player1.name });
     } catch (error) {
       console.error("Error swapping names:", error);
     }
-  };
+  }, [player1, player2, setPlayer1, setPlayer2]);
 
   return (
     <Container
@@ -103,12 +155,12 @@ const AdminPanelContent = () => {
           <VisibilityCard
             isVisible={isVisible}
             onVisibilityChange={setVisibility}
-            animationDuration={animationDuration} // Настраиваемое время анимации (800мс)
-            onAnimationDurationChange={setAnimationDuration} // Callback для изменения времени анимации
+            animationDuration={animationDuration}
+            onAnimationDurationChange={setAnimationDuration}
           />
         </Col>
         <Col xs={12} md={6} lg={6}>
-          <MetaPanel setMeta={setMeta} meta={meta} />
+          <MetaPanel setMeta={debouncedSetMeta} meta={meta} />
         </Col>
       </Row>
 
@@ -134,21 +186,21 @@ const AdminPanelContent = () => {
             player={player1}
             onName={async (name) => {
               try {
-                await setPlayer1({ ...player1, name });
+                await debouncedSetPlayer1({ ...player1, name });
               } catch (error) {
                 console.error("Error updating player1 name:", error);
               }
             }}
             onSponsor={async (sponsor) => {
               try {
-                await setPlayer1({ ...player1, sponsor });
+                await debouncedSetPlayer1({ ...player1, sponsor });
               } catch (error) {
                 console.error("Error updating player1 sponsor:", error);
               }
             }}
             onScore={async (score) => {
               try {
-                await setPlayer1({
+                await debouncedSetPlayer1({
                   ...player1,
                   score: Math.max(0, Math.min(99, score)),
                 });
@@ -158,35 +210,35 @@ const AdminPanelContent = () => {
             }}
             onWin={async () => {
               try {
-                await setPlayer1({ ...player1, final: "winner" });
+                await debouncedSetPlayer1({ ...player1, final: "winner" });
               } catch (error) {
                 console.error("Error setting player1 as winner:", error);
               }
             }}
             onLose={async () => {
               try {
-                await setPlayer1({ ...player1, final: "loser" });
+                await debouncedSetPlayer1({ ...player1, final: "loser" });
               } catch (error) {
                 console.error("Error setting player1 as loser:", error);
               }
             }}
             onTag={async (tag) => {
               try {
-                await setPlayer1({ ...player1, tag });
+                await debouncedSetPlayer1({ ...player1, tag });
               } catch (error) {
                 console.error("Error updating player1 tag:", error);
               }
             }}
             onFlag={async (flag) => {
               try {
-                await setPlayer1({ ...player1, flag });
+                await debouncedSetPlayer1({ ...player1, flag });
               } catch (error) {
                 console.error("Error updating player1 flag:", error);
               }
             }}
             onClearFinal={async () => {
               try {
-                await setPlayer1({ ...player1, final: "none" });
+                await debouncedSetPlayer1({ ...player1, final: "none" });
               } catch (error) {
                 console.error("Error clearing player1 final status:", error);
               }
@@ -217,21 +269,21 @@ const AdminPanelContent = () => {
             player={player2}
             onName={async (name) => {
               try {
-                await setPlayer2({ ...player2, name });
+                await debouncedSetPlayer2({ ...player2, name });
               } catch (error) {
                 console.error("Error updating player2 name:", error);
               }
             }}
             onSponsor={async (sponsor) => {
               try {
-                await setPlayer2({ ...player2, sponsor });
+                await debouncedSetPlayer2({ ...player2, sponsor });
               } catch (error) {
                 console.error("Error updating player2 sponsor:", error);
               }
             }}
             onScore={async (score) => {
               try {
-                await setPlayer2({
+                await debouncedSetPlayer2({
                   ...player2,
                   score: Math.max(0, Math.min(99, score)),
                 });
@@ -241,35 +293,35 @@ const AdminPanelContent = () => {
             }}
             onWin={async () => {
               try {
-                await setPlayer2({ ...player2, final: "winner" });
+                await debouncedSetPlayer2({ ...player2, final: "winner" });
               } catch (error) {
                 console.error("Error setting player2 as winner:", error);
               }
             }}
             onLose={async () => {
               try {
-                await setPlayer2({ ...player2, final: "loser" });
+                await debouncedSetPlayer2({ ...player2, final: "loser" });
               } catch (error) {
                 console.error("Error setting player2 as loser:", error);
               }
             }}
             onTag={async (tag) => {
               try {
-                await setPlayer2({ ...player2, tag });
+                await debouncedSetPlayer2({ ...player2, tag });
               } catch (error) {
                 console.error("Error updating player2 tag:", error);
               }
             }}
             onFlag={async (flag) => {
               try {
-                await setPlayer2({ ...player2, flag });
+                await debouncedSetPlayer2({ ...player2, flag });
               } catch (error) {
                 console.error("Error updating player2 flag:", error);
               }
             }}
             onClearFinal={async () => {
               try {
-                await setPlayer2({ ...player2, final: "none" });
+                await debouncedSetPlayer2({ ...player2, final: "none" });
               } catch (error) {
                 console.error("Error clearing player2 final status:", error);
               }

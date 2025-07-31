@@ -10,11 +10,11 @@ import useTwitchStore from "../../../shared/twitchStore/twitchStore";
 import { arrayExcept, getRandomColor } from "../../../shared/Utils";
 import Announce from "../../../shared/Utils/Announce/Announce";
 import {
-    getHusbandText,
-    getText,
-    getTitle,
-    shuffleArray,
-    WaifuAlertProps,
+  getHusbandText,
+  getText,
+  getTitle,
+  shuffleArray,
+  WaifuAlertProps,
 } from "./helper";
 import styles from "./WaifuAlerts.module.scss";
 import WaifuRoulette from "./WaifuRoulette";
@@ -233,7 +233,7 @@ export default function WaifuAlerts() {
   );
 
   return (
-    <>
+    <div className={styles.textShadow}>
       {!announced && (
         <Announce title={"WaifuRoll"} callback={() => setAnnounced(true)} />
       )}
@@ -399,6 +399,6 @@ export default function WaifuAlerts() {
           </audio>
         </>
       )}
-    </>
+    </div>
   );
 }

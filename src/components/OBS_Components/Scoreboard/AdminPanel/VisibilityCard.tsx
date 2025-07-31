@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Card, Form } from "react-bootstrap";
 import { Clock, Eye, EyeSlash, PlayCircle } from "react-bootstrap-icons";
+
 import { useSiteColors } from "../../../../shared/Utils/useSiteColors";
 
 type VisibilityCardProps = {
@@ -140,7 +141,11 @@ const VisibilityCard: React.FC<VisibilityCardProps> = ({
             )}
             <span
               className="fw-bold text-uppercase"
-              style={{ color: colors.text.danger, letterSpacing: 1, fontSize: 14 }}
+              style={{
+                color: colors.text.danger,
+                letterSpacing: 1,
+                fontSize: 14,
+              }}
             >
               Видимость
             </span>
@@ -153,7 +158,9 @@ const VisibilityCard: React.FC<VisibilityCardProps> = ({
               className="fw-bold py-2 px-3"
               style={{
                 fontSize: 14,
-                backgroundColor: isVisible ? colors.background.danger : colors.background.success,
+                backgroundColor: isVisible
+                  ? colors.background.danger
+                  : colors.background.success,
                 color: colors.text.light,
                 border: "none",
                 boxShadow: isVisible
@@ -194,10 +201,10 @@ const VisibilityCard: React.FC<VisibilityCardProps> = ({
             <div className="d-flex flex-column align-items-center gap-1">
               <Form.Label
                 className="fw-bold mb-1"
-                style={{ 
-                  fontSize: 11, 
+                style={{
+                  fontSize: 11,
                   margin: 0,
-                  color: colors.text.primary 
+                  color: colors.text.primary,
                 }}
               >
                 Анимация (мс)
@@ -218,25 +225,25 @@ const VisibilityCard: React.FC<VisibilityCardProps> = ({
                 >
                   -
                 </Button>
-                                 <Form.Control
-                   type="number"
-                   value={animationDuration}
-                   onChange={handleAnimationDurationChange}
-                   min={100}
-                   max={10000}
-                   step={100}
-                   size="sm"
-                   className="border-danger border-2 fw-bold rounded-3 text-center"
-                   style={{
-                     fontSize: 12,
-                     width: 80,
-                     height: 32,
-                     backgroundColor: colors.background.card,
-                     color: colors.text.primary,
-                     borderColor: colors.border.danger,
-                   }}
-                   placeholder="800"
-                 />
+                <Form.Control
+                  type="number"
+                  value={animationDuration}
+                  onChange={handleAnimationDurationChange}
+                  min={100}
+                  max={10000}
+                  step={100}
+                  size="sm"
+                  className="border-danger border-2 fw-bold rounded-3 text-center"
+                  style={{
+                    fontSize: 12,
+                    width: 80,
+                    height: 32,
+                    backgroundColor: colors.background.card,
+                    color: colors.text.primary,
+                    borderColor: colors.border.danger,
+                  }}
+                  placeholder="800"
+                />
                 <Button
                   variant="outline-danger"
                   size="sm"
@@ -262,40 +269,38 @@ const VisibilityCard: React.FC<VisibilityCardProps> = ({
           {" "}
           {/* Removed mt-auto, added align-items-center */}
           {/* Время последнего обновления */}
-                     <div
-             className="d-flex align-items-center gap-2 text-center"
-             style={{ fontSize: 13, color: colors.text.primary }}
-           >
-             <Clock size={14} color={colors.text.danger} />
-             <span className="fw-bold">
-               Обновлено: {formatTime(lastUpdateTime)}
-             </span>
-           </div>
-           {/* Время открытия страницы */}
-           <div
-             className="d-flex align-items-center gap-2 text-center"
-             style={{ fontSize: 13, color: colors.text.primary }}
-           >
-             <PlayCircle size={14} color={colors.text.danger} />
-             <span className="fw-bold">
-               Открыто: {formatPageOpenTime()}
-             </span>
-           </div>
+          <div
+            className="d-flex align-items-center gap-2 text-center"
+            style={{ fontSize: 13, color: colors.text.primary }}
+          >
+            <Clock size={14} color={colors.text.danger} />
+            <span className="fw-bold">
+              Обновлено: {formatTime(lastUpdateTime)}
+            </span>
+          </div>
+          {/* Время открытия страницы */}
+          <div
+            className="d-flex align-items-center gap-2 text-center"
+            style={{ fontSize: 13, color: colors.text.primary }}
+          >
+            <PlayCircle size={14} color={colors.text.danger} />
+            <span className="fw-bold">Открыто: {formatPageOpenTime()}</span>
+          </div>
           {/* Статус панели */}
           <div className="text-center mt-2">
             {" "}
             {/* Added mt-2 */}
-                         <small
-               className="fw-bold"
-               style={{
-                 fontSize: 12,
-                 color: isVisible ? colors.text.success : colors.text.danger,
-                 textTransform: "uppercase",
-                 letterSpacing: 0.5,
-               }}
-             >
-               {isVisible ? "Панель видна" : "Панель скрыта"}
-             </small>
+            <small
+              className="fw-bold"
+              style={{
+                fontSize: 12,
+                color: isVisible ? colors.text.success : colors.text.danger,
+                textTransform: "uppercase",
+                letterSpacing: 0.5,
+              }}
+            >
+              {isVisible ? "Панель видна" : "Панель скрыта"}
+            </small>
           </div>
         </div>
       </Card.Body>
