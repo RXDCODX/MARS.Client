@@ -10,35 +10,91 @@ import {
 
 import { useSiteColors } from "../../../../../shared/Utils";
 import FlagSelector from "../FlagCard/FlagSelector";
-import { PlayerWithTimestamp } from "../types";
+import {
+  useColor,
+  usePlayer1,
+  usePlayer2,
+  usePlayerActions,
+} from "../store/scoreboardStore";
 
 type PlayerCardProps = {
-  player: PlayerWithTimestamp;
-  onName: (name: string) => void;
-  onSponsor: (sponsor: string) => void;
-  onScore: (score: number) => void;
-  onWin: () => void;
-  onLose: () => void;
+  playerIndex: 1 | 2; // 1 для player1, 2 для player2
   label: string;
   accent: string;
-  onTag: (tag: string) => void;
-  onFlag: (flag: string) => void;
-  onClearFinal: () => void;
 };
 
 const PlayerCard: React.FC<PlayerCardProps> = ({
-  player,
-  onName,
-  onScore,
-  onWin,
-  onLose,
+  playerIndex,
   label,
   accent,
-  onTag,
-  onFlag,
-  onClearFinal,
 }) => {
   const colors = useSiteColors();
+  const player1 = usePlayer1();
+  const player2 = usePlayer2();
+  const { setPlayer1, setPlayer2 } = usePlayerActions();
+  const scoreboardColors = useColor();
+
+  const player = playerIndex === 1 ? player1 : player2;
+  const setPlayer = playerIndex === 1 ? setPlayer1 : setPlayer2;
+
+  const handleNameChange = (name: string) => {
+    try {
+      setPlayer({ ...player, name });
+    } catch (error) {
+      console.error(`Error updating player${playerIndex} name:`, error);
+    }
+  };
+
+  const handleScoreChange = (score: number) => {
+    try {
+      setPlayer({
+        ...player,
+        score: Math.max(0, Math.min(99, score)),
+      });
+    } catch (error) {
+      console.error(`Error updating player${playerIndex} score:`, error);
+    }
+  };
+
+  const handleWin = () => {
+    try {
+      setPlayer({ ...player, final: "winner" });
+    } catch (error) {
+      console.error(`Error setting player${playerIndex} as winner:`, error);
+    }
+  };
+
+  const handleLose = () => {
+    try {
+      setPlayer({ ...player, final: "loser" });
+    } catch (error) {
+      console.error(`Error setting player${playerIndex} as loser:`, error);
+    }
+  };
+
+  const handleTagChange = (tag: string) => {
+    try {
+      setPlayer({ ...player, tag });
+    } catch (error) {
+      console.error(`Error updating player${playerIndex} tag:`, error);
+    }
+  };
+
+  const handleFlagChange = (flag: string) => {
+    try {
+      setPlayer({ ...player, flag });
+    } catch (error) {
+      console.error(`Error updating player${playerIndex} flag:`, error);
+    }
+  };
+
+  const handleClearFinal = () => {
+    try {
+      setPlayer({ ...player, final: "none" });
+    } catch (error) {
+      console.error(`Error clearing player${playerIndex} final status:`, error);
+    }
+  };
 
   return (
     <Card
@@ -64,14 +120,14 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
           <Form.Control
             placeholder="Tag"
             value={player.tag}
-            onChange={(e) => onTag(e.target.value)}
+            onChange={(e) => handleTagChange(e.target.value)}
             size="sm"
             className="border-info border-2 fw-bold rounded-3"
             style={{
               maxWidth: 90,
               backgroundColor: colors.background.card,
-              color: colors.text.primary,
-              borderColor: colors.border.info,
+              color: scoreboardColors?.playerNamesColor || colors.text.primary,
+              borderColor: scoreboardColors?.mainColor || colors.border.info,
             }}
           />
           <Form.Control
@@ -85,21 +141,21 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
             }
             onChange={(e) => {
               const val = e.target.value.replace(/^\[W\] |^\[L\] /, "");
-              onName(val);
+              handleNameChange(val);
             }}
             size="sm"
             className="fw-bold border-primary border-2 w-100 rounded-3"
             style={{
               backgroundColor: colors.background.card,
-              color: colors.text.primary,
-              borderColor: colors.border.primary,
+              color: scoreboardColors?.playerNamesColor || colors.text.primary,
+              borderColor: scoreboardColors?.mainColor || colors.border.primary,
             }}
           />
         </div>
         <div className="d-flex align-items-center gap-2 mb-3">
           <FlagSelector
             selectedFlag={player.flag}
-            onFlagChange={onFlag}
+            onFlagChange={handleFlagChange}
             placeholder="Флаг"
           />
         </div>
@@ -107,7 +163,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
           <Button
             variant="outline-info"
             size="sm"
-            onClick={() => onScore(player.score + 1)}
+            onClick={() => handleScoreChange(player.score + 1)}
           >
             <ArrowUp />
           </Button>
@@ -115,7 +171,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
             className="fw-bold text-center w-100"
             style={{
               fontSize: "2.5rem",
-              color: colors.text.accent,
+              color: scoreboardColors?.scoreColor || colors.text.accent,
               minWidth: 48,
               textAlign: "center",
             }}
@@ -125,14 +181,14 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
           <Button
             variant="outline-info"
             size="sm"
-            onClick={() => onScore(player.score - 1)}
+            onClick={() => handleScoreChange(player.score - 1)}
           >
             <ArrowDown />
           </Button>
           <Button
             variant="outline-secondary"
             size="sm"
-            onClick={() => onScore(0)}
+            onClick={() => handleScoreChange(0)}
           >
             <ArrowRepeat />
           </Button>
@@ -142,7 +198,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
             variant="success"
             size="sm"
             className="px-3 d-flex align-items-center gap-1"
-            onClick={onWin}
+            onClick={handleWin}
             style={{
               backgroundColor: colors.background.success,
               borderColor: colors.border.success,
@@ -155,7 +211,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
             variant="danger"
             size="sm"
             className="px-3 d-flex align-items-center gap-1"
-            onClick={onLose}
+            onClick={handleLose}
             style={{
               backgroundColor: colors.background.danger,
               borderColor: colors.border.danger,
@@ -170,7 +226,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
               size="sm"
               className="ms-2 px-2 py-0"
               style={{ fontSize: 14 }}
-              onClick={onClearFinal}
+              onClick={handleClearFinal}
               title="Убрать статус W/L"
             >
               ✕

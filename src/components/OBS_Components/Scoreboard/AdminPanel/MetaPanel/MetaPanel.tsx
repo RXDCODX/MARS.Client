@@ -3,15 +3,13 @@ import { Button, ButtonGroup, Card, Form } from "react-bootstrap";
 import { InfoCircle } from "react-bootstrap-icons";
 
 import { useSiteColors } from "../../../../../shared/Utils/useSiteColors";
-import { MetaInfo } from "../types";
+import { useMeta, useMetaActions, useColor } from "../store/scoreboardStore";
 
-type MetaPanelProps = {
-  setMeta: (meta: Partial<MetaInfo>) => void;
-  meta: MetaInfo;
-};
-
-const MetaPanel: React.FC<MetaPanelProps> = ({ setMeta, meta }) => {
+const MetaPanel: React.FC = () => {
   const colors = useSiteColors();
+  const meta = useMeta();
+  const { setMeta } = useMetaActions();
+  const scoreboardColors = useColor();
   const [customFightRule, setCustomFightRule] = useState(meta.fightRule || "");
 
   const fightRules = ["FT1", "FT2", "FT3", "FT4", "FT5"];
@@ -72,8 +70,8 @@ const MetaPanel: React.FC<MetaPanelProps> = ({ setMeta, meta }) => {
               style={{
                 fontSize: 14,
                 backgroundColor: colors.background.card,
-                color: colors.text.primary,
-                borderColor: colors.border.primary,
+                color: scoreboardColors?.tournamentTitleColor || colors.text.primary,
+                borderColor: scoreboardColors?.mainColor || colors.border.primary,
               }}
             />
           </Form.Group>
@@ -98,7 +96,7 @@ const MetaPanel: React.FC<MetaPanelProps> = ({ setMeta, meta }) => {
                     style={{
                       minWidth: 50,
                       fontSize: 12,
-                      backgroundColor:
+                      background:
                         meta.fightRule === rule
                           ? colors.background.accent
                           : "transparent",
@@ -114,8 +112,6 @@ const MetaPanel: React.FC<MetaPanelProps> = ({ setMeta, meta }) => {
                 ))}
               </ButtonGroup>
             </div>
-
-            {/* Отдельный ряд для None */}
             <div className="d-flex gap-1 flex-wrap mb-2">
               <Button
                 variant={
@@ -139,56 +135,19 @@ const MetaPanel: React.FC<MetaPanelProps> = ({ setMeta, meta }) => {
                 None
               </Button>
             </div>
-
-            <div className="d-flex flex-column gap-2">
-              <Button
-                variant={
-                  meta.fightRule === "Custom" ||
-                  (!fightRules.includes(meta.fightRule) &&
-                    meta.fightRule !== "None")
-                    ? "primary"
-                    : "outline-primary"
-                }
-                onClick={() => handleFightRuleChange("Custom")}
-                className="fw-bold w-100"
-                style={{
-                  fontSize: 12,
-                  background:
-                    meta.fightRule === "Custom" ||
-                    (!fightRules.includes(meta.fightRule) &&
-                      meta.fightRule !== "None")
-                      ? colors.background.accent
-                      : "transparent",
-                  borderColor: colors.border.accent,
-                  color:
-                    meta.fightRule === "Custom" ||
-                    (!fightRules.includes(meta.fightRule) &&
-                      meta.fightRule !== "None")
-                      ? colors.text.light
-                      : colors.text.accent,
-                }}
-              >
-                Custom
-              </Button>
-              {(meta.fightRule === "Custom" ||
-                (customFightRule &&
-                  !fightRules.includes(meta.fightRule) &&
-                  meta.fightRule !== "None")) && (
-                <Form.Control
-                  type="text"
-                  placeholder="Кастомный режим (например: FT10, BO3)"
-                  value={customFightRule || ""}
-                  onChange={(e) => handleCustomFightRuleChange(e.target.value)}
-                  className="border-warning border-2 fw-bold rounded-3"
-                  style={{
-                    fontSize: 12,
-                    backgroundColor: colors.background.card,
-                    color: colors.text.primary,
-                    borderColor: colors.border.warning,
-                  }}
-                />
-              )}
-            </div>
+            <Form.Control
+              type="text"
+              placeholder="Или введите свой режим"
+              value={customFightRule}
+              onChange={(e) => handleCustomFightRuleChange(e.target.value)}
+              className="border-secondary border-2 fw-bold rounded-3"
+              style={{
+                fontSize: 14,
+                backgroundColor: colors.background.card,
+                color: scoreboardColors?.fightModeColor || colors.text.primary,
+                borderColor: scoreboardColors?.mainColor || colors.border.secondary,
+              }}
+            />
           </Form.Group>
         </div>
       </Card.Body>

@@ -1,10 +1,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useState } from "react";
 
-import { logger } from "../../../app/main";
+import { useScoreboardStore } from "./AdminPanel";
 import { defaultLayout, LayoutSettings } from "./AdminPanel/types";
 import styles from "./Scoreboard.module.scss";
-import { ScoreboardSignalRContext } from "./ScoreboardContext";
 
 type Player = {
   name: string;
@@ -88,6 +87,7 @@ const ScoreboardContent: React.FC = () => {
   const [isVisible, setIsVisible] = useState<boolean>(true);
   const [animationDuration, setAnimationDuration] = useState<number>(800);
   const [layout, setLayout] = useState<LayoutSettings>(defaultLayout);
+  const connection = useScoreboardStore((state) => state._connection);
 
   const handleReceiveState = useCallback((state: ScoreboardState) => {
     setPlayer1(state.player1);
@@ -108,24 +108,11 @@ const ScoreboardContent: React.FC = () => {
     }
   }, []);
 
-  // Подключение к SignalR хабу
-  ScoreboardSignalRContext.useSignalREffect(
-    "ReceiveState",
-    handleReceiveState,
-    [],
-  );
-  ScoreboardSignalRContext.useSignalREffect(
-    "StateUpdated",
-    handleReceiveState,
-    [],
-  );
-  ScoreboardSignalRContext.useSignalREffect(
-    "VisibilityChanged",
-    (isVisible: boolean) => {
-      setIsVisible(isVisible);
-    },
-    [],
-  );
+  connection.on("ReceiveState", handleReceiveState);
+  connection.on("StateUpdated", handleReceiveState);
+  connection.on("VisibilityChanged", (isVisible: boolean) => {
+    setIsVisible(isVisible);
+  });
 
   if (!isVisible) {
     return null;
@@ -267,6 +254,7 @@ const ScoreboardContent: React.FC = () => {
                 style={{
                   width: layout.scoreSize,
                   backgroundColor: colors.borderColor,
+                  height: layout.playerBarHeight,
                 }}
               >
                 <h3 style={{ color: colors.scoreColor }}>{player1.score}</h3>
@@ -342,6 +330,7 @@ const ScoreboardContent: React.FC = () => {
                 style={{
                   width: layout.scoreSize,
                   backgroundColor: colors.borderColor,
+                  height: layout.playerBarHeight,
                 }}
               >
                 <h3 style={{ color: colors.scoreColor }}>{player2.score}</h3>
@@ -354,19 +343,6 @@ const ScoreboardContent: React.FC = () => {
   );
 };
 
-const Scoreboard: React.FC = () => (
-  <ScoreboardSignalRContext.Provider
-    automaticReconnect={true}
-    onError={(error) => new Promise((resolve) => resolve(console.log(error)))}
-    onClosed={(event) => console.log(event)}
-    onOpen={(event) => console.log(event)}
-    logger={logger}
-    withCredentials={false}
-    url={import.meta.env.VITE_BASE_PATH + "scoreboardhub"}
-    logMessageContent
-  >
-    <ScoreboardContent />
-  </ScoreboardSignalRContext.Provider>
-);
+const Scoreboard: React.FC = () => <ScoreboardContent />;
 
 export default Scoreboard;

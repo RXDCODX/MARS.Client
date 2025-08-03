@@ -1,35 +1,25 @@
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { FaArrowsAlt, FaCompress } from "react-icons/fa";
 
-import { defaultLayout, LayoutSettings } from "./types";
+import { defaultLayout } from "./types";
+import { useLayout, useLayoutActions } from "./store/scoreboardStore";
 
-interface LayoutCardProps {
-  layout: LayoutSettings;
-  onLayoutChange: (layout: LayoutSettings) => void;
-  onReset?: () => void;
-}
+const LayoutCard: React.FC = () => {
+  const layout = useLayout();
+  const { setLayout } = useLayoutActions();
 
-const LayoutCard: React.FC<LayoutCardProps> = ({
-  layout,
-  onLayoutChange,
-  onReset,
-}) => {
   const handleChange = (
-    field: keyof LayoutSettings,
+    field: keyof typeof layout,
     value: number | boolean,
   ) => {
-    onLayoutChange({
+    setLayout({
       ...layout,
       [field]: value,
     });
   };
 
   const resetToDefaults = () => {
-    if (onReset) {
-      onReset();
-    } else {
-      onLayoutChange(defaultLayout);
-    }
+    setLayout(defaultLayout);
   };
 
   return (
@@ -127,21 +117,6 @@ const LayoutCard: React.FC<LayoutCardProps> = ({
             <h6 className="mb-3">Размеры</h6>
 
             <Form.Group className="mb-3">
-              <Form.Label>Высота заголовка (px)</Form.Label>
-              <Form.Range
-                min="40"
-                max="120"
-                value={layout.headerHeight}
-                onChange={(e) =>
-                  handleChange("headerHeight", parseInt(e.target.value))
-                }
-              />
-              <Form.Text className="text-muted">
-                {layout.headerHeight}px
-              </Form.Text>
-            </Form.Group>
-
-            <Form.Group className="mb-3">
               <Form.Label>Ширина заголовка (px)</Form.Label>
               <Form.Range
                 min="200"
@@ -157,25 +132,25 @@ const LayoutCard: React.FC<LayoutCardProps> = ({
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Высота панели игрока (px)</Form.Label>
+              <Form.Label>Высота заголовка (px)</Form.Label>
               <Form.Range
-                min="60"
+                min="40"
                 max="120"
-                value={layout.playerBarHeight}
+                value={layout.headerHeight}
                 onChange={(e) =>
-                  handleChange("playerBarHeight", parseInt(e.target.value))
+                  handleChange("headerHeight", parseInt(e.target.value))
                 }
               />
               <Form.Text className="text-muted">
-                {layout.playerBarHeight}px
+                {layout.headerHeight}px
               </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3">
-              <Form.Label>Ширина панели игрока (px)</Form.Label>
+              <Form.Label>Ширина карточки игрока (px)</Form.Label>
               <Form.Range
-                min="300"
-                max="800"
+                min="200"
+                max="600"
                 value={layout.playerBarWidth}
                 onChange={(e) =>
                   handleChange("playerBarWidth", parseInt(e.target.value))
@@ -187,10 +162,25 @@ const LayoutCard: React.FC<LayoutCardProps> = ({
             </Form.Group>
 
             <Form.Group className="mb-3">
+              <Form.Label>Высота карточки игрока (px)</Form.Label>
+              <Form.Range
+                min="60"
+                max="150"
+                value={layout.playerBarHeight}
+                onChange={(e) =>
+                  handleChange("playerBarHeight", parseInt(e.target.value))
+                }
+              />
+              <Form.Text className="text-muted">
+                {layout.playerBarHeight}px
+              </Form.Text>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
               <Form.Label>Размер счета (px)</Form.Label>
               <Form.Range
-                min="40"
-                max="100"
+                min="30"
+                max="80"
                 value={layout.scoreSize}
                 onChange={(e) =>
                   handleChange("scoreSize", parseInt(e.target.value))
@@ -198,73 +188,69 @@ const LayoutCard: React.FC<LayoutCardProps> = ({
               />
               <Form.Text className="text-muted">{layout.scoreSize}px</Form.Text>
             </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Размер флага (px)</Form.Label>
-              <Form.Range
-                min="16"
-                max="48"
-                value={layout.flagSize}
-                onChange={(e) =>
-                  handleChange("flagSize", parseInt(e.target.value))
-                }
-              />
-              <Form.Text className="text-muted">{layout.flagSize}px</Form.Text>
-            </Form.Group>
           </Col>
         </Row>
 
-        <Row
-          className="mt-3 justify-content-center w-75"
-          style={{
-            background: "var(--site-bg-tertiary)",
-            border: "2px solid var(--site-border-accent)",
-            borderRadius: "20px",
-          }}
-        >
-          {/* Видимость */}
-          <Col md={6}>
-            <h6 className="mb-3">Видимость элементов</h6>
-
-            <Form.Group className="mb-3 justify-content-lg-center">
-              <Form.Check
-                type="switch"
-                id="showHeader"
-                label="Показывать заголовок"
-                checked={layout.showHeader}
-                onChange={(e) => handleChange("showHeader", e.target.checked)}
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Check
-                type="switch"
-                id="showFlags"
-                label="Показывать флаги"
-                checked={layout.showFlags}
-                onChange={(e) => handleChange("showFlags", e.target.checked)}
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Check
-                type="switch"
-                id="showSponsors"
-                label="Показывать спонсоров"
-                checked={layout.showSponsors}
-                onChange={(e) => handleChange("showSponsors", e.target.checked)}
-              />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Check
-                type="switch"
-                id="showTags"
-                label="Показывать теги"
-                checked={layout.showTags}
-                onChange={(e) => handleChange("showTags", e.target.checked)}
-              />
-            </Form.Group>
+        {/* Дополнительные настройки */}
+        <Row className="w-100 mt-3">
+          <Col md={12}>
+            <h6 className="mb-3">Дополнительные настройки</h6>
+            <Row>
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Отступы (px)</Form.Label>
+                  <Form.Range
+                    min="5"
+                    max="30"
+                    value={layout.padding}
+                    onChange={(e) =>
+                      handleChange("padding", parseInt(e.target.value))
+                    }
+                  />
+                  <Form.Text className="text-muted">
+                    {layout.padding}px
+                  </Form.Text>
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Label>Расстояние между элементами (px)</Form.Label>
+                  <Form.Range
+                    min="5"
+                    max="50"
+                    value={layout.spacing}
+                    onChange={(e) =>
+                      handleChange("spacing", parseInt(e.target.value))
+                    }
+                  />
+                  <Form.Text className="text-muted">
+                    {layout.spacing}px
+                  </Form.Text>
+                </Form.Group>
+              </Col>
+              <Col md={4}>
+                <Form.Group className="mb-3">
+                  <Form.Check
+                    type="checkbox"
+                    label="Показывать заголовок"
+                    checked={layout.showHeader}
+                    onChange={(e) => handleChange("showHeader", e.target.checked)}
+                  />
+                  <Form.Check
+                    type="checkbox"
+                    label="Показывать флаги"
+                    checked={layout.showFlags}
+                    onChange={(e) => handleChange("showFlags", e.target.checked)}
+                  />
+                  <Form.Check
+                    type="checkbox"
+                    label="Показывать теги"
+                    checked={layout.showTags}
+                    onChange={(e) => handleChange("showTags", e.target.checked)}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
           </Col>
         </Row>
 

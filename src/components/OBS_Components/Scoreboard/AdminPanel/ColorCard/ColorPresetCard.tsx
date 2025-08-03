@@ -1,33 +1,28 @@
 import { useEffect, useState } from "react";
-import { Button, Card, Col, Form, Row } from "react-bootstrap";
+import { Button, Card, Col, Row } from "react-bootstrap";
 import { Palette } from "react-bootstrap-icons";
 
 import { useSiteColors } from "../../../../../shared/Utils/useSiteColors";
+import { useColor, useColorActions } from "../store/scoreboardStore";
 import { ColorPreset, defaultPreset } from "../types";
 import ColorPickerWithTransparency from "./ColorPickerWithTransparency";
 
-type ColorPresetCardProps = {
-  onColorChange: (colors: Partial<ColorPreset>) => void;
-  currentColors?: ColorPreset;
-};
-
-const ColorPresetCard: React.FC<ColorPresetCardProps> = ({
-  onColorChange,
-  currentColors,
-}) => {
+const ColorPresetCard: React.FC = () => {
   const colors = useSiteColors();
+  const scoreboardColors = useColor();
+  const { handleColorChange } = useColorActions();
   const [customColors, setCustomColors] = useState(
-    currentColors || defaultPreset,
+    scoreboardColors || defaultPreset,
   );
 
   // Синхронизируем локальное состояние с внешними цветами
   useEffect(() => {
-    if (currentColors) {
-      setCustomColors(currentColors);
+    if (scoreboardColors) {
+      setCustomColors(scoreboardColors);
     }
-  }, [currentColors]);
+  }, [scoreboardColors]);
 
-  const colorPresets: ColorPreset[] = [
+  const colorPresets = [
     defaultPreset,
     {
       name: "Classic Blue",
@@ -75,7 +70,7 @@ const ColorPresetCard: React.FC<ColorPresetCardProps> = ({
       playerNamesColor: "#ffffff",
       tournamentTitleColor: "#ffc107",
       fightModeColor: "#ffc107",
-      scoreColor: "#ffc107",
+      scoreColor: "#ffffff",
       backgroundColor: "#23272f",
       borderColor: "#ffc107",
     },
@@ -89,25 +84,35 @@ const ColorPresetCard: React.FC<ColorPresetCardProps> = ({
       backgroundColor: "#000000",
       borderColor: "#00ff88",
     },
+    {
+      name: "Neon Blue",
+      mainColor: "#0088ff",
+      playerNamesColor: "#ffffff",
+      tournamentTitleColor: "#0088ff",
+      fightModeColor: "#0088ff",
+      scoreColor: "#ffffff",
+      backgroundColor: "#000000",
+      borderColor: "#0088ff",
+    },
   ];
 
   const applyPreset = (preset: ColorPreset) => {
     setCustomColors(preset);
-    onColorChange(preset);
+    handleColorChange(preset);
   };
 
   const handleCustomColorChange = (
     field: keyof typeof customColors,
     value: string,
   ) => {
-    const newColors = { ...customColors, [field]: value };
-    setCustomColors(newColors);
-    onColorChange(newColors);
+    const updatedColors = { ...customColors, [field]: value };
+    setCustomColors(updatedColors);
+    handleColorChange(updatedColors);
   };
 
   return (
     <Card
-      className="shadow-lg p-4 mb-4 text-center"
+      className="shadow-lg p-4 mb-4"
       style={{
         backgroundColor: colors.background.card,
         borderRadius: 18,
@@ -115,11 +120,15 @@ const ColorPresetCard: React.FC<ColorPresetCardProps> = ({
       }}
     >
       <Card.Body>
-        <div className="d-flex flex-column align-items-center mb-3 gap-2 text-center">
-          <Palette color={colors.text.accent} size={22} />
+        <div className="d-flex flex-column align-items-center mb-4 gap-2">
+          <Palette color={colors.text.accent} size={24} />
           <span
             className="fw-bold text-uppercase"
-            style={{ color: colors.text.accent, letterSpacing: 1 }}
+            style={{
+              color: colors.text.accent,
+              letterSpacing: 1,
+              fontSize: 16,
+            }}
           >
             Color Presets
           </span>
@@ -127,155 +136,147 @@ const ColorPresetCard: React.FC<ColorPresetCardProps> = ({
 
         {/* Пресеты цветов */}
         <div className="mb-4">
-          <h6 className="fw-bold mb-3" style={{ color: colors.text.primary }}>
-            Presets:
+          <h6
+            className="fw-bold mb-3"
+            style={{ color: colors.text.primary, fontSize: 14 }}
+          >
+            Быстрые пресеты
           </h6>
-          <div className="d-flex flex-wrap justify-content-center gap-2">
-            {colorPresets.map((preset) => (
-              <Button
-                key={preset.name}
-                variant="outline-primary"
-                size="sm"
-                onClick={() => applyPreset(preset)}
-                className="fw-bold"
-                style={{
-                  borderColor: preset.mainColor,
-                  color: preset.mainColor,
-                  minWidth: 100,
-                }}
-              >
-                {preset.name}
-              </Button>
+          <Row className="g-2">
+            {colorPresets.map((preset, index) => (
+              <Col key={index} xs={6} sm={4} md={3}>
+                <Button
+                  variant="outline-primary"
+                  size="sm"
+                  className="w-100 fw-bold"
+                  onClick={() => applyPreset(preset)}
+                  style={{
+                    fontSize: 11,
+                    borderColor: preset.mainColor,
+                    color: preset.mainColor,
+                    minHeight: 40,
+                  }}
+                >
+                  {preset.name || "Default"}
+                </Button>
+              </Col>
             ))}
-          </div>
+          </Row>
         </div>
 
         {/* Кастомные цвета */}
         <div>
-          <h6 className="fw-bold mb-3" style={{ color: colors.text.primary }}>
-            Custom Colors:
+          <h6
+            className="fw-bold mb-3"
+            style={{ color: colors.text.primary, fontSize: 14 }}
+          >
+            Кастомные цвета
           </h6>
-          <Row className="g-3 d-flex justify-content-center">
-            <Col xs={6} md={3}>
-              <Form.Group>
-                <Form.Label
-                  className="fw-bold small"
-                  style={{ color: colors.text.primary }}
-                >
-                  Main Color (Tags & Glow)
-                </Form.Label>
+          <Row className="g-3">
+            <Col xs={12} sm={6}>
+              <div>
+                <label className="fw-bold small mb-2 d-block">
+                  Основной цвет
+                </label>
                 <ColorPickerWithTransparency
-                  value={customColors.mainColor}
-                  onChange={(value) =>
-                    handleCustomColorChange("mainColor", value)
+                  value={customColors.mainColor || "#3F00FF"}
+                  onChange={(color) =>
+                    handleCustomColorChange("mainColor", color)
                   }
-                  placeholder="hex или rgba"
                 />
-              </Form.Group>
+              </div>
             </Col>
-            <Col xs={6} md={3}>
-              <Form.Group>
-                <Form.Label
-                  className="fw-bold small"
-                  style={{ color: colors.text.primary }}
-                >
-                  Player Names
-                </Form.Label>
+            <Col xs={12} sm={6}>
+              <div>
+                <label className="fw-bold small mb-2 d-block">
+                  Цвет имен игроков
+                </label>
                 <ColorPickerWithTransparency
-                  value={customColors.playerNamesColor}
-                  onChange={(value) =>
-                    handleCustomColorChange("playerNamesColor", value)
+                  value={customColors.playerNamesColor || "#FFFFFF"}
+                  onChange={(color) =>
+                    handleCustomColorChange("playerNamesColor", color)
                   }
-                  placeholder="hex или rgba"
                 />
-              </Form.Group>
+              </div>
             </Col>
-            <Col xs={6} md={3}>
-              <Form.Group>
-                <Form.Label
-                  className="fw-bold small"
-                  style={{ color: colors.text.primary }}
-                >
-                  Tournament Title
-                </Form.Label>
+            <Col xs={12} sm={6}>
+              <div>
+                <label className="fw-bold small mb-2 d-block">
+                  Цвет заголовка турнира
+                </label>
                 <ColorPickerWithTransparency
-                  value={customColors.tournamentTitleColor}
-                  onChange={(value) =>
-                    handleCustomColorChange("tournamentTitleColor", value)
+                  value={customColors.tournamentTitleColor || "#FFFFFF"}
+                  onChange={(color) =>
+                    handleCustomColorChange("tournamentTitleColor", color)
                   }
-                  placeholder="hex или rgba"
                 />
-              </Form.Group>
+              </div>
             </Col>
-            <Col xs={6} md={3}>
-              <Form.Group>
-                <Form.Label
-                  className="fw-bold small"
-                  style={{ color: colors.text.primary }}
-                >
-                  Fight Mode
-                </Form.Label>
+            <Col xs={12} sm={6}>
+              <div>
+                <label className="fw-bold small mb-2 d-block">
+                  Цвет режима боя
+                </label>
                 <ColorPickerWithTransparency
-                  value={customColors.fightModeColor}
-                  onChange={(value) =>
-                    handleCustomColorChange("fightModeColor", value)
+                  value={customColors.fightModeColor || "#FFFFFF"}
+                  onChange={(color) =>
+                    handleCustomColorChange("fightModeColor", color)
                   }
-                  placeholder="hex или rgba"
                 />
-              </Form.Group>
+              </div>
             </Col>
-            <Col xs={6} md={3}>
-              <Form.Group>
-                <Form.Label
-                  className="fw-bold small"
-                  style={{ color: colors.text.primary }}
-                >
-                  Score Color
-                </Form.Label>
+            <Col xs={12} sm={6}>
+              <div>
+                <label className="fw-bold small mb-2 d-block">Цвет счета</label>
                 <ColorPickerWithTransparency
-                  value={customColors.scoreColor}
-                  onChange={(value) =>
-                    handleCustomColorChange("scoreColor", value)
+                  value={customColors.scoreColor || "#FFFFFF"}
+                  onChange={(color) =>
+                    handleCustomColorChange("scoreColor", color)
                   }
-                  placeholder="hex или rgba"
                 />
-              </Form.Group>
+              </div>
             </Col>
-            <Col xs={6} md={3}>
-              <Form.Group>
-                <Form.Label
-                  className="fw-bold small"
-                  style={{ color: colors.text.primary }}
-                >
-                  Background
-                </Form.Label>
+            <Col xs={12} sm={6}>
+              <div>
+                <label className="fw-bold small mb-2 d-block">Цвет фона</label>
                 <ColorPickerWithTransparency
-                  value={customColors.backgroundColor}
-                  onChange={(value) =>
-                    handleCustomColorChange("backgroundColor", value)
+                  value={customColors.backgroundColor || "rgba(0, 0, 0, 0.8)"}
+                  onChange={(color) =>
+                    handleCustomColorChange("backgroundColor", color)
                   }
-                  placeholder="hex или rgba"
                 />
-              </Form.Group>
+              </div>
             </Col>
-            <Col xs={6} md={3}>
-              <Form.Group>
-                <Form.Label
-                  className="fw-bold small"
-                  style={{ color: colors.text.primary }}
-                >
-                  Border Color
-                </Form.Label>
+            <Col xs={12}>
+              <div>
+                <label className="fw-bold small mb-2 d-block">
+                  Цвет границ
+                </label>
                 <ColorPickerWithTransparency
-                  value={customColors.borderColor}
-                  onChange={(value) =>
-                    handleCustomColorChange("borderColor", value)
+                  value={customColors.borderColor || "#3F00FF"}
+                  onChange={(color) =>
+                    handleCustomColorChange("borderColor", color)
                   }
-                  placeholder="hex или rgba"
                 />
-              </Form.Group>
+              </div>
             </Col>
           </Row>
+        </div>
+
+        {/* Кнопка сброса */}
+        <div className="d-flex justify-content-center mt-4">
+          <Button
+            variant="outline-secondary"
+            size="sm"
+            onClick={() => applyPreset(defaultPreset)}
+            className="fw-bold"
+            style={{
+              borderColor: colors.border.secondary,
+              color: colors.text.secondary,
+            }}
+          >
+            Сбросить к умолчанию
+          </Button>
         </div>
       </Card.Body>
     </Card>

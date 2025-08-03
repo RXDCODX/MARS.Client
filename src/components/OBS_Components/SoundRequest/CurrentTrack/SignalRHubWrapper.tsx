@@ -1,4 +1,4 @@
-import { logger } from "../../../../app/main";
+import { logger } from "../../../../shared/logger";
 import { SignalRContext } from ".";
 import CurrentTrackManager from "./CurrentTrackManager";
 
