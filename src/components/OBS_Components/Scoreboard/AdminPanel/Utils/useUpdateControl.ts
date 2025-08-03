@@ -15,9 +15,10 @@ export const useUpdateControl = (): UpdateControl => {
   const lastUpdateTimeRef = useRef<number>(0);
   const pendingUpdatesRef = useRef<Set<string>>(new Set());
 
-  const generateUpdateId = useCallback(() => {
-    return `update_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  }, []);
+  const generateUpdateId = useCallback(
+    () => `update_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    [],
+  );
 
   const startUpdate = useCallback((updateId?: string): boolean => {
     // Проверяем, не отправляем ли мы уже обновление
@@ -29,7 +30,7 @@ export const useUpdateControl = (): UpdateControl => {
     // Устанавливаем флаг обновления
     isUpdatingRef.current = true;
     lastUpdateTimeRef.current = Date.now();
-    
+
     if (updateId) {
       pendingUpdatesRef.current.add(updateId);
     }
@@ -74,4 +75,4 @@ export const useUpdateControl = (): UpdateControl => {
     shouldIgnoreUpdate,
     generateUpdateId,
   };
-}; 
+};

@@ -198,6 +198,7 @@ export const useAdminState = () => {
           console.log("Updating color from server");
           return {
             ...state.colors,
+            _lastEdit: prev._lastEdit,
             _receivedAt: now,
           };
         }
@@ -300,6 +301,7 @@ export const useAdminState = () => {
       setPlayer1State({ ...state.player1, _lastEdit: now });
       setPlayer2State({ ...state.player2, _lastEdit: now });
       setMetaState({ ...state.meta, _lastEdit: now });
+      setColor({ ...state.colors, _lastEdit: now });
       setIsVisibleState(state.isVisible);
 
       const serverState = createServerState();
@@ -377,6 +379,7 @@ export const useAdminState = () => {
     setPlayer2State({ ...initialState.player2, _lastEdit: now });
     setMetaState({ ...initialState.meta, _lastEdit: now });
     setIsVisibleState(initialState.isVisible);
+    setColor({ ...defaultPreset, _lastEdit: now });
     setAnimationDurationState(initialState.animationDuration ?? 1000);
 
     sendToServer("UpdateState", initialState, updateId);
@@ -386,23 +389,38 @@ export const useAdminState = () => {
   const handleColorChange = useCallback(
     (colorUpdate: Partial<ColorPreset>) => {
       const updateId = updateControl.generateUpdateId();
+      const now = Date.now();
       const currentColors = {
-        mainColor: "#3F00FF",
-        playerNamesColor: "#ffffff",
-        tournamentTitleColor: "#3F00FF",
-        fightModeColor: "#3F00FF",
-        scoreColor: "#ffffff",
-        backgroundColor: "#23272f",
-        borderColor: "#3F00FF",
+        mainColor: color.mainColor,
+        playerNamesColor: color.playerNamesColor,
+        tournamentTitleColor: color.tournamentTitleColor,
+        fightModeColor: color.fightModeColor,
+        scoreColor: color.scoreColor,
+        backgroundColor: color.backgroundColor,
+        borderColor: color.borderColor,
         ...colorUpdate,
       };
+
+      // Обновляем локальное состояние цветов
+      setColor((prev) => ({ ...prev, ...colorUpdate, _lastEdit: now }));
 
       // Отправляем полное состояние на сервер
       const serverState = createServerState();
       serverState.colors = currentColors;
       sendToServer("UpdateState", serverState, updateId);
     },
-    [createServerState, sendToServer, updateControl],
+    [
+      color.backgroundColor,
+      color.borderColor,
+      color.fightModeColor,
+      color.mainColor,
+      color.playerNamesColor,
+      color.scoreColor,
+      color.tournamentTitleColor,
+      createServerState,
+      sendToServer,
+      updateControl,
+    ],
   );
 
   const setLayout = useCallback(
@@ -423,6 +441,7 @@ export const useAdminState = () => {
     player1,
     player2,
     meta,
+    color,
     isVisible,
     animationDuration,
     layout,

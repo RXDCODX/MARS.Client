@@ -8,12 +8,12 @@ import ThemeToggle from "../../../ThemeToggle";
 import { ScoreboardSignalRContext } from "../ScoreboardContext";
 import ActionButtons from "./ActionButtons";
 import styles from "./AdminPanel.module.scss";
+import ColorPresetCard from "./ColorCard/ColorPresetCard";
 import LayoutCard from "./LayoutCard";
 import MetaPanel from "./MetaPanel/MetaPanel";
 import PlayerCard from "./PlayerCard/PlayerCard";
 import { defaultLayout } from "./types";
 import { useAdminState } from "./useAdminState";
-import ColorPresetCard from "./Utils/ColorPresetCard";
 import VisibilityCard from "./VisibilityCard/VisibilityCard";
 
 const AdminPanelContent = () => {
@@ -22,6 +22,7 @@ const AdminPanelContent = () => {
     player1,
     player2,
     meta,
+    color,
     isVisible,
     animationDuration,
     layout,
@@ -132,7 +133,10 @@ const AdminPanelContent = () => {
       />
 
       {/* Color Preset Panel */}
-      <ColorPresetCard onColorChange={handleColorChange} />
+      <ColorPresetCard
+        onColorChange={handleColorChange}
+        currentColors={color}
+      />
 
       {/* Players Cards */}
       <Row className="justify-content-center align-items-center g-4">

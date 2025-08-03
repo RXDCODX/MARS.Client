@@ -8,11 +8,24 @@ import ColorPickerWithTransparency from "./ColorPickerWithTransparency";
 
 type ColorPresetCardProps = {
   onColorChange: (colors: Partial<ColorPreset>) => void;
+  currentColors?: ColorPreset;
 };
 
-const ColorPresetCard: React.FC<ColorPresetCardProps> = ({ onColorChange }) => {
+const ColorPresetCard: React.FC<ColorPresetCardProps> = ({
+  onColorChange,
+  currentColors,
+}) => {
   const colors = useSiteColors();
-  const [customColors, setCustomColors] = useState(defaultPreset);
+  const [customColors, setCustomColors] = useState(
+    currentColors || defaultPreset,
+  );
+
+  // Синхронизируем локальное состояние с внешними цветами
+  useEffect(() => {
+    if (currentColors) {
+      setCustomColors(currentColors);
+    }
+  }, [currentColors]);
 
   const colorPresets: ColorPreset[] = [
     defaultPreset,
@@ -77,11 +90,6 @@ const ColorPresetCard: React.FC<ColorPresetCardProps> = ({ onColorChange }) => {
       borderColor: "#00ff88",
     },
   ];
-
-  // Применяем дефолтный пресет при загрузке компонента
-  useEffect(() => {
-    onColorChange(defaultPreset);
-  }, [onColorChange]);
 
   const applyPreset = (preset: ColorPreset) => {
     setCustomColors(preset);
