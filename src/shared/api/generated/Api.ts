@@ -1046,7 +1046,41 @@ export interface ScoreboardDto {
   animationDuration: number;
   colors: ScoreboardColorsDto;
   isVisible: boolean;
+  layout: ScoreboardLayoutDto | undefined;
   meta: ScoreboardMetaDto;
+}
+
+export interface ScoreboardLayoutDto {
+  /** @format int32 */
+  flagSize: number;
+  /** @format int32 */
+  headerHeight: number;
+  /** @format int32 */
+  headerLeft: number;
+  /** @format int32 */
+  headerTop: number;
+  /** @format int32 */
+  headerWidth: number;
+  /** @format int32 */
+  padding: number;
+  /** @format int32 */
+  playerBarHeight: number;
+  /** @format int32 */
+  playerBarWidth: number;
+  /** @format int32 */
+  playersLeft: number;
+  /** @format int32 */
+  playersRight: number;
+  /** @format int32 */
+  playersTop: number;
+  /** @format int32 */
+  scoreSize: number;
+  showFlags: boolean;
+  showHeader: boolean;
+  showSponsors: boolean;
+  showTags: boolean;
+  /** @format int32 */
+  spacing: number;
 }
 
 export interface ScoreboardMetaDto {

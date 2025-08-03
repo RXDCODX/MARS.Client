@@ -4,8 +4,10 @@ import { useCallback, useState } from "react";
 import { ScoreboardDto } from "../../../../shared/api/generated/Api";
 import { ScoreboardSignalRContext } from "../ScoreboardContext";
 import {
+  ColorInfoWIthTimestamp,
   ColorPreset,
   defaultLayout,
+  defaultPreset,
   LayoutSettings,
   MetaInfo,
   MetaInfoWithTimestamp,
@@ -48,6 +50,7 @@ export const useAdminState = () => {
     _receivedAt: 0,
   });
 
+  const [color, setColor] = useState<ColorInfoWIthTimestamp>(defaultPreset);
   const [isVisible, setIsVisibleState] = useState<boolean>(true);
   const [animationDuration, setAnimationDurationState] = useState<number>(800);
   const [layout, setLayoutState] = useState<LayoutSettings>(defaultLayout);
@@ -98,10 +101,12 @@ export const useAdminState = () => {
       updatedPlayer1?: PlayerWithTimestamp,
       updatedPlayer2?: PlayerWithTimestamp,
       updatedMeta?: MetaInfoWithTimestamp,
+      updatedColor?: ColorPreset,
     ) => {
       const currentPlayer1 = updatedPlayer1 || player1;
       const currentPlayer2 = updatedPlayer2 || player2;
       const currentMeta = updatedMeta || meta;
+      const currentColor = updatedColor || color;
 
       return {
         player1: {
@@ -125,20 +130,20 @@ export const useAdminState = () => {
           fightRule: currentMeta.fightRule,
         },
         colors: {
-          mainColor: "#3F00FF",
-          playerNamesColor: "#ffffff",
-          tournamentTitleColor: "#3F00FF",
-          fightModeColor: "#3F00FF",
-          scoreColor: "#ffffff",
-          backgroundColor: "#23272f",
-          borderColor: "#3F00FF",
+          mainColor: currentColor.mainColor,
+          playerNamesColor: currentColor.playerNamesColor,
+          tournamentTitleColor: currentColor.tournamentTitleColor,
+          fightModeColor: currentColor.fightModeColor,
+          scoreColor: currentColor.scoreColor,
+          backgroundColor: currentColor.backgroundColor,
+          borderColor: currentColor.borderColor,
         },
         isVisible,
         animationDuration,
         layout,
       };
     },
-    [player1, player2, meta, isVisible, animationDuration, layout],
+    [player1, player2, meta, isVisible, animationDuration, layout, color],
   );
 
   const handleReceiveState = useCallback(
@@ -188,6 +193,19 @@ export const useAdminState = () => {
           return { ...state.meta, _lastEdit: prev._lastEdit, _receivedAt: now };
         }
         console.log("Keeping local meta state");
+        return prev;
+      });
+
+      setColor((prev) => {
+        const shouldUpdate = !prev._lastEdit || prev._lastEdit < now - 1000;
+        if (shouldUpdate) {
+          console.log("Updating color from server");
+          return {
+            ...state.colors,
+            _receivedAt: now,
+          };
+        }
+        console.log("Keeping local color state");
         return prev;
       });
 
@@ -324,7 +342,7 @@ export const useAdminState = () => {
   const reset = useCallback(async () => {
     const now = Date.now();
     const updateId = updateControl.generateUpdateId();
-    const initialState = {
+    const initialState: ScoreboardDto = {
       player1: {
         name: "Player 1",
         sponsor: "",
@@ -356,6 +374,7 @@ export const useAdminState = () => {
       },
       isVisible: true,
       animationDuration: 800,
+      layout: undefined,
     };
 
     setPlayer1State({ ...initialState.player1, _lastEdit: now });

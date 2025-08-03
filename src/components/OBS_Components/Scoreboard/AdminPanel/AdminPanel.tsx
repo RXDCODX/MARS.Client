@@ -12,7 +12,7 @@ import ColorPresetCard from "./ColorPresetCard";
 import LayoutCard from "./LayoutCard";
 import MetaPanel from "./MetaPanel";
 import PlayerCard from "./PlayerCard";
-import { defaultLayout, MetaInfo, Player } from "./types";
+import { defaultLayout } from "./types";
 import { useAdminState } from "./useAdminState";
 import VisibilityCard from "./VisibilityCard";
 
@@ -77,46 +77,6 @@ const AdminPanelContent = () => {
     }
   }, [navigate]);
 
-  // Дебаунсинг для обработчиков событий
-  const debouncedSetPlayer1 = useCallback(
-    (update: Partial<Player>) => {
-      const now = Date.now();
-      if (now - lastUpdateRef.current < 50) {
-        console.log("Debouncing player1 update");
-        return;
-      }
-      lastUpdateRef.current = now;
-      setPlayer1(update);
-    },
-    [setPlayer1],
-  );
-
-  const debouncedSetPlayer2 = useCallback(
-    (update: Partial<Player>) => {
-      const now = Date.now();
-      if (now - lastUpdateRef.current < 50) {
-        console.log("Debouncing player2 update");
-        return;
-      }
-      lastUpdateRef.current = now;
-      setPlayer2(update);
-    },
-    [setPlayer2],
-  );
-
-  const debouncedSetMeta = useCallback(
-    (update: Partial<MetaInfo>) => {
-      const now = Date.now();
-      if (now - lastUpdateRef.current < 50) {
-        console.log("Debouncing meta update");
-        return;
-      }
-      lastUpdateRef.current = now;
-      setMeta(update);
-    },
-    [setMeta],
-  );
-
   const handleSwapNames = useCallback(async () => {
     try {
       await setPlayer1({ ...player1, name: player2.name });
@@ -160,7 +120,7 @@ const AdminPanelContent = () => {
           />
         </Col>
         <Col xs={12} md={6} lg={6}>
-          <MetaPanel setMeta={debouncedSetMeta} meta={meta} />
+          <MetaPanel setMeta={() => setMeta(meta)} meta={meta} />
         </Col>
       </Row>
 
@@ -184,23 +144,23 @@ const AdminPanelContent = () => {
         >
           <PlayerCard
             player={player1}
-            onName={async (name) => {
+            onName={(name) => {
               try {
-                await debouncedSetPlayer1({ ...player1, name });
+                setPlayer1({ ...player1, name });
               } catch (error) {
                 console.error("Error updating player1 name:", error);
               }
             }}
-            onSponsor={async (sponsor) => {
+            onSponsor={(sponsor) => {
               try {
-                await debouncedSetPlayer1({ ...player1, sponsor });
+                setPlayer1({ ...player1, sponsor });
               } catch (error) {
                 console.error("Error updating player1 sponsor:", error);
               }
             }}
-            onScore={async (score) => {
+            onScore={(score) => {
               try {
-                await debouncedSetPlayer1({
+                setPlayer1({
                   ...player1,
                   score: Math.max(0, Math.min(99, score)),
                 });
@@ -208,37 +168,37 @@ const AdminPanelContent = () => {
                 console.error("Error updating player1 score:", error);
               }
             }}
-            onWin={async () => {
+            onWin={() => {
               try {
-                await debouncedSetPlayer1({ ...player1, final: "winner" });
+                setPlayer1({ ...player1, final: "winner" });
               } catch (error) {
                 console.error("Error setting player1 as winner:", error);
               }
             }}
-            onLose={async () => {
+            onLose={() => {
               try {
-                await debouncedSetPlayer1({ ...player1, final: "loser" });
+                setPlayer1({ ...player1, final: "loser" });
               } catch (error) {
                 console.error("Error setting player1 as loser:", error);
               }
             }}
-            onTag={async (tag) => {
+            onTag={(tag) => {
               try {
-                await debouncedSetPlayer1({ ...player1, tag });
+                setPlayer1({ ...player1, tag });
               } catch (error) {
                 console.error("Error updating player1 tag:", error);
               }
             }}
-            onFlag={async (flag) => {
+            onFlag={(flag) => {
               try {
-                await debouncedSetPlayer1({ ...player1, flag });
+                setPlayer1({ ...player1, flag });
               } catch (error) {
                 console.error("Error updating player1 flag:", error);
               }
             }}
-            onClearFinal={async () => {
+            onClearFinal={() => {
               try {
-                await debouncedSetPlayer1({ ...player1, final: "none" });
+                setPlayer1({ ...player1, final: "none" });
               } catch (error) {
                 console.error("Error clearing player1 final status:", error);
               }
@@ -267,23 +227,23 @@ const AdminPanelContent = () => {
         >
           <PlayerCard
             player={player2}
-            onName={async (name) => {
+            onName={(name) => {
               try {
-                await debouncedSetPlayer2({ ...player2, name });
+                setPlayer2({ ...player2, name });
               } catch (error) {
                 console.error("Error updating player2 name:", error);
               }
             }}
-            onSponsor={async (sponsor) => {
+            onSponsor={(sponsor) => {
               try {
-                await debouncedSetPlayer2({ ...player2, sponsor });
+                setPlayer2({ ...player2, sponsor });
               } catch (error) {
                 console.error("Error updating player2 sponsor:", error);
               }
             }}
-            onScore={async (score) => {
+            onScore={(score) => {
               try {
-                await debouncedSetPlayer2({
+                setPlayer2({
                   ...player2,
                   score: Math.max(0, Math.min(99, score)),
                 });
@@ -291,37 +251,37 @@ const AdminPanelContent = () => {
                 console.error("Error updating player2 score:", error);
               }
             }}
-            onWin={async () => {
+            onWin={() => {
               try {
-                await debouncedSetPlayer2({ ...player2, final: "winner" });
+                setPlayer2({ ...player2, final: "winner" });
               } catch (error) {
                 console.error("Error setting player2 as winner:", error);
               }
             }}
-            onLose={async () => {
+            onLose={() => {
               try {
-                await debouncedSetPlayer2({ ...player2, final: "loser" });
+                setPlayer2({ ...player2, final: "loser" });
               } catch (error) {
                 console.error("Error setting player2 as loser:", error);
               }
             }}
-            onTag={async (tag) => {
+            onTag={(tag) => {
               try {
-                await debouncedSetPlayer2({ ...player2, tag });
+                setPlayer2({ ...player2, tag });
               } catch (error) {
                 console.error("Error updating player2 tag:", error);
               }
             }}
-            onFlag={async (flag) => {
+            onFlag={(flag) => {
               try {
-                await debouncedSetPlayer2({ ...player2, flag });
+                setPlayer2({ ...player2, flag });
               } catch (error) {
                 console.error("Error updating player2 flag:", error);
               }
             }}
-            onClearFinal={async () => {
+            onClearFinal={() => {
               try {
-                await debouncedSetPlayer2({ ...player2, final: "none" });
+                setPlayer2({ ...player2, final: "none" });
               } catch (error) {
                 console.error("Error clearing player2 final status:", error);
               }

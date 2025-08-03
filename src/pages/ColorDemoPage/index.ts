@@ -1,1 +1,1 @@
-export { default } from './ColorDemoPage'; 
+export { default } from "./ColorDemoPage";

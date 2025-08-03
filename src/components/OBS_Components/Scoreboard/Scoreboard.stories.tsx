@@ -75,7 +75,7 @@ export const TournamentMatch: Story = {
     expect(playerNames.length).toBeGreaterThan(0);
 
     // Проверяем наличие счетов
-    const scores = canvasElement.querySelectorAll('h2');
+    const scores = canvasElement.querySelectorAll("h2");
     expect(scores.length).toBeGreaterThan(0);
   },
 };
@@ -114,7 +114,9 @@ export const Hidden: Story = {
 
     // В данном случае компонент может быть скрыт через SignalR
     // Проверяем базовую структуру
-    const container = canvasElement.querySelector('[class*="scoreboard-container"]');
+    const container = canvasElement.querySelector(
+      '[class*="scoreboard-container"]',
+    );
     expect(container).toBeInTheDocument();
   },
 };
@@ -171,7 +173,9 @@ export const CustomColors: Story = {
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие элементов с кастомными стилями
-    const styledElements = canvasElement.querySelectorAll('[style*="box-shadow"]');
+    const styledElements = canvasElement.querySelectorAll(
+      '[style*="box-shadow"]',
+    );
     expect(styledElements.length).toBeGreaterThan(0);
   },
-}; 
+};

@@ -17,6 +17,7 @@ import CurrentTrackSignalRHubWrapper from "../components/OBS_Components/SoundReq
 import WaifuAlerts from "../components/OBS_Components/WaifuAlerts/WaifuAlerts";
 import { Layout } from "../components/Site_Components/Layout";
 import AboutPage from "../pages/AboutPage";
+import CommandsPage from "../pages/CommandsPage/CommandsPage";
 import ContactsPage from "../pages/ContactsPage";
 import DocsPage from "../pages/DocsPage";
 import WelcomePage from "../pages/WelcomePage";
@@ -67,6 +68,14 @@ const PrivateRoutes = () => (
         element={
           <Layout>
             <ContactsPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/commands"
+        element={
+          <Layout>
+            <CommandsPage />
           </Layout>
         }
       />

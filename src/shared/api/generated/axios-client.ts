@@ -1472,6 +1472,63 @@ export interface ScoreboardDto {
 
   /**  */
   animationDuration: number;
+
+  /**  */
+  layout?: CombinedLayoutTypes;
+}
+
+/** ScoreboardLayoutDto */
+export interface ScoreboardLayoutDto {
+  /**  */
+  headerTop: number;
+
+  /**  */
+  headerLeft: number;
+
+  /**  */
+  playersTop: number;
+
+  /**  */
+  playersLeft: number;
+
+  /**  */
+  playersRight: number;
+
+  /**  */
+  headerHeight: number;
+
+  /**  */
+  headerWidth: number;
+
+  /**  */
+  playerBarHeight: number;
+
+  /**  */
+  playerBarWidth: number;
+
+  /**  */
+  scoreSize: number;
+
+  /**  */
+  flagSize: number;
+
+  /**  */
+  spacing: number;
+
+  /**  */
+  padding: number;
+
+  /**  */
+  showHeader: boolean;
+
+  /**  */
+  showFlags: boolean;
+
+  /**  */
+  showSponsors: boolean;
+
+  /**  */
+  showTags: boolean;
 }
 
 /** ScoreboardMetaDto */
@@ -2510,6 +2567,7 @@ export type CombinedPlayer1Types = ScoreboardPlayerDto;
 export type CombinedPlayer2Types = ScoreboardPlayerDto;
 export type CombinedMetaTypes = ScoreboardMetaDto;
 export type CombinedColorsTypes = ScoreboardColorsDto;
+export type CombinedLayoutTypes = ScoreboardLayoutDto;
 export enum EnumServiceInfoStatus {
   'Running' = 'Running',
   'Stopped' = 'Stopped',

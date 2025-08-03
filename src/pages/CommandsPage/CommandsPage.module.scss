@@ -1,0 +1,129 @@
+.selectedCommand {
+  transform: translateX(4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+.commandCard {
+  transition: all 0.2s ease-in-out;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.parameterInput {
+  transition: border-color 0.2s ease-in-out;
+  
+  &:focus {
+    border-color: var(--bs-primary);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  }
+}
+
+.resultContainer {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 8px;
+  border-left: 4px solid var(--bs-primary);
+}
+
+.commandList {
+  scrollbar-width: thin;
+  scrollbar-color: var(--bs-secondary) transparent;
+  
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--bs-secondary);
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: var(--bs-secondary-dark);
+  }
+}
+
+.loadingSpinner {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.platformCount {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+.commandDescription {
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+.parameterGroup {
+  border-left: 3px solid var(--bs-primary);
+  padding-left: 1rem;
+  margin-bottom: 1.5rem;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.executeButton {
+  min-width: 140px;
+}
+
+.cancelButton {
+  min-width: 100px;
+}
+
+.resultText {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.emptyState {
+  opacity: 0.6;
+  
+  .icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+}
+
+.tabGroup {
+  .btn-check:checked + .btn-outline-primary {
+    background-color: var(--bs-primary);
+    border-color: var(--bs-primary);
+    color: white;
+  }
+  
+  .btn-check:checked + .btn-outline-danger {
+    background-color: var(--bs-danger);
+    border-color: var(--bs-danger);
+    color: white;
+  }
+} 

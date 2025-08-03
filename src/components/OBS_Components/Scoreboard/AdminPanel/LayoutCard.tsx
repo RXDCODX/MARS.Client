@@ -1,7 +1,7 @@
-import React from "react";
-import { Card, Form, Row, Col, Button } from "react-bootstrap";
+import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { FaArrowsAlt, FaCompress } from "react-icons/fa";
-import { LayoutSettings, defaultLayout } from "./types";
+
+import { defaultLayout, LayoutSettings } from "./types";
 
 interface LayoutCardProps {
   layout: LayoutSettings;
@@ -9,8 +9,15 @@ interface LayoutCardProps {
   onReset?: () => void;
 }
 
-const LayoutCard: React.FC<LayoutCardProps> = ({ layout, onLayoutChange, onReset }) => {
-  const handleChange = (field: keyof LayoutSettings, value: number | boolean) => {
+const LayoutCard: React.FC<LayoutCardProps> = ({
+  layout,
+  onLayoutChange,
+  onReset,
+}) => {
+  const handleChange = (
+    field: keyof LayoutSettings,
+    value: number | boolean,
+  ) => {
     onLayoutChange({
       ...layout,
       [field]: value,
@@ -37,19 +44,21 @@ const LayoutCard: React.FC<LayoutCardProps> = ({ layout, onLayoutChange, onReset
           Сброс
         </Button>
       </Card.Header>
-      <Card.Body>
+      <Card.Body className="d-flex flex-column align-items-center">
         <Row>
           {/* Позиционирование */}
           <Col md={6}>
             <h6 className="mb-3">Позиционирование</h6>
-            
+
             <Form.Group className="mb-3">
               <Form.Label>Заголовок - отступ сверху (px)</Form.Label>
               <Form.Range
                 min="0"
                 max="200"
                 value={layout.headerTop}
-                onChange={(e) => handleChange("headerTop", parseInt(e.target.value))}
+                onChange={(e) =>
+                  handleChange("headerTop", parseInt(e.target.value))
+                }
               />
               <Form.Text className="text-muted">{layout.headerTop}px</Form.Text>
             </Form.Group>
@@ -60,7 +69,9 @@ const LayoutCard: React.FC<LayoutCardProps> = ({ layout, onLayoutChange, onReset
                 min="0"
                 max="100"
                 value={layout.headerLeft}
-                onChange={(e) => handleChange("headerLeft", parseInt(e.target.value))}
+                onChange={(e) =>
+                  handleChange("headerLeft", parseInt(e.target.value))
+                }
               />
               <Form.Text className="text-muted">{layout.headerLeft}%</Form.Text>
             </Form.Group>
@@ -71,9 +82,13 @@ const LayoutCard: React.FC<LayoutCardProps> = ({ layout, onLayoutChange, onReset
                 min="0"
                 max="200"
                 value={layout.playersTop}
-                onChange={(e) => handleChange("playersTop", parseInt(e.target.value))}
+                onChange={(e) =>
+                  handleChange("playersTop", parseInt(e.target.value))
+                }
               />
-              <Form.Text className="text-muted">{layout.playersTop}px</Form.Text>
+              <Form.Text className="text-muted">
+                {layout.playersTop}px
+              </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -82,9 +97,13 @@ const LayoutCard: React.FC<LayoutCardProps> = ({ layout, onLayoutChange, onReset
                 min="0"
                 max="200"
                 value={layout.playersLeft}
-                onChange={(e) => handleChange("playersLeft", parseInt(e.target.value))}
+                onChange={(e) =>
+                  handleChange("playersLeft", parseInt(e.target.value))
+                }
               />
-              <Form.Text className="text-muted">{layout.playersLeft}px</Form.Text>
+              <Form.Text className="text-muted">
+                {layout.playersLeft}px
+              </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -93,25 +112,33 @@ const LayoutCard: React.FC<LayoutCardProps> = ({ layout, onLayoutChange, onReset
                 min="0"
                 max="200"
                 value={layout.playersRight}
-                onChange={(e) => handleChange("playersRight", parseInt(e.target.value))}
+                onChange={(e) =>
+                  handleChange("playersRight", parseInt(e.target.value))
+                }
               />
-              <Form.Text className="text-muted">{layout.playersRight}px</Form.Text>
+              <Form.Text className="text-muted">
+                {layout.playersRight}px
+              </Form.Text>
             </Form.Group>
           </Col>
 
           {/* Размеры */}
           <Col md={6}>
             <h6 className="mb-3">Размеры</h6>
-            
+
             <Form.Group className="mb-3">
               <Form.Label>Высота заголовка (px)</Form.Label>
               <Form.Range
                 min="40"
                 max="120"
                 value={layout.headerHeight}
-                onChange={(e) => handleChange("headerHeight", parseInt(e.target.value))}
+                onChange={(e) =>
+                  handleChange("headerHeight", parseInt(e.target.value))
+                }
               />
-              <Form.Text className="text-muted">{layout.headerHeight}px</Form.Text>
+              <Form.Text className="text-muted">
+                {layout.headerHeight}px
+              </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -120,9 +147,13 @@ const LayoutCard: React.FC<LayoutCardProps> = ({ layout, onLayoutChange, onReset
                 min="200"
                 max="800"
                 value={layout.headerWidth}
-                onChange={(e) => handleChange("headerWidth", parseInt(e.target.value))}
+                onChange={(e) =>
+                  handleChange("headerWidth", parseInt(e.target.value))
+                }
               />
-              <Form.Text className="text-muted">{layout.headerWidth}px</Form.Text>
+              <Form.Text className="text-muted">
+                {layout.headerWidth}px
+              </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -131,9 +162,13 @@ const LayoutCard: React.FC<LayoutCardProps> = ({ layout, onLayoutChange, onReset
                 min="60"
                 max="120"
                 value={layout.playerBarHeight}
-                onChange={(e) => handleChange("playerBarHeight", parseInt(e.target.value))}
+                onChange={(e) =>
+                  handleChange("playerBarHeight", parseInt(e.target.value))
+                }
               />
-              <Form.Text className="text-muted">{layout.playerBarHeight}px</Form.Text>
+              <Form.Text className="text-muted">
+                {layout.playerBarHeight}px
+              </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -142,9 +177,13 @@ const LayoutCard: React.FC<LayoutCardProps> = ({ layout, onLayoutChange, onReset
                 min="300"
                 max="800"
                 value={layout.playerBarWidth}
-                onChange={(e) => handleChange("playerBarWidth", parseInt(e.target.value))}
+                onChange={(e) =>
+                  handleChange("playerBarWidth", parseInt(e.target.value))
+                }
               />
-              <Form.Text className="text-muted">{layout.playerBarWidth}px</Form.Text>
+              <Form.Text className="text-muted">
+                {layout.playerBarWidth}px
+              </Form.Text>
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -153,7 +192,9 @@ const LayoutCard: React.FC<LayoutCardProps> = ({ layout, onLayoutChange, onReset
                 min="40"
                 max="100"
                 value={layout.scoreSize}
-                onChange={(e) => handleChange("scoreSize", parseInt(e.target.value))}
+                onChange={(e) =>
+                  handleChange("scoreSize", parseInt(e.target.value))
+                }
               />
               <Form.Text className="text-muted">{layout.scoreSize}px</Form.Text>
             </Form.Group>
@@ -164,46 +205,28 @@ const LayoutCard: React.FC<LayoutCardProps> = ({ layout, onLayoutChange, onReset
                 min="16"
                 max="48"
                 value={layout.flagSize}
-                onChange={(e) => handleChange("flagSize", parseInt(e.target.value))}
+                onChange={(e) =>
+                  handleChange("flagSize", parseInt(e.target.value))
+                }
               />
               <Form.Text className="text-muted">{layout.flagSize}px</Form.Text>
             </Form.Group>
           </Col>
         </Row>
 
-        <Row className="mt-3">
-          {/* Отступы */}
-          <Col md={6}>
-            <h6 className="mb-3">Отступы</h6>
-            
-            <Form.Group className="mb-3">
-              <Form.Label>Общий отступ (px)</Form.Label>
-              <Form.Range
-                min="8"
-                max="32"
-                value={layout.spacing}
-                onChange={(e) => handleChange("spacing", parseInt(e.target.value))}
-              />
-              <Form.Text className="text-muted">{layout.spacing}px</Form.Text>
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Внутренний отступ (px)</Form.Label>
-              <Form.Range
-                min="8"
-                max="32"
-                value={layout.padding}
-                onChange={(e) => handleChange("padding", parseInt(e.target.value))}
-              />
-              <Form.Text className="text-muted">{layout.padding}px</Form.Text>
-            </Form.Group>
-          </Col>
-
+        <Row
+          className="mt-3 justify-content-center w-75"
+          style={{
+            background: "var(--site-bg-tertiary)",
+            border: "2px solid var(--site-border-accent)",
+            borderRadius: "20px",
+          }}
+        >
           {/* Видимость */}
           <Col md={6}>
             <h6 className="mb-3">Видимость элементов</h6>
-            
-            <Form.Group className="mb-3">
+
+            <Form.Group className="mb-3 justify-content-lg-center">
               <Form.Check
                 type="switch"
                 id="showHeader"
@@ -246,154 +269,23 @@ const LayoutCard: React.FC<LayoutCardProps> = ({ layout, onLayoutChange, onReset
         </Row>
 
         {/* Предварительный просмотр */}
-        <Row className="mt-4">
-          <Col>
-            <h6 className="mb-3">Предварительный просмотр</h6>
-            <div 
-              className="border rounded p-3"
-              style={{
-                height: "200px",
-                position: "relative",
-                backgroundColor: "#f8f9fa",
-                overflow: "hidden"
-              }}
-            >
-              {/* Заголовок */}
-              {layout.showHeader && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: `${layout.headerTop}px`,
-                    left: `${layout.headerLeft}%`,
-                    transform: "translateX(-50%)",
-                    width: `${layout.headerWidth}px`,
-                    height: `${layout.headerHeight}px`,
-                    backgroundColor: "rgba(0, 0, 0, 0.8)",
-                    border: "2px solid #3F00FF",
-                    borderRadius: "12px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "12px",
-                    color: "white"
-                  }}
-                >
-                  Заголовок
-                </div>
-              )}
+        <iframe
+          width={"1920"}
+          className="w-100"
+          src="/scoreboard"
+          style={{
+            background: "var(--site-bg-primary)",
+            border: "3px solid var(--site-border-accent)",
+            borderRadius: "20px",
+            display: "block",
+            margin: "5vh 5px",
 
-              {/* Игроки */}
-              <div
-                style={{
-                  position: "absolute",
-                  top: `${layout.playersTop}px`,
-                  left: `${layout.playersLeft}px`,
-                  right: `${layout.playersRight}px`,
-                  display: "flex",
-                  justifyContent: "space-between",
-                  gap: `${layout.spacing}px`
-                }}
-              >
-                {/* Левый игрок */}
-                <div
-                  style={{
-                    width: `${layout.playerBarWidth}px`,
-                    height: `${layout.playerBarHeight}px`,
-                    backgroundColor: "rgba(0, 0, 0, 0.8)",
-                    border: "2px solid #3F00FF",
-                    borderRadius: "12px",
-                    display: "flex",
-                    alignItems: "center",
-                    padding: `${layout.padding}px`,
-                    fontSize: "10px",
-                    color: "white"
-                  }}
-                >
-                  {layout.showFlags && (
-                    <div
-                      style={{
-                        width: `${layout.flagSize}px`,
-                        height: `${layout.flagSize * 0.6}px`,
-                        backgroundColor: "#666",
-                        borderRadius: "4px",
-                        marginRight: `${layout.spacing}px`
-                      }}
-                    />
-                  )}
-                  <div style={{ flex: 1, textAlign: "right" }}>
-                    <div>Игрок 1</div>
-                    {layout.showTags && <div style={{ fontSize: "8px" }}>Тег</div>}
-                    {layout.showSponsors && <div style={{ fontSize: "8px" }}>Спонсор</div>}
-                  </div>
-                  <div
-                    style={{
-                      width: `${layout.scoreSize}px`,
-                      height: `${layout.scoreSize}px`,
-                      backgroundColor: "#3F00FF",
-                      borderRadius: "50%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginLeft: `${layout.spacing}px`
-                    }}
-                  >
-                    0
-                  </div>
-                </div>
-
-                {/* Правый игрок */}
-                <div
-                  style={{
-                    width: `${layout.playerBarWidth}px`,
-                    height: `${layout.playerBarHeight}px`,
-                    backgroundColor: "rgba(0, 0, 0, 0.8)",
-                    border: "2px solid #3F00FF",
-                    borderRadius: "12px",
-                    display: "flex",
-                    alignItems: "center",
-                    padding: `${layout.padding}px`,
-                    fontSize: "10px",
-                    color: "white"
-                  }}
-                >
-                  <div
-                    style={{
-                      width: `${layout.scoreSize}px`,
-                      height: `${layout.scoreSize}px`,
-                      backgroundColor: "#3F00FF",
-                      borderRadius: "50%",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginRight: `${layout.spacing}px`
-                    }}
-                  >
-                    0
-                  </div>
-                  <div style={{ flex: 1, textAlign: "left" }}>
-                    <div>Игрок 2</div>
-                    {layout.showTags && <div style={{ fontSize: "8px" }}>Тег</div>}
-                    {layout.showSponsors && <div style={{ fontSize: "8px" }}>Спонсор</div>}
-                  </div>
-                  {layout.showFlags && (
-                    <div
-                      style={{
-                        width: `${layout.flagSize}px`,
-                        height: `${layout.flagSize * 0.6}px`,
-                        backgroundColor: "#666",
-                        borderRadius: "4px",
-                        marginLeft: `${layout.spacing}px`
-                      }}
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-          </Col>
-        </Row>
+            boxShadow: "0 2px 8px var(--bs-box-shadow-lg)",
+          }}
+        ></iframe>
       </Card.Body>
     </Card>
   );
 };
 
-export default LayoutCard; 
+export default LayoutCard;

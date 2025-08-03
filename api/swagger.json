@@ -224,26 +224,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "type": "string"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "type": "string"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "type": "string"
                 }
               }
             }
@@ -262,26 +253,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "type": "string"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "type": "string"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "type": "string"
                 }
               }
             }
@@ -656,6 +638,102 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Scoreboard/test": {
+      "get": {
+        "tags": [
+          "Scoreboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Scoreboard/state": {
+      "get": {
+        "tags": [
+          "Scoreboard"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Scoreboard"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ScoreboardDto"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ScoreboardDto"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ScoreboardDto"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Scoreboard/visibility": {
+      "post": {
+        "tags": [
+          "Scoreboard"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -1054,7 +1132,7 @@
         }
       }
     },
-    "/hubs/ScoreboardHub/GetCurrentState": {
+    "/scoreboard/GetCurrentState": {
       "post": {
         "tags": [
           "ScoreboardHub"
@@ -1062,7 +1140,7 @@
         "responses": { }
       }
     },
-    "/hubs/ScoreboardHub/GetHistory": {
+    "/scoreboard/GetHistory": {
       "post": {
         "tags": [
           "ScoreboardHub"
@@ -1110,7 +1188,7 @@
         }
       }
     },
-    "/hubs/ScoreboardHub/JoinAsClient": {
+    "/scoreboard/JoinAsClient": {
       "post": {
         "tags": [
           "ScoreboardHub"
@@ -1118,7 +1196,15 @@
         "responses": { }
       }
     },
-    "/hubs/ScoreboardHub/OnDisconnectedAsync": {
+    "/scoreboard/OnConnectedAsync": {
+      "post": {
+        "tags": [
+          "ScoreboardHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/scoreboard/OnDisconnectedAsync": {
       "post": {
         "tags": [
           "ScoreboardHub"
@@ -1135,7 +1221,7 @@
         "responses": { }
       }
     },
-    "/hubs/ScoreboardHub/SetPlayerFinal": {
+    "/scoreboard/SetPlayerFinal": {
       "post": {
         "tags": [
           "ScoreboardHub"
@@ -1160,7 +1246,7 @@
         "responses": { }
       }
     },
-    "/hubs/ScoreboardHub/SetVisibility": {
+    "/scoreboard/SetVisibility": {
       "post": {
         "tags": [
           "ScoreboardHub"
@@ -1177,7 +1263,7 @@
         "responses": { }
       }
     },
-    "/hubs/ScoreboardHub/UpdatePlayerScore": {
+    "/scoreboard/UpdatePlayerScore": {
       "post": {
         "tags": [
           "ScoreboardHub"
@@ -1203,7 +1289,7 @@
         "responses": { }
       }
     },
-    "/hubs/ScoreboardHub/UpdateState": {
+    "/scoreboard/UpdateState": {
       "post": {
         "tags": [
           "ScoreboardHub"
@@ -4963,6 +5049,103 @@
           "animationDuration": {
             "type": "integer",
             "format": "int32"
+          },
+          "layout": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ScoreboardLayoutDto"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ScoreboardLayoutDto": {
+        "required": [
+          "flagSize",
+          "headerHeight",
+          "headerLeft",
+          "headerTop",
+          "headerWidth",
+          "padding",
+          "playerBarHeight",
+          "playerBarWidth",
+          "playersLeft",
+          "playersRight",
+          "playersTop",
+          "scoreSize",
+          "showFlags",
+          "showHeader",
+          "showSponsors",
+          "showTags",
+          "spacing"
+        ],
+        "type": "object",
+        "properties": {
+          "headerTop": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "headerLeft": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "playersTop": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "playersLeft": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "playersRight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "headerHeight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "headerWidth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "playerBarHeight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "playerBarWidth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scoreSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "flagSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "spacing": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "padding": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "showHeader": {
+            "type": "boolean"
+          },
+          "showFlags": {
+            "type": "boolean"
+          },
+          "showSponsors": {
+            "type": "boolean"
+          },
+          "showTags": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

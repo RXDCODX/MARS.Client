@@ -35,6 +35,13 @@ const WelcomePage: React.FC = () => {
       description: "Полная интеграция с различными платформами и сервисами.",
       link: "/services",
     },
+    {
+      icon: "⌨️",
+      title: "Выполнение команд",
+      description:
+        "Интерфейс для выполнения команд с разделенными инпутами для разных параметров.",
+      link: "/commands",
+    },
   ];
 
   const obsComponents = [

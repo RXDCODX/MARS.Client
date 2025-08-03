@@ -6,6 +6,7 @@ export * from './signalr_types';
 // Импорты клиентов контроллеров
 export { CheckersService } from './checkers-client';
 export { CommandsService } from './commands-client';
+export { ScoreboardService } from './scoreboard-client';
 export { ServiceManagerService } from './servicemanager-client';
 export { SoundBarService } from './soundbar-client';
 

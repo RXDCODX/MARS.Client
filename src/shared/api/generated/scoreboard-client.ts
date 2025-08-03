@@ -1,8 +1,8 @@
-// Клиент для контроллера ServiceManager
+// Клиент для контроллера Scoreboard
 import { HttpClient } from "./types";
 
 // Экспортируем только методы для этого контроллера
-export class ServiceManagerService {
+export class ScoreboardService {
   private httpClient: HttpClient;
 
   constructor(baseURL?: string) {

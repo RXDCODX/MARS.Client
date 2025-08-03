@@ -1,6 +1,6 @@
 // Bootstrap CSS
 @use "../styles/bootstrap";
-@import "bootstrap-icons/font/bootstrap-icons.css";
+@use "bootstrap-icons/font/bootstrap-icons.css";
 
 /* Применяем стили только если не в Storybook */
 html:not([data-storybook]) {
@@ -638,4 +638,10 @@ div {
 
 .site-scrollbar::-webkit-scrollbar-thumb:hover {
   background: var(--site-scrollbar-thumb-hover) !important;
+}
+
+@media (max-width: 992px) {
+  .row {
+    gap: 1rem;
+  }
 }

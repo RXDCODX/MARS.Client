@@ -197,6 +197,7 @@ const ScoreboardContent: React.FC = () => {
                 padding: `${layout.padding}px`,
               }}
             >
+              <div className={styles.headerLeftBorder}></div>
               <h1 style={{ color: colors.tournamentTitleColor }}>
                 {meta.title}
               </h1>
@@ -208,6 +209,7 @@ const ScoreboardContent: React.FC = () => {
                   {meta.fightRule}
                 </div>
               )}
+              <div className={styles.headerRightBorder}></div>
             </motion.div>
           )}
 
@@ -236,6 +238,33 @@ const ScoreboardContent: React.FC = () => {
                 padding: `${layout.padding}px`,
               }}
             >
+              {layout.showFlags && player1.flag && player1.flag !== "none" && (
+                <div
+                  className={styles.flag}
+                  style={{
+                    height: "auto",
+                  }}
+                >
+                  <img
+                    src={getFlagPath(player1.flag)}
+                    alt="Player 1 flag"
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                </div>
+              )}
+
+              {/* Счет левого игрока */}
+              <div
+                className={styles.score}
+                style={{
+                  width: layout.scoreSize,
+                  backgroundColor: colors.borderColor,
+                }}
+              >
+                <h3 style={{ color: colors.scoreColor }}>{player1.score}</h3>
+              </div>
               <div className={styles.playerInfo}>
                 <h2 style={{ color: colors.playerNamesColor }}>
                   {player1.final === "winner" && "[W] "}
@@ -251,38 +280,7 @@ const ScoreboardContent: React.FC = () => {
                   {layout.showTags && isValidTag(player1.tag) && " | "}
                   {player1.name}
                 </h2>
-                {layout.showSponsors && player1.sponsor && (
-                  <div className={styles.playerSponsor}>{player1.sponsor}</div>
-                )}
               </div>
-
-              <div
-                className={styles.score}
-                style={{
-                  width: `${layout.scoreSize}px`,
-                  height: `${layout.scoreSize}px`,
-                }}
-              >
-                <h3 style={{ color: colors.scoreColor }}>{player1.score}</h3>
-              </div>
-
-              {layout.showFlags && player1.flag && player1.flag !== "none" && (
-                <div
-                  className={styles.flag}
-                  style={{
-                    width: `${layout.flagSize}px`,
-                    height: `${layout.flagSize * 0.6}px`,
-                  }}
-                >
-                  <img
-                    src={getFlagPath(player1.flag)}
-                    alt="Player 1 flag"
-                    onError={(e) => {
-                      e.currentTarget.style.display = "none";
-                    }}
-                  />
-                </div>
-              )}
             </motion.div>
 
             {/* Правый игрок */}
@@ -302,8 +300,7 @@ const ScoreboardContent: React.FC = () => {
                 <div
                   className={styles.flag}
                   style={{
-                    width: `${layout.flagSize}px`,
-                    height: `${layout.flagSize * 0.6}px`,
+                    height: `auto`,
                   }}
                 >
                   <img
@@ -315,16 +312,6 @@ const ScoreboardContent: React.FC = () => {
                   />
                 </div>
               )}
-
-              <div
-                className={styles.score}
-                style={{
-                  width: `${layout.scoreSize}px`,
-                  height: `${layout.scoreSize}px`,
-                }}
-              >
-                <h3 style={{ color: colors.scoreColor }}>{player2.score}</h3>
-              </div>
 
               <div className={styles.playerInfo}>
                 <h2 style={{ color: colors.playerNamesColor }}>
@@ -341,9 +328,17 @@ const ScoreboardContent: React.FC = () => {
                     </span>
                   )}
                 </h2>
-                {layout.showSponsors && player2.sponsor && (
-                  <div className={styles.playerSponsor}>{player2.sponsor}</div>
-                )}
+              </div>
+
+              {/* Счет правого игрока */}
+              <div
+                className={styles.score}
+                style={{
+                  width: layout.scoreSize,
+                  backgroundColor: colors.borderColor,
+                }}
+              >
+                <h3 style={{ color: colors.scoreColor }}>{player2.score}</h3>
               </div>
             </motion.div>
           </motion.div>
