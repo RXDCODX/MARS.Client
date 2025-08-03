@@ -121,7 +121,7 @@ const AdminPanelContent = () => {
           />
         </Col>
         <Col xs={12} md={6} lg={6}>
-          <MetaPanel setMeta={() => setMeta(meta)} meta={meta} />
+          <MetaPanel setMeta={setMeta} meta={meta} />
         </Col>
       </Row>
 
