@@ -8,9 +8,9 @@ import {
   XCircleFill,
 } from "react-bootstrap-icons";
 
-import { useSiteColors } from "../../../../shared/Utils/useSiteColors";
-import FlagSelector from "./FlagSelector";
-import { PlayerWithTimestamp } from "./types";
+import { useSiteColors } from "../../../../../shared/Utils";
+import FlagSelector from "../FlagCard/FlagSelector";
+import { PlayerWithTimestamp } from "../types";
 
 type PlayerCardProps = {
   player: PlayerWithTimestamp;

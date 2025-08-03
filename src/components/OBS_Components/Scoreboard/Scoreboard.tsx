@@ -197,7 +197,10 @@ const ScoreboardContent: React.FC = () => {
                 padding: `${layout.padding}px`,
               }}
             >
-              <div className={styles.headerLeftBorder}></div>
+              <div
+                className={styles.headerLeftBorder}
+                style={{ borderColor: colors.borderColor }}
+              ></div>
               <h1 style={{ color: colors.tournamentTitleColor }}>
                 {meta.title}
               </h1>
@@ -209,7 +212,10 @@ const ScoreboardContent: React.FC = () => {
                   {meta.fightRule}
                 </div>
               )}
-              <div className={styles.headerRightBorder}></div>
+              <div
+                className={styles.headerRightBorder}
+                style={{ borderColor: colors.borderColor }}
+              ></div>
             </motion.div>
           )}
 

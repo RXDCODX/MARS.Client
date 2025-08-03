@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Form } from "react-bootstrap";
 
-import { useSiteColors } from "../../../../shared/Utils/useSiteColors";
+import { useSiteColors } from "../../../../../shared/Utils/useSiteColors";
 import { Country, getFlagPath, searchCountries } from "./flagUtils";
 
 type FlagSelectorProps = {

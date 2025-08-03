@@ -8,13 +8,13 @@ import ThemeToggle from "../../../ThemeToggle";
 import { ScoreboardSignalRContext } from "../ScoreboardContext";
 import ActionButtons from "./ActionButtons";
 import styles from "./AdminPanel.module.scss";
-import ColorPresetCard from "./ColorPresetCard";
 import LayoutCard from "./LayoutCard";
-import MetaPanel from "./MetaPanel";
-import PlayerCard from "./PlayerCard";
+import MetaPanel from "./MetaPanel/MetaPanel";
+import PlayerCard from "./PlayerCard/PlayerCard";
 import { defaultLayout } from "./types";
 import { useAdminState } from "./useAdminState";
-import VisibilityCard from "./VisibilityCard";
+import ColorPresetCard from "./Utils/ColorPresetCard";
+import VisibilityCard from "./VisibilityCard/VisibilityCard";
 
 const AdminPanelContent = () => {
   const colors = useSiteColors();

@@ -1,8 +1,8 @@
 import { HubConnectionState } from "@microsoft/signalr";
 import { useCallback, useState } from "react";
 
-import { ScoreboardDto } from "../../../../shared/api/generated/Api";
-import { ScoreboardSignalRContext } from "../ScoreboardContext";
+import { ScoreboardDto } from "../../../../../shared/api/generated/Api";
+import { ScoreboardSignalRContext } from "../../ScoreboardContext";
 import {
   ColorInfoWIthTimestamp,
   ColorPreset,
@@ -14,8 +14,8 @@ import {
   Player,
   PlayerWithTimestamp,
   ScoreboardState,
-} from "./types";
-import { useUpdateControl } from "./Utils/useUpdateControl";
+} from "../types";
+import { useUpdateControl } from "./useUpdateControl";
 
 export const useAdminState = () => {
   // Используем новый хук для контроля обновлений
@@ -57,7 +57,11 @@ export const useAdminState = () => {
 
   // Функция для безопасной отправки данных на сервер
   const sendToServer = useCallback(
-    (method: string, data: ScoreboardDto | boolean, updateId?: string) => {
+    async (
+      method: string,
+      data: ScoreboardDto | boolean,
+      updateId?: string,
+    ) => {
       try {
         if (
           !ScoreboardSignalRContext.connection ||
@@ -76,7 +80,7 @@ export const useAdminState = () => {
         }
 
         console.log(`Sending ${method}:`, data);
-        ScoreboardSignalRContext.invoke(method, data);
+        await ScoreboardSignalRContext.invoke(method, data);
         console.log(`Successfully sent ${method}`);
 
         // Завершаем обновление
@@ -223,7 +227,7 @@ export const useAdminState = () => {
 
   // Методы для отправки данных с timestamp
   const setPlayer1 = useCallback(
-    (playerUpdate: Partial<Player>) => {
+    async (playerUpdate: Partial<Player>) => {
       const now = Date.now();
       const updateId = updateControl.generateUpdateId();
       const updatedPlayer = { ...player1, ...playerUpdate, _lastEdit: now };
@@ -233,13 +237,13 @@ export const useAdminState = () => {
 
       // Отправляем состояние на сервер
       const serverState = createServerState(updatedPlayer);
-      sendToServer("UpdateState", serverState, updateId);
+      await sendToServer("UpdateState", serverState, updateId);
     },
     [player1, createServerState, sendToServer, updateControl],
   );
 
   const setPlayer2 = useCallback(
-    (playerUpdate: Partial<Player>) => {
+    async (playerUpdate: Partial<Player>) => {
       const now = Date.now();
       const updateId = updateControl.generateUpdateId();
       const updatedPlayer = { ...player2, ...playerUpdate, _lastEdit: now };
@@ -249,13 +253,13 @@ export const useAdminState = () => {
 
       // Отправляем состояние на сервер
       const serverState = createServerState(undefined, updatedPlayer);
-      sendToServer("UpdateState", serverState, updateId);
+      await sendToServer("UpdateState", serverState, updateId);
     },
     [player2, createServerState, sendToServer, updateControl],
   );
 
   const setMeta = useCallback(
-    (metaUpdate: Partial<MetaInfo>) => {
+    async (metaUpdate: Partial<MetaInfo>) => {
       const now = Date.now();
       const updateId = updateControl.generateUpdateId();
       const updatedMeta = { ...meta, ...metaUpdate, _lastEdit: now };
@@ -265,35 +269,35 @@ export const useAdminState = () => {
 
       // Отправляем состояние на сервер
       const serverState = createServerState(undefined, undefined, updatedMeta);
-      sendToServer("UpdateState", serverState, updateId);
+      await sendToServer("UpdateState", serverState, updateId);
     },
     [meta, createServerState, sendToServer, updateControl],
   );
 
   const setVisibility = useCallback(
-    (isVisible: boolean) => {
+    async (isVisible: boolean) => {
       const updateId = updateControl.generateUpdateId();
       setIsVisibleState(isVisible); // Оптимистичное обновление
-      sendToServer("SetVisibility", isVisible, updateId);
+      await sendToServer("SetVisibility", isVisible, updateId);
     },
     [sendToServer, updateControl],
   );
 
   const setAnimationDuration = useCallback(
-    (duration: number) => {
+    async (duration: number) => {
       const updateId = updateControl.generateUpdateId();
       setAnimationDurationState(duration); // Оптимистичное обновление
 
       // Отправляем полное состояние на сервер
       const serverState = createServerState();
       serverState.animationDuration = duration;
-      sendToServer("UpdateState", serverState, updateId);
+      await sendToServer("UpdateState", serverState, updateId);
     },
     [createServerState, sendToServer, updateControl],
   );
 
   const setState = useCallback(
-    (state: ScoreboardState) => {
+    async (state: ScoreboardState) => {
       const now = Date.now();
       const updateId = updateControl.generateUpdateId();
 
@@ -303,25 +307,25 @@ export const useAdminState = () => {
       setIsVisibleState(state.isVisible);
 
       const serverState = createServerState();
-      sendToServer("UpdateState", serverState, updateId);
+      await sendToServer("UpdateState", serverState, updateId);
     },
     [createServerState, sendToServer, updateControl],
   );
 
-  const getState = useCallback(() => {
+  const getState = useCallback(async () => {
     try {
       if (!ScoreboardSignalRContext.connection) {
         console.error("SignalR connection not available");
         return;
       }
-      ScoreboardSignalRContext.connection.invoke("GetCurrentState");
+      await ScoreboardSignalRContext.connection.invoke("GetCurrentState");
     } catch (error) {
       console.error("Error getting current state:", error);
     }
   }, []);
 
   // Вспомогательные функции
-  const swapPlayers = useCallback(() => {
+  const swapPlayers = useCallback(async () => {
     const now = Date.now();
     const updateId = updateControl.generateUpdateId();
     const newPlayer1 = { ...player2, _lastEdit: now };
@@ -332,10 +336,10 @@ export const useAdminState = () => {
 
     // Отправляем полное состояние на сервер
     const serverState = createServerState(newPlayer1, newPlayer2);
-    sendToServer("UpdateState", serverState, updateId);
+    await sendToServer("UpdateState", serverState, updateId);
   }, [player1, player2, createServerState, sendToServer, updateControl]);
 
-  const reset = useCallback(() => {
+  const reset = useCallback(async () => {
     const now = Date.now();
     const updateId = updateControl.generateUpdateId();
     const initialState: ScoreboardDto = {
@@ -379,12 +383,12 @@ export const useAdminState = () => {
     setIsVisibleState(initialState.isVisible);
     setAnimationDurationState(initialState.animationDuration ?? 1000);
 
-    sendToServer("UpdateState", initialState, updateId);
+    await sendToServer("UpdateState", initialState, updateId);
   }, [sendToServer, updateControl]);
 
   // Обработчик изменения цветов
   const handleColorChange = useCallback(
-    (colorUpdate: Partial<ColorPreset>) => {
+    async (colorUpdate: Partial<ColorPreset>) => {
       const updateId = updateControl.generateUpdateId();
       const currentColors = {
         mainColor: "#3F00FF",
@@ -400,13 +404,13 @@ export const useAdminState = () => {
       // Отправляем полное состояние на сервер
       const serverState = createServerState();
       serverState.colors = currentColors;
-      sendToServer("UpdateState", serverState, updateId);
+      await sendToServer("UpdateState", serverState, updateId);
     },
     [createServerState, sendToServer, updateControl],
   );
 
   const setLayout = useCallback(
-    (layoutUpdate: Partial<LayoutSettings>) => {
+    async (layoutUpdate: Partial<LayoutSettings>) => {
       const updateId = updateControl.generateUpdateId();
       const updatedLayout = { ...layout, ...layoutUpdate };
       setLayoutState(updatedLayout);
@@ -414,7 +418,7 @@ export const useAdminState = () => {
       // Отправляем полное состояние на сервер
       const serverState = createServerState();
       serverState.layout = updatedLayout;
-      sendToServer("UpdateState", serverState, updateId);
+      await sendToServer("UpdateState", serverState, updateId);
     },
     [layout, createServerState, sendToServer, updateControl],
   );

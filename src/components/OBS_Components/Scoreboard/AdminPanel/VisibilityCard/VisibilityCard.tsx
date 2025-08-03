@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Card, Form } from "react-bootstrap";
 import { Clock, Eye, EyeSlash, PlayCircle } from "react-bootstrap-icons";
 
-import { useSiteColors } from "../../../../shared/Utils/useSiteColors";
+import { useSiteColors } from "../../../../../shared/Utils/useSiteColors";
 
 type VisibilityCardProps = {
   isVisible: boolean;

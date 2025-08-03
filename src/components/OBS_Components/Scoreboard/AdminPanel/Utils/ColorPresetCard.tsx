@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { Palette } from "react-bootstrap-icons";
 
-import { useSiteColors } from "../../../../shared/Utils/useSiteColors";
+import { useSiteColors } from "../../../../../shared/Utils/useSiteColors";
+import { ColorPreset, defaultPreset } from "../types";
 import ColorPickerWithTransparency from "./ColorPickerWithTransparency";
-import { ColorPreset, defaultPreset } from "./types";
 
 type ColorPresetCardProps = {
   onColorChange: (colors: Partial<ColorPreset>) => void;

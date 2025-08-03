@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Button, ButtonGroup, Card, Form } from "react-bootstrap";
 import { InfoCircle } from "react-bootstrap-icons";
 
-import { useSiteColors } from "../../../../shared/Utils/useSiteColors";
-import { MetaInfo } from "./types";
+import { useSiteColors } from "../../../../../shared/Utils/useSiteColors";
+import { MetaInfo } from "../types";
 
 type MetaPanelProps = {
   setMeta: (meta: Partial<MetaInfo>) => void;
