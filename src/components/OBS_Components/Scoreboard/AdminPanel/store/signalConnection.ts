@@ -4,11 +4,9 @@ import { logger } from "../../../../../shared/logger";
 
 const policy: IRetryPolicy = { nextRetryDelayInMilliseconds: () => 5000 };
 
+const baseUrl = import.meta.env.VITE_BASE_PATH;
+
 export const ScoreboardSignalRContext = new HubConnectionBuilder()
-  .withUrl(
-    import.meta.env.PROD
-      ? "http://localhost:9155/scoreboardhub"
-      : "http://localhost:9255/scoreboardhub",
-  )
+  .withUrl(baseUrl + "scoreboardHub")
   .withAutomaticReconnect(policy)
   .configureLogging(logger);

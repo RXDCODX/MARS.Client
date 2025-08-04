@@ -2,7 +2,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useState } from "react";
 
 import { useScoreboardStore } from "./AdminPanel";
-import { defaultLayout, LayoutSettings } from "./AdminPanel/types";
+import {
+  defaultLayout,
+  defaultPreset,
+  LayoutSettings,
+} from "./AdminPanel/types";
 import styles from "./Scoreboard.module.scss";
 
 type Player = {
@@ -37,16 +41,6 @@ type ScoreboardState = {
   isVisible: boolean;
   animationDuration?: number;
   layout?: LayoutSettings;
-};
-
-const defaultPreset: ColorPreset = {
-  mainColor: "#3F00FF",
-  playerNamesColor: "#FFFFFF",
-  tournamentTitleColor: "#FFFFFF",
-  fightModeColor: "#FFFFFF",
-  scoreColor: "#FFFFFF",
-  backgroundColor: "rgba(0, 0, 0, 0.8)",
-  borderColor: "#3F00FF",
 };
 
 const ScoreboardContent: React.FC = () => {
@@ -220,9 +214,7 @@ const ScoreboardContent: React.FC = () => {
           >
             {/* Левый игрок */}
             <motion.div
-              className={`${styles.playerLeft} ${
-                player1.final === "winner" ? styles.winner : ""
-              } ${player1.final === "loser" ? styles.loser : ""}`}
+              className={styles.playerLeft}
               style={{
                 width: `${layout.playerBarWidth}px`,
                 height: `${layout.playerBarHeight}px`,
@@ -279,9 +271,7 @@ const ScoreboardContent: React.FC = () => {
 
             {/* Правый игрок */}
             <motion.div
-              className={`${styles.playerRight} ${
-                player2.final === "winner" ? styles.winner : ""
-              } ${player2.final === "loser" ? styles.loser : ""}`}
+              className={styles.playerRight}
               style={{
                 width: `${layout.playerBarWidth}px`,
                 height: `${layout.playerBarHeight}px`,
