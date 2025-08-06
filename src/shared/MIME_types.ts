@@ -46,7 +46,6 @@ export function addMimeTypesToImgTags(htmlText: string): string {
     const extension =
       src.split(".").pop()?.toLowerCase().split(/[#?]/)[0] || "";
 
-    debugger;
     // Получаем MIME-тип из нашей коллекции
     const mimeType = MIME_Types[extension] || "application/octet-stream";
 
