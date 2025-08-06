@@ -2,7 +2,7 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
   color: var(--bs-white);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
 }
 
@@ -106,7 +106,7 @@
   position: relative;
 
   &::before {
-    content: '→';
+    content: "→";
     position: absolute;
     left: 0;
     color: var(--bs-primary);
@@ -135,4 +135,4 @@
   .button {
     width: 100%;
   }
-} 
+}

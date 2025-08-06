@@ -65,7 +65,7 @@ export interface ScoreboardActions {
   _sendToServer: (
     method: string,
     data: ScoreboardDto | boolean,
-    updateId?: string,
+    updateId?: string
   ) => boolean;
   _createServerState: (
     updatedPlayer1?: PlayerWithTimestamp,
@@ -74,7 +74,7 @@ export interface ScoreboardActions {
     updatedColor?: ColorPreset,
     updatedLayout?: LayoutSettings,
     updatedVisibility?: boolean,
-    updatedAnimationDuration?: number,
+    updatedAnimationDuration?: number
   ) => ScoreboardDto;
 }
 
@@ -129,7 +129,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
   connection.on("ReceiveState", firstActiveFunction);
 
   // Запускаем соединение
-  connection.start().catch((err) => {
+  connection.start().catch(err => {
     console.error("Error starting SignalR connection:", err);
   });
 
@@ -137,7 +137,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
     ...initialState,
     _connection: connection,
     // Действия с игроками
-    setPlayer1: (playerUpdate) => {
+    setPlayer1: playerUpdate => {
       const currentPlayer = get().player1;
       const updatedPlayer = {
         ...currentPlayer,
@@ -152,7 +152,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
       get()._sendToServer("UpdateState", serverState);
     },
 
-    setPlayer2: (playerUpdate) => {
+    setPlayer2: playerUpdate => {
       const currentPlayer = get().player2;
       const updatedPlayer = {
         ...currentPlayer,
@@ -185,7 +185,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
     },
 
     // Действия с мета информацией
-    setMeta: (metaUpdate) => {
+    setMeta: metaUpdate => {
       const currentMeta = get().meta;
       const updatedMeta = {
         ...currentMeta,
@@ -199,13 +199,13 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
       const serverState = get()._createServerState(
         undefined,
         undefined,
-        updatedMeta,
+        updatedMeta
       );
       get()._sendToServer("UpdateState", serverState);
     },
 
     // Действия с цветами
-    setColor: (colorUpdate) => {
+    setColor: colorUpdate => {
       const currentColor = get().color;
       const updatedColor = {
         ...currentColor,
@@ -220,17 +220,17 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
         undefined,
         undefined,
         undefined,
-        updatedColor,
+        updatedColor
       );
       get()._sendToServer("UpdateState", serverState);
     },
 
-    handleColorChange: (colorUpdate) => {
+    handleColorChange: colorUpdate => {
       get().setColor(colorUpdate);
     },
 
     // Действия с макетом
-    setLayout: (layoutUpdate) => {
+    setLayout: layoutUpdate => {
       const currentLayout = get().layout;
       const updatedLayout = {
         ...currentLayout,
@@ -245,20 +245,20 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
         undefined,
         undefined,
         undefined,
-        updatedLayout,
+        updatedLayout
       );
       get()._sendToServer("UpdateState", serverState);
     },
 
     // Действия с видимостью
-    setVisibility: (isVisible) => {
+    setVisibility: isVisible => {
       set({ isVisible });
 
       // Отправляем на сервер
       get()._sendToServer("SetVisibility", isVisible);
     },
 
-    setAnimationDuration: (duration) => {
+    setAnimationDuration: duration => {
       set({ animationDuration: duration });
 
       // Отправляем на сервер
@@ -269,7 +269,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
         undefined,
         undefined,
         undefined,
-        duration,
+        duration
       );
       get()._sendToServer("UpdateState", serverState);
     },
@@ -284,7 +284,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
     },
 
     // Действия для получения состояния с сервера
-    handleReceiveState: (state) => {
+    handleReceiveState: state => {
       if (state.player1) {
         set({ player1: { ...state.player1, _receivedAt: Date.now() } });
       }
@@ -314,7 +314,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
         const connection = get()._connection;
         if (!connection || connection.state !== HubConnectionState.Connected) {
           console.log(
-            "SignalR connection not available, using local state only",
+            "SignalR connection not available, using local state only"
           );
           return true;
         }
@@ -336,7 +336,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
       updatedColor,
       updatedLayout,
       updatedVisibility,
-      updatedAnimationDuration,
+      updatedAnimationDuration
     ) => {
       const state = get();
 
@@ -355,55 +355,54 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
 });
 
 // Селекторы для оптимизации
-export const usePlayer1 = () => useScoreboardStore((state) => state.player1);
-export const usePlayer2 = () => useScoreboardStore((state) => state.player2);
-export const useMeta = () => useScoreboardStore((state) => state.meta);
-export const useColor = () => useScoreboardStore((state) => state.color);
-export const useLayout = () => useScoreboardStore((state) => state.layout);
-export const useVisibility = () =>
-  useScoreboardStore((state) => state.isVisible);
+export const usePlayer1 = () => useScoreboardStore(state => state.player1);
+export const usePlayer2 = () => useScoreboardStore(state => state.player2);
+export const useMeta = () => useScoreboardStore(state => state.meta);
+export const useColor = () => useScoreboardStore(state => state.color);
+export const useLayout = () => useScoreboardStore(state => state.layout);
+export const useVisibility = () => useScoreboardStore(state => state.isVisible);
 export const useAnimationDuration = () =>
-  useScoreboardStore((state) => state.animationDuration);
+  useScoreboardStore(state => state.animationDuration);
 
 // Селекторы для действий - возвращаем отдельные функции для стабильности
 export const usePlayerActions = () => {
-  const setPlayer1 = useScoreboardStore((state) => state.setPlayer1);
-  const setPlayer2 = useScoreboardStore((state) => state.setPlayer2);
-  const swapPlayers = useScoreboardStore((state) => state.swapPlayers);
+  const setPlayer1 = useScoreboardStore(state => state.setPlayer1);
+  const setPlayer2 = useScoreboardStore(state => state.setPlayer2);
+  const swapPlayers = useScoreboardStore(state => state.swapPlayers);
 
   return { setPlayer1, setPlayer2, swapPlayers };
 };
 
 export const useMetaActions = () => {
-  const setMeta = useScoreboardStore((state) => state.setMeta);
+  const setMeta = useScoreboardStore(state => state.setMeta);
   return { setMeta };
 };
 
 export const useColorActions = () => {
-  const setColor = useScoreboardStore((state) => state.setColor);
+  const setColor = useScoreboardStore(state => state.setColor);
   const handleColorChange = useScoreboardStore(
-    (state) => state.handleColorChange,
+    state => state.handleColorChange
   );
   return { setColor, handleColorChange };
 };
 
 export const useLayoutActions = () => {
-  const setLayout = useScoreboardStore((state) => state.setLayout);
+  const setLayout = useScoreboardStore(state => state.setLayout);
   return { setLayout };
 };
 
 export const useVisibilityActions = () => {
-  const setVisibility = useScoreboardStore((state) => state.setVisibility);
+  const setVisibility = useScoreboardStore(state => state.setVisibility);
   const setAnimationDuration = useScoreboardStore(
-    (state) => state.setAnimationDuration,
+    state => state.setAnimationDuration
   );
   return { setVisibility, setAnimationDuration };
 };
 
 export const useGeneralActions = () => {
-  const reset = useScoreboardStore((state) => state.reset);
+  const reset = useScoreboardStore(state => state.reset);
   const handleReceiveState = useScoreboardStore(
-    (state) => state.handleReceiveState,
+    state => state.handleReceiveState
   );
   return { reset, handleReceiveState };
 };

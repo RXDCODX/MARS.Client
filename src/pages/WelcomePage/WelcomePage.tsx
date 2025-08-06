@@ -1,7 +1,8 @@
 import { Card, Col, Container, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import { useSiteColors } from "../../shared/Utils/useSiteColors";
+import { useSiteColors } from "@/shared/Utils/useSiteColors";
+
 import styles from "./WelcomePage.module.scss";
 
 const WelcomePage: React.FC = () => {

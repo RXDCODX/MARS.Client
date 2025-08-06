@@ -5,7 +5,9 @@
   top: 0;
   z-index: 1000;
   backdrop-filter: blur(10px);
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .container {
@@ -166,7 +168,7 @@
   font-weight: 500;
   transition: all 0.2s ease;
   text-shadow: var(--site-shadow-light);
-  
+
   &:hover {
     background: var(--site-hover-bg);
     color: var(--site-text-accent);
@@ -192,7 +194,7 @@
   justify-content: space-between;
   transition: all 0.2s ease;
   text-shadow: var(--site-shadow-light);
-  
+
   &:hover {
     background: var(--site-hover-bg);
     color: var(--site-text-accent);
@@ -229,7 +231,7 @@
     font-weight: 500;
     transition: all 0.2s ease;
     text-shadow: var(--site-shadow-light);
-    
+
     &:hover {
       background: var(--site-hover-bg);
       color: var(--site-text-accent);
@@ -316,4 +318,4 @@
   .userName {
     display: none;
   }
-} 
+}

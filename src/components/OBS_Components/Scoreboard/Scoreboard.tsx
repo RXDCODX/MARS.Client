@@ -81,7 +81,7 @@ const ScoreboardContent: React.FC = () => {
   const [isVisible, setIsVisible] = useState<boolean>(true);
   const [animationDuration, setAnimationDuration] = useState<number>(800);
   const [layout, setLayout] = useState<LayoutSettings>(defaultLayout);
-  const connection = useScoreboardStore((state) => state._connection);
+  const connection = useScoreboardStore(state => state._connection);
 
   const handleReceiveState = useCallback((state: ScoreboardState) => {
     setPlayer1(state.player1);
@@ -233,7 +233,7 @@ const ScoreboardContent: React.FC = () => {
                   <img
                     src={getFlagPath(player1.flag)}
                     alt="Player 1 flag"
-                    onError={(e) => {
+                    onError={e => {
                       e.currentTarget.style.display = "none";
                     }}
                   />
@@ -290,7 +290,7 @@ const ScoreboardContent: React.FC = () => {
                   <img
                     src={getFlagPath(player2.flag)}
                     alt="Player 2 flag"
-                    onError={(e) => {
+                    onError={e => {
                       e.currentTarget.style.display = "none";
                     }}
                   />

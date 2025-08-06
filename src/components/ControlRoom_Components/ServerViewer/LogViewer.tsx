@@ -62,14 +62,14 @@ const LogViewer: React.FC<LogViewerProps> = ({
   const filteredLogs = useMemo(
     () =>
       logs.filter(
-        (log) =>
+        log =>
           (!level || log.level === level) &&
           (!search ||
             log.message.toLowerCase().includes(search.toLowerCase()) ||
             (log.exception &&
-              log.exception.toLowerCase().includes(search.toLowerCase()))),
+              log.exception.toLowerCase().includes(search.toLowerCase())))
       ),
-    [logs, level, search],
+    [logs, level, search]
   );
 
   return (
@@ -105,16 +105,16 @@ const LogViewer: React.FC<LogViewerProps> = ({
           size="sm"
           placeholder="Поиск по сообщению или exception..."
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={e => setSearch(e.target.value)}
           style={{ maxWidth: 220 }}
         />
         <Form.Select
           size="sm"
           value={level}
-          onChange={(e) => setLevel(e.target.value)}
+          onChange={e => setLevel(e.target.value)}
           style={{ maxWidth: 120 }}
         >
-          {levelOptions.map((opt) => (
+          {levelOptions.map(opt => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
             </option>
@@ -131,7 +131,7 @@ const LogViewer: React.FC<LogViewerProps> = ({
         <Button
           size="sm"
           variant={autoScroll ? "success" : "outline-secondary"}
-          onClick={() => setAutoScroll((v) => !v)}
+          onClick={() => setAutoScroll(v => !v)}
         >
           {autoScroll ? "Автоскролл" : "Без автоскролла"}
         </Button>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // SignalR типы
 // Этот файл содержит типы для SignalR соединений
 

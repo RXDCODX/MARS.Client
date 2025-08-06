@@ -12,7 +12,7 @@ const ColorPresetCard: React.FC = () => {
   const scoreboardColors = useColor();
   const { handleColorChange } = useColorActions();
   const [customColors, setCustomColors] = useState(
-    scoreboardColors || defaultPreset,
+    scoreboardColors || defaultPreset
   );
 
   // Синхронизируем локальное состояние с внешними цветами
@@ -103,7 +103,7 @@ const ColorPresetCard: React.FC = () => {
 
   const handleCustomColorChange = (
     field: keyof typeof customColors,
-    value: string,
+    value: string
   ) => {
     const updatedColors = { ...customColors, [field]: value };
     setCustomColors(updatedColors);
@@ -180,7 +180,7 @@ const ColorPresetCard: React.FC = () => {
                 </label>
                 <ColorPickerWithTransparency
                   value={customColors.mainColor || "#3F00FF"}
-                  onChange={(color) =>
+                  onChange={color =>
                     handleCustomColorChange("mainColor", color)
                   }
                 />
@@ -193,7 +193,7 @@ const ColorPresetCard: React.FC = () => {
                 </label>
                 <ColorPickerWithTransparency
                   value={customColors.playerNamesColor || "#FFFFFF"}
-                  onChange={(color) =>
+                  onChange={color =>
                     handleCustomColorChange("playerNamesColor", color)
                   }
                 />
@@ -206,7 +206,7 @@ const ColorPresetCard: React.FC = () => {
                 </label>
                 <ColorPickerWithTransparency
                   value={customColors.tournamentTitleColor || "#FFFFFF"}
-                  onChange={(color) =>
+                  onChange={color =>
                     handleCustomColorChange("tournamentTitleColor", color)
                   }
                 />
@@ -219,7 +219,7 @@ const ColorPresetCard: React.FC = () => {
                 </label>
                 <ColorPickerWithTransparency
                   value={customColors.fightModeColor || "#FFFFFF"}
-                  onChange={(color) =>
+                  onChange={color =>
                     handleCustomColorChange("fightModeColor", color)
                   }
                 />
@@ -230,7 +230,7 @@ const ColorPresetCard: React.FC = () => {
                 <label className="fw-bold small mb-2 d-block">Цвет счета</label>
                 <ColorPickerWithTransparency
                   value={customColors.scoreColor || "#FFFFFF"}
-                  onChange={(color) =>
+                  onChange={color =>
                     handleCustomColorChange("scoreColor", color)
                   }
                 />
@@ -241,7 +241,7 @@ const ColorPresetCard: React.FC = () => {
                 <label className="fw-bold small mb-2 d-block">Цвет фона</label>
                 <ColorPickerWithTransparency
                   value={customColors.backgroundColor || "rgba(0, 0, 0, 0.8)"}
-                  onChange={(color) =>
+                  onChange={color =>
                     handleCustomColorChange("backgroundColor", color)
                   }
                 />
@@ -254,7 +254,7 @@ const ColorPresetCard: React.FC = () => {
                 </label>
                 <ColorPickerWithTransparency
                   value={customColors.borderColor || "#3F00FF"}
-                  onChange={(color) =>
+                  onChange={color =>
                     handleCustomColorChange("borderColor", color)
                   }
                 />

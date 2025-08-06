@@ -120,7 +120,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
           <Form.Control
             placeholder="Tag"
             value={player.tag}
-            onChange={(e) => handleTagChange(e.target.value)}
+            onChange={e => handleTagChange(e.target.value)}
             size="sm"
             className="border-info border-2 fw-bold rounded-3"
             style={{
@@ -139,7 +139,7 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
                   ? "[L] "
                   : "") + player.name
             }
-            onChange={(e) => {
+            onChange={e => {
               const val = e.target.value.replace(/^\[W\] |^\[L\] /, "");
               handleNameChange(val);
             }}

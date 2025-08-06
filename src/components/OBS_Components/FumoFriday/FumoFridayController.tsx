@@ -15,7 +15,7 @@ export interface Message {
 export function FumoFridayController() {
   const [, setMessages] = useState<Message[]>([]);
   const [currentMessage, setCurrentMessage] = useState<Message | undefined>(
-    undefined,
+    undefined
   );
   const [switcher, setSwitcher] = useState(false);
 
@@ -26,12 +26,12 @@ export function FumoFridayController() {
       const newMessage: Message = { id: id, message: message, color: color };
       handleAddEvent(newMessage);
     },
-    [],
+    []
   );
 
   const handleAddEvent = useCallback(
     (message: Message) => {
-      setMessages((prevMessages) => {
+      setMessages(prevMessages => {
         if (!currentMessage) {
           setCurrentMessage(message);
           return prevMessages;
@@ -39,23 +39,23 @@ export function FumoFridayController() {
         return [...prevMessages, message];
       });
     },
-    [currentMessage],
+    [currentMessage]
   );
 
   const changeSwitcher = useCallback(() => {
-    setSwitcher((prevSwitcher) => !prevSwitcher);
+    setSwitcher(prevSwitcher => !prevSwitcher);
   }, []);
 
   const handleRemoveEvent = useCallback(
     (message: Message) => {
-      setMessages((prevMessages) => {
-        const newMessages = prevMessages.filter((msg) => msg.id !== message.id);
+      setMessages(prevMessages => {
+        const newMessages = prevMessages.filter(msg => msg.id !== message.id);
         setCurrentMessage(newMessages[0]);
         return newMessages;
       });
       changeSwitcher();
     },
-    [changeSwitcher],
+    [changeSwitcher]
   );
 
   // Экспортируем функцию play для внешнего использования

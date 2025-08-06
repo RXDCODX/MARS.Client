@@ -1,12 +1,12 @@
 import { useState } from "react";
 
-import { ChatMessage } from "../../../shared/api/generated/Api";
-import { createTestMessageSet } from "../../../shared/Utils/testMessageUtils";
+import { ChatMessage } from "@/shared/api/generated/Api";
+import { createTestMessageSet } from "@/shared/Utils/testMessageUtils";
 
 interface MessageManagerProps {
   children: (
     messages: ChatMessage[],
-    removeMessage: (id: string) => void,
+    removeMessage: (id: string) => void
   ) => React.ReactNode;
 }
 
@@ -19,11 +19,11 @@ export function MessageManager({ children }: MessageManagerProps) {
 
     newMessages.forEach((msg, index) => {
       setTimeout(() => {
-        setMessages((prev) => {
+        setMessages(prev => {
           while (prev.length >= 50) {
             prev.pop();
           }
-          if (prev.find((m) => m.id === msg.id)) {
+          if (prev.find(m => m.id === msg.id)) {
             return prev;
           } else {
             return [msg, ...prev];
@@ -32,11 +32,11 @@ export function MessageManager({ children }: MessageManagerProps) {
       }, index * 200);
     });
 
-    setMessageCount((prev) => prev + newMessages.length);
+    setMessageCount(prev => prev + newMessages.length);
   };
 
   const removeMessage = (id: string) => {
-    setMessages((prev) => prev.filter((m) => m.id !== id));
+    setMessages(prev => prev.filter(m => m.id !== id));
   };
 
   return (

@@ -7,6 +7,7 @@
 ## CSS переменные
 
 ### Цвета текста
+
 - `--site-text-primary` - Основной цвет текста
 - `--site-text-secondary` - Вторичный цвет текста
 - `--site-text-muted` - Приглушенный цвет текста
@@ -19,6 +20,7 @@
 - `--site-text-info` - Цвет текста для информации
 
 ### Цвета фонов
+
 - `--site-bg-primary` - Основной цвет фона
 - `--site-bg-secondary` - Вторичный цвет фона
 - `--site-bg-tertiary` - Третичный цвет фона
@@ -31,6 +33,7 @@
 - `--site-bg-info` - Цвет фона для информации
 
 ### Цвета границ
+
 - `--site-border-primary` - Основной цвет границ
 - `--site-border-secondary` - Вторичный цвет границ
 - `--site-border-accent` - Акцентный цвет границ
@@ -40,6 +43,7 @@
 - `--site-border-info` - Цвет границ для информации
 
 ### Цвета теней
+
 - `--site-shadow-light` - Легкая тень
 - `--site-shadow-medium` - Средняя тень
 - `--site-shadow-heavy` - Тяжелая тень
@@ -48,6 +52,7 @@
 ## CSS классы
 
 ### Текстовые классы
+
 ```css
 .site-text-primary
 .site-text-secondary
@@ -62,6 +67,7 @@
 ```
 
 ### Фоновые классы
+
 ```css
 .site-bg-primary
 .site-bg-secondary
@@ -76,6 +82,7 @@
 ```
 
 ### Классы границ
+
 ```css
 .site-border-primary
 .site-border-secondary
@@ -87,6 +94,7 @@
 ```
 
 ### Классы теней
+
 ```css
 .site-shadow-light
 .site-shadow-medium
@@ -97,11 +105,13 @@
 ## TypeScript хук useSiteColors
 
 ### Импорт
+
 ```typescript
-import { useSiteColors } from '../../../shared/Utils/useSiteColors';
+import { useSiteColors } from "../../../shared/Utils/useSiteColors";
 ```
 
 ### Использование
+
 ```typescript
 const colors = useSiteColors();
 
@@ -110,52 +120,65 @@ const textColor = colors.text.primary;
 const bgColor = colors.background.card;
 
 // Использование утилитарных функций
-const textStyle = colors.utils.getTextStyle('primary');
+const textStyle = colors.utils.getTextStyle("primary");
 const cardStyle = colors.utils.getCardStyle();
-const buttonStyle = colors.utils.getButtonStyle('success');
+const buttonStyle = colors.utils.getButtonStyle("success");
 ```
 
 ### Доступные методы
 
 #### getTextStyle(type)
+
 Возвращает объект стилей для текста
+
 ```typescript
-colors.utils.getTextStyle('primary') // { color: 'var(--site-text-primary)' }
+colors.utils.getTextStyle("primary"); // { color: 'var(--site-text-primary)' }
 ```
 
 #### getBackgroundStyle(type)
+
 Возвращает объект стилей для фона
+
 ```typescript
-colors.utils.getBackgroundStyle('card') // { backgroundColor: 'var(--site-bg-card)' }
+colors.utils.getBackgroundStyle("card"); // { backgroundColor: 'var(--site-bg-card)' }
 ```
 
 #### getBorderStyle(type)
+
 Возвращает объект стилей для границ
+
 ```typescript
-colors.utils.getBorderStyle('primary') // { borderColor: 'var(--site-border-primary)' }
+colors.utils.getBorderStyle("primary"); // { borderColor: 'var(--site-border-primary)' }
 ```
 
 #### getShadowStyle(type)
+
 Возвращает объект стилей для теней
+
 ```typescript
-colors.utils.getShadowStyle('light') // { boxShadow: 'var(--site-shadow-light)' }
+colors.utils.getShadowStyle("light"); // { boxShadow: 'var(--site-shadow-light)' }
 ```
 
 #### getCardStyle()
+
 Возвращает готовые стили для карточки
+
 ```typescript
-colors.utils.getCardStyle() // { backgroundColor: 'var(--site-bg-card)', borderColor: 'var(--site-border-primary)', boxShadow: 'var(--site-shadow-light)' }
+colors.utils.getCardStyle(); // { backgroundColor: 'var(--site-bg-card)', borderColor: 'var(--site-border-primary)', boxShadow: 'var(--site-shadow-light)' }
 ```
 
 #### getButtonStyle(variant)
+
 Возвращает готовые стили для кнопки
+
 ```typescript
-colors.utils.getButtonStyle('primary') // { backgroundColor: 'var(--site-bg-primary)', color: 'var(--site-text-light)', ... }
+colors.utils.getButtonStyle("primary"); // { backgroundColor: 'var(--site-bg-primary)', color: 'var(--site-text-light)', ... }
 ```
 
 ## Примеры использования
 
 ### В React компоненте
+
 ```typescript
 import React from 'react';
 import { useSiteColors } from '../../../shared/Utils/useSiteColors';
@@ -180,13 +203,14 @@ const MyComponent: React.FC = () => {
 ```
 
 ### В CSS модулях
+
 ```scss
 .myComponent {
   color: var(--site-text-primary);
   background-color: var(--site-bg-card);
   border: 1px solid var(--site-border-primary);
   box-shadow: var(--site-shadow-light);
-  
+
   &:hover {
     background-color: var(--site-hover-bg);
   }
@@ -194,6 +218,7 @@ const MyComponent: React.FC = () => {
 ```
 
 ### С CSS классами
+
 ```jsx
 <div className="site-bg-card site-text-primary site-border-primary site-shadow-light">
   Контент
@@ -215,4 +240,4 @@ const MyComponent: React.FC = () => {
 2. **Автоматическая адаптация** - Цвета меняются с темой автоматически
 3. **TypeScript поддержка** - Полная типизация для безопасного использования
 4. **Удобство использования** - Простые CSS классы и TypeScript хуки
-5. **Производительность** - CSS переменные работают нативно в браузере 
+5. **Производительность** - CSS переменные работают нативно в браузере

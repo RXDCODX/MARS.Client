@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Textfit } from "react-textfit";
 
-import RainbowText from "../../../shared/components/RainbowText/RainbowText";
+import RainbowText from "@/shared/components/RainbowText/RainbowText";
+
 import { Message } from "./FumoFridayController";
 import styles from "./Styles.module.scss";
 import { getVideoPath } from "./videoAssets";

@@ -35,11 +35,11 @@ export const useTwitchStore = create<State & Actions>()(
     init: (clientId: string, clientSecret: string) => {
       const { client, fetcher, parser, newParser } = initialization(
         clientId,
-        clientSecret,
+        clientSecret
       );
       getBadges(client)
-        .then((badges) => set({ badges }))
-        .catch((err) => {
+        .then(badges => set({ badges }))
+        .catch(err => {
           console.error(err);
           set({ badges: [] });
         });
@@ -67,7 +67,7 @@ export const useTwitchStore = create<State & Actions>()(
             parseToLink: newParser,
           });
         })
-        .catch((err) => {
+        .catch(err => {
           console.error("Error loading emotes...");
           console.error(err);
           set({
@@ -87,7 +87,7 @@ export const useTwitchStore = create<State & Actions>()(
     sendMsgToPyrokxnezxz: async (msg: string) => {
       await SignalRContext.invoke("TwitchMsg", msg);
     },
-  })),
+  }))
 );
 
 function initialization(clientId: string, clientSecret: string) {

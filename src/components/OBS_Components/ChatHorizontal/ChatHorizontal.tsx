@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 
+import { ChatMessage } from "@/shared/api/generated/Api";
+import Announce from "@/shared/Utils/Announce/Announce";
+
 import { SignalRContext } from "../../../app";
-import { ChatMessage } from "../../../shared/api/generated/Api";
-import Announce from "../../../shared/Utils/Announce/Announce";
 import { Message } from "./Message";
 
 interface ChatHorizontalProps {
@@ -28,7 +29,7 @@ export default function ChatHorizontal({
     const updateSlots = () => {
       const count = Math.max(1, Math.floor(window.innerHeight / SLOT_HEIGHT));
       slotCountRef.current = count;
-      setSlots((prev) => {
+      setSlots(prev => {
         if (prev.length === count) return prev;
         // Если увеличилось — добавляем null, если уменьшилось — обрезаем
         if (prev.length < count)
@@ -47,7 +48,7 @@ export default function ChatHorizontal({
   const handleRemove =
     onRemoveMessage ||
     ((id: string) => {
-      setInternalMessages((prev) => prev.filter((m) => m.id !== id));
+      setInternalMessages(prev => prev.filter(m => m.id !== id));
     });
 
   // SignalR эффекты только если не переданы внешние сообщения
@@ -58,32 +59,32 @@ export default function ChatHorizontal({
         return;
       }
       message.id ??= id;
-      setInternalMessages((prev) => {
+      setInternalMessages(prev => {
         while (prev.length >= 50) {
           prev.pop();
         }
-        if (prev.find((m) => m.id === message.id)) {
+        if (prev.find(m => m.id === message.id)) {
           return prev;
         } else {
           return [message, ...prev];
         }
       });
     },
-    [],
+    []
   );
 
   SignalRContext.useSignalREffect(
-    "deletemessage",
+    "DeleteMessage",
     (id: string) => {
-      setInternalMessages((prev) => prev.filter((m) => m.id !== id));
+      setInternalMessages(prev => prev.filter(m => m.id !== id));
     },
-    [],
+    []
   );
 
   // --- SLOT LOGIC ---
   // Сопоставление id сообщения -> индекс слота
   const [messageSlotMap, setMessageSlotMap] = useState<Record<string, number>>(
-    {},
+    {}
   );
 
   // Когда приходит новое сообщение — пытаемся положить в свободный слот или в очередь
@@ -91,26 +92,26 @@ export default function ChatHorizontal({
     // Берем только новые сообщения, которых нет в слотах и очереди
     const activeIds = new Set([
       ...(slots.filter(Boolean) as string[]),
-      ...queue.map((m) => m.id!),
+      ...queue.map(m => m.id!),
     ]);
-    const newMessages = messages.filter((m) => !activeIds.has(m.id!));
+    const newMessages = messages.filter(m => !activeIds.has(m.id!));
     if (newMessages.length === 0) return;
-    setQueue((prev) => [...prev, ...newMessages]);
+    setQueue(prev => [...prev, ...newMessages]);
   }, [messages, slots, queue]);
 
   // Когда есть свободные слоты и очередь — размещаем сообщения
   useEffect(() => {
     if (queue.length === 0) return;
-    setSlots((prevSlots) => {
+    setSlots(prevSlots => {
       const newSlots = [...prevSlots];
       let changed = false;
       const newMessageSlotMap = { ...messageSlotMap };
       // Собираем индексы всех свободных слотов
       const freeIndices = newSlots
         .map((s, idx) => (s === null ? idx : null))
-        .filter((v) => v !== null) as number[];
+        .filter(v => v !== null) as number[];
       // Для каждого сообщения из очереди выбираем случайный свободный слот
-      queue.forEach((msg) => {
+      queue.forEach(msg => {
         if (freeIndices.length === 0) return;
         const randIdx = Math.floor(Math.random() * freeIndices.length);
         const freeIdx = freeIndices[randIdx];
@@ -125,8 +126,8 @@ export default function ChatHorizontal({
       if (changed) {
         setMessageSlotMap(newMessageSlotMap);
         // Удаляем из очереди те, что заняли слот
-        setQueue((prevQueue) =>
-          prevQueue.filter((msg) => !newSlots.includes(msg.id!)),
+        setQueue(prevQueue =>
+          prevQueue.filter(msg => !newSlots.includes(msg.id!))
         );
         return newSlots;
       }
@@ -138,12 +139,12 @@ export default function ChatHorizontal({
   // Когда сообщение завершает анимацию — освобождаем слот
   const removeFromSlot = (message: ChatMessage) => {
     const slotIdx = messageSlotMap[message.id!];
-    setSlots((prev) => {
+    setSlots(prev => {
       const newSlots = [...prev];
       if (slotIdx !== undefined) newSlots[slotIdx] = null;
       return newSlots;
     });
-    setMessageSlotMap((prev) => {
+    setMessageSlotMap(prev => {
       const copy = { ...prev };
       delete copy[message.id!];
       return copy;
@@ -162,7 +163,7 @@ export default function ChatHorizontal({
       )}
       {slots.map((msgId, slotIdx) => {
         if (!msgId) return null;
-        const msg = messages.find((m) => m.id === msgId);
+        const msg = messages.find(m => m.id === msgId);
         if (!msg) return null;
         return (
           <Message

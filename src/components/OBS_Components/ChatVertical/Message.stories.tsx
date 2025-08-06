@@ -3,10 +3,11 @@ import { useState } from "react";
 import { expect } from "storybook/test";
 
 import {
-    ChatMessage,
-    ChatMessageNoisyEnum,
-    ChatMessageUserTypeEnum,
-} from "../../../shared/api/generated/Api";
+  ChatMessage,
+  ChatMessageNoisyEnum,
+  ChatMessageUserTypeEnum,
+} from "@/shared/api/generated/Api";
+
 import { Message } from "./Message";
 
 const meta: Meta<typeof Message> = {
@@ -188,7 +189,7 @@ export const Default: Story = {
   },
   play: async ({ canvasElement }) => {
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -232,7 +233,7 @@ export const Generator: Story = {
       setMessages(generateRandomMessages(20));
     };
     const handleRemove = (id: string) => {
-      setMessages((prev) => prev.filter((m) => m.id !== id));
+      setMessages(prev => prev.filter(m => m.id !== id));
     };
     return (
       <div style={{ position: "relative", width: "100%", minHeight: 300 }}>
@@ -262,7 +263,7 @@ export const Generator: Story = {
             marginTop: 60,
           }}
         >
-          {messages.map((msg) => (
+          {messages.map(msg => (
             <Message
               key={msg.id}
               message={msg}

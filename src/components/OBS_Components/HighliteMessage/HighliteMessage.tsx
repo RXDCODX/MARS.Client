@@ -1,6 +1,7 @@
 import { useState } from "react";
 
-import Announce from "../../../shared/Utils/Announce/Announce";
+import Announce from "@/shared/Utils/Announce/Announce";
+
 import Message from "./Message";
 
 export default function HighliteMessage() {

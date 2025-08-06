@@ -4,7 +4,7 @@ export { default as ColorPresetCard } from "./ColorCard/ColorPresetCard";
 export { default as MetaPanel } from "./MetaPanel/MetaPanel";
 export { default as PlayerCard } from "./PlayerCard/PlayerCard";
 export * from "./types";
-export { 
+export {
   usePlayer1,
   usePlayer2,
   useMeta,

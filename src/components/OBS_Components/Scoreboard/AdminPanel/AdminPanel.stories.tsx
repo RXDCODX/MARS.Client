@@ -18,7 +18,7 @@ const meta: Meta<typeof AdminPanel> = {
   },
   tags: ["autodocs"],
   decorators: [
-    (Story) => (
+    Story => (
       <BrowserRouter>
         <div
           style={{
@@ -43,7 +43,7 @@ export const Default: Story = {
   args: {},
   play: async ({ canvasElement }) => {
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -65,12 +65,12 @@ export const Desktop: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие карточек игроков
     const playerCards = canvasElement.querySelectorAll(
-      '[class*="player-card"]',
+      '[class*="player-card"]'
     );
     expect(playerCards.length).toBeGreaterThan(0);
   },
@@ -87,7 +87,7 @@ export const Mobile: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // В мобильном режиме должен произойти редирект
@@ -107,7 +107,7 @@ export const WithCustomData: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие элементов управления
@@ -126,7 +126,7 @@ export const ColorCustomization: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие цветовых настроек
@@ -145,7 +145,7 @@ export const PlayerManagement: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие полей ввода для игроков

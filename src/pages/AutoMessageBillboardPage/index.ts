@@ -1,1 +1,1 @@
-export { default } from "./AutoMessageBillboardPage"; 
+export { default } from "./AutoMessageBillboardPage";

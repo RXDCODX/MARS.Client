@@ -31,7 +31,7 @@ export const Default: Story = {
   },
   play: async ({ canvasElement }) => {
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -56,7 +56,7 @@ export const LongText: Story = {
   },
   play: async ({ canvasElement }) => {
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -80,7 +80,7 @@ export const ShortText: Story = {
   },
   play: async ({ canvasElement }) => {
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -104,7 +104,7 @@ export const EmptyText: Story = {
   },
   play: async ({ canvasElement }) => {
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();

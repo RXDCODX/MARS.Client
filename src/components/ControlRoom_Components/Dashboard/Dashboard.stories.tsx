@@ -1,13 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import Dashboard from './Dashboard';
+import type { Meta, StoryObj } from "@storybook/react";
+
+import Dashboard from "./Dashboard";
 
 const meta: Meta<typeof Dashboard> = {
-  title: 'ControlRoom/Dashboard',
+  title: "ControlRoom/Dashboard",
   component: Dashboard,
   parameters: {
-    layout: 'padded',
+    layout: "padded",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 };
 
 export default meta;
@@ -22,8 +23,8 @@ export const Loading: Story = {
   parameters: {
     docs: {
       description: {
-        story: 'Состояние загрузки дашборда с анимацией спиннера.',
+        story: "Состояние загрузки дашборда с анимацией спиннера.",
       },
     },
   },
-}; 
+};

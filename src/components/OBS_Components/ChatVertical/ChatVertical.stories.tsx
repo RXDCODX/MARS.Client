@@ -18,7 +18,7 @@ const meta: Meta<typeof ChatVertical> = {
   },
   tags: ["autodocs"],
   decorators: [
-    (Story) => (
+    Story => (
       <div
         style={{
           width: "100vw",
@@ -47,14 +47,14 @@ export const Default: Story = {
   ),
   play: async ({ canvasElement }) => {
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем контейнер чата
     const chatContainer = canvasElement.querySelector(
-      '[class*="chatContainer"]',
+      '[class*="chatContainer"]'
     );
     expect(chatContainer).toBeInTheDocument();
 
@@ -72,14 +72,14 @@ export const Default: Story = {
     generateButton?.click();
 
     // Ждем появления сообщений
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
     // Проверяем, что сообщения появились
     let messages = canvasElement.querySelectorAll('[class*="container"]');
 
     // Если сообщения еще не появились, ждем еще немного
     if (messages.length === 0) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       messages = canvasElement.querySelectorAll('[class*="container"]');
     }
 

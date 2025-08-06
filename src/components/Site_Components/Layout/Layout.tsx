@@ -1,6 +1,7 @@
 import { Container } from "react-bootstrap";
 
-import { useSiteColors } from "../../../shared/Utils/useSiteColors";
+import { useSiteColors } from "@/shared/Utils/useSiteColors";
+
 import Footer from "./Footer/Footer";
 import Header from "./Header/Header";
 import styles from "./Layout.module.scss";

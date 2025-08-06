@@ -5,7 +5,7 @@ import styles from "./AutoMessageBillboard.module.scss";
 
 export default function AutoMessageBillboardTest() {
   const [testMode, setTestMode] = useState<"storybook" | "signalr">(
-    "storybook",
+    "storybook"
   );
   const [messages, setMessages] = useState<string[]>([
     "Привет всем! Как дела?",
@@ -17,7 +17,7 @@ export default function AutoMessageBillboardTest() {
 
   const addMessage = () => {
     const newMessage = `Тестовое сообщение ${Date.now()}`;
-    setMessages((prev) => [...prev, newMessage]);
+    setMessages(prev => [...prev, newMessage]);
   };
 
   const clearMessages = () => {
@@ -28,7 +28,7 @@ export default function AutoMessageBillboardTest() {
     // Симуляция получения сообщений через SignalR
     const interval = setInterval(() => {
       const newMessage = `SignalR сообщение ${Date.now()}`;
-      setMessages((prev) => [...prev, newMessage]);
+      setMessages(prev => [...prev, newMessage]);
     }, 5000);
 
     // Останавливаем через 30 секунд

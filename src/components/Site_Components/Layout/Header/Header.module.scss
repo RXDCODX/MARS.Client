@@ -3,32 +3,35 @@
   box-shadow: var(--site-shadow-medium);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--site-border-primary);
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
   z-index: 1030;
-  
+
   .navbar-brand {
     font-size: 1.5rem;
     font-weight: 700;
     color: var(--site-text-primary) !important;
     text-shadow: var(--site-shadow-light);
     white-space: nowrap;
-    
+
     i {
       font-size: 1.8rem;
       margin-right: 0.5rem;
       text-shadow: var(--site-shadow-light);
     }
   }
-  
+
   .navbar-nav {
     align-items: center;
-    
+
     .nav-link {
       color: var(--site-text-primary) !important;
       font-weight: 500;
       text-shadow: var(--site-shadow-light);
       transition: all 0.3s ease;
-      
+
       &:hover {
         color: var(--site-text-accent) !important;
         transform: translateY(-1px);
@@ -36,7 +39,7 @@
       }
     }
   }
-  
+
   .navbar-collapse {
     justify-content: space-between;
   }
@@ -66,7 +69,7 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  
+
   &:hover {
     color: var(--site-text-accent) !important;
     transform: translateY(-1px);
@@ -102,7 +105,7 @@
   background: var(--site-bg-card) !important;
   border-radius: 8px;
   overflow: visible; /* Разрешаем поддропдаунам выходить за границы */
-  
+
   a {
     display: block;
     padding: 12px 20px;
@@ -112,7 +115,7 @@
     transition: all 0.2s ease;
     text-shadow: var(--site-shadow-light);
     white-space: nowrap;
-    
+
     &:hover {
       background: var(--site-hover-bg);
       color: var(--site-text-accent) !important;
@@ -143,19 +146,19 @@
   white-space: nowrap;
   border-radius: 8px;
   margin: 0 4px;
-  
+
   &:hover {
     background: var(--site-hover-bg);
     color: var(--site-text-accent) !important;
     text-shadow: var(--site-shadow-medium);
   }
-  
+
   i {
     font-size: 0.8rem;
     opacity: 0.8;
     transition: all 0.2s ease;
   }
-  
+
   &:hover i {
     opacity: 1;
     transform: translateX(2px);
@@ -197,7 +200,7 @@
   margin: 0 4px;
   overflow: hidden; /* Скрываем текст, выходящий за границы */
   text-overflow: ellipsis; /* Добавляем многоточие для длинного текста */
-  
+
   &:hover {
     background: var(--site-hover-bg);
     color: var(--site-text-accent) !important;
@@ -237,13 +240,13 @@
     max-width: 200px;
     width: auto;
   }
-  
+
   .subDropdownMenu {
     min-width: 160px;
     max-width: 200px;
     width: auto;
   }
-  
+
   .dropdownButton {
     max-width: 150px;
     font-size: 0.9rem;
@@ -255,21 +258,21 @@
     min-width: 140px;
     max-width: 180px;
   }
-  
+
   .subDropdownMenu {
     min-width: 140px;
     max-width: 180px;
   }
-  
+
   .dropdownButton {
     max-width: 120px;
     font-size: 0.85rem;
     padding: 0.4rem 0.8rem;
   }
-  
+
   .navbar-brand {
     font-size: 1.2rem;
-    
+
     i {
       font-size: 1.4rem;
     }
@@ -281,7 +284,7 @@
   &:hover .dropdownMenu {
     display: block;
   }
-  
+
   // Предотвращение ломания колонок
   .dropdownMenu {
     min-width: max-content;
@@ -316,7 +319,7 @@
   text-decoration: none !important;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  
+
   &:hover {
     text-decoration: none !important;
   }
@@ -329,10 +332,10 @@
     word-wrap: break-word;
     word-break: keep-all;
   }
-  
+
   .subDropdownMenu {
     overflow: visible !important; /* Разрешаем поддропдаунам выходить за границы */
     word-wrap: break-word;
     word-break: keep-all;
   }
-} 
+}

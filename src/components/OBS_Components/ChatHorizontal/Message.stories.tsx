@@ -2,10 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 
 import {
-    ChatMessage,
-    ChatMessageNoisyEnum,
-    ChatMessageUserTypeEnum,
-} from "../../../shared/api/generated/Api";
+  ChatMessage,
+  ChatMessageNoisyEnum,
+  ChatMessageUserTypeEnum,
+} from "@/shared/api/generated/Api";
+
 import { Message } from "./Message";
 
 const meta: Meta<typeof Message> = {
@@ -88,7 +89,7 @@ export const Default: Story = {
   },
   play: async ({ canvasElement }) => {
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -127,7 +128,7 @@ export const VIPUser: Story = {
   },
   play: async ({ canvasElement }) => {
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем VIP статус
     const messageElement = canvasElement.querySelector('[class*="message"]');
@@ -164,7 +165,7 @@ export const Moderator: Story = {
   },
   play: async ({ canvasElement }) => {
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем модераторский статус
     const messageElement = canvasElement.querySelector('[class*="message"]');
@@ -201,7 +202,7 @@ export const Broadcaster: Story = {
   },
   play: async ({ canvasElement }) => {
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем статус стримера
     const messageElement = canvasElement.querySelector('[class*="message"]');

@@ -19,29 +19,38 @@ src/AdminPanel/
 ## Компоненты
 
 ### AdminPanel.tsx
+
 Основной компонент, который объединяет все остальные компоненты. Использует хук `useAdminState` для управления состоянием.
 
 ### PlayerCard.tsx
+
 Компонент для отображения и редактирования информации об игроке:
+
 - Имя и тег игрока
 - Счетчик очков с кнопками +/-
 - Кнопки Win/Lose
 - Стилизация с акцентным цветом
 
 ### MetaPanel.tsx
+
 Компонент для управления мета-информацией:
+
 - Название турнира
 - Режим драки (FT1-FT5 или кастомный)
 - Предустановленные правила
 
 ### ColorPresetCard.tsx
+
 Компонент для настройки цветов табло:
+
 - Предустановленные цветовые схемы
 - Кастомные цвета для каждого элемента
 - Палитра цветов и текстовые поля
 
 ### ActionButtons.tsx
+
 Компонент с кнопками действий:
+
 - Поменять имена игроков
 - Поменять игроков местами
 - Сбросить все данные
@@ -49,7 +58,9 @@ src/AdminPanel/
 ## Хуки
 
 ### useAdminState.ts
+
 Хук для управления состоянием AdminPanel:
+
 - Управление состоянием игроков с timestamp
 - Синхронизация с SignalR
 - Методы для обновления данных
@@ -58,7 +69,9 @@ src/AdminPanel/
 ## Типы
 
 ### types.ts
+
 Все TypeScript типы для AdminPanel:
+
 - `Player` - базовая информация об игроке
 - `PlayerWithTimestamp` - игрок с временными метками
 - `MetaInfo` - мета-информация
@@ -77,7 +90,7 @@ src/AdminPanel/
 ## Использование
 
 ```tsx
-import AdminPanel from './AdminPanel';
+import AdminPanel from "./AdminPanel";
 // или отдельные компоненты
-import { PlayerCard, MetaPanel, ColorPresetCard } from './AdminPanel';
-``` 
+import { PlayerCard, MetaPanel, ColorPresetCard } from "./AdminPanel";
+```

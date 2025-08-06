@@ -15,7 +15,7 @@
 ### Базовое использование
 
 ```tsx
-import { FumoFriday } from './components/FumoFriday';
+import { FumoFriday } from "./components/FumoFriday";
 
 function App() {
   return <FumoFriday />;
@@ -25,21 +25,24 @@ function App() {
 ### Тестирование
 
 #### Способ 1: Кнопка в интерфейсе
+
 На странице FumoFriday есть кнопка "Test FumoFriday Alert" в правом верхнем углу.
 
 #### Способ 2: Программное тестирование
+
 ```javascript
 // В консоли браузера
 window.testFumoFriday();
 
 // Или программно
-import { testFumoFridayAlert } from './components/FumoFriday/FumoFriday.test';
+import { testFumoFridayAlert } from "./components/FumoFriday/FumoFriday.test";
 testFumoFridayAlert();
 ```
 
 #### Способ 3: Кастомное сообщение
+
 ```javascript
-import { testFumoFridayWithCustomMessage } from './components/FumoFriday/FumoFriday.test';
+import { testFumoFridayWithCustomMessage } from "./components/FumoFriday/FumoFriday.test";
 testFumoFridayWithCustomMessage("Custom User", "#4ecdc4");
 ```
 
@@ -62,6 +65,7 @@ FumoFriday/
 ## API
 
 ### Message Interface
+
 ```typescript
 interface Message {
   id: string;
@@ -94,4 +98,4 @@ interface Message {
 - React
 - uuid (для генерации уникальных ID)
 - react-textfit (для адаптивного текста)
-- SignalR (для получения сообщений с сервера) 
+- SignalR (для получения сообщений с сервера)

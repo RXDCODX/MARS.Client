@@ -4,9 +4,14 @@ import { useEffect, useRef, useState } from "react";
 // eslint-disable-next-line no-restricted-imports
 import react from "react";
 
-import { MediaDto } from "../../../../shared/api/generated/Api";
-import useTwitchStore from "../../../../shared/twitchStore/twitchStore";
-import { getCoordinates, getRandomRotation, replaceEmotes } from "../../../../shared/Utils";
+import { MediaDto } from "@/shared/api/generated/Api";
+import useTwitchStore from "@/shared/twitchStore/twitchStore";
+import {
+  getCoordinates,
+  getRandomRotation,
+  replaceEmotes,
+} from "@/shared/Utils";
+
 import styles from "./Media.module.scss";
 
 const Player = createComponent({
@@ -29,8 +34,8 @@ export default function TelegramSticker({ mediaInfo, callBack }: Props) {
     textInfo,
     fileInfo,
   } = mediaInfo.mediaInfo;
-  const parser = useTwitchStore((state) => state.parser);
-  const parserToLInk = useTwitchStore((state) => state.parseToLink);
+  const parser = useTwitchStore(state => state.parser);
+  const parserToLInk = useTwitchStore(state => state.parseToLink);
 
   const [style, setStyle] = useState<React.CSSProperties>(
     positionInfo.isProportion
@@ -42,7 +47,7 @@ export default function TelegramSticker({ mediaInfo, callBack }: Props) {
           width: positionInfo.width + "px",
           height: positionInfo.height + "px",
           maxHeight: "max-content",
-        },
+        }
   );
 
   const elementRef = useRef<HTMLDivElement>(null);
@@ -55,7 +60,7 @@ export default function TelegramSticker({ mediaInfo, callBack }: Props) {
     if (elementRef.current) {
       const cords = getCoordinates(elementRef.current, mediaInfo.mediaInfo);
       const rotation = getRandomRotation(mediaInfo.mediaInfo);
-      setStyle((prev) => ({
+      setStyle(prev => ({
         ...prev,
         ...cords,
         ...rotation,

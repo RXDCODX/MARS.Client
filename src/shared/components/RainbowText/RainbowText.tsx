@@ -19,12 +19,12 @@ const RainbowText = ({
 }: RainbowTextProps) => {
   const characters = useMemo(() => text.split(""), [text]);
   const gradientSize = useMemo(
-    () => characters.filter((char) => char !== " ").length,
-    [characters],
+    () => characters.filter(char => char !== " ").length,
+    [characters]
   );
   const gradient = useMemo(
     () => rainbowGradient(gradientSize, saturation, lightness),
-    [gradientSize, saturation, lightness],
+    [gradientSize, saturation, lightness]
   );
 
   return (

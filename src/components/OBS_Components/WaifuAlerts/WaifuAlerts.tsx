@@ -3,12 +3,13 @@ import SchoolPride from "react-canvas-confetti/dist/presets/pride";
 import { PrizeType } from "react-roulette-pro";
 import { Textfit } from "react-textfit";
 
+import { Host, Waifu } from "@/shared/api/generated/Api";
+import animate from "@/shared/styles/animate.module.scss";
+import useTwitchStore from "@/shared/twitchStore/twitchStore";
+import { arrayExcept, getRandomColor } from "@/shared/Utils";
+import Announce from "@/shared/Utils/Announce/Announce";
+
 import { SignalRContext } from "../../../app";
-import { Host, Waifu } from "../../../shared/api/generated/Api";
-import animate from "../../../shared/styles/animate.module.scss";
-import useTwitchStore from "../../../shared/twitchStore/twitchStore";
-import { arrayExcept, getRandomColor } from "../../../shared/Utils";
-import Announce from "../../../shared/Utils/Announce/Announce";
 import {
   getHusbandText,
   getText,
@@ -35,7 +36,7 @@ interface State {
 
 function reducer(
   state: State,
-  action: { type: StateStatus; waifu?: WaifuAlertProps; prizes?: PrizeType[] },
+  action: { type: StateStatus; waifu?: WaifuAlertProps; prizes?: PrizeType[] }
 ): State {
   switch (action.type) {
     case StateStatus.add:
@@ -61,7 +62,7 @@ function reducer(
 
       if (state.messages.length > 0) {
         const newArray = state.messages.filter(
-          (message) => message.waifu.shikiId !== action.waifu!.waifu.shikiId,
+          message => message.waifu.shikiId !== action.waifu!.waifu.shikiId
         );
 
         if (newArray.length > 0) {
@@ -94,10 +95,10 @@ function reducer(
       const excepts = arrayExcept(
         state.prizes ?? [],
         action.prizes ?? [],
-        (a, b) => a.id === b.id,
+        (a, b) => a.id === b.id
       );
 
-      excepts.forEach((prize) => {
+      excepts.forEach(prize => {
         if (prize.image) {
           const img = new Image();
           img.src = prize.image;
@@ -130,7 +131,7 @@ export default function WaifuAlerts() {
   const divHard = useRef<HTMLDivElement>(null);
   const [isRouletted, setIsRouletted] = useState(false);
   const [rouletteIndex, setRouletteIndex] = useState(-1);
-  const sendMessage = useTwitchStore((state) => state.sendMsgToPyrokxnezxz);
+  const sendMessage = useTwitchStore(state => state.sendMsgToPyrokxnezxz);
 
   SignalRContext.useSignalREffect(
     "waifuroll",
@@ -143,7 +144,7 @@ export default function WaifuAlerts() {
       };
       handleAddEvent(parsedMessage);
     },
-    [],
+    []
   );
 
   SignalRContext.useSignalREffect(
@@ -157,7 +158,7 @@ export default function WaifuAlerts() {
       };
       handleAddEvent(parsedMessage);
     },
-    [],
+    []
   );
 
   SignalRContext.useSignalREffect(
@@ -173,7 +174,7 @@ export default function WaifuAlerts() {
       };
       handleAddEvent(parsedMessage);
     },
-    [],
+    []
   );
 
   SignalRContext.useSignalREffect(
@@ -181,7 +182,7 @@ export default function WaifuAlerts() {
     async (prizes: PrizeType[]) => {
       dispatch({ type: StateStatus.addPrizes, prizes });
     },
-    [],
+    []
   );
 
   function handleAddEvent(waifu: WaifuAlertProps) {
@@ -200,7 +201,7 @@ export default function WaifuAlerts() {
     if (currentMessage) {
       if (prizes) {
         const index = prizes.findIndex(
-          (prize) => prize.id === currentMessage.waifu.shikiId,
+          prize => prize.id === currentMessage.waifu.shikiId
         );
         setRouletteIndex(index);
       }
@@ -229,7 +230,7 @@ export default function WaifuAlerts() {
       handleRemoveEvent(currentMessage);
       throw Error("Failed to play audio");
     },
-    [unmuteAll],
+    [unmuteAll]
   );
 
   return (
@@ -281,7 +282,7 @@ export default function WaifuAlerts() {
                 }, 7000);
                 if (!currentMessage.waifu.isAdded) {
                   sendMessage(
-                    `@${currentMessage.displayName}, ${getText(currentMessage)} ${getTitle(currentMessage)}!${getHusbandText(currentMessage)}`,
+                    `@${currentMessage.displayName}, ${getText(currentMessage)} ${getTitle(currentMessage)}!${getHusbandText(currentMessage)}`
                   );
                 }
               }}
@@ -383,7 +384,7 @@ export default function WaifuAlerts() {
               unmuteAll();
               handleRemoveEvent(currentMessage);
             }}
-            onCanPlay={(event) => {
+            onCanPlay={event => {
               try {
                 event.currentTarget?.play();
               } catch {

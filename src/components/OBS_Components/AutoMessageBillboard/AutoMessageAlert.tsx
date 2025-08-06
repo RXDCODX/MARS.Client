@@ -1,8 +1,8 @@
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef } from "react";
 
-import useTwitchStore from "../../../shared/twitchStore/twitchStore";
-import { replaceEmotes } from "../../../shared/Utils";
+import useTwitchStore from "@/shared/twitchStore/twitchStore";
+import { replaceEmotes } from "@/shared/Utils";
 
 interface Props {
   message: string;
@@ -32,8 +32,8 @@ export default function AutoMessageAlert({ message, onComplete }: Props) {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Получаем парсеры для эмодзи
-  const parser = useTwitchStore((state) => state.parser);
-  const parserToLink = useTwitchStore((state) => state.parseToLink);
+  const parser = useTwitchStore(state => state.parser);
+  const parserToLink = useTwitchStore(state => state.parseToLink);
 
   // Генерируем случайный градиент для каждого сообщения
   const randomGradient = useMemo(() => {

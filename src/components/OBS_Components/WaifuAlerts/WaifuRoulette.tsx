@@ -3,8 +3,9 @@ import "react-roulette-pro/dist/index.css";
 import { CSSProperties, useRef, useState } from "react";
 import RoulettePro, { PrizeType } from "react-roulette-pro";
 
-import animate from "../../../shared/styles/animate.module.scss";
-import { getRandomColor } from "../../../shared/Utils";
+import animate from "@/shared/styles/animate.module.scss";
+import { getRandomColor } from "@/shared/Utils";
+
 import styles from "./WaifuAlerts.module.scss";
 
 interface Props {
@@ -96,7 +97,7 @@ export default function WaifuRoulette({
             div.onanimationend = () => {
               callback();
             };
-            setBaseStyle((prev) => ({
+            setBaseStyle(prev => ({
               ...prev,
               animationDuration: "1.5s",
             }));

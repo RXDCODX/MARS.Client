@@ -1,6 +1,7 @@
 import { Col, Container, ListGroup, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { useSiteColors } from "../../../../shared/Utils/useSiteColors";
+
+import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
 import styles from "./Footer.module.scss";
 
@@ -21,11 +22,14 @@ const Footer: React.FC = () => {
         <Row className="g-4">
           <Col lg={3} md={6}>
             <div className={styles.section}>
-              <h3 className="h5 mb-3" style={colors.utils.getTextStyle('primary')}>
+              <h3
+                className="h5 mb-3"
+                style={colors.utils.getTextStyle("primary")}
+              >
                 <i className="bi bi-rocket-takeoff me-2"></i>
                 MARS Client
               </h3>
-              <p style={colors.utils.getTextStyle('secondary')}>
+              <p style={colors.utils.getTextStyle("secondary")}>
                 Мощная платформа для управления стримингом и создания
                 интерактивных компонентов для OBS.
               </p>
@@ -34,20 +38,37 @@ const Footer: React.FC = () => {
 
           <Col lg={3} md={6}>
             <div className={styles.section}>
-              <h4 className="h6 mb-3" style={colors.utils.getTextStyle('primary')}>Быстрые ссылки</h4>
+              <h4
+                className="h6 mb-3"
+                style={colors.utils.getTextStyle("primary")}
+              >
+                Быстрые ссылки
+              </h4>
               <ListGroup variant="flush" className="bg-transparent">
                 <ListGroup.Item className="bg-transparent border-0 px-0">
-                  <Link to="/" className="text-decoration-none" style={colors.utils.getTextStyle('secondary')}>
+                  <Link
+                    to="/"
+                    className="text-decoration-none"
+                    style={colors.utils.getTextStyle("secondary")}
+                  >
                     Главная
                   </Link>
                 </ListGroup.Item>
                 <ListGroup.Item className="bg-transparent border-0 px-0">
-                  <Link to="/about" className="text-decoration-none" style={colors.utils.getTextStyle('secondary')}>
+                  <Link
+                    to="/about"
+                    className="text-decoration-none"
+                    style={colors.utils.getTextStyle("secondary")}
+                  >
                     О проекте
                   </Link>
                 </ListGroup.Item>
                 <ListGroup.Item className="bg-transparent border-0 px-0">
-                  <Link to="/docs" className="text-decoration-none" style={colors.utils.getTextStyle('secondary')}>
+                  <Link
+                    to="/docs"
+                    className="text-decoration-none"
+                    style={colors.utils.getTextStyle("secondary")}
+                  >
                     Документация
                   </Link>
                 </ListGroup.Item>
@@ -55,7 +76,7 @@ const Footer: React.FC = () => {
                   <Link
                     to="/contacts"
                     className="text-decoration-none"
-                    style={colors.utils.getTextStyle('secondary')}
+                    style={colors.utils.getTextStyle("secondary")}
                   >
                     Контакты
                   </Link>
@@ -66,29 +87,46 @@ const Footer: React.FC = () => {
 
           <Col lg={3} md={6}>
             <div className={styles.section}>
-              <h4 className="h6 mb-3" style={colors.utils.getTextStyle('primary')}>OBS Компоненты</h4>
+              <h4
+                className="h6 mb-3"
+                style={colors.utils.getTextStyle("primary")}
+              >
+                OBS Компоненты
+              </h4>
               <ListGroup variant="flush" className="bg-transparent">
                 <ListGroup.Item className="bg-transparent border-0 px-0">
                   <Link
                     to="/pyroalerts"
                     className="text-decoration-none"
-                    style={colors.utils.getTextStyle('secondary')}
+                    style={colors.utils.getTextStyle("secondary")}
                   >
                     Pyro Alerts
                   </Link>
                 </ListGroup.Item>
                 <ListGroup.Item className="bg-transparent border-0 px-0">
-                  <Link to="/waifu" className="text-decoration-none" style={colors.utils.getTextStyle('secondary')}>
+                  <Link
+                    to="/waifu"
+                    className="text-decoration-none"
+                    style={colors.utils.getTextStyle("secondary")}
+                  >
                     Waifu Alerts
                   </Link>
                 </ListGroup.Item>
                 <ListGroup.Item className="bg-transparent border-0 px-0">
-                  <Link to="/chath" className="text-decoration-none" style={colors.utils.getTextStyle('secondary')}>
+                  <Link
+                    to="/chath"
+                    className="text-decoration-none"
+                    style={colors.utils.getTextStyle("secondary")}
+                  >
                     Горизонтальный чат
                   </Link>
                 </ListGroup.Item>
                 <ListGroup.Item className="bg-transparent border-0 px-0">
-                  <Link to="/chatv" className="text-decoration-none" style={colors.utils.getTextStyle('secondary')}>
+                  <Link
+                    to="/chatv"
+                    className="text-decoration-none"
+                    style={colors.utils.getTextStyle("secondary")}
+                  >
                     Вертикальный чат
                   </Link>
                 </ListGroup.Item>
@@ -98,10 +136,19 @@ const Footer: React.FC = () => {
 
           <Col lg={3} md={6}>
             <div className={styles.section}>
-              <h4 className="h6 mb-3" style={colors.utils.getTextStyle('primary')}>Панель управления</h4>
+              <h4
+                className="h6 mb-3"
+                style={colors.utils.getTextStyle("primary")}
+              >
+                Панель управления
+              </h4>
               <ListGroup variant="flush" className="bg-transparent">
                 <ListGroup.Item className="bg-transparent border-0 px-0">
-                  <Link to="/admin" className="text-decoration-none" style={colors.utils.getTextStyle('secondary')}>
+                  <Link
+                    to="/admin"
+                    className="text-decoration-none"
+                    style={colors.utils.getTextStyle("secondary")}
+                  >
                     Админ панель
                   </Link>
                 </ListGroup.Item>
@@ -109,13 +156,17 @@ const Footer: React.FC = () => {
                   <Link
                     to="/dashboard"
                     className="text-decoration-none"
-                    style={colors.utils.getTextStyle('secondary')}
+                    style={colors.utils.getTextStyle("secondary")}
                   >
                     Дашборд
                   </Link>
                 </ListGroup.Item>
                 <ListGroup.Item className="bg-transparent border-0 px-0">
-                  <Link to="/main" className="text-decoration-none" style={colors.utils.getTextStyle('secondary')}>
+                  <Link
+                    to="/main"
+                    className="text-decoration-none"
+                    style={colors.utils.getTextStyle("secondary")}
+                  >
                     Просмотр серверов
                   </Link>
                 </ListGroup.Item>
@@ -123,7 +174,7 @@ const Footer: React.FC = () => {
                   <Link
                     to="/services"
                     className="text-decoration-none"
-                    style={colors.utils.getTextStyle('secondary')}
+                    style={colors.utils.getTextStyle("secondary")}
                   >
                     Сервисы
                   </Link>
@@ -138,7 +189,7 @@ const Footer: React.FC = () => {
         <Row className="align-items-center">
           <Col md={6}>
             <div className={styles.copyright}>
-              <p className="mb-0" style={colors.utils.getTextStyle('muted')}>
+              <p className="mb-0" style={colors.utils.getTextStyle("muted")}>
                 &copy; {currentYear} MARS Client. Все права защищены.
               </p>
             </div>
@@ -146,13 +197,27 @@ const Footer: React.FC = () => {
 
           <Col md={6} className="text-md-end">
             <div className={styles.social}>
-              <a href="#" className="me-3" aria-label="GitHub" style={colors.utils.getTextStyle('secondary')}>
+              <a
+                href="#"
+                className="me-3"
+                aria-label="GitHub"
+                style={colors.utils.getTextStyle("secondary")}
+              >
                 <i className="bi bi-github fs-5"></i>
               </a>
-              <a href="#" className="me-3" aria-label="Discord" style={colors.utils.getTextStyle('secondary')}>
+              <a
+                href="#"
+                className="me-3"
+                aria-label="Discord"
+                style={colors.utils.getTextStyle("secondary")}
+              >
                 <i className="bi bi-discord fs-5"></i>
               </a>
-              <a href="#" aria-label="Twitter" style={colors.utils.getTextStyle('secondary')}>
+              <a
+                href="#"
+                aria-label="Twitter"
+                style={colors.utils.getTextStyle("secondary")}
+              >
                 <i className="bi bi-twitter-x fs-5"></i>
               </a>
             </div>

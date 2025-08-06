@@ -1,12 +1,15 @@
 // SignalR клиент для TunaHub
 import { HttpClient } from './types';
+import { getApiBaseUrl } from './api-config';
 
 // Экспортируем только методы для этого хаба
 export class TunaHubService {
   private httpClient: HttpClient;
 
   constructor(baseURL?: string) {
-    this.httpClient = new HttpClient({ baseUrl: baseURL });
+    // Используем переданный baseURL или получаем из переменных окружения в рантайме
+    const apiBaseUrl = baseURL || getApiBaseUrl();
+    this.httpClient = new HttpClient({ baseUrl: apiBaseUrl });
   }
 
   // SignalR методы будут добавлены вручную или через другой генератор

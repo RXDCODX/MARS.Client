@@ -1,10 +1,11 @@
 import { useCallback, useState } from "react";
 
-import { SignalRContext } from "../../../app";
 import {
-    ChatMessage,
-    MakeScreenParticlesCreateParamsParticlesEnum,
-} from "../../../shared/api/generated/Api";
+  ChatMessage,
+  MakeScreenParticlesCreateParamsParticlesEnum,
+} from "@/shared/api/generated/Api";
+
+import { SignalRContext } from "../../../app";
 import { Confettyv2 } from "./Confetty";
 import EmojiParticles from "./EmojiParticles";
 import Firework from "./Firework";
@@ -31,9 +32,9 @@ export default function Manager() {
     (type: MakeScreenParticlesCreateParamsParticlesEnum) => {
       const newMessage = { type: type, id: count };
       setCount(count + 1);
-      setMessages((prev) => [...prev, newMessage]);
+      setMessages(prev => [...prev, newMessage]);
     },
-    [],
+    []
   );
 
   SignalRContext.useSignalREffect(
@@ -41,19 +42,19 @@ export default function Manager() {
     (mediaDto: ChatMessage) => {
       const newMessage = { input: mediaDto, id: count };
       setCount(count + 1);
-      setEmojis((prev) => [...prev, newMessage]);
+      setEmojis(prev => [...prev, newMessage]);
     },
-    [],
+    []
   );
 
   const removeMessage = useCallback((id: number) => {
-    setMessages((prev) => prev.filter((message) => message.id !== id));
+    setMessages(prev => prev.filter(message => message.id !== id));
   }, []);
 
   return (
     <>
       {messages.length > 0 &&
-        messages.map((message) => {
+        messages.map(message => {
           switch (message.type) {
             case MakeScreenParticlesCreateParamsParticlesEnum.Confetty:
               return (
@@ -72,7 +73,7 @@ export default function Manager() {
           }
         })}
       {emojis.length > 0 &&
-        emojis.map((message) => (
+        emojis.map(message => (
           <EmojiParticles key={message.id} input={message.input} />
         ))}
     </>

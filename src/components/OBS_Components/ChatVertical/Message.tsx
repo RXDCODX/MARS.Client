@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 
-import { ChatMessage } from "../../../shared/api/generated/Api";
-import anime from "../../../shared/styles/animate.module.scss";
-import useTwitchStore from "../../../shared/twitchStore/twitchStore";
-import { parseContent, replaceBadges, replaceEmotes } from "../../../shared/Utils";
-import GradientText from "../../../shared/Utils/Animations/GradientText";
+import { ChatMessage } from "@/shared/api/generated/Api";
+import anime from "@/shared/styles/animate.module.scss";
+import useTwitchStore from "@/shared/twitchStore/twitchStore";
+import { parseContent, replaceBadges, replaceEmotes } from "@/shared/Utils";
+import GradientText from "@/shared/Utils/Animations/GradientText";
+
 import { CSS_ANIMATION_CONFIG } from "./animationTimings";
 import styles from "./Message.module.scss";
 
@@ -22,9 +23,9 @@ function getRoleColor(message: ChatMessage) {
 
 export function Message({ message, onRemove }: Props) {
   const [handler, setHandler] = useState(true);
-  const badges = useTwitchStore((state) => state.badges);
-  const parser = useTwitchStore((state) => state.parser);
-  const parserToLink = useTwitchStore((state) => state.parseToLink);
+  const badges = useTwitchStore(state => state.badges);
+  const parser = useTwitchStore(state => state.parser);
+  const parserToLink = useTwitchStore(state => state.parseToLink);
   const [parts] = useState(() => parseContent(message.message));
   const roleColor = getRoleColor(message);
   const msgRef = useRef<HTMLDivElement>(null);
@@ -68,7 +69,7 @@ export function Message({ message, onRemove }: Props) {
           </div>
         </div>
         <div className={styles.right}>
-          {parts?.map((part) => {
+          {parts?.map(part => {
             if (message.isBroadcaster || message.isVip || message.isModerator) {
               // Особые пользователи — всегда градиент
               if (part.type === "text") {

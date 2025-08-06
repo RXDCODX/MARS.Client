@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { SignalRContext } from "../../../app";
 import {
   MediaDto,
   MediaMetaInfoPriorityEnum,
-} from "../../../shared/api/generated/Api";
-import Announce from "../../../shared/Utils/Announce/Announce";
+} from "@/shared/api/generated/Api";
+import Announce from "@/shared/Utils/Announce/Announce";
+
+import { SignalRContext } from "../../../app";
 import Alert from "../PyroAlerts/Alert";
 import HighPriorityAlert from "../PyroAlerts/HighPriorityAlert";
 
@@ -36,7 +37,7 @@ export default function PyroAlerts() {
           },
         };
 
-        setHighPriorityQueue((prev) => [...prev, parsedMessage]); // Добавляем в очередь высокоприоритетных
+        setHighPriorityQueue(prev => [...prev, parsedMessage]); // Добавляем в очередь высокоприоритетных
         setMessages([]);
         break;
       }
@@ -56,30 +57,30 @@ export default function PyroAlerts() {
           },
         };
 
-        setMessages((prev) => [...prev, coolMessage]);
+        setMessages(prev => [...prev, coolMessage]);
         break;
       }
     }
   }, []);
 
   const remove = useCallback((message: MediaDto) => {
-    setMessages((prev) =>
-      prev.filter((m) => m.mediaInfo.id !== message.mediaInfo.id),
+    setMessages(prev =>
+      prev.filter(m => m.mediaInfo.id !== message.mediaInfo.id)
     );
   }, []);
 
   const removeHighPrior = useCallback(
     (message: MediaDto) => {
-      setHighPriorityQueue((prev) =>
-        prev.filter((m) => m.mediaInfo.id !== message.mediaInfo.id),
+      setHighPriorityQueue(prev =>
+        prev.filter(m => m.mediaInfo.id !== message.mediaInfo.id)
       );
 
-      const newPriority = highPriorityQueue.some((e) => e)
+      const newPriority = highPriorityQueue.some(e => e)
         ? highPriorityQueue[0]
         : null;
       setCurrentHighPriority(newPriority);
     },
-    [highPriorityQueue],
+    [highPriorityQueue]
   );
 
   // Эффект для обработки очереди высокоприоритетных алертов
@@ -91,7 +92,7 @@ export default function PyroAlerts() {
 
       // Удаляем его из очереди через 2 секунды (время показа)
       const timer = setTimeout(() => {
-        setHighPriorityQueue((prev) => prev.slice(1));
+        setHighPriorityQueue(prev => prev.slice(1));
         setCurrentHighPriority(null);
       }, 2000);
 
@@ -120,7 +121,7 @@ export default function PyroAlerts() {
 
       {/* Рендерим обычные алерты, если нет высокоприоритетных */}
       {!currentHighPriority &&
-        messages.map((messageProps) => (
+        messages.map(messageProps => (
           <Alert
             key={messageProps.mediaInfo.id}
             message={messageProps}

@@ -30,7 +30,7 @@ const FlagSelector: React.FC<FlagSelectorProps> = ({
     setIsOpen(false);
     // Устанавливаем название страны в поисковый запрос для отображения в инпуте
     const selectedCountry = searchCountries(countryCode).find(
-      (c) => c.code === countryCode,
+      c => c.code === countryCode
     );
     if (selectedCountry) {
       setSearchQuery(selectedCountry.name);
@@ -60,7 +60,7 @@ const FlagSelector: React.FC<FlagSelectorProps> = ({
 
   // Получаем информацию о выбранной стране
   const selectedCountry = selectedFlag
-    ? searchCountries(selectedFlag).find((c) => c.code === selectedFlag)
+    ? searchCountries(selectedFlag).find(c => c.code === selectedFlag)
     : null;
 
   return (
@@ -104,7 +104,7 @@ const FlagSelector: React.FC<FlagSelectorProps> = ({
                 borderRadius: "2px",
                 border: `1px solid ${colors.border.primary}`,
               }}
-              onError={(e) => {
+              onError={e => {
                 e.currentTarget.style.display = "none";
               }}
             />
@@ -125,7 +125,7 @@ const FlagSelector: React.FC<FlagSelectorProps> = ({
             boxShadow: colors.shadow.medium,
           }}
         >
-          {filteredCountries.map((country) => (
+          {filteredCountries.map(country => (
             <div
               key={country.code}
               className="d-flex align-items-center gap-2 p-2 cursor-pointer"
@@ -136,11 +136,11 @@ const FlagSelector: React.FC<FlagSelectorProps> = ({
                 transition: "background-color 0.2s ease",
               }}
               onClick={() => handleSelect(country.code)}
-              onMouseEnter={(e) =>
+              onMouseEnter={e =>
                 (e.currentTarget.style.backgroundColor =
                   colors.hover.background)
               }
-              onMouseLeave={(e) =>
+              onMouseLeave={e =>
                 (e.currentTarget.style.backgroundColor = "transparent")
               }
             >
@@ -155,7 +155,7 @@ const FlagSelector: React.FC<FlagSelectorProps> = ({
                   borderRadius: "2px",
                   border: `1px solid ${colors.border.primary}`,
                 }}
-                onError={(e) => {
+                onError={e => {
                   e.currentTarget.style.display = "none";
                 }}
               />

@@ -193,7 +193,7 @@
   position: relative;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 50%;
     top: 0;
@@ -375,7 +375,10 @@
     font-size: 2rem;
   }
 
-  .mission, .team, .timeline, .cta {
+  .mission,
+  .team,
+  .timeline,
+  .cta {
     padding: 60px 0;
   }
 
@@ -386,4 +389,4 @@
   .sectionTitle {
     font-size: 2rem;
   }
-} 
+}

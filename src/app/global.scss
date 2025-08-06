@@ -120,7 +120,7 @@ html:not([data-storybook]) {
   --site-shadow-heavy: 0 10px 15px rgba(0, 0, 0, 0.2);
   --site-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.1);
 
-  // Цвета для ховер эффектов
+  // Цвета для hover эффектов
   --site-hover-bg: rgba(0, 0, 0, 0.05);
   --site-hover-text: #495057;
   --site-hover-border: #adb5bd;
@@ -129,7 +129,7 @@ html:not([data-storybook]) {
   --site-focus-ring: rgba(102, 126, 234, 0.25);
   --site-focus-border: #667eea;
 
-  // Цвета для скроллбаров
+  // Цвета для scroll bars
   --site-scrollbar-track: #f8f9fa;
   --site-scrollbar-thumb: #adb5bd;
   --site-scrollbar-thumb-hover: #6c757d;
@@ -247,7 +247,7 @@ html:not([data-storybook]) {
   --site-shadow-heavy: 0 10px 15px rgba(0, 0, 0, 0.5);
   --site-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.3);
 
-  // Цвета для ховер эффектов (инвертированы)
+  // Цвета для hover эффектов (инвертированы)
   --site-hover-bg: rgba(255, 255, 255, 0.05);
   --site-hover-text: #ced4da;
   --site-hover-border: #6c757d;
@@ -256,7 +256,7 @@ html:not([data-storybook]) {
   --site-focus-ring: rgba(124, 141, 248, 0.25);
   --site-focus-border: #7c8df8;
 
-  // Цвета для скроллбаров (инвертированы)
+  // Цвета для scroll bars (инвертированы)
   --site-scrollbar-track: #343a40;
   --site-scrollbar-thumb: #6c757d;
   --site-scrollbar-thumb-hover: #adb5bd;
@@ -364,7 +364,7 @@ h6 {
   text-shadow: var(--text-shadow-light);
 }
 
-// Глобальные стили для overflow и скроллбаров
+// Глобальные стили для overflow и scroll баров
 body {
   overflow-x: hidden;
 }
@@ -390,7 +390,7 @@ div {
   max-width: 100%;
 }
 
-/* Кастомизация скроллбаров */
+/* Кастомизация scroll баров */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -601,7 +601,7 @@ div {
   box-shadow: var(--site-shadow-inset) !important;
 }
 
-/* Утилиты для ховер эффектов */
+/* Утилиты для hover эффектов */
 .site-hover-bg:hover {
   background-color: var(--site-hover-bg) !important;
 }
@@ -623,7 +623,7 @@ div {
   border-color: var(--site-focus-border) !important;
 }
 
-/* Утилиты для скроллбаров */
+/* Утилиты для scroll баров */
 .site-scrollbar {
   scrollbar-color: var(--site-scrollbar-thumb) var(--site-scrollbar-track) !important;
 }

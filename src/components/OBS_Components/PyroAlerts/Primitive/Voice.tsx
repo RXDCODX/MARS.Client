@@ -1,8 +1,9 @@
 import { useCallback, useState } from "react";
 import { Textfit } from "react-textfit";
 
+import { MediaDto } from "@/shared/api/generated/Api";
+
 import { SignalRContext } from "../../../../app";
-import { MediaDto } from "../../../../shared/api/generated/Api";
 import styles from "./Media.module.scss";
 
 interface Props {

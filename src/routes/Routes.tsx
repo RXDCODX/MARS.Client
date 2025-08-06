@@ -1,26 +1,27 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-import ServerViewer from "../components/ControlRoom_Components/ServerViewer/ServerViewer";
-import ServiceDetails from "../components/ControlRoom_Components/ServerViewer/ServiceDetails";
-import AutoMessageBillboard from "../components/OBS_Components/AutoMessageBillboard/AutoMessageBillboard";
-import AutoMessageBillboardTest from "../components/OBS_Components/AutoMessageBillboard/AutoMessageBillboardTest";
-import ChatHorizontal from "../components/OBS_Components/ChatHorizontal/ChatHorizontal";
-import ChatVertical from "../components/OBS_Components/ChatVertical/ChatVertical";
-import { FumoFriday } from "../components/OBS_Components/FumoFriday";
-import HighliteMessage from "../components/OBS_Components/HighliteMessage/HighliteMessage";
-import PyroAlerts from "../components/OBS_Components/PyroAlerts/PyroAlerts";
-import RandomMem from "../components/OBS_Components/RandomMem/RandomMem";
-import Scoreboard from "../components/OBS_Components/Scoreboard";
-import ScoreboardAdminPanel from "../components/OBS_Components/Scoreboard/AdminPanel/AdminPanel";
-import Manager from "../components/OBS_Components/ScreenParticles/Manager";
-import CurrentTrackSignalRHubWrapper from "../components/OBS_Components/SoundRequest/CurrentTrack/SignalRHubWrapper";
-import WaifuAlerts from "../components/OBS_Components/WaifuAlerts/WaifuAlerts";
-import { Layout } from "../components/Site_Components/Layout";
-import AboutPage from "../pages/AboutPage";
-import CommandsPage from "../pages/CommandsPage/CommandsPage";
-import ContactsPage from "../pages/ContactsPage";
-import DocsPage from "../pages/DocsPage";
-import WelcomePage from "../pages/WelcomePage";
+import ServerViewer from "@/components/ControlRoom_Components/ServerViewer/ServerViewer";
+import ServiceDetails from "@/components/ControlRoom_Components/ServerViewer/ServiceDetails";
+import AutoMessageBillboard from "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboard";
+import AutoMessageBillboardTest from "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboardTest";
+import ChatHorizontal from "@/components/OBS_Components/ChatHorizontal/ChatHorizontal";
+import ChatVertical from "@/components/OBS_Components/ChatVertical/ChatVertical";
+import { FumoFriday } from "@/components/OBS_Components/FumoFriday";
+import HighliteMessage from "@/components/OBS_Components/HighliteMessage/HighliteMessage";
+import PyroAlerts from "@/components/OBS_Components/PyroAlerts/PyroAlerts";
+import RandomMem from "@/components/OBS_Components/RandomMem/RandomMem";
+import Scoreboard from "@/components/OBS_Components/Scoreboard";
+import ScoreboardAdminPanel from "@/components/OBS_Components/Scoreboard/AdminPanel/AdminPanel";
+import Manager from "@/components/OBS_Components/ScreenParticles/Manager";
+import CurrentTrackSignalRHubWrapper from "@/components/OBS_Components/SoundRequest/CurrentTrack/SignalRHubWrapper";
+import WaifuAlerts from "@/components/OBS_Components/WaifuAlerts/WaifuAlerts";
+import { Layout } from "@/components/Site_Components/Layout";
+import AboutPage from "@/pages/AboutPage";
+import CommandsPage from "@/pages/CommandsPage/CommandsPage";
+import ContactsPage from "@/pages/ContactsPage";
+import DocsPage from "@/pages/DocsPage";
+import WelcomePage from "@/pages/WelcomePage";
+
 import { LinktreeMenu } from "./LinkTree/LinkTreeMenu";
 
 // Компонент-обертка для страницы деталей сервиса

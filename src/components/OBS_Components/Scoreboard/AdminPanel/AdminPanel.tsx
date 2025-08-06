@@ -3,7 +3,8 @@ import { useCallback, useEffect, useRef } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-import { useSiteColors } from "../../../../shared/Utils/useSiteColors";
+import { useSiteColors } from "@/shared/Utils/useSiteColors";
+
 import ThemeToggle from "../../../ThemeToggle";
 import ActionButtons from "./ActionButtons";
 import styles from "./AdminPanel.module.scss";
@@ -39,10 +40,10 @@ const AdminPanelContent = () => {
       lastUpdateRef.current = now;
       handleReceiveState(state);
     },
-    [handleReceiveState],
+    [handleReceiveState]
   );
 
-  const connection = useScoreboardStore((state) => state._connection);
+  const connection = useScoreboardStore(state => state._connection);
 
   useEffect(() => {
     if (connection.state === HubConnectionState.Connected) {

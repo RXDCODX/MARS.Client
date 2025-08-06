@@ -22,7 +22,7 @@ const meta: Meta<typeof ActionButtons> = {
     onReset: { action: "reset clicked" },
   },
   decorators: [
-    (Story) => (
+    Story => (
       <div
         style={{
           width: "300px",
@@ -42,11 +42,11 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {},
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие кнопок действий
-    const buttons = canvasElement.querySelectorAll('button');
+    const buttons = canvasElement.querySelectorAll("button");
     expect(buttons.length).toBeGreaterThan(0);
   },
 };
@@ -61,11 +61,11 @@ export const AllButtons: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие всех трех кнопок
-    const buttons = canvasElement.querySelectorAll('button');
+    const buttons = canvasElement.querySelectorAll("button");
     expect(buttons.length).toBe(3);
   },
 };
@@ -80,11 +80,13 @@ export const SwapNamesButton: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие кнопки смены имен
-    const swapNamesButton = canvasElement.querySelector('button[title*="names"]');
+    const swapNamesButton = canvasElement.querySelector(
+      'button[title*="names"]'
+    );
     expect(swapNamesButton).toBeInTheDocument();
   },
 };
@@ -99,11 +101,13 @@ export const SwapPlayersButton: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие кнопки смены игроков
-    const swapPlayersButton = canvasElement.querySelector('button[title*="players"]');
+    const swapPlayersButton = canvasElement.querySelector(
+      'button[title*="players"]'
+    );
     expect(swapPlayersButton).toBeInTheDocument();
   },
 };
@@ -118,7 +122,7 @@ export const ResetButton: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие кнопки сброса
@@ -137,11 +141,11 @@ export const ButtonStyles: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие иконок в кнопках
-    const icons = canvasElement.querySelectorAll('i');
+    const icons = canvasElement.querySelectorAll("i");
     expect(icons.length).toBeGreaterThan(0);
   },
 };
@@ -156,11 +160,11 @@ export const ResponsiveLayout: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие контейнера кнопок
     const container = canvasElement.querySelector('[class*="action-buttons"]');
     expect(container).toBeInTheDocument();
   },
-}; 
+};

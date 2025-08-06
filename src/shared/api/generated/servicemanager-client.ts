@@ -1,12 +1,15 @@
 // Клиент для контроллера ServiceManager
-import { HttpClient } from "./types";
+import { HttpClient } from './types';
+import { getApiBaseUrl } from './api-config';
 
 // Экспортируем только методы для этого контроллера
 export class ServiceManagerService {
   private httpClient: HttpClient;
 
   constructor(baseURL?: string) {
-    this.httpClient = new HttpClient({ baseUrl: baseURL });
+    // Используем переданный baseURL или получаем из переменных окружения в рантайме
+    const apiBaseUrl = baseURL || getApiBaseUrl();
+    this.httpClient = new HttpClient({ baseUrl: apiBaseUrl });
   }
 
   // Методы будут добавлены вручную или через другой генератор

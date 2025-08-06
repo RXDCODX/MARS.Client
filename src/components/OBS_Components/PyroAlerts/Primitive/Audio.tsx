@@ -1,8 +1,9 @@
 import { useCallback, useRef } from "react";
 
+import { MediaDto } from "@/shared/api/generated/Api";
+import { BigTextBlockForAudio } from "@/shared/Utils/BigTexts/BigTextBlockForAudio";
+
 import { SignalRContext } from "../../../../app";
-import { MediaDto } from "../../../../shared/api/generated/Api";
-import { BigTextBlockForAudio } from "../../../../shared/Utils/BigTexts/BigTextBlockForAudio";
 
 interface Props {
   callback: () => void;
@@ -42,10 +43,10 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
         key={Id}
         ref={audioRef}
         controls={false}
-        onError={(e) => {
+        onError={e => {
           console.log(
             "%c" + e,
-            "color: #7289DA; -webkit-text-stroke: 2px black; font-size: 72px; font-weight: bold;",
+            "color: #7289DA; -webkit-text-stroke: 2px black; font-size: 72px; font-weight: bold;"
           );
           error();
         }}
@@ -55,7 +56,7 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
             callback();
           }, 1000);
         }}
-        onCanPlay={(event) => {
+        onCanPlay={event => {
           event.currentTarget?.play();
         }}
         onCanPlayThrough={() => muteAll()}

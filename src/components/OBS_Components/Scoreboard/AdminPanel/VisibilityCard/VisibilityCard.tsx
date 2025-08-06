@@ -3,14 +3,18 @@ import { Button, Card, Form } from "react-bootstrap";
 import { Clock, Eye, EyeSlash } from "react-bootstrap-icons";
 
 import { useSiteColors } from "../../../../../shared/Utils/useSiteColors";
-import { useVisibility, useVisibilityActions, useAnimationDuration } from "../store/scoreboardStore";
+import {
+  useAnimationDuration,
+  useVisibility,
+  useVisibilityActions,
+} from "../store/scoreboardStore";
 
 const VisibilityCard: React.FC = () => {
   const colors = useSiteColors();
   const isVisible = useVisibility();
   const animationDuration = useAnimationDuration();
   const { setVisibility, setAnimationDuration } = useVisibilityActions();
-  
+
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [isShowing, setIsShowing] = useState(false); // Новое состояние для отслеживания действия показа
   const [pageOpenTime] = useState<number>(Date.now());
@@ -58,14 +62,10 @@ const VisibilityCard: React.FC = () => {
   };
 
   const handleAnimationDurationChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = parseInt(e.target.value);
-    if (
-      !isNaN(value) &&
-      value >= 100 &&
-      value <= 99999
-    ) {
+    if (!isNaN(value) && value >= 100 && value <= 99999) {
       setAnimationDuration(value);
     }
   };

@@ -2,7 +2,7 @@ import {
   ChatMessage,
   ChatMessageNoisyEnum,
   ChatMessageUserTypeEnum,
-} from "../../shared/api/generated/Api";
+} from "@/shared/api/generated/Api";
 
 /**
  * Создает тестовое сообщение чата с базовыми параметрами
@@ -14,7 +14,7 @@ export function createTestMessage(
   colorHex: string,
   isVip: boolean = false,
   isModerator: boolean = false,
-  isBroadcaster: boolean = false,
+  isBroadcaster: boolean = false
 ): ChatMessage {
   return {
     id,
@@ -70,21 +70,21 @@ export function createTestMessage(
  */
 export function createTestMessageSet(
   prefix: string,
-  startIndex: number,
+  startIndex: number
 ): ChatMessage[] {
   return [
     createTestMessage(
       `${prefix}-${startIndex}`,
       "Привет всем! 👋",
       "User1",
-      "#ff0000",
+      "#ff0000"
     ),
     createTestMessage(
       `${prefix}-${startIndex + 1}`,
       "Как дела?",
       "User2",
       "#00ff00",
-      true,
+      true
     ),
     createTestMessage(
       `${prefix}-${startIndex + 2}`,
@@ -92,7 +92,7 @@ export function createTestMessageSet(
       "Moderator",
       "#0000ff",
       false,
-      true,
+      true
     ),
     createTestMessage(
       `${prefix}-${startIndex + 3}`,
@@ -101,7 +101,7 @@ export function createTestMessageSet(
       "#ffff00",
       false,
       false,
-      true,
+      true
     ),
   ];
 }
@@ -111,21 +111,21 @@ export function createTestMessageSet(
  */
 export function createFastTestMessageSet(
   prefix: string,
-  startIndex: number,
+  startIndex: number
 ): ChatMessage[] {
   return [
     createTestMessage(
       `${prefix}-${startIndex}`,
       "Быстрое сообщение! ⚡",
       "FastUser",
-      "#ff6600",
+      "#ff6600"
     ),
     createTestMessage(
       `${prefix}-${startIndex + 1}`,
       "Еще одно! 🚀",
       "SpeedUser",
       "#ff0066",
-      true,
+      true
     ),
     createTestMessage(
       `${prefix}-${startIndex + 2}`,
@@ -133,7 +133,7 @@ export function createFastTestMessageSet(
       "ThirdUser",
       "#00ffff",
       false,
-      true,
+      true
     ),
   ];
 }
@@ -143,21 +143,21 @@ export function createFastTestMessageSet(
  */
 export function createDemoTestMessageSet(
   prefix: string,
-  startIndex: number,
+  startIndex: number
 ): ChatMessage[] {
   return [
     createTestMessage(
       `${prefix}-${startIndex}`,
       "Привет всем! 👋",
       "User1",
-      "#ff0000",
+      "#ff0000"
     ),
     createTestMessage(
       `${prefix}-${startIndex + 1}`,
       "Как дела?",
       "User2",
       "#00ff00",
-      true,
+      true
     ),
     createTestMessage(
       `${prefix}-${startIndex + 2}`,
@@ -165,7 +165,7 @@ export function createDemoTestMessageSet(
       "Moderator",
       "#0000ff",
       false,
-      true,
+      true
     ),
   ];
 }

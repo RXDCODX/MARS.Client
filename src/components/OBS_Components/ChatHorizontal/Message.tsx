@@ -1,30 +1,31 @@
 import { useEffect, useRef, useState } from "react";
 import { useAnimate } from "react-simple-animate";
 
-import { ChatMessage } from "../../../shared/api/generated/Api";
-import animateStyles from "../../../shared/styles/animate.module.scss";
-import useTwitchStore from "../../../shared/twitchStore/twitchStore";
+import { ChatMessage } from "@/shared/api/generated/Api";
+import animateStyles from "@/shared/styles/animate.module.scss";
+import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import {
   getNotWhiteColor,
   getRandomInt,
   isWhiteColor,
   parseContent,
   replaceEmotes,
-} from "../../../shared/Utils";
-import GradientText from "../../../shared/Utils/Animations/GradientText";
+} from "@/shared/Utils";
+import GradientText from "@/shared/Utils/Animations/GradientText";
+
 import styles from "./Message.module.scss";
 
 interface Props {
   message: ChatMessage;
   callback?: () => void;
-  slotTop?: number; // добавлен проп для вертикального позиционирования
+  slotTop?: number; // добавлен prop для вертикального позиционирования
 }
 
 export const Message = ({ message, callback, slotTop }: Props) => {
   const [handler, setHandler] = useState(true);
   const divRef = useRef<HTMLDivElement>(null);
-  const parser = useTwitchStore((state) => state.parser);
-  const parserToLink = useTwitchStore((state) => state.parseToLink);
+  const parser = useTwitchStore(state => state.parser);
+  const parserToLink = useTwitchStore(state => state.parseToLink);
 
   const [text] = useState(parseContent(message.message));
   const [fontSize] = useState(getRandomInt(10, 40));
@@ -33,10 +34,10 @@ export const Message = ({ message, callback, slotTop }: Props) => {
   const [mainColor] = useState(
     isWhiteColor(message.colorHex ?? "white")
       ? getNotWhiteColor(opacity)
-      : (message.colorHex ?? "white"),
+      : (message.colorHex ?? "white")
   );
   const [bg] = useState(
-    `linear-gradient(125deg, ${mainColor} , transparent 75%) border-box`,
+    `linear-gradient(125deg, ${mainColor} , transparent 75%) border-box`
   );
   const [baseStyles, setBaseStyles] = useState<React.CSSProperties>({
     visibility: "hidden",
@@ -68,7 +69,7 @@ export const Message = ({ message, callback, slotTop }: Props) => {
   useEffect(() => {
     const elem = divRef.current!;
     const randPosY = Math.floor(
-      Math.random() * (window.innerHeight - elem.offsetHeight),
+      Math.random() * (window.innerHeight - elem.offsetHeight)
     );
 
     setBaseStyles({
@@ -83,7 +84,7 @@ export const Message = ({ message, callback, slotTop }: Props) => {
     if (divRef.current && divRef.current.offsetWidth) {
       setDivOffset(divRef.current.offsetWidth);
 
-      setBaseStyles((prev) => ({
+      setBaseStyles(prev => ({
         ...prev,
         left: window.outerWidth + divOffset + "px",
       }));

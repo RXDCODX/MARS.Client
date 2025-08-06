@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, userEvent, within } from "storybook/test";
 import { useState } from "react";
+import { expect, userEvent, within } from "storybook/test";
 
 import { Confettyv2 } from "./Confetty";
 import EmojiParticles from "./EmojiParticles";
@@ -77,7 +77,7 @@ export const ConfettyEffect: StoryObj = {
     const canvas = within(canvasElement);
 
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что кнопка существует
     const activateButton = canvas.getByRole("button", {
@@ -93,14 +93,14 @@ export const ConfettyEffect: StoryObj = {
     await userEvent.click(activateButton);
 
     // Ждем появления эффекта
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     // Проверяем, что эффект активировался
     const activeConfettiCanvas = canvasElement.querySelectorAll("canvas");
     expect(activeConfettiCanvas.length).toBeGreaterThan(0);
 
     // Ждем завершения эффекта
-    await new Promise((resolve) => setTimeout(resolve, 10500));
+    await new Promise(resolve => setTimeout(resolve, 10500));
 
     // Проверяем, что эффект завершился
     const finalCanvas = canvasElement.querySelectorAll("canvas");
@@ -131,7 +131,7 @@ export const FireworkEffect: StoryObj = {
     const canvas = within(canvasElement);
 
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что кнопка существует
     const activateButton = canvas.getByRole("button", {
@@ -147,14 +147,14 @@ export const FireworkEffect: StoryObj = {
     await userEvent.click(activateButton);
 
     // Ждем появления эффекта
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     // Проверяем, что эффект активировался
     const activeFireworkCanvas = canvasElement.querySelectorAll("canvas");
     expect(activeFireworkCanvas.length).toBeGreaterThan(0);
 
     // Ждем завершения эффекта
-    await new Promise((resolve) => setTimeout(resolve, 10500));
+    await new Promise(resolve => setTimeout(resolve, 10500));
 
     // Проверяем, что эффект завершился
     const finalCanvas = canvasElement.querySelectorAll("canvas");
@@ -185,7 +185,7 @@ export const EmojiParticlesEffect: StoryObj = {
     const canvas = within(canvasElement);
 
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что кнопка существует
     const activateButton = canvas.getByRole("button", {
@@ -201,14 +201,14 @@ export const EmojiParticlesEffect: StoryObj = {
     await userEvent.click(activateButton);
 
     // Ждем появления эффекта (эмодзи требуют больше времени для загрузки)
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
     // Проверяем, что эффект активировался
     const activeEmojiCanvas = canvasElement.querySelectorAll("canvas");
     expect(activeEmojiCanvas.length).toBeGreaterThan(0);
 
     // Ждем завершения эффекта
-    await new Promise((resolve) => setTimeout(resolve, 12000));
+    await new Promise(resolve => setTimeout(resolve, 12000));
 
     // Проверяем, что эффект завершился
     const finalCanvas = canvasElement.querySelectorAll("canvas");

@@ -18,7 +18,24 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    /* Path mapping for absolute imports */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@/components/*": ["src/components/*"],
+      "@/pages/*": ["src/pages/*"],
+      "@/shared/*": ["src/shared/*"],
+      "@/contexts/*": ["src/contexts/*"],
+      "@/routes/*": ["src/routes/*"],
+      "@/app/*": ["src/app/*"],
+      "@/assets/*": ["src/assets/*"],
+      "@/styles/*": ["src/styles/*"],
+      "@/utils/*": ["src/shared/Utils/*"],
+      "@/api/*": ["src/shared/api/*"],
+      "@/types/*": ["src/shared/types/*"]
+    }
   },
   "include": ["src"]
 }

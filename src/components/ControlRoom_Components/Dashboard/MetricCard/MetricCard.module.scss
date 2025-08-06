@@ -9,13 +9,17 @@
   overflow: hidden;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: 4px;
-    background: linear-gradient(90deg, var(--accent-color), var(--accent-color-light));
+    background: linear-gradient(
+      90deg,
+      var(--accent-color),
+      var(--accent-color-light)
+    );
   }
 
   &:hover {
@@ -115,4 +119,4 @@
 .trendStable {
   color: var(--bs-body-color);
   background: var(--bs-light);
-} 
+}

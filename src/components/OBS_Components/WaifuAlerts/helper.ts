@@ -1,5 +1,5 @@
-import { Host, Waifu } from "../../../shared/api/generated/Api";
-import { getRandomInt } from "../../../shared/Utils";
+import { Host, Waifu } from "@/shared/api/generated/Api";
+import { getRandomInt } from "@/shared/Utils";
 
 export function shuffleArray<T>(array: T[]): T[] {
   const shuffledArray = [...array];
@@ -118,7 +118,7 @@ function getCorrectForm(
   number: number,
   form1: string,
   form2: string,
-  form5: string,
+  form5: string
 ): string {
   number = Math.abs(number) % 100;
   const remainder = number % 10;

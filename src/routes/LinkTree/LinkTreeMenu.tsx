@@ -21,7 +21,7 @@ export const LinktreeMenu = () => {
     <div className="linktree-container">
       <h1>Choose a Component</h1>
       <div className="links-grid">
-        {links.map((link) => (
+        {links.map(link => (
           <Link
             key={link.path}
             to={link.path}

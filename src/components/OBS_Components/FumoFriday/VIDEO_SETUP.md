@@ -1,12 +1,15 @@
 # Настройка видео в Storybook
 
 ## Проблема
+
 При сборке Storybook и публикации на GitHub Pages видео файлы не отображались из-за неправильной обработки путей к статическим файлам.
 
 ## Решение
 
 ### 1. Конфигурация Storybook
+
 В `.storybook/main.ts` добавлены настройки:
+
 ```typescript
 "staticDirs": [
   "../public",
@@ -15,10 +18,12 @@
 ```
 
 ### 2. Импорт видео как модули
+
 Создан файл `videoAssets.ts` для импорта видео файлов:
+
 ```typescript
-import cirnoVideo from './FumosVideos/cirno.webm';
-import reimuVideo from './FumosVideos/reimu.webm';
+import cirnoVideo from "./FumosVideos/cirno.webm";
+import reimuVideo from "./FumosVideos/reimu.webm";
 
 export const videoAssets = {
   cirno: cirnoVideo,
@@ -27,9 +32,11 @@ export const videoAssets = {
 ```
 
 ### 3. Функция с fallback
+
 Функция `getVideoPath()` обеспечивает надежную работу:
+
 ```typescript
-export const getVideoPath = (videoName: 'cirno' | 'reimu'): string => {
+export const getVideoPath = (videoName: "cirno" | "reimu"): string => {
   if (videoName in videoAssets) {
     return videoAssets[videoName as keyof typeof videoAssets];
   }
@@ -38,7 +45,9 @@ export const getVideoPath = (videoName: 'cirno' | 'reimu'): string => {
 ```
 
 ### 4. Конфигурация Vite
+
 В `vite.config.ts` добавлены настройки для обработки видео:
+
 ```typescript
 assetsInclude: ['**/*.webm', '**/*.mp4'],
 build: {
@@ -58,7 +67,9 @@ build: {
 ```
 
 ### 5. TypeScript декларации
+
 В `src/vite-env.d.ts` добавлены типы для видео файлов:
+
 ```typescript
 declare module "*.webm" {
   const src: string;
@@ -67,7 +78,9 @@ declare module "*.webm" {
 ```
 
 ## Использование
+
 В компонентах используйте:
+
 ```typescript
 import { getVideoPath } from "./videoAssets";
 
@@ -75,8 +88,9 @@ import { getVideoPath } from "./videoAssets";
 ```
 
 ## Результат
+
 - ✅ Видео работает в локальной разработке
 - ✅ Видео работает в собранном Storybook
 - ✅ Видео работает на GitHub Pages
 - ✅ Правильная обработка хешированных имен файлов
-- ✅ Fallback на статические пути при необходимости 
+- ✅ Fallback на статические пути при необходимости

@@ -3,7 +3,7 @@ import { Button, ButtonGroup, Card, Form } from "react-bootstrap";
 import { InfoCircle } from "react-bootstrap-icons";
 
 import { useSiteColors } from "../../../../../shared/Utils/useSiteColors";
-import { useMeta, useMetaActions, useColor } from "../store/scoreboardStore";
+import { useColor, useMeta, useMetaActions } from "../store/scoreboardStore";
 
 const MetaPanel: React.FC = () => {
   const colors = useSiteColors();
@@ -65,13 +65,15 @@ const MetaPanel: React.FC = () => {
               type="text"
               placeholder="Введите название турнира"
               value={meta.title}
-              onChange={(e) => setMeta({ title: e.target.value })}
+              onChange={e => setMeta({ title: e.target.value })}
               className="border-primary border-2 fw-bold rounded-3"
               style={{
                 fontSize: 14,
                 backgroundColor: colors.background.card,
-                color: scoreboardColors?.tournamentTitleColor || colors.text.primary,
-                borderColor: scoreboardColors?.mainColor || colors.border.primary,
+                color:
+                  scoreboardColors?.tournamentTitleColor || colors.text.primary,
+                borderColor:
+                  scoreboardColors?.mainColor || colors.border.primary,
               }}
             />
           </Form.Group>
@@ -85,7 +87,7 @@ const MetaPanel: React.FC = () => {
             </Form.Label>
             <div className="d-flex gap-1 flex-wrap mb-2">
               <ButtonGroup size="sm" className="w-100">
-                {fightRules.map((rule) => (
+                {fightRules.map(rule => (
                   <Button
                     key={rule}
                     variant={
@@ -139,13 +141,14 @@ const MetaPanel: React.FC = () => {
               type="text"
               placeholder="Или введите свой режим"
               value={customFightRule}
-              onChange={(e) => handleCustomFightRuleChange(e.target.value)}
+              onChange={e => handleCustomFightRuleChange(e.target.value)}
               className="border-secondary border-2 fw-bold rounded-3"
               style={{
                 fontSize: 14,
                 backgroundColor: colors.background.card,
                 color: scoreboardColors?.fightModeColor || colors.text.primary,
-                borderColor: scoreboardColors?.mainColor || colors.border.secondary,
+                borderColor:
+                  scoreboardColors?.mainColor || colors.border.secondary,
               }}
             />
           </Form.Group>

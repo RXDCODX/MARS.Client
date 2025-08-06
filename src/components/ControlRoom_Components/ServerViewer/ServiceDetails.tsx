@@ -14,7 +14,7 @@ import {
 } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 
-import { useServiceStore } from "../../../shared/serviceStore";
+import { useServiceStore } from "@/shared/serviceStore";
 
 const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { selectedService, services, setSelectedService, fetchServices } =
@@ -64,7 +64,7 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     }
   }, [services.length, fetchServices]);
 
-  const info = services.find((s) => s.name === selectedService) || null;
+  const info = services.find(s => s.name === selectedService) || null;
 
   useEffect(() => {
     if (!selectedService) return;
@@ -80,7 +80,7 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         setCommands(cmdRes.data);
         setConfig(cfgRes.data);
       })
-      .catch((e) => {
+      .catch(e => {
         console.error("Error loading service details:", e);
         setError(e.message || "Ошибка загрузки данных");
       })
@@ -94,12 +94,12 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     try {
       const res = await axios.post(
         `/api/ServiceManager/service/${selectedService}/execute`,
-        { command: cmd },
+        { command: cmd }
       );
       setExecResult(
         res.data === true
           ? `Команда '${cmd}' выполнена успешно`
-          : `Ошибка выполнения команды '${cmd}'`,
+          : `Ошибка выполнения команды '${cmd}'`
       );
     } catch {
       setExecResult(`Ошибка выполнения команды '${cmd}'`);
@@ -114,16 +114,16 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     try {
       const action = info.isEnabled ? "stop" : "start";
       await axios.post(
-        `/api/ServiceManager/service/${selectedService}/${action}`,
+        `/api/ServiceManager/service/${selectedService}/${action}`
       );
       // Обновляем список сервисов после изменения состояния
       await fetchServices();
       setExecResult(
-        `Сервис ${info.isEnabled ? "остановлен" : "запущен"} успешно`,
+        `Сервис ${info.isEnabled ? "остановлен" : "запущен"} успешно`
       );
     } catch {
       setExecResult(
-        `Ошибка ${info.isEnabled ? "остановки" : "запуска"} сервиса`,
+        `Ошибка ${info.isEnabled ? "остановки" : "запуска"} сервиса`
       );
     } finally {
       setToggleLoading(false);
@@ -141,7 +141,7 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         params.append("level", logLevel);
       }
       const res = await axios.get(
-        `/api/ServiceManager/service/${selectedService}/logs?${params}`,
+        `/api/ServiceManager/service/${selectedService}/logs?${params}`
       );
       setLogs(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
@@ -169,8 +169,8 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
   // Фильтрация логов
   const filteredLogs = logs.filter(
-    (log) =>
-      logFilter === "" || log.toLowerCase().includes(logFilter.toLowerCase()),
+    log =>
+      logFilter === "" || log.toLowerCase().includes(logFilter.toLowerCase())
   );
 
   // Показываем загрузку, если сервис не выбран или данные загружаются
@@ -241,7 +241,7 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             Сервис "{selectedService}" не найден в списке доступных сервисов.
           </p>
           <p className="text-muted">
-            Доступные сервисы: {services.map((s) => s.name).join(", ") || "нет"}
+            Доступные сервисы: {services.map(s => s.name).join(", ") || "нет"}
           </p>
           <hr />
           <div className="d-flex justify-content-end">
@@ -390,7 +390,7 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                           </tr>
                         </thead>
                         <tbody>
-                          {commands.map((cmd) => (
+                          {commands.map(cmd => (
                             <tr key={cmd.name}>
                               <td>
                                 <code className="bg-light px-2 py-1 rounded">
@@ -440,7 +440,7 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                         size="sm"
                         style={{ width: "auto" }}
                         value={logLevel}
-                        onChange={(e) => setLogLevel(e.target.value)}
+                        onChange={e => setLogLevel(e.target.value)}
                       >
                         <option value="all">Все уровни</option>
                         <option value="debug">Debug</option>
@@ -453,7 +453,7 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                         id="auto-refresh"
                         label="Автообновление"
                         checked={autoRefresh}
-                        onChange={(e) => setAutoRefresh(e.target.checked)}
+                        onChange={e => setAutoRefresh(e.target.checked)}
                       />
                       <Button
                         size="sm"
@@ -477,7 +477,7 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                       type="text"
                       placeholder="🔍 Фильтр логов..."
                       value={logFilter}
-                      onChange={(e) => setLogFilter(e.target.value)}
+                      onChange={e => setLogFilter(e.target.value)}
                       size="sm"
                     />
                   </div>

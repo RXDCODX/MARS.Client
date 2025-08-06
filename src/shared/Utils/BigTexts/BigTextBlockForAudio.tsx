@@ -11,8 +11,8 @@ interface Props {
 }
 
 export function BigTextBlockForAudio({ mediaInfo }: Props) {
-  const parser = useTwitchStore((state) => state.parser);
-  const parserToLink = useTwitchStore((state) => state.parseToLink);
+  const parser = useTwitchStore(state => state.parser);
+  const parserToLink = useTwitchStore(state => state.parseToLink);
   const text = mediaInfo.mediaInfo.textInfo.text;
 
   if (text === null && text === "") {

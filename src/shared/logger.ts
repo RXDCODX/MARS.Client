@@ -31,7 +31,7 @@ export const logger: ILogger = {
         `%c${levelName}:%c (JSON)`,
         `color: ${levelColor}; font-weight: bold;`,
         "color: gray;",
-        jsonData,
+        jsonData
       );
     } else {
       // Обычное сообщение
@@ -39,7 +39,7 @@ export const logger: ILogger = {
         `%c${levelName}:%c`,
         `color: ${levelColor}; font-weight: bold;`,
         "color: inherit;",
-        message,
+        message
       );
     }
   },

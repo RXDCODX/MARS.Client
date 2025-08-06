@@ -3,6 +3,9 @@
 export * from './types';
 export * from './signalr_types';
 
+// Импорты утилит конфигурации
+export * from './api-config';
+
 // Импорты клиентов контроллеров
 export { CheckersService } from './checkers-client';
 export { CommandsService } from './commands-client';

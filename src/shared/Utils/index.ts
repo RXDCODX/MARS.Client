@@ -4,7 +4,8 @@ import { ChatMessage as TwitchChatMessage } from "@twurple/chat";
 import parse from "html-react-parser";
 import { v4 as randomUUID } from "uuid";
 
-import { HighliteMessageProps } from "../../components/OBS_Components/HighliteMessage/Message";
+import { HighliteMessageProps } from "@/components/OBS_Components/HighliteMessage/Message";
+
 import { ChatMessage, MediaInfo } from "../api/generated/Api";
 import { addMimeTypesToImgTags } from "../MIME_types";
 
@@ -48,7 +49,7 @@ export function replaceEmotes({
 
     resultText = message.message.replace(/[\u{E0000}-\u{E007F}]/gu, "");
 
-    message.emoteSet?.emotes?.forEach((emote) => {
+    message.emoteSet?.emotes?.forEach(emote => {
       if (
         emote.name === undefined ||
         emote.imageUrl === undefined ||
@@ -62,7 +63,7 @@ export function replaceEmotes({
         `<img class="emote"
         srcset="//static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/1.0 1x, //static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/light/2.0 2x, //static-cdn.jtvnw.net/emoticons/v2/${emote.id}/default/dark/4.0 4x" alt="${emote.name}" 
         loading="lazy"
-        decoding="async" />`,
+        decoding="async" />`
       );
     });
 
@@ -122,7 +123,7 @@ export function getRandomInt(min: number, max: number): number {
 export function getCoordinates(
   ref: HTMLImageElement | HTMLVideoElement | HTMLDivElement,
   info: MediaInfo,
-  isInWindow: boolean = true,
+  isInWindow: boolean = true
 ): React.CSSProperties {
   const returnObj: React.CSSProperties = {};
   const { positionInfo } = info;
@@ -280,7 +281,7 @@ export const getRandomColor = (opacity: number = 1): string => {
 
 export function replaceBadges(
   badges: HelixChatBadgeSet[],
-  chatMessage: ChatMessage | TwitchChatMessage,
+  chatMessage: ChatMessage | TwitchChatMessage
 ) {
   let text: string | undefined = "";
   let sub = "";
@@ -289,8 +290,8 @@ export function replaceBadges(
     text = chatMessage.text;
 
     chatMessage.userInfo.badges.forEach((v, k) => {
-      const set = badges.find((e) => e.id == k);
-      const lastVersion = set?.versions.find((e) => e.id == v);
+      const set = badges.find(e => e.id == k);
+      const lastVersion = set?.versions.find(e => e.id == v);
 
       if (!lastVersion) {
         return undefined;
@@ -302,9 +303,9 @@ export function replaceBadges(
   } else if (chatMessage.badges !== undefined) {
     text = chatMessage.message;
 
-    chatMessage.badges.forEach((b) => {
-      const set = badges.find((e) => e.id == b.key);
-      const lastVersion = set?.versions?.find((e) => e.id == b.value);
+    chatMessage.badges.forEach(b => {
+      const set = badges.find(e => e.id == b.key);
+      const lastVersion = set?.versions?.find(e => e.id == b.value);
 
       if (!lastVersion) {
         return undefined;
@@ -331,12 +332,12 @@ export function replaceBadges(
 export function getEmojisSrcFromText(
   text: string | ChatMessage,
   client: emoticons.EmoteParser,
-  newParser: emoticons.EmoteParser,
+  newParser: emoticons.EmoteParser
 ) {
   if (typeof text === "string") {
     text = text.replace(/[\u{E0000}-\u{E007F}]/gu, "");
     const messages = text.split(" ");
-    const result = messages.map((message) => client.parse(message, 1));
+    const result = messages.map(message => client.parse(message, 1));
     return result;
   } else if ("message" in text && typeof text.message === "string") {
     const message = text as ChatMessage;
@@ -351,7 +352,7 @@ export function getEmojisSrcFromText(
 
     message.message = message.message.replace(/[\u{E0000}-\u{E007F}]/gu, "");
 
-    const urls = message.emoteSet.emotes.map((emote) => {
+    const urls = message.emoteSet.emotes.map(emote => {
       if (emote.name !== undefined) {
         message.message = message.message?.replace(emote.name, "");
       }
@@ -360,11 +361,11 @@ export function getEmojisSrcFromText(
 
     const newMEssages = message.message.trim().split(" ");
 
-    newMEssages.forEach((message) => {
+    newMEssages.forEach(message => {
       urls.push(newParser.parse(message, 1));
     });
 
-    return urls.filter((url) => url !== undefined);
+    return urls.filter(url => url !== undefined);
   } else {
     throw new Error("text must be string or ChatMessage");
   }
@@ -449,7 +450,7 @@ export function parseContent(text?: string): ContentPart[] | undefined {
   const parts = text
     .replace(/[\u{E0000}-\u{E007F}]/gu, "")
     .split(/\s+/)
-    .filter((part) => part.trim().length > 0);
+    .filter(part => part.trim().length > 0);
 
   for (const part of parts) {
     if (part.startsWith("https://") || part.startsWith("http://")) {
@@ -523,15 +524,15 @@ export function parseContent(text?: string): ContentPart[] | undefined {
 export function arrayExcept<T>(
   arr1: T[],
   arr2: T[],
-  comparer?: (a: T, b: T) => boolean,
+  comparer?: (a: T, b: T) => boolean
 ): T[] {
   // Если есть функция сравнения
   if (comparer) {
     const inArr1Only = arr1.filter(
-      (item1) => !arr2.some((item2) => comparer(item1, item2)),
+      item1 => !arr2.some(item2 => comparer(item1, item2))
     );
     const inArr2Only = arr2.filter(
-      (item2) => !arr1.some((item1) => comparer(item1, item2)),
+      item2 => !arr1.some(item1 => comparer(item1, item2))
     );
     return [...inArr1Only, ...inArr2Only];
   }
@@ -566,7 +567,7 @@ export function clampToViewport(
   left: number,
   top: number,
   width: number,
-  height: number,
+  height: number
 ): { left: number; top: number } {
   const maxLeft = Math.max(0, window.innerWidth - width);
   const maxTop = Math.max(0, window.innerHeight - height);

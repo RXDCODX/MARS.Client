@@ -1,5 +1,6 @@
-import ColorDemo from "../../components/Site_Components/ColorDemo/ColorDemo";
-import { useSiteColors } from "../../shared/Utils/useSiteColors";
+import ColorDemo from "@/components/Site_Components/ColorDemo/ColorDemo";
+import { useSiteColors } from "@/shared/Utils/useSiteColors";
+
 import styles from "./ColorDemoPage.module.scss";
 
 /**
@@ -37,7 +38,7 @@ const ColorDemoPage: React.FC = () => {
             </h3>
             <pre style={colors.utils.getBackgroundStyle("secondary")}>
               <code style={colors.utils.getTextStyle("primary")}>
-                {`import { useSiteColors } from '../../shared/Utils/useSiteColors';
+                {`import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
 const colors = useSiteColors();
 

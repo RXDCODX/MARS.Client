@@ -17,7 +17,7 @@ const meta: Meta<typeof Manager> = {
   },
   tags: ["autodocs"],
   decorators: [
-    (Story) => (
+    Story => (
       <div
         style={{
           width: "100vw",
@@ -42,7 +42,7 @@ export const Default: Story = {
     // const canvas = within(canvasElement); // Unused variable
 
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -70,7 +70,7 @@ export const Empty: Story = {
     // const canvas = within(canvasElement); // Unused variable
 
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();

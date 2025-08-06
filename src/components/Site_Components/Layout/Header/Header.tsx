@@ -2,14 +2,15 @@ import { useState } from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import { useSiteColors } from "../../../../shared/Utils/useSiteColors";
+import { useSiteColors } from "@/shared/Utils/useSiteColors";
+
 import ThemeToggle from "../../../ThemeToggle";
 import styles from "./Header.module.scss";
 
 const Header: React.FC = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [activeSubDropdown, setActiveSubDropdown] = useState<string | null>(
-    null,
+    null
   );
   const colors = useSiteColors();
 

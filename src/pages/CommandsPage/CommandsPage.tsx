@@ -11,102 +11,130 @@ import {
   Spinner,
 } from "react-bootstrap";
 
+import { CommandsService } from "@/shared/api/generated/commands-client";
 import {
   CommandInfo,
+  CommandInfoAvailablePlatformsEnum,
   CommandParameterInfo,
-} from "../../shared/api/generated/Api";
-import { CommandsService } from "../../shared/api/generated/commands-client";
-import { useSiteColors } from "../../shared/Utils/useSiteColors";
+} from "@/shared/api/generated/types";
+import { useSiteColors } from "@/shared/Utils/useSiteColors";
+
 import styles from "./CommandsPage.module.scss";
+
+// Типы для состояния компонента
+interface CommandsPageState {
+  userCommands: CommandInfo[];
+  adminCommands: CommandInfo[];
+  selectedCommand: CommandInfo | null;
+  commandParameters: CommandParameterInfo[];
+  parameterValues: Record<string, string>;
+  executionResult: string;
+  isExecuting: boolean;
+  error: string;
+  isLoading: boolean;
+  activeTab: "user" | "admin";
+}
 
 const CommandsPage: React.FC = () => {
   const colors = useSiteColors();
   const [commandsService] = useState(() => new CommandsService());
 
-  // Состояние для команд
-  const [userCommands, setUserCommands] = useState<CommandInfo[]>([]);
-  const [adminCommands, setAdminCommands] = useState<CommandInfo[]>([]);
-  const [selectedCommand, setSelectedCommand] = useState<CommandInfo | null>(
-    null,
-  );
-  const [commandParameters, setCommandParameters] = useState<
-    CommandParameterInfo[]
-  >([]);
+  // Состояние компонента
+  const [state, setState] = useState<CommandsPageState>({
+    userCommands: [],
+    adminCommands: [],
+    selectedCommand: null,
+    commandParameters: [],
+    parameterValues: {},
+    executionResult: "",
+    isExecuting: false,
+    error: "",
+    isLoading: true,
+    activeTab: "user",
+  });
 
-  // Состояние для параметров
-  const [parameterValues, setParameterValues] = useState<
-    Record<string, string>
-  >({});
+  // Обновление состояния
+  const updateState = useCallback((updates: Partial<CommandsPageState>) => {
+    setState(prev => ({ ...prev, ...updates }));
+  }, []);
 
-  // Состояние для результатов
-  const [executionResult, setExecutionResult] = useState<string>("");
-  const [isExecuting, setIsExecuting] = useState(false);
-  const [error, setError] = useState<string>("");
-
-  // Состояние для загрузки
-  const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<"user" | "admin">("user");
-
+  // Загрузка команд
   const loadCommands = useCallback(async () => {
     try {
-      setIsLoading(true);
-      setError("");
+      updateState({ isLoading: true, error: "" });
 
       // Загружаем команды для API платформы
       const userCommandsData =
-        await commandsService.getUserCommandsInfoForPlatform("Api");
+        await commandsService.getUserCommandsInfoForPlatform(
+          CommandInfoAvailablePlatformsEnum.Api
+        );
       const adminCommandsData =
-        await commandsService.getAdminCommandsInfoForPlatform("Api");
+        await commandsService.getAdminCommandsInfoForPlatform(
+          CommandInfoAvailablePlatformsEnum.Api
+        );
 
-      setUserCommands(userCommandsData);
-      setAdminCommands(adminCommandsData);
+      updateState({
+        userCommands: userCommandsData,
+        adminCommands: adminCommandsData,
+        isLoading: false,
+      });
     } catch (err) {
-      setError("Ошибка при загрузке команд: " + (err as Error).message);
-    } finally {
-      setIsLoading(false);
+      updateState({
+        error: "Ошибка при загрузке команд: " + (err as Error).message,
+        isLoading: false,
+      });
     }
-  }, [commandsService]);
+  }, [commandsService, updateState]);
 
   // Загрузка команд при монтировании компонента
   useEffect(() => {
     loadCommands();
   }, [loadCommands]);
 
+  // Выбор команды
   const handleCommandSelect = async (command: CommandInfo) => {
     try {
-      setSelectedCommand(command);
-      setParameterValues({});
-      setExecutionResult("");
-      setError("");
+      updateState({
+        selectedCommand: command,
+        parameterValues: {},
+        executionResult: "",
+        error: "",
+      });
 
       // Загружаем параметры команды
       const parameters = await commandsService.getCommandParameters(
-        command.name,
+        command.name
       );
-      setCommandParameters(parameters);
+      updateState({ commandParameters: parameters });
     } catch (err) {
-      setError(
-        "Ошибка при загрузке параметров команды: " + (err as Error).message,
-      );
+      updateState({
+        error:
+          "Ошибка при загрузке параметров команды: " + (err as Error).message,
+      });
     }
   };
 
+  // Изменение параметра
   const handleParameterChange = (parameterName: string, value: string) => {
-    setParameterValues((prev) => ({
-      ...prev,
-      [parameterName]: value,
-    }));
+    updateState({
+      parameterValues: {
+        ...state.parameterValues,
+        [parameterName]: value,
+      },
+    });
   };
 
+  // Построение входной строки команды
   const buildCommandInput = (): string => {
-    if (!selectedCommand || commandParameters.length === 0) {
+    if (!state.selectedCommand || state.commandParameters.length === 0) {
       return "";
     }
 
     const inputParts: string[] = [];
 
-    commandParameters.forEach((param) => {
-      const value = parameterValues[param.name] || param.defaultValue || "";
+    state.commandParameters.forEach(param => {
+      const value =
+        state.parameterValues[param.name] || param.defaultValue || "";
       if (value) {
         inputParts.push(value);
       }
@@ -115,31 +143,42 @@ const CommandsPage: React.FC = () => {
     return inputParts.join(" ");
   };
 
+  // Выполнение команды
   const executeCommand = async () => {
-    if (!selectedCommand) return;
+    if (!state.selectedCommand) return;
 
     try {
-      setIsExecuting(true);
-      setError("");
-      setExecutionResult("");
+      updateState({ isExecuting: true, error: "", executionResult: "" });
 
       const input = buildCommandInput();
       const result = await commandsService.executeCommand(
-        selectedCommand.name,
-        input,
+        state.selectedCommand.name,
+        input
       );
 
-      setExecutionResult(result);
+      updateState({ executionResult: result, isExecuting: false });
     } catch (err) {
-      setError("Ошибка при выполнении команды: " + (err as Error).message);
-    } finally {
-      setIsExecuting(false);
+      updateState({
+        error: "Ошибка при выполнении команды: " + (err as Error).message,
+        isExecuting: false,
+      });
     }
   };
 
+  // Отмена выбора команды
+  const handleCancelCommand = () => {
+    updateState({
+      selectedCommand: null,
+      parameterValues: {},
+      executionResult: "",
+      commandParameters: [],
+    });
+  };
+
+  // Рендер поля ввода параметра
   const renderParameterInput = (parameter: CommandParameterInfo) => {
     const value =
-      parameterValues[parameter.name] || parameter.defaultValue || "";
+      state.parameterValues[parameter.name] || parameter.defaultValue || "";
 
     switch (parameter.type.toLowerCase()) {
       case "bool":
@@ -149,7 +188,7 @@ const CommandsPage: React.FC = () => {
             id={`param-${parameter.name}`}
             label={parameter.description}
             checked={value === "true"}
-            onChange={(e) =>
+            onChange={e =>
               handleParameterChange(parameter.name, e.target.checked.toString())
             }
           />
@@ -161,7 +200,7 @@ const CommandsPage: React.FC = () => {
             type="number"
             placeholder={parameter.description}
             value={value}
-            onChange={(e) =>
+            onChange={e =>
               handleParameterChange(parameter.name, e.target.value)
             }
             required={parameter.required}
@@ -174,7 +213,7 @@ const CommandsPage: React.FC = () => {
             step="0.1"
             placeholder={parameter.description}
             value={value}
-            onChange={(e) =>
+            onChange={e =>
               handleParameterChange(parameter.name, e.target.value)
             }
             required={parameter.required}
@@ -186,7 +225,7 @@ const CommandsPage: React.FC = () => {
             type="text"
             placeholder={parameter.description}
             value={value}
-            onChange={(e) =>
+            onChange={e =>
               handleParameterChange(parameter.name, e.target.value)
             }
             required={parameter.required}
@@ -195,13 +234,14 @@ const CommandsPage: React.FC = () => {
     }
   };
 
+  // Рендер карточки команды
   const renderCommandCard = (command: CommandInfo) => (
     <Card
       key={command.name}
-      className={`mb-2 ${selectedCommand?.name === command.name ? styles.selectedCommand : ""}`}
+      className={`mb-2 ${state.selectedCommand?.name === command.name ? styles.selectedCommand : ""}`}
       style={{
         backgroundColor:
-          selectedCommand?.name === command.name
+          state.selectedCommand?.name === command.name
             ? colors.background.accent
             : colors.background.card,
         borderColor: colors.border.primary,
@@ -237,7 +277,8 @@ const CommandsPage: React.FC = () => {
     </Card>
   );
 
-  if (isLoading) {
+  // Отображение загрузки
+  if (state.isLoading) {
     return (
       <Container className="text-center py-5">
         <Spinner animation="border" role="status">
@@ -258,9 +299,9 @@ const CommandsPage: React.FC = () => {
             Выполнение команд
           </h1>
 
-          {error && (
+          {state.error && (
             <Alert variant="danger" className="mb-4">
-              {error}
+              {state.error}
             </Alert>
           )}
 
@@ -287,7 +328,7 @@ const CommandsPage: React.FC = () => {
                       variant="outline-secondary"
                       size="sm"
                       onClick={loadCommands}
-                      disabled={isLoading}
+                      disabled={state.isLoading}
                     >
                       <i className="bi bi-arrow-clockwise"></i>
                     </Button>
@@ -301,14 +342,14 @@ const CommandsPage: React.FC = () => {
                         className="btn-check"
                         name="commandType"
                         id="userCommands"
-                        checked={activeTab === "user"}
-                        onChange={() => setActiveTab("user")}
+                        checked={state.activeTab === "user"}
+                        onChange={() => updateState({ activeTab: "user" })}
                       />
                       <label
                         className="btn btn-outline-primary"
                         htmlFor="userCommands"
                       >
-                        Пользовательские ({userCommands.length})
+                        Пользовательские ({state.userCommands.length})
                       </label>
 
                       <input
@@ -316,14 +357,14 @@ const CommandsPage: React.FC = () => {
                         className="btn-check"
                         name="commandType"
                         id="adminCommands"
-                        checked={activeTab === "admin"}
-                        onChange={() => setActiveTab("admin")}
+                        checked={state.activeTab === "admin"}
+                        onChange={() => updateState({ activeTab: "admin" })}
                       />
                       <label
                         className="btn btn-outline-danger"
                         htmlFor="adminCommands"
                       >
-                        Админские ({adminCommands.length})
+                        Админские ({state.adminCommands.length})
                       </label>
                     </div>
                   </div>
@@ -332,16 +373,16 @@ const CommandsPage: React.FC = () => {
                     className="px-3 pb-3"
                     style={{ maxHeight: "600px", overflowY: "auto" }}
                   >
-                    {activeTab === "user" ? (
-                      userCommands.length > 0 ? (
-                        userCommands.map(renderCommandCard)
+                    {state.activeTab === "user" ? (
+                      state.userCommands.length > 0 ? (
+                        state.userCommands.map(renderCommandCard)
                       ) : (
                         <p className="text-muted text-center">
                           Нет пользовательских команд
                         </p>
                       )
-                    ) : adminCommands.length > 0 ? (
-                      adminCommands.map(renderCommandCard)
+                    ) : state.adminCommands.length > 0 ? (
+                      state.adminCommands.map(renderCommandCard)
                     ) : (
                       <p className="text-muted text-center">
                         Нет админских команд
@@ -354,7 +395,7 @@ const CommandsPage: React.FC = () => {
 
             {/* Параметры и выполнение */}
             <Col lg={8}>
-              {selectedCommand ? (
+              {state.selectedCommand ? (
                 <Card
                   style={{
                     backgroundColor: colors.background.card,
@@ -371,14 +412,14 @@ const CommandsPage: React.FC = () => {
                       className="mb-0"
                       style={colors.utils.getTextStyle("primary")}
                     >
-                      /{selectedCommand.name}
+                      /{state.selectedCommand.name}
                     </h5>
                     <small style={colors.utils.getTextStyle("secondary")}>
-                      {selectedCommand.description}
+                      {state.selectedCommand.description}
                     </small>
                   </Card.Header>
                   <Card.Body>
-                    {commandParameters.length > 0 ? (
+                    {state.commandParameters.length > 0 ? (
                       <Form>
                         <h6
                           className="mb-3"
@@ -387,7 +428,7 @@ const CommandsPage: React.FC = () => {
                           Параметры команды:
                         </h6>
 
-                        {commandParameters.map((parameter) => (
+                        {state.commandParameters.map(parameter => (
                           <Form.Group key={parameter.name} className="mb-3">
                             <Form.Label
                               style={colors.utils.getTextStyle("primary")}
@@ -413,9 +454,9 @@ const CommandsPage: React.FC = () => {
                           <Button
                             variant="primary"
                             onClick={executeCommand}
-                            disabled={isExecuting}
+                            disabled={state.isExecuting}
                           >
-                            {isExecuting ? (
+                            {state.isExecuting ? (
                               <>
                                 <Spinner
                                   animation="border"
@@ -431,17 +472,13 @@ const CommandsPage: React.FC = () => {
 
                           <Button
                             variant="outline-secondary"
-                            onClick={() => {
-                              setSelectedCommand(null);
-                              setParameterValues({});
-                              setExecutionResult("");
-                            }}
+                            onClick={handleCancelCommand}
                           >
                             Отменить
                           </Button>
                         </div>
 
-                        {executionResult && (
+                        {state.executionResult && (
                           <div className="mt-3">
                             <h6 style={colors.utils.getTextStyle("primary")}>
                               Результат:
@@ -457,7 +494,7 @@ const CommandsPage: React.FC = () => {
                                 wordBreak: "break-word",
                               }}
                             >
-                              {executionResult}
+                              {state.executionResult}
                             </pre>
                           </div>
                         )}
@@ -470,9 +507,9 @@ const CommandsPage: React.FC = () => {
                         <Button
                           variant="primary"
                           onClick={executeCommand}
-                          disabled={isExecuting}
+                          disabled={state.isExecuting}
                         >
-                          {isExecuting ? (
+                          {state.isExecuting ? (
                             <>
                               <Spinner
                                 animation="border"

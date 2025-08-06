@@ -20,7 +20,7 @@ const meta: Meta<typeof ColorPresetCard> = {
     onColorChange: { action: "color changed" },
   },
   decorators: [
-    (Story) => (
+    Story => (
       <div
         style={{
           width: "600px",
@@ -40,7 +40,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   args: {},
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие карточки цветов
@@ -59,7 +59,7 @@ export const BlueTheme: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие цветовых полей
@@ -78,11 +78,11 @@ export const RedTheme: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие пресетов
-    const presetButtons = canvasElement.querySelectorAll('button');
+    const presetButtons = canvasElement.querySelectorAll("button");
     expect(presetButtons.length).toBeGreaterThan(0);
   },
 };
@@ -97,11 +97,13 @@ export const GreenTheme: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие полей прозрачности
-    const transparencyInputs = canvasElement.querySelectorAll('input[type="range"]');
+    const transparencyInputs = canvasElement.querySelectorAll(
+      'input[type="range"]'
+    );
     expect(transparencyInputs.length).toBeGreaterThan(0);
   },
 };
@@ -116,11 +118,11 @@ export const PurpleTheme: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие лейблов цветов
-    const labels = canvasElement.querySelectorAll('label');
+    const labels = canvasElement.querySelectorAll("label");
     expect(labels.length).toBeGreaterThan(0);
   },
 };
@@ -135,11 +137,13 @@ export const CustomColors: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие всех элементов управления цветом
-    const colorControls = canvasElement.querySelectorAll('[class*="color-control"]');
+    const colorControls = canvasElement.querySelectorAll(
+      '[class*="color-control"]'
+    );
     expect(colorControls.length).toBeGreaterThan(0);
   },
-}; 
+};

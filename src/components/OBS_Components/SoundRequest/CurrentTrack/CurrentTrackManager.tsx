@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import {
-  TunaMusicData,
-  TunaMusicDTO,
-} from "../../../../shared/api/generated/Api";
+import { TunaMusicData, TunaMusicDTO } from "@/shared/api/generated/Api";
+
 import { SignalRContext } from ".";
 import CurrentTrack from "./CurrentTrack";
 
@@ -35,7 +33,7 @@ export default function CurrentTrackManager() {
   const changeTrack = useCallback(
     (data: TunaMusicData) => {
       // Сначала запускаем анимацию
-      setCounter((prev) => prev + 1);
+      setCounter(prev => prev + 1);
       setTrack({
         track: { ...data, isDefaultValue: false },
         count: counter,
@@ -44,19 +42,19 @@ export default function CurrentTrackManager() {
 
       // Через время анимации меняем трек
       setTimeout(() => {
-        setTrack((prev) => ({
+        setTrack(prev => ({
           ...prev,
           shouldAnimate: false,
         }));
       }, 3500); // Общее время анимации (слайды + NOW PLAYING + финальная анимация)
     },
-    [counter],
+    [counter]
   );
 
   const trackKey = useMemo(
     () =>
       `${track.track.artists.join(", ")}-${track.track.title}-${track.count}`,
-    [track.track.artists, track.track.title, track.count],
+    [track.track.artists, track.track.title, track.count]
   );
 
   SignalRContext.useSignalREffect(
@@ -73,12 +71,12 @@ export default function CurrentTrackManager() {
       }
 
       // Если трек тот же, просто обновляем данные без анимации
-      setTrack((prev) => ({
+      setTrack(prev => ({
         ...prev,
         track: { ...data.data, isDefaultValue: false },
       }));
     },
-    [track.track.artists, track.track.title, changeTrack],
+    [track.track.artists, track.track.title, changeTrack]
   );
 
   useEffect(() => {

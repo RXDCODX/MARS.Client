@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { useSiteColors } from "../../../shared/Utils/useSiteColors";
+import { useSiteColors } from "@/shared/Utils/useSiteColors";
+
 import styles from "./Navbar.module.scss";
 import { NavbarProps } from "./Navbar.types";
 
@@ -14,7 +15,7 @@ interface NavItem {
 const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange }) => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [activeSubDropdown, setActiveSubDropdown] = useState<string | null>(
-    null,
+    null
   );
   const colors = useSiteColors();
 
@@ -80,7 +81,7 @@ const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange }) => {
 
   const handleSubDropdownToggle = (subDropdownName: string) => {
     setActiveSubDropdown(
-      activeSubDropdown === subDropdownName ? null : subDropdownName,
+      activeSubDropdown === subDropdownName ? null : subDropdownName
     );
   };
 
@@ -107,7 +108,7 @@ const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange }) => {
         </div>
 
         <div className={styles.tabs}>
-          {tabs.map((tab) => (
+          {tabs.map(tab => (
             <button
               key={tab.id}
               className={`${styles.tab} ${activeTab === tab.id ? styles.active : ""}`}

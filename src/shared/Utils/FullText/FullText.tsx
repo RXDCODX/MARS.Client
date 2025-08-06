@@ -22,7 +22,7 @@ export const FullText = ({
         const width = elementRef.current.offsetWidth;
         const newFontSize = Math.max(
           Math.min(width / (compressor * 10), maxFontSize),
-          minFontSize,
+          minFontSize
         );
         setFontSize(newFontSize);
       }

@@ -225,7 +225,7 @@ const DocsPage: React.FC = () => {
         <div className={styles.sidebar}>
           <h2>Документация</h2>
           <nav className={styles.tabs}>
-            {tabs.map((tab) => (
+            {tabs.map(tab => (
               <button
                 key={tab.id}
                 className={`${styles.tab} ${activeTab === tab.id ? styles.active : ""}`}

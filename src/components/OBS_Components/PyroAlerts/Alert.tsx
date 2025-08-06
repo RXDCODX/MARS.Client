@@ -1,9 +1,7 @@
 import { useCallback } from "react";
 
-import {
-    MediaDto,
-    MediaFileInfoTypeEnum,
-} from "../../../shared/api/generated/Api";
+import { MediaDto, MediaFileInfoTypeEnum } from "@/shared/api/generated/Api";
+
 import { Audio, Image, Video, Voice } from "./Primitive";
 import TelegramSticker from "./Primitive/TelegramSticker";
 
@@ -22,7 +20,7 @@ export default function Alert(messageProps: Props) {
   const { fileInfo } = message.mediaInfo;
   const callback = useCallback(
     () => messageProps.remove(message),
-    [message, messageProps],
+    [message, messageProps]
   );
 
   switch (fileInfo.type) {

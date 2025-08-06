@@ -1,5 +1,7 @@
 import { useState } from "react";
-import AutoMessageBillboardTest from "../../components/OBS_Components/AutoMessageBillboard/AutoMessageBillboardTest";
+
+import AutoMessageBillboardTest from "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboardTest";
+
 import styles from "./AutoMessageBillboardPage.module.scss";
 
 export default function AutoMessageBillboardPage() {
@@ -14,7 +16,7 @@ export default function AutoMessageBillboardPage() {
     }
   };
 
-    const sendRandomMessages = () => {
+  const sendRandomMessages = () => {
     const messages = [
       "Привет всем! Как дела?",
       "Не забудьте подписаться на канал!",
@@ -57,12 +59,12 @@ export default function AutoMessageBillboardPage() {
       <div className={styles.controls}>
         <h1>AutoMessageBillboard Demo</h1>
         <p>Демонстрация компонента для отображения автоматических сообщений</p>
-        
+
         <div className={styles.inputGroup}>
           <input
             type="text"
             value={testMessage}
-            onChange={(e) => setTestMessage(e.target.value)}
+            onChange={e => setTestMessage(e.target.value)}
             placeholder="Введите тестовое сообщение..."
             className={styles.input}
           />
@@ -70,15 +72,15 @@ export default function AutoMessageBillboardPage() {
             Отправить
           </button>
         </div>
-        
+
         <button onClick={sendRandomMessages} className={styles.button}>
           Отправить серию сообщений
         </button>
-        
+
         <button onClick={sendEmoteMessages} className={styles.button}>
           Отправить сообщения с эмодзи
         </button>
-        
+
         <div className={styles.info}>
           <h3>Как это работает:</h3>
           <ul>
@@ -90,8 +92,8 @@ export default function AutoMessageBillboardPage() {
           </ul>
         </div>
       </div>
-      
+
       <AutoMessageBillboardTest />
     </div>
   );
-} 
+}

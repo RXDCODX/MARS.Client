@@ -35,7 +35,8 @@ import {
 import { useNavigate } from "react-router-dom";
 import Switch from "react-switch";
 
-import { useServiceStore } from "../../../shared/serviceStore";
+import { useServiceStore } from "@/shared/serviceStore";
+
 import LogViewer from "./LogViewer";
 import ServiceDetails from "./ServiceDetails";
 
@@ -114,13 +115,13 @@ function ServerViewerUI() {
   const filteredServices = useMemo(
     () =>
       services.filter(
-        (s) =>
+        s =>
           (!statusFilter || s.status === statusFilter) &&
           (!search ||
             s.displayName.toLowerCase().includes(search.toLowerCase()) ||
-            s.name.toLowerCase().includes(search.toLowerCase())),
+            s.name.toLowerCase().includes(search.toLowerCase()))
       ),
-    [services, statusFilter, search],
+    [services, statusFilter, search]
   );
 
   return (
@@ -162,7 +163,7 @@ function ServerViewerUI() {
             <Form.Control
               placeholder="Поиск по имени..."
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={e => setSearch(e.target.value)}
             />
           </InputGroup>
         </Col>
@@ -175,7 +176,7 @@ function ServerViewerUI() {
             >
               Все
             </Button>
-            {statusOrder.map((st) => (
+            {statusOrder.map(st => (
               <Button
                 key={st}
                 size="sm"
@@ -223,7 +224,7 @@ function ServerViewerUI() {
             </tr>
           </thead>
           <tbody>
-            {filteredServices.map((s) => (
+            {filteredServices.map(s => (
               <tr
                 key={s.name}
                 style={{ fontWeight: "normal", textShadow: "none" }}
@@ -235,7 +236,7 @@ function ServerViewerUI() {
                     onClick={() => {
                       setSelectedService(s.name);
                       navigate(
-                        `/services/details?name=${encodeURIComponent(s.name)}`,
+                        `/services/details?name=${encodeURIComponent(s.name)}`
                       );
                     }}
                   >

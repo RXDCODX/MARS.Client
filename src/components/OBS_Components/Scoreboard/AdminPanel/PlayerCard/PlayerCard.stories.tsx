@@ -17,7 +17,7 @@ const meta: Meta<typeof PlayerCard> = {
   },
   tags: ["autodocs"],
   decorators: [
-    (Story) => (
+    Story => (
       <div
         style={{
           width: "400px",
@@ -41,7 +41,7 @@ export const Player1: Story = {
     accent: "#0dcaf0",
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие основных элементов
@@ -64,7 +64,7 @@ export const Player2: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие основных элементов
@@ -87,7 +87,7 @@ export const WithCustomAccent: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие основных элементов
@@ -110,7 +110,7 @@ export const LongLabel: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие основных элементов
@@ -133,7 +133,7 @@ export const DarkAccent: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие основных элементов
@@ -156,11 +156,11 @@ export const NeonAccent: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие основных элементов
     const card = canvasElement.querySelector('[class*="player-card"]');
     expect(card).toBeInTheDocument();
   },
-}; 
+};

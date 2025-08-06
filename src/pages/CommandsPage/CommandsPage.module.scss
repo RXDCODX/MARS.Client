@@ -6,7 +6,7 @@
 
 .commandCard {
   transition: all 0.2s ease-in-out;
-  
+
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -15,7 +15,7 @@
 
 .parameterInput {
   transition: border-color 0.2s ease-in-out;
-  
+
   &:focus {
     border-color: var(--bs-primary);
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
@@ -31,20 +31,20 @@
 .commandList {
   scrollbar-width: thin;
   scrollbar-color: var(--bs-secondary) transparent;
-  
+
   &::-webkit-scrollbar {
     width: 6px;
   }
-  
+
   &::-webkit-scrollbar-track {
     background: transparent;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     background-color: var(--bs-secondary);
     border-radius: 3px;
   }
-  
+
   &::-webkit-scrollbar-thumb:hover {
     background-color: var(--bs-secondary-dark);
   }
@@ -85,7 +85,7 @@
   border-left: 3px solid var(--bs-primary);
   padding-left: 1rem;
   margin-bottom: 1.5rem;
-  
+
   &:last-child {
     margin-bottom: 0;
   }
@@ -100,14 +100,14 @@
 }
 
 .resultText {
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: 0.9rem;
   line-height: 1.5;
 }
 
 .emptyState {
   opacity: 0.6;
-  
+
   .icon {
     font-size: 4rem;
     margin-bottom: 1rem;
@@ -120,10 +120,10 @@
     border-color: var(--bs-primary);
     color: white;
   }
-  
+
   .btn-check:checked + .btn-outline-danger {
     background-color: var(--bs-danger);
     border-color: var(--bs-danger);
     color: white;
   }
-} 
+}

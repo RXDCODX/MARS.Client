@@ -38,7 +38,7 @@ interface ServiceStoreState {
   fetchServices: () => Promise<void>;
   handleAction: (
     serviceName: string,
-    action: "start" | "stop" | "restart" | "toggle",
+    action: "start" | "stop" | "restart" | "toggle"
   ) => Promise<void>;
   handleShowLogs: (serviceName: string) => Promise<void>;
   handleCloseLogs: () => void;
@@ -64,14 +64,14 @@ export const useServiceStore = create<ServiceStoreState>((set, get) => ({
   progress: 0,
   showLogs: false,
   selectedService: null,
-  setSelectedService: (service) => set({ selectedService: service }),
+  setSelectedService: service => set({ selectedService: service }),
   clearSelectedService: () => set({ selectedService: null }),
 
   fetchServices: async () => {
     set({ loading: true, error: null });
     try {
       const res = await axios.get<ServiceInfo[]>(
-        API + "/api/ServiceManager/services",
+        API + "/api/ServiceManager/services"
       );
       set({ services: Array.isArray(res.data) ? res.data : [] });
     } catch (e) {
@@ -88,18 +88,18 @@ export const useServiceStore = create<ServiceStoreState>((set, get) => ({
     set({ actionLoading: serviceName + action, error: null });
     try {
       if (action === "toggle") {
-        const service = get().services.find((s) => s.name === serviceName);
+        const service = get().services.find(s => s.name === serviceName);
         if (!service) return;
         await axios.post(
           API + `/api/ServiceManager/service/${serviceName}/active`,
           null,
           {
             params: { isActive: !service.isEnabled },
-          },
+          }
         );
       } else {
         await axios.post(
-          API + `/api/ServiceManager/service/${serviceName}/${action}`,
+          API + `/api/ServiceManager/service/${serviceName}/${action}`
         );
       }
       await get().fetchServices();
@@ -112,7 +112,7 @@ export const useServiceStore = create<ServiceStoreState>((set, get) => ({
     }
   },
 
-  handleShowLogs: async (serviceName) => {
+  handleShowLogs: async serviceName => {
     set({
       logsService: serviceName,
       showLogs: true,
@@ -121,7 +121,7 @@ export const useServiceStore = create<ServiceStoreState>((set, get) => ({
     });
     try {
       const res = await axios.get<ServiceLog[]>(
-        API + `/api/ServiceManager/service/${serviceName}/logs`,
+        API + `/api/ServiceManager/service/${serviceName}/logs`
       );
       set({ logs: res.data });
     } catch (e) {
@@ -140,8 +140,8 @@ export const useServiceStore = create<ServiceStoreState>((set, get) => ({
   },
 
   handleCloseLogs: () => set({ showLogs: false, logsService: null, logs: [] }),
-  setStatusFilter: (v) => set({ statusFilter: v }),
-  setSearch: (v) => set({ search: v }),
-  setAutoRefresh: (v) => set({ autoRefresh: v }),
-  setProgress: (v) => set({ progress: v }),
+  setStatusFilter: v => set({ statusFilter: v }),
+  setSearch: v => set({ search: v }),
+  setAutoRefresh: v => set({ autoRefresh: v }),
+  setProgress: v => set({ progress: v }),
 }));

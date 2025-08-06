@@ -2,16 +2,17 @@ import { useCallback, useReducer, useRef } from "react";
 import { Textfit } from "react-textfit";
 import { useShallow } from "zustand/react/shallow";
 
-import { SignalRContext } from "../../../app";
-import { ChatMessage, Image } from "../../../shared/api/generated/Api";
-import animate from "../../../shared/styles/animate.module.scss";
-import useTwitchStore from "../../../shared/twitchStore/twitchStore";
+import { ChatMessage, Image } from "@/shared/api/generated/Api";
+import animate from "@/shared/styles/animate.module.scss";
+import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import {
-    getNotWhiteColor,
-    isVideo,
-    isWhiteColor,
-    replaceBadges,
-} from "../../../shared/Utils";
+  getNotWhiteColor,
+  isVideo,
+  isWhiteColor,
+  replaceBadges,
+} from "@/shared/Utils";
+
+import { SignalRContext } from "../../../app";
 import styles from "./Message.module.scss";
 
 enum StateStatus {
@@ -33,7 +34,7 @@ interface State {
 
 function reducer(
   state: State,
-  action: { type: StateStatus; messageProps: HighliteMessageProps },
+  action: { type: StateStatus; messageProps: HighliteMessageProps }
 ): State {
   switch (action.type) {
     case StateStatus.add:
@@ -50,7 +51,7 @@ function reducer(
     case StateStatus.remove:
       if (state.messages.length > 0) {
         const newArray = state.messages.filter(
-          (message) => message.message.id !== action.messageProps.message.id,
+          message => message.message.id !== action.messageProps.message.id
         );
 
         if (newArray.length > 0) {
@@ -83,7 +84,7 @@ export default function Message() {
     messages: [],
     isMessageShowing: false,
   });
-  const badges = useTwitchStore(useShallow((state) => state.badges));
+  const badges = useTwitchStore(useShallow(state => state.badges));
   const divHard = useRef<HTMLDivElement>(null);
 
   SignalRContext.useSignalREffect(
@@ -94,7 +95,7 @@ export default function Message() {
         messageProps: { message, color, faceImage: faceUrl },
       });
     },
-    [],
+    []
   );
 
   const handleRemoveEvent = useCallback((message: HighliteMessageProps) => {
@@ -133,7 +134,7 @@ export default function Message() {
                         " " +
                         animate.animated;
                     },
-                    import.meta.env.DEV ? 99999 : 7000,
+                    import.meta.env.DEV ? 99999 : 7000
                   );
                 }}
               />
@@ -160,7 +161,7 @@ export default function Message() {
                         " " +
                         animate.animated;
                     },
-                    import.meta.env.DEV ? 99999 : 7000,
+                    import.meta.env.DEV ? 99999 : 7000
                   );
                 }}
               />

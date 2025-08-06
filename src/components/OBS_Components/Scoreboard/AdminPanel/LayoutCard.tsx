@@ -1,8 +1,8 @@
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { FaArrowsAlt, FaCompress } from "react-icons/fa";
 
-import { defaultLayout } from "./types";
 import { useLayout, useLayoutActions } from "./store/scoreboardStore";
+import { defaultLayout } from "./types";
 
 const LayoutCard: React.FC = () => {
   const layout = useLayout();
@@ -10,7 +10,7 @@ const LayoutCard: React.FC = () => {
 
   const handleChange = (
     field: keyof typeof layout,
-    value: number | boolean,
+    value: number | boolean
   ) => {
     setLayout({
       ...layout,
@@ -46,7 +46,7 @@ const LayoutCard: React.FC = () => {
                 min="0"
                 max="200"
                 value={layout.headerTop}
-                onChange={(e) =>
+                onChange={e =>
                   handleChange("headerTop", parseInt(e.target.value))
                 }
               />
@@ -59,7 +59,7 @@ const LayoutCard: React.FC = () => {
                 min="0"
                 max="100"
                 value={layout.headerLeft}
-                onChange={(e) =>
+                onChange={e =>
                   handleChange("headerLeft", parseInt(e.target.value))
                 }
               />
@@ -72,7 +72,7 @@ const LayoutCard: React.FC = () => {
                 min="0"
                 max="200"
                 value={layout.playersTop}
-                onChange={(e) =>
+                onChange={e =>
                   handleChange("playersTop", parseInt(e.target.value))
                 }
               />
@@ -87,7 +87,7 @@ const LayoutCard: React.FC = () => {
                 min="0"
                 max="200"
                 value={layout.playersLeft}
-                onChange={(e) =>
+                onChange={e =>
                   handleChange("playersLeft", parseInt(e.target.value))
                 }
               />
@@ -102,7 +102,7 @@ const LayoutCard: React.FC = () => {
                 min="0"
                 max="200"
                 value={layout.playersRight}
-                onChange={(e) =>
+                onChange={e =>
                   handleChange("playersRight", parseInt(e.target.value))
                 }
               />
@@ -122,7 +122,7 @@ const LayoutCard: React.FC = () => {
                 min="200"
                 max="800"
                 value={layout.headerWidth}
-                onChange={(e) =>
+                onChange={e =>
                   handleChange("headerWidth", parseInt(e.target.value))
                 }
               />
@@ -137,7 +137,7 @@ const LayoutCard: React.FC = () => {
                 min="40"
                 max="120"
                 value={layout.headerHeight}
-                onChange={(e) =>
+                onChange={e =>
                   handleChange("headerHeight", parseInt(e.target.value))
                 }
               />
@@ -152,7 +152,7 @@ const LayoutCard: React.FC = () => {
                 min="200"
                 max="600"
                 value={layout.playerBarWidth}
-                onChange={(e) =>
+                onChange={e =>
                   handleChange("playerBarWidth", parseInt(e.target.value))
                 }
               />
@@ -167,7 +167,7 @@ const LayoutCard: React.FC = () => {
                 min="60"
                 max="150"
                 value={layout.playerBarHeight}
-                onChange={(e) =>
+                onChange={e =>
                   handleChange("playerBarHeight", parseInt(e.target.value))
                 }
               />
@@ -182,7 +182,7 @@ const LayoutCard: React.FC = () => {
                 min="30"
                 max="80"
                 value={layout.scoreSize}
-                onChange={(e) =>
+                onChange={e =>
                   handleChange("scoreSize", parseInt(e.target.value))
                 }
               />
@@ -203,7 +203,7 @@ const LayoutCard: React.FC = () => {
                     min="5"
                     max="30"
                     value={layout.padding}
-                    onChange={(e) =>
+                    onChange={e =>
                       handleChange("padding", parseInt(e.target.value))
                     }
                   />
@@ -219,7 +219,7 @@ const LayoutCard: React.FC = () => {
                     min="5"
                     max="50"
                     value={layout.spacing}
-                    onChange={(e) =>
+                    onChange={e =>
                       handleChange("spacing", parseInt(e.target.value))
                     }
                   />
@@ -234,19 +234,19 @@ const LayoutCard: React.FC = () => {
                     type="checkbox"
                     label="Показывать заголовок"
                     checked={layout.showHeader}
-                    onChange={(e) => handleChange("showHeader", e.target.checked)}
+                    onChange={e => handleChange("showHeader", e.target.checked)}
                   />
                   <Form.Check
                     type="checkbox"
                     label="Показывать флаги"
                     checked={layout.showFlags}
-                    onChange={(e) => handleChange("showFlags", e.target.checked)}
+                    onChange={e => handleChange("showFlags", e.target.checked)}
                   />
                   <Form.Check
                     type="checkbox"
                     label="Показывать теги"
                     checked={layout.showTags}
-                    onChange={(e) => handleChange("showTags", e.target.checked)}
+                    onChange={e => handleChange("showTags", e.target.checked)}
                   />
                 </Form.Group>
               </Col>

@@ -17,7 +17,7 @@ export const useUpdateControl = (): UpdateControl => {
 
   const generateUpdateId = useCallback(
     () => `update_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-    [],
+    []
   );
 
   const startUpdate = useCallback((updateId?: string): boolean => {

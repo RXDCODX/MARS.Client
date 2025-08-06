@@ -1,5 +1,6 @@
-import React from 'react';
-import styles from './PerformanceChart.module.scss';
+import React from "react";
+
+import styles from "./PerformanceChart.module.scss";
 
 const PerformanceChart: React.FC = () => {
   // Имитация данных для графика
@@ -9,10 +10,13 @@ const PerformanceChart: React.FC = () => {
     for (let i = 23; i >= 0; i--) {
       const time = new Date(now.getTime() - i * 60 * 60 * 1000);
       data.push({
-        time: time.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }),
+        time: time.toLocaleTimeString("ru-RU", {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
         cpu: Math.random() * 100,
         memory: Math.random() * 100,
-        requests: Math.floor(Math.random() * 500)
+        requests: Math.floor(Math.random() * 500),
       });
     }
     return data;
@@ -20,9 +24,7 @@ const PerformanceChart: React.FC = () => {
 
   const chartData = generateData();
 
-  const getBarHeight = (value: number, max: number) => {
-    return (value / max) * 100;
-  };
+  const getBarHeight = (value: number, max: number) => (value / max) * 100;
 
   const maxRequests = Math.max(...chartData.map(d => d.requests));
 
@@ -45,25 +47,27 @@ const PerformanceChart: React.FC = () => {
           </div>
         </div>
       </div>
-      
+
       <div className={styles.chart}>
         <div className={styles.chartBars}>
           {chartData.map((data, index) => (
             <div key={index} className={styles.barGroup}>
               <div className={styles.barContainer}>
-                <div 
+                <div
                   className={`${styles.bar} ${styles.cpu}`}
                   style={{ height: `${getBarHeight(data.cpu, 100)}%` }}
                   title={`CPU: ${data.cpu.toFixed(1)}%`}
                 ></div>
-                <div 
+                <div
                   className={`${styles.bar} ${styles.memory}`}
                   style={{ height: `${getBarHeight(data.memory, 100)}%` }}
                   title={`Память: ${data.memory.toFixed(1)}%`}
                 ></div>
-                <div 
+                <div
                   className={`${styles.bar} ${styles.requests}`}
-                  style={{ height: `${getBarHeight(data.requests, maxRequests)}%` }}
+                  style={{
+                    height: `${getBarHeight(data.requests, maxRequests)}%`,
+                  }}
                   title={`Запросы: ${data.requests}`}
                 ></div>
               </div>
@@ -72,18 +76,24 @@ const PerformanceChart: React.FC = () => {
           ))}
         </div>
       </div>
-      
+
       <div className={styles.stats}>
         <div className={styles.stat}>
           <div className={styles.statLabel}>Среднее CPU</div>
           <div className={styles.statValue}>
-            {(chartData.reduce((sum, d) => sum + d.cpu, 0) / chartData.length).toFixed(1)}%
+            {(
+              chartData.reduce((sum, d) => sum + d.cpu, 0) / chartData.length
+            ).toFixed(1)}
+            %
           </div>
         </div>
         <div className={styles.stat}>
           <div className={styles.statLabel}>Средняя память</div>
           <div className={styles.statValue}>
-            {(chartData.reduce((sum, d) => sum + d.memory, 0) / chartData.length).toFixed(1)}%
+            {(
+              chartData.reduce((sum, d) => sum + d.memory, 0) / chartData.length
+            ).toFixed(1)}
+            %
           </div>
         </div>
         <div className={styles.stat}>
@@ -97,4 +107,4 @@ const PerformanceChart: React.FC = () => {
   );
 };
 
-export default PerformanceChart; 
+export default PerformanceChart;

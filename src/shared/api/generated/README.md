@@ -1,73 +1,93 @@
-# API Генератор
+# Generated API Client
 
-Этот каталог содержит автоматически сгенерированные файлы API для проекта MARS.
+Автоматически сгенерированный API клиент для проекта MARS.
 
-## Структура файлов
+## Поддержка VITE_BASE_PATH в рантайме
 
-### Типы
-- `types.ts` - Основные типы API (интерфейсы, энумы, типы данных)
-- `signalr_types.ts` - Типы для SignalR хабов
+Клиент поддерживает настройку базового пути через переменную окружения `VITE_BASE_PATH` с определением в рантайме.
 
-### Клиенты контроллеров
-- `checkers-client.ts` - Клиент для контроллера Checkers
-- `commands-client.ts` - Клиент для контроллера Commands  
-- `servicemanager-client.ts` - Клиент для контроллера ServiceManager
-- `soundbar-client.ts` - Клиент для контроллера SoundBar
+### Настройка
 
-### SignalR клиенты
-- `scoreboardhub-client.ts` - Клиент для ScoreboardHub
-- `soundrequesthub-client.ts` - Клиент для SoundRequestHub
-- `tunahub-client.ts` - Клиент для TunaHub
+1. Создайте файл `.env` в корне проекта
+2. Добавьте переменную `VITE_BASE_PATH`:
 
-### Основные файлы
-- `axios-client.ts` - Основной axios клиент (для обратной совместимости)
-- `index.ts` - Индексный файл с экспортами всех модулей
+```env
+# Примеры настройки базового пути
+VITE_BASE_PATH=/api/v1
+# или
+VITE_BASE_PATH=https://api.example.com
+# или
+VITE_BASE_PATH=http://localhost:5000/api
+```
 
-## Использование
+### Использование
 
-### Импорт типов
+#### Автоматическое использование базового пути в рантайме
+
 ```typescript
-import { MoveRequest, PlayerState } from './types';
-import { ScoreboardDto } from './signalr_types';
+import { CommandsService } from "@/shared/api/generated";
+
+// Автоматически использует VITE_BASE_PATH в рантайме
+const commandsService = new CommandsService();
+
+// Запрос будет отправлен на: {VITE_BASE_PATH}/api/commands/user/platform/Api/info
+const userCommands = await commandsService.getUserCommandsInfoForPlatform("Api");
 ```
 
-### Импорт клиентов
+#### Ручное указание базового пути
+
 ```typescript
-// Импорт конкретного контроллера
-import { CheckersService } from './checkers-client';
+import { CommandsService } from "@/shared/api/generated";
 
-// Импорт SignalR клиента
-import { ScoreboardHubService } from './scoreboardhub-client';
+// Переопределяем базовый путь
+const commandsService = new CommandsService("https://custom-api.com");
 
-// Импорт основного клиента
-import { ApiService } from './axios-client';
+// Запрос будет отправлен на: https://custom-api.com/api/commands/user/platform/Api/info
+const userCommands = await commandsService.getUserCommandsInfoForPlatform("Api");
 ```
 
-### Использование клиентов
+#### Использование утилит
+
 ```typescript
-// Использование контроллера
-const checkersService = new CheckersService();
-await checkersService.start();
-await checkersService.move(moveRequest);
+import { getApiBaseUrl, createApiUrl } from "@/shared/api/generated";
 
-// Использование SignalR хаба
-const scoreboardHub = new ScoreboardHubService();
-scoreboardHub.onScoreboardUpdate((data) => {
-  console.log('Scoreboard updated:', data);
-});
+// Получить базовый URL в рантайме
+const baseUrl = getApiBaseUrl(); // например: "/api/v1"
+
+// Создать полный URL для endpoint
+const fullUrl = createApiUrl("/api/commands"); // например: "/api/v1/api/commands"
 ```
 
-## Регенерация API
+## Доступные сервисы
 
-Для обновления API файлов запустите:
+- `CheckersService` - работа с checkers
+- `CommandsService` - работа с commands
+- `ScoreboardService` - работа с scoreboard
+- `ServiceManagerService` - работа с servicemanager
+- `SoundBarService` - работа с soundbar
 
-```bash
-cd mars.client
-node build-api.js
+## SignalR клиенты
+
+- `ScoreboardHubService` - SignalR для scoreboardhub
+- `SoundRequestHubService` - SignalR для soundrequesthub
+- `TelegramusHubService` - SignalR для telegramushub
+- `TunaHubService` - SignalR для tunahub
+
+## Типы
+
+Все типы экспортируются из `./types` и доступны для импорта:
+
+```typescript
+import { 
+  CommandInfo, 
+  CommandParameterInfo,
+  CommandInfoAvailablePlatformsEnum 
+} from "@/shared/api/generated";
 ```
 
-## Примечания
+## Особенности рантайм определения
 
-- Все файлы генерируются автоматически из `swagger.json`
-- Не редактируйте файлы вручную - изменения будут перезаписаны при регенерации
-- Для добавления новых контроллеров обновите `swagger.json` и перезапустите генератор 
+- Базовый путь определяется в рантайме, а не при сборке
+- Поддерживает как браузерную (import.meta.env), так и серверную (process.env) среду
+- Автоматически обрабатывает trailing slash
+- Fallback на пустую строку если переменная не установлена

@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 
-import { TunaMusicData } from "../../../../shared/api/generated/Api";
+import { TunaMusicData } from "@/shared/api/generated/Api";
+
 import CurrentTrack from "./CurrentTrack";
 
 const meta: Meta<typeof CurrentTrack> = {
@@ -48,7 +49,7 @@ export const Default: Story = {
     // const canvas = within(canvasElement); // Unused variable
 
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -71,7 +72,7 @@ export const Default: Story = {
 
     // Проверяем текст трека
     const textElements = canvasElement.querySelectorAll(
-      '[class*="textContainer"]',
+      '[class*="textContainer"]'
     );
     expect(textElements.length).toBeGreaterThan(0);
   },
@@ -86,7 +87,7 @@ export const WithoutAnimation: Story = {
     // const canvas = within(canvasElement); // Unused variable
 
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -113,7 +114,7 @@ export const WithoutCover: Story = {
     // const canvas = within(canvasElement); // Unused variable
 
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -141,14 +142,14 @@ export const MultipleArtists: Story = {
     // const canvas = within(canvasElement); // Unused variable
 
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем отображение нескольких артистов
     const textElements = canvasElement.querySelectorAll(
-      '[class*="textContainer"]',
+      '[class*="textContainer"]'
     );
     expect(textElements.length).toBeGreaterThan(0);
 

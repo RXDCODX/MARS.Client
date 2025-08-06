@@ -1,7 +1,7 @@
 import { CSSProperties } from "react";
 
-import { ChatMessage } from "../../../shared/api/generated/Api";
-import type { ContentPart } from "../../../shared/Utils";
+import { ChatMessage } from "@/shared/api/generated/Api";
+import type { ContentPart } from "@/shared/Utils";
 
 interface Props {
   className?: string;
@@ -31,7 +31,7 @@ export default function ContentPart({ part, style, className }: Props) {
     return (
       <div className={className} style={style}>
         {replaceLinksWithStub(
-          typeof part.content === "string" ? part.content : "",
+          typeof part.content === "string" ? part.content : ""
         )}
       </div>
     );

@@ -2,8 +2,9 @@ import { AnimatePresence } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
+import Announce from "@/shared/Utils/Announce/Announce";
+
 import { SignalRContext } from "../../../app";
-import Announce from "../../../shared/Utils/Announce/Announce";
 import AutoMessageAlert from "./AutoMessageAlert";
 
 interface AutoMessageData {
@@ -21,7 +22,7 @@ export default function AutoMessageBillboard({
 }: AutoMessageBillboardProps) {
   const [messageQueue, setMessageQueue] = useState<AutoMessageData[]>([]);
   const [currentMessage, setCurrentMessage] = useState<AutoMessageData | null>(
-    null,
+    null
   );
   const [isAnounced, setAnounced] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
@@ -30,7 +31,7 @@ export default function AutoMessageBillboard({
   // Инициализация с внешними сообщениями (для Storybook)
   useEffect(() => {
     if (externalMessages && externalMessages.length > 0) {
-      const initialQueue = externalMessages.map((msg) => ({
+      const initialQueue = externalMessages.map(msg => ({
         id: uuidv4(),
         message: msg,
         timestamp: Date.now(),
@@ -45,7 +46,7 @@ export default function AutoMessageBillboard({
       return;
     }
 
-    setMessageQueue((prevQueue) => {
+    setMessageQueue(prevQueue => {
       if (prevQueue.length === 0) {
         return prevQueue;
       }
@@ -97,7 +98,7 @@ export default function AutoMessageBillboard({
       };
 
       // Ограничиваем очередь максимум 10 сообщениями
-      setMessageQueue((prev) => {
+      setMessageQueue(prev => {
         const updatedQueue = [...prev, newMessage];
         // Если очередь больше 10 сообщений, удаляем самые старые
         if (updatedQueue.length > 10) {
@@ -106,7 +107,7 @@ export default function AutoMessageBillboard({
         return updatedQueue;
       });
     },
-    [externalMessages],
+    [externalMessages]
   );
 
   const removeMessage = useCallback(() => {
@@ -136,7 +137,7 @@ export default function AutoMessageBillboard({
         clearTimeout(timeoutRef.current);
       }
     },
-    [],
+    []
   );
 
   return (

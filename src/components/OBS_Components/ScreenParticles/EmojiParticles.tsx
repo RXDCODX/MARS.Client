@@ -1,10 +1,11 @@
 import { JSX, useEffect, useState } from "react";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 
+import { ChatMessage } from "@/shared/api/generated/Api";
+import useTwitchStore from "@/shared/twitchStore/twitchStore";
+import { getEmojisSrcFromText } from "@/shared/Utils";
+
 import { randomInRange } from ".";
-import { ChatMessage } from "../../../shared/api/generated/Api";
-import useTwitchStore from "../../../shared/twitchStore/twitchStore";
-import { getEmojisSrcFromText } from "../../../shared/Utils";
 
 interface imageData {
   src: string;
@@ -22,7 +23,7 @@ async function shapeFromImage(imageData: imageData) {
   const img = new Image();
   img.src = src;
 
-  await new Promise((res) => img.addEventListener("load", res));
+  await new Promise(res => img.addEventListener("load", res));
 
   const size = 10 * scalar;
 
@@ -84,22 +85,22 @@ export async function getBase64(url: string): Promise<string> {
 
 const ConfettiImage = ({ input, scalar = 10 }: Props) => {
   const [shapes, setShapes] = useState<Array<any>>([]);
-  const parser = useTwitchStore((state) => state.parser);
-  const parserToLink = useTwitchStore((state) => state.parseToLink);
+  const parser = useTwitchStore(state => state.parser);
+  const parserToLink = useTwitchStore(state => state.parseToLink);
   if (!parser || !parserToLink) {
     return undefined;
   }
   const [images, _] = useState(
-    getEmojisSrcFromText(input, parser, parserToLink),
+    getEmojisSrcFromText(input, parser, parserToLink)
   );
   const [element, setElement] = useState<JSX.Element | null>(null);
 
   useEffect(() => {
     if (images?.length && images.length > 0) {
-      images.forEach(async (image) => {
+      images.forEach(async image => {
         const base64 = await getBase64(image);
         const aa = await shapeFromImage({ src: base64, scalar });
-        setShapes((prev) => [...prev, aa]);
+        setShapes(prev => [...prev, aa]);
       });
     }
   }, [images]);
@@ -123,7 +124,7 @@ const ConfettiImage = ({ input, scalar = 10 }: Props) => {
               y: randomInRange(0, 1),
             },
           })}
-        />,
+        />
       );
     }
   }, [shapes, scalar]);

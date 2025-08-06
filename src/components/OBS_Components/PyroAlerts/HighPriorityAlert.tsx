@@ -1,8 +1,7 @@
 import { useCallback } from "react";
-import {
-    MediaDto,
-    MediaFileInfoTypeEnum,
-} from "../../../shared/api/generated/Api";
+
+import { MediaDto, MediaFileInfoTypeEnum } from "@/shared/api/generated/Api";
+
 import { Audio, Image, Video, Voice } from "./Primitive";
 import TelegramSticker from "./Primitive/TelegramSticker";
 

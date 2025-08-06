@@ -19,7 +19,7 @@ const meta: Meta<typeof ChatHorizontal> = {
   },
   tags: ["autodocs"],
   decorators: [
-    (Story) => (
+    Story => (
       <div
         style={{
           width: "100vw",
@@ -48,7 +48,7 @@ export const Default: Story = {
   ),
   play: async ({ canvasElement }) => {
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -75,20 +75,20 @@ export const Default: Story = {
     }
 
     // Ждем появления сообщений (увеличиваем время ожидания)
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
     // Проверяем, что сообщения появились
     let messages = canvasElement.querySelectorAll('[class*="message"]');
 
     // Если сообщения еще не появились, ждем еще немного
     if (messages.length === 0) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       messages = canvasElement.querySelectorAll('[class*="message"]');
     }
 
     // Если все еще нет сообщений, попробуем еще раз
     if (messages.length === 0) {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
       messages = canvasElement.querySelectorAll('[class*="message"]');
     }
 
@@ -100,7 +100,7 @@ export const Default: Story = {
 
     // Дополнительная проверка - ищем сообщения по разным селекторам
     const allMessages = canvasElement.querySelectorAll(
-      '[class*="message"], [class*="container"]',
+      '[class*="message"], [class*="container"]'
     );
     expect(allMessages.length).toBeGreaterThan(0);
 

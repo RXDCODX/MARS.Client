@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Textfit } from "react-textfit";
 
-import { SignalRContext } from "../../../../app";
 import {
   MediaDto,
   MediaFileInfo,
@@ -10,9 +9,11 @@ import {
   MediaPositionInfo,
   MediaStylesInfo,
   MediaTextInfo,
-} from "../../../../shared/api/generated/Api";
-import { KeyWordText } from "../../../../shared/components/KeyWordText";
-import { getCoordinates, getRandomRotation } from "../../../../shared/Utils";
+} from "@/shared/api/generated/Api";
+import { KeyWordText } from "@/shared/components/KeyWordText";
+import { getCoordinates, getRandomRotation } from "@/shared/Utils";
+
+import { SignalRContext } from "../../../../app";
 import styles from "./Media.module.scss";
 
 interface Props {
@@ -57,7 +58,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
       positionInfo.rotation,
       positionInfo.xCoordinate,
       positionInfo.yCoordinate,
-    ],
+    ]
   );
 
   const initialStyles = useMemo<React.CSSProperties>(
@@ -72,7 +73,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
             height: memoizedPositionInfo.height + "px",
             maxHeight: "max-content",
           },
-    [memoizedPositionInfo],
+    [memoizedPositionInfo]
   );
 
   const [baseStyles, setBaseStyles] =
@@ -84,7 +85,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
       duration: metaInfo.duration,
       isLooped: metaInfo.isLooped,
     }),
-    [metaInfo.duration, metaInfo.isLooped],
+    [metaInfo.duration, metaInfo.isLooped]
   );
 
   // Мемоизируем MediaInfo для стабильности зависимостей
@@ -93,19 +94,19 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
       id: MediaInfo.mediaInfo.id,
       filePath: fileInfo.filePath,
     }),
-    [MediaInfo.mediaInfo.id, fileInfo.filePath],
+    [MediaInfo.mediaInfo.id, fileInfo.filePath]
   );
 
   // Мемоизируем positionInfo для функций getCoordinates и getRandomRotation
   const memoizedPositionInfoForFunctions = useMemo(
     () => memoizedPositionInfo,
-    [memoizedPositionInfo],
+    [memoizedPositionInfo]
   );
 
   // Мемоизируем id для стабильности зависимостей
   const memoizedId = useMemo(
     () => MediaInfo.mediaInfo.id,
-    [MediaInfo.mediaInfo.id],
+    [MediaInfo.mediaInfo.id]
   );
 
   // Мемоизируем textInfo для стабильности зависимостей
@@ -114,7 +115,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
       keyWordsColor: textInfo.keyWordsColor,
       text: textInfo.text,
     }),
-    [textInfo.keyWordsColor, textInfo.text],
+    [textInfo.keyWordsColor, textInfo.text]
   );
 
   // Обновляем baseStyles при изменении initialStyles
@@ -153,7 +154,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
         callback();
       }
     },
-    [memoizedMetaInfo, unmuteAll, callback],
+    [memoizedMetaInfo, unmuteAll, callback]
   );
 
   const handleLoadedMetadata = useCallback(
@@ -174,14 +175,14 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
         const randomRotation = getRandomRotation(fakeMediaInfo);
 
         if (memoizedPositionInfo.isUseOriginalWidthAndHeight) {
-          setBaseStyles((prev) => ({
+          setBaseStyles(prev => ({
             ...prev,
             width: video.videoWidth + "px",
             height: video.videoHeight + "px",
           }));
         }
 
-        setBaseStyles((prev) => ({
+        setBaseStyles(prev => ({
           ...prev,
           ...newCords,
           ...randomRotation,
@@ -198,7 +199,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
       memoizedPositionInfo.isUseOriginalWidthAndHeight,
       memoizedPositionInfoForFunctions,
       muteAll,
-    ],
+    ]
   );
 
   useEffect(() => {
@@ -211,7 +212,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
           callback();
         }
       },
-      memoizedMetaInfo.duration * 1000 + 200,
+      memoizedMetaInfo.duration * 1000 + 200
     ); // Длительность + 2 сек буфера
 
     setBackupTimer(timer);
@@ -227,7 +228,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
         unmuteAll();
         callback();
       },
-      memoizedMetaInfo.duration * 1000 + 1000,
+      memoizedMetaInfo.duration * 1000 + 1000
     );
 
     return () => {
@@ -249,10 +250,10 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
           width: baseStyles.width,
           height: baseStyles.height,
         }}
-        onError={(e) => {
+        onError={e => {
           console.log(
             "%c" + e,
-            "color: #7289DA; -webkit-text-stroke: 2px black; font-size: 72px; font-weight: bold;",
+            "color: #7289DA; -webkit-text-stroke: 2px black; font-size: 72px; font-weight: bold;"
           );
           unmuteAll();
           callback();

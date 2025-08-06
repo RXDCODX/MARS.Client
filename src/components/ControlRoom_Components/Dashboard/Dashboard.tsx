@@ -27,7 +27,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
       setIsLoading(true);
 
       // Имитация API вызова
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       setMetrics({
         cpuUsage: Math.random() * 100,

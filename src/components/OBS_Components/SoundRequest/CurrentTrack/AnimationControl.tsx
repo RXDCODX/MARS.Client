@@ -1,7 +1,8 @@
 import { AnimatePresence, motion, Variant } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 
-import AnimatedGradientBackground from "../../../../shared/Utils/Animations/AnimatedGradientBackground";
+import AnimatedGradientBackground from "@/shared/Utils/Animations/AnimatedGradientBackground";
+
 import styles from "./CurrentTrack.module.scss";
 
 interface Props {
@@ -46,7 +47,7 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
       case "nowPlaying":
         if (nowPlayingCount < 2) {
           setTimeout(() => {
-            setNowPlayingCount((prev) => prev + 1);
+            setNowPlayingCount(prev => prev + 1);
           }, 800);
         } else {
           setTimeout(() => setAnimationStage("slidesCoverFinal"), 200);
@@ -208,7 +209,7 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
             initial="hidden"
             animate="visible"
             exit="exit"
-            onAnimationComplete={(definition) => {
+            onAnimationComplete={definition => {
               if (definition === "visible") {
                 handleAnimationComplete("nowPlaying");
               }
@@ -248,7 +249,7 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
             ? "visible"
             : "hidden"
         }
-        onAnimationComplete={(definition) => {
+        onAnimationComplete={definition => {
           if (definition === "visible" && animationStage === "showChildren") {
             handleAnimationComplete("showChildren");
           }

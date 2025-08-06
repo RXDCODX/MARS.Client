@@ -17,7 +17,7 @@ const meta: Meta<typeof Scoreboard> = {
   },
   tags: ["autodocs"],
   decorators: [
-    (Story) => (
+    Story => (
       <div
         style={{
           width: "100vw",
@@ -40,7 +40,7 @@ export const Default: Story = {
   args: {},
   play: async ({ canvasElement }) => {
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -67,7 +67,7 @@ export const TournamentMatch: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие игроков
@@ -90,7 +90,7 @@ export const GrandFinals: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие режима драки
@@ -109,13 +109,13 @@ export const Hidden: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // В данном случае компонент может быть скрыт через SignalR
     // Проверяем базовую структуру
     const container = canvasElement.querySelector(
-      '[class*="scoreboard-container"]',
+      '[class*="scoreboard-container"]'
     );
     expect(container).toBeInTheDocument();
   },
@@ -131,7 +131,7 @@ export const WithFlags: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие флагов
@@ -150,7 +150,7 @@ export const WinnerLoser: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие меток победителя/проигравшего
@@ -169,12 +169,12 @@ export const CustomColors: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие элементов с кастомными стилями
     const styledElements = canvasElement.querySelectorAll(
-      '[style*="box-shadow"]',
+      '[style*="box-shadow"]'
     );
     expect(styledElements.length).toBeGreaterThan(0);
   },

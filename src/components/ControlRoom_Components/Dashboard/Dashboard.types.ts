@@ -9,4 +9,4 @@ export interface Metrics {
   requestsPerSecond: number;
   errorRate: number;
   uptime: number;
-} 
+}

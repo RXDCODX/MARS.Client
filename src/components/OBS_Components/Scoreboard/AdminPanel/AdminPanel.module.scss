@@ -1,7 +1,9 @@
 // Стили для админ панели
 .adminPanel {
   min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 .adminTitle {
@@ -18,36 +20,36 @@
     box-shadow: var(--site-shadow-light) !important;
     transition: all 0.3s ease;
     color: var(--site-text-primary) !important;
-    
+
     &:hover {
       box-shadow: var(--site-shadow-medium) !important;
     }
   }
-  
+
   .card-header {
     background-color: var(--site-bg-primary) !important;
     border-bottom-color: var(--site-border-primary) !important;
     color: var(--site-text-primary) !important;
   }
-  
+
   .card-body {
     background-color: var(--site-bg-primary) !important;
     color: var(--site-text-primary) !important;
   }
-  
+
   .card-footer {
     background-color: var(--site-bg-primary) !important;
     border-top-color: var(--site-border-primary) !important;
     color: var(--site-text-primary) !important;
   }
-  
+
   // Переопределяем стили для карточек с жестко заданными цветами
   .card[style*="background: #1a1d23"] {
     background-color: var(--site-bg-primary) !important;
     border-color: var(--site-border-primary) !important;
     color: var(--site-text-primary) !important;
   }
-  
+
   .card[style*="background-color: #1a1d23"] {
     background-color: var(--site-bg-primary) !important;
     border-color: var(--site-border-primary) !important;
@@ -61,7 +63,7 @@
     background-color: var(--site-bg-primary) !important;
     border-color: var(--site-border-primary) !important;
     color: var(--site-text-primary) !important;
-    
+
     &:focus {
       background-color: var(--site-bg-primary) !important;
       border-color: var(--site-border-accent) !important;
@@ -69,42 +71,42 @@
       color: var(--site-text-primary) !important;
     }
   }
-  
+
   .form-label {
     color: var(--site-text-primary) !important;
   }
-  
+
   .form-text {
     color: var(--site-text-secondary) !important;
   }
-  
+
   // Плейсхолдеры
   input::placeholder {
     color: var(--site-text-muted) !important;
     opacity: 0.7;
   }
-  
+
   input:focus::placeholder {
     opacity: 0.5;
   }
-  
+
   // Переопределяем стили для инпутов с жестко заданными цветами
   .form-control.bg-dark {
     background-color: var(--site-bg-primary) !important;
     color: var(--site-text-primary) !important;
     border-color: var(--site-border-primary) !important;
-    
+
     &:focus {
       background-color: var(--site-bg-primary) !important;
       border-color: var(--site-border-accent) !important;
       color: var(--site-text-primary) !important;
     }
   }
-  
+
   .form-control.text-white {
     color: var(--site-text-primary) !important;
   }
-  
+
   // Стили для дропдаунов флагов
   .position-relative {
     .bg-dark {
@@ -112,11 +114,11 @@
       color: var(--site-text-primary) !important;
       border-color: var(--site-border-primary) !important;
     }
-    
+
     .text-white {
       color: var(--site-text-primary) !important;
     }
-    
+
     .text-muted {
       color: var(--site-text-secondary) !important;
     }
@@ -127,144 +129,144 @@
 :global(.admin-panel) {
   .btn {
     transition: all 0.3s ease;
-    
+
     &:hover {
       transform: translateY(-1px);
       box-shadow: var(--site-shadow-medium) !important;
     }
   }
-  
+
   .btn-primary {
     background-color: var(--site-bg-accent) !important;
     border-color: var(--site-border-accent) !important;
     color: var(--site-text-light) !important;
-    
+
     &:hover {
       background-color: var(--site-bg-accent) !important;
       filter: brightness(1.1);
       color: var(--site-text-light) !important;
     }
   }
-  
+
   .btn-secondary {
     background-color: var(--site-bg-secondary) !important;
     border-color: var(--site-border-primary) !important;
     color: var(--site-text-primary) !important;
-    
+
     &:hover {
       background-color: var(--site-hover-bg) !important;
       color: var(--site-text-primary) !important;
     }
   }
-  
+
   .btn-outline-primary {
     border-color: var(--site-border-accent) !important;
     color: var(--site-text-accent) !important;
-    
+
     &:hover {
       background-color: var(--site-bg-accent) !important;
       color: var(--site-text-light) !important;
     }
   }
-  
+
   .btn-outline-secondary {
     border-color: var(--site-border-primary) !important;
     color: var(--site-text-primary) !important;
-    
+
     &:hover {
       background-color: var(--site-hover-bg) !important;
       color: var(--site-text-primary) !important;
     }
   }
-  
+
   .btn-outline-danger {
     border-color: var(--site-border-danger) !important;
     color: var(--site-text-danger) !important;
-    
+
     &:hover {
       background-color: var(--site-bg-danger) !important;
       color: var(--site-text-light) !important;
     }
   }
-  
+
   .btn-outline-success {
     border-color: var(--site-border-success) !important;
     color: var(--site-text-success) !important;
-    
+
     &:hover {
       background-color: var(--site-bg-success) !important;
       color: var(--site-text-light) !important;
     }
   }
-  
+
   .btn-danger {
     background-color: var(--site-bg-danger) !important;
     border-color: var(--site-border-danger) !important;
     color: var(--site-text-light) !important;
-    
+
     &:hover {
       background-color: var(--site-bg-danger) !important;
       filter: brightness(1.1);
       color: var(--site-text-light) !important;
     }
   }
-  
+
   .btn-success {
     background-color: var(--site-bg-success) !important;
     border-color: var(--site-border-success) !important;
     color: var(--site-text-light) !important;
-    
+
     &:hover {
       background-color: var(--site-bg-success) !important;
       filter: brightness(1.1);
       color: var(--site-text-light) !important;
     }
   }
-  
+
   .btn-info {
     background-color: var(--site-bg-info) !important;
     border-color: var(--site-border-info) !important;
     color: var(--site-text-light) !important;
-    
+
     &:hover {
       background-color: var(--site-bg-info) !important;
       filter: brightness(1.1);
       color: var(--site-text-light) !important;
     }
   }
-  
-     .btn-outline-info {
-     border-color: var(--site-border-info) !important;
-     color: var(--site-text-info) !important;
-     
-     &:hover {
-       background-color: var(--site-bg-info) !important;
-       color: var(--site-text-light) !important;
-     }
-   }
-   
-   .btn-warning {
-     background-color: var(--site-bg-warning) !important;
-     border-color: var(--site-border-warning) !important;
-     color: var(--site-text-light) !important;
-     
-     &:hover {
-       background-color: var(--site-bg-warning) !important;
-       filter: brightness(1.1);
-       color: var(--site-text-light) !important;
-     }
-   }
-   
-   .btn-outline-warning {
-     border-color: var(--site-border-warning) !important;
-     color: var(--site-text-warning) !important;
-     
-     &:hover {
-       background-color: var(--site-bg-warning) !important;
-       color: var(--site-text-light) !important;
-     }
-   }
- }
+
+  .btn-outline-info {
+    border-color: var(--site-border-info) !important;
+    color: var(--site-text-info) !important;
+
+    &:hover {
+      background-color: var(--site-bg-info) !important;
+      color: var(--site-text-light) !important;
+    }
+  }
+
+  .btn-warning {
+    background-color: var(--site-bg-warning) !important;
+    border-color: var(--site-border-warning) !important;
+    color: var(--site-text-light) !important;
+
+    &:hover {
+      background-color: var(--site-bg-warning) !important;
+      filter: brightness(1.1);
+      color: var(--site-text-light) !important;
+    }
+  }
+
+  .btn-outline-warning {
+    border-color: var(--site-border-warning) !important;
+    color: var(--site-text-warning) !important;
+
+    &:hover {
+      background-color: var(--site-bg-warning) !important;
+      color: var(--site-text-light) !important;
+    }
+  }
+}
 
 // Стили для селектов
 :global(.admin-panel) {
@@ -272,7 +274,7 @@
     background-color: var(--site-bg-primary) !important;
     border-color: var(--site-border-primary) !important;
     color: var(--site-text-primary) !important;
-    
+
     &:focus {
       background-color: var(--site-bg-primary) !important;
       border-color: var(--site-border-accent) !important;
@@ -285,13 +287,13 @@
 :global(.admin-panel) {
   .table {
     color: var(--site-text-primary) !important;
-    
+
     th {
       background-color: var(--site-bg-primary) !important;
       border-color: var(--site-border-primary) !important;
       color: var(--site-text-primary) !important;
     }
-    
+
     td {
       border-color: var(--site-border-primary) !important;
       color: var(--site-text-primary) !important;
@@ -305,24 +307,24 @@
     &.bg-primary {
       background-color: var(--site-bg-accent) !important;
     }
-    
+
     &.bg-secondary {
       background-color: var(--site-bg-primary) !important;
       color: var(--site-text-primary) !important;
     }
-    
+
     &.bg-success {
       background-color: var(--site-bg-success) !important;
     }
-    
+
     &.bg-warning {
       background-color: var(--site-bg-warning) !important;
     }
-    
+
     &.bg-danger {
       background-color: var(--site-bg-danger) !important;
     }
-    
+
     &.bg-info {
       background-color: var(--site-bg-info) !important;
     }
@@ -333,22 +335,22 @@
 :global(.admin-panel) {
   .alert {
     border-color: var(--site-border-primary) !important;
-    
+
     &.alert-primary {
       background-color: var(--site-bg-primary) !important;
       color: var(--site-text-info) !important;
     }
-    
+
     &.alert-success {
       background-color: var(--site-bg-primary) !important;
       color: var(--site-text-success) !important;
     }
-    
+
     &.alert-warning {
       background-color: var(--site-bg-primary) !important;
       color: var(--site-text-warning) !important;
     }
-    
+
     &.alert-danger {
       background-color: var(--site-bg-primary) !important;
       color: var(--site-text-danger) !important;
@@ -362,7 +364,7 @@
     color: var(--site-text-light) !important;
     opacity: 0.7;
   }
-  
+
   &:focus::placeholder {
     opacity: 0.5;
   }
@@ -373,65 +375,68 @@
   .text-white {
     color: var(--site-text-primary) !important;
   }
-  
+
   .text-danger {
     color: var(--site-text-danger) !important;
   }
-  
+
   .text-success {
     color: var(--site-text-success) !important;
   }
-  
+
   .text-info {
     color: var(--site-text-info) !important;
   }
-  
+
   .text-warning {
     color: var(--site-text-warning) !important;
   }
-  
+
   .text-primary {
     color: var(--site-text-primary) !important;
   }
-  
+
   .text-secondary {
     color: var(--site-text-secondary) !important;
   }
-  
+
   .text-muted {
     color: var(--site-text-muted) !important;
   }
-  
+
   .text-light {
     color: var(--site-text-light) !important;
   }
-  
+
   .text-dark {
     color: var(--site-text-dark) !important;
   }
-  
+
   .fw-bold {
     font-weight: 700 !important;
   }
-  
+
   .text-uppercase {
     text-transform: uppercase !important;
   }
-  
+
   // Исправляем проблемы с color: inherit
-  .btn, .form-control, .form-label, .form-text {
+  .btn,
+  .form-control,
+  .form-label,
+  .form-text {
     color: inherit !important;
   }
-  
+
   // Но переопределяем для конкретных элементов
   .form-control {
     color: var(--site-text-primary) !important;
   }
-  
+
   .form-label {
     color: var(--site-text-primary) !important;
   }
-  
+
   .form-text {
     color: var(--site-text-secondary) !important;
   }
@@ -443,4 +448,4 @@
     font-size: 1.5rem;
     text-align: center;
   }
-} 
+}

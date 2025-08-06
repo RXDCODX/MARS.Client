@@ -1,6 +1,8 @@
-export interface CommandsPageProps {
-  // Пока что пустой, но может понадобиться в будущем
-}
+import {
+  CommandInfo,
+  CommandInfoAvailablePlatformsEnum,
+  CommandParameterInfo,
+} from "@/shared/api/generated/types";
 
 export interface CommandExecutionState {
   isExecuting: boolean;
@@ -13,10 +15,12 @@ export interface ParameterState {
 }
 
 export interface CommandsState {
-  userCommands: any[];
-  adminCommands: any[];
-  selectedCommand: any | null;
-  commandParameters: any[];
+  userCommands: CommandInfo[];
+  adminCommands: CommandInfo[];
+  selectedCommand: CommandInfo | null;
+  commandParameters: CommandParameterInfo[];
   isLoading: boolean;
   activeTab: "user" | "admin";
 }
+
+export type PlatformType = CommandInfoAvailablePlatformsEnum;

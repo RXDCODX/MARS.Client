@@ -42,7 +42,7 @@ export const Default: Story = {
     // const canvas = within(canvasElement); // Unused variable
 
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -70,7 +70,7 @@ export const SlowSpeed: Story = {
     // const canvas = within(canvasElement); // Unused variable
 
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -95,7 +95,7 @@ export const FastSpeed: Story = {
     // const canvas = within(canvasElement); // Unused variable
 
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -121,7 +121,7 @@ export const LongText: Story = {
     // const canvas = within(canvasElement); // Unused variable
 
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();

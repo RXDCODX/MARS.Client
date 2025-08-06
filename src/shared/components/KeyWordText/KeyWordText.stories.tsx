@@ -47,7 +47,7 @@ export const Default: Story = {
   },
   play: async ({ canvasElement }) => {
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -58,7 +58,7 @@ export const Default: Story = {
 
     // Проверяем, что текст отображается
     expect(canvasElement).toHaveTextContent(
-      "Hello #world! This is a #test message.",
+      "Hello #world! This is a #test message."
     );
 
     // Проверяем выделение ключевых слов
@@ -82,7 +82,7 @@ export const WithQuotes: Story = {
   },
   play: async ({ canvasElement }) => {
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -93,7 +93,7 @@ export const WithQuotes: Story = {
 
     // Проверяем, что текст отображается
     expect(canvasElement).toHaveTextContent(
-      'This is a "quoted #keyword" example.',
+      'This is a "quoted #keyword" example.'
     );
 
     // Проверяем выделение ключевых слов в кавычках
@@ -118,26 +118,26 @@ export const MultipleKeywords: Story = {
   },
   play: async ({ canvasElement }) => {
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие множественных ключевых слов
     const keywords = canvasElement.querySelectorAll(
-      '[class*="multiple-keywords"]',
+      '[class*="multiple-keywords"]'
     );
     expect(keywords.length).toBeGreaterThan(1);
 
     // Проверяем, что все ключевые слова выделены
-    keywords.forEach((keyword) => {
+    keywords.forEach(keyword => {
       const computedStyle = window.getComputedStyle(keyword);
       expect(computedStyle.color).toBe("rgb(0, 0, 255)");
     });
 
     // Проверяем, что текст отображается полностью
     expect(canvasElement).toHaveTextContent(
-      "Multiple #keywords in #one #sentence",
+      "Multiple #keywords in #one #sentence"
     );
   },
 };
@@ -152,7 +152,7 @@ export const NoKeywords: Story = {
   },
   play: async ({ canvasElement }) => {
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
@@ -163,7 +163,7 @@ export const NoKeywords: Story = {
 
     // Проверяем, что текст отображается
     expect(canvasElement).toHaveTextContent(
-      "This text has no keywords to highlight.",
+      "This text has no keywords to highlight."
     );
   },
 };

@@ -10,7 +10,7 @@ export const countries: Country[] = Object.entries(countriesData).map(
   ([code, name]) => ({
     code: code.toLowerCase(),
     name: name as string,
-  }),
+  })
 );
 
 // Функция для получения пути к флагу
@@ -26,9 +26,9 @@ export const searchCountries = (query: string): Country[] => {
   const lowerQuery = query.toLowerCase();
   return countries
     .filter(
-      (country) =>
+      country =>
         country.name.toLowerCase().includes(lowerQuery) ||
-        country.code.toLowerCase().includes(lowerQuery),
+        country.code.toLowerCase().includes(lowerQuery)
     )
     .slice(0, 20); // Ограничиваем результаты
 };

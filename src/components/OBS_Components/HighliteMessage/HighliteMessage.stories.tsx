@@ -16,7 +16,7 @@ const meta: Meta<typeof HighliteMessage> = {
     },
   },
   tags: ["autodocs"],
-  decorators: [(Story) => <Story />],
+  decorators: [Story => <Story />],
 };
 
 export default meta;
@@ -28,14 +28,14 @@ export const Default: Story = {
     // const canvas = within(canvasElement); // Unused variable
 
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем, что нет активных всплывающих сообщений изначально
     const highliteMessages = canvasElement.querySelectorAll(
-      '[class*="container"]',
+      '[class*="container"]'
     );
     expect(highliteMessages.length).toBe(0);
 
@@ -58,14 +58,14 @@ export const Empty: Story = {
     // const canvas = within(canvasElement); // Unused variable
 
     // Ждем появления компонента
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем, что нет всплывающих сообщений
     const highliteMessages = canvasElement.querySelectorAll(
-      '[class*="container"]',
+      '[class*="container"]'
     );
     expect(highliteMessages.length).toBe(0);
 

@@ -20,7 +20,7 @@ const meta: Meta<typeof MetaPanel> = {
     setMeta: { action: "meta changed" },
   },
   decorators: [
-    (Story) => (
+    Story => (
       <div
         style={{
           width: "400px",
@@ -45,7 +45,7 @@ export const Default: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие панели мета-информации
@@ -69,11 +69,13 @@ export const Tournament: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие поля названия турнира
-    const titleInput = canvasElement.querySelector('input[placeholder*="title"]');
+    const titleInput = canvasElement.querySelector(
+      'input[placeholder*="title"]'
+    );
     expect(titleInput).toBeInTheDocument();
   },
 };
@@ -93,11 +95,13 @@ export const Exhibition: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие поля правил боя
-    const fightRuleInput = canvasElement.querySelector('input[placeholder*="fight"]');
+    const fightRuleInput = canvasElement.querySelector(
+      'input[placeholder*="fight"]'
+    );
     expect(fightRuleInput).toBeInTheDocument();
   },
 };
@@ -117,7 +121,7 @@ export const Finals: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие всех полей ввода
@@ -141,7 +145,7 @@ export const Empty: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие карточки
@@ -165,11 +169,11 @@ export const LongTitle: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие заголовка карточки
     const cardHeader = canvasElement.querySelector('[class*="card-header"]');
     expect(cardHeader).toBeInTheDocument();
   },
-}; 
+};

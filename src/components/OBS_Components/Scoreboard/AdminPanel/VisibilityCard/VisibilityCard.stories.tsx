@@ -21,7 +21,7 @@ const meta: Meta<typeof VisibilityCard> = {
     onAnimationDurationChange: { action: "animation duration changed" },
   },
   decorators: [
-    (Story) => (
+    Story => (
       <div
         style={{
           width: "400px",
@@ -44,7 +44,7 @@ export const Default: Story = {
     animationDuration: 800,
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие карточки видимости
@@ -66,7 +66,7 @@ export const Visible: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие переключателя видимости
@@ -88,7 +88,7 @@ export const Hidden: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем состояние переключателя
@@ -110,7 +110,7 @@ export const FastAnimation: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие слайдера времени анимации
@@ -132,11 +132,11 @@ export const SlowAnimation: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие лейбла времени анимации
-    const labels = canvasElement.querySelectorAll('label');
+    const labels = canvasElement.querySelectorAll("label");
     expect(labels.length).toBeGreaterThan(0);
   },
 };
@@ -154,7 +154,7 @@ export const NoAnimation: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие карточки
@@ -176,11 +176,11 @@ export const MaximumAnimation: Story = {
     },
   },
   play: async ({ canvasElement }) => {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 100));
     expect(canvasElement).toBeInTheDocument();
 
     // Проверяем наличие всех элементов управления
     const controls = canvasElement.querySelectorAll('[class*="form-control"]');
     expect(controls.length).toBeGreaterThan(0);
   },
-}; 
+};

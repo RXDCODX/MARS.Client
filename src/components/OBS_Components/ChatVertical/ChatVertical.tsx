@@ -1,13 +1,14 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
+import { ChatMessage } from "@/shared/api/generated/Api";
+import Announce from "@/shared/Utils/Announce/Announce";
+
 import { SignalRContext } from "../../../app";
-import { ChatMessage } from "../../../shared/api/generated/Api";
-import Announce from "../../../shared/Utils/Announce/Announce";
 import {
-    FRAMER_MOTION_CONFIG,
-    SCROLL_CONFIG,
-    SCROLL_TIMEOUT,
+  FRAMER_MOTION_CONFIG,
+  SCROLL_CONFIG,
+  SCROLL_TIMEOUT,
 } from "./animationTimings";
 import styles from "./ChatVertical.module.scss";
 import { Message } from "./Message";
@@ -32,7 +33,7 @@ export default function ChatVertical({
   const handleRemove =
     onRemoveMessage ||
     ((id: string) => {
-      setInternalMessages((prev) => prev.filter((m) => m.id !== id));
+      setInternalMessages(prev => prev.filter(m => m.id !== id));
     });
 
   // Для jump-анимации всех сообщений
@@ -41,7 +42,7 @@ export default function ChatVertical({
   // Когда появляется новое сообщение — обновляем jumpKey
   useEffect(() => {
     if (messages.length > 0) {
-      setJumpKey((k) => k + 1);
+      setJumpKey(k => k + 1);
     }
   }, [messages.length]);
 
@@ -64,24 +65,24 @@ export default function ChatVertical({
         return null;
       }
       message.id ??= id;
-      setInternalMessages((prev) => {
+      setInternalMessages(prev => {
         while (prev.length >= 15) {
           prev.pop();
         }
-        if (prev.find((m) => m.id === message.id)) {
+        if (prev.find(m => m.id === message.id)) {
           return prev;
         } else {
           return [message, ...prev];
         }
       });
     },
-    [],
+    []
   );
 
   // Плавное удаление: сначала помечаем _pendingRemove, потом реально удаляем
   const handleDeleteMessage = (id: string) => {
-    setInternalMessages((prev) =>
-      prev.map((m) => (m.id === id ? { ...m, _pendingRemove: true } : m)),
+    setInternalMessages(prev =>
+      prev.map(m => (m.id === id ? { ...m, _pendingRemove: true } : m))
     );
   };
 
@@ -90,7 +91,7 @@ export default function ChatVertical({
     (id: string) => {
       handleDeleteMessage(id);
     },
-    [],
+    []
   );
 
   return (
