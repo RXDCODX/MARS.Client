@@ -5,11 +5,11 @@ import { ChatMessage } from "../../../shared/api/generated/Api";
 import animateStyles from "../../../shared/styles/animate.module.scss";
 import useTwitchStore from "../../../shared/twitchStore/twitchStore";
 import {
-    getNotWhiteColor,
-    getRandomInt,
-    isWhiteColor,
-    parseContent,
-    replaceEmotes,
+  getNotWhiteColor,
+  getRandomInt,
+  isWhiteColor,
+  parseContent,
+  replaceEmotes,
 } from "../../../shared/Utils";
 import GradientText from "../../../shared/Utils/Animations/GradientText";
 import styles from "./Message.module.scss";

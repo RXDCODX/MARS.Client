@@ -35,4 +35,4 @@ export interface TelegramusHub {
 export interface TunaHub {
   updateMusic: (data: any) => void;
   getCurrentTrack: () => Promise<any>;
-} 
+}

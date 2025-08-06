@@ -1,13 +1,14 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import AdminPanel from './AdminPanel';
+import type { Meta, StoryObj } from "@storybook/react-vite";
+
+import AdminPanel from "./AdminPanel";
 
 const meta: Meta<typeof AdminPanel> = {
-  title: 'ControlRoom/AdminPanel',
+  title: "ControlRoom/AdminPanel",
   component: AdminPanel,
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
 };
 
 export default meta;
@@ -21,7 +22,7 @@ export const WithCustomTheme: Story = {
   args: {},
   parameters: {
     backgrounds: {
-      default: 'dark',
+      default: "dark",
     },
   },
-}; 
+};

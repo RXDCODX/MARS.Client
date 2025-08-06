@@ -1,42 +1,42 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import styles from './AboutPage.module.scss';
+import React from "react";
+import { Link } from "react-router-dom";
+import styles from "./AboutPage.module.scss";
 
 const AboutPage: React.FC = () => {
   const teamMembers = [
     {
-      name: 'Команда разработки',
-      role: 'Backend & Frontend',
-      description: 'Создание мощной архитектуры и современного интерфейса'
+      name: "Команда разработки",
+      role: "Backend & Frontend",
+      description: "Создание мощной архитектуры и современного интерфейса",
     },
     {
-      name: 'Дизайн команда',
-      role: 'UI/UX Design',
-      description: 'Создание красивых и удобных интерфейсов'
+      name: "Дизайн команда",
+      role: "UI/UX Design",
+      description: "Создание красивых и удобных интерфейсов",
     },
     {
-      name: 'QA команда',
-      role: 'Тестирование',
-      description: 'Обеспечение качества и стабильности работы'
-    }
+      name: "QA команда",
+      role: "Тестирование",
+      description: "Обеспечение качества и стабильности работы",
+    },
   ];
 
   const milestones = [
     {
-      year: '2024',
-      title: 'Запуск проекта',
-      description: 'Начало разработки MARS Client'
+      year: "2024",
+      title: "Запуск проекта",
+      description: "Начало разработки MARS Client",
     },
     {
-      year: '2024',
-      title: 'Первая версия',
-      description: 'Базовые OBS компоненты и панель управления'
+      year: "2024",
+      title: "Первая версия",
+      description: "Базовые OBS компоненты и панель управления",
     },
     {
-      year: '2024',
-      title: 'Расширение функционала',
-      description: 'Добавление новых компонентов и улучшение UI'
-    }
+      year: "2024",
+      title: "Расширение функционала",
+      description: "Добавление новых компонентов и улучшение UI",
+    },
   ];
 
   return (
@@ -46,7 +46,8 @@ const AboutPage: React.FC = () => {
         <div className={styles.container}>
           <h1 className={styles.heroTitle}>О проекте MARS Client</h1>
           <p className={styles.heroSubtitle}>
-            Мощная платформа для создания профессиональных стримов с интерактивными компонентами
+            Мощная платформа для создания профессиональных стримов с
+            интерактивными компонентами
           </p>
         </div>
       </section>
@@ -58,13 +59,14 @@ const AboutPage: React.FC = () => {
             <div className={styles.missionText}>
               <h2>Наша миссия</h2>
               <p>
-                MARS Client создан для того, чтобы помочь стримерам создавать качественный контент 
-                с минимальными усилиями. Мы предоставляем готовые решения для всех аспектов стриминга: 
-                от красивых алертов до мощной панели управления.
+                MARS Client создан для того, чтобы помочь стримерам создавать
+                качественный контент с минимальными усилиями. Мы предоставляем
+                готовые решения для всех аспектов стриминга: от красивых алертов
+                до мощной панели управления.
               </p>
               <p>
-                Наша цель - сделать стриминг доступным и профессиональным для всех, кто хочет 
-                делиться своим контентом с миром.
+                Наша цель - сделать стриминг доступным и профессиональным для
+                всех, кто хочет делиться своим контентом с миром.
               </p>
             </div>
             <div className={styles.missionVisual}>
@@ -95,7 +97,9 @@ const AboutPage: React.FC = () => {
             {teamMembers.map((member, index) => (
               <div key={index} className={styles.teamCard}>
                 <div className={styles.memberAvatar}>
-                  <span className={styles.avatarText}>{member.name.charAt(0)}</span>
+                  <span className={styles.avatarText}>
+                    {member.name.charAt(0)}
+                  </span>
                 </div>
                 <h3 className={styles.memberName}>{member.name}</h3>
                 <p className={styles.memberRole}>{member.role}</p>
@@ -116,7 +120,9 @@ const AboutPage: React.FC = () => {
                 <div className={styles.timelineYear}>{milestone.year}</div>
                 <div className={styles.timelineContent}>
                   <h3 className={styles.timelineTitle}>{milestone.title}</h3>
-                  <p className={styles.timelineDescription}>{milestone.description}</p>
+                  <p className={styles.timelineDescription}>
+                    {milestone.description}
+                  </p>
                 </div>
               </div>
             ))}
@@ -143,4 +149,4 @@ const AboutPage: React.FC = () => {
   );
 };
 
-export default AboutPage; 
+export default AboutPage;
