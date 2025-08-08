@@ -43,7 +43,7 @@ import {
   CommandInfo, 
   CommandParameterInfo, 
   CommandInfoAvailablePlatformsEnum 
-} from "@/shared/api/generated/types";
+} from "@/shared/api";
 ```
 
 ## Используемый API клиент

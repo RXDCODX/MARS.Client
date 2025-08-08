@@ -1,9 +1,7 @@
 import { useCallback, useState } from "react";
 
-import {
-  ChatMessage,
-  MakeScreenParticlesCreateParamsParticlesEnum,
-} from "@/shared/api/generated/Api";
+import { ChatMessage } from "@/shared/api";
+import { MakeScreenParticlesCreateParamsParticlesEnum } from "@/shared/api/SignalR/types/signalr-types";
 
 import { SignalRContext } from "../../../app";
 import { Confettyv2 } from "./Confetty";

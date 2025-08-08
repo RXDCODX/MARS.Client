@@ -11,14 +11,15 @@ import {
   Spinner,
 } from "react-bootstrap";
 
-import { CommandsService } from "@/shared/api/generated/commands-client";
+import { Commands } from "@/shared/api";
+import { CommandsAdminPlatformInfoListParamsEnum } from "@/shared/api/data-contracts";
 import {
   CommandInfo,
-  CommandInfoAvailablePlatformsEnum,
   CommandParameterInfo,
-} from "@/shared/api/generated/types";
+} from "@/shared/api/SignalR/types/signalr-types";
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
+import { CommandsUserPlatformInfoListParamsEnum } from "../../shared/api/data-contracts";
 import styles from "./CommandsPage.module.scss";
 
 // Типы для состояния компонента
@@ -37,7 +38,7 @@ interface CommandsPageState {
 
 const CommandsPage: React.FC = () => {
   const colors = useSiteColors();
-  const [commandsService] = useState(() => new CommandsService());
+  const [commandsService] = useState(() => new Commands());
 
   // Состояние компонента
   const [state, setState] = useState<CommandsPageState>({
@@ -64,14 +65,15 @@ const CommandsPage: React.FC = () => {
       updateState({ isLoading: true, error: "" });
 
       // Загружаем команды для API платформы
-      const userCommandsData =
-        await commandsService.getUserCommandsInfoForPlatform(
-          CommandInfoAvailablePlatformsEnum.Api
-        );
-      const adminCommandsData =
-        await commandsService.getAdminCommandsInfoForPlatform(
-          CommandInfoAvailablePlatformsEnum.Api
-        );
+      const resultUser = await commandsService.commandsAdminPlatformInfoList(
+        CommandsAdminPlatformInfoListParamsEnum.Api
+      );
+      const adminResult = await commandsService.commandsUserPlatformInfoList(
+        CommandsUserPlatformInfoListParamsEnum.Api
+      );
+
+      const userCommandsData = resultUser.data;
+      const adminCommandsData = adminResult.data;
 
       updateState({
         userCommands: userCommandsData,
@@ -102,9 +104,10 @@ const CommandsPage: React.FC = () => {
       });
 
       // Загружаем параметры команды
-      const parameters = await commandsService.getCommandParameters(
-        command.name
-      );
+      const result = await commandsService.commandsParametersList(command.name);
+
+      const parameters = result.data;
+
       updateState({ commandParameters: parameters });
     } catch (err) {
       updateState({
@@ -151,12 +154,14 @@ const CommandsPage: React.FC = () => {
       updateState({ isExecuting: true, error: "", executionResult: "" });
 
       const input = buildCommandInput();
-      const result = await commandsService.executeCommand(
+      const result = await commandsService.commandsExecuteCreate(
         state.selectedCommand.name,
         input
       );
 
-      updateState({ executionResult: result, isExecuting: false });
+      const resultData = result.data;
+
+      updateState({ executionResult: resultData, isExecuting: false });
     } catch (err) {
       updateState({
         error: "Ошибка при выполнении команды: " + (err as Error).message,
@@ -522,6 +527,27 @@ const CommandsPage: React.FC = () => {
                             "Выполнить команду"
                           )}
                         </Button>
+
+                        {state.executionResult && (
+                          <div className="mt-3">
+                            <h6 style={colors.utils.getTextStyle("primary")}>
+                              Результат:
+                            </h6>
+                            <pre
+                              className="bg-light p-3 rounded"
+                              style={{
+                                backgroundColor: colors.background.secondary,
+                                border: `1px solid ${colors.border.primary}`,
+                                maxHeight: "300px",
+                                overflowY: "auto",
+                                whiteSpace: "pre-wrap",
+                                wordBreak: "break-word",
+                              }}
+                            >
+                              {state.executionResult}
+                            </pre>
+                          </div>
+                        )}
                       </div>
                     )}
                   </Card.Body>

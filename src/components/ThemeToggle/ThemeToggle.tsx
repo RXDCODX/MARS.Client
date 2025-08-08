@@ -1,6 +1,6 @@
 import { Button } from "react-bootstrap";
 
-import { useTheme } from "@/contexts/ThemeContext";
+import { useTheme } from "@/contexts/Theme";
 
 import styles from "./ThemeToggle.module.scss";
 

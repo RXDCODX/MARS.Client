@@ -2,7 +2,8 @@ import { useCallback, useState } from "react";
 import { Container, Row } from "react-bootstrap";
 import { Textfit } from "react-textfit";
 
-import { MediaDto } from "../../api/generated/Api";
+import { MediaDto } from "@/shared/api";
+
 import styles from "./aa.module.scss";
 
 interface Props {

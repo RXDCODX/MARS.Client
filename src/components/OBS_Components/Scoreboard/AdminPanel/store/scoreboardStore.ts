@@ -1,7 +1,9 @@
 import { HubConnection, HubConnectionState } from "@microsoft/signalr";
 import { create } from "zustand";
 
-import { ScoreboardDto } from "../../../../../shared/api/generated/Api";
+import { ScoreboardDto } from "@/shared/api";
+import { ScoreboardHubSignalRContext } from "@/shared/api/SignalR/ScoreboardHub/SignalRContext";
+
 import {
   ColorInfoWIthTimestamp,
   ColorPreset,
@@ -12,7 +14,6 @@ import {
   MetaInfoWithTimestamp,
   PlayerWithTimestamp,
 } from "../types";
-import { ScoreboardSignalRContext } from "./signalConnection";
 
 // Интерфейс состояния
 export interface ScoreboardState {
@@ -83,7 +84,7 @@ export type ScoreboardStore = ScoreboardState & ScoreboardActions;
 
 // Начальное состояние
 const initialState: ScoreboardState = {
-  _connection: ScoreboardSignalRContext.build(),
+  _connection: ScoreboardHubSignalRContext.build(),
   player1: {
     name: "Daigo Umehara",
     sponsor: "Red Bull",
@@ -119,7 +120,7 @@ const initialState: ScoreboardState = {
 // Создание store
 export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
   // Инициализируем соединение
-  const connection = ScoreboardSignalRContext.build();
+  const connection = ScoreboardHubSignalRContext.build();
 
   const firstActiveFunction = (state: ScoreboardState) => {
     get().handleReceiveState(state);

@@ -1,11 +1,13 @@
 /** Generate by swagger-axios-codegen */
-// @ts-nocheck
 /* eslint-disable */
 
 /** Generate by swagger-axios-codegen */
 /* eslint-disable */
 // @ts-nocheck
-import axiosStatic, { type AxiosInstance, type AxiosRequestConfig } from 'axios';
+import axiosStatic, {
+  type AxiosInstance,
+  type AxiosRequestConfig,
+} from "axios";
 
 export interface IRequestOptions extends AxiosRequestConfig {
   /**
@@ -43,37 +45,46 @@ export interface ServiceOptions {
 export const serviceOptions: ServiceOptions = {};
 
 // Instance selector
-export function axios(configs: IRequestConfig, resolve: (p: any) => void, reject: (p: any) => void): Promise<any> {
+export function axios(
+  configs: IRequestConfig,
+  resolve: (p: any) => void,
+  reject: (p: any) => void
+): Promise<any> {
   if (serviceOptions.axios) {
     return serviceOptions.axios
       .request(configs)
-      .then((res) => {
+      .then(res => {
         resolve(res.data);
       })
-      .catch((err) => {
+      .catch(err => {
         reject(err);
       });
   } else {
-    throw new Error('please inject yourself instance like axios  ');
+    throw new Error("please inject yourself instance like axios  ");
   }
 }
 
-export function getConfigs(method: string, contentType: string, url: string, options: any): IRequestConfig {
+export function getConfigs(
+  method: string,
+  contentType: string,
+  url: string,
+  options: any
+): IRequestConfig {
   const configs: IRequestConfig = {
     loading: serviceOptions.loading,
     showError: serviceOptions.showError,
     ...options,
     method,
-    url
+    url,
   };
   configs.headers = {
     ...options.headers,
-    'Content-Type': contentType
+    "Content-Type": contentType,
   };
   return configs;
 }
 
-export const basePath = '';
+export const basePath = "";
 
 export interface IList<T> extends Array<T> {}
 export interface List<T> extends Array<T> {}
@@ -1648,10 +1659,10 @@ export interface TunaMusicData {
   status: string;
 
   /**  */
-  progress: string;
+  progress: number;
 
   /**  */
-  duration: string;
+  duration: number;
 
   /**  */
   album_url: string;
@@ -2199,111 +2210,111 @@ export interface YandexTrackAdditionalInfo {
 export type CombinedEntryPointTypes = MethodInfo;
 export type CombinedManifestModuleTypes = Module;
 export enum EnumAssemblySecurityRuleSet {
-  'None' = 'None',
-  'Level1' = 'Level1',
-  'Level2' = 'Level2'
+  "None" = "None",
+  "Level1" = "Level1",
+  "Level2" = "Level2",
 }
 export enum EnumBaseTrackInfoDomain {
-  'None' = 'None',
-  'Youtube' = 'Youtube',
-  'SoundCloud' = 'SoundCloud',
-  'YandexMusic' = 'YandexMusic',
-  'VkMusic' = 'VkMusic'
+  "None" = "None",
+  "Youtube" = "Youtube",
+  "SoundCloud" = "SoundCloud",
+  "YandexMusic" = "YandexMusic",
+  "VkMusic" = "VkMusic",
 }
 export type CombinedYandexSpecificInfoTypes = YandexTrackAdditionalInfo;
 export type CombinedColorTypes = Color;
 export type CombinedEmoteSetTypes = EmoteSet;
 export enum EnumChatMessageUserType {
-  'Viewer' = 'Viewer',
-  'Moderator' = 'Moderator',
-  'GlobalModerator' = 'GlobalModerator',
-  'Broadcaster' = 'Broadcaster',
-  'Admin' = 'Admin',
-  'Staff' = 'Staff'
+  "Viewer" = "Viewer",
+  "Moderator" = "Moderator",
+  "GlobalModerator" = "GlobalModerator",
+  "Broadcaster" = "Broadcaster",
+  "Admin" = "Admin",
+  "Staff" = "Staff",
 }
 export type CombinedCheerBadgeTypes = CheerBadge;
 export enum EnumChatMessageNoisy {
-  'NotSet' = 'NotSet',
-  'True' = 'True',
-  'False' = 'False'
+  "NotSet" = "NotSet",
+  "True" = "True",
+  "False" = "False",
 }
 export type CombinedChatReplyTypes = ChatReply;
 export enum EnumCheerBadgeColor {
-  'Gray' = 'Gray',
-  'Purple' = 'Purple',
-  'Green' = 'Green',
-  'Blue' = 'Blue',
-  'Red' = 'Red'
+  "Gray" = "Gray",
+  "Purple" = "Purple",
+  "Green" = "Green",
+  "Blue" = "Blue",
+  "Red" = "Red",
 }
 export enum EnumCommandInfoAvailablePlatforms {
-  'None' = 'None',
-  'Api' = 'Api',
-  'Telegram' = 'Telegram',
-  'Twitch' = 'Twitch',
-  'Discord' = 'Discord',
-  'Vk' = 'Vk'
+  "None" = "None",
+  "Api" = "Api",
+  "Telegram" = "Telegram",
+  "Twitch" = "Twitch",
+  "Discord" = "Discord",
+  "Vk" = "Vk",
 }
 export type CombinedDeclaringTypeTypes = Type;
 export type CombinedReflectedTypeTypes = Type;
 export type CombinedModuleTypes = Module;
 export enum EnumConstructorInfoAttributes {
-  'PrivateScope' = 'PrivateScope',
-  'Private' = 'Private',
-  'FamANDAssem' = 'FamANDAssem',
-  'Assembly' = 'Assembly',
-  'Family' = 'Family',
-  'FamORAssem' = 'FamORAssem',
-  'Public' = 'Public',
-  'MemberAccessMask' = 'MemberAccessMask',
-  'UnmanagedExport' = 'UnmanagedExport',
-  'Static' = 'Static',
-  'Final' = 'Final',
-  'Virtual' = 'Virtual',
-  'HideBySig' = 'HideBySig',
-  'NewSlot' = 'NewSlot',
-  'CheckAccessOnOverride' = 'CheckAccessOnOverride',
-  'Abstract' = 'Abstract',
-  'SpecialName' = 'SpecialName',
-  'RTSpecialName' = 'RTSpecialName',
-  'PinvokeImpl' = 'PinvokeImpl',
-  'HasSecurity' = 'HasSecurity',
-  'RequireSecObject' = 'RequireSecObject',
-  'ReservedMask' = 'ReservedMask'
+  "PrivateScope" = "PrivateScope",
+  "Private" = "Private",
+  "FamANDAssem" = "FamANDAssem",
+  "Assembly" = "Assembly",
+  "Family" = "Family",
+  "FamORAssem" = "FamORAssem",
+  "Public" = "Public",
+  "MemberAccessMask" = "MemberAccessMask",
+  "UnmanagedExport" = "UnmanagedExport",
+  "Static" = "Static",
+  "Final" = "Final",
+  "Virtual" = "Virtual",
+  "HideBySig" = "HideBySig",
+  "NewSlot" = "NewSlot",
+  "CheckAccessOnOverride" = "CheckAccessOnOverride",
+  "Abstract" = "Abstract",
+  "SpecialName" = "SpecialName",
+  "RTSpecialName" = "RTSpecialName",
+  "PinvokeImpl" = "PinvokeImpl",
+  "HasSecurity" = "HasSecurity",
+  "RequireSecObject" = "RequireSecObject",
+  "ReservedMask" = "ReservedMask",
 }
 export enum EnumConstructorInfoMethodImplementationFlags {
-  'IL' = 'IL',
-  'Native' = 'Native',
-  'OPTIL' = 'OPTIL',
-  'CodeTypeMask' = 'CodeTypeMask',
-  'ManagedMask' = 'ManagedMask',
-  'NoInlining' = 'NoInlining',
-  'ForwardRef' = 'ForwardRef',
-  'Synchronized' = 'Synchronized',
-  'NoOptimization' = 'NoOptimization',
-  'PreserveSig' = 'PreserveSig',
-  'AggressiveInlining' = 'AggressiveInlining',
-  'AggressiveOptimization' = 'AggressiveOptimization',
-  'InternalCall' = 'InternalCall',
-  'MaxMethodImplVal' = 'MaxMethodImplVal'
+  "IL" = "IL",
+  "Native" = "Native",
+  "OPTIL" = "OPTIL",
+  "CodeTypeMask" = "CodeTypeMask",
+  "ManagedMask" = "ManagedMask",
+  "NoInlining" = "NoInlining",
+  "ForwardRef" = "ForwardRef",
+  "Synchronized" = "Synchronized",
+  "NoOptimization" = "NoOptimization",
+  "PreserveSig" = "PreserveSig",
+  "AggressiveInlining" = "AggressiveInlining",
+  "AggressiveOptimization" = "AggressiveOptimization",
+  "InternalCall" = "InternalCall",
+  "MaxMethodImplVal" = "MaxMethodImplVal",
 }
 export enum EnumConstructorInfoCallingConvention {
-  'Standard' = 'Standard',
-  'VarArgs' = 'VarArgs',
-  'Any' = 'Any',
-  'HasThis' = 'HasThis',
-  'ExplicitThis' = 'ExplicitThis'
+  "Standard" = "Standard",
+  "VarArgs" = "VarArgs",
+  "Any" = "Any",
+  "HasThis" = "HasThis",
+  "ExplicitThis" = "ExplicitThis",
 }
 export type CombinedMethodHandleTypes = RuntimeMethodHandle;
 export enum EnumConstructorInfoMemberType {
-  'Constructor' = 'Constructor',
-  'Event' = 'Event',
-  'Field' = 'Field',
-  'Method' = 'Method',
-  'Property' = 'Property',
-  'TypeInfo' = 'TypeInfo',
-  'Custom' = 'Custom',
-  'NestedType' = 'NestedType',
-  'All' = 'All'
+  "Constructor" = "Constructor",
+  "Event" = "Event",
+  "Field" = "Field",
+  "Method" = "Method",
+  "Property" = "Property",
+  "TypeInfo" = "TypeInfo",
+  "Custom" = "Custom",
+  "NestedType" = "NestedType",
+  "All" = "All",
 }
 export type CombinedAttributeTypeTypes = Type;
 export type CombinedConstructorTypes = ConstructorInfo;
@@ -2311,20 +2322,20 @@ export type CombinedMemberInfoTypes = MemberInfo;
 export type CombinedTypedValueTypes = CustomAttributeTypedArgument;
 export type CombinedArgumentTypeTypes = Type;
 export enum EnumEventInfoMemberType {
-  'Constructor' = 'Constructor',
-  'Event' = 'Event',
-  'Field' = 'Field',
-  'Method' = 'Method',
-  'Property' = 'Property',
-  'TypeInfo' = 'TypeInfo',
-  'Custom' = 'Custom',
-  'NestedType' = 'NestedType',
-  'All' = 'All'
+  "Constructor" = "Constructor",
+  "Event" = "Event",
+  "Field" = "Field",
+  "Method" = "Method",
+  "Property" = "Property",
+  "TypeInfo" = "TypeInfo",
+  "Custom" = "Custom",
+  "NestedType" = "NestedType",
+  "All" = "All",
 }
 export enum EnumEventInfoAttributes {
-  'None' = 'None',
-  'SpecialName' = 'SpecialName',
-  'RTSpecialName' = 'RTSpecialName'
+  "None" = "None",
+  "SpecialName" = "SpecialName",
+  "RTSpecialName" = "RTSpecialName",
 }
 export type CombinedAddMethodTypes = MethodInfo;
 export type CombinedRemoveMethodTypes = MethodInfo;
@@ -2333,36 +2344,36 @@ export type CombinedEventHandlerTypeTypes = Type;
 export type CombinedTargetSiteTypes = MethodBase;
 export type CombinedInnerExceptionTypes = Exception;
 export enum EnumFieldInfoMemberType {
-  'Constructor' = 'Constructor',
-  'Event' = 'Event',
-  'Field' = 'Field',
-  'Method' = 'Method',
-  'Property' = 'Property',
-  'TypeInfo' = 'TypeInfo',
-  'Custom' = 'Custom',
-  'NestedType' = 'NestedType',
-  'All' = 'All'
+  "Constructor" = "Constructor",
+  "Event" = "Event",
+  "Field" = "Field",
+  "Method" = "Method",
+  "Property" = "Property",
+  "TypeInfo" = "TypeInfo",
+  "Custom" = "Custom",
+  "NestedType" = "NestedType",
+  "All" = "All",
 }
 export enum EnumFieldInfoAttributes {
-  'PrivateScope' = 'PrivateScope',
-  'Private' = 'Private',
-  'FamANDAssem' = 'FamANDAssem',
-  'Assembly' = 'Assembly',
-  'Family' = 'Family',
-  'FamORAssem' = 'FamORAssem',
-  'Public' = 'Public',
-  'FieldAccessMask' = 'FieldAccessMask',
-  'Static' = 'Static',
-  'InitOnly' = 'InitOnly',
-  'Literal' = 'Literal',
-  'NotSerialized' = 'NotSerialized',
-  'HasFieldRVA' = 'HasFieldRVA',
-  'SpecialName' = 'SpecialName',
-  'RTSpecialName' = 'RTSpecialName',
-  'HasFieldMarshal' = 'HasFieldMarshal',
-  'PinvokeImpl' = 'PinvokeImpl',
-  'HasDefault' = 'HasDefault',
-  'ReservedMask' = 'ReservedMask'
+  "PrivateScope" = "PrivateScope",
+  "Private" = "Private",
+  "FamANDAssem" = "FamANDAssem",
+  "Assembly" = "Assembly",
+  "Family" = "Family",
+  "FamORAssem" = "FamORAssem",
+  "Public" = "Public",
+  "FieldAccessMask" = "FieldAccessMask",
+  "Static" = "Static",
+  "InitOnly" = "InitOnly",
+  "Literal" = "Literal",
+  "NotSerialized" = "NotSerialized",
+  "HasFieldRVA" = "HasFieldRVA",
+  "SpecialName" = "SpecialName",
+  "RTSpecialName" = "RTSpecialName",
+  "HasFieldMarshal" = "HasFieldMarshal",
+  "PinvokeImpl" = "PinvokeImpl",
+  "HasDefault" = "HasDefault",
+  "ReservedMask" = "ReservedMask",
 }
 export type CombinedFieldTypeTypes = Type;
 export type CombinedFieldHandleTypes = RuntimeFieldHandle;
@@ -2371,13 +2382,13 @@ export type CombinedHostCoolDownTypes = HostCoolDown;
 export type CombinedHostTypes = Host;
 export type CombinedMediaInfoTypes = MediaInfo;
 export enum EnumMediaFileInfoType {
-  'None' = 'None',
-  'Image' = 'Image',
-  'Audio' = 'Audio',
-  'Video' = 'Video',
-  'TelegramSticker' = 'TelegramSticker',
-  'Voice' = 'Voice',
-  'Gif' = 'Gif'
+  "None" = "None",
+  "Image" = "Image",
+  "Audio" = "Audio",
+  "Video" = "Video",
+  "TelegramSticker" = "TelegramSticker",
+  "Voice" = "Voice",
+  "Gif" = "Gif",
 }
 export type CombinedTextInfoTypes = MediaTextInfo;
 export type CombinedFileInfoTypes = MediaFileInfo;
@@ -2385,136 +2396,136 @@ export type CombinedPositionInfoTypes = MediaPositionInfo;
 export type CombinedMetaInfoTypes = MediaMetaInfo;
 export type CombinedStylesInfoTypes = MediaStylesInfo;
 export enum EnumMediaMetaInfoPriority {
-  'Low' = 'Low',
-  'Normal' = 'Normal',
-  'High' = 'High'
+  "Low" = "Low",
+  "Normal" = "Normal",
+  "High" = "High",
 }
 export enum EnumMemberInfoMemberType {
-  'Constructor' = 'Constructor',
-  'Event' = 'Event',
-  'Field' = 'Field',
-  'Method' = 'Method',
-  'Property' = 'Property',
-  'TypeInfo' = 'TypeInfo',
-  'Custom' = 'Custom',
-  'NestedType' = 'NestedType',
-  'All' = 'All'
+  "Constructor" = "Constructor",
+  "Event" = "Event",
+  "Field" = "Field",
+  "Method" = "Method",
+  "Property" = "Property",
+  "TypeInfo" = "TypeInfo",
+  "Custom" = "Custom",
+  "NestedType" = "NestedType",
+  "All" = "All",
 }
 export enum EnumMethodBaseMemberType {
-  'Constructor' = 'Constructor',
-  'Event' = 'Event',
-  'Field' = 'Field',
-  'Method' = 'Method',
-  'Property' = 'Property',
-  'TypeInfo' = 'TypeInfo',
-  'Custom' = 'Custom',
-  'NestedType' = 'NestedType',
-  'All' = 'All'
+  "Constructor" = "Constructor",
+  "Event" = "Event",
+  "Field" = "Field",
+  "Method" = "Method",
+  "Property" = "Property",
+  "TypeInfo" = "TypeInfo",
+  "Custom" = "Custom",
+  "NestedType" = "NestedType",
+  "All" = "All",
 }
 export enum EnumMethodBaseAttributes {
-  'PrivateScope' = 'PrivateScope',
-  'Private' = 'Private',
-  'FamANDAssem' = 'FamANDAssem',
-  'Assembly' = 'Assembly',
-  'Family' = 'Family',
-  'FamORAssem' = 'FamORAssem',
-  'Public' = 'Public',
-  'MemberAccessMask' = 'MemberAccessMask',
-  'UnmanagedExport' = 'UnmanagedExport',
-  'Static' = 'Static',
-  'Final' = 'Final',
-  'Virtual' = 'Virtual',
-  'HideBySig' = 'HideBySig',
-  'NewSlot' = 'NewSlot',
-  'CheckAccessOnOverride' = 'CheckAccessOnOverride',
-  'Abstract' = 'Abstract',
-  'SpecialName' = 'SpecialName',
-  'RTSpecialName' = 'RTSpecialName',
-  'PinvokeImpl' = 'PinvokeImpl',
-  'HasSecurity' = 'HasSecurity',
-  'RequireSecObject' = 'RequireSecObject',
-  'ReservedMask' = 'ReservedMask'
+  "PrivateScope" = "PrivateScope",
+  "Private" = "Private",
+  "FamANDAssem" = "FamANDAssem",
+  "Assembly" = "Assembly",
+  "Family" = "Family",
+  "FamORAssem" = "FamORAssem",
+  "Public" = "Public",
+  "MemberAccessMask" = "MemberAccessMask",
+  "UnmanagedExport" = "UnmanagedExport",
+  "Static" = "Static",
+  "Final" = "Final",
+  "Virtual" = "Virtual",
+  "HideBySig" = "HideBySig",
+  "NewSlot" = "NewSlot",
+  "CheckAccessOnOverride" = "CheckAccessOnOverride",
+  "Abstract" = "Abstract",
+  "SpecialName" = "SpecialName",
+  "RTSpecialName" = "RTSpecialName",
+  "PinvokeImpl" = "PinvokeImpl",
+  "HasSecurity" = "HasSecurity",
+  "RequireSecObject" = "RequireSecObject",
+  "ReservedMask" = "ReservedMask",
 }
 export enum EnumMethodBaseMethodImplementationFlags {
-  'IL' = 'IL',
-  'Native' = 'Native',
-  'OPTIL' = 'OPTIL',
-  'CodeTypeMask' = 'CodeTypeMask',
-  'ManagedMask' = 'ManagedMask',
-  'NoInlining' = 'NoInlining',
-  'ForwardRef' = 'ForwardRef',
-  'Synchronized' = 'Synchronized',
-  'NoOptimization' = 'NoOptimization',
-  'PreserveSig' = 'PreserveSig',
-  'AggressiveInlining' = 'AggressiveInlining',
-  'AggressiveOptimization' = 'AggressiveOptimization',
-  'InternalCall' = 'InternalCall',
-  'MaxMethodImplVal' = 'MaxMethodImplVal'
+  "IL" = "IL",
+  "Native" = "Native",
+  "OPTIL" = "OPTIL",
+  "CodeTypeMask" = "CodeTypeMask",
+  "ManagedMask" = "ManagedMask",
+  "NoInlining" = "NoInlining",
+  "ForwardRef" = "ForwardRef",
+  "Synchronized" = "Synchronized",
+  "NoOptimization" = "NoOptimization",
+  "PreserveSig" = "PreserveSig",
+  "AggressiveInlining" = "AggressiveInlining",
+  "AggressiveOptimization" = "AggressiveOptimization",
+  "InternalCall" = "InternalCall",
+  "MaxMethodImplVal" = "MaxMethodImplVal",
 }
 export enum EnumMethodBaseCallingConvention {
-  'Standard' = 'Standard',
-  'VarArgs' = 'VarArgs',
-  'Any' = 'Any',
-  'HasThis' = 'HasThis',
-  'ExplicitThis' = 'ExplicitThis'
+  "Standard" = "Standard",
+  "VarArgs" = "VarArgs",
+  "Any" = "Any",
+  "HasThis" = "HasThis",
+  "ExplicitThis" = "ExplicitThis",
 }
 export enum EnumMethodInfoAttributes {
-  'PrivateScope' = 'PrivateScope',
-  'Private' = 'Private',
-  'FamANDAssem' = 'FamANDAssem',
-  'Assembly' = 'Assembly',
-  'Family' = 'Family',
-  'FamORAssem' = 'FamORAssem',
-  'Public' = 'Public',
-  'MemberAccessMask' = 'MemberAccessMask',
-  'UnmanagedExport' = 'UnmanagedExport',
-  'Static' = 'Static',
-  'Final' = 'Final',
-  'Virtual' = 'Virtual',
-  'HideBySig' = 'HideBySig',
-  'NewSlot' = 'NewSlot',
-  'CheckAccessOnOverride' = 'CheckAccessOnOverride',
-  'Abstract' = 'Abstract',
-  'SpecialName' = 'SpecialName',
-  'RTSpecialName' = 'RTSpecialName',
-  'PinvokeImpl' = 'PinvokeImpl',
-  'HasSecurity' = 'HasSecurity',
-  'RequireSecObject' = 'RequireSecObject',
-  'ReservedMask' = 'ReservedMask'
+  "PrivateScope" = "PrivateScope",
+  "Private" = "Private",
+  "FamANDAssem" = "FamANDAssem",
+  "Assembly" = "Assembly",
+  "Family" = "Family",
+  "FamORAssem" = "FamORAssem",
+  "Public" = "Public",
+  "MemberAccessMask" = "MemberAccessMask",
+  "UnmanagedExport" = "UnmanagedExport",
+  "Static" = "Static",
+  "Final" = "Final",
+  "Virtual" = "Virtual",
+  "HideBySig" = "HideBySig",
+  "NewSlot" = "NewSlot",
+  "CheckAccessOnOverride" = "CheckAccessOnOverride",
+  "Abstract" = "Abstract",
+  "SpecialName" = "SpecialName",
+  "RTSpecialName" = "RTSpecialName",
+  "PinvokeImpl" = "PinvokeImpl",
+  "HasSecurity" = "HasSecurity",
+  "RequireSecObject" = "RequireSecObject",
+  "ReservedMask" = "ReservedMask",
 }
 export enum EnumMethodInfoMethodImplementationFlags {
-  'IL' = 'IL',
-  'Native' = 'Native',
-  'OPTIL' = 'OPTIL',
-  'CodeTypeMask' = 'CodeTypeMask',
-  'ManagedMask' = 'ManagedMask',
-  'NoInlining' = 'NoInlining',
-  'ForwardRef' = 'ForwardRef',
-  'Synchronized' = 'Synchronized',
-  'NoOptimization' = 'NoOptimization',
-  'PreserveSig' = 'PreserveSig',
-  'AggressiveInlining' = 'AggressiveInlining',
-  'AggressiveOptimization' = 'AggressiveOptimization',
-  'InternalCall' = 'InternalCall',
-  'MaxMethodImplVal' = 'MaxMethodImplVal'
+  "IL" = "IL",
+  "Native" = "Native",
+  "OPTIL" = "OPTIL",
+  "CodeTypeMask" = "CodeTypeMask",
+  "ManagedMask" = "ManagedMask",
+  "NoInlining" = "NoInlining",
+  "ForwardRef" = "ForwardRef",
+  "Synchronized" = "Synchronized",
+  "NoOptimization" = "NoOptimization",
+  "PreserveSig" = "PreserveSig",
+  "AggressiveInlining" = "AggressiveInlining",
+  "AggressiveOptimization" = "AggressiveOptimization",
+  "InternalCall" = "InternalCall",
+  "MaxMethodImplVal" = "MaxMethodImplVal",
 }
 export enum EnumMethodInfoCallingConvention {
-  'Standard' = 'Standard',
-  'VarArgs' = 'VarArgs',
-  'Any' = 'Any',
-  'HasThis' = 'HasThis',
-  'ExplicitThis' = 'ExplicitThis'
+  "Standard" = "Standard",
+  "VarArgs" = "VarArgs",
+  "Any" = "Any",
+  "HasThis" = "HasThis",
+  "ExplicitThis" = "ExplicitThis",
 }
 export enum EnumMethodInfoMemberType {
-  'Constructor' = 'Constructor',
-  'Event' = 'Event',
-  'Field' = 'Field',
-  'Method' = 'Method',
-  'Property' = 'Property',
-  'TypeInfo' = 'TypeInfo',
-  'Custom' = 'Custom',
-  'NestedType' = 'NestedType',
-  'All' = 'All'
+  "Constructor" = "Constructor",
+  "Event" = "Event",
+  "Field" = "Field",
+  "Method" = "Method",
+  "Property" = "Property",
+  "TypeInfo" = "TypeInfo",
+  "Custom" = "Custom",
+  "NestedType" = "NestedType",
+  "All" = "All",
 }
 export type CombinedReturnParameterTypes = ParameterInfo;
 export type CombinedReturnTypeTypes = Type;
@@ -2522,43 +2533,43 @@ export type CombinedReturnTypeCustomAttributesTypes = ICustomAttributeProvider;
 export type CombinedAssemblyTypes = Assembly;
 export type CombinedModuleHandleTypes = ModuleHandle;
 export enum EnumParameterInfoAttributes {
-  'None' = 'None',
-  'In' = 'In',
-  'Out' = 'Out',
-  'Lcid' = 'Lcid',
-  'Retval' = 'Retval',
-  'Optional' = 'Optional',
-  'HasDefault' = 'HasDefault',
-  'HasFieldMarshal' = 'HasFieldMarshal',
-  'Reserved3' = 'Reserved3',
-  'Reserved4' = 'Reserved4',
-  'ReservedMask' = 'ReservedMask'
+  "None" = "None",
+  "In" = "In",
+  "Out" = "Out",
+  "Lcid" = "Lcid",
+  "Retval" = "Retval",
+  "Optional" = "Optional",
+  "HasDefault" = "HasDefault",
+  "HasFieldMarshal" = "HasFieldMarshal",
+  "Reserved3" = "Reserved3",
+  "Reserved4" = "Reserved4",
+  "ReservedMask" = "ReservedMask",
 }
 export type CombinedMemberTypes = MemberInfo;
 export type CombinedParameterTypeTypes = Type;
 export type CombinedCurrentTrackTypes = BaseTrackInfo;
 export type CombinedNextTrackTypes = BaseTrackInfo;
 export enum EnumPropertyInfoMemberType {
-  'Constructor' = 'Constructor',
-  'Event' = 'Event',
-  'Field' = 'Field',
-  'Method' = 'Method',
-  'Property' = 'Property',
-  'TypeInfo' = 'TypeInfo',
-  'Custom' = 'Custom',
-  'NestedType' = 'NestedType',
-  'All' = 'All'
+  "Constructor" = "Constructor",
+  "Event" = "Event",
+  "Field" = "Field",
+  "Method" = "Method",
+  "Property" = "Property",
+  "TypeInfo" = "TypeInfo",
+  "Custom" = "Custom",
+  "NestedType" = "NestedType",
+  "All" = "All",
 }
 export type CombinedPropertyTypeTypes = Type;
 export enum EnumPropertyInfoAttributes {
-  'None' = 'None',
-  'SpecialName' = 'SpecialName',
-  'RTSpecialName' = 'RTSpecialName',
-  'HasDefault' = 'HasDefault',
-  'Reserved2' = 'Reserved2',
-  'Reserved3' = 'Reserved3',
-  'Reserved4' = 'Reserved4',
-  'ReservedMask' = 'ReservedMask'
+  "None" = "None",
+  "SpecialName" = "SpecialName",
+  "RTSpecialName" = "RTSpecialName",
+  "HasDefault" = "HasDefault",
+  "Reserved2" = "Reserved2",
+  "Reserved3" = "Reserved3",
+  "Reserved4" = "Reserved4",
+  "ReservedMask" = "ReservedMask",
 }
 export type CombinedGetMethodTypes = MethodInfo;
 export type CombinedSetMethodTypes = MethodInfo;
@@ -2569,123 +2580,123 @@ export type CombinedMetaTypes = ScoreboardMetaDto;
 export type CombinedColorsTypes = ScoreboardColorsDto;
 export type CombinedLayoutTypes = ScoreboardLayoutDto;
 export enum EnumServiceInfoStatus {
-  'Running' = 'Running',
-  'Stopped' = 'Stopped',
-  'Starting' = 'Starting',
-  'Stopping' = 'Stopping',
-  'Error' = 'Error',
-  'Unknown' = 'Unknown'
+  "Running" = "Running",
+  "Stopped" = "Stopped",
+  "Starting" = "Starting",
+  "Stopping" = "Stopping",
+  "Error" = "Error",
+  "Unknown" = "Unknown",
 }
 export enum EnumStructLayoutAttributeValue {
-  'Sequential' = 'Sequential',
-  'Explicit' = 'Explicit',
-  'Auto' = 'Auto'
+  "Sequential" = "Sequential",
+  "Explicit" = "Explicit",
+  "Auto" = "Auto",
 }
 export type CombinedDataTypes = TunaMusicData;
 export enum EnumTypeMemberType {
-  'Constructor' = 'Constructor',
-  'Event' = 'Event',
-  'Field' = 'Field',
-  'Method' = 'Method',
-  'Property' = 'Property',
-  'TypeInfo' = 'TypeInfo',
-  'Custom' = 'Custom',
-  'NestedType' = 'NestedType',
-  'All' = 'All'
+  "Constructor" = "Constructor",
+  "Event" = "Event",
+  "Field" = "Field",
+  "Method" = "Method",
+  "Property" = "Property",
+  "TypeInfo" = "TypeInfo",
+  "Custom" = "Custom",
+  "NestedType" = "NestedType",
+  "All" = "All",
 }
 export type CombinedDeclaringMethodTypes = MethodBase;
 export type CombinedUnderlyingSystemTypeTypes = Type;
 export enum EnumTypeGenericParameterAttributes {
-  'None' = 'None',
-  'Covariant' = 'Covariant',
-  'Contravariant' = 'Contravariant',
-  'VarianceMask' = 'VarianceMask',
-  'ReferenceTypeConstraint' = 'ReferenceTypeConstraint',
-  'NotNullableValueTypeConstraint' = 'NotNullableValueTypeConstraint',
-  'DefaultConstructorConstraint' = 'DefaultConstructorConstraint',
-  'SpecialConstraintMask' = 'SpecialConstraintMask',
-  'AllowByRefLike' = 'AllowByRefLike'
+  "None" = "None",
+  "Covariant" = "Covariant",
+  "Contravariant" = "Contravariant",
+  "VarianceMask" = "VarianceMask",
+  "ReferenceTypeConstraint" = "ReferenceTypeConstraint",
+  "NotNullableValueTypeConstraint" = "NotNullableValueTypeConstraint",
+  "DefaultConstructorConstraint" = "DefaultConstructorConstraint",
+  "SpecialConstraintMask" = "SpecialConstraintMask",
+  "AllowByRefLike" = "AllowByRefLike",
 }
 export enum EnumTypeAttributes {
-  'NotPublic' = 'NotPublic',
-  'Public' = 'Public',
-  'NestedPublic' = 'NestedPublic',
-  'NestedPrivate' = 'NestedPrivate',
-  'NestedFamily' = 'NestedFamily',
-  'NestedAssembly' = 'NestedAssembly',
-  'NestedFamANDAssem' = 'NestedFamANDAssem',
-  'VisibilityMask' = 'VisibilityMask',
-  'SequentialLayout' = 'SequentialLayout',
-  'ExplicitLayout' = 'ExplicitLayout',
-  'LayoutMask' = 'LayoutMask',
-  'Interface' = 'Interface',
-  'Abstract' = 'Abstract',
-  'Sealed' = 'Sealed',
-  'SpecialName' = 'SpecialName',
-  'RTSpecialName' = 'RTSpecialName',
-  'Import' = 'Import',
-  'Serializable' = 'Serializable',
-  'WindowsRuntime' = 'WindowsRuntime',
-  'UnicodeClass' = 'UnicodeClass',
-  'AutoClass' = 'AutoClass',
-  'StringFormatMask' = 'StringFormatMask',
-  'HasSecurity' = 'HasSecurity',
-  'ReservedMask' = 'ReservedMask',
-  'BeforeFieldInit' = 'BeforeFieldInit',
-  'CustomFormatMask' = 'CustomFormatMask'
+  "NotPublic" = "NotPublic",
+  "Public" = "Public",
+  "NestedPublic" = "NestedPublic",
+  "NestedPrivate" = "NestedPrivate",
+  "NestedFamily" = "NestedFamily",
+  "NestedAssembly" = "NestedAssembly",
+  "NestedFamANDAssem" = "NestedFamANDAssem",
+  "VisibilityMask" = "VisibilityMask",
+  "SequentialLayout" = "SequentialLayout",
+  "ExplicitLayout" = "ExplicitLayout",
+  "LayoutMask" = "LayoutMask",
+  "Interface" = "Interface",
+  "Abstract" = "Abstract",
+  "Sealed" = "Sealed",
+  "SpecialName" = "SpecialName",
+  "RTSpecialName" = "RTSpecialName",
+  "Import" = "Import",
+  "Serializable" = "Serializable",
+  "WindowsRuntime" = "WindowsRuntime",
+  "UnicodeClass" = "UnicodeClass",
+  "AutoClass" = "AutoClass",
+  "StringFormatMask" = "StringFormatMask",
+  "HasSecurity" = "HasSecurity",
+  "ReservedMask" = "ReservedMask",
+  "BeforeFieldInit" = "BeforeFieldInit",
+  "CustomFormatMask" = "CustomFormatMask",
 }
 export type CombinedStructLayoutAttributeTypes = StructLayoutAttribute;
 export type CombinedTypeInitializerTypes = ConstructorInfo;
 export type CombinedTypeHandleTypes = RuntimeTypeHandle;
 export type CombinedBaseTypeTypes = Type;
 export enum EnumTypeInfoMemberType {
-  'Constructor' = 'Constructor',
-  'Event' = 'Event',
-  'Field' = 'Field',
-  'Method' = 'Method',
-  'Property' = 'Property',
-  'TypeInfo' = 'TypeInfo',
-  'Custom' = 'Custom',
-  'NestedType' = 'NestedType',
-  'All' = 'All'
+  "Constructor" = "Constructor",
+  "Event" = "Event",
+  "Field" = "Field",
+  "Method" = "Method",
+  "Property" = "Property",
+  "TypeInfo" = "TypeInfo",
+  "Custom" = "Custom",
+  "NestedType" = "NestedType",
+  "All" = "All",
 }
 export enum EnumTypeInfoGenericParameterAttributes {
-  'None' = 'None',
-  'Covariant' = 'Covariant',
-  'Contravariant' = 'Contravariant',
-  'VarianceMask' = 'VarianceMask',
-  'ReferenceTypeConstraint' = 'ReferenceTypeConstraint',
-  'NotNullableValueTypeConstraint' = 'NotNullableValueTypeConstraint',
-  'DefaultConstructorConstraint' = 'DefaultConstructorConstraint',
-  'SpecialConstraintMask' = 'SpecialConstraintMask',
-  'AllowByRefLike' = 'AllowByRefLike'
+  "None" = "None",
+  "Covariant" = "Covariant",
+  "Contravariant" = "Contravariant",
+  "VarianceMask" = "VarianceMask",
+  "ReferenceTypeConstraint" = "ReferenceTypeConstraint",
+  "NotNullableValueTypeConstraint" = "NotNullableValueTypeConstraint",
+  "DefaultConstructorConstraint" = "DefaultConstructorConstraint",
+  "SpecialConstraintMask" = "SpecialConstraintMask",
+  "AllowByRefLike" = "AllowByRefLike",
 }
 export enum EnumTypeInfoAttributes {
-  'NotPublic' = 'NotPublic',
-  'Public' = 'Public',
-  'NestedPublic' = 'NestedPublic',
-  'NestedPrivate' = 'NestedPrivate',
-  'NestedFamily' = 'NestedFamily',
-  'NestedAssembly' = 'NestedAssembly',
-  'NestedFamANDAssem' = 'NestedFamANDAssem',
-  'VisibilityMask' = 'VisibilityMask',
-  'SequentialLayout' = 'SequentialLayout',
-  'ExplicitLayout' = 'ExplicitLayout',
-  'LayoutMask' = 'LayoutMask',
-  'Interface' = 'Interface',
-  'Abstract' = 'Abstract',
-  'Sealed' = 'Sealed',
-  'SpecialName' = 'SpecialName',
-  'RTSpecialName' = 'RTSpecialName',
-  'Import' = 'Import',
-  'Serializable' = 'Serializable',
-  'WindowsRuntime' = 'WindowsRuntime',
-  'UnicodeClass' = 'UnicodeClass',
-  'AutoClass' = 'AutoClass',
-  'StringFormatMask' = 'StringFormatMask',
-  'HasSecurity' = 'HasSecurity',
-  'ReservedMask' = 'ReservedMask',
-  'BeforeFieldInit' = 'BeforeFieldInit',
-  'CustomFormatMask' = 'CustomFormatMask'
+  "NotPublic" = "NotPublic",
+  "Public" = "Public",
+  "NestedPublic" = "NestedPublic",
+  "NestedPrivate" = "NestedPrivate",
+  "NestedFamily" = "NestedFamily",
+  "NestedAssembly" = "NestedAssembly",
+  "NestedFamANDAssem" = "NestedFamANDAssem",
+  "VisibilityMask" = "VisibilityMask",
+  "SequentialLayout" = "SequentialLayout",
+  "ExplicitLayout" = "ExplicitLayout",
+  "LayoutMask" = "LayoutMask",
+  "Interface" = "Interface",
+  "Abstract" = "Abstract",
+  "Sealed" = "Sealed",
+  "SpecialName" = "SpecialName",
+  "RTSpecialName" = "RTSpecialName",
+  "Import" = "Import",
+  "Serializable" = "Serializable",
+  "WindowsRuntime" = "WindowsRuntime",
+  "UnicodeClass" = "UnicodeClass",
+  "AutoClass" = "AutoClass",
+  "StringFormatMask" = "StringFormatMask",
+  "HasSecurity" = "HasSecurity",
+  "ReservedMask" = "ReservedMask",
+  "BeforeFieldInit" = "BeforeFieldInit",
+  "CustomFormatMask" = "CustomFormatMask",
 }
 export type CombinedRequestedTrackTypes = BaseTrackInfo;

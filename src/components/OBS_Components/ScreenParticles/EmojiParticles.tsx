@@ -1,7 +1,7 @@
 import { JSX, useEffect, useState } from "react";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 
-import { ChatMessage } from "@/shared/api/generated/Api";
+import { ChatMessage } from "@/shared/api";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import { getEmojisSrcFromText } from "@/shared/Utils";
 

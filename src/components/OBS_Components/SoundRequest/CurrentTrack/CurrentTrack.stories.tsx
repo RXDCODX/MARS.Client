@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 
-import { TunaMusicData } from "@/shared/api/generated/Api";
+import { TunaMusicData } from "@/shared/api";
 
 import CurrentTrack from "./CurrentTrack";
 

@@ -19,13 +19,13 @@ export default defineConfig({
       "@/styles": path.resolve(__dirname, "./src/styles"),
       "@/utils": path.resolve(__dirname, "./src/shared/Utils"),
       "@/api": path.resolve(__dirname, "./src/shared/api"),
-      "@/types": path.resolve(__dirname, "./src/shared/types")
-    }
+      "@/types": path.resolve(__dirname, "./src/shared/types"),
+    },
   },
   build: {
     rollupOptions: {
       output: {
-        assetFileNames: (assetInfo) => {
+        assetFileNames: assetInfo => {
           if (!assetInfo.name) {
             return `assets/[name]-[hash][extname]`;
           }
@@ -38,5 +38,8 @@ export default defineConfig({
         },
       },
     },
+  },
+  server: {
+    port: 44478,
   },
 });

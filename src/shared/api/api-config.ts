@@ -14,7 +14,7 @@ export function getApiBaseUrl(): string {
       return basePath.replace(/\/$/, "");
     }
   }
-
+  
   // В Node.js используем process.env
   if (typeof process !== "undefined" && process.env) {
     const basePath = process.env.VITE_BASE_PATH;
@@ -22,7 +22,7 @@ export function getApiBaseUrl(): string {
       return basePath.replace(/\/$/, "");
     }
   }
-
+  
   // По умолчанию возвращаем пустую строку
   return "";
 }
@@ -35,7 +35,7 @@ export function getApiBaseUrl(): string {
 export function createApiUrl(endpoint: string): string {
   const baseUrl = getApiBaseUrl();
   const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
-
+  
   return `${baseUrl}${cleanEndpoint}`;
 }
 
@@ -43,5 +43,5 @@ export function createApiUrl(endpoint: string): string {
  * Конфигурация по умолчанию для API клиентов
  */
 export const defaultApiConfig = {
-  baseUrl: getApiBaseUrl(),
+  baseURL: getApiBaseUrl(),
 };

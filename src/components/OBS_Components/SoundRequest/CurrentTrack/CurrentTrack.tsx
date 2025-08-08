@@ -1,6 +1,6 @@
 import { Textfit } from "react-textfit";
 
-import { TunaMusicData } from "@/shared/api/generated/Api";
+import { TunaMusicData } from "@/shared/api";
 
 import AnimationControl from "./AnimationControl";
 import styles from "./CurrentTrack.module.scss";

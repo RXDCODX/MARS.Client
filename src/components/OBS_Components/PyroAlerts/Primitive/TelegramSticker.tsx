@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 // eslint-disable-next-line no-restricted-imports
 import react from "react";
 
-import { MediaDto } from "@/shared/api/generated/Api";
+import { MediaDto } from "@/shared/api";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import {
   getCoordinates,

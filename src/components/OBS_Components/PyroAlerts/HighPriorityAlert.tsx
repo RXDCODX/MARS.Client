@@ -1,23 +1,23 @@
 import { useCallback } from "react";
 
-import { MediaDto, MediaFileInfoTypeEnum } from "@/shared/api/generated/Api";
+import { EnumMediaFileInfoType, MediaDto } from "@/shared/api";
 
 import { Audio, Image, Video, Voice } from "./Primitive";
 import TelegramSticker from "./Primitive/TelegramSticker";
 
 export interface AlertDestination {
   message: MediaDto;
-  type: MediaFileInfoTypeEnum;
+  type: EnumMediaFileInfoType;
   callback: () => void;
 }
 
 export default function HighPriorityAlert(alert: AlertDestination) {
   const message = alert.message;
-  const callback = useCallback(() => alert.callback(), [alert.callback]);
+  const callback = useCallback(() => alert.callback(), [alert]);
 
   switch (alert.type) {
-    case MediaFileInfoTypeEnum.Image:
-    case MediaFileInfoTypeEnum.Gif:
+    case EnumMediaFileInfoType.Image:
+    case EnumMediaFileInfoType.Gif:
       return (
         <Image
           key={message.mediaInfo.id}
@@ -25,7 +25,7 @@ export default function HighPriorityAlert(alert: AlertDestination) {
           callBack={callback}
         />
       );
-    case MediaFileInfoTypeEnum.Video:
+    case EnumMediaFileInfoType.Video:
       return (
         <Video
           key={message.mediaInfo.id}
@@ -34,7 +34,7 @@ export default function HighPriorityAlert(alert: AlertDestination) {
           isHighPrior
         />
       );
-    case MediaFileInfoTypeEnum.Audio:
+    case EnumMediaFileInfoType.Audio:
       return (
         <Audio
           key={message.mediaInfo.id}
@@ -43,7 +43,7 @@ export default function HighPriorityAlert(alert: AlertDestination) {
           isHighPrior
         />
       );
-    case MediaFileInfoTypeEnum.Voice:
+    case EnumMediaFileInfoType.Voice:
       return (
         <Voice
           key={message.mediaInfo.id}
@@ -52,7 +52,7 @@ export default function HighPriorityAlert(alert: AlertDestination) {
           isHighPrior
         />
       );
-    case MediaFileInfoTypeEnum.TelegramSticker:
+    case EnumMediaFileInfoType.TelegramSticker:
       return (
         <TelegramSticker
           key={message.mediaInfo.id}

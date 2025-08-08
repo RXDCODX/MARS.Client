@@ -20,6 +20,7 @@ import AboutPage from "@/pages/AboutPage";
 import CommandsPage from "@/pages/CommandsPage/CommandsPage";
 import ContactsPage from "@/pages/ContactsPage";
 import DocsPage from "@/pages/DocsPage";
+import FramedataPage from "@/pages/FramedataPage/FramedataPage";
 import WelcomePage from "@/pages/WelcomePage";
 
 import { LinktreeMenu } from "./LinkTree/LinkTreeMenu";
@@ -77,6 +78,14 @@ const PrivateRoutes = () => (
         element={
           <Layout>
             <CommandsPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/framedata"
+        element={
+          <Layout>
+            <FramedataPage />
           </Layout>
         }
       />

@@ -5,8 +5,8 @@ import parse from "html-react-parser";
 import { v4 as randomUUID } from "uuid";
 
 import { HighliteMessageProps } from "@/components/OBS_Components/HighliteMessage/Message";
+import { ChatMessage, MediaInfo } from "@/shared/api";
 
-import { ChatMessage, MediaInfo } from "../api/generated/Api";
 import { addMimeTypesToImgTags } from "../MIME_types";
 
 export { BigTextBlockForAudio } from "./BigTexts/BigTextBlockForAudio";
@@ -336,7 +336,7 @@ export function getEmojisSrcFromText(
 ) {
   if (typeof text === "string") {
     text = text.replace(/[\u{E0000}-\u{E007F}]/gu, "");
-    const messages = text.split(" ");
+    const messages: string[] = text.split(" ");
     const result = messages.map(message => client.parse(message, 1));
     return result;
   } else if ("message" in text && typeof text.message === "string") {

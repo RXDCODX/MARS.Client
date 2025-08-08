@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { ChatMessage } from "@/shared/api/generated/Api";
+import { ChatMessage } from "@/shared/api";
 import anime from "@/shared/styles/animate.module.scss";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import { parseContent, replaceBadges, replaceEmotes } from "@/shared/Utils";

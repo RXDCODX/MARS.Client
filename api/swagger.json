@@ -601,6 +601,686 @@
         }
       }
     },
+    "/api/Framedata/characters": {
+      "get": {
+        "tags": [
+          "Framedata"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Framedata"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Framedata/characters/{name}": {
+      "get": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Framedata/characters/{characterName}/moves": {
+      "get": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "characterName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "characterName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Framedata/characters/{characterName}/moves/{command}": {
+      "get": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "characterName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "command",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "characterName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "command",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "characterName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "command",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Framedata/moves/search": {
+      "get": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "characterName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stanceCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "heatEngage",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "powerCrush",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isThrow",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "homing",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/FramedataChanges/pending": {
+      "get": {
+        "tags": [
+          "FramedataChanges"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FramedataChange"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FramedataChange"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FramedataChange"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/FramedataChanges/apply/{changeId}": {
+      "post": {
+        "tags": [
+          "FramedataChanges"
+        ],
+        "parameters": [
+          {
+            "name": "changeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/FramedataChanges/reject/{changeId}": {
+      "post": {
+        "tags": [
+          "FramedataChanges"
+        ],
+        "parameters": [
+          {
+            "name": "changeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/FramedataChanges/detect": {
+      "post": {
+        "tags": [
+          "FramedataChanges"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/FramedataChanges/stats": {
+      "get": {
+        "tags": [
+          "FramedataChanges"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/-/{controller}/endpoints": {
       "get": {
         "tags": [
@@ -1130,6 +1810,14 @@
             "description": "OK"
           }
         }
+      }
+    },
+    "/scoreboard/ForceProcessPendingUpdates": {
+      "post": {
+        "tags": [
+          "ScoreboardHub"
+        ],
+        "responses": { }
       }
     },
     "/scoreboard/GetCurrentState": {
@@ -3409,6 +4097,137 @@
         },
         "additionalProperties": false
       },
+      "FramedataChange": {
+        "required": [
+          "changeType",
+          "characterName",
+          "detectedAt",
+          "id",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "characterName": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "changeType": {
+            "enum": [
+              "NewCharacter",
+              "NewMove",
+              "MoveUpdate",
+              "MoveRemoval",
+              "CharacterUpdate"
+            ],
+            "type": "string"
+          },
+          "detectedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "appliedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "enum": [
+              "Pending",
+              "Applied",
+              "Rejected",
+              "Obsolete"
+            ],
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 500,
+            "type": "string",
+            "nullable": true
+          },
+          "changeInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FramedataChangeInfo"
+              }
+            ],
+            "nullable": true
+          },
+          "currentInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FramedataChangeInfo"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FramedataChangeInfo": {
+        "required": [
+          "framedataChangeId",
+          "id",
+          "infoType",
+          "jsonData",
+          "retrievedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "framedataChangeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "framedataChange": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FramedataChange"
+              }
+            ],
+            "nullable": true
+          },
+          "currentInfoId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "infoType": {
+            "enum": [
+              "Character",
+              "Move",
+              "Movelist"
+            ],
+            "type": "string"
+          },
+          "jsonData": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "sourceUrl": {
+            "maxLength": 500,
+            "type": "string",
+            "nullable": true
+          },
+          "retrievedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dataHash": {
+            "maxLength": 64,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "Host": {
         "required": [
           "hostCoolDown",
@@ -4562,6 +5381,103 @@
         },
         "additionalProperties": false
       },
+      "Move": {
+        "required": [
+          "characterName",
+          "command",
+          "heatBurst",
+          "heatEngage",
+          "heatSmash",
+          "homing",
+          "isFromStance",
+          "powerCrush",
+          "requiresHeat",
+          "stanceCode",
+          "throw",
+          "tornado"
+        ],
+        "type": "object",
+        "properties": {
+          "characterName": {
+            "type": "string"
+          },
+          "command": {
+            "type": "string"
+          },
+          "character": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TekkenCharacter"
+              }
+            ],
+            "nullable": true
+          },
+          "isFromStance": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "stanceCode": {
+            "type": "string"
+          },
+          "stanceName": {
+            "type": "string",
+            "nullable": true
+          },
+          "heatEngage": {
+            "type": "boolean"
+          },
+          "heatSmash": {
+            "type": "boolean"
+          },
+          "powerCrush": {
+            "type": "boolean"
+          },
+          "throw": {
+            "type": "boolean"
+          },
+          "homing": {
+            "type": "boolean"
+          },
+          "tornado": {
+            "type": "boolean"
+          },
+          "heatBurst": {
+            "type": "boolean"
+          },
+          "requiresHeat": {
+            "type": "boolean"
+          },
+          "hitLevel": {
+            "type": "string",
+            "nullable": true
+          },
+          "damage": {
+            "type": "string",
+            "nullable": true
+          },
+          "startUpFrame": {
+            "type": "string",
+            "nullable": true
+          },
+          "blockFrame": {
+            "type": "string",
+            "nullable": true
+          },
+          "hitFrame": {
+            "type": "string",
+            "nullable": true
+          },
+          "counterHitFrame": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "MoveRequest": {
         "required": [
           "fromX",
@@ -5307,6 +6223,69 @@
             ],
             "type": "string",
             "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TekkenCharacter": {
+        "required": [
+          "lastUpdateTime",
+          "name",
+          "pageUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "linkToImage": {
+            "maxLength": 300,
+            "type": "string",
+            "nullable": true
+          },
+          "pageUrl": {
+            "maxLength": 200,
+            "type": "string"
+          },
+          "image": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
+          "imageExtension": {
+            "maxLength": 20,
+            "type": "string",
+            "nullable": true
+          },
+          "movelist": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Move"
+            },
+            "nullable": true
+          },
+          "lastUpdateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "strengths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "weaknesess": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false

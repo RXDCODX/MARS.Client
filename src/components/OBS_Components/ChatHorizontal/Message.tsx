@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAnimate } from "react-simple-animate";
 
-import { ChatMessage } from "@/shared/api/generated/Api";
+import { ChatMessage } from "@/shared/api";
 import animateStyles from "@/shared/styles/animate.module.scss";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import {

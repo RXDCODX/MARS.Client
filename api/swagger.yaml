@@ -1,0 +1,5122 @@
+http://localhost:9255/swagger/v1/swagger.yamlopenapi: 3.0.4
+info:
+  title: Telegramus Open Api v3
+  version: v1
+paths:
+  /api/Checkers/start:
+    post:
+      tags:
+        - Checkers
+      responses:
+        '200':
+          description: OK
+  /api/Checkers/move:
+    post:
+      tags:
+        - Checkers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/MoveRequest'
+          text/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/MoveRequest'
+          application/*+json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/MoveRequest'
+      responses:
+        '200':
+          description: OK
+  /api/Checkers/state:
+    get:
+      tags:
+        - Checkers
+      responses:
+        '200':
+          description: OK
+  '/api/Checkers/moves/{x}/{y}':
+    get:
+      tags:
+        - Checkers
+      parameters:
+        - name: x
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: y
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+  /api/Checkers/queue/join:
+    post:
+      tags:
+        - Checkers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/JoinQueueRequest'
+          text/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/JoinQueueRequest'
+          application/*+json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/JoinQueueRequest'
+      responses:
+        '200':
+          description: OK
+  /api/Checkers/queue/leave:
+    post:
+      tags:
+        - Checkers
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/LeaveQueueRequest'
+          text/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/LeaveQueueRequest'
+          application/*+json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/LeaveQueueRequest'
+      responses:
+        '200':
+          description: OK
+  /api/Checkers/queue/status:
+    get:
+      tags:
+        - Checkers
+      responses:
+        '200':
+          description: OK
+  /api/Checkers/queue/next-game:
+    get:
+      tags:
+        - Checkers
+      responses:
+        '200':
+          description: OK
+  /api/Commands/user:
+    get:
+      tags:
+        - Commands
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+            text/json:
+              schema:
+                type: string
+  /api/Commands/admin:
+    get:
+      tags:
+        - Commands
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+            text/json:
+              schema:
+                type: string
+  '/api/Commands/user/platform/{platform}':
+    get:
+      tags:
+        - Commands
+      parameters:
+        - name: platform
+          in: path
+          required: true
+          schema:
+            enum:
+              - None
+              - Api
+              - Telegram
+              - Twitch
+              - Discord
+              - Vk
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  type: string
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+            text/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  '/api/Commands/admin/platform/{platform}':
+    get:
+      tags:
+        - Commands
+      parameters:
+        - name: platform
+          in: path
+          required: true
+          schema:
+            enum:
+              - None
+              - Api
+              - Telegram
+              - Twitch
+              - Discord
+              - Vk
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  type: string
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+            text/json:
+              schema:
+                type: array
+                items:
+                  type: string
+  '/api/Commands/user/platform/{platform}/info':
+    get:
+      tags:
+        - Commands
+      parameters:
+        - name: platform
+          in: path
+          required: true
+          schema:
+            enum:
+              - None
+              - Api
+              - Telegram
+              - Twitch
+              - Discord
+              - Vk
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommandInfo'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommandInfo'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommandInfo'
+  '/api/Commands/admin/platform/{platform}/info':
+    get:
+      tags:
+        - Commands
+      parameters:
+        - name: platform
+          in: path
+          required: true
+          schema:
+            enum:
+              - None
+              - Api
+              - Telegram
+              - Twitch
+              - Discord
+              - Vk
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommandInfo'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommandInfo'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommandInfo'
+  '/api/Commands/{commandName}/parameters':
+    get:
+      tags:
+        - Commands
+      parameters:
+        - name: commandName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommandParameterInfo'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommandParameterInfo'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommandParameterInfo'
+  '/api/Commands/{commandName}/execute':
+    post:
+      tags:
+        - Commands
+      parameters:
+        - name: commandName
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: string
+          text/json:
+            schema:
+              type: string
+          application/*+json:
+            schema:
+              type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: string
+            text/json:
+              schema:
+                type: string
+  /api/Framedata/characters:
+    get:
+      tags:
+        - Framedata
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TekkenCharacter'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TekkenCharacter'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TekkenCharacter'
+    post:
+      tags:
+        - Framedata
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/TekkenCharacter'
+          text/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/TekkenCharacter'
+          application/*+json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/TekkenCharacter'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/TekkenCharacter'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TekkenCharacter'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/TekkenCharacter'
+  '/api/Framedata/characters/{name}':
+    get:
+      tags:
+        - Framedata
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/TekkenCharacter'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TekkenCharacter'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/TekkenCharacter'
+    put:
+      tags:
+        - Framedata
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/TekkenCharacter'
+          text/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/TekkenCharacter'
+          application/*+json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/TekkenCharacter'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/TekkenCharacter'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TekkenCharacter'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/TekkenCharacter'
+    delete:
+      tags:
+        - Framedata
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  '/api/Framedata/characters/{characterName}/moves':
+    get:
+      tags:
+        - Framedata
+      parameters:
+        - name: characterName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Move'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Move'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Move'
+    post:
+      tags:
+        - Framedata
+      parameters:
+        - name: characterName
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Move'
+          text/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Move'
+          application/*+json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Move'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Move'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Move'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Move'
+  '/api/Framedata/characters/{characterName}/moves/{command}':
+    get:
+      tags:
+        - Framedata
+      parameters:
+        - name: characterName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: command
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Move'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Move'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Move'
+    put:
+      tags:
+        - Framedata
+      parameters:
+        - name: characterName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: command
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Move'
+          text/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Move'
+          application/*+json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Move'
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Move'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Move'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Move'
+    delete:
+      tags:
+        - Framedata
+      parameters:
+        - name: characterName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: command
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /api/Framedata/moves/search:
+    get:
+      tags:
+        - Framedata
+      parameters:
+        - name: characterName
+          in: query
+          schema:
+            type: string
+        - name: stanceCode
+          in: query
+          schema:
+            type: string
+        - name: heatEngage
+          in: query
+          schema:
+            type: boolean
+        - name: powerCrush
+          in: query
+          schema:
+            type: boolean
+        - name: isThrow
+          in: query
+          schema:
+            type: boolean
+        - name: homing
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Move'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Move'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Move'
+  /api/FramedataChanges/pending:
+    get:
+      tags:
+        - FramedataChanges
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FramedataChange'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FramedataChange'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FramedataChange'
+  '/api/FramedataChanges/apply/{changeId}':
+    post:
+      tags:
+        - FramedataChanges
+      parameters:
+        - name: changeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+  '/api/FramedataChanges/reject/{changeId}':
+    post:
+      tags:
+        - FramedataChanges
+      parameters:
+        - name: changeId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+  /api/FramedataChanges/detect:
+    post:
+      tags:
+        - FramedataChanges
+      responses:
+        '200':
+          description: OK
+  /api/FramedataChanges/stats:
+    get:
+      tags:
+        - FramedataChanges
+      responses:
+        '200':
+          description: OK
+  '/-/{controller}/endpoints':
+    get:
+      tags:
+        - Info
+      parameters:
+        - name: controller
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  '/memory/{escapedFileName}':
+    get:
+      tags:
+        - PyroAlerts
+      parameters:
+        - name: escapedFileName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /api/Scoreboard/test:
+    get:
+      tags:
+        - Scoreboard
+      responses:
+        '200':
+          description: OK
+  /api/Scoreboard/state:
+    get:
+      tags:
+        - Scoreboard
+      responses:
+        '200':
+          description: OK
+    post:
+      tags:
+        - Scoreboard
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ScoreboardDto'
+          text/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ScoreboardDto'
+          application/*+json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ScoreboardDto'
+      responses:
+        '200':
+          description: OK
+  /api/Scoreboard/visibility:
+    post:
+      tags:
+        - Scoreboard
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: boolean
+          text/json:
+            schema:
+              type: boolean
+          application/*+json:
+            schema:
+              type: boolean
+      responses:
+        '200':
+          description: OK
+  /api/ServiceManager/status:
+    get:
+      tags:
+        - ServiceManager
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: object
+                additionalProperties:
+                  enum:
+                    - Running
+                    - Stopped
+                    - Starting
+                    - Stopping
+                    - Error
+                    - Unknown
+                  type: string
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  enum:
+                    - Running
+                    - Stopped
+                    - Starting
+                    - Stopping
+                    - Error
+                    - Unknown
+                  type: string
+            text/json:
+              schema:
+                type: object
+                additionalProperties:
+                  enum:
+                    - Running
+                    - Stopped
+                    - Starting
+                    - Stopping
+                    - Error
+                    - Unknown
+                  type: string
+  '/api/ServiceManager/service/{serviceName}':
+    get:
+      tags:
+        - ServiceManager
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ServiceInfo'
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceInfo'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/ServiceInfo'
+  '/api/ServiceManager/service/{serviceName}/start':
+    post:
+      tags:
+        - ServiceManager
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  '/api/ServiceManager/service/{serviceName}/stop':
+    post:
+      tags:
+        - ServiceManager
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  '/api/ServiceManager/service/{serviceName}/restart':
+    post:
+      tags:
+        - ServiceManager
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  '/api/ServiceManager/service/{serviceName}/logs':
+    get:
+      tags:
+        - ServiceManager
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: count
+          in: query
+          schema:
+            type: integer
+            format: int32
+            default: 100
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServiceLog'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServiceLog'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServiceLog'
+  '/api/ServiceManager/service/{serviceName}/active':
+    post:
+      tags:
+        - ServiceManager
+      parameters:
+        - name: serviceName
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: boolean
+          text/json:
+            schema:
+              type: boolean
+          application/*+json:
+            schema:
+              type: boolean
+      responses:
+        '200':
+          description: OK
+  /api/ServiceManager/services:
+    get:
+      tags:
+        - ServiceManager
+      responses:
+        '200':
+          description: OK
+          content:
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServiceInfo'
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServiceInfo'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServiceInfo'
+  /api/SoundBar/mute:
+    post:
+      tags:
+        - SoundBar
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/MuteRequest'
+          text/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/MuteRequest'
+          application/*+json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/MuteRequest'
+      responses:
+        '200':
+          description: OK
+  /api/SoundBar/unmute:
+    post:
+      tags:
+        - SoundBar
+      responses:
+        '200':
+          description: OK
+  /api/SoundBar/bagcount:
+    get:
+      tags:
+        - SoundBar
+      responses:
+        '200':
+          description: OK
+  /twitchtoken:
+    get:
+      tags:
+        - Twitch
+      parameters:
+        - name: code
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+  /scoreboard/ForceProcessPendingUpdates:
+    post:
+      tags:
+        - ScoreboardHub
+      responses: { }
+  /scoreboard/GetCurrentState:
+    post:
+      tags:
+        - ScoreboardHub
+      responses: { }
+  /scoreboard/GetHistory:
+    post:
+      tags:
+        - ScoreboardHub
+      parameters:
+        - name: count
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScoreboardDto'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScoreboardDto'
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScoreboardDto'
+  /scoreboard/JoinAsClient:
+    post:
+      tags:
+        - ScoreboardHub
+      responses: { }
+  /scoreboard/OnConnectedAsync:
+    post:
+      tags:
+        - ScoreboardHub
+      responses: { }
+  /scoreboard/OnDisconnectedAsync:
+    post:
+      tags:
+        - ScoreboardHub
+      parameters:
+        - name: exception
+          in: query
+          schema:
+            $ref: '#/components/schemas/Exception'
+      responses: { }
+  /scoreboard/SetPlayerFinal:
+    post:
+      tags:
+        - ScoreboardHub
+      parameters:
+        - name: playerPosition
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: final
+          in: query
+          schema:
+            type: string
+      responses: { }
+  /scoreboard/SetVisibility:
+    post:
+      tags:
+        - ScoreboardHub
+      parameters:
+        - name: isVisible
+          in: query
+          schema:
+            type: boolean
+      responses: { }
+  /scoreboard/UpdatePlayerScore:
+    post:
+      tags:
+        - ScoreboardHub
+      parameters:
+        - name: playerPosition
+          in: query
+          schema:
+            type: integer
+            format: int32
+        - name: newScore
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses: { }
+  /scoreboard/UpdateState:
+    post:
+      tags:
+        - ScoreboardHub
+      parameters:
+        - name: state
+          in: query
+          schema:
+            $ref: '#/components/schemas/ScoreboardDto'
+      responses: { }
+  /hubs/SoundRequestHub/AddTrackToQueue:
+    post:
+      tags:
+        - SoundRequestHub
+      parameters:
+        - name: track
+          in: query
+          schema:
+            $ref: '#/components/schemas/UserRequestedTrack'
+      responses: { }
+  /hubs/SoundRequestHub/Ended:
+    post:
+      tags:
+        - SoundRequestHub
+      responses: { }
+  /hubs/SoundRequestHub/ErrorPlaying:
+    post:
+      tags:
+        - SoundRequestHub
+      responses: { }
+  /hubs/SoundRequestHub/GetHistory:
+    post:
+      tags:
+        - SoundRequestHub
+      parameters:
+        - name: count
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BaseTrackInfo'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BaseTrackInfo'
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BaseTrackInfo'
+  /hubs/SoundRequestHub/GetPlayerState:
+    post:
+      tags:
+        - SoundRequestHub
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlayerState'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/PlayerState'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/PlayerState'
+  /hubs/SoundRequestHub/GetQueue:
+    post:
+      tags:
+        - SoundRequestHub
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserRequestedTrack'
+            text/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserRequestedTrack'
+            text/plain:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserRequestedTrack'
+  /hubs/SoundRequestHub/JoinAsClient:
+    post:
+      tags:
+        - SoundRequestHub
+      responses: { }
+  /hubs/SoundRequestHub/Mute:
+    post:
+      tags:
+        - SoundRequestHub
+      responses: { }
+  /hubs/SoundRequestHub/Pause:
+    post:
+      tags:
+        - SoundRequestHub
+      responses: { }
+  /hubs/SoundRequestHub/Play:
+    post:
+      tags:
+        - SoundRequestHub
+      responses: { }
+  /hubs/SoundRequestHub/Resume:
+    post:
+      tags:
+        - SoundRequestHub
+      responses: { }
+  /hubs/SoundRequestHub/SetVolume:
+    post:
+      tags:
+        - SoundRequestHub
+      parameters:
+        - name: volume
+          in: query
+          schema:
+            type: integer
+            format: int32
+      responses: { }
+  /hubs/SoundRequestHub/Skip:
+    post:
+      tags:
+        - SoundRequestHub
+      responses: { }
+  /hubs/SoundRequestHub/Started:
+    post:
+      tags:
+        - SoundRequestHub
+      responses: { }
+  /hubs/SoundRequestHub/Stop:
+    post:
+      tags:
+        - SoundRequestHub
+      responses: { }
+  /hubs/SoundRequestHub/Unmute:
+    post:
+      tags:
+        - SoundRequestHub
+      responses: { }
+  /telegramus/MuteAll:
+    post:
+      tags:
+        - TelegramusHub
+      parameters:
+        - name: args
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+      responses: { }
+  /telegramus/OnConnectedAsync:
+    post:
+      tags:
+        - TelegramusHub
+      responses: { }
+  /telegramus/TwitchMsg:
+    post:
+      tags:
+        - TelegramusHub
+      parameters:
+        - name: msg
+          in: query
+          schema:
+            type: string
+      responses: { }
+  /telegramus/UnmuteSessions:
+    post:
+      tags:
+        - TelegramusHub
+      responses: { }
+  /hubs/TunaHub/BeYm:
+    post:
+      tags:
+        - TunaHub
+      responses: { }
+  /hubs/TunaHub/GetYandexMusicTracks:
+    post:
+      tags:
+        - TunaHub
+      parameters:
+        - name: title
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Root'
+            text/json:
+              schema:
+                $ref: '#/components/schemas/Root'
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/Root'
+  /hubs/TunaHub/OnConnectedAsync:
+    post:
+      tags:
+        - TunaHub
+      responses: { }
+  /hubs/TunaHub/SendPlayerData:
+    post:
+      tags:
+        - TunaHub
+      parameters:
+        - name: info
+          in: query
+          schema:
+            $ref: '#/components/schemas/TunaMusicDTO'
+      responses: { }
+  /telegramus/AddNewWaifu:
+    post:
+      tags:
+        - TelegramusHub
+      parameters:
+        - name: content
+          in: query
+          schema:
+            $ref: '#/components/schemas/Waifu'
+        - name: displayName
+          in: query
+          schema:
+            type: string
+        - name: color
+          in: query
+          schema:
+            type: string
+      responses: { }
+  /telegramus/Alert:
+    post:
+      tags:
+        - TelegramusHub
+      parameters:
+        - name: info
+          in: query
+          schema:
+            $ref: '#/components/schemas/MediaDto'
+      responses: { }
+  /telegramus/Alerts:
+    post:
+      tags:
+        - TelegramusHub
+      parameters:
+        - name: info
+          in: query
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/MediaDto'
+      responses: { }
+  /telegramus/AutoMessage:
+    post:
+      tags:
+        - TelegramusHub
+      parameters:
+        - name: message
+          in: query
+          schema:
+            type: string
+      responses: { }
+  /telegramus/DeleteMessage:
+    post:
+      tags:
+        - TelegramusHub
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+      responses: { }
+  /telegramus/FumoFriday:
+    post:
+      tags:
+        - TelegramusHub
+      parameters:
+        - name: displayName
+          in: query
+          schema:
+            type: string
+        - name: color
+          in: query
+          schema:
+            type: string
+      responses: { }
+  /telegramus/Highlite:
+    post:
+      tags:
+        - TelegramusHub
+      parameters:
+        - name: message
+          in: query
+          schema:
+            $ref: '#/components/schemas/ChatMessage'
+        - name: color
+          in: query
+          schema:
+            type: string
+        - name: faceUrl
+          in: query
+          schema:
+            $ref: '#/components/schemas/Image'
+      responses: { }
+  /telegramus/MakeScreenEmojisParticles:
+    post:
+      tags:
+        - TelegramusHub
+      parameters:
+        - name: message
+          in: query
+          schema:
+            $ref: '#/components/schemas/ChatMessage'
+      responses: { }
+  /telegramus/MakeScreenParticles:
+    post:
+      tags:
+        - TelegramusHub
+      parameters:
+        - name: particles
+          in: query
+          schema:
+            enum:
+              - Confetty
+              - Fireworks
+            type: string
+      responses: { }
+  /telegramus/MergeWaifu:
+    post:
+      tags:
+        - TelegramusHub
+      parameters:
+        - name: content
+          in: query
+          schema:
+            $ref: '#/components/schemas/Waifu'
+        - name: host
+          in: query
+          schema:
+            $ref: '#/components/schemas/Host'
+        - name: avatar
+          in: query
+          schema:
+            type: string
+        - name: color
+          in: query
+          schema:
+            type: string
+      responses: { }
+  /telegramus/NewMessage:
+    post:
+      tags:
+        - TelegramusHub
+      parameters:
+        - name: id
+          in: query
+          schema:
+            type: string
+        - name: message
+          in: query
+          schema:
+            $ref: '#/components/schemas/ChatMessage'
+      responses: { }
+  /telegramus/PostTwitchInfo:
+    post:
+      tags:
+        - TelegramusHub
+      parameters:
+        - name: clientId
+          in: query
+          schema:
+            type: string
+        - name: secret
+          in: query
+          schema:
+            type: string
+      responses: { }
+  /telegramus/RandomMem:
+    post:
+      tags:
+        - TelegramusHub
+      parameters:
+        - name: mediaInfo
+          in: query
+          schema:
+            $ref: '#/components/schemas/MediaDto'
+      responses: { }
+  /telegramus/UpdateWaifuPrizes:
+    post:
+      tags:
+        - TelegramusHub
+      parameters:
+        - name: prizes
+          in: query
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/PrizeType'
+      responses: { }
+  /telegramus/WaifuRoll:
+    post:
+      tags:
+        - TelegramusHub
+      parameters:
+        - name: content
+          in: query
+          schema:
+            $ref: '#/components/schemas/Waifu'
+        - name: displayName
+          in: query
+          schema:
+            type: string
+        - name: waifuHusband
+          in: query
+          schema:
+            $ref: '#/components/schemas/Host'
+        - name: color
+          in: query
+          schema:
+            type: string
+      responses: { }
+components:
+  schemas:
+    Assembly:
+      required:
+        - customAttributes
+        - definedTypes
+        - escapedCodeBase
+        - exportedTypes
+        - globalAssemblyCache
+        - hostContext
+        - imageRuntimeVersion
+        - isCollectible
+        - isDynamic
+        - isFullyTrusted
+        - location
+        - manifestModule
+        - modules
+        - reflectionOnly
+        - securityRuleSet
+      type: object
+      properties:
+        definedTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/TypeInfo'
+          readOnly: true
+        exportedTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Type'
+          readOnly: true
+        codeBase:
+          type: string
+          nullable: true
+          readOnly: true
+          deprecated: true
+        entryPoint:
+          allOf:
+            - $ref: '#/components/schemas/MethodInfo'
+          nullable: true
+          readOnly: true
+        fullName:
+          type: string
+          nullable: true
+          readOnly: true
+        imageRuntimeVersion:
+          type: string
+          readOnly: true
+        isDynamic:
+          type: boolean
+          readOnly: true
+        location:
+          type: string
+          readOnly: true
+        reflectionOnly:
+          type: boolean
+          readOnly: true
+        isCollectible:
+          type: boolean
+          readOnly: true
+        isFullyTrusted:
+          type: boolean
+          readOnly: true
+        customAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomAttributeData'
+          readOnly: true
+        escapedCodeBase:
+          type: string
+          readOnly: true
+          deprecated: true
+        manifestModule:
+          allOf:
+            - $ref: '#/components/schemas/Module'
+          readOnly: true
+        modules:
+          type: array
+          items:
+            $ref: '#/components/schemas/Module'
+          readOnly: true
+        globalAssemblyCache:
+          type: boolean
+          readOnly: true
+          deprecated: true
+        hostContext:
+          type: integer
+          format: int64
+          readOnly: true
+        securityRuleSet:
+          enum:
+            - None
+            - Level1
+            - Level2
+          type: string
+          readOnly: true
+      additionalProperties: false
+    BaseTrackInfo:
+      required:
+        - domain
+        - duration
+        - id
+        - lastTimePlays
+        - title
+        - trackName
+        - url
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        trackName:
+          type: string
+        authors:
+          type: array
+          items:
+            type: string
+          nullable: true
+        featAuthors:
+          type: array
+          items:
+            type: string
+          nullable: true
+        duration:
+          type: string
+          format: date-span
+        genre:
+          type: array
+          items:
+            type: string
+          nullable: true
+        url:
+          type: string
+        lastTimePlays:
+          type: string
+          format: date-time
+        domain:
+          enum:
+            - None
+            - Youtube
+            - SoundCloud
+            - YandexMusic
+            - VkMusic
+          type: string
+        yandexSpecificInfo:
+          allOf:
+            - $ref: '#/components/schemas/YandexTrackAdditionalInfo'
+          nullable: true
+        title:
+          type: string
+          readOnly: true
+      additionalProperties: false
+    ChatMessage:
+      required:
+        - bits
+        - bitsInDollars
+        - color
+        - isBroadcaster
+        - isFirstMessage
+        - isHighlighted
+        - isMe
+        - isModerator
+        - isPartner
+        - isSkippingSubMode
+        - isStaff
+        - isSubscriber
+        - isTurbo
+        - isVip
+        - noisy
+        - subscribedMonthCount
+        - userType
+      type: object
+      properties:
+        badges:
+          type: array
+          items:
+            $ref: '#/components/schemas/StringStringKeyValuePair'
+          nullable: true
+          readOnly: true
+        botUsername:
+          type: string
+          nullable: true
+          readOnly: true
+        color:
+          allOf:
+            - $ref: '#/components/schemas/Color'
+          readOnly: true
+        colorHex:
+          type: string
+          nullable: true
+          readOnly: true
+        displayName:
+          type: string
+          nullable: true
+          readOnly: true
+        emoteSet:
+          allOf:
+            - $ref: '#/components/schemas/EmoteSet'
+          nullable: true
+          readOnly: true
+        isTurbo:
+          type: boolean
+          readOnly: true
+        userId:
+          type: string
+          nullable: true
+          readOnly: true
+        username:
+          type: string
+          nullable: true
+          readOnly: true
+        userType:
+          enum:
+            - Viewer
+            - Moderator
+            - GlobalModerator
+            - Broadcaster
+            - Admin
+            - Staff
+          type: string
+          readOnly: true
+        rawIrcMessage:
+          type: string
+          nullable: true
+          readOnly: true
+        badgeInfo:
+          type: array
+          items:
+            $ref: '#/components/schemas/StringStringKeyValuePair'
+          nullable: true
+          readOnly: true
+        bits:
+          type: integer
+          format: int32
+          readOnly: true
+        bitsInDollars:
+          type: number
+          format: double
+          readOnly: true
+        channel:
+          type: string
+          nullable: true
+          readOnly: true
+        cheerBadge:
+          allOf:
+            - $ref: '#/components/schemas/CheerBadge'
+          nullable: true
+          readOnly: true
+        customRewardId:
+          type: string
+          nullable: true
+          readOnly: true
+        emoteReplacedMessage:
+          type: string
+          nullable: true
+          readOnly: true
+        id:
+          type: string
+          nullable: true
+          readOnly: true
+        isBroadcaster:
+          type: boolean
+          readOnly: true
+        isFirstMessage:
+          type: boolean
+          readOnly: true
+        isHighlighted:
+          type: boolean
+          readOnly: true
+        isMe:
+          type: boolean
+          readOnly: true
+        isModerator:
+          type: boolean
+          readOnly: true
+        isSkippingSubMode:
+          type: boolean
+          readOnly: true
+        isSubscriber:
+          type: boolean
+          readOnly: true
+        isVip:
+          type: boolean
+          readOnly: true
+        isStaff:
+          type: boolean
+          readOnly: true
+        isPartner:
+          type: boolean
+          readOnly: true
+        message:
+          type: string
+          nullable: true
+          readOnly: true
+        noisy:
+          enum:
+            - NotSet
+            - 'True'
+            - 'False'
+          type: string
+          readOnly: true
+        roomId:
+          type: string
+          nullable: true
+          readOnly: true
+        subscribedMonthCount:
+          type: integer
+          format: int32
+          readOnly: true
+        tmiSentTs:
+          type: string
+          nullable: true
+          readOnly: true
+        chatReply:
+          allOf:
+            - $ref: '#/components/schemas/ChatReply'
+          nullable: true
+          readOnly: true
+      additionalProperties: false
+    ChatReply:
+      type: object
+      properties:
+        parentDisplayName:
+          type: string
+          nullable: true
+          readOnly: true
+        parentMsgBody:
+          type: string
+          nullable: true
+          readOnly: true
+        parentMsgId:
+          type: string
+          nullable: true
+          readOnly: true
+        parentUserId:
+          type: string
+          nullable: true
+          readOnly: true
+        parentUserLogin:
+          type: string
+          nullable: true
+          readOnly: true
+      additionalProperties: false
+    CheerBadge:
+      required:
+        - cheerAmount
+        - color
+      type: object
+      properties:
+        cheerAmount:
+          type: integer
+          format: int32
+        color:
+          enum:
+            - Gray
+            - Purple
+            - Green
+            - Blue
+            - Red
+          type: string
+          readOnly: true
+      additionalProperties: false
+    Color:
+      required:
+        - a
+        - b
+        - g
+        - isEmpty
+        - isKnownColor
+        - isNamedColor
+        - isSystemColor
+        - name
+        - r
+      type: object
+      properties:
+        r:
+          type: integer
+          format: int32
+          readOnly: true
+        g:
+          type: integer
+          format: int32
+          readOnly: true
+        b:
+          type: integer
+          format: int32
+          readOnly: true
+        a:
+          type: integer
+          format: int32
+          readOnly: true
+        isKnownColor:
+          type: boolean
+          readOnly: true
+        isEmpty:
+          type: boolean
+          readOnly: true
+        isNamedColor:
+          type: boolean
+          readOnly: true
+        isSystemColor:
+          type: boolean
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+      additionalProperties: false
+    CommandInfo:
+      required:
+        - availablePlatforms
+        - description
+        - isAdminCommand
+        - name
+        - parameters
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        isAdminCommand:
+          type: boolean
+        parameters:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommandParameterInfo'
+        availablePlatforms:
+          type: array
+          items:
+            enum:
+              - None
+              - Api
+              - Telegram
+              - Twitch
+              - Discord
+              - Vk
+            type: string
+      additionalProperties: false
+    CommandParameterInfo:
+      required:
+        - description
+        - name
+        - required
+        - type
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+        required:
+          type: boolean
+        defaultValue:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ConstructorInfo:
+      required:
+        - attributes
+        - callingConvention
+        - containsGenericParameters
+        - customAttributes
+        - isAbstract
+        - isAssembly
+        - isCollectible
+        - isConstructedGenericMethod
+        - isConstructor
+        - isFamily
+        - isFamilyAndAssembly
+        - isFamilyOrAssembly
+        - isFinal
+        - isGenericMethod
+        - isGenericMethodDefinition
+        - isHideBySig
+        - isPrivate
+        - isPublic
+        - isSecurityCritical
+        - isSecuritySafeCritical
+        - isSecurityTransparent
+        - isSpecialName
+        - isStatic
+        - isVirtual
+        - memberType
+        - metadataToken
+        - methodHandle
+        - methodImplementationFlags
+        - module
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          readOnly: true
+        declaringType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        reflectedType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        module:
+          allOf:
+            - $ref: '#/components/schemas/Module'
+          readOnly: true
+        customAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomAttributeData'
+          readOnly: true
+        isCollectible:
+          type: boolean
+          readOnly: true
+        metadataToken:
+          type: integer
+          format: int32
+          readOnly: true
+        attributes:
+          enum:
+            - PrivateScope
+            - Private
+            - FamANDAssem
+            - Assembly
+            - Family
+            - FamORAssem
+            - Public
+            - MemberAccessMask
+            - UnmanagedExport
+            - Static
+            - Final
+            - Virtual
+            - HideBySig
+            - NewSlot
+            - CheckAccessOnOverride
+            - Abstract
+            - SpecialName
+            - RTSpecialName
+            - PinvokeImpl
+            - HasSecurity
+            - RequireSecObject
+            - ReservedMask
+          type: string
+          readOnly: true
+        methodImplementationFlags:
+          enum:
+            - IL
+            - Native
+            - OPTIL
+            - CodeTypeMask
+            - ManagedMask
+            - NoInlining
+            - ForwardRef
+            - Synchronized
+            - NoOptimization
+            - PreserveSig
+            - AggressiveInlining
+            - AggressiveOptimization
+            - InternalCall
+            - MaxMethodImplVal
+          type: string
+          readOnly: true
+        callingConvention:
+          enum:
+            - Standard
+            - VarArgs
+            - Any
+            - HasThis
+            - ExplicitThis
+          type: string
+          readOnly: true
+        isAbstract:
+          type: boolean
+          readOnly: true
+        isConstructor:
+          type: boolean
+          readOnly: true
+        isFinal:
+          type: boolean
+          readOnly: true
+        isHideBySig:
+          type: boolean
+          readOnly: true
+        isSpecialName:
+          type: boolean
+          readOnly: true
+        isStatic:
+          type: boolean
+          readOnly: true
+        isVirtual:
+          type: boolean
+          readOnly: true
+        isAssembly:
+          type: boolean
+          readOnly: true
+        isFamily:
+          type: boolean
+          readOnly: true
+        isFamilyAndAssembly:
+          type: boolean
+          readOnly: true
+        isFamilyOrAssembly:
+          type: boolean
+          readOnly: true
+        isPrivate:
+          type: boolean
+          readOnly: true
+        isPublic:
+          type: boolean
+          readOnly: true
+        isConstructedGenericMethod:
+          type: boolean
+          readOnly: true
+        isGenericMethod:
+          type: boolean
+          readOnly: true
+        isGenericMethodDefinition:
+          type: boolean
+          readOnly: true
+        containsGenericParameters:
+          type: boolean
+          readOnly: true
+        methodHandle:
+          allOf:
+            - $ref: '#/components/schemas/RuntimeMethodHandle'
+          readOnly: true
+        isSecurityCritical:
+          type: boolean
+          readOnly: true
+        isSecuritySafeCritical:
+          type: boolean
+          readOnly: true
+        isSecurityTransparent:
+          type: boolean
+          readOnly: true
+        memberType:
+          enum:
+            - Constructor
+            - Event
+            - Field
+            - Method
+            - Property
+            - TypeInfo
+            - Custom
+            - NestedType
+            - All
+          type: string
+          readOnly: true
+      additionalProperties: false
+    CustomAttributeData:
+      required:
+        - attributeType
+        - constructor
+        - constructorArguments
+        - namedArguments
+      type: object
+      properties:
+        attributeType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          readOnly: true
+        constructor:
+          allOf:
+            - $ref: '#/components/schemas/ConstructorInfo'
+          readOnly: true
+        constructorArguments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomAttributeTypedArgument'
+          readOnly: true
+        namedArguments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomAttributeNamedArgument'
+          readOnly: true
+      additionalProperties: false
+    CustomAttributeNamedArgument:
+      required:
+        - isField
+        - memberInfo
+        - memberName
+        - typedValue
+      type: object
+      properties:
+        memberInfo:
+          allOf:
+            - $ref: '#/components/schemas/MemberInfo'
+        typedValue:
+          allOf:
+            - $ref: '#/components/schemas/CustomAttributeTypedArgument'
+          readOnly: true
+        memberName:
+          type: string
+          readOnly: true
+        isField:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    CustomAttributeTypedArgument:
+      required:
+        - argumentType
+      type: object
+      properties:
+        argumentType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+        value:
+          nullable: true
+      additionalProperties: false
+    Emote:
+      required:
+        - endIndex
+        - startIndex
+      type: object
+      properties:
+        id:
+          type: string
+          nullable: true
+          readOnly: true
+        name:
+          type: string
+          nullable: true
+        startIndex:
+          type: integer
+          format: int32
+          readOnly: true
+        endIndex:
+          type: integer
+          format: int32
+          readOnly: true
+        imageUrl:
+          type: string
+          nullable: true
+          readOnly: true
+      additionalProperties: false
+    EmoteSet:
+      type: object
+      properties:
+        emotes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Emote'
+          nullable: true
+          readOnly: true
+        rawEmoteSetString:
+          type: string
+          nullable: true
+      additionalProperties: false
+    EventInfo:
+      required:
+        - attributes
+        - customAttributes
+        - isCollectible
+        - isMulticast
+        - isSpecialName
+        - memberType
+        - metadataToken
+        - module
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          readOnly: true
+        declaringType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        reflectedType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        module:
+          allOf:
+            - $ref: '#/components/schemas/Module'
+          readOnly: true
+        customAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomAttributeData'
+          readOnly: true
+        isCollectible:
+          type: boolean
+          readOnly: true
+        metadataToken:
+          type: integer
+          format: int32
+          readOnly: true
+        memberType:
+          enum:
+            - Constructor
+            - Event
+            - Field
+            - Method
+            - Property
+            - TypeInfo
+            - Custom
+            - NestedType
+            - All
+          type: string
+          readOnly: true
+        attributes:
+          enum:
+            - None
+            - SpecialName
+            - RTSpecialName
+          type: string
+          readOnly: true
+        isSpecialName:
+          type: boolean
+          readOnly: true
+        addMethod:
+          allOf:
+            - $ref: '#/components/schemas/MethodInfo'
+          nullable: true
+          readOnly: true
+        removeMethod:
+          allOf:
+            - $ref: '#/components/schemas/MethodInfo'
+          nullable: true
+          readOnly: true
+        raiseMethod:
+          allOf:
+            - $ref: '#/components/schemas/MethodInfo'
+          nullable: true
+          readOnly: true
+        isMulticast:
+          type: boolean
+          readOnly: true
+        eventHandlerType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+      additionalProperties: false
+    Exception:
+      required:
+        - data
+        - hResult
+        - message
+      type: object
+      properties:
+        targetSite:
+          allOf:
+            - $ref: '#/components/schemas/MethodBase'
+          nullable: true
+          readOnly: true
+        message:
+          type: string
+          readOnly: true
+        data:
+          type: object
+          additionalProperties: { }
+          readOnly: true
+        innerException:
+          allOf:
+            - $ref: '#/components/schemas/Exception'
+          nullable: true
+          readOnly: true
+        helpLink:
+          type: string
+          nullable: true
+        source:
+          type: string
+          nullable: true
+        hResult:
+          type: integer
+          format: int32
+        stackTrace:
+          type: string
+          nullable: true
+          readOnly: true
+      additionalProperties: false
+    FieldInfo:
+      required:
+        - attributes
+        - customAttributes
+        - fieldHandle
+        - fieldType
+        - isAssembly
+        - isCollectible
+        - isFamily
+        - isFamilyAndAssembly
+        - isFamilyOrAssembly
+        - isInitOnly
+        - isLiteral
+        - isNotSerialized
+        - isPinvokeImpl
+        - isPrivate
+        - isPublic
+        - isSecurityCritical
+        - isSecuritySafeCritical
+        - isSecurityTransparent
+        - isSpecialName
+        - isStatic
+        - memberType
+        - metadataToken
+        - module
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+          readOnly: true
+        declaringType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        reflectedType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        module:
+          allOf:
+            - $ref: '#/components/schemas/Module'
+          readOnly: true
+        customAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomAttributeData'
+          readOnly: true
+        isCollectible:
+          type: boolean
+          readOnly: true
+        metadataToken:
+          type: integer
+          format: int32
+          readOnly: true
+        memberType:
+          enum:
+            - Constructor
+            - Event
+            - Field
+            - Method
+            - Property
+            - TypeInfo
+            - Custom
+            - NestedType
+            - All
+          type: string
+          readOnly: true
+        attributes:
+          enum:
+            - PrivateScope
+            - Private
+            - FamANDAssem
+            - Assembly
+            - Family
+            - FamORAssem
+            - Public
+            - FieldAccessMask
+            - Static
+            - InitOnly
+            - Literal
+            - NotSerialized
+            - HasFieldRVA
+            - SpecialName
+            - RTSpecialName
+            - HasFieldMarshal
+            - PinvokeImpl
+            - HasDefault
+            - ReservedMask
+          type: string
+          readOnly: true
+        fieldType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          readOnly: true
+        isInitOnly:
+          type: boolean
+          readOnly: true
+        isLiteral:
+          type: boolean
+          readOnly: true
+        isNotSerialized:
+          type: boolean
+          readOnly: true
+          deprecated: true
+        isPinvokeImpl:
+          type: boolean
+          readOnly: true
+        isSpecialName:
+          type: boolean
+          readOnly: true
+        isStatic:
+          type: boolean
+          readOnly: true
+        isAssembly:
+          type: boolean
+          readOnly: true
+        isFamily:
+          type: boolean
+          readOnly: true
+        isFamilyAndAssembly:
+          type: boolean
+          readOnly: true
+        isFamilyOrAssembly:
+          type: boolean
+          readOnly: true
+        isPrivate:
+          type: boolean
+          readOnly: true
+        isPublic:
+          type: boolean
+          readOnly: true
+        isSecurityCritical:
+          type: boolean
+          readOnly: true
+        isSecuritySafeCritical:
+          type: boolean
+          readOnly: true
+        isSecurityTransparent:
+          type: boolean
+          readOnly: true
+        fieldHandle:
+          allOf:
+            - $ref: '#/components/schemas/RuntimeFieldHandle'
+          readOnly: true
+      additionalProperties: false
+    FramedataChange:
+      required:
+        - changeType
+        - characterName
+        - detectedAt
+        - id
+        - status
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        characterName:
+          maxLength: 100
+          minLength: 1
+          type: string
+        changeType:
+          enum:
+            - NewCharacter
+            - NewMove
+            - MoveUpdate
+            - MoveRemoval
+            - CharacterUpdate
+          type: string
+        detectedAt:
+          type: string
+          format: date-time
+        appliedAt:
+          type: string
+          format: date-time
+          nullable: true
+        status:
+          enum:
+            - Pending
+            - Applied
+            - Rejected
+            - Obsolete
+          type: string
+        description:
+          maxLength: 500
+          type: string
+          nullable: true
+        changeInfo:
+          allOf:
+            - $ref: '#/components/schemas/FramedataChangeInfo'
+          nullable: true
+        currentInfo:
+          allOf:
+            - $ref: '#/components/schemas/FramedataChangeInfo'
+          nullable: true
+      additionalProperties: false
+    FramedataChangeInfo:
+      required:
+        - framedataChangeId
+        - id
+        - infoType
+        - jsonData
+        - retrievedAt
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        framedataChangeId:
+          type: integer
+          format: int32
+        framedataChange:
+          allOf:
+            - $ref: '#/components/schemas/FramedataChange'
+          nullable: true
+        currentInfoId:
+          type: integer
+          format: int32
+          nullable: true
+        infoType:
+          enum:
+            - Character
+            - Move
+            - Movelist
+          type: string
+        jsonData:
+          minLength: 1
+          type: string
+        sourceUrl:
+          maxLength: 500
+          type: string
+          nullable: true
+        retrievedAt:
+          type: string
+          format: date-time
+        dataHash:
+          maxLength: 64
+          type: string
+          nullable: true
+      additionalProperties: false
+    Host:
+      required:
+        - hostCoolDown
+        - hostGreetings
+        - isPrivated
+        - orderCount
+        - twitchId
+        - whenOrdered
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+        twitchId:
+          type: string
+        whenOrdered:
+          type: string
+          format: date-time
+        waifuBrideId:
+          type: string
+          nullable: true
+        isPrivated:
+          type: boolean
+        orderCount:
+          type: integer
+          format: int64
+        waifuRollId:
+          type: string
+          nullable: true
+        whenPrivated:
+          type: string
+          format: date-time
+          nullable: true
+        hostGreetings:
+          allOf:
+            - $ref: '#/components/schemas/HostAutoHello'
+        hostCoolDown:
+          allOf:
+            - $ref: '#/components/schemas/HostCoolDown'
+      additionalProperties: false
+    HostAutoHello:
+      required:
+        - guid
+        - hostId
+        - time
+      type: object
+      properties:
+        guid:
+          type: string
+          format: uuid
+        hostId:
+          type: string
+        host:
+          allOf:
+            - $ref: '#/components/schemas/Host'
+          nullable: true
+        time:
+          type: string
+          format: date-time
+      additionalProperties: false
+    HostCoolDown:
+      required:
+        - guid
+        - hostId
+        - time
+      type: object
+      properties:
+        guid:
+          type: string
+          format: uuid
+        hostId:
+          type: string
+        host:
+          allOf:
+            - $ref: '#/components/schemas/Host'
+          nullable: true
+        time:
+          type: string
+          format: date-time
+      additionalProperties: false
+    ICustomAttributeProvider:
+      type: object
+      additionalProperties: false
+    Image:
+      required:
+        - byteSize
+        - favorites
+        - height
+        - imageID
+        - isNsfw
+        - uploadedAt
+        - width
+      type: object
+      properties:
+        signature:
+          type: string
+          nullable: true
+        extension:
+          type: string
+          nullable: true
+        imageID:
+          type: integer
+          format: int32
+        favorites:
+          type: integer
+          format: int32
+        dominantColor:
+          type: string
+          nullable: true
+        source:
+          type: string
+          nullable: true
+        artist:
+          nullable: true
+        uploadedAt:
+          type: string
+          format: date-time
+        likedAt:
+          nullable: true
+        isNsfw:
+          type: boolean
+        width:
+          type: integer
+          format: int32
+        height:
+          type: integer
+          format: int32
+        byteSize:
+          type: integer
+          format: int32
+        url:
+          type: string
+          nullable: true
+        previewURL:
+          type: string
+          nullable: true
+      additionalProperties: false
+    IntPtr:
+      type: object
+      additionalProperties: false
+    JoinQueueRequest:
+      required:
+        - playerId
+      type: object
+      properties:
+        playerId:
+          type: string
+      additionalProperties: false
+    LeaveQueueRequest:
+      required:
+        - playerId
+      type: object
+      properties:
+        playerId:
+          type: string
+      additionalProperties: false
+    MediaDto:
+      required:
+        - mediaInfo
+        - uploadStartTime
+      type: object
+      properties:
+        mediaInfo:
+          allOf:
+            - $ref: '#/components/schemas/MediaInfo'
+        uploadStartTime:
+          type: string
+          format: date-time
+      additionalProperties: false
+    MediaFileInfo:
+      required:
+        - extension
+        - fileName
+        - filePath
+        - isLocalFile
+        - type
+      type: object
+      properties:
+        type:
+          enum:
+            - None
+            - Image
+            - Audio
+            - Video
+            - TelegramSticker
+            - Voice
+            - Gif
+          type: string
+        filePath:
+          type: string
+        isLocalFile:
+          type: boolean
+        fileName:
+          type: string
+        extension:
+          type: string
+      additionalProperties: false
+    MediaInfo:
+      required:
+        - fileInfo
+        - id
+        - metaInfo
+        - positionInfo
+        - stylesInfo
+        - textInfo
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        textInfo:
+          allOf:
+            - $ref: '#/components/schemas/MediaTextInfo'
+        fileInfo:
+          allOf:
+            - $ref: '#/components/schemas/MediaFileInfo'
+        positionInfo:
+          allOf:
+            - $ref: '#/components/schemas/MediaPositionInfo'
+        metaInfo:
+          allOf:
+            - $ref: '#/components/schemas/MediaMetaInfo'
+        stylesInfo:
+          allOf:
+            - $ref: '#/components/schemas/MediaStylesInfo'
+      additionalProperties: false
+    MediaMetaInfo:
+      required:
+        - displayName
+        - duration
+        - isLooped
+        - priority
+        - twitchPointsCost
+        - vip
+      type: object
+      properties:
+        twitchPointsCost:
+          type: integer
+          format: int32
+        twitchGuid:
+          type: string
+          format: uuid
+          nullable: true
+        vip:
+          type: boolean
+        displayName:
+          type: string
+        isLooped:
+          type: boolean
+        duration:
+          type: integer
+          format: int32
+        priority:
+          enum:
+            - Low
+            - Normal
+            - High
+          type: string
+      additionalProperties: false
+    MediaPositionInfo:
+      required:
+        - height
+        - isHorizontalCenter
+        - isProportion
+        - isResizeRequires
+        - isRotated
+        - isUseOriginalWidthAndHeight
+        - isVerticallCenter
+        - randomCoordinates
+        - rotation
+        - width
+        - xCoordinate
+        - yCoordinate
+      type: object
+      properties:
+        isProportion:
+          type: boolean
+        isResizeRequires:
+          type: boolean
+        height:
+          type: integer
+          format: int32
+        width:
+          type: integer
+          format: int32
+        isRotated:
+          type: boolean
+        rotation:
+          type: integer
+          format: int32
+        xCoordinate:
+          type: integer
+          format: int32
+        yCoordinate:
+          type: integer
+          format: int32
+        randomCoordinates:
+          type: boolean
+        isVerticallCenter:
+          type: boolean
+        isHorizontalCenter:
+          type: boolean
+        isUseOriginalWidthAndHeight:
+          type: boolean
+      additionalProperties: false
+    MediaStylesInfo:
+      required:
+        - isBorder
+      type: object
+      properties:
+        isBorder:
+          type: boolean
+      additionalProperties: false
+    MediaTextInfo:
+      type: object
+      properties:
+        keyWordsColor:
+          type: string
+          nullable: true
+        triggerWord:
+          type: string
+          nullable: true
+        text:
+          type: string
+          nullable: true
+        textColor:
+          type: string
+          nullable: true
+        keyWordSybmolDelimiter:
+          type: string
+          nullable: true
+      additionalProperties: false
+    MemberInfo:
+      required:
+        - customAttributes
+        - isCollectible
+        - memberType
+        - metadataToken
+        - module
+        - name
+      type: object
+      properties:
+        memberType:
+          enum:
+            - Constructor
+            - Event
+            - Field
+            - Method
+            - Property
+            - TypeInfo
+            - Custom
+            - NestedType
+            - All
+          type: string
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        declaringType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        reflectedType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        module:
+          allOf:
+            - $ref: '#/components/schemas/Module'
+          readOnly: true
+        customAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomAttributeData'
+          readOnly: true
+        isCollectible:
+          type: boolean
+          readOnly: true
+        metadataToken:
+          type: integer
+          format: int32
+          readOnly: true
+      additionalProperties: false
+    MethodBase:
+      required:
+        - attributes
+        - callingConvention
+        - containsGenericParameters
+        - customAttributes
+        - isAbstract
+        - isAssembly
+        - isCollectible
+        - isConstructedGenericMethod
+        - isConstructor
+        - isFamily
+        - isFamilyAndAssembly
+        - isFamilyOrAssembly
+        - isFinal
+        - isGenericMethod
+        - isGenericMethodDefinition
+        - isHideBySig
+        - isPrivate
+        - isPublic
+        - isSecurityCritical
+        - isSecuritySafeCritical
+        - isSecurityTransparent
+        - isSpecialName
+        - isStatic
+        - isVirtual
+        - memberType
+        - metadataToken
+        - methodHandle
+        - methodImplementationFlags
+        - module
+        - name
+      type: object
+      properties:
+        memberType:
+          enum:
+            - Constructor
+            - Event
+            - Field
+            - Method
+            - Property
+            - TypeInfo
+            - Custom
+            - NestedType
+            - All
+          type: string
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        declaringType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        reflectedType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        module:
+          allOf:
+            - $ref: '#/components/schemas/Module'
+          readOnly: true
+        customAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomAttributeData'
+          readOnly: true
+        isCollectible:
+          type: boolean
+          readOnly: true
+        metadataToken:
+          type: integer
+          format: int32
+          readOnly: true
+        attributes:
+          enum:
+            - PrivateScope
+            - Private
+            - FamANDAssem
+            - Assembly
+            - Family
+            - FamORAssem
+            - Public
+            - MemberAccessMask
+            - UnmanagedExport
+            - Static
+            - Final
+            - Virtual
+            - HideBySig
+            - NewSlot
+            - CheckAccessOnOverride
+            - Abstract
+            - SpecialName
+            - RTSpecialName
+            - PinvokeImpl
+            - HasSecurity
+            - RequireSecObject
+            - ReservedMask
+          type: string
+          readOnly: true
+        methodImplementationFlags:
+          enum:
+            - IL
+            - Native
+            - OPTIL
+            - CodeTypeMask
+            - ManagedMask
+            - NoInlining
+            - ForwardRef
+            - Synchronized
+            - NoOptimization
+            - PreserveSig
+            - AggressiveInlining
+            - AggressiveOptimization
+            - InternalCall
+            - MaxMethodImplVal
+          type: string
+          readOnly: true
+        callingConvention:
+          enum:
+            - Standard
+            - VarArgs
+            - Any
+            - HasThis
+            - ExplicitThis
+          type: string
+          readOnly: true
+        isAbstract:
+          type: boolean
+          readOnly: true
+        isConstructor:
+          type: boolean
+          readOnly: true
+        isFinal:
+          type: boolean
+          readOnly: true
+        isHideBySig:
+          type: boolean
+          readOnly: true
+        isSpecialName:
+          type: boolean
+          readOnly: true
+        isStatic:
+          type: boolean
+          readOnly: true
+        isVirtual:
+          type: boolean
+          readOnly: true
+        isAssembly:
+          type: boolean
+          readOnly: true
+        isFamily:
+          type: boolean
+          readOnly: true
+        isFamilyAndAssembly:
+          type: boolean
+          readOnly: true
+        isFamilyOrAssembly:
+          type: boolean
+          readOnly: true
+        isPrivate:
+          type: boolean
+          readOnly: true
+        isPublic:
+          type: boolean
+          readOnly: true
+        isConstructedGenericMethod:
+          type: boolean
+          readOnly: true
+        isGenericMethod:
+          type: boolean
+          readOnly: true
+        isGenericMethodDefinition:
+          type: boolean
+          readOnly: true
+        containsGenericParameters:
+          type: boolean
+          readOnly: true
+        methodHandle:
+          allOf:
+            - $ref: '#/components/schemas/RuntimeMethodHandle'
+          readOnly: true
+        isSecurityCritical:
+          type: boolean
+          readOnly: true
+        isSecuritySafeCritical:
+          type: boolean
+          readOnly: true
+        isSecurityTransparent:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    MethodInfo:
+      required:
+        - attributes
+        - callingConvention
+        - containsGenericParameters
+        - customAttributes
+        - isAbstract
+        - isAssembly
+        - isCollectible
+        - isConstructedGenericMethod
+        - isConstructor
+        - isFamily
+        - isFamilyAndAssembly
+        - isFamilyOrAssembly
+        - isFinal
+        - isGenericMethod
+        - isGenericMethodDefinition
+        - isHideBySig
+        - isPrivate
+        - isPublic
+        - isSecurityCritical
+        - isSecuritySafeCritical
+        - isSecurityTransparent
+        - isSpecialName
+        - isStatic
+        - isVirtual
+        - memberType
+        - metadataToken
+        - methodHandle
+        - methodImplementationFlags
+        - module
+        - name
+        - returnParameter
+        - returnType
+        - returnTypeCustomAttributes
+      type: object
+      properties:
+        name:
+          type: string
+          readOnly: true
+        declaringType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        reflectedType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        module:
+          allOf:
+            - $ref: '#/components/schemas/Module'
+          readOnly: true
+        customAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomAttributeData'
+          readOnly: true
+        isCollectible:
+          type: boolean
+          readOnly: true
+        metadataToken:
+          type: integer
+          format: int32
+          readOnly: true
+        attributes:
+          enum:
+            - PrivateScope
+            - Private
+            - FamANDAssem
+            - Assembly
+            - Family
+            - FamORAssem
+            - Public
+            - MemberAccessMask
+            - UnmanagedExport
+            - Static
+            - Final
+            - Virtual
+            - HideBySig
+            - NewSlot
+            - CheckAccessOnOverride
+            - Abstract
+            - SpecialName
+            - RTSpecialName
+            - PinvokeImpl
+            - HasSecurity
+            - RequireSecObject
+            - ReservedMask
+          type: string
+          readOnly: true
+        methodImplementationFlags:
+          enum:
+            - IL
+            - Native
+            - OPTIL
+            - CodeTypeMask
+            - ManagedMask
+            - NoInlining
+            - ForwardRef
+            - Synchronized
+            - NoOptimization
+            - PreserveSig
+            - AggressiveInlining
+            - AggressiveOptimization
+            - InternalCall
+            - MaxMethodImplVal
+          type: string
+          readOnly: true
+        callingConvention:
+          enum:
+            - Standard
+            - VarArgs
+            - Any
+            - HasThis
+            - ExplicitThis
+          type: string
+          readOnly: true
+        isAbstract:
+          type: boolean
+          readOnly: true
+        isConstructor:
+          type: boolean
+          readOnly: true
+        isFinal:
+          type: boolean
+          readOnly: true
+        isHideBySig:
+          type: boolean
+          readOnly: true
+        isSpecialName:
+          type: boolean
+          readOnly: true
+        isStatic:
+          type: boolean
+          readOnly: true
+        isVirtual:
+          type: boolean
+          readOnly: true
+        isAssembly:
+          type: boolean
+          readOnly: true
+        isFamily:
+          type: boolean
+          readOnly: true
+        isFamilyAndAssembly:
+          type: boolean
+          readOnly: true
+        isFamilyOrAssembly:
+          type: boolean
+          readOnly: true
+        isPrivate:
+          type: boolean
+          readOnly: true
+        isPublic:
+          type: boolean
+          readOnly: true
+        isConstructedGenericMethod:
+          type: boolean
+          readOnly: true
+        isGenericMethod:
+          type: boolean
+          readOnly: true
+        isGenericMethodDefinition:
+          type: boolean
+          readOnly: true
+        containsGenericParameters:
+          type: boolean
+          readOnly: true
+        methodHandle:
+          allOf:
+            - $ref: '#/components/schemas/RuntimeMethodHandle'
+          readOnly: true
+        isSecurityCritical:
+          type: boolean
+          readOnly: true
+        isSecuritySafeCritical:
+          type: boolean
+          readOnly: true
+        isSecurityTransparent:
+          type: boolean
+          readOnly: true
+        memberType:
+          enum:
+            - Constructor
+            - Event
+            - Field
+            - Method
+            - Property
+            - TypeInfo
+            - Custom
+            - NestedType
+            - All
+          type: string
+          readOnly: true
+        returnParameter:
+          allOf:
+            - $ref: '#/components/schemas/ParameterInfo'
+          readOnly: true
+        returnType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          readOnly: true
+        returnTypeCustomAttributes:
+          allOf:
+            - $ref: '#/components/schemas/ICustomAttributeProvider'
+          readOnly: true
+      additionalProperties: false
+    Module:
+      required:
+        - assembly
+        - customAttributes
+        - fullyQualifiedName
+        - mdStreamVersion
+        - metadataToken
+        - moduleHandle
+        - moduleVersionId
+        - name
+        - scopeName
+      type: object
+      properties:
+        assembly:
+          allOf:
+            - $ref: '#/components/schemas/Assembly'
+          readOnly: true
+        fullyQualifiedName:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        mdStreamVersion:
+          type: integer
+          format: int32
+          readOnly: true
+        moduleVersionId:
+          type: string
+          format: uuid
+          readOnly: true
+        scopeName:
+          type: string
+          readOnly: true
+        moduleHandle:
+          allOf:
+            - $ref: '#/components/schemas/ModuleHandle'
+          readOnly: true
+        customAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomAttributeData'
+          readOnly: true
+        metadataToken:
+          type: integer
+          format: int32
+          readOnly: true
+      additionalProperties: false
+    ModuleHandle:
+      required:
+        - mdStreamVersion
+      type: object
+      properties:
+        mdStreamVersion:
+          type: integer
+          format: int32
+          readOnly: true
+      additionalProperties: false
+    Move:
+      required:
+        - characterName
+        - command
+        - heatBurst
+        - heatEngage
+        - heatSmash
+        - homing
+        - isFromStance
+        - powerCrush
+        - requiresHeat
+        - stanceCode
+        - throw
+        - tornado
+      type: object
+      properties:
+        characterName:
+          type: string
+        command:
+          type: string
+        isFromStance:
+          type: boolean
+          readOnly: true
+        stanceCode:
+          type: string
+        stanceName:
+          type: string
+          nullable: true
+        heatEngage:
+          type: boolean
+        heatSmash:
+          type: boolean
+        powerCrush:
+          type: boolean
+        throw:
+          type: boolean
+        homing:
+          type: boolean
+        tornado:
+          type: boolean
+        heatBurst:
+          type: boolean
+        requiresHeat:
+          type: boolean
+        hitLevel:
+          type: string
+          nullable: true
+        damage:
+          type: string
+          nullable: true
+        startUpFrame:
+          type: string
+          nullable: true
+        blockFrame:
+          type: string
+          nullable: true
+        hitFrame:
+          type: string
+          nullable: true
+        counterHitFrame:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+      additionalProperties: false
+    MoveRequest:
+      required:
+        - fromX
+        - fromY
+        - toX
+        - toY
+      type: object
+      properties:
+        fromX:
+          type: string
+        fromY:
+          type: integer
+          format: int32
+        toX:
+          type: string
+        toY:
+          type: integer
+          format: int32
+      additionalProperties: false
+    MuteRequest:
+      required:
+        - processNames
+      type: object
+      properties:
+        processNames:
+          type: array
+          items:
+            type: string
+      additionalProperties: false
+    ParameterInfo:
+      required:
+        - attributes
+        - customAttributes
+        - hasDefaultValue
+        - isIn
+        - isLcid
+        - isOptional
+        - isOut
+        - isRetval
+        - member
+        - metadataToken
+        - parameterType
+        - position
+      type: object
+      properties:
+        attributes:
+          enum:
+            - None
+            - In
+            - Out
+            - Lcid
+            - Retval
+            - Optional
+            - HasDefault
+            - HasFieldMarshal
+            - Reserved3
+            - Reserved4
+            - ReservedMask
+          type: string
+          readOnly: true
+        member:
+          allOf:
+            - $ref: '#/components/schemas/MemberInfo'
+          readOnly: true
+        name:
+          type: string
+          nullable: true
+          readOnly: true
+        parameterType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          readOnly: true
+        position:
+          type: integer
+          format: int32
+          readOnly: true
+        isIn:
+          type: boolean
+          readOnly: true
+        isLcid:
+          type: boolean
+          readOnly: true
+        isOptional:
+          type: boolean
+          readOnly: true
+        isOut:
+          type: boolean
+          readOnly: true
+        isRetval:
+          type: boolean
+          readOnly: true
+        defaultValue:
+          nullable: true
+          readOnly: true
+        rawDefaultValue:
+          nullable: true
+          readOnly: true
+        hasDefaultValue:
+          type: boolean
+          readOnly: true
+        customAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomAttributeData'
+          readOnly: true
+        metadataToken:
+          type: integer
+          format: int32
+          readOnly: true
+      additionalProperties: false
+    PlayerState:
+      required:
+        - id
+        - isMuted
+        - isPaused
+        - isStoped
+        - volume
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        currentTrack:
+          allOf:
+            - $ref: '#/components/schemas/BaseTrackInfo'
+          nullable: true
+        nextTrack:
+          allOf:
+            - $ref: '#/components/schemas/BaseTrackInfo'
+          nullable: true
+        currentTrackDuration:
+          type: string
+          format: date-span
+          nullable: true
+        isPaused:
+          type: boolean
+        isMuted:
+          type: boolean
+        isStoped:
+          type: boolean
+        volume:
+          type: integer
+          format: int32
+      additionalProperties: false
+    PrizeType:
+      required:
+        - id
+        - image
+        - text
+      type: object
+      properties:
+        id:
+          type: string
+        image:
+          type: string
+        text:
+          type: string
+      additionalProperties: false
+    PropertyInfo:
+      required:
+        - attributes
+        - canRead
+        - canWrite
+        - customAttributes
+        - isCollectible
+        - isSpecialName
+        - memberType
+        - metadataToken
+        - module
+        - name
+        - propertyType
+      type: object
+      properties:
+        name:
+          type: string
+          readOnly: true
+        declaringType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        reflectedType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        module:
+          allOf:
+            - $ref: '#/components/schemas/Module'
+          readOnly: true
+        customAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomAttributeData'
+          readOnly: true
+        isCollectible:
+          type: boolean
+          readOnly: true
+        metadataToken:
+          type: integer
+          format: int32
+          readOnly: true
+        memberType:
+          enum:
+            - Constructor
+            - Event
+            - Field
+            - Method
+            - Property
+            - TypeInfo
+            - Custom
+            - NestedType
+            - All
+          type: string
+          readOnly: true
+        propertyType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          readOnly: true
+        attributes:
+          enum:
+            - None
+            - SpecialName
+            - RTSpecialName
+            - HasDefault
+            - Reserved2
+            - Reserved3
+            - Reserved4
+            - ReservedMask
+          type: string
+          readOnly: true
+        isSpecialName:
+          type: boolean
+          readOnly: true
+        canRead:
+          type: boolean
+          readOnly: true
+        canWrite:
+          type: boolean
+          readOnly: true
+        getMethod:
+          allOf:
+            - $ref: '#/components/schemas/MethodInfo'
+          nullable: true
+          readOnly: true
+        setMethod:
+          allOf:
+            - $ref: '#/components/schemas/MethodInfo'
+          nullable: true
+          readOnly: true
+      additionalProperties: false
+    Root:
+      type: object
+      additionalProperties: false
+    RuntimeFieldHandle:
+      required:
+        - value
+      type: object
+      properties:
+        value:
+          allOf:
+            - $ref: '#/components/schemas/IntPtr'
+          readOnly: true
+      additionalProperties: false
+    RuntimeMethodHandle:
+      required:
+        - value
+      type: object
+      properties:
+        value:
+          allOf:
+            - $ref: '#/components/schemas/IntPtr'
+          readOnly: true
+      additionalProperties: false
+    RuntimeTypeHandle:
+      required:
+        - value
+      type: object
+      properties:
+        value:
+          allOf:
+            - $ref: '#/components/schemas/IntPtr'
+          readOnly: true
+      additionalProperties: false
+    ScoreboardColorsDto:
+      required:
+        - backgroundColor
+        - borderColor
+        - fightModeColor
+        - mainColor
+        - playerNamesColor
+        - scoreColor
+        - tournamentTitleColor
+      type: object
+      properties:
+        mainColor:
+          type: string
+        playerNamesColor:
+          type: string
+        tournamentTitleColor:
+          type: string
+        fightModeColor:
+          type: string
+        scoreColor:
+          type: string
+        backgroundColor:
+          type: string
+        borderColor:
+          type: string
+      additionalProperties: false
+    ScoreboardDto:
+      required:
+        - animationDuration
+        - colors
+        - isVisible
+        - meta
+        - player1
+        - player2
+      type: object
+      properties:
+        player1:
+          allOf:
+            - $ref: '#/components/schemas/ScoreboardPlayerDto'
+        player2:
+          allOf:
+            - $ref: '#/components/schemas/ScoreboardPlayerDto'
+        meta:
+          allOf:
+            - $ref: '#/components/schemas/ScoreboardMetaDto'
+        colors:
+          allOf:
+            - $ref: '#/components/schemas/ScoreboardColorsDto'
+        isVisible:
+          type: boolean
+        animationDuration:
+          type: integer
+          format: int32
+        layout:
+          allOf:
+            - $ref: '#/components/schemas/ScoreboardLayoutDto'
+          nullable: true
+      additionalProperties: false
+    ScoreboardLayoutDto:
+      required:
+        - flagSize
+        - headerHeight
+        - headerLeft
+        - headerTop
+        - headerWidth
+        - padding
+        - playerBarHeight
+        - playerBarWidth
+        - playersLeft
+        - playersRight
+        - playersTop
+        - scoreSize
+        - showFlags
+        - showHeader
+        - showSponsors
+        - showTags
+        - spacing
+      type: object
+      properties:
+        headerTop:
+          type: integer
+          format: int32
+        headerLeft:
+          type: integer
+          format: int32
+        playersTop:
+          type: integer
+          format: int32
+        playersLeft:
+          type: integer
+          format: int32
+        playersRight:
+          type: integer
+          format: int32
+        headerHeight:
+          type: integer
+          format: int32
+        headerWidth:
+          type: integer
+          format: int32
+        playerBarHeight:
+          type: integer
+          format: int32
+        playerBarWidth:
+          type: integer
+          format: int32
+        scoreSize:
+          type: integer
+          format: int32
+        flagSize:
+          type: integer
+          format: int32
+        spacing:
+          type: integer
+          format: int32
+        padding:
+          type: integer
+          format: int32
+        showHeader:
+          type: boolean
+        showFlags:
+          type: boolean
+        showSponsors:
+          type: boolean
+        showTags:
+          type: boolean
+      additionalProperties: false
+    ScoreboardMetaDto:
+      required:
+        - fightRule
+        - title
+      type: object
+      properties:
+        title:
+          type: string
+        fightRule:
+          type: string
+      additionalProperties: false
+    ScoreboardPlayerDto:
+      required:
+        - final
+        - flag
+        - name
+        - score
+        - sponsor
+        - tag
+      type: object
+      properties:
+        name:
+          type: string
+        sponsor:
+          type: string
+        score:
+          type: integer
+          format: int32
+        tag:
+          type: string
+        flag:
+          type: string
+        final:
+          type: string
+      additionalProperties: false
+    ServiceInfo:
+      required:
+        - configuration
+        - description
+        - displayName
+        - isEnabled
+        - name
+        - status
+      type: object
+      properties:
+        name:
+          type: string
+        displayName:
+          type: string
+        description:
+          type: string
+        status:
+          enum:
+            - Running
+            - Stopped
+            - Starting
+            - Stopping
+            - Error
+            - Unknown
+          type: string
+        startTime:
+          type: string
+          format: date-time
+          nullable: true
+        lastActivity:
+          type: string
+          format: date-time
+          nullable: true
+        isEnabled:
+          type: boolean
+        configuration:
+          type: object
+          additionalProperties: { }
+      additionalProperties: false
+    ServiceLog:
+      required:
+        - level
+        - message
+        - timestamp
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        level:
+          type: string
+        message:
+          type: string
+        exception:
+          type: string
+          nullable: true
+      additionalProperties: false
+    StringStringKeyValuePair:
+      type: object
+      properties:
+        key:
+          type: string
+          nullable: true
+        value:
+          type: string
+          nullable: true
+      additionalProperties: false
+    StructLayoutAttribute:
+      required:
+        - typeId
+        - value
+      type: object
+      properties:
+        typeId:
+          readOnly: true
+        value:
+          enum:
+            - Sequential
+            - Explicit
+            - Auto
+          type: string
+          readOnly: true
+      additionalProperties: false
+    TekkenCharacter:
+      required:
+        - lastUpdateTime
+        - name
+        - pageUrl
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+        linkToImage:
+          maxLength: 300
+          type: string
+          nullable: true
+        pageUrl:
+          maxLength: 200
+          type: string
+        image:
+          type: string
+          format: byte
+          nullable: true
+        imageExtension:
+          maxLength: 20
+          type: string
+          nullable: true
+        movelist:
+          type: array
+          items:
+            $ref: '#/components/schemas/Move'
+          nullable: true
+        lastUpdateTime:
+          type: string
+          format: date-time
+        description:
+          type: string
+          nullable: true
+        strengths:
+          type: array
+          items:
+            type: string
+          nullable: true
+        weaknesess:
+          type: array
+          items:
+            type: string
+          nullable: true
+      additionalProperties: false
+    TunaMusicDTO:
+      required:
+        - data
+      type: object
+      properties:
+        data:
+          allOf:
+            - $ref: '#/components/schemas/TunaMusicData'
+        hostname:
+          type: string
+          nullable: true
+        timestamp:
+          type: string
+          nullable: true
+      additionalProperties: false
+    TunaMusicData:
+      required:
+        - album_url
+        - artists
+        - cover
+        - duration
+        - progress
+        - status
+        - title
+      type: object
+      properties:
+        cover:
+          type: string
+        title:
+          type: string
+        artists:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+        progress:
+          type: integer
+          format: int64
+        duration:
+          type: integer
+          format: int64
+        album_url:
+          type: string
+      additionalProperties: false
+    Type:
+      required:
+        - assembly
+        - attributes
+        - containsGenericParameters
+        - customAttributes
+        - genericParameterAttributes
+        - genericParameterPosition
+        - genericTypeArguments
+        - guid
+        - hasElementType
+        - isAbstract
+        - isAnsiClass
+        - isArray
+        - isAutoClass
+        - isAutoLayout
+        - isByRef
+        - isByRefLike
+        - isClass
+        - isCollectible
+        - isCOMObject
+        - isConstructedGenericType
+        - isContextful
+        - isEnum
+        - isExplicitLayout
+        - isFunctionPointer
+        - isGenericMethodParameter
+        - isGenericParameter
+        - isGenericType
+        - isGenericTypeDefinition
+        - isGenericTypeParameter
+        - isImport
+        - isInterface
+        - isLayoutSequential
+        - isMarshalByRef
+        - isNested
+        - isNestedAssembly
+        - isNestedFamANDAssem
+        - isNestedFamily
+        - isNestedFamORAssem
+        - isNestedPrivate
+        - isNestedPublic
+        - isNotPublic
+        - isPointer
+        - isPrimitive
+        - isPublic
+        - isSealed
+        - isSecurityCritical
+        - isSecuritySafeCritical
+        - isSecurityTransparent
+        - isSerializable
+        - isSignatureType
+        - isSpecialName
+        - isSZArray
+        - isTypeDefinition
+        - isUnicodeClass
+        - isUnmanagedFunctionPointer
+        - isValueType
+        - isVariableBoundArray
+        - isVisible
+        - memberType
+        - metadataToken
+        - module
+        - name
+        - typeHandle
+        - underlyingSystemType
+      type: object
+      properties:
+        name:
+          type: string
+          readOnly: true
+        customAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomAttributeData'
+          readOnly: true
+        isCollectible:
+          type: boolean
+          readOnly: true
+        metadataToken:
+          type: integer
+          format: int32
+          readOnly: true
+        memberType:
+          enum:
+            - Constructor
+            - Event
+            - Field
+            - Method
+            - Property
+            - TypeInfo
+            - Custom
+            - NestedType
+            - All
+          type: string
+          readOnly: true
+        namespace:
+          type: string
+          nullable: true
+          readOnly: true
+        assemblyQualifiedName:
+          type: string
+          nullable: true
+          readOnly: true
+        fullName:
+          type: string
+          nullable: true
+          readOnly: true
+        assembly:
+          allOf:
+            - $ref: '#/components/schemas/Assembly'
+          readOnly: true
+        module:
+          allOf:
+            - $ref: '#/components/schemas/Module'
+          readOnly: true
+        isInterface:
+          type: boolean
+          readOnly: true
+        isNested:
+          type: boolean
+          readOnly: true
+        declaringType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        declaringMethod:
+          allOf:
+            - $ref: '#/components/schemas/MethodBase'
+          nullable: true
+          readOnly: true
+        reflectedType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        underlyingSystemType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          readOnly: true
+        isTypeDefinition:
+          type: boolean
+          readOnly: true
+        isArray:
+          type: boolean
+          readOnly: true
+        isByRef:
+          type: boolean
+          readOnly: true
+        isPointer:
+          type: boolean
+          readOnly: true
+        isConstructedGenericType:
+          type: boolean
+          readOnly: true
+        isGenericParameter:
+          type: boolean
+          readOnly: true
+        isGenericTypeParameter:
+          type: boolean
+          readOnly: true
+        isGenericMethodParameter:
+          type: boolean
+          readOnly: true
+        isGenericType:
+          type: boolean
+          readOnly: true
+        isGenericTypeDefinition:
+          type: boolean
+          readOnly: true
+        isSZArray:
+          type: boolean
+          readOnly: true
+        isVariableBoundArray:
+          type: boolean
+          readOnly: true
+        isByRefLike:
+          type: boolean
+          readOnly: true
+        isFunctionPointer:
+          type: boolean
+          readOnly: true
+        isUnmanagedFunctionPointer:
+          type: boolean
+          readOnly: true
+        hasElementType:
+          type: boolean
+          readOnly: true
+        genericTypeArguments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Type'
+          readOnly: true
+        genericParameterPosition:
+          type: integer
+          format: int32
+          readOnly: true
+        genericParameterAttributes:
+          enum:
+            - None
+            - Covariant
+            - Contravariant
+            - VarianceMask
+            - ReferenceTypeConstraint
+            - NotNullableValueTypeConstraint
+            - DefaultConstructorConstraint
+            - SpecialConstraintMask
+            - AllowByRefLike
+          type: string
+          readOnly: true
+        attributes:
+          enum:
+            - NotPublic
+            - Public
+            - NestedPublic
+            - NestedPrivate
+            - NestedFamily
+            - NestedAssembly
+            - NestedFamANDAssem
+            - VisibilityMask
+            - SequentialLayout
+            - ExplicitLayout
+            - LayoutMask
+            - Interface
+            - Abstract
+            - Sealed
+            - SpecialName
+            - RTSpecialName
+            - Import
+            - Serializable
+            - WindowsRuntime
+            - UnicodeClass
+            - AutoClass
+            - StringFormatMask
+            - HasSecurity
+            - ReservedMask
+            - BeforeFieldInit
+            - CustomFormatMask
+          type: string
+          readOnly: true
+        isAbstract:
+          type: boolean
+          readOnly: true
+        isImport:
+          type: boolean
+          readOnly: true
+        isSealed:
+          type: boolean
+          readOnly: true
+        isSpecialName:
+          type: boolean
+          readOnly: true
+        isClass:
+          type: boolean
+          readOnly: true
+        isNestedAssembly:
+          type: boolean
+          readOnly: true
+        isNestedFamANDAssem:
+          type: boolean
+          readOnly: true
+        isNestedFamily:
+          type: boolean
+          readOnly: true
+        isNestedFamORAssem:
+          type: boolean
+          readOnly: true
+        isNestedPrivate:
+          type: boolean
+          readOnly: true
+        isNestedPublic:
+          type: boolean
+          readOnly: true
+        isNotPublic:
+          type: boolean
+          readOnly: true
+        isPublic:
+          type: boolean
+          readOnly: true
+        isAutoLayout:
+          type: boolean
+          readOnly: true
+        isExplicitLayout:
+          type: boolean
+          readOnly: true
+        isLayoutSequential:
+          type: boolean
+          readOnly: true
+        isAnsiClass:
+          type: boolean
+          readOnly: true
+        isAutoClass:
+          type: boolean
+          readOnly: true
+        isUnicodeClass:
+          type: boolean
+          readOnly: true
+        isCOMObject:
+          type: boolean
+          readOnly: true
+        isContextful:
+          type: boolean
+          readOnly: true
+        isEnum:
+          type: boolean
+          readOnly: true
+        isMarshalByRef:
+          type: boolean
+          readOnly: true
+        isPrimitive:
+          type: boolean
+          readOnly: true
+        isValueType:
+          type: boolean
+          readOnly: true
+        isSignatureType:
+          type: boolean
+          readOnly: true
+        isSecurityCritical:
+          type: boolean
+          readOnly: true
+        isSecuritySafeCritical:
+          type: boolean
+          readOnly: true
+        isSecurityTransparent:
+          type: boolean
+          readOnly: true
+        structLayoutAttribute:
+          allOf:
+            - $ref: '#/components/schemas/StructLayoutAttribute'
+          nullable: true
+          readOnly: true
+        typeInitializer:
+          allOf:
+            - $ref: '#/components/schemas/ConstructorInfo'
+          nullable: true
+          readOnly: true
+        typeHandle:
+          allOf:
+            - $ref: '#/components/schemas/RuntimeTypeHandle'
+          readOnly: true
+        guid:
+          type: string
+          format: uuid
+          readOnly: true
+        baseType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        isSerializable:
+          type: boolean
+          readOnly: true
+          deprecated: true
+        containsGenericParameters:
+          type: boolean
+          readOnly: true
+        isVisible:
+          type: boolean
+          readOnly: true
+      additionalProperties: false
+    TypeInfo:
+      required:
+        - assembly
+        - attributes
+        - containsGenericParameters
+        - customAttributes
+        - declaredConstructors
+        - declaredEvents
+        - declaredFields
+        - declaredMembers
+        - declaredMethods
+        - declaredNestedTypes
+        - declaredProperties
+        - genericParameterAttributes
+        - genericParameterPosition
+        - genericTypeArguments
+        - genericTypeParameters
+        - guid
+        - hasElementType
+        - implementedInterfaces
+        - isAbstract
+        - isAnsiClass
+        - isArray
+        - isAutoClass
+        - isAutoLayout
+        - isByRef
+        - isByRefLike
+        - isClass
+        - isCollectible
+        - isCOMObject
+        - isConstructedGenericType
+        - isContextful
+        - isEnum
+        - isExplicitLayout
+        - isFunctionPointer
+        - isGenericMethodParameter
+        - isGenericParameter
+        - isGenericType
+        - isGenericTypeDefinition
+        - isGenericTypeParameter
+        - isImport
+        - isInterface
+        - isLayoutSequential
+        - isMarshalByRef
+        - isNested
+        - isNestedAssembly
+        - isNestedFamANDAssem
+        - isNestedFamily
+        - isNestedFamORAssem
+        - isNestedPrivate
+        - isNestedPublic
+        - isNotPublic
+        - isPointer
+        - isPrimitive
+        - isPublic
+        - isSealed
+        - isSecurityCritical
+        - isSecuritySafeCritical
+        - isSecurityTransparent
+        - isSerializable
+        - isSignatureType
+        - isSpecialName
+        - isSZArray
+        - isTypeDefinition
+        - isUnicodeClass
+        - isUnmanagedFunctionPointer
+        - isValueType
+        - isVariableBoundArray
+        - isVisible
+        - memberType
+        - metadataToken
+        - module
+        - name
+        - typeHandle
+        - underlyingSystemType
+      type: object
+      properties:
+        name:
+          type: string
+          readOnly: true
+        customAttributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomAttributeData'
+          readOnly: true
+        isCollectible:
+          type: boolean
+          readOnly: true
+        metadataToken:
+          type: integer
+          format: int32
+          readOnly: true
+        memberType:
+          enum:
+            - Constructor
+            - Event
+            - Field
+            - Method
+            - Property
+            - TypeInfo
+            - Custom
+            - NestedType
+            - All
+          type: string
+          readOnly: true
+        namespace:
+          type: string
+          nullable: true
+          readOnly: true
+        assemblyQualifiedName:
+          type: string
+          nullable: true
+          readOnly: true
+        fullName:
+          type: string
+          nullable: true
+          readOnly: true
+        assembly:
+          allOf:
+            - $ref: '#/components/schemas/Assembly'
+          readOnly: true
+        module:
+          allOf:
+            - $ref: '#/components/schemas/Module'
+          readOnly: true
+        isInterface:
+          type: boolean
+          readOnly: true
+        isNested:
+          type: boolean
+          readOnly: true
+        declaringType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        declaringMethod:
+          allOf:
+            - $ref: '#/components/schemas/MethodBase'
+          nullable: true
+          readOnly: true
+        reflectedType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        underlyingSystemType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          readOnly: true
+        isTypeDefinition:
+          type: boolean
+          readOnly: true
+        isArray:
+          type: boolean
+          readOnly: true
+        isByRef:
+          type: boolean
+          readOnly: true
+        isPointer:
+          type: boolean
+          readOnly: true
+        isConstructedGenericType:
+          type: boolean
+          readOnly: true
+        isGenericParameter:
+          type: boolean
+          readOnly: true
+        isGenericTypeParameter:
+          type: boolean
+          readOnly: true
+        isGenericMethodParameter:
+          type: boolean
+          readOnly: true
+        isGenericType:
+          type: boolean
+          readOnly: true
+        isGenericTypeDefinition:
+          type: boolean
+          readOnly: true
+        isSZArray:
+          type: boolean
+          readOnly: true
+        isVariableBoundArray:
+          type: boolean
+          readOnly: true
+        isByRefLike:
+          type: boolean
+          readOnly: true
+        isFunctionPointer:
+          type: boolean
+          readOnly: true
+        isUnmanagedFunctionPointer:
+          type: boolean
+          readOnly: true
+        hasElementType:
+          type: boolean
+          readOnly: true
+        genericTypeArguments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Type'
+          readOnly: true
+        genericParameterPosition:
+          type: integer
+          format: int32
+          readOnly: true
+        genericParameterAttributes:
+          enum:
+            - None
+            - Covariant
+            - Contravariant
+            - VarianceMask
+            - ReferenceTypeConstraint
+            - NotNullableValueTypeConstraint
+            - DefaultConstructorConstraint
+            - SpecialConstraintMask
+            - AllowByRefLike
+          type: string
+          readOnly: true
+        attributes:
+          enum:
+            - NotPublic
+            - Public
+            - NestedPublic
+            - NestedPrivate
+            - NestedFamily
+            - NestedAssembly
+            - NestedFamANDAssem
+            - VisibilityMask
+            - SequentialLayout
+            - ExplicitLayout
+            - LayoutMask
+            - Interface
+            - Abstract
+            - Sealed
+            - SpecialName
+            - RTSpecialName
+            - Import
+            - Serializable
+            - WindowsRuntime
+            - UnicodeClass
+            - AutoClass
+            - StringFormatMask
+            - HasSecurity
+            - ReservedMask
+            - BeforeFieldInit
+            - CustomFormatMask
+          type: string
+          readOnly: true
+        isAbstract:
+          type: boolean
+          readOnly: true
+        isImport:
+          type: boolean
+          readOnly: true
+        isSealed:
+          type: boolean
+          readOnly: true
+        isSpecialName:
+          type: boolean
+          readOnly: true
+        isClass:
+          type: boolean
+          readOnly: true
+        isNestedAssembly:
+          type: boolean
+          readOnly: true
+        isNestedFamANDAssem:
+          type: boolean
+          readOnly: true
+        isNestedFamily:
+          type: boolean
+          readOnly: true
+        isNestedFamORAssem:
+          type: boolean
+          readOnly: true
+        isNestedPrivate:
+          type: boolean
+          readOnly: true
+        isNestedPublic:
+          type: boolean
+          readOnly: true
+        isNotPublic:
+          type: boolean
+          readOnly: true
+        isPublic:
+          type: boolean
+          readOnly: true
+        isAutoLayout:
+          type: boolean
+          readOnly: true
+        isExplicitLayout:
+          type: boolean
+          readOnly: true
+        isLayoutSequential:
+          type: boolean
+          readOnly: true
+        isAnsiClass:
+          type: boolean
+          readOnly: true
+        isAutoClass:
+          type: boolean
+          readOnly: true
+        isUnicodeClass:
+          type: boolean
+          readOnly: true
+        isCOMObject:
+          type: boolean
+          readOnly: true
+        isContextful:
+          type: boolean
+          readOnly: true
+        isEnum:
+          type: boolean
+          readOnly: true
+        isMarshalByRef:
+          type: boolean
+          readOnly: true
+        isPrimitive:
+          type: boolean
+          readOnly: true
+        isValueType:
+          type: boolean
+          readOnly: true
+        isSignatureType:
+          type: boolean
+          readOnly: true
+        isSecurityCritical:
+          type: boolean
+          readOnly: true
+        isSecuritySafeCritical:
+          type: boolean
+          readOnly: true
+        isSecurityTransparent:
+          type: boolean
+          readOnly: true
+        structLayoutAttribute:
+          allOf:
+            - $ref: '#/components/schemas/StructLayoutAttribute'
+          nullable: true
+          readOnly: true
+        typeInitializer:
+          allOf:
+            - $ref: '#/components/schemas/ConstructorInfo'
+          nullable: true
+          readOnly: true
+        typeHandle:
+          allOf:
+            - $ref: '#/components/schemas/RuntimeTypeHandle'
+          readOnly: true
+        guid:
+          type: string
+          format: uuid
+          readOnly: true
+        baseType:
+          allOf:
+            - $ref: '#/components/schemas/Type'
+          nullable: true
+          readOnly: true
+        isSerializable:
+          type: boolean
+          readOnly: true
+          deprecated: true
+        containsGenericParameters:
+          type: boolean
+          readOnly: true
+        isVisible:
+          type: boolean
+          readOnly: true
+        genericTypeParameters:
+          type: array
+          items:
+            $ref: '#/components/schemas/Type'
+          readOnly: true
+        declaredConstructors:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConstructorInfo'
+          readOnly: true
+        declaredEvents:
+          type: array
+          items:
+            $ref: '#/components/schemas/EventInfo'
+          readOnly: true
+        declaredFields:
+          type: array
+          items:
+            $ref: '#/components/schemas/FieldInfo'
+          readOnly: true
+        declaredMembers:
+          type: array
+          items:
+            $ref: '#/components/schemas/MemberInfo'
+          readOnly: true
+        declaredMethods:
+          type: array
+          items:
+            $ref: '#/components/schemas/MethodInfo'
+          readOnly: true
+        declaredNestedTypes:
+          type: array
+          items:
+            $ref: '#/components/schemas/TypeInfo'
+          readOnly: true
+        declaredProperties:
+          type: array
+          items:
+            $ref: '#/components/schemas/PropertyInfo'
+          readOnly: true
+        implementedInterfaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/Type'
+          readOnly: true
+      additionalProperties: false
+    UserRequestedTrack:
+      required:
+        - id
+        - order
+        - requestedTrack
+        - requestedTrackId
+        - twitchId
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        twitchDisplayName:
+          type: string
+          nullable: true
+        twitchId:
+          type: string
+        order:
+          type: integer
+          format: int32
+        requestedTrackId:
+          type: string
+          format: uuid
+        requestedTrack:
+          allOf:
+            - $ref: '#/components/schemas/BaseTrackInfo'
+      additionalProperties: false
+    Waifu:
+      required:
+        - age
+        - imageUrl
+        - isAdded
+        - isMerged
+        - isPrivated
+        - lastOrder
+        - name
+        - orderCount
+        - shikiId
+        - whenAdded
+      type: object
+      properties:
+        shikiId:
+          maxLength: 20
+          minLength: 1
+          type: string
+        name:
+          maxLength: 200
+          minLength: 1
+          type: string
+        age:
+          type: integer
+          format: int64
+        anime:
+          type: string
+          nullable: true
+        manga:
+          type: string
+          nullable: true
+        whenAdded:
+          type: string
+          format: date-time
+        lastOrder:
+          type: string
+          format: date-time
+        orderCount:
+          type: integer
+          format: int32
+        isPrivated:
+          type: boolean
+        imageUrl:
+          maxLength: 200
+          minLength: 1
+          type: string
+        isMerged:
+          type: boolean
+        isAdded:
+          type: boolean
+      additionalProperties: false
+    YandexTrackAdditionalInfo:
+      type: object
+      properties:
+        artworkUrl:
+          type: string
+          nullable: true
+        mp3TrackUrl:
+          type: string
+          nullable: true
+      additionalProperties: false
+tags:
+  - name: ScoreboardHub
+  - name: SoundRequestHub
+  - name: TelegramusHub
+  - name: TunaHub
+  - name: TelegramusHub

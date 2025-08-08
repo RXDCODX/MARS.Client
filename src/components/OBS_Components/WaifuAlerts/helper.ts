@@ -1,4 +1,4 @@
-import { Host, Waifu } from "@/shared/api/generated/Api";
+import { Host, Waifu } from "@/shared/api";
 import { getRandomInt } from "@/shared/Utils";
 
 export function shuffleArray<T>(array: T[]): T[] {
@@ -61,7 +61,6 @@ export function getHusbandText(message: WaifuAlertProps) {
     seconds: Math.floor((timeDiff % (1000 * 60)) / 1000),
   };
 
-  debugger;
   const timeText = getTimeSpanText(span, message.waifu);
   const randomIndex = getRandomInt(0, startWords.length - 1);
   const startWord = startWords[randomIndex];
@@ -130,9 +129,9 @@ function getCorrectForm(
 }
 
 export interface WaifuAlertProps {
-  waifu: Waifu & { isPrivated?: boolean };
+  waifu: Waifu;
   displayName: string;
-  waifuHusband?: Host & { whenPrivated?: string };
+  waifuHusband?: Host;
   color?: string;
   avatarUrl?: string;
 }

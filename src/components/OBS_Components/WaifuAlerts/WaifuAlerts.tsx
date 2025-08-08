@@ -3,7 +3,7 @@ import SchoolPride from "react-canvas-confetti/dist/presets/pride";
 import { PrizeType } from "react-roulette-pro";
 import { Textfit } from "react-textfit";
 
-import { Host, Waifu } from "@/shared/api/generated/Api";
+import { Host, Waifu } from "@/shared/api";
 import animate from "@/shared/styles/animate.module.scss";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import { arrayExcept, getRandomColor } from "@/shared/Utils";

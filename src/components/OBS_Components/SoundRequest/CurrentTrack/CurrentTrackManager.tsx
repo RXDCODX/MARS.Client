@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { TunaMusicData, TunaMusicDTO } from "@/shared/api/generated/Api";
+import { TunaMusicData, TunaMusicDTO } from "@/shared/api";
 
 import { SignalRContext } from ".";
 import CurrentTrack from "./CurrentTrack";

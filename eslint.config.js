@@ -1,6 +1,4 @@
 // For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
-import storybook from "eslint-plugin-storybook";
-
 //*@ts-check*
 import { fixupConfigRules } from "@eslint/compat";
 import js from "@eslint/js";
@@ -12,6 +10,7 @@ import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
+import storybook from "eslint-plugin-storybook";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -32,7 +31,7 @@ export default tseslint.config(
     },
   },
   ...fixupConfigRules({
-    files: ["**/*.{ts,tsx}"],
+    files: ["**/*.{js,jsx,ts,tsx}"],
     languageOptions: {
       ecmaVersion: "latest",
       globals: globals.browser,
@@ -99,5 +98,5 @@ export default tseslint.config(
     },
   },
   eslintConfigPrettier,
-  storybook.configs["flat/recommended"],
+  storybook.configs["flat/recommended"]
 );

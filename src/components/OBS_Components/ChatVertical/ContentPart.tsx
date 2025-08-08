@@ -1,6 +1,6 @@
 import { CSSProperties } from "react";
 
-import { ChatMessage } from "@/shared/api/generated/Api";
+import { ChatMessage } from "@/shared/api";
 import type { ContentPart } from "@/shared/Utils";
 
 interface Props {

@@ -9,7 +9,7 @@ import {
   MediaPositionInfo,
   MediaStylesInfo,
   MediaTextInfo,
-} from "@/shared/api/generated/Api";
+} from "@/shared/api";
 import { KeyWordText } from "@/shared/components/KeyWordText";
 import { getCoordinates, getRandomRotation } from "@/shared/Utils";
 

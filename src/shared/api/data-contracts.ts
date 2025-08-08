@@ -503,6 +503,66 @@ export enum FieldInfoMemberTypeEnum {
   All = "All",
 }
 
+export interface FramedataChange {
+  /** @format date-time */
+  appliedAt: string | undefined;
+  changeInfo: FramedataChangeInfo | undefined;
+  changeType: FramedataChangeChangeTypeEnum;
+  /**
+   * @minLength 1
+   * @maxLength 100
+   */
+  characterName: string;
+  currentInfo: FramedataChangeInfo | undefined;
+  /** @maxLength 500 */
+  description: string | undefined;
+  /** @format date-time */
+  detectedAt: string;
+  /** @format int32 */
+  id: number;
+  status: FramedataChangeStatusEnum;
+}
+
+export enum FramedataChangeChangeTypeEnum {
+  NewCharacter = "NewCharacter",
+  NewMove = "NewMove",
+  MoveUpdate = "MoveUpdate",
+  MoveRemoval = "MoveRemoval",
+  CharacterUpdate = "CharacterUpdate",
+}
+
+export interface FramedataChangeInfo {
+  /** @format int32 */
+  currentInfoId: number | undefined;
+  /** @maxLength 64 */
+  dataHash: string | undefined;
+  framedataChange: FramedataChange | undefined;
+  /** @format int32 */
+  framedataChangeId: number;
+  /** @format int32 */
+  id: number;
+  infoType: FramedataChangeInfoInfoTypeEnum;
+  /** @minLength 1 */
+  jsonData: string;
+  /** @format date-time */
+  retrievedAt: string;
+  /** @maxLength 500 */
+  sourceUrl: string | undefined;
+}
+
+export enum FramedataChangeInfoInfoTypeEnum {
+  Character = "Character",
+  Move = "Move",
+  Movelist = "Movelist",
+}
+
+export enum FramedataChangeStatusEnum {
+  Pending = "Pending",
+  Applied = "Applied",
+  Rejected = "Rejected",
+  Obsolete = "Obsolete",
+}
+
 export interface Host {
   hostCoolDown: HostCoolDown;
   hostGreetings: HostAutoHello;
@@ -571,11 +631,6 @@ export interface JoinQueueRequest {
 
 export interface LeaveQueueRequest {
   playerId: string;
-}
-
-export enum MakeScreenParticlesCreateParamsParticlesEnum {
-  Confetty = "Confetty",
-  Fireworks = "Fireworks",
 }
 
 export interface MediaDto {
@@ -906,6 +961,30 @@ export interface ModuleHandle {
   mdStreamVersion: number;
 }
 
+export interface Move {
+  blockFrame: string | undefined;
+  character: TekkenCharacter | undefined;
+  characterName: string;
+  command: string;
+  counterHitFrame: string | undefined;
+  damage: string | undefined;
+  heatBurst: boolean;
+  heatEngage: boolean;
+  heatSmash: boolean;
+  hitFrame: string | undefined;
+  hitLevel: string | undefined;
+  homing: boolean;
+  isFromStance: boolean;
+  notes: string | undefined;
+  powerCrush: boolean;
+  requiresHeat: boolean;
+  stanceCode: string;
+  stanceName: string | undefined;
+  startUpFrame: string | undefined;
+  throw: boolean;
+  tornado: boolean;
+}
+
 export interface MoveRequest {
   fromX: string;
   /** @format int32 */
@@ -1142,6 +1221,25 @@ export enum StructLayoutAttributeValueEnum {
   Sequential = "Sequential",
   Explicit = "Explicit",
   Auto = "Auto",
+}
+
+export interface TekkenCharacter {
+  description: string | undefined;
+  /** @format byte */
+  image: string | undefined;
+  /** @maxLength 20 */
+  imageExtension: string | undefined;
+  /** @format date-time */
+  lastUpdateTime: string;
+  /** @maxLength 300 */
+  linkToImage: string | undefined;
+  movelist: Move[] | undefined;
+  /** @minLength 1 */
+  name: string;
+  /** @maxLength 200 */
+  pageUrl: string;
+  strengths: string[] | undefined;
+  weaknesess: string[] | undefined;
 }
 
 export interface TunaMusicDTO {

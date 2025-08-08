@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { ChatMessage } from "@/shared/api/generated/Api";
+import { ChatMessage } from "@/shared/api";
 import { createTestMessageSet } from "@/shared/Utils/testMessageUtils";
 
 interface MessageManagerProps {

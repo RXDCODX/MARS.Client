@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { ChatMessage } from "@/shared/api/generated/Api";
+import { ChatMessage } from "@/shared/api";
 import Announce from "@/shared/Utils/Announce/Announce";
 
 import { SignalRContext } from "../../../app";

@@ -1,6 +1,6 @@
 import { CSSProperties, useEffect, useRef, useState } from "react";
 
-import { MediaDto } from "@/shared/api/generated/Api";
+import { MediaDto } from "@/shared/api";
 import { getCoordinates, getRandomRotation } from "@/shared/Utils";
 
 import styles from "./Media.module.scss";

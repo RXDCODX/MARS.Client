@@ -1,4 +1,4 @@
-import { useTheme } from "@/contexts/ThemeContext";
+import { useTheme } from "@/contexts/Theme";
 
 // Определяем тип возвращаемого значения
 type SiteColors = {

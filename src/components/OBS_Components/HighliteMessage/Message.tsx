@@ -2,7 +2,7 @@ import { useCallback, useReducer, useRef } from "react";
 import { Textfit } from "react-textfit";
 import { useShallow } from "zustand/react/shallow";
 
-import { ChatMessage, Image } from "@/shared/api/generated/Api";
+import { ChatMessage, Image } from "@/shared/api";
 import animate from "@/shared/styles/animate.module.scss";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import {

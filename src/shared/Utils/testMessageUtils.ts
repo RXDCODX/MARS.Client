@@ -1,8 +1,8 @@
 import {
   ChatMessage,
-  ChatMessageNoisyEnum,
-  ChatMessageUserTypeEnum,
-} from "@/shared/api/generated/Api";
+  EnumChatMessageNoisy,
+  EnumChatMessageUserType,
+} from "@/shared/api";
 
 /**
  * Создает тестовое сообщение чата с базовыми параметрами
@@ -54,13 +54,13 @@ export function createTestMessage(
     isStaff: false,
     isSubscriber: false,
     isTurbo: false,
-    noisy: ChatMessageNoisyEnum.False,
+    noisy: EnumChatMessageNoisy.False,
     rawIrcMessage: undefined,
     roomId: undefined,
     subscribedMonthCount: 0,
     tmiSentTs: undefined,
     userId: undefined,
-    userType: ChatMessageUserTypeEnum.Viewer,
+    userType: EnumChatMessageUserType.Viewer,
     username: undefined,
   };
 }

@@ -4,9 +4,9 @@ import { expect } from "storybook/test";
 
 import {
   ChatMessage,
-  ChatMessageNoisyEnum,
-  ChatMessageUserTypeEnum,
-} from "@/shared/api/generated/Api";
+  EnumChatMessageNoisy,
+  EnumChatMessageUserType,
+} from "@/shared/api";
 
 import { Message } from "./Message";
 
@@ -74,13 +74,13 @@ const defaultMessage: ChatMessage = {
   isStaff: false,
   isSubscriber: false,
   isTurbo: false,
-  noisy: ChatMessageNoisyEnum.False,
+  noisy: EnumChatMessageNoisy.False,
   rawIrcMessage: undefined,
   roomId: undefined,
   subscribedMonthCount: 0,
   tmiSentTs: undefined,
   userId: undefined,
-  userType: ChatMessageUserTypeEnum.Viewer,
+  userType: EnumChatMessageUserType.Viewer,
   username: undefined,
 };
 
@@ -166,12 +166,12 @@ function generateRandomMessages(count: number): ChatMessage[] {
       isModerator,
       isBroadcaster,
       userType: isBroadcaster
-        ? ChatMessageUserTypeEnum.Broadcaster
+        ? EnumChatMessageUserType.Broadcaster
         : isModerator
-          ? ChatMessageUserTypeEnum.Moderator
+          ? EnumChatMessageUserType.Moderator
           : isVip
-            ? ChatMessageUserTypeEnum.Viewer
-            : ChatMessageUserTypeEnum.Viewer,
+            ? EnumChatMessageUserType.Viewer
+            : EnumChatMessageUserType.Viewer,
       color: {
         ...defaultMessage.color,
         r: parseInt(colorHex.slice(1, 3), 16),

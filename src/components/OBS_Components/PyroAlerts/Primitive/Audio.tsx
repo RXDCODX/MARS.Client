@@ -1,6 +1,6 @@
 import { useCallback, useRef } from "react";
 
-import { MediaDto } from "@/shared/api/generated/Api";
+import { MediaDto } from "@/shared/api";
 import { BigTextBlockForAudio } from "@/shared/Utils/BigTexts/BigTextBlockForAudio";
 
 import { SignalRContext } from "../../../../app";
