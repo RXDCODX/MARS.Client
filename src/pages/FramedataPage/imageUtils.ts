@@ -10,7 +10,6 @@ export const getCharacterImage = (
   character: TekkenCharacter,
   fallbackSize: string = "200x300"
 ): string => {
-  debugger;
   // Сначала пробуем base64 изображение
   if (character.image && character.imageExtension) {
     try {

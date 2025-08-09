@@ -3,7 +3,7 @@ import { resolve } from "path";
 import process from "process";
 import { generateApi } from "swagger-typescript-api";
 
-// Функция для автоматического определения контроллеров из swagger.json
+// Функция для автоматического определения контроллеров из swagger (api)
 function getControllersFromSwagger(swaggerSource) {
   const controllers = new Set();
 
@@ -17,7 +17,7 @@ function getControllersFromSwagger(swaggerSource) {
   return Array.from(controllers);
 }
 
-// Функция для автоматического определения SignalR хабов из swagger.json
+// Функция для автоматического определения SignalR хабов из swagger (hubs)
 function getSignalRHubsFromSwagger(swaggerSource) {
   const hubPaths = new Map(); // Map для хранения пути к хабу
 
@@ -58,80 +58,45 @@ function getSignalRHubsFromSwagger(swaggerSource) {
   }));
 }
 
-// Функция для создания фильтрованного swagger.json без SignalR хабов
-function createFilteredSwagger(swaggerSource) {
-  const filteredSwagger = { ...swaggerSource };
-
-  // Удаляем пути, связанные с SignalR хабами
-  const pathsToRemove = [];
-
-  Object.keys(filteredSwagger.paths).forEach(path => {
-    const pathData = filteredSwagger.paths[path];
-    let shouldRemove = false;
-
-    // Проверяем все методы в пути
-    Object.values(pathData).forEach(methodData => {
-      if (methodData.tags && Array.isArray(methodData.tags)) {
-        methodData.tags.forEach(tag => {
-          if (tag && tag.toLowerCase().includes("hub")) {
-            shouldRemove = true;
-          }
-        });
-      }
-    });
-
-    // Также удаляем пути, которые не начинаются с /api/
-    if (!path.startsWith("/api/")) {
-      shouldRemove = true;
-    }
-
-    if (shouldRemove) {
-      pathsToRemove.push(path);
-    }
-  });
-
-  // Удаляем найденные пути
-  pathsToRemove.forEach(path => {
-    delete filteredSwagger.paths[path];
-  });
-
-  return filteredSwagger;
-}
-
 // Определяем контроллеры и хабы динамически
 let CONTROLLERS = [];
 let SIGNALR_HUBS = [];
 
-const OUTPUT_DIR = resolve(process.cwd(), "./src/shared/api/");
+// Базовые директории вывода
+const OUTPUT_DIR_ROOT = resolve(process.cwd(), "./src/shared/api/");
+const OUTPUT_DIR_HTTP = resolve(OUTPUT_DIR_ROOT, "./http/");
+const OUTPUT_DIR_SIGNALR_TYPES = resolve(OUTPUT_DIR_ROOT, "./signalr/");
+const OUTPUT_DIR_SIGNALR_WRAPPERS = resolve(OUTPUT_DIR_ROOT, "./SignalR/");
 
 // Создаем директории если их нет
-if (!fs.existsSync(OUTPUT_DIR)) {
-  fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-}
+[
+  OUTPUT_DIR_ROOT,
+  OUTPUT_DIR_HTTP,
+  OUTPUT_DIR_SIGNALR_TYPES,
+  OUTPUT_DIR_SIGNALR_WRAPPERS,
+].forEach(dir => {
+  if (!fs.existsSync(dir)) {
+    fs.mkdirSync(dir, { recursive: true });
+  }
+});
 
-// Функция для генерации типов с модульной структурой
-async function generateTypes() {
-  // Создаем фильтрованный swagger без SignalR хабов
-  const swaggerJsonPath = resolve(process.cwd(), "./api/swagger.json");
-  const swaggerSource = JSON.parse(fs.readFileSync(swaggerJsonPath, "utf-8"));
-  const filteredSwagger = createFilteredSwagger(swaggerSource);
-
-  // Сохраняем фильтрованный swagger во временный файл
-  const tempSwaggerPath = resolve(process.cwd(), "./api/swagger-filtered.json");
-  fs.writeFileSync(tempSwaggerPath, JSON.stringify(filteredSwagger, null, 2));
+// Функция для генерации HTTP клиентов и типов в отдельную папку
+async function generateHttpTypes() {
+  // Читаем swagger_api.json и фильтруем до /api/*
+  const swaggerApiJsonPath = resolve(process.cwd(), "./api/swagger_api.json");
 
   const params = {
-    input: tempSwaggerPath,
-    output: OUTPUT_DIR,
+    input: swaggerApiJsonPath,
+    output: OUTPUT_DIR_HTTP,
     name: "Api.ts",
-    cleanOutput: false,
+    cleanOutput: true,
     httpClientType: "axios",
     prettier: {
       trailingComma: "all",
       tabWidth: 4,
       printWidth: 160,
     },
-    generateClient: true, // Генерируем клиент с методами
+    generateClient: true,
     modular: true,
     moduleNameFirstTag: true,
     sortTypes: true,
@@ -140,36 +105,79 @@ async function generateTypes() {
       ...constructs,
       NullValue: () => "undefined",
       TypeField: ({ readonly, key, value }) => {
-        const finalValue = value.includes(" | null")
-          ? value.replace(" | null", " | undefined")
-          : value;
-        return [...(readonly ? ["readonly "] : []), key, ": ", finalValue].join(
-          ""
-        );
+        const hadNull = typeof value === "string" && /\|\s*null\b/.test(value);
+        const hadUndefined =
+          typeof value === "string" && /\|\s*undefined\b/.test(value);
+        let cleaned = String(value)
+          .replace(/\s*\|\s*null\b/g, "")
+          .replace(/\s*\|\s*undefined\b/g, "")
+          .trim();
+        const optionalMark = hadNull || hadUndefined ? "?" : "";
+        return `${readonly ? "readonly " : ""}${key}${optionalMark}: ${cleaned}`;
       },
     }),
   };
 
   await generateApi(params);
 
-  // Удаляем временный файл
-  fs.unlinkSync(tempSwaggerPath);
+  // Шим-файл для обратной совместимости импорта типов из корня
+  const rootTypesShim = resolve(OUTPUT_DIR_ROOT, "data-contracts.ts");
+  fs.writeFileSync(rootTypesShim, 'export * from "./http/data-contracts";\n');
 
-  // Копируем содержимое в types.ts (только типы)
-  const apiPath = resolve(OUTPUT_DIR, "Api.ts");
-  const typesPath = resolve(OUTPUT_DIR, "types.ts");
-  if (fs.existsSync(apiPath)) {
-    const content = fs.readFileSync(apiPath, "utf-8");
-    // Извлекаем только типы (до класса Api)
-    const typesMatch = content.match(/(.*?)(export class Api)/s);
-    if (typesMatch) {
-      fs.writeFileSync(typesPath, typesMatch[1]);
-    } else {
-      fs.writeFileSync(typesPath, content);
-    }
+  console.log("✅ HTTP клиенты и типы сгенерированы в src/shared/api/http/");
+}
+
+async function generateSignalRTypes() {
+  // Читаем swagger_hubs.json и генерируем только типы
+  const swaggerHubsJsonPath = resolve(process.cwd(), "./api/swagger_hubs.json");
+  const params = {
+    input: swaggerHubsJsonPath,
+    output: OUTPUT_DIR_SIGNALR_TYPES,
+    name: "types.ts",
+    cleanOutput: true,
+    httpClientType: "axios",
+    prettier: {
+      trailingComma: "all",
+      tabWidth: 4,
+      printWidth: 160,
+    },
+    generateClient: false,
+    modular: true,
+    sortTypes: true,
+    extractEnums: true,
+    codeGenConstructs: constructs => ({
+      ...constructs,
+      NullValue: () => "undefined",
+      TypeField: ({ readonly, key, value }) => {
+        const hadNull = typeof value === "string" && /\|\s*null\b/.test(value);
+        const hadUndefined =
+          typeof value === "string" && /\|\s*undefined\b/.test(value);
+        let cleaned = String(value)
+          .replace(/\s*\|\s*null\b/g, "")
+          .replace(/\s*\|\s*undefined\b/g, "")
+          .trim();
+        const optionalMark = hadNull || hadUndefined ? "?" : "";
+        return `${readonly ? "readonly " : ""}${key}${optionalMark}: ${cleaned}`;
+      },
+    }),
+  };
+
+  await generateApi(params);
+
+  // Создаем shim для обратной совместимости старого импорта signalr-types
+  const legacySignalRTypesDir = resolve(OUTPUT_DIR_ROOT, "./SignalR/types/");
+  if (!fs.existsSync(legacySignalRTypesDir)) {
+    fs.mkdirSync(legacySignalRTypesDir, { recursive: true });
   }
+  const legacyShimPath = resolve(legacySignalRTypesDir, "signalr-types.ts");
+  fs.writeFileSync(
+    legacyShimPath,
+    'export * from "../../signalr/data-contracts";\n'
+  );
 
-  console.log("✅ Типы сгенерированы в types.ts с модульной структурой");
+  console.log(
+    "✅ SignalR типы сгенерированы в signalr/types.ts (и совместимость сохранена через SignalR/types/signalr-types.ts)"
+  );
 }
 
 // Функция для создания утилит конфигурации API
@@ -190,7 +198,7 @@ export function getApiBaseUrl(): string {
       return basePath.replace(/\\/$/, "");
     }
   }
-  
+
   // В Node.js используем process.env
   if (typeof process !== "undefined" && process.env) {
     const basePath = process.env.VITE_BASE_PATH;
@@ -198,7 +206,7 @@ export function getApiBaseUrl(): string {
       return basePath.replace(/\\/$/, "");
     }
   }
-  
+
   // По умолчанию возвращаем пустую строку
   return "";
 }
@@ -211,7 +219,7 @@ export function getApiBaseUrl(): string {
 export function createApiUrl(endpoint: string): string {
   const baseUrl = getApiBaseUrl();
   const cleanEndpoint = endpoint.startsWith("/") ? endpoint : \`/\${endpoint}\`;
-  
+
   return \`\${baseUrl}\${cleanEndpoint}\`;
 }
 
@@ -223,7 +231,7 @@ export const defaultApiConfig = {
 };
 `;
 
-  fs.writeFileSync(resolve(OUTPUT_DIR, "api-config.ts"), apiConfigContent);
+  fs.writeFileSync(resolve(OUTPUT_DIR_ROOT, "api-config.ts"), apiConfigContent);
   console.log("✅ API конфигурация создана в api-config.ts");
 }
 
@@ -235,7 +243,7 @@ async function generateSignalRClients() {
 
   for (const hub of SIGNALR_HUBS) {
     // Создаем папку для каждого хаба
-    const hubDir = resolve(OUTPUT_DIR, `SignalR/${hub.name}`);
+    const hubDir = resolve(OUTPUT_DIR_SIGNALR_WRAPPERS, `${hub.name}`);
     if (!fs.existsSync(hubDir)) {
       fs.mkdirSync(hubDir, { recursive: true });
     }
@@ -308,21 +316,20 @@ export default function ${hub.name}SignalRHubWrapper({
 // Функция для создания индексного файла
 function createIndexFile() {
   const indexContent = `// Автоматически сгенерированный индексный файл
-// Импорты типов
-export * from "./axios-client";
-
 // Импорты утилит конфигурации
 export * from "./api-config";
+export * from "./data-contracts";
+export * from "./signalr/types/signalr-types"; // Волосатые ножки
 
 // Импорты клиентов контроллеров
-${CONTROLLERS.map(controller => `export { ${controller} } from "./${controller}";`).join("\n")}
+${CONTROLLERS.map(controller => `export { ${controller} } from "./http/${controller}";`).join("\n")}
 
 // Импорты SignalR клиентов
-${SIGNALR_HUBS.map(hub => `export { ${hub.name}SignalRContext } from "./SignalR/${hub.name}/SignalRContext";`).join("\n")}
-${SIGNALR_HUBS.map(hub => `export { default as ${hub.name}SignalRHubWrapper } from "./SignalR/${hub.name}/SignalRHubWrapper";`).join("\n")}
+${SIGNALR_HUBS.map(hub => `export { ${hub.name}SignalRContext } from "./signalr/${hub.name}/SignalRContext";`).join("\n")}
+${SIGNALR_HUBS.map(hub => `export { default as ${hub.name}SignalRHubWrapper } from "./signalr/${hub.name}/SignalRHubWrapper";`).join("\n")}
 `;
 
-  fs.writeFileSync(resolve(OUTPUT_DIR, "index.ts"), indexContent);
+  fs.writeFileSync(resolve(OUTPUT_DIR_ROOT, "index.ts"), indexContent);
   console.log("✅ Индексный файл создан");
 }
 
@@ -331,13 +338,22 @@ async function main() {
   try {
     console.log("🚀 Начинаем генерацию API...");
 
-    // Читаем swagger.json для определения контроллеров и хабов
-    const swaggerJsonPath = resolve(process.cwd(), "./api/swagger.json");
-    const swaggerSource = JSON.parse(fs.readFileSync(swaggerJsonPath, "utf-8"));
+    // Читаем swagger файлы для контроллеров и хабов
+    const swaggerApiJsonPath = resolve(process.cwd(), "./api/swagger_api.json");
+    const swaggerHubsJsonPath = resolve(
+      process.cwd(),
+      "./api/swagger_hubs.json"
+    );
+    const swaggerApiSource = JSON.parse(
+      fs.readFileSync(swaggerApiJsonPath, "utf-8")
+    );
+    const swaggerHubsSource = JSON.parse(
+      fs.readFileSync(swaggerHubsJsonPath, "utf-8")
+    );
 
     // Определяем контроллеры и хабы
-    CONTROLLERS = getControllersFromSwagger(swaggerSource);
-    SIGNALR_HUBS = getSignalRHubsFromSwagger(swaggerSource);
+    CONTROLLERS = getControllersFromSwagger(swaggerApiSource);
+    SIGNALR_HUBS = getSignalRHubsFromSwagger(swaggerHubsSource);
 
     console.log(`📋 Найдено контроллеров: ${CONTROLLERS.join(", ")}`);
     console.log(
@@ -345,7 +361,8 @@ async function main() {
     );
 
     // Генерируем типы
-    await generateTypes();
+    await generateHttpTypes();
+    await generateSignalRTypes();
 
     // Создаем утилиты конфигурации API
     createApiConfig();

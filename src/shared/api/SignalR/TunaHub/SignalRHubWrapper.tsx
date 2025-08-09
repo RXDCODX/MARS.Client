@@ -19,7 +19,7 @@ export default function TunaHubSignalRHubWrapper({
       onOpen={event => console.log(event)}
       logger={logger}
       withCredentials={false}
-      url={import.meta.env.VITE_BASE_PATH + "/hubs/TunaHub"}
+      url={import.meta.env.VITE_BASE_PATH + "/hubs/tuna"}
       logMessageContent
     >
       {children}

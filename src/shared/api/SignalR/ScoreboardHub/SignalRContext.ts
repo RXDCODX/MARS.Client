@@ -7,6 +7,6 @@ const policy: IRetryPolicy = { nextRetryDelayInMilliseconds: () => 5000 };
 const baseUrl = import.meta.env.VITE_BASE_PATH;
 
 export const ScoreboardHubSignalRContext = new HubConnectionBuilder()
-  .withUrl(baseUrl + "/scoreboard")
+  .withUrl(baseUrl + "/hubs/scoreboard")
   .withAutomaticReconnect(policy)
   .configureLogging(logger);

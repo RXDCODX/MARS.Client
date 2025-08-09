@@ -1,0 +1,1856 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Telegramus API",
+    "version": "v1"
+  },
+  "paths": {
+    "/api/Commands/user": {
+      "get": {
+        "tags": [
+          "Commands"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Commands/admin": {
+      "get": {
+        "tags": [
+          "Commands"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Commands/user/platform/{platform}": {
+      "get": {
+        "tags": [
+          "Commands"
+        ],
+        "parameters": [
+          {
+            "name": "platform",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "None",
+                "Api",
+                "Telegram",
+                "Twitch",
+                "Discord",
+                "Vk"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Commands/admin/platform/{platform}": {
+      "get": {
+        "tags": [
+          "Commands"
+        ],
+        "parameters": [
+          {
+            "name": "platform",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "None",
+                "Api",
+                "Telegram",
+                "Twitch",
+                "Discord",
+                "Vk"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Commands/user/platform/{platform}/info": {
+      "get": {
+        "tags": [
+          "Commands"
+        ],
+        "parameters": [
+          {
+            "name": "platform",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "None",
+                "Api",
+                "Telegram",
+                "Twitch",
+                "Discord",
+                "Vk"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommandInfo"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommandInfo"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommandInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Commands/admin/platform/{platform}/info": {
+      "get": {
+        "tags": [
+          "Commands"
+        ],
+        "parameters": [
+          {
+            "name": "platform",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "None",
+                "Api",
+                "Telegram",
+                "Twitch",
+                "Discord",
+                "Vk"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommandInfo"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommandInfo"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommandInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Commands/{commandName}/parameters": {
+      "get": {
+        "tags": [
+          "Commands"
+        ],
+        "parameters": [
+          {
+            "name": "commandName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommandParameterInfo"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommandParameterInfo"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CommandParameterInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Commands/{commandName}/execute": {
+      "post": {
+        "tags": [
+          "Commands"
+        ],
+        "parameters": [
+          {
+            "name": "commandName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Framedata/characters": {
+      "get": {
+        "tags": [
+          "Framedata"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Framedata"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Framedata/characters/{name}": {
+      "get": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TekkenCharacter"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TekkenCharacter"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Framedata/characters/{characterName}/moves": {
+      "get": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "characterName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "characterName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Framedata/characters/{characterName}/moves/{command}": {
+      "get": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "characterName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "command",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "characterName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "command",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Move"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "characterName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "command",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Framedata/moves/search": {
+      "get": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "characterName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "stanceCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "heatEngage",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "powerCrush",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "isThrow",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "homing",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Move"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/FramedataChanges/pending": {
+      "get": {
+        "tags": [
+          "FramedataChanges"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FramedataChange"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FramedataChange"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FramedataChange"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/FramedataChanges/apply/{changeId}": {
+      "post": {
+        "tags": [
+          "FramedataChanges"
+        ],
+        "parameters": [
+          {
+            "name": "changeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/FramedataChanges/reject/{changeId}": {
+      "post": {
+        "tags": [
+          "FramedataChanges"
+        ],
+        "parameters": [
+          {
+            "name": "changeId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/FramedataChanges/detect": {
+      "post": {
+        "tags": [
+          "FramedataChanges"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/FramedataChanges/stats": {
+      "get": {
+        "tags": [
+          "FramedataChanges"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/memory/{escapedFileName}": {
+      "get": {
+        "tags": [
+          "PyroAlerts"
+        ],
+        "parameters": [
+          {
+            "name": "escapedFileName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ServiceManager/status": {
+      "get": {
+        "tags": [
+          "ServiceManager"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "enum": [
+                      "Running",
+                      "Stopped",
+                      "Starting",
+                      "Stopping",
+                      "Error",
+                      "Unknown"
+                    ],
+                    "type": "string"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "enum": [
+                      "Running",
+                      "Stopped",
+                      "Starting",
+                      "Stopping",
+                      "Error",
+                      "Unknown"
+                    ],
+                    "type": "string"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "enum": [
+                      "Running",
+                      "Stopped",
+                      "Starting",
+                      "Stopping",
+                      "Error",
+                      "Unknown"
+                    ],
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ServiceManager/service/{serviceName}": {
+      "get": {
+        "tags": [
+          "ServiceManager"
+        ],
+        "parameters": [
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceInfo"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceInfo"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ServiceManager/service/{serviceName}/start": {
+      "post": {
+        "tags": [
+          "ServiceManager"
+        ],
+        "parameters": [
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ServiceManager/service/{serviceName}/stop": {
+      "post": {
+        "tags": [
+          "ServiceManager"
+        ],
+        "parameters": [
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ServiceManager/service/{serviceName}/restart": {
+      "post": {
+        "tags": [
+          "ServiceManager"
+        ],
+        "parameters": [
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ServiceManager/service/{serviceName}/logs": {
+      "get": {
+        "tags": [
+          "ServiceManager"
+        ],
+        "parameters": [
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceLog"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceLog"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceLog"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ServiceManager/service/{serviceName}/active": {
+      "post": {
+        "tags": [
+          "ServiceManager"
+        ],
+        "parameters": [
+          {
+            "name": "serviceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "boolean"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ServiceManager/services": {
+      "get": {
+        "tags": [
+          "ServiceManager"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceInfo"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceInfo"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ServiceInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/twitchtoken": {
+      "get": {
+        "tags": [
+          "Twitch"
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CommandInfo": {
+        "required": [
+          "availablePlatforms",
+          "description",
+          "isAdminCommand",
+          "name",
+          "parameters"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "isAdminCommand": {
+            "type": "boolean"
+          },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CommandParameterInfo"
+            }
+          },
+          "availablePlatforms": {
+            "type": "array",
+            "items": {
+              "enum": [
+                "None",
+                "Api",
+                "Telegram",
+                "Twitch",
+                "Discord",
+                "Vk"
+              ],
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CommandParameterInfo": {
+        "required": [
+          "description",
+          "name",
+          "required",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "defaultValue": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FramedataChange": {
+        "required": [
+          "changeType",
+          "characterName",
+          "detectedAt",
+          "id",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "characterName": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "changeType": {
+            "enum": [
+              "NewCharacter",
+              "NewMove",
+              "MoveUpdate",
+              "MoveRemoval",
+              "CharacterUpdate"
+            ],
+            "type": "string"
+          },
+          "detectedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "appliedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "enum": [
+              "Pending",
+              "Applied",
+              "Rejected",
+              "Obsolete"
+            ],
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 500,
+            "type": "string",
+            "nullable": true
+          },
+          "changeInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FramedataChangeInfo"
+              }
+            ],
+            "nullable": true
+          },
+          "currentInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FramedataChangeInfo"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FramedataChangeInfo": {
+        "required": [
+          "framedataChangeId",
+          "id",
+          "infoType",
+          "jsonData",
+          "retrievedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "framedataChangeId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "framedataChange": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FramedataChange"
+              }
+            ],
+            "nullable": true
+          },
+          "currentInfoId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "infoType": {
+            "enum": [
+              "Character",
+              "Move",
+              "Movelist"
+            ],
+            "type": "string"
+          },
+          "jsonData": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "sourceUrl": {
+            "maxLength": 500,
+            "type": "string",
+            "nullable": true
+          },
+          "retrievedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dataHash": {
+            "maxLength": 64,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Move": {
+        "required": [
+          "characterName",
+          "command",
+          "heatBurst",
+          "heatEngage",
+          "heatSmash",
+          "homing",
+          "isFromStance",
+          "powerCrush",
+          "requiresHeat",
+          "stanceCode",
+          "throw",
+          "tornado"
+        ],
+        "type": "object",
+        "properties": {
+          "characterName": {
+            "type": "string"
+          },
+          "command": {
+            "type": "string"
+          },
+          "isFromStance": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "stanceCode": {
+            "type": "string"
+          },
+          "stanceName": {
+            "type": "string",
+            "nullable": true
+          },
+          "heatEngage": {
+            "type": "boolean"
+          },
+          "heatSmash": {
+            "type": "boolean"
+          },
+          "powerCrush": {
+            "type": "boolean"
+          },
+          "throw": {
+            "type": "boolean"
+          },
+          "homing": {
+            "type": "boolean"
+          },
+          "tornado": {
+            "type": "boolean"
+          },
+          "heatBurst": {
+            "type": "boolean"
+          },
+          "requiresHeat": {
+            "type": "boolean"
+          },
+          "hitLevel": {
+            "type": "string",
+            "nullable": true
+          },
+          "damage": {
+            "type": "string",
+            "nullable": true
+          },
+          "startUpFrame": {
+            "type": "string",
+            "nullable": true
+          },
+          "blockFrame": {
+            "type": "string",
+            "nullable": true
+          },
+          "hitFrame": {
+            "type": "string",
+            "nullable": true
+          },
+          "counterHitFrame": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ServiceInfo": {
+        "required": [
+          "configuration",
+          "description",
+          "displayName",
+          "isEnabled",
+          "name",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "Running",
+              "Stopped",
+              "Starting",
+              "Stopping",
+              "Error",
+              "Unknown"
+            ],
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastActivity": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "configuration": {
+            "type": "object",
+            "additionalProperties": { }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ServiceLog": {
+        "required": [
+          "level",
+          "message",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "level": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "exception": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TekkenCharacter": {
+        "required": [
+          "lastUpdateTime",
+          "name",
+          "pageUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "linkToImage": {
+            "maxLength": 300,
+            "type": "string",
+            "nullable": true
+          },
+          "pageUrl": {
+            "maxLength": 200,
+            "type": "string"
+          },
+          "image": {
+            "type": "string",
+            "format": "byte",
+            "nullable": true
+          },
+          "imageExtension": {
+            "maxLength": 20,
+            "type": "string",
+            "nullable": true
+          },
+          "movelist": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Move"
+            },
+            "nullable": true
+          },
+          "lastUpdateTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "strengths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "weaknesess": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -19,7 +19,7 @@ export default function SoundRequestHubSignalRHubWrapper({
       onOpen={event => console.log(event)}
       logger={logger}
       withCredentials={false}
-      url={import.meta.env.VITE_BASE_PATH + "/hubs/SoundRequestHub"}
+      url={import.meta.env.VITE_BASE_PATH + "/hubs/soundrequest"}
       logMessageContent
     >
       {children}

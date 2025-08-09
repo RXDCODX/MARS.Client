@@ -1,0 +1,2273 @@
+{
+  "openapi": "3.0.4",
+  "info": {
+    "title": "Telegramus Hubs",
+    "version": "v1"
+  },
+  "paths": {
+    "/hubs/scoreboard/ForceProcessPendingUpdates": {
+      "post": {
+        "tags": [
+          "ScoreboardHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/scoreboard/GetCurrentState": {
+      "post": {
+        "tags": [
+          "ScoreboardHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/scoreboard/GetHistory": {
+      "post": {
+        "tags": [
+          "ScoreboardHub"
+        ],
+        "parameters": [
+          {
+            "name": "count",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScoreboardDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScoreboardDto"
+                  }
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ScoreboardDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hubs/scoreboard/JoinAsClient": {
+      "post": {
+        "tags": [
+          "ScoreboardHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/scoreboard/OnConnectedAsync": {
+      "post": {
+        "tags": [
+          "ScoreboardHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/scoreboard/OnDisconnectedAsync": {
+      "post": {
+        "tags": [
+          "ScoreboardHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/scoreboard/SetPlayerFinal": {
+      "post": {
+        "tags": [
+          "ScoreboardHub"
+        ],
+        "parameters": [
+          {
+            "name": "playerPosition",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "final",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/scoreboard/SetVisibility": {
+      "post": {
+        "tags": [
+          "ScoreboardHub"
+        ],
+        "parameters": [
+          {
+            "name": "isVisible",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/scoreboard/UpdatePlayerScore": {
+      "post": {
+        "tags": [
+          "ScoreboardHub"
+        ],
+        "parameters": [
+          {
+            "name": "playerPosition",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "newScore",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/scoreboard/UpdateState": {
+      "post": {
+        "tags": [
+          "ScoreboardHub"
+        ],
+        "parameters": [
+          {
+            "name": "state",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ScoreboardDto"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/soundrequest/AddTrackToQueue": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "parameters": [
+          {
+            "name": "track",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/UserRequestedTrack"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/soundrequest/Ended": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/soundrequest/ErrorPlaying": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/soundrequest/GetHistory": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "parameters": [
+          {
+            "name": "count",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BaseTrackInfo"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BaseTrackInfo"
+                  }
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BaseTrackInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hubs/soundrequest/GetPlayerState": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerState"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerState"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerState"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hubs/soundrequest/GetQueue": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserRequestedTrack"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserRequestedTrack"
+                  }
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserRequestedTrack"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hubs/soundrequest/JoinAsClient": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/soundrequest/Mute": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/soundrequest/Pause": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/soundrequest/Play": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/soundrequest/Resume": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/soundrequest/SetVolume": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "parameters": [
+          {
+            "name": "volume",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/soundrequest/Skip": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/soundrequest/Started": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/soundrequest/Stop": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/soundrequest/Unmute": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/MuteAll": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "args",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/OnConnectedAsync": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/TwitchMsg": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "msg",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/UnmuteSessions": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/tuna/BeYm": {
+      "post": {
+        "tags": [
+          "TunaHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/tuna/GetYandexMusicTracks": {
+      "post": {
+        "tags": [
+          "TunaHub"
+        ],
+        "parameters": [
+          {
+            "name": "title",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TunaMusicDtoRoot"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TunaMusicDtoRoot"
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TunaMusicDtoRoot"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/hubs/tuna/OnConnectedAsync": {
+      "post": {
+        "tags": [
+          "TunaHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/tuna/SendPlayerData": {
+      "post": {
+        "tags": [
+          "TunaHub"
+        ],
+        "parameters": [
+          {
+            "name": "info",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/TunaMusicDTO"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/AddNewWaifu": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "content",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Waifu"
+            }
+          },
+          {
+            "name": "displayName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "color",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/Alert": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "info",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/MediaDto"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/Alerts": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "info",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/MediaDto"
+              }
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/AutoMessage": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "message",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/DeleteMessage": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/FumoFriday": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "displayName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "color",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/Highlite": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "message",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ChatMessage"
+            }
+          },
+          {
+            "name": "color",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "faceUrl",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Image"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/MakeScreenEmojisParticles": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "message",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ChatMessage"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/MakeScreenParticles": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "particles",
+            "in": "query",
+            "schema": {
+              "enum": [
+                "Confetty",
+                "Fireworks"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/MergeWaifu": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "content",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Waifu"
+            }
+          },
+          {
+            "name": "host",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Host"
+            }
+          },
+          {
+            "name": "avatar",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "color",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/NewMessage": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "message",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ChatMessage"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/PostTwitchInfo": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "secret",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/RandomMem": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "mediaInfo",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/MediaDto"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/UpdateWaifuPrizes": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "prizes",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/PrizeType"
+              }
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/WaifuRoll": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "content",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Waifu"
+            }
+          },
+          {
+            "name": "displayName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "waifuHusband",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Host"
+            }
+          },
+          {
+            "name": "color",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BaseTrackInfo": {
+        "required": [
+          "domain",
+          "duration",
+          "id",
+          "lastTimePlays",
+          "title",
+          "trackName",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "trackName": {
+            "type": "string"
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "featAuthors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "duration": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "genre": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "url": {
+            "type": "string"
+          },
+          "lastTimePlays": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "domain": {
+            "enum": [
+              "None",
+              "Youtube",
+              "SoundCloud",
+              "YandexMusic",
+              "VkMusic"
+            ],
+            "type": "string"
+          },
+          "yandexSpecificInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/YandexTrackAdditionalInfo"
+              }
+            ],
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ChatMessage": {
+        "required": [
+          "bits",
+          "bitsInDollars",
+          "color",
+          "isBroadcaster",
+          "isFirstMessage",
+          "isHighlighted",
+          "isMe",
+          "isModerator",
+          "isPartner",
+          "isSkippingSubMode",
+          "isStaff",
+          "isSubscriber",
+          "isTurbo",
+          "isVip",
+          "noisy",
+          "subscribedMonthCount",
+          "userType"
+        ],
+        "type": "object",
+        "properties": {
+          "badges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StringStringKeyValuePair"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "botUsername": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "color": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Color"
+              }
+            ],
+            "readOnly": true
+          },
+          "colorHex": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "emoteSet": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EmoteSet"
+              }
+            ],
+            "nullable": true,
+            "readOnly": true
+          },
+          "isTurbo": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "userId": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "userType": {
+            "enum": [
+              "Viewer",
+              "Moderator",
+              "GlobalModerator",
+              "Broadcaster",
+              "Admin",
+              "Staff"
+            ],
+            "type": "string",
+            "readOnly": true
+          },
+          "rawIrcMessage": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "badgeInfo": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StringStringKeyValuePair"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "bits": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "bitsInDollars": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "channel": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "cheerBadge": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CheerBadge"
+              }
+            ],
+            "nullable": true,
+            "readOnly": true
+          },
+          "customRewardId": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "emoteReplacedMessage": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "id": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "isBroadcaster": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isFirstMessage": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isHighlighted": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isMe": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isModerator": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isSkippingSubMode": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isSubscriber": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isVip": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isStaff": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isPartner": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "noisy": {
+            "enum": [
+              "NotSet",
+              "True",
+              "False"
+            ],
+            "type": "string",
+            "readOnly": true
+          },
+          "roomId": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "subscribedMonthCount": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "tmiSentTs": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "chatReply": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ChatReply"
+              }
+            ],
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ChatReply": {
+        "type": "object",
+        "properties": {
+          "parentDisplayName": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "parentMsgBody": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "parentMsgId": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "parentUserId": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "parentUserLogin": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CheerBadge": {
+        "required": [
+          "cheerAmount",
+          "color"
+        ],
+        "type": "object",
+        "properties": {
+          "cheerAmount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "color": {
+            "enum": [
+              "Gray",
+              "Purple",
+              "Green",
+              "Blue",
+              "Red"
+            ],
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Emote": {
+        "required": [
+          "endIndex",
+          "startIndex"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "startIndex": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "endIndex": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmoteSet": {
+        "type": "object",
+        "properties": {
+          "emotes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Emote"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "rawEmoteSetString": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Host": {
+        "required": [
+          "hostCoolDown",
+          "hostGreetings",
+          "isPrivated",
+          "orderCount",
+          "twitchId",
+          "whenOrdered"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "twitchId": {
+            "type": "string"
+          },
+          "whenOrdered": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "waifuBrideId": {
+            "type": "string",
+            "nullable": true
+          },
+          "isPrivated": {
+            "type": "boolean"
+          },
+          "orderCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "waifuRollId": {
+            "type": "string",
+            "nullable": true
+          },
+          "whenPrivated": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "hostGreetings": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HostAutoHello"
+              }
+            ]
+          },
+          "hostCoolDown": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HostCoolDown"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "HostAutoHello": {
+        "required": [
+          "guid",
+          "hostId",
+          "time"
+        ],
+        "type": "object",
+        "properties": {
+          "guid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "hostId": {
+            "type": "string"
+          },
+          "host": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Host"
+              }
+            ],
+            "nullable": true
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "HostCoolDown": {
+        "required": [
+          "guid",
+          "hostId",
+          "time"
+        ],
+        "type": "object",
+        "properties": {
+          "guid": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "hostId": {
+            "type": "string"
+          },
+          "host": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Host"
+              }
+            ],
+            "nullable": true
+          },
+          "time": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Image": {
+        "required": [
+          "byteSize",
+          "favorites",
+          "height",
+          "imageID",
+          "isNsfw",
+          "uploadedAt",
+          "width"
+        ],
+        "type": "object",
+        "properties": {
+          "signature": {
+            "type": "string",
+            "nullable": true
+          },
+          "extension": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "favorites": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dominantColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "nullable": true
+          },
+          "artist": {
+            "nullable": true
+          },
+          "uploadedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "likedAt": {
+            "nullable": true
+          },
+          "isNsfw": {
+            "type": "boolean"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "byteSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "previewURL": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MediaDto": {
+        "required": [
+          "mediaInfo",
+          "uploadStartTime"
+        ],
+        "type": "object",
+        "properties": {
+          "mediaInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaInfo"
+              }
+            ]
+          },
+          "uploadStartTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MediaFileInfo": {
+        "required": [
+          "extension",
+          "fileName",
+          "filePath",
+          "isLocalFile",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "type": {
+            "enum": [
+              "None",
+              "Image",
+              "Audio",
+              "Video",
+              "TelegramSticker",
+              "Voice",
+              "Gif"
+            ],
+            "type": "string"
+          },
+          "filePath": {
+            "type": "string"
+          },
+          "isLocalFile": {
+            "type": "boolean"
+          },
+          "fileName": {
+            "type": "string"
+          },
+          "extension": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MediaInfo": {
+        "required": [
+          "fileInfo",
+          "id",
+          "metaInfo",
+          "positionInfo",
+          "stylesInfo",
+          "textInfo"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "readOnly": true
+          },
+          "textInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaTextInfo"
+              }
+            ]
+          },
+          "fileInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaFileInfo"
+              }
+            ]
+          },
+          "positionInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaPositionInfo"
+              }
+            ]
+          },
+          "metaInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaMetaInfo"
+              }
+            ]
+          },
+          "stylesInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaStylesInfo"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "MediaMetaInfo": {
+        "required": [
+          "displayName",
+          "duration",
+          "isLooped",
+          "priority",
+          "twitchPointsCost",
+          "vip"
+        ],
+        "type": "object",
+        "properties": {
+          "twitchPointsCost": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "twitchGuid": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "vip": {
+            "type": "boolean"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "isLooped": {
+            "type": "boolean"
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "priority": {
+            "enum": [
+              "Low",
+              "Normal",
+              "High"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MediaPositionInfo": {
+        "required": [
+          "height",
+          "isHorizontalCenter",
+          "isProportion",
+          "isResizeRequires",
+          "isRotated",
+          "isUseOriginalWidthAndHeight",
+          "isVerticallCenter",
+          "randomCoordinates",
+          "rotation",
+          "width",
+          "xCoordinate",
+          "yCoordinate"
+        ],
+        "type": "object",
+        "properties": {
+          "isProportion": {
+            "type": "boolean"
+          },
+          "isResizeRequires": {
+            "type": "boolean"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isRotated": {
+            "type": "boolean"
+          },
+          "rotation": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "xCoordinate": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "yCoordinate": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "randomCoordinates": {
+            "type": "boolean"
+          },
+          "isVerticallCenter": {
+            "type": "boolean"
+          },
+          "isHorizontalCenter": {
+            "type": "boolean"
+          },
+          "isUseOriginalWidthAndHeight": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MediaStylesInfo": {
+        "required": [
+          "isBorder"
+        ],
+        "type": "object",
+        "properties": {
+          "isBorder": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MediaTextInfo": {
+        "type": "object",
+        "properties": {
+          "keyWordsColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "triggerWord": {
+            "type": "string",
+            "nullable": true
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "textColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "keyWordSybmolDelimiter": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PlayerState": {
+        "required": [
+          "id",
+          "isMuted",
+          "isPaused",
+          "isStoped",
+          "volume"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "currentTrack": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BaseTrackInfo"
+              }
+            ],
+            "nullable": true
+          },
+          "nextTrack": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BaseTrackInfo"
+              }
+            ],
+            "nullable": true
+          },
+          "currentTrackDuration": {
+            "type": "string",
+            "format": "date-span",
+            "nullable": true
+          },
+          "isPaused": {
+            "type": "boolean"
+          },
+          "isMuted": {
+            "type": "boolean"
+          },
+          "isStoped": {
+            "type": "boolean"
+          },
+          "volume": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PrizeType": {
+        "required": [
+          "id",
+          "image",
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "image": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ScoreboardColorsDto": {
+        "required": [
+          "backgroundColor",
+          "borderColor",
+          "fightModeColor",
+          "mainColor",
+          "playerNamesColor",
+          "scoreColor",
+          "tournamentTitleColor"
+        ],
+        "type": "object",
+        "properties": {
+          "mainColor": {
+            "type": "string"
+          },
+          "playerNamesColor": {
+            "type": "string"
+          },
+          "tournamentTitleColor": {
+            "type": "string"
+          },
+          "fightModeColor": {
+            "type": "string"
+          },
+          "scoreColor": {
+            "type": "string"
+          },
+          "backgroundColor": {
+            "type": "string"
+          },
+          "borderColor": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ScoreboardDto": {
+        "required": [
+          "animationDuration",
+          "colors",
+          "isVisible",
+          "meta",
+          "player1",
+          "player2"
+        ],
+        "type": "object",
+        "properties": {
+          "player1": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ScoreboardPlayerDto"
+              }
+            ]
+          },
+          "player2": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ScoreboardPlayerDto"
+              }
+            ]
+          },
+          "meta": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ScoreboardMetaDto"
+              }
+            ]
+          },
+          "colors": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ScoreboardColorsDto"
+              }
+            ]
+          },
+          "isVisible": {
+            "type": "boolean"
+          },
+          "animationDuration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "layout": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ScoreboardLayoutDto"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ScoreboardLayoutDto": {
+        "required": [
+          "flagSize",
+          "headerHeight",
+          "headerLeft",
+          "headerTop",
+          "headerWidth",
+          "padding",
+          "playerBarHeight",
+          "playerBarWidth",
+          "playersLeft",
+          "playersRight",
+          "playersTop",
+          "scoreSize",
+          "showFlags",
+          "showHeader",
+          "showSponsors",
+          "showTags",
+          "spacing"
+        ],
+        "type": "object",
+        "properties": {
+          "headerTop": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "headerLeft": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "playersTop": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "playersLeft": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "playersRight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "headerHeight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "headerWidth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "playerBarHeight": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "playerBarWidth": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scoreSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "flagSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "spacing": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "padding": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "showHeader": {
+            "type": "boolean"
+          },
+          "showFlags": {
+            "type": "boolean"
+          },
+          "showSponsors": {
+            "type": "boolean"
+          },
+          "showTags": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ScoreboardMetaDto": {
+        "required": [
+          "fightRule",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "fightRule": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ScoreboardPlayerDto": {
+        "required": [
+          "final",
+          "flag",
+          "name",
+          "score",
+          "sponsor",
+          "tag"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "sponsor": {
+            "type": "string"
+          },
+          "score": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tag": {
+            "type": "string"
+          },
+          "flag": {
+            "type": "string"
+          },
+          "final": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "StringStringKeyValuePair": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TunaMusicDTO": {
+        "required": [
+          "data"
+        ],
+        "type": "object",
+        "properties": {
+          "data": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TunaMusicData"
+              }
+            ]
+          },
+          "hostname": {
+            "type": "string",
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TunaMusicData": {
+        "required": [
+          "album_url",
+          "artists",
+          "cover",
+          "duration",
+          "progress",
+          "status",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "cover": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "artists": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "type": "string"
+          },
+          "progress": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "album_url": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TunaMusicDtoRoot": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "UserRequestedTrack": {
+        "required": [
+          "id",
+          "order",
+          "requestedTrack",
+          "requestedTrackId",
+          "twitchId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "twitchDisplayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "twitchId": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "requestedTrackId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "requestedTrack": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BaseTrackInfo"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "Waifu": {
+        "required": [
+          "age",
+          "imageUrl",
+          "isAdded",
+          "isMerged",
+          "isPrivated",
+          "lastOrder",
+          "name",
+          "orderCount",
+          "shikiId",
+          "whenAdded"
+        ],
+        "type": "object",
+        "properties": {
+          "shikiId": {
+            "maxLength": 20,
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "anime": {
+            "type": "string",
+            "nullable": true
+          },
+          "manga": {
+            "type": "string",
+            "nullable": true
+          },
+          "whenAdded": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastOrder": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "orderCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isPrivated": {
+            "type": "boolean"
+          },
+          "imageUrl": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "isMerged": {
+            "type": "boolean"
+          },
+          "isAdded": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "YandexTrackAdditionalInfo": {
+        "type": "object",
+        "properties": {
+          "artworkUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "mp3TrackUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "ScoreboardHub"
+    },
+    {
+      "name": "SoundRequestHub"
+    },
+    {
+      "name": "TelegramusHub"
+    },
+    {
+      "name": "TunaHub"
+    }
+  ]
+}

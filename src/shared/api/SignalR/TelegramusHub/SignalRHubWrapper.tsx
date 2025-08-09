@@ -19,7 +19,7 @@ export default function TelegramusHubSignalRHubWrapper({
       onOpen={event => console.log(event)}
       logger={logger}
       withCredentials={false}
-      url={import.meta.env.VITE_BASE_PATH + "/telegramus"}
+      url={import.meta.env.VITE_BASE_PATH + "/hubs/telegramus"}
       logMessageContent
     >
       {children}

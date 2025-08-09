@@ -7,6 +7,6 @@ const policy: IRetryPolicy = { nextRetryDelayInMilliseconds: () => 5000 };
 const baseUrl = import.meta.env.VITE_BASE_PATH;
 
 export const TelegramusHubSignalRContext = new HubConnectionBuilder()
-  .withUrl(baseUrl + "/telegramus")
+  .withUrl(baseUrl + "/hubs/telegramus")
   .withAutomaticReconnect(policy)
   .configureLogging(logger);

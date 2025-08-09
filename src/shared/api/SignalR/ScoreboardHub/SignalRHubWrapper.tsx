@@ -19,7 +19,7 @@ export default function ScoreboardHubSignalRHubWrapper({
       onOpen={event => console.log(event)}
       logger={logger}
       withCredentials={false}
-      url={import.meta.env.VITE_BASE_PATH + "/scoreboard"}
+      url={import.meta.env.VITE_BASE_PATH + "/hubs/scoreboard"}
       logMessageContent
     >
       {children}

@@ -1,25 +1,21 @@
 // Автоматически сгенерированный индексный файл
-// Импорты типов
-export * from "./axios-client";
-
 // Импорты утилит конфигурации
 export * from "./api-config";
+export * from "./data-contracts";
+export * from "./signalr/types/signalr-types"; // Волосатые ножки
 
 // Импорты клиентов контроллеров
-export { Checkers } from "./Checkers";
-export { Commands } from "./Commands";
-export { Framedata } from "./Framedata";
-export { FramedataChanges } from "./FramedataChanges";
-export { Scoreboard } from "./Scoreboard";
-export { ServiceManager } from "./ServiceManager";
-export { SoundBar } from "./SoundBar";
+export { Commands } from "./http/Commands";
+export { Framedata } from "./http/Framedata";
+export { FramedataChanges } from "./http/FramedataChanges";
+export { ServiceManager } from "./http/ServiceManager";
 
 // Импорты SignalR клиентов
-export { ScoreboardHubSignalRContext } from "./SignalR/ScoreboardHub/SignalRContext";
-export { SoundRequestHubSignalRContext } from "./SignalR/SoundRequestHub/SignalRContext";
-export { TelegramusHubSignalRContext } from "./SignalR/TelegramusHub/SignalRContext";
-export { TunaHubSignalRContext } from "./SignalR/TunaHub/SignalRContext";
-export { default as ScoreboardHubSignalRHubWrapper } from "./SignalR/ScoreboardHub/SignalRHubWrapper";
-export { default as SoundRequestHubSignalRHubWrapper } from "./SignalR/SoundRequestHub/SignalRHubWrapper";
-export { default as TelegramusHubSignalRHubWrapper } from "./SignalR/TelegramusHub/SignalRHubWrapper";
-export { default as TunaHubSignalRHubWrapper } from "./SignalR/TunaHub/SignalRHubWrapper";
+export { ScoreboardHubSignalRContext } from "./signalr/ScoreboardHub/SignalRContext";
+export { SoundRequestHubSignalRContext } from "./signalr/SoundRequestHub/SignalRContext";
+export { TelegramusHubSignalRContext } from "./signalr/TelegramusHub/SignalRContext";
+export { TunaHubSignalRContext } from "./signalr/TunaHub/SignalRContext";
+export { default as ScoreboardHubSignalRHubWrapper } from "./signalr/ScoreboardHub/SignalRHubWrapper";
+export { default as SoundRequestHubSignalRHubWrapper } from "./signalr/SoundRequestHub/SignalRHubWrapper";
+export { default as TelegramusHubSignalRHubWrapper } from "./signalr/TelegramusHub/SignalRHubWrapper";
+export { default as TunaHubSignalRHubWrapper } from "./signalr/TunaHub/SignalRHubWrapper";
