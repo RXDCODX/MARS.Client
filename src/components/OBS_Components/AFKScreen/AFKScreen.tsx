@@ -21,19 +21,12 @@ const AFKScreen = () => {
   const playerInstanceRef = useRef<any>(null);
   const [isMuted, setIsMuted] = useState(true);
   const [hasError, setHasError] = useState(false);
-  const [currentPlaylist, setCurrentPlaylist] = useState<string>("");
+  const [_, setCurrentPlaylist] = useState<string>("");
 
   // Функция для получения случайного плейлиста
   const getRandomPlaylist = useCallback(() => {
     const randomIndex = Math.floor(Math.random() * PLAYLISTS.length);
     return PLAYLISTS[randomIndex];
-  }, []);
-
-  // Функция для получения случайного видео из плейлиста
-  const getRandomVideoFromPlaylist = useCallback((playlistId: string) => {
-    // Генерируем случайный индекс видео (обычно в плейлистах до 200 видео)
-    const randomVideoIndex = Math.floor(Math.random() * 200) + 1;
-    return `${playlistId}&index=${randomVideoIndex}`;
   }, []);
 
   useEffect(() => {

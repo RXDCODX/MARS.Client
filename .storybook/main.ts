@@ -17,6 +17,7 @@ const config: StorybookConfig = {
   staticDirs: [
     "../public",
     "../src/components/OBS_Components/FumoFriday/FumosVideos",
+    "../src/assets/faces",
   ],
   viteFinal: async config => {
     // Настройка для GitHub Pages
@@ -27,8 +28,15 @@ const config: StorybookConfig = {
     // Настройки для обработки видео файлов
     config.assetsInclude = config.assetsInclude || [];
     if (Array.isArray(config.assetsInclude)) {
-      config.assetsInclude.push("**/*.webm", "**/*.mp4");
+      config.assetsInclude.push("**/*.webm", "**/*.mp4", "**/*.gif");
     }
+
+    // Настройки для обработки ассетов
+    config.define = {
+      ...config.define,
+      'import.meta.env.PROD': false,
+      'import.meta.env.DEV': true,
+    };
 
     // Добавляем алиасы для корректной работы с импортами
     if (config.resolve) {

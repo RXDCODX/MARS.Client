@@ -2,12 +2,14 @@ import { useCallback, useReducer, useRef } from "react";
 import { Textfit } from "react-textfit";
 import { useShallow } from "zustand/react/shallow";
 
-import { ChatMessage, Image } from "@/shared/api";
+import { ChatMessage } from "@/shared/api";
 import animate from "@/shared/styles/animate.module.scss";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import {
+  type FaceAsset,
   getNotWhiteColor,
-  isVideo,
+  getRandomFace,
+  getRandomFaceByType,
   isWhiteColor,
   replaceBadges,
 } from "@/shared/Utils";
@@ -23,7 +25,7 @@ enum StateStatus {
 export interface HighliteMessageProps {
   message: ChatMessage;
   color: string;
-  faceImage: Image;
+  faceImage: FaceAsset;
 }
 
 interface State {
@@ -89,10 +91,12 @@ export default function Message() {
 
   SignalRContext.useSignalREffect(
     "Highlite",
-    (message: ChatMessage, color: string, faceUrl: Image) => {
+    (message: ChatMessage, color: string) => {
+      // Генерируем случайное лицо для каждого сообщения
+      const faceImage = getRandomFace();
       dispatch({
         type: StateStatus.add,
-        messageProps: { message, color, faceImage: faceUrl },
+        messageProps: { message, color, faceImage },
       });
     },
     []
@@ -115,12 +119,10 @@ export default function Message() {
         >
           {/* IMAGE */}
           <div className={styles["buble-image"]}>
-            {!isVideo(currentMessage) && (
+            {currentMessage.faceImage.type === "image" && (
               <img
-                alt="Image"
-                src={
-                  import.meta.env.VITE_BASE_PATH + currentMessage.faceImage.url
-                }
+                alt={`Face: ${currentMessage.faceImage.name}`}
+                src={currentMessage.faceImage.url}
                 onLoad={() => {
                   setTimeout(
                     () => {
@@ -139,11 +141,9 @@ export default function Message() {
                 }}
               />
             )}
-            {isVideo(currentMessage) && (
+            {currentMessage.faceImage.type === "video" && (
               <video
-                src={
-                  import.meta.env.VITE_BASE_PATH + currentMessage.faceImage.url
-                }
+                src={currentMessage.faceImage.url}
                 autoPlay
                 controls={false}
                 loop

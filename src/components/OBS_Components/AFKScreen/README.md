@@ -22,6 +22,7 @@ import { AFKScreen } from '../components/OBS_Components';
 ## Технические детали
 
 Компонент использует:
+
 - `youtube-player` - официальная библиотека для работы с YouTube IFrame API
 - `useRef` и `useEffect` для управления жизненным циклом плеера
 - Автоматическая очистка ресурсов при размонтировании компонента
@@ -29,6 +30,7 @@ import { AFKScreen } from '../components/OBS_Components';
 ## Конфигурация
 
 В компоненте настроены следующие параметры YouTube плеера:
+
 - `videoId`: "6oMsWcCDGnw" - ID основного видео
 - `playlist`: "PLB6r_8YDnipME_VANRWiiBgI9-rabmmL1" - ID плейлиста
 - `autoplay: 1` - автоматический запуск
@@ -39,6 +41,7 @@ import { AFKScreen } from '../components/OBS_Components';
 ## События
 
 Компонент обрабатывает следующие события плеера:
+
 - `ready` - плеер готов к воспроизведению
 - `stateChange` - изменение состояния воспроизведения
 - `error` - ошибки воспроизведения
@@ -46,6 +49,7 @@ import { AFKScreen } from '../components/OBS_Components';
 ## Стили
 
 Компонент использует CSS модули (`AFKScreen.module.scss`) для стилизации:
+
 - `.afk-screen-container` - основной контейнер
 - `.youtube-player` - стили для YouTube плеера
 - Адаптивные размеры для полноэкранного отображения в OBS
