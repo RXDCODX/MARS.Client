@@ -214,4 +214,22 @@ export class Framedata<
       format: "json",
       ...params,
     });
+
+  /**
+   * Получить изображение персонажа
+   *
+   * @tags Framedata
+   * @name FramedataCharactersImageDetail
+   * @request GET:/api/Framedata/characters/{name}/image
+   */
+  framedataCharactersImageDetail = (
+    name: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<Blob, any>({
+      path: `/api/Framedata/characters/${name}/image`,
+      method: "GET",
+      format: "blob",
+      ...params,
+    });
 }

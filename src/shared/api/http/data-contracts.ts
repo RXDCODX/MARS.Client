@@ -223,9 +223,17 @@ export interface ServiceLog {
 export interface TekkenCharacter {
   description?: string;
   /** @format byte */
-  image?: string;
+  image?: number[];
   /** @maxLength 20 */
   imageExtension?: string;
+  /** @format byte */
+  avatarImage?: number[];
+  /** @maxLength 20 */
+  avatarImageExtension?: string;
+  /** @format byte */
+  fullBodyImage?: number[];
+  /** @maxLength 20 */
+  fullBodyImageExtension?: string;
   /** @format date-time */
   lastUpdateTime: string;
   /** @maxLength 300 */

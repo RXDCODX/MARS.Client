@@ -1,10 +1,16 @@
-import { Alert, Card, Col, Row, Spinner } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import { Alert, Badge, Button, Card, Col, Row, Spinner } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
-import { TekkenCharacter } from "@/shared/api/data-contracts";
+import { defaultApiConfig, FramedataChanges } from "@/shared/api";
+import {
+  FramedataChange,
+  FramedataChangeChangeTypeEnum,
+  TekkenCharacter,
+} from "@/shared/api/data-contracts";
 
 import styles from "./FramedataPage.module.scss";
-import { getCharacterImage, handleImageError } from "./imageUtils";
+import { getCharacterAvatar, handleImageError } from "./imageUtils";
 
 interface CharacterGridProps {
   characters: TekkenCharacter[];
@@ -19,6 +25,101 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
   error,
   onCharacterSelect,
 }) => {
+  const navigate = useNavigate();
+  const [pendingChanges, setPendingChanges] = useState<FramedataChange[]>([]);
+  const [pendingError, setPendingError] = useState<string>("");
+  const [isLoadingPending, setIsLoadingPending] = useState<boolean>(true);
+  const [isBulkActionInProgress, setIsBulkActionInProgress] =
+    useState<boolean>(false);
+
+  const api = useMemo(
+    () => new FramedataChanges({ baseURL: defaultApiConfig.baseURL }),
+    []
+  );
+
+  const loadPending = useMemo(
+    () => () => {
+      setIsLoadingPending(true);
+      setPendingError("");
+      api
+        .framedataChangesPendingList()
+        .then(res => {
+          setPendingChanges(res.data ?? []);
+          setIsLoadingPending(false);
+        })
+        .catch(err => {
+          setPendingError(
+            (err as Error)?.message ||
+              "Не удалось загрузить ожидающие изменения"
+          );
+          setIsLoadingPending(false);
+        });
+    },
+    [api]
+  );
+
+  useEffect(() => {
+    loadPending();
+  }, [loadPending]);
+
+  const statsByType = useMemo(() => {
+    const map: Partial<Record<FramedataChangeChangeTypeEnum, number>> = {};
+    for (const ch of pendingChanges) {
+      map[ch.changeType] = (map[ch.changeType] || 0) + 1;
+    }
+    return map;
+  }, [pendingChanges]);
+
+  const changeTypeVariantMap: Record<string, string> = {
+    [FramedataChangeChangeTypeEnum.NewCharacter]: "primary",
+    [FramedataChangeChangeTypeEnum.NewMove]: "info",
+    [FramedataChangeChangeTypeEnum.MoveUpdate]: "secondary",
+    [FramedataChangeChangeTypeEnum.MoveRemoval]: "dark",
+    [FramedataChangeChangeTypeEnum.CharacterUpdate]: "secondary",
+  };
+
+  const statEntries = useMemo(() => Object.entries(statsByType), [statsByType]);
+  const gridSize = useMemo(
+    () => Math.ceil(Math.sqrt(Math.max(1, statEntries.length))),
+    [statEntries.length]
+  );
+
+  const handleApplyAll = async () => {
+    if (!pendingChanges.length) return;
+    setIsBulkActionInProgress(true);
+    setPendingError("");
+    try {
+      await Promise.all(
+        pendingChanges.map(ch => api.framedataChangesApplyCreate(ch.id))
+      );
+      loadPending();
+    } catch (e) {
+      setPendingError(
+        e instanceof Error ? e.message : "Не удалось применить все изменения"
+      );
+    } finally {
+      setIsBulkActionInProgress(false);
+    }
+  };
+
+  const handleRejectAll = async () => {
+    if (!pendingChanges.length) return;
+    setIsBulkActionInProgress(true);
+    setPendingError("");
+    try {
+      await Promise.all(
+        pendingChanges.map(ch => api.framedataChangesRejectCreate(ch.id))
+      );
+      loadPending();
+    } catch (e) {
+      setPendingError(
+        e instanceof Error ? e.message : "Не удалось отменить все изменения"
+      );
+    } finally {
+      setIsBulkActionInProgress(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="text-center py-5">
@@ -48,14 +149,116 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
   }
 
   return (
-    <div className={styles.characterGrid}>
-      <div className="d-flex justify-content-between align-items-center mb-4">
+    <div className={`${styles.characterGrid} ${styles.compactGrid}`}>
+      <Card className="mb-4">
+        <Card.Header>
+          <h5 className="mb-0">Ожидающие изменения фреймдаты</h5>
+        </Card.Header>
+        <Card.Body>
+          {isLoadingPending ? (
+            <div className="text-center py-3">
+              <Spinner animation="border" role="status">
+                <span className="visually-hidden">Загрузка...</span>
+              </Spinner>
+            </div>
+          ) : pendingError ? (
+            <Alert variant="danger" className="mb-0">
+              {pendingError}
+            </Alert>
+          ) : pendingChanges.length === 0 ? (
+            <Alert variant="info" className="mb-0">
+              Нет ожидающих изменений
+            </Alert>
+          ) : (
+            <div className="d-flex flex-column gap-3">
+              <div>
+                Всего ожидает:{" "}
+                <Badge bg="secondary">{pendingChanges.length}</Badge>
+              </div>
+              <div
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
+                  gap: "0.5rem",
+                }}
+              >
+                {Array.from({ length: gridSize * gridSize }).map((_, idx) => {
+                  const entry = statEntries[idx];
+                  if (!entry) {
+                    return (
+                      <div
+                        key={`empty-${idx}`}
+                        className="p-3 border rounded"
+                        style={{ visibility: "hidden" }}
+                      />
+                    );
+                  }
+                  const [type, count] = entry as [string, number];
+                  return (
+                    <div
+                      key={type}
+                      className="text-center p-3 border rounded d-flex flex-column justify-content-center align-items-center"
+                    >
+                      <div className="fs-4 fw-bold">{count}</div>
+                      <Badge bg={changeTypeVariantMap[type] || "secondary"}>
+                        {type}
+                      </Badge>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </Card.Body>
+        <Card.Footer>
+          <Row className="g-2 justify-content-center">
+            <Col xs={4}>
+              <Button
+                size="sm"
+                variant="success"
+                className="w-100"
+                onClick={handleApplyAll}
+                disabled={
+                  isLoadingPending ||
+                  isBulkActionInProgress ||
+                  pendingChanges.length === 0
+                }
+              >
+                Принять все
+              </Button>
+            </Col>
+            <Col xs={4}>
+              <Button
+                size="sm"
+                variant="warning"
+                className="w-100"
+                onClick={() => navigate("/framedata/pending")}
+              >
+                Начать рассматривать
+              </Button>
+            </Col>
+            <Col xs={4}>
+              <Button
+                size="sm"
+                variant="danger"
+                className="w-100"
+                onClick={handleRejectAll}
+                disabled={
+                  isLoadingPending ||
+                  isBulkActionInProgress ||
+                  pendingChanges.length === 0
+                }
+              >
+                Отменить все
+              </Button>
+            </Col>
+          </Row>
+        </Card.Footer>
+      </Card>
+      <div className="d-flex justify-content-between align-items-center mb-2">
         <h2 className="mb-0">Персонажи Tekken</h2>
-        <Link to="/framedata/pending" className="btn btn-warning">
-          Ожидающие изменения
-        </Link>
       </div>
-      <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
+      <Row xs={3} sm={4} md={6} lg={8} xl={10} xxl={12} className="g-1">
         {characters.map(character => {
           const charName =
             character.name.charAt(0).toUpperCase() + character.name.slice(1);
@@ -69,31 +272,20 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
                 <div className={styles.characterImageContainer}>
                   <Card.Img
                     variant="top"
-                    src={getCharacterImage(character, "200x300")}
+                    src={getCharacterAvatar(character, "200x300")}
                     alt={charName}
                     className={styles.characterImage}
                     onError={e => handleImageError(e, charName, "200x300")}
                   />
                 </div>
-                <Card.Body className="d-flex flex-column">
-                  <Card.Title className="text-center mb-2">
+                <Card.Body
+                  className={`${styles.compactCardBody} d-flex flex-column`}
+                >
+                  <Card.Title
+                    className={`${styles.compactCardTitle} text-center mb-0`}
+                  >
                     {charName}
                   </Card.Title>
-                  {character.description && (
-                    <Card.Text className="text-muted small flex-grow-1">
-                      {character.description.length > 100
-                        ? `${character.description.substring(0, 100)}...`
-                        : character.description}
-                    </Card.Text>
-                  )}
-                  <div className="mt-auto">
-                    <small className="text-muted">
-                      Последнее обновление:{" "}
-                      {new Date(character.lastUpdateTime).toLocaleDateString(
-                        "ru-RU"
-                      )}
-                    </small>
-                  </div>
                 </Card.Body>
               </Card>
             </Col>

@@ -14,7 +14,7 @@ import {
 import { TekkenCharacter } from "@/shared/api/data-contracts";
 
 import styles from "./FramedataPage.module.scss";
-import { getCharacterImage, handleImageError } from "./imageUtils";
+import { getCharacterAvatar, getCharacterFullBody, handleImageError } from "./imageUtils";
 
 interface MovesViewProps {
   character: TekkenCharacter;
@@ -36,6 +36,18 @@ const MovesView: React.FC<MovesViewProps> = ({
   const [showThrow, setShowThrow] = useState(false);
   const [showHoming, setShowHomings] = useState(false);
   const [showTornado, setShowTornado] = useState(false);
+
+  const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>({
+    command: true,
+    hitLevel: true,
+    damage: true,
+    startUpFrame: true,
+    blockFrame: true,
+    hitFrame: true,
+    counterHitFrame: true,
+    features: true,
+    notes: true,
+  });
 
   const filteredMoves = useMemo(() => {
     if (!character.movelist) return [];
@@ -97,29 +109,40 @@ const MovesView: React.FC<MovesViewProps> = ({
 
   return (
     <div className={styles.movesView}>
-      <div className="d-flex align-items-center mb-4">
-        <Button variant="outline-secondary" onClick={onBack} className="me-3">
-          ← Назад к персонажу
-        </Button>
-        <div className="d-flex align-items-center">
-          <img
-            src={getCharacterImage(character, "150x200")}
-            alt={charName}
-            className={styles.characterThumbnail}
-            onError={e => handleImageError(e, charName, "150x200")}
-          />
-          <h2 className="mb-0 ms-3">{charName} - Удары</h2>
-        </div>
+      {/* Full-body background image */}
+      <div className={styles.fullBodyBackground}>
+        <img
+          src={getCharacterFullBody(character, "800x1200")}
+          alt={`${charName} full body`}
+          className={styles.fullBodyImage}
+          onError={(e) => handleImageError(e, charName, "800x1200")}
+        />
       </div>
+      
+      <div className={styles.movesContent}>
+        <div className="d-flex align-items-center mb-4">
+          <Button variant="outline-secondary" onClick={onBack} className="me-3">
+            ← Назад к персонажу
+          </Button>
+          <div className="d-flex align-items-center">
+            <img
+              src={getCharacterAvatar(character, "150x200")}
+              alt={charName}
+              className={styles.characterThumbnail}
+              onError={e => handleImageError(e, charName, "150x200")}
+            />
+            <h2 className="mb-0 ms-3">{charName} - Удары</h2>
+          </div>
+        </div>
 
       <Card className="mb-4">
         <Card.Header className="justify-items-center">
           <h5>Фильтры</h5>
         </Card.Header>
         <Card.Body>
-          <Row className="flex-md-column align-items-center align-content-center">
-            <Col md={6} className="w-75">
-              <Form.Group className="mb-3">
+          <Row>
+            <Col lg={6} md={12} className="mb-3">
+              <Form.Group>
                 <Form.Label>Поиск по команде или заметкам</Form.Label>
                 <Form.Control
                   type="text"
@@ -129,8 +152,8 @@ const MovesView: React.FC<MovesViewProps> = ({
                 />
               </Form.Group>
             </Col>
-            <Col md={3} className="w-75">
-              <Form.Group className="mb-3">
+            <Col lg={3} md={6} className="mb-3">
+              <Form.Group>
                 <Form.Label>Стойка</Form.Label>
                 <Form.Select
                   value={stanceFilter}
@@ -145,47 +168,74 @@ const MovesView: React.FC<MovesViewProps> = ({
                 </Form.Select>
               </Form.Group>
             </Col>
-            <Col md={3} className="w-75">
-              <Form.Group className="mb-3">
+            <Col lg={3} md={6} className="mb-3">
+              <Form.Group>
                 <Form.Label>Фильтры</Form.Label>
-                <div className="d-flex">
+                <div className="d-flex flex-wrap gap-2">
                   <Form.Check
                     type="checkbox"
-                    label="Только Heat удары"
+                    label="Heat удары"
                     checked={showHeatOnly}
                     onChange={e => setShowHeatOnly(e.target.checked)}
-                    className="mb-2"
                   />
                   <Form.Check
                     type="checkbox"
-                    label="Только Power Crush"
+                    label="Power Crush"
                     checked={showPowerCrushOnly}
                     onChange={e => setShowPowerCrushOnly(e.target.checked)}
                   />
                   <Form.Check
                     type="checkbox"
-                    label="Только Throw"
+                    label="Throw"
                     checked={showThrow}
                     onChange={e => setShowThrow(e.target.checked)}
                   />
                   <Form.Check
                     type="checkbox"
-                    label="Только Homings"
+                    label="Homing"
                     checked={showHoming}
-                    onChange={e => setShowHomings(e.target.checked)}
+                    onChange={e => setShowHoming(e.target.checked)}
                   />
                   <Form.Check
                     type="checkbox"
-                    label="Только Homings"
-                    checked={showHoming}
-                    onChange={e => setShowHomings(e.target.checked)}
-                  />
-                  <Form.Check
-                    type="checkbox"
-                    label="Только Tornado"
+                    label="Tornado"
                     checked={showTornado}
                     onChange={e => setShowTornado(e.target.checked)}
                   />
+                </div>
+              </Form.Group>
+            </Col>
+            <Col lg={12} md={12} className="mb-3">
+              <Form.Group>
+                <Form.Label>Видимые столбцы</Form.Label>
+                <div className="d-flex flex-wrap gap-2">
+                  {Object.keys(visibleColumns).map((columnKey) => (
+                    <Form.Check
+                      key={columnKey}
+                      type="checkbox"
+                      label={(() => {
+                        switch (columnKey) {
+                          case 'command': return 'Команда';
+                          case 'hitLevel': return 'Уровень';
+                          case 'damage': return 'Урон';
+                          case 'startUpFrame': return 'Старт';
+                          case 'blockFrame': return 'Блок';
+                          case 'hitFrame': return 'Попадание';
+                          case 'counterHitFrame': return 'Контр-удар';
+                          case 'features': return 'Особенности';
+                          case 'notes': return 'Заметки';
+                          default: return columnKey;
+                        }
+                      })()}
+                      checked={visibleColumns[columnKey]}
+                      onChange={() =>
+                        setVisibleColumns((prev) => ({
+                          ...prev,
+                          [columnKey]: !prev[columnKey],
+                        }))
+                      }
+                    />
+                  ))}
                 </div>
               </Form.Group>
             </Col>
@@ -200,77 +250,81 @@ const MovesView: React.FC<MovesViewProps> = ({
         </Alert>
       ) : (
         <div className={styles.movesTableContainer}>
-          <Table responsive striped hover className={styles.movesTable}>
+          <Table responsive="lg" striped hover className={styles.movesTable}>
             <thead>
               <tr>
-                <th>Команда</th>
-                <th>Уровень удара</th>
-                <th>Урон</th>
-                <th>Старт</th>
-                <th>Блок</th>
-                <th>Попадание</th>
-                <th>Контр-удар</th>
-                <th>Особенности</th>
-                <th>Заметки</th>
+                {visibleColumns.command && <th>Команда</th>}
+                {visibleColumns.hitLevel && <th>Уровень</th>}
+                {visibleColumns.damage && <th>Урон</th>}
+                {visibleColumns.startUpFrame && <th>Старт</th>}
+                {visibleColumns.blockFrame && <th>Блок</th>}
+                {visibleColumns.hitFrame && <th>Попадание</th>}
+                {visibleColumns.counterHitFrame && <th>Контр-удар</th>}
+                {visibleColumns.features && <th>Особенности</th>}
+                {visibleColumns.notes && <th>Заметки</th>}
               </tr>
             </thead>
             <tbody>
               {filteredMoves.map((move, index) => (
                 <tr key={`${move.command}-${index}`}>
-                  <td className={styles.commandCell}>
-                    <code>{move.command}</code>
-                  </td>
-                  <td>{move.hitLevel || "-"}</td>
-                  <td>{move.damage || "-"}</td>
-                  <td>{move.startUpFrame || "-"}</td>
-                  <td>{move.blockFrame || "-"}</td>
-                  <td>{move.hitFrame || "-"}</td>
-                  <td>{move.counterHitFrame || "-"}</td>
-                  <td>
-                    <div className={styles.moveBadges}>
-                      {move.heatEngage && (
-                        <Badge bg="warning" className="me-1 text-wrap">
-                          Heat Engage
-                        </Badge>
-                      )}
-                      {move.heatSmash && (
-                        <Badge bg="danger" className="me-1 text-wrap">
-                          Heat Smash
-                        </Badge>
-                      )}
-                      {move.powerCrush && (
-                        <Badge bg="info" className="me-1 text-wrap">
-                          Power Crush
-                        </Badge>
-                      )}
-                      {move.throw && (
-                        <Badge bg="secondary" className="me-1 text-wrap">
-                          Throw
-                        </Badge>
-                      )}
-                      {move.homing && (
-                        <Badge bg="primary" className="me-1 text-wrap">
-                          Homing
-                        </Badge>
-                      )}
-                      {move.tornado && (
-                        <Badge bg="success" className="me-1 text-wrap">
-                          Tornado
-                        </Badge>
-                      )}
-                      {move.heatBurst && (
-                        <Badge bg="dark" className="me-1 text-wrap">
-                          Heat Burst
-                        </Badge>
-                      )}
-                      {move.requiresHeat && (
-                        <Badge bg="warning" className="me-1 text-wrap">
-                          Requires Heat
-                        </Badge>
-                      )}
-                    </div>
-                  </td>
-                  <td className={styles.notesCell}>{move.notes || "-"}</td>
+                  {visibleColumns.command && (
+                    <td className={styles.commandCell}>
+                      <code>{move.command}</code>
+                    </td>
+                  )}
+                  {visibleColumns.hitLevel && <td>{move.hitLevel || "-"}</td>}
+                  {visibleColumns.damage && <td>{move.damage || "-"}</td>}
+                  {visibleColumns.startUpFrame && <td>{move.startUpFrame || "-"}</td>}
+                  {visibleColumns.blockFrame && <td>{move.blockFrame || "-"}</td>}
+                  {visibleColumns.hitFrame && <td>{move.hitFrame || "-"}</td>}
+                  {visibleColumns.counterHitFrame && <td>{move.counterHitFrame || "-"}</td>}
+                  {visibleColumns.features && (
+                    <td>
+                      <div className={styles.moveBadges}>
+                        {move.heatEngage && (
+                          <Badge bg="warning" className="me-1 text-wrap">
+                            Heat Engage
+                          </Badge>
+                        )}
+                        {move.heatSmash && (
+                          <Badge bg="danger" className="me-1 text-wrap">
+                            Heat Smash
+                          </Badge>
+                        )}
+                        {move.powerCrush && (
+                          <Badge bg="info" className="me-1 text-wrap">
+                            Power Crush
+                          </Badge>
+                        )}
+                        {move.throw && (
+                          <Badge bg="secondary" className="me-1 text-wrap">
+                            Throw
+                          </Badge>
+                        )}
+                        {move.homing && (
+                          <Badge bg="primary" className="me-1 text-wrap">
+                            Homing
+                          </Badge>
+                        )}
+                        {move.tornado && (
+                          <Badge bg="success" className="me-1 text-wrap">
+                            Tornado
+                          </Badge>
+                        )}
+                        {move.heatBurst && (
+                          <Badge bg="dark" className="me-1 text-wrap">
+                            Heat Burst
+                          </Badge>
+                        )}
+                        {move.requiresHeat && (
+                          <Badge bg="warning" className="me-1 text-wrap">
+                            Requires Heat
+                          </Badge>
+                        )}
+                      </div>
+                    </td>
+                  )}
+                  {visibleColumns.notes && <td className={styles.notesCell}>{move.notes || "-"}</td>}
                 </tr>
               ))}
             </tbody>
@@ -283,6 +337,7 @@ const MovesView: React.FC<MovesViewProps> = ({
           Найдено ударов: {filteredMoves.length} из{" "}
           {character.movelist?.length || 0}
         </small>
+      </div>
       </div>
     </div>
   );

@@ -3,18 +3,20 @@ import { Badge, Button, Card, Col, Row } from "react-bootstrap";
 import { TekkenCharacter } from "@/shared/api/data-contracts";
 
 import styles from "./FramedataPage.module.scss";
-import { getCharacterImage, handleImageError } from "./imageUtils";
+import { getCharacterAvatar, handleImageError } from "./imageUtils";
 
 interface CharacterDetailsProps {
   character: TekkenCharacter;
   onBack: () => void;
   onViewMoves: (character: TekkenCharacter) => void;
+  onEditCharacter: (character: TekkenCharacter) => void;
 }
 
 const CharacterDetails: React.FC<CharacterDetailsProps> = ({
   character,
   onBack,
   onViewMoves,
+  onEditCharacter,
 }) => {
   const charName =
     character.name.charAt(0).toUpperCase() + character.name.slice(1);
@@ -34,21 +36,30 @@ const CharacterDetails: React.FC<CharacterDetailsProps> = ({
             <div className={styles.characterDetailImageContainer}>
               <Card.Img
                 variant="top"
-                src={getCharacterImage(character, "300x400")}
+                src={getCharacterAvatar(character, "300x400")}
                 alt={charName}
                 className={styles.characterDetailImage}
                 onError={e => handleImageError(e, charName, "300x400")}
               />
             </div>
             <Card.Body>
-              <Button
-                variant="primary"
-                size="lg"
-                className="w-100"
-                onClick={() => onViewMoves(character)}
-              >
-                Просмотреть удары
-              </Button>
+              <div className="d-flex gap-2">
+                <Button
+                  variant="primary"
+                  size="lg"
+                  className="flex-fill"
+                  onClick={() => onViewMoves(character)}
+                >
+                  Просмотреть удары
+                </Button>
+                <Button
+                  variant="outline-warning"
+                  size="lg"
+                  onClick={() => onEditCharacter(character)}
+                >
+                  Изменить
+                </Button>
+              </div>
             </Card.Body>
           </Card>
         </Col>

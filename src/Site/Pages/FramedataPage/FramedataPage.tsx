@@ -4,6 +4,7 @@ import { Alert, Button, Container } from "react-bootstrap";
 import { TekkenCharacter } from "@/shared/api/data-contracts";
 
 import CharacterDetails from "./CharacterDetails";
+import CharacterEditForm from "./CharacterEditForm";
 import CharacterGrid from "./CharacterGrid";
 import styles from "./FramedataPage.module.scss";
 import { NavigationState } from "./FramedataPage.types";
@@ -116,6 +117,34 @@ const FramedataPage: React.FC = () => {
     [updateNavigationState, loadCharacterMoves]
   );
 
+  const handleEditCharacter = useCallback(
+    (character: TekkenCharacter) => {
+      updateNavigationState({
+        currentView: "edit-character",
+        selectedCharacter: character,
+      });
+    },
+    [updateNavigationState]
+  );
+
+  const handleCharacterSaved = useCallback(
+    (updatedCharacter: TekkenCharacter) => {
+      // Обновляем персонажа в списке
+      setCharacters(prev =>
+        prev.map(char =>
+          char.name === updatedCharacter.name ? updatedCharacter : char
+        )
+      );
+
+      // Обновляем выбранного персонажа
+      updateNavigationState({
+        selectedCharacter: updatedCharacter,
+        currentView: "character-details",
+      });
+    },
+    [updateNavigationState]
+  );
+
   const handleBackToCharacters = useCallback(() => {
     updateNavigationState({
       currentView: "characters",
@@ -174,6 +203,24 @@ const FramedataPage: React.FC = () => {
             character={navigationState.selectedCharacter}
             onBack={handleBackToCharacters}
             onViewMoves={handleViewMoves}
+            onEditCharacter={handleEditCharacter}
+          />
+        );
+
+      case "edit-character":
+        if (!navigationState.selectedCharacter) {
+          return (
+            <Alert variant="warning">
+              <Alert.Heading>Персонаж не выбран</Alert.Heading>
+              <p>Вернитесь к списку персонажей.</p>
+            </Alert>
+          );
+        }
+        return (
+          <CharacterEditForm
+            character={navigationState.selectedCharacter}
+            onBack={handleBackToCharacterDetails}
+            onSave={handleCharacterSaved}
           />
         );
 

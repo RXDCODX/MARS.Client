@@ -1,42 +1,70 @@
 import { TekkenCharacter } from "@/shared/api/data-contracts";
 
 /**
- * Получает URL изображения персонажа с приоритетом base64
- * @param character - персонаж Tekken
- * @param fallbackSize - размер fallback изображения (например, "200x300")
- * @returns URL изображения
+ * Получить URL аватара персонажа
+ */
+export const getCharacterAvatar = (
+  character: TekkenCharacter,
+  fallbackSize: string = "200x300"
+): string => {
+  // Если есть аватар, используем его
+  if (character.avatarImage && character.avatarImage.length > 0) {
+    return `/api/framedata/characters/${encodeURIComponent(character.name)}/avatar`;
+  }
+  
+  // Если есть старое изображение, используем его
+  if (character.image && character.image.length > 0) {
+    return `/api/framedata/characters/${encodeURIComponent(character.name)}/image`;
+  }
+  
+  // Если есть ссылка на изображение, используем её
+  if (character.linkToImage) {
+    return character.linkToImage;
+  }
+  
+  // Fallback на placeholder
+  return `https://via.placeholder.com/${fallbackSize}/cccccc/666666?text=${encodeURIComponent(character.name)}`;
+};
+
+/**
+ * Получить URL полного изображения персонажа
+ */
+export const getCharacterFullBody = (
+  character: TekkenCharacter,
+  fallbackSize: string = "400x600"
+): string => {
+  // Если есть полное изображение, используем его
+  if (character.fullBodyImage && character.fullBodyImage.length > 0) {
+    return `/api/framedata/characters/${encodeURIComponent(character.name)}/fullbody`;
+  }
+  
+  // Если есть старое изображение, используем его
+  if (character.image && character.image.length > 0) {
+    return `/api/framedata/characters/${encodeURIComponent(character.name)}/image`;
+  }
+  
+  // Если есть ссылка на изображение, используем её
+  if (character.linkToImage) {
+    return character.linkToImage;
+  }
+  
+  // Fallback на placeholder
+  return `https://via.placeholder.com/${fallbackSize}/cccccc/666666?text=${encodeURIComponent(character.name)}`;
+};
+
+/**
+ * Получить URL изображения персонажа (для обратной совместимости)
+ * @deprecated Используйте getCharacterAvatar или getCharacterFullBody
  */
 export const getCharacterImage = (
   character: TekkenCharacter,
   fallbackSize: string = "200x300"
 ): string => {
-  // Сначала пробуем base64 изображение
-  if (character.image && character.imageExtension) {
-    try {
-      const base64String = character.image;
-      return `data:image/${character.imageExtension};base64,${base64String}`;
-    } catch (error) {
-      console.warn(
-        `Ошибка при обработке base64 изображения для ${character.name}:`,
-        error
-      );
-    }
-  }
-
-  // Затем пробуем ссылку на изображение
-  if (character.linkToImage) {
-    return character.linkToImage;
-  }
-
-  // Fallback изображение с именем персонажа
-  return `https://via.placeholder.com/${fallbackSize}/6c757d/ffffff?text=${encodeURIComponent(character.name)}`;
+  return getCharacterAvatar(character, fallbackSize);
 };
 
 /**
  * Обработчик ошибки загрузки изображения
- * @param e - событие ошибки
- * @param characterName - имя персонажа
- * @param fallbackSize - размер fallback изображения
  */
 export const handleImageError = (
   e: React.SyntheticEvent<HTMLImageElement, Event>,
@@ -44,5 +72,6 @@ export const handleImageError = (
   fallbackSize: string = "200x300"
 ): void => {
   const target = e.target as HTMLImageElement;
-  target.src = `https://via.placeholder.com/${fallbackSize}/6c757d/ffffff?text=${encodeURIComponent(characterName)}`;
+  target.src = `https://via.placeholder.com/${fallbackSize}/cccccc/666666?text=${encodeURIComponent(characterName)}`;
+  target.onerror = null; // Предотвращаем бесконечный цикл
 };
