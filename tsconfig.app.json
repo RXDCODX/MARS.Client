@@ -25,7 +25,10 @@
     "paths": {
       "@/*": ["src/*"],
       "@/components/*": ["src/components/*"],
-      "@/pages/*": ["src/pages/*"],
+      "@/Site_Components/*": ["src/Site/Site_Components/*"],
+      "@/ControlRoom_Components/*": ["src/Site/ControlRoom_Components/*"],
+      "@/pages/*": ["src/Site/*"],
+      "@/Site/*": ["src/Site/*"],
       "@/shared/*": ["src/shared/*"],
       "@/contexts/*": ["src/contexts/*"],
       "@/routes/*": ["src/routes/*"],

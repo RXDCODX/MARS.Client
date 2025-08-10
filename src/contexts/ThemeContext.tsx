@@ -1,3 +1,4 @@
+import { ChakraProvider, extendTheme } from "@chakra-ui/react";
 import { ReactNode, useEffect, useState } from "react";
 
 import { Theme, ThemeContext } from "./Theme";
@@ -7,28 +8,31 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>(() => {
-    // Проверяем сохраненную тему в localStorage
+  const [themeMode, setThemeMode] = useState<Theme>(() => {
     const savedTheme = localStorage.getItem("theme") as Theme;
     return savedTheme || "light";
   });
 
   useEffect(() => {
-    // Применяем тему к html элементу для Bootstrap
-    document.documentElement.setAttribute("data-bs-theme", theme);
-    // Также применяем к body для совместимости со старым кодом
-    document.body.setAttribute("data-theme", theme);
-    // Сохраняем в localStorage
-    localStorage.setItem("theme", theme);
-  }, [theme]);
+    localStorage.setItem("theme", themeMode);
+  }, [themeMode]);
 
   const toggleTheme = () => {
-    setTheme(prevTheme => (prevTheme === "light" ? "dark" : "light"));
+    setThemeMode(prevTheme => (prevTheme === "light" ? "dark" : "light"));
   };
 
+  const theme = extendTheme({
+    config: {
+      initialColorMode: themeMode,
+      useSystemColorMode: false,
+    },
+  });
+
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
+    <ChakraProvider theme={theme}>
+      <ThemeContext.Provider value={{ theme: themeMode, toggleTheme }}>
+        {children}
+      </ThemeContext.Provider>
+    </ChakraProvider>
   );
 };

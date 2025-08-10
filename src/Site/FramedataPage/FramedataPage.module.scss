@@ -1,0 +1,1225 @@
+.framedataPage {
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.characterCard {
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  border: 1px solid #dee2e6;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.characterImageContainer {
+  position: relative;
+  overflow: hidden;
+  height: 200px;
+}
+
+.characterImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.moveTable {
+  font-size: 0.9rem;
+  
+  th {
+    background-color: var(--bs-primary);
+    color: white;
+    font-weight: 600;
+  }
+  
+  td {
+    vertical-align: middle;
+  }
+}
+
+.commandCode {
+  font-family: 'Courier New', monospace;
+  background-color: var(--bs-light);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.85rem;
+}
+
+.searchBox {
+  max-width: 300px;
+}
+
+.badge {
+  font-size: 0.75rem;
+}
+
+.modalForm {
+  .form-group {
+    margin-bottom: 1rem;
+  }
+}
+
+.checkboxGroup {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.loadingSpinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.errorAlert {
+  margin-bottom: 1rem;
+}
+
+.tabContent {
+  margin-top: 1rem;
+}
+
+.characterActions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.moveActions {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.strengthsContainer,
+.weaknessesContainer {
+  margin-bottom: 0.5rem;
+}
+
+.lastUpdateTime {
+  font-size: 0.8rem;
+  color: var(--bs-secondary);
+}
+
+.noCharacterSelected {
+  text-align: center;
+  padding: 2rem;
+  color: var(--bs-secondary);
+}
+
+// Стили для сетки персонажей
+.characterGrid {
+  padding: 20px 0;
+}
+
+.characterDetailCard {
+  border: 1px solid #dee2e6;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.characterDetailImageContainer {
+  position: relative;
+  overflow: hidden;
+  height: 300px;
+}
+
+.characterDetailImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+// Стили для просмотра ударов
+.movesView {
+  padding: 20px 0;
+}
+
+.characterThumbnail {
+  width: 60px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid #dee2e6;
+}
+
+.movesTableContainer {
+  overflow-x: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.movesTable {
+  margin-bottom: 0;
+  
+  th {
+    background-color: #f8f9fa;
+    border-bottom: 2px solid #dee2e6;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  
+  td {
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+}
+
+.commandCell {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  color: #495057;
+}
+
+.notesCell {
+  max-width: 200px;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+.moveBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  
+  .badge {
+    font-size: 0.7em;
+  }
+}
+
+// Адаптивные стили
+@media (max-width: 768px) {
+  .characterCard {
+    margin-bottom: 1rem;
+  }
+  
+  .moveTable {
+    font-size: 0.8rem;
+    
+    th, td {
+      padding: 0.5rem 0.25rem;
+    }
+  }
+  
+  .checkboxGroup {
+    grid-template-columns: 1fr;
+  }
+  
+  .characterActions,
+  .moveActions {
+    flex-direction: column;
+  }
+
+  .characterImageContainer {
+    height: 150px;
+  }
+  
+  .characterDetailImageContainer {
+    height: 200px;
+  }
+  
+  .movesTable {
+    font-size: 0.9em;
+  }
+  
+  .moveBadges {
+    .badge {
+      font-size: 0.6em;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .characterImageContainer {
+    height: 120px;
+  }
+  
+  .characterDetailImageContainer {
+    height: 150px;
+  }
+  
+  .movesTable {
+    font-size: 0.8em;
+  }
+}
+<<<<<<< Current (Your changes)
+=======
+
+// Modern page header
+.pageHeader {
+  margin-bottom: 2rem;
+}
+
+.pageTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  
+  i {
+    color: #3498db;
+  }
+}
+
+.pageSubtitle {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  margin-bottom: 0;
+}
+
+.characterCount {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+// Statistics Card Styles
+.statsCard {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  border-radius: 15px;
+  
+  .card-body {
+    padding: 1.5rem;
+  }
+}
+
+.statsIcon {
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  
+  i {
+    font-size: 1.5rem;
+    color: white !important;
+  }
+}
+
+.statsActions {
+  display: flex;
+  gap: 0.5rem;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
+.quickStats {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 1rem;
+  
+  .badge {
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: white;
+  }
+}
+
+// Modern Character Cards
+.modernCharacterCard {
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  position: relative;
+  
+  &:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    
+    .cardOverlay {
+      opacity: 1;
+    }
+    
+    .cardImage {
+      transform: scale(1.1);
+    }
+  }
+  
+  &:active {
+    transform: translateY(-6px) scale(1.01);
+  }
+}
+
+.cardImageWrapper {
+  position: relative;
+  overflow: hidden;
+  height: 240px;
+  background: linear-gradient(45deg, #f1f2f6, #ddd6fe);
+}
+
+.cardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.cardOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.7) 100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  
+  .btn {
+    border-radius: 50px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    color: #2c3e50;
+    
+    &:hover {
+      background: white;
+      transform: scale(1.05);
+    }
+  }
+}
+
+.changesBadge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 15px;
+  font-weight: 600;
+  animation: pulse 2s infinite;
+  box-shadow: 0 2px 10px rgba(255, 193, 7, 0.3);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+}
+
+.cardDescription {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+}
+
+.cardFooter {
+  border-top: 1px solid #ecf0f1;
+  padding-top: 0.75rem;
+  
+  small {
+    font-size: 0.8rem;
+    color: #95a5a6;
+  }
+}
+
+// Error and Info cards
+.errorCard, .infoCard {
+  border-radius: 15px;
+  border: none;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  
+  .alert-heading {
+    font-weight: 700;
+  }
+}
+
+// Modern Moves View Styles
+.modernMovesView {
+  padding: 1rem 0;
+}
+
+.movesHeader {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.backButton {
+  border-radius: 25px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  border: 2px solid #6c757d;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: #6c757d;
+    color: white;
+    transform: translateY(-1px);
+  }
+}
+
+.characterAvatar {
+  width: 80px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 3px solid white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.characterName {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+}
+
+.movesSubtitle {
+  color: #7f8c8d;
+  margin-bottom: 0;
+  font-size: 1rem;
+}
+
+// Search Card
+.searchCard {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+.searchInput {
+  border-radius: 25px;
+  border: 2px solid #e9ecef;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: border-color 0.3s ease;
+  
+  &:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  }
+}
+
+.stanceSelect {
+  border-radius: 25px;
+  border: 2px solid #e9ecef;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  
+  &:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  }
+}
+
+.filtersToggle {
+  border-radius: 25px;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  border: 2px solid #667eea;
+  color: #667eea;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: #667eea;
+    color: white;
+  }
+}
+
+.filtersSection {
+  border-top: 1px solid #e9ecef;
+  padding-top: 1rem;
+}
+
+.filterCheckbox {
+  background: #f8f9fa;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  border: 1px solid #e9ecef;
+  transition: all 0.3s ease;
+  
+  .form-check-input:checked {
+    background-color: #667eea;
+    border-color: #667eea;
+  }
+  
+  &:hover {
+    background: #e9ecef;
+  }
+}
+
+// Results Header
+.resultsHeader {
+  margin-bottom: 1rem;
+  padding: 0.5rem 0;
+}
+
+.resultsBadge {
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+}
+
+// Compact Moves Table
+.compactMovesTable {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.movesTable {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+  
+  thead th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    font-weight: 600;
+    padding: 1rem 0.75rem;
+    text-align: center;
+    white-space: nowrap;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  tbody td {
+    padding: 0.75rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #f8f9fa;
+    text-align: center;
+    
+    &:first-child {
+      text-align: left;
+    }
+  }
+  
+  tbody tr:hover {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  }
+  
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.commandCode {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  display: inline-block;
+}
+
+.hitLevel {
+  font-weight: 600;
+  color: #495057;
+}
+
+.damage {
+  font-weight: 700;
+  color: #e74c3c;
+  font-size: 0.95rem;
+}
+
+.frameData {
+  font-weight: 600;
+  font-family: 'JetBrains Mono', monospace;
+  color: #2c3e50;
+  font-size: 0.9rem;
+}
+
+.compactBadges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+  justify-content: center;
+  
+  .badge {
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+}
+
+.notes {
+  color: #6c757d;
+  font-size: 0.8rem;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.noResultsAlert {
+  border-radius: 15px;
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  
+  .alert-heading {
+    font-weight: 700;
+  }
+}
+
+// Responsive adjustments for moves table
+@media (max-width: 1200px) {
+  .movesTable {
+    font-size: 0.8rem;
+    
+    thead th {
+      padding: 0.75rem 0.5rem;
+      font-size: 0.75rem;
+    }
+    
+    tbody td {
+      padding: 0.6rem 0.4rem;
+    }
+    
+    .commandCode {
+      font-size: 0.75rem;
+      padding: 0.3rem 0.6rem;
+    }
+  }
+}
+
+@media (max-width: 992px) {
+  .movesHeader {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .characterAvatar {
+    width: 60px;
+    height: 75px;
+  }
+  
+  .characterName {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .modernMovesView {
+    padding: 0.5rem 0;
+  }
+  
+  .movesHeader {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .movesTable {
+    font-size: 0.75rem;
+    
+    thead th {
+      padding: 0.5rem 0.25rem;
+      font-size: 0.7rem;
+    }
+    
+    tbody td {
+      padding: 0.5rem 0.25rem;
+    }
+    
+    .commandCode {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.4rem;
+    }
+  }
+  
+  .compactBadges .badge {
+    font-size: 0.6rem;
+  }
+}
+
+// Changes Review Page Styles
+.changesReviewPage {
+  padding: 1rem 0;
+}
+
+.reviewHeader {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.reviewTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  
+  i {
+    color: #667eea;
+  }
+}
+
+.reviewSubtitle {
+  color: #7f8c8d;
+  margin-bottom: 0;
+  font-size: 1rem;
+}
+
+.summaryCard {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+.summaryBadge {
+  font-size: 0.9rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.totalChanges {
+  text-align: center;
+  
+  h3 {
+    color: white !important;
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0;
+  }
+  
+  p {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 0.9rem;
+  }
+}
+
+.noChangesAlert {
+  border-radius: 15px;
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  
+  .alert-heading {
+    font-weight: 700;
+  }
+}
+
+.changesTableCard {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  
+  .card-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-bottom: none;
+    padding: 1rem 1.5rem;
+    
+    h5 {
+      color: #2c3e50;
+      font-weight: 700;
+    }
+  }
+}
+
+.changesTable {
+  margin-bottom: 0;
+  
+  thead th {
+    background: white;
+    color: #495057;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #dee2e6;
+    padding: 1rem;
+  }
+  
+  tbody td {
+    padding: 1rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #f8f9fa;
+  }
+  
+  tbody tr:hover {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  }
+  
+  tbody tr:last-child td {
+    border-bottom: none;
+  }
+}
+
+.changeDescription {
+  color: #6c757d;
+  font-size: 0.9rem;
+  max-width: 300px;
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+  
+  .btn {
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
+
+.jsonData {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 1rem;
+  font-size: 0.8rem;
+  max-height: 300px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+// Responsive adjustments for changes review
+@media (max-width: 992px) {
+  .reviewHeader {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .reviewTitle {
+    font-size: 1.8rem;
+  }
+  
+  .summaryCard .row {
+    text-align: center;
+  }
+  
+  .totalChanges {
+    margin-top: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .changesReviewPage {
+    padding: 0.5rem 0;
+  }
+  
+  .reviewHeader {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .reviewTitle {
+    font-size: 1.5rem;
+  }
+  
+  .changesTable {
+    font-size: 0.8rem;
+    
+    thead th {
+      padding: 0.75rem 0.5rem;
+      font-size: 0.7rem;
+    }
+    
+    tbody td {
+      padding: 0.75rem 0.5rem;
+    }
+  }
+  
+  .changeDescription {
+    max-width: 200px;
+  }
+  
+  .actionButtons .btn {
+    width: 28px;
+    height: 28px;
+    font-size: 0.7rem;
+  }
+}
+
+// Modern Character Details Styles
+.modernCharacterDetails {
+  padding: 1rem 0;
+}
+
+.characterDetailsHeader {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 15px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.characterHeaderAvatar {
+  width: 100px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 15px;
+  border: 3px solid white;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.characterDetailsTitle {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.characterDetailsSubtitle {
+  color: #7f8c8d;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.characterImageWrapper {
+  position: relative;
+  overflow: hidden;
+  height: 400px;
+  border-radius: 15px 15px 0 0;
+  background: linear-gradient(45deg, #f1f2f6, #ddd6fe);
+}
+
+.characterMainImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to bottom, transparent 70%, rgba(0, 0, 0, 0.6) 100%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.movesCountBadge {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  background: rgba(0, 123, 255, 0.9) !important;
+}
+
+.viewMovesButton {
+  border-radius: 25px;
+  padding: 1rem 2rem;
+  font-weight: 700;
+  font-size: 1.1rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+  width: 100%;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
+  }
+}
+
+.characterInfoCard {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.infoCardHeader {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: none;
+  padding: 1.5rem;
+  
+  h4 {
+    color: #2c3e50;
+    font-weight: 700;
+    
+    i {
+      color: #667eea;
+    }
+  }
+}
+
+.descriptionSection {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #f8f9fa;
+}
+
+.sectionTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+  
+  i {
+    color: #667eea;
+  }
+}
+
+.descriptionText {
+  color: #555;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+
+.attributeSection {
+  margin-bottom: 2rem;
+}
+
+.badgeContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.modernBadge {
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+  }
+}
+
+.updateInfo {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #f8f9fa;
+  
+  i {
+    font-size: 1rem;
+  }
+}
+
+// Responsive adjustments for character details
+@media (max-width: 992px) {
+  .characterDetailsHeader {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .characterDetailsTitle {
+    font-size: 2rem;
+  }
+  
+  .characterHeaderAvatar {
+    width: 80px;
+    height: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modernCharacterDetails {
+    padding: 0.5rem 0;
+  }
+  
+  .characterDetailsHeader {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .characterDetailsTitle {
+    font-size: 1.8rem;
+  }
+  
+  .characterImageWrapper {
+    height: 300px;
+  }
+  
+  .viewMovesButton {
+    font-size: 1rem;
+    padding: 0.8rem 1.5rem;
+  }
+  
+  .attributeSection {
+    margin-bottom: 1.5rem;
+  }
+}
+>>>>>>> Incoming (Background Agent changes)

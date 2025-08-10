@@ -1,5 +1,3 @@
-import "./global.scss";
-
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import Routes from "@/routes/Routes";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";

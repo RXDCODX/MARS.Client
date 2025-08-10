@@ -1,7 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-import ServerViewer from "@/components/ControlRoom_Components/ServerViewer/ServerViewer";
-import ServiceDetails from "@/components/ControlRoom_Components/ServerViewer/ServiceDetails";
 import AutoMessageBillboard from "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboard";
 import AutoMessageBillboardTest from "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboardTest";
 import ChatHorizontal from "@/components/OBS_Components/ChatHorizontal/ChatHorizontal";
@@ -15,14 +13,15 @@ import ScoreboardAdminPanel from "@/components/OBS_Components/Scoreboard/AdminPa
 import Manager from "@/components/OBS_Components/ScreenParticles/Manager";
 import CurrentTrackSignalRHubWrapper from "@/components/OBS_Components/SoundRequest/CurrentTrack/SignalRHubWrapper";
 import WaifuAlerts from "@/components/OBS_Components/WaifuAlerts/WaifuAlerts";
-import { Layout } from "@/components/Site_Components/Layout";
-import AboutPage from "@/pages/AboutPage";
-import CommandsPage from "@/pages/CommandsPage/CommandsPage";
-import ContactsPage from "@/pages/ContactsPage";
-import DocsPage from "@/pages/DocsPage";
-import FramedataPage from "@/pages/FramedataPage/FramedataPage";
-import PendingChangesPage from "@/pages/FramedataPage/PendingChangesPage";
-import WelcomePage from "@/pages/WelcomePage";
+import AboutPage from "@/Site/AboutPage";
+import CommandsPage from "@/Site/CommandsPage/CommandsPage";
+import ContactsPage from "@/Site/ContactsPage";
+import { ServerViewer, ServiceDetails } from "@/Site/ControlRoom_Components";
+import DocsPage from "@/Site/DocsPage";
+import FramedataPage from "@/Site/FramedataPage/FramedataPage";
+import PendingChangesPage from "@/Site/FramedataPage/PendingChangesPage";
+import WelcomePage from "@/Site/WelcomePage";
+import { Layout } from "@/Site_Components/Layout";
 
 import { LinktreeMenu } from "./LinkTree/LinkTreeMenu";
 
