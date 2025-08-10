@@ -68,6 +68,11 @@ const WelcomePage: React.FC = () => {
       path: "/confetti",
       description: "Экранные эффекты",
     },
+    {
+      name: "AFK Screen",
+      path: "/afkscreen",
+      description: "Автоматическое воспроизведение видео из плейлиста",
+    },
   ];
 
   return (

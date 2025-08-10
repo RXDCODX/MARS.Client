@@ -48,7 +48,7 @@ testFumoFridayWithCustomMessage("Custom User", "#4ecdc4");
 
 ## Структура файлов
 
-```
+```text
 FumoFriday/
 ├── FumoFriday.tsx              # Основной компонент
 ├── FumoFridayController.tsx    # Контроллер логики

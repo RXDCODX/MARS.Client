@@ -1,5 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
+import AFKScreen from "@/components/OBS_Components/AFKScreen/AFKScreen";
 import AutoMessageBillboard from "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboard";
 import AutoMessageBillboardTest from "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboardTest";
 import ChatHorizontal from "@/components/OBS_Components/ChatHorizontal/ChatHorizontal";
@@ -193,6 +194,14 @@ const PrivateRoutes = () => (
         element={
           <OBSComponentWrapper>
             <CurrentTrackSignalRHubWrapper />
+          </OBSComponentWrapper>
+        }
+      />
+      <Route
+        path="/afkscreen"
+        element={
+          <OBSComponentWrapper>
+            <AFKScreen />
           </OBSComponentWrapper>
         }
       />

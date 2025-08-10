@@ -49,6 +49,7 @@ const Header: React.FC = () => {
         { label: "Fumo Friday", path: "/fumofriday" },
         { label: "Random Mem", path: "/randommem" },
         { label: "Экранные частицы", path: "/confetti" },
+        { label: "AFK Screen", path: "/afkscreen" },
       ],
     },
     {
