@@ -6,7 +6,7 @@ import { FumoFriday } from "./FumoFriday";
 import { Reimu } from "./Reimu";
 
 const meta: Meta<typeof FumoFriday> = {
-  title: "FumoFriday/FumoFriday",
+  title: "Stream Components/FumoFriday",
   component: FumoFriday,
   parameters: {
     layout: "fullscreen",

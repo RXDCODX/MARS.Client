@@ -6,7 +6,7 @@ import { TunaMusicData } from "@/shared/api";
 import CurrentTrack from "./CurrentTrack";
 
 const meta: Meta<typeof CurrentTrack> = {
-  title: "SoundRequest/CurrentTrack",
+  title: "Stream Components/SoundRequest/CurrentTrack",
   component: CurrentTrack,
   parameters: {
     layout: "centered",

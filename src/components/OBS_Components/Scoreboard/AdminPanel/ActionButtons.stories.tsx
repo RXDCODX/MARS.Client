@@ -4,7 +4,7 @@ import { expect } from "storybook/test";
 import ActionButtons from "./ActionButtons";
 
 const meta: Meta<typeof ActionButtons> = {
-  title: "Admin Panel/Action Buttons",
+  title: "Stream Components/Scoreboard/AdminPanel/ActionButtons",
   component: ActionButtons,
   parameters: {
     layout: "centered",

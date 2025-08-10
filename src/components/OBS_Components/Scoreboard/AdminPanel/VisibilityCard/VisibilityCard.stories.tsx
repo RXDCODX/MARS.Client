@@ -4,7 +4,7 @@ import { expect } from "storybook/test";
 import VisibilityCard from "./VisibilityCard";
 
 const meta: Meta<typeof VisibilityCard> = {
-  title: "Admin Panel/Visibility Card",
+  title: "Stream Components/Scoreboard/AdminPanel/VisibilityCard",
   component: VisibilityCard,
   parameters: {
     layout: "centered",

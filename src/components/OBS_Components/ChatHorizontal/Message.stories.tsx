@@ -10,7 +10,7 @@ import {
 import { Message } from "./Message";
 
 const meta: Meta<typeof Message> = {
-  title: "Chat/ChatHorizontal/Message",
+  title: "Stream Components/ChatHorizontal/Message",
   component: Message,
   parameters: {
     layout: "centered",

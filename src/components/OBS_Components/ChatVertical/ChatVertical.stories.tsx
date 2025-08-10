@@ -5,7 +5,7 @@ import ChatVertical from "./ChatVertical";
 import { MessageManager } from "./MessageManager";
 
 const meta: Meta<typeof ChatVertical> = {
-  title: "Chat/ChatVertical",
+  title: "Stream Components/ChatVertical",
   component: ChatVertical,
   parameters: {
     layout: "fullscreen",

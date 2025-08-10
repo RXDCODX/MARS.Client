@@ -5,7 +5,7 @@ import { expect } from "storybook/test";
 import AdminPanel from "./AdminPanel";
 
 const meta: Meta<typeof AdminPanel> = {
-  title: "Admin Panel/Scoreboard Admin",
+  title: "Stream Components/Scoreboard/AdminPanel",
   component: AdminPanel,
   parameters: {
     layout: "fullscreen",

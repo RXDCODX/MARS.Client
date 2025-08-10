@@ -6,7 +6,7 @@ import ChatHorizontal from "./ChatHorizontal";
 import { MessageManager } from "./MessageManager";
 
 const meta: Meta<typeof ChatHorizontal> = {
-  title: "Chat/ChatHorizontal",
+  title: "Stream Components/ChatHorizontal",
   component: ChatHorizontal,
   parameters: {
     layout: "fullscreen",

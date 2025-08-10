@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import AutoMessageBillboard from "./AutoMessageBillboard";
 
 const meta: Meta<typeof AutoMessageBillboard> = {
-  title: "OBS Components/AutoMessageBillboard",
+  title: "Stream Components/AutoMessageBillboard",
   component: AutoMessageBillboard,
   parameters: {
     layout: "fullscreen",

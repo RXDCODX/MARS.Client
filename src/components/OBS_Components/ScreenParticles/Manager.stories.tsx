@@ -4,7 +4,7 @@ import { expect } from "storybook/test";
 import Manager from "./Manager";
 
 const meta: Meta<typeof Manager> = {
-  title: "Particles/Manager",
+  title: "Stream Components/ScreenParticles/Manager",
   component: Manager,
   parameters: {
     layout: "fullscreen",

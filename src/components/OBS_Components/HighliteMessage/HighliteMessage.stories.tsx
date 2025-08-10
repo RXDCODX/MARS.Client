@@ -4,7 +4,7 @@ import { expect } from "storybook/test";
 import HighliteMessage from "./HighliteMessage";
 
 const meta: Meta<typeof HighliteMessage> = {
-  title: "Chat/HighliteMessage",
+  title: "Stream Components/HighliteMessage",
   component: HighliteMessage,
   parameters: {
     layout: "fullscreen",

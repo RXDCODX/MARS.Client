@@ -4,7 +4,7 @@ import { expect } from "storybook/test";
 import Scoreboard from "./Scoreboard";
 
 const meta: Meta<typeof Scoreboard> = {
-  title: "OBS Components/Scoreboard",
+  title: "Stream Components/Scoreboard",
   component: Scoreboard,
   parameters: {
     layout: "fullscreen",

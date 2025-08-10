@@ -4,7 +4,7 @@ import { expect } from "storybook/test";
 import ColorPresetCard from "./ColorPresetCard";
 
 const meta: Meta<typeof ColorPresetCard> = {
-  title: "Admin Panel/Color Preset Card",
+  title: "Stream Components/Scoreboard/AdminPanel/ColorPresetCard",
   component: ColorPresetCard,
   parameters: {
     layout: "centered",

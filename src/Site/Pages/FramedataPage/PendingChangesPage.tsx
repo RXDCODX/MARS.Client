@@ -1,7 +1,19 @@
 import { useEffect, useMemo, useState } from "react";
-import { Alert, Badge, Card, Col, Container, Row, Spinner } from "react-bootstrap";
+import {
+  Alert,
+  Badge,
+  Card,
+  Col,
+  Container,
+  Row,
+  Spinner,
+} from "react-bootstrap";
 
-import { defaultApiConfig, FramedataChange, FramedataChanges } from "@/shared/api";
+import {
+  defaultApiConfig,
+  FramedataChange,
+  FramedataChanges,
+} from "@/shared/api";
 
 import styles from "./FramedataPage.module.scss";
 
@@ -48,13 +60,15 @@ const PendingChangesPage: React.FC = () => {
     };
   }, []);
 
-  const sortedChanges = useMemo(() => {
-    return [...changes].sort((a, b) => {
-      const ad = new Date(a.detectedAt).getTime();
-      const bd = new Date(b.detectedAt).getTime();
-      return bd - ad;
-    });
-  }, [changes]);
+  const sortedChanges = useMemo(
+    () =>
+      [...changes].sort((a, b) => {
+        const ad = new Date(a.detectedAt).getTime();
+        const bd = new Date(b.detectedAt).getTime();
+        return bd - ad;
+      }),
+    [changes]
+  );
 
   return (
     <Container className={styles.framedataPage}>
@@ -89,21 +103,30 @@ const PendingChangesPage: React.FC = () => {
               <Card className="h-100">
                 <Card.Body className="d-flex flex-column">
                   <div className="d-flex justify-content-between align-items-start mb-2">
-                    <Card.Title className="mb-0">{change.characterName}</Card.Title>
+                    <Card.Title className="mb-0">
+                      {change.characterName}
+                    </Card.Title>
                     <Badge bg={statusVariantMap[change.status] || "secondary"}>
                       {change.status}
                     </Badge>
                   </div>
                   <div className="mb-2">
-                    <Badge bg={changeTypeVariantMap[change.changeType] || "secondary"}>
+                    <Badge
+                      bg={
+                        changeTypeVariantMap[change.changeType] || "secondary"
+                      }
+                    >
                       {change.changeType}
                     </Badge>
                   </div>
                   {change.description && (
-                    <Card.Text className="text-muted small">{change.description}</Card.Text>
+                    <Card.Text className="text-muted small">
+                      {change.description}
+                    </Card.Text>
                   )}
                   <div className="mt-auto text-muted small">
-                    Обнаружено: {new Date(change.detectedAt).toLocaleString("ru-RU")}
+                    Обнаружено:{" "}
+                    {new Date(change.detectedAt).toLocaleString("ru-RU")}
                   </div>
                 </Card.Body>
               </Card>
@@ -116,5 +139,3 @@ const PendingChangesPage: React.FC = () => {
 };
 
 export default PendingChangesPage;
-
-

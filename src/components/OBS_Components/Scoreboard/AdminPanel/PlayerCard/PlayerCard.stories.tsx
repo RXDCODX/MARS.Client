@@ -4,7 +4,7 @@ import { expect } from "storybook/test";
 import PlayerCard from "./PlayerCard";
 
 const meta: Meta<typeof PlayerCard> = {
-  title: "Admin Panel/Player Card",
+  title: "Stream Components/Scoreboard/AdminPanel/PlayerCard",
   component: PlayerCard,
   parameters: {
     layout: "centered",

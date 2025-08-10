@@ -4,7 +4,7 @@ import { expect } from "storybook/test";
 import WaifuAlerts from "./WaifuAlerts";
 
 const meta: Meta<typeof WaifuAlerts> = {
-  title: "Waifu/WaifuAlerts",
+  title: "Stream Components/WaifuAlerts",
   component: WaifuAlerts,
   parameters: {
     layout: "fullscreen",

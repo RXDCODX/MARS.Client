@@ -47,7 +47,7 @@ const TestWrapper = ({
 );
 
 const meta: Meta = {
-  title: "Particles/Effects",
+  title: "Stream Components/ScreenParticles/Effects",
   parameters: {
     layout: "fullscreen",
     docs: {

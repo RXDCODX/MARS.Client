@@ -2,10 +2,10 @@ import "./storybook-global.scss";
 
 import type { Preview } from "@storybook/react-vite";
 
-import { withStorybookAttribute } from "./decorators";
+import { withStorybookAttribute, withThemeProvider } from "./decorators";
 
 const preview: Preview = {
-  decorators: [withStorybookAttribute],
+  decorators: [withThemeProvider, withStorybookAttribute],
   parameters: {
     controls: {
       matchers: {

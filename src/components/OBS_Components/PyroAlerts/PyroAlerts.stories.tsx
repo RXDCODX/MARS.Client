@@ -4,7 +4,7 @@ import { expect } from "storybook/test";
 import PyroAlerts from "./PyroAlerts";
 
 const meta: Meta<typeof PyroAlerts> = {
-  title: "Alerts/PyroAlerts",
+  title: "Stream Components/PyroAlerts",
   component: PyroAlerts,
   parameters: {
     layout: "fullscreen",
