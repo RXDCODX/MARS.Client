@@ -1,0 +1,1 @@
+import{r as t}from"./iframe-gjcH4K4g.js";const o=t.createContext(void 0),s=()=>{const e=t.useContext(o);if(e===void 0)throw new Error("useTheme must be used within a ThemeProvider");return e};export{s as u};
