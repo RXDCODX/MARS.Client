@@ -19,7 +19,7 @@ import {
 } from "@/shared/api/data-contracts";
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
-import { CommandsUserPlatformInfoListParamsEnum } from "../../shared/api/data-contracts";
+import { CommandsUserPlatformInfoListParamsEnum } from "@/shared/api/data-contracts";
 import styles from "./CommandsPage.module.scss";
 
 // Типы для состояния компонента

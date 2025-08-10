@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
-import ThemeToggle from "../../../ThemeToggle";
+import ThemeToggle from "@/components/ThemeToggle";
 import styles from "./Header.module.scss";
 
 const Header: React.FC = () => {
