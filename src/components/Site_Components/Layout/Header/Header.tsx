@@ -19,6 +19,7 @@ const Header: React.FC = () => {
     { label: "О проекте", path: "/about" },
     { label: "Документация", path: "/docs" },
     { label: "Команды", path: "/commands" },
+    { label: "Фреймдата", path: "/framedata" },
     { label: "Контакты", path: "/contacts" },
   ];
 

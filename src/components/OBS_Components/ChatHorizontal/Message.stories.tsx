@@ -3,8 +3,8 @@ import { expect } from "storybook/test";
 
 import {
   ChatMessage,
-  EnumChatMessageNoisy,
-  EnumChatMessageUserType,
+  ChatMessageNoisyEnum,
+  ChatMessageUserTypeEnum,
 } from "@/shared/api";
 
 import { Message } from "./Message";
@@ -72,13 +72,13 @@ const defaultMessage: ChatMessage = {
   isStaff: false,
   isSubscriber: false,
   isTurbo: false,
-  noisy: EnumChatMessageNoisy.False,
+  noisy: ChatMessageNoisyEnum.False,
   rawIrcMessage: undefined,
   roomId: undefined,
   subscribedMonthCount: 0,
   tmiSentTs: undefined,
   userId: undefined,
-  userType: EnumChatMessageUserType.Viewer,
+  userType: ChatMessageUserTypeEnum.Viewer,
   username: undefined,
 };
 

@@ -1,4 +1,5 @@
 import { Alert, Card, Col, Row, Spinner } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 import { TekkenCharacter } from "@/shared/api/data-contracts";
 
@@ -48,7 +49,12 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
 
   return (
     <div className={styles.characterGrid}>
-      <h2 className="mb-4">Персонажи Tekken</h2>
+      <div className="d-flex justify-content-between align-items-center mb-4">
+        <h2 className="mb-0">Персонажи Tekken</h2>
+        <Link to="/framedata/pending" className="btn btn-warning">
+          Ожидающие изменения
+        </Link>
+      </div>
       <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
         {characters.map(character => {
           const charName =

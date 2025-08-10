@@ -2,7 +2,7 @@ import { HubConnection, HubConnectionState } from "@microsoft/signalr";
 import { create } from "zustand";
 
 import { ScoreboardDto } from "@/shared/api";
-import { ScoreboardHubSignalRContext } from "@/shared/api/SignalR/ScoreboardHub/SignalRContext";
+import { ScoreboardHubSignalRContext } from "@/shared/api";
 
 import {
   ColorInfoWIthTimestamp,

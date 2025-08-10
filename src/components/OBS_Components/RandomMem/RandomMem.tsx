@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { EnumMediaMetaInfoPriority, MediaDto } from "@/shared/api";
+import { MediaDto, MediaMetaInfoPriorityEnum } from "@/shared/api";
 import Announce from "@/shared/Utils/Announce/Announce";
 
 import { SignalRContext } from "../../../app";
@@ -19,7 +19,7 @@ export default function PyroAlerts() {
     message.mediaInfo.id = uuidv4();
 
     switch (message.mediaInfo.metaInfo.priority) {
-      case EnumMediaMetaInfoPriority.High: {
+      case MediaMetaInfoPriorityEnum.High: {
         const parsedMessage: MediaDto = {
           ...message,
           mediaInfo: {
@@ -38,8 +38,8 @@ export default function PyroAlerts() {
         setMessages([]);
         break;
       }
-      case EnumMediaMetaInfoPriority.Low:
-      case EnumMediaMetaInfoPriority.Normal: {
+      case MediaMetaInfoPriorityEnum.Low:
+      case MediaMetaInfoPriorityEnum.Normal: {
         const coolMessage: MediaDto = {
           ...message,
           mediaInfo: {

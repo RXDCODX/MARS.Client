@@ -32,6 +32,7 @@ const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange }) => {
     { label: "Главная", path: "/" },
     { label: "О проекте", path: "/about" },
     { label: "Документация", path: "/docs" },
+    { label: "Фреймдата", path: "/framedata" },
     { label: "Команды", path: "/commands" },
     { label: "Контакты", path: "/contacts" },
   ];

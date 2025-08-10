@@ -1,13 +1,13 @@
 import { useCallback } from "react";
 
-import { EnumMediaFileInfoType, MediaDto } from "@/shared/api";
+import { MediaDto, MediaFileInfoTypeEnum } from "@/shared/api";
 
 import { Audio, Image, Video, Voice } from "./Primitive";
 import TelegramSticker from "./Primitive/TelegramSticker";
 
 export interface AlertDestination {
   message: MediaDto;
-  type: EnumMediaFileInfoType;
+  type: MediaFileInfoTypeEnum;
   callback: () => void;
 }
 
@@ -16,8 +16,8 @@ export default function HighPriorityAlert(alert: AlertDestination) {
   const callback = useCallback(() => alert.callback(), [alert]);
 
   switch (alert.type) {
-    case EnumMediaFileInfoType.Image:
-    case EnumMediaFileInfoType.Gif:
+    case MediaFileInfoTypeEnum.Image:
+    case MediaFileInfoTypeEnum.Gif:
       return (
         <Image
           key={message.mediaInfo.id}
@@ -25,7 +25,7 @@ export default function HighPriorityAlert(alert: AlertDestination) {
           callBack={callback}
         />
       );
-    case EnumMediaFileInfoType.Video:
+    case MediaFileInfoTypeEnum.Video:
       return (
         <Video
           key={message.mediaInfo.id}
@@ -34,7 +34,7 @@ export default function HighPriorityAlert(alert: AlertDestination) {
           isHighPrior
         />
       );
-    case EnumMediaFileInfoType.Audio:
+    case MediaFileInfoTypeEnum.Audio:
       return (
         <Audio
           key={message.mediaInfo.id}
@@ -43,7 +43,7 @@ export default function HighPriorityAlert(alert: AlertDestination) {
           isHighPrior
         />
       );
-    case EnumMediaFileInfoType.Voice:
+    case MediaFileInfoTypeEnum.Voice:
       return (
         <Voice
           key={message.mediaInfo.id}
@@ -52,7 +52,7 @@ export default function HighPriorityAlert(alert: AlertDestination) {
           isHighPrior
         />
       );
-    case EnumMediaFileInfoType.TelegramSticker:
+    case MediaFileInfoTypeEnum.TelegramSticker:
       return (
         <TelegramSticker
           key={message.mediaInfo.id}

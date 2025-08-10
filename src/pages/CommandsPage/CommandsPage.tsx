@@ -12,11 +12,11 @@ import {
 } from "react-bootstrap";
 
 import { Commands } from "@/shared/api";
-import { CommandsAdminPlatformInfoListParamsEnum } from "@/shared/api/data-contracts";
 import {
   CommandInfo,
   CommandParameterInfo,
-} from "@/shared/api/SignalR/types/signalr-types";
+  CommandsAdminPlatformInfoListParamsEnum,
+} from "@/shared/api/data-contracts";
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
 import { CommandsUserPlatformInfoListParamsEnum } from "../../shared/api/data-contracts";

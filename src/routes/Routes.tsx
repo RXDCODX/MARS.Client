@@ -21,6 +21,7 @@ import CommandsPage from "@/pages/CommandsPage/CommandsPage";
 import ContactsPage from "@/pages/ContactsPage";
 import DocsPage from "@/pages/DocsPage";
 import FramedataPage from "@/pages/FramedataPage/FramedataPage";
+import PendingChangesPage from "@/pages/FramedataPage/PendingChangesPage";
 import WelcomePage from "@/pages/WelcomePage";
 
 import { LinktreeMenu } from "./LinkTree/LinkTreeMenu";
@@ -86,6 +87,14 @@ const PrivateRoutes = () => (
         element={
           <Layout>
             <FramedataPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/framedata/pending"
+        element={
+          <Layout>
+            <PendingChangesPage />
           </Layout>
         }
       />

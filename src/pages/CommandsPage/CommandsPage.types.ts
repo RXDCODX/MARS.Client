@@ -1,7 +1,7 @@
 import {
   CommandInfo,
+  CommandInfoAvailablePlatformsEnum,
   CommandParameterInfo,
-  EnumCommandInfoAvailablePlatforms,
 } from "@/shared/api";
 
 export interface CommandExecutionState {
@@ -23,4 +23,4 @@ export interface CommandsState {
   activeTab: "user" | "admin";
 }
 
-export type PlatformType = EnumCommandInfoAvailablePlatforms;
+export type PlatformType = CommandInfoAvailablePlatformsEnum;
