@@ -4,7 +4,7 @@ import {
   Grid,
   Heading,
   Text,
-  useColorModeValue, // Ensure this is imported if needed for direct color values
+
 } from "@chakra-ui/react";
 import React from "react";
 
@@ -18,14 +18,13 @@ import { useSiteColors } from "@/shared/Utils/useSiteColors";
 const ColorDemo: React.FC = () => {
   const colors = useSiteColors();
 
-  // Convert CSS variable values to direct Chakra UI color tokens or use useColorModeValue if possible
-  const cardBg = useColorModeValue(colors.background.card, "gray.700");
-  const borderPrimary = useColorModeValue(colors.border.primary, "gray.600");
-  const shadowLight = useColorModeValue(colors.shadow.light, "lg");
-  const shadowMedium = useColorModeValue(colors.shadow.medium, "xl");
-  const shadowHeavy = useColorModeValue(colors.shadow.heavy, "2xl");
-  const shadowInset = useColorModeValue(colors.shadow.inset, "dark-inset");
-  const hoverBg = useColorModeValue(colors.hover.background, "whiteAlpha.100");
+  const cardBg = colors.background.card;
+  const borderPrimary = colors.border.primary;
+  const shadowLight = colors.shadow.light as any;
+  const shadowMedium = colors.shadow.medium as any;
+  const shadowHeavy = colors.shadow.heavy as any;
+  const shadowInset = colors.shadow.inset as any;
+  const hoverBg = colors.hover.background;
 
   return (
     <Box
