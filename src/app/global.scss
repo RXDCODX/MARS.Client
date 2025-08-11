@@ -1,5 +1,5 @@
-// Bootstrap CSS
-@use "../styles/bootstrap";
+/* Bootstrap отключён после миграции на Chakra UI */
+/* @use "../styles/bootstrap"; */
 @use "bootstrap-icons/font/bootstrap-icons.css";
 
 /* Применяем стили только если не в Storybook */

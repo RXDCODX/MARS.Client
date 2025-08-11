@@ -1,4 +1,5 @@
-import { Button } from "react-bootstrap";
+import { Button } from "@chakra-ui/react";
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 
 import { useTheme } from "@/contexts/Theme";
 
@@ -15,17 +16,17 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
 }) => {
   const { theme, toggleTheme } = useTheme();
 
-  const getButtonVariant = () => {
-    if (variant === "admin") {
-      return "outline-secondary";
-    }
-    return theme === "light" ? "outline-dark" : "outline-light";
+  const getButtonColorScheme = () => {
+    if (variant === "admin") return "gray";
+    return theme === "light" ? "gray" : "yellow";
   };
 
   const getButtonSize = () => {
     switch (size) {
       case "lg":
         return "lg";
+      case "md":
+        return "md";
       default:
         return "sm";
     }
@@ -36,7 +37,8 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
 
   return (
     <Button
-      variant={getButtonVariant()}
+      variant="outline"
+      colorScheme={getButtonColorScheme()}
       size={getButtonSize()}
       onClick={toggleTheme}
       className={getButtonClass()}
@@ -44,12 +46,12 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({
     >
       {theme === "light" ? (
         <>
-          <i className="bi bi-moon-fill"></i>
+          <MoonIcon style={{ marginRight: 6 }} />
           <span className="ms-1 d-none d-sm-inline">Темная</span>
         </>
       ) : (
         <>
-          <i className="bi bi-sun-fill"></i>
+          <SunIcon style={{ marginRight: 6 }} />
           <span className="ms-1 d-none d-sm-inline">Светлая</span>
         </>
       )}

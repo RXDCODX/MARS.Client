@@ -1,13 +1,5 @@
-import {
-  Box,
-  Button,
-  Container,
-  Heading,
-  Input,
-  Stack,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Button, Container, Heading, Input, Stack, Text } from "@chakra-ui/react";
+import { useSiteColors } from "@/shared/Utils/useSiteColors";
 import { useState } from "react";
 
 import AutoMessageBillboardTest from "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboardTest";
@@ -16,11 +8,12 @@ export default function AutoMessageBillboardPage() {
   const [testMessage, setTestMessage] = useState("");
 
   // Цветовые переменные
-  const bgPrimary = useColorModeValue("white", "gray.800");
-  const bgSecondary = useColorModeValue("gray.50", "gray.700");
-  const textPrimary = useColorModeValue("gray.800", "white");
-  const textSecondary = useColorModeValue("gray.600", "gray.300");
-  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const colors = useSiteColors();
+  const bgPrimary = colors.background.primary;
+  const bgSecondary = colors.background.secondary;
+  const textPrimary = colors.text.primary;
+  const textSecondary = colors.text.secondary;
+  const borderColor = colors.border.primary;
 
   const handleSendTestMessage = () => {
     if (testMessage.trim()) {

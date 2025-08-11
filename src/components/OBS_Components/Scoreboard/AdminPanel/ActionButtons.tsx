@@ -1,5 +1,5 @@
-import { Button, Stack } from "react-bootstrap";
-import { ArrowLeftRight, ArrowRepeat } from "react-bootstrap-icons";
+import { HStack, Button } from "@chakra-ui/react";
+import { ArrowLeftRight, ArrowClockwise } from "react-bootstrap-icons";
 
 type ActionButtonsProps = {
   onSwapNames: () => void;
@@ -12,53 +12,47 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   onSwapPlayers,
   onReset,
 }) => (
-  <Stack gap={3} className="w-100 w-md-auto align-items-center">
+  <HStack gap={3} w="100%" align="center">
     <Button
-      variant="info"
-      className="fw-bold py-2 text-white w-100 w-md-auto mx-2 tooltip-container"
-      style={{
-        fontSize: 18,
-        background: "#0dcaf0",
-        border: "none",
-        boxShadow: "0 2px 8px #0dcaf055",
-        position: "relative",
-      }}
+      colorScheme="cyan"
+      variant="solid"
+      fontWeight="bold"
+      py={2}
+      w={{ base: "100%", md: "auto" }}
+      mx={2}
+      boxShadow="0 2px 8px #0dcaf055"
       onClick={onSwapNames}
       title="Поменять имена"
     >
-      <ArrowLeftRight /> Name
+      <ArrowLeftRight style={{ marginRight: 6 }} /> Name
     </Button>
     <Button
-      variant="info"
-      className="fw-bold py-2 text-white w-100 w-md-auto mx-2 tooltip-container"
-      style={{
-        fontSize: 18,
-        background: "#0dcaf0",
-        border: "none",
-        boxShadow: "0 2px 8px #0dcaf055",
-        position: "relative",
-      }}
+      colorScheme="cyan"
+      variant="solid"
+      fontWeight="bold"
+      py={2}
+      w={{ base: "100%", md: "auto" }}
+      mx={2}
+      boxShadow="0 2px 8px #0dcaf055"
       onClick={onSwapPlayers}
       title="Поменять игроков местами"
     >
-      <ArrowLeftRight /> All
+      <ArrowLeftRight style={{ marginRight: 6 }} /> All
     </Button>
     <Button
-      variant="danger"
-      className="fw-bold py-2 text-white w-100 w-md-auto mx-2 tooltip-container"
-      style={{
-        fontSize: 18,
-        background: "#dc3545",
-        border: "none",
-        boxShadow: "0 2px 8px #dc354555",
-        position: "relative",
-      }}
+      colorScheme="red"
+      variant="solid"
+      fontWeight="bold"
+      py={2}
+      w={{ base: "100%", md: "auto" }}
+      mx={2}
+      boxShadow="0 2px 8px #dc354555"
       onClick={onReset}
       title="Сбросить всё"
     >
-      <ArrowRepeat /> Reset
+      <ArrowClockwise style={{ marginRight: 6 }} /> Reset
     </Button>
-  </Stack>
+  </HStack>
 );
 
 export default ActionButtons;

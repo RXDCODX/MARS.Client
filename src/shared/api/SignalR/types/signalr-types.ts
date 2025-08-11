@@ -1,1 +1,1 @@
-export * from "../../signalr/data-contracts";
+export * from "../../SignalR/data-contracts";

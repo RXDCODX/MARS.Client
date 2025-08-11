@@ -1,12 +1,4 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  SimpleGrid,
-  Spinner,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Flex, Grid, Heading, SimpleGrid, Spinner, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 import ActiveUsers from "./ActiveUsers/ActiveUsers";
@@ -29,14 +21,11 @@ const Dashboard: React.FC<DashboardProps> = () => {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  // Chakra UI color mode values
-  const bgPrimary = useColorModeValue("white", "gray.800");
-  const textPrimary = useColorModeValue("gray.800", "white");
-  const textSecondary = useColorModeValue("gray.600", "gray.300");
-  const primaryGradientLight = useColorModeValue(
-    "linear(to-r, blue.500, purple.500)",
-    "linear(to-r, blue.300, purple.300)"
-  );
+  // Цвета из site-colors
+  const bgPrimary = "white";
+  const textPrimary = "gray.800";
+  const textSecondary = "gray.600";
+  const primaryGradientLight = "linear(to-r, blue.500, purple.500)";
 
   useEffect(() => {
     // Имитация загрузки данных
@@ -158,13 +147,13 @@ const Dashboard: React.FC<DashboardProps> = () => {
         </Text>
       </Box>
 
-      <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} spacing={6} mb={8}>
+      <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} gap={6} mb={8}>
         {metricCards.map((card, index) => (
           <MetricCard key={index} {...card} />
         ))}
       </SimpleGrid>
 
-      <SimpleGrid columns={{ base: 1, lg: "2fr 1fr" }} spacing={6}>
+      <Grid templateColumns={{ base: "1fr", lg: "2fr 1fr" }} gap={6}>
         <Flex direction="column" gap={6}>
           <SystemStatus />
           <PerformanceChart />
@@ -174,7 +163,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
           <ActiveUsers />
           <RecentLogs />
         </Flex>
-      </SimpleGrid>
+      </Grid>
     </Box>
   );
 };

@@ -4,32 +4,30 @@ import {
   Button,
   Code,
   Container,
-  Divider,
   Flex,
   Grid,
   GridItem,
   Heading,
-  HStack,
-  List,
-  ListIcon,
-  ListItem,
-  Text,
-  useColorModeValue,
   VStack,
+  Text,
 } from "@chakra-ui/react";
+import { List } from "@chakra-ui/react";
+import { useSiteColors } from "@/shared/Utils/useSiteColors";
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const DocsPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState("getting-started");
 
-  const bgPrimary = useColorModeValue("white", "gray.800");
-  const bgSecondary = useColorModeValue("gray.50", "gray.700");
-  const bgCard = useColorModeValue("white", "gray.700");
-  const textPrimary = useColorModeValue("gray.800", "white");
-  const textSecondary = useColorModeValue("gray.600", "gray.300");
-  const textAccent = useColorModeValue("blue.500", "blue.300");
-  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const colors = useSiteColors();
+  const bgPrimary = colors.background.primary;
+  const bgSecondary = colors.background.secondary;
+  const bgCard = colors.background.card;
+  const textPrimary = colors.text.primary;
+  const textSecondary = colors.text.secondary;
+  const textAccent = colors.text.accent;
+  const borderColor = colors.border.primary;
 
   const tabs = [
     { id: "getting-started", label: "Начало работы" },

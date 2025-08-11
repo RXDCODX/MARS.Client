@@ -1,5 +1,6 @@
-import { ChakraProvider, extendTheme } from "@chakra-ui/react";
-import { ReactNode, useEffect, useState } from "react";
+import { ChakraProvider } from "@chakra-ui/react";
+import { defaultConfig, defaultSystem } from "@chakra-ui/react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 
 import { Theme, ThemeContext } from "./Theme";
 
@@ -15,21 +16,20 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
 
   useEffect(() => {
     localStorage.setItem("theme", themeMode);
+    document.documentElement.dataset.colorMode = themeMode;
   }, [themeMode]);
 
   const toggleTheme = () => {
     setThemeMode(prevTheme => (prevTheme === "light" ? "dark" : "light"));
   };
 
-  const theme = extendTheme({
-    config: {
-      initialColorMode: themeMode,
-      useSystemColorMode: false,
-    },
-  });
+  const systemValue = useMemo(() => {
+    // Можно дополнительно настраивать defaultConfig.theme.semanticTokens под тему
+    return defaultSystem;
+  }, [themeMode]);
 
   return (
-    <ChakraProvider theme={theme}>
+    <ChakraProvider value={systemValue}>
       <ThemeContext.Provider value={{ theme: themeMode, toggleTheme }}>
         {children}
       </ThemeContext.Provider>

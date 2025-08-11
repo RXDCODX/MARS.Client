@@ -1,16 +1,6 @@
 import { ChevronDownIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { Menu } from "@chakra-ui/react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -27,15 +17,14 @@ interface NavItem {
 const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange }) => {
   const colors = useSiteColors();
 
-  // Chakra UI color mode values
-  const bgColor = useColorModeValue(colors.background.secondary, "gray.800");
-  const borderColor = useColorModeValue(colors.border.primary, "gray.600");
-  const cardBg = useColorModeValue(colors.background.card, "gray.700");
-  const textPrimary = useColorModeValue(colors.text.primary, "white");
-  const textSecondary = useColorModeValue(colors.text.secondary, "gray.300");
-  const accentColor = useColorModeValue(colors.text.accent, colors.text.accent);
-  const lightText = useColorModeValue(colors.text.light, "black"); // Assuming light text needs to be black in dark mode for contrast if used directly
-  const hoverBg = useColorModeValue(colors.hover.background, "whiteAlpha.200");
+  const bgColor = colors.background.secondary;
+  const borderColor = colors.border.primary;
+  const cardBg = colors.background.card;
+  const textPrimary = colors.text.primary;
+  const textSecondary = colors.text.secondary;
+  const accentColor = colors.text.accent;
+  const lightText = colors.text.light;
+  const hoverBg = colors.hover.background;
 
   const tabs = [
     { id: "dashboard", label: "Дашборд", icon: "📊" },
@@ -141,197 +130,80 @@ const Navbar: React.FC<NavbarProps> = ({ activeTab, onTabChange }) => {
               py={3}
               borderRadius="lg"
               fontWeight="medium"
-              leftIcon={<Text fontSize="lg">{tab.icon}</Text>}
+              /* v3: иконку рендерим вручную */
               _hover={{ bg: hoverBg, transform: "translateY(-2px)" }}
               transition="all 0.3s ease"
               whiteSpace="nowrap"
-            >
-              {tab.label}
+> {tab.icon} {tab.label}
             </Button>
           ))}
         </Flex>
 
         {/* Страницы сайта */}
-        <Menu placement="bottom-start">
-          <MenuButton
-            as={Button}
-            rightIcon={<ChevronDownIcon />}
-            variant="ghost"
-            color={textPrimary}
-            px={4}
-            py={3}
-            borderRadius="lg"
-            fontWeight="medium"
-            leftIcon={<Text fontSize="lg">🌐</Text>}
-            _hover={{ bg: hoverBg, transform: "translateY(-2px)" }}
-            transition="all 0.3s ease"
-            whiteSpace="nowrap"
-          >
-            Страницы сайта
-          </MenuButton>
-          <MenuList
-            bg={cardBg}
-            borderColor={borderColor}
-            boxShadow="md"
-            borderRadius="lg"
-            p={2}
-            minW="200px"
-            zIndex={1001}
-          >
+        <Menu.Root>
+          <Menu.Trigger>
+            <Button variant="ghost" color={textPrimary} px={4} py={3} borderRadius="lg" fontWeight="medium" _hover={{ bg: hoverBg, transform: "translateY(-2px)" }}>
+              🌐 Страницы сайта <ChevronDownIcon style={{ marginLeft: 8 }} />
+            </Button>
+          </Menu.Trigger>
+          <Menu.Content bg={cardBg} borderColor={borderColor} style={{ boxShadow: "var(--chakra-shadows-md)", borderRadius: 12, padding: 8, minWidth: 200, zIndex: 1001 }}>
             {sitePages.map((item, index) => (
-              <MenuItem
-                key={index}
-                as={Link}
-                to={item.path}
-                bg={cardBg}
-                color={textPrimary}
-                borderRadius="md"
-                _hover={{
-                  bg: hoverBg,
-                  color: accentColor,
-                  transform: "translateX(5px)",
-                }}
-                transition="all 0.2s ease"
-                py={2}
-                px={4}
-              >
-                {item.label}
-              </MenuItem>
+              <Menu.Item key={index} value={item.path}>
+                <Link to={item.path} style={{ color: textPrimary as any, textDecoration: "none", display: "block", padding: "8px 12px", borderRadius: 8 }}>
+                  {item.label}
+                </Link>
+              </Menu.Item>
             ))}
-          </MenuList>
-        </Menu>
+          </Menu.Content>
+        </Menu.Root>
 
         {/* OBS Компоненты */}
-        <Menu placement="bottom-start">
-          <MenuButton
-            as={Button}
-            rightIcon={<ChevronDownIcon />}
-            variant="ghost"
-            color={textPrimary}
-            px={4}
-            py={3}
-            borderRadius="lg"
-            fontWeight="medium"
-            leftIcon={<Text fontSize="lg">🎮</Text>}
-            _hover={{ bg: hoverBg, transform: "translateY(-2px)" }}
-            transition="all 0.3s ease"
-            whiteSpace="nowrap"
-          >
-            OBS Компоненты
-          </MenuButton>
-          <MenuList
-            bg={cardBg}
-            borderColor={borderColor}
-            boxShadow="md"
-            borderRadius="lg"
-            p={2}
-            minW="200px"
-            zIndex={1001}
-          >
+        <Menu.Root>
+          <Menu.Trigger>
+            <Button variant="ghost" color={textPrimary} px={4} py={3} borderRadius="lg" fontWeight="medium" _hover={{ bg: hoverBg, transform: "translateY(-2px)" }}>
+              🎮 OBS Компоненты <ChevronDownIcon style={{ marginLeft: 8 }} />
+            </Button>
+          </Menu.Trigger>
+          <Menu.Content bg={cardBg} borderColor={borderColor} style={{ boxShadow: "var(--chakra-shadows-md)", borderRadius: 12, padding: 8, minWidth: 200, zIndex: 1001 }}>
             {obsComponents.map((item, index) => (
-              <Menu key={index} placement="right-start" gutter={4}>
-                {" "}
-                {/* Nested Menu */}
-                <MenuButton
-                  as={MenuItem}
-                  rightIcon={<ChevronRightIcon />}
-                  bg={cardBg}
-                  color={textPrimary}
-                  borderRadius="md"
-                  _hover={{ bg: hoverBg, color: accentColor }}
-                  transition="all 0.2s ease"
-                  py={2}
-                  px={4}
-                >
-                  {item.label}
-                </MenuButton>
-                <MenuList
-                  bg={cardBg}
-                  borderColor={borderColor}
-                  boxShadow="md"
-                  borderRadius="lg"
-                  p={2}
-                  minW="200px"
-                  zIndex={1002}
-                >
+              <Menu.Root key={index} positioning={{ placement: "right-start" }}>
+                <Menu.TriggerItem>
+                  {item.label} <ChevronRightIcon style={{ marginLeft: 8 }} />
+                </Menu.TriggerItem>
+                <Menu.Content bg={cardBg} borderColor={borderColor} style={{ boxShadow: "var(--chakra-shadows-md)", borderRadius: 12, padding: 8, minWidth: 200, zIndex: 1002 }}>
                   {item.children?.map((child, childIndex) => (
-                    <MenuItem
-                      key={childIndex}
-                      as={Link}
-                      to={child.path || "#"}
-                      bg={cardBg}
-                      color={textPrimary}
-                      borderRadius="md"
-                      _hover={{
-                        bg: hoverBg,
-                        color: accentColor,
-                        transform: "translateX(5px)",
-                      }}
-                      transition="all 0.2s ease"
-                      py={2}
-                      px={4}
-                    >
-                      {child.label}
-                    </MenuItem>
+                    <Menu.Item key={childIndex} value={child.path}>
+                      <Link to={child.path} style={{ color: textPrimary as any, textDecoration: "none", display: "block", padding: "8px 12px", borderRadius: 8 }}>
+                        {child.label}
+                      </Link>
+                    </Menu.Item>
                   ))}
-                </MenuList>
-              </Menu>
+                </Menu.Content>
+              </Menu.Root>
             ))}
-          </MenuList>
-        </Menu>
+          </Menu.Content>
+        </Menu.Root>
 
         {/* Панель управления */}
-        <Menu placement="bottom-start">
-          <MenuButton
-            as={Button}
-            rightIcon={<ChevronDownIcon />}
-            variant="ghost"
-            color={textPrimary}
-            px={4}
-            py={3}
-            borderRadius="lg"
-            fontWeight="medium"
-            leftIcon={<Text fontSize="lg">⚙️</Text>}
-            _hover={{ bg: hoverBg, transform: "translateY(-2px)" }}
-            transition="all 0.3s ease"
-            whiteSpace="nowrap"
-          >
-            Панель управления
-          </MenuButton>
-          <MenuList
-            bg={cardBg}
-            borderColor={borderColor}
-            boxShadow="md"
-            borderRadius="lg"
-            p={2}
-            minW="200px"
-            zIndex={1001}
-          >
+        <Menu.Root>
+          <Menu.Trigger>
+            <Button variant="ghost" color={textPrimary} px={4} py={3} borderRadius="lg" fontWeight="medium" _hover={{ bg: hoverBg, transform: "translateY(-2px)" }}>
+              ⚙️ Панель управления <ChevronDownIcon style={{ marginLeft: 8 }} />
+            </Button>
+          </Menu.Trigger>
+          <Menu.Content bg={cardBg} borderColor={borderColor} style={{ boxShadow: "var(--chakra-shadows-md)", borderRadius: 12, padding: 8, minWidth: 200, zIndex: 1001 }}>
             {controlRoomPages.map((item, index) => (
-              <MenuItem
-                key={index}
-                as={Link}
-                to={item.path}
-                bg={cardBg}
-                color={textPrimary}
-                borderRadius="md"
-                _hover={{
-                  bg: hoverBg,
-                  color: accentColor,
-                  transform: "translateX(5px)",
-                }}
-                transition="all 0.2s ease"
-                py={2}
-                px={4}
-              >
-                {item.label}
-              </MenuItem>
+              <Menu.Item key={index} value={item.path}>
+                <Link to={item.path} style={{ color: textPrimary as any, textDecoration: "none", display: "block", padding: "8px 12px", borderRadius: 8 }}>
+                  {item.label}
+                </Link>
+              </Menu.Item>
             ))}
-          </MenuList>
-        </Menu>
+          </Menu.Content>
+        </Menu.Root>
 
         <Flex
-          bg={useColorModeValue(colors.background.tertiary, "gray.700")}
+          bg={colors.background.tertiary}
           color={textPrimary}
           borderColor={borderColor}
           borderRadius="lg"

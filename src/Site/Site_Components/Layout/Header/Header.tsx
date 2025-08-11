@@ -1,30 +1,18 @@
 import { ChevronDownIcon, ChevronRightIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Container,
-  Flex,
-  HStack,
-  Icon,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  Text,
-  useColorModeValue,
-} from "@chakra-ui/react";
+import { Box, Button, Container, Flex, Text } from "@chakra-ui/react";
+import { Menu } from "@chakra-ui/react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
-import ThemeToggle from "../../../ThemeToggle";
+import ThemeToggle from "@/components/ThemeToggle";
 
 const Header: React.FC = () => {
   const colors = useSiteColors();
-  const bgColor = useColorModeValue(colors.background.secondary, "gray.800");
-  const borderColor = useColorModeValue(colors.border.primary, "gray.600");
-  const cardBg = useColorModeValue(colors.background.card, "gray.700");
+  const bgColor = colors.background.secondary;
+  const borderColor = colors.border.primary;
+  const cardBg = colors.background.card;
 
   const sitePages = [
     { label: "Главная", path: "/" },
@@ -77,127 +65,81 @@ const Header: React.FC = () => {
   ];
 
   return (
-    <Box
-      as="header"
-      bg={bgColor}
-      borderBottom={`1px solid ${borderColor}`}
-      boxShadow="md"
-      position="sticky"
-      top={0}
-      zIndex={1000}
-    >
+    <Box as="header" bg={bgColor} borderBottom={`1px solid ${borderColor}`} boxShadow="md" position="sticky" top={0} zIndex={1000}>
       <Container maxW="full" px={4}>
         <Flex justify="space-between" align="center" py={4}>
-          <Text
-            as={Link}
-            to="/"
-            fontSize="xl"
-            fontWeight="bold"
-            color={colors.text.primary}
-            _hover={{ textDecoration: "none" }}
-          >
-            🚀 MARS Client
-          </Text>
+          <Link to="/" style={{ textDecoration: "none" }}>
+            <Text fontSize="xl" fontWeight="bold" color={colors.text.primary}>
+              🚀 MARS Client
+            </Text>
+          </Link>
 
-          <HStack spacing={4} align="center">
+          <Flex align="center" gap={4}>
             {/* Страницы сайта */}
-            <Menu>
-              <MenuButton
-                as={Button}
-                rightIcon={<ChevronDownIcon />}
-                variant="ghost"
-                color={colors.text.primary}
-                _hover={{ bg: cardBg }}
-              >
-                Страницы сайта
-              </MenuButton>
-              <MenuList bg={cardBg} borderColor={borderColor}>
+            <Menu.Root>
+              <Menu.Trigger>
+                <Button variant="ghost" color={colors.text.primary}>
+                  Страницы сайта <ChevronDownIcon style={{ marginLeft: 8 }} />
+                </Button>
+              </Menu.Trigger>
+              <Menu.Content bg={cardBg} borderColor={borderColor}>
                 {sitePages.map((item, index) => (
-                  <MenuItem
-                    key={index}
-                    as={Link}
-                    to={item.path}
-                    bg={cardBg}
-                    color={colors.text.primary}
-                    _hover={{ bg: colors.background.primary }}
-                  >
-                    {item.label}
-                  </MenuItem>
+                  <Menu.Item key={index} value={item.path}>
+                    <Link to={item.path} style={{ color: colors.text.primary, textDecoration: "none" }}>
+                      {item.label}
+                    </Link>
+                  </Menu.Item>
                 ))}
-              </MenuList>
-            </Menu>
+              </Menu.Content>
+            </Menu.Root>
 
             {/* OBS Компоненты */}
-            <Menu>
-              <MenuButton
-                as={Button}
-                rightIcon={<ChevronDownIcon />}
-                variant="ghost"
-                color={colors.text.primary}
-                _hover={{ bg: cardBg }}
-              >
-                OBS Компоненты
-              </MenuButton>
-              <MenuList bg={cardBg} borderColor={borderColor}>
+            <Menu.Root>
+              <Menu.Trigger>
+                <Button variant="ghost" color={colors.text.primary}>
+                  OBS Компоненты <ChevronDownIcon style={{ marginLeft: 8 }} />
+                </Button>
+              </Menu.Trigger>
+              <Menu.Content bg={cardBg} borderColor={borderColor}>
                 {obsComponents.map((item, index) => (
-                  <Menu key={index}>
-                    <MenuButton
-                      as={MenuItem}
-                      rightIcon={<ChevronRightIcon />}
-                      bg={cardBg}
-                      color={colors.text.primary}
-                      _hover={{ bg: colors.background.primary }}
-                    >
-                      {item.label}
-                    </MenuButton>
-                    <MenuList bg={cardBg} borderColor={borderColor}>
+                  <Menu.Root key={index} positioning={{ placement: "right-start" }}>
+                    <Menu.TriggerItem value={item.label}>
+                      {item.label} <ChevronRightIcon style={{ marginLeft: 8 }} />
+                    </Menu.TriggerItem>
+                    <Menu.Content bg={cardBg} borderColor={borderColor}>
                       {item.children.map((child, childIndex) => (
-                        <MenuItem
-                          key={childIndex}
-                          as={Link}
-                          to={child.path}
-                          bg={cardBg}
-                          color={colors.text.primary}
-                          _hover={{ bg: colors.background.primary }}
-                        >
-                          {child.label}
-                        </MenuItem>
+                        <Menu.Item key={childIndex} value={child.path}>
+                          <Link to={child.path} style={{ color: colors.text.primary, textDecoration: "none" }}>
+                            {child.label}
+                          </Link>
+                        </Menu.Item>
                       ))}
-                    </MenuList>
-                  </Menu>
+                    </Menu.Content>
+                  </Menu.Root>
                 ))}
-              </MenuList>
-            </Menu>
+              </Menu.Content>
+            </Menu.Root>
 
             {/* Панель управления */}
-            <Menu>
-              <MenuButton
-                as={Button}
-                rightIcon={<ChevronDownIcon />}
-                variant="ghost"
-                color={colors.text.primary}
-                _hover={{ bg: cardBg }}
-              >
-                Панель управления
-              </MenuButton>
-              <MenuList bg={cardBg} borderColor={borderColor}>
+            <Menu.Root>
+              <Menu.Trigger>
+                <Button variant="ghost" color={colors.text.primary}>
+                  Панель управления <ChevronDownIcon style={{ marginLeft: 8 }} />
+                </Button>
+              </Menu.Trigger>
+              <Menu.Content bg={cardBg} borderColor={borderColor}>
                 {controlRoomPages.map((item, index) => (
-                  <MenuItem
-                    key={index}
-                    as={Link}
-                    to={item.path}
-                    bg={cardBg}
-                    color={colors.text.primary}
-                    _hover={{ bg: colors.background.primary }}
-                  >
-                    {item.label}
-                  </MenuItem>
+                  <Menu.Item key={index} value={item.path}>
+                    <Link to={item.path} style={{ color: colors.text.primary, textDecoration: "none" }}>
+                      {item.label}
+                    </Link>
+                  </Menu.Item>
                 ))}
-              </MenuList>
-            </Menu>
+              </Menu.Content>
+            </Menu.Root>
 
             <ThemeToggle />
-          </HStack>
+          </Flex>
         </Flex>
       </Container>
     </Box>
