@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from "react";
-
-import { ChatMessage } from "@/shared/api";
 import anime from "@/shared/styles/animate.module.scss";
+import catisaVideo from "@/assets/catisa.mp4";
+import { useEffect, useRef, useState } from "react";
+import { ChatMessage } from "@/shared/api";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import { parseContent, replaceBadges, replaceEmotes } from "@/shared/Utils";
 import GradientText from "@/shared/Utils/Animations/GradientText";
-
 import { CSS_ANIMATION_CONFIG } from "./animationTimings";
 import styles from "./Message.module.scss";
 
@@ -29,6 +28,11 @@ export function Message({ message, onRemove }: Props) {
   const [parts] = useState(() => parseContent(message.message));
   const roleColor = getRoleColor(message);
   const msgRef = useRef<HTMLDivElement>(null);
+
+  // Проверка на catisa-триггер
+  const isCatisa =
+    typeof message.message === "string" &&
+    (/^!catisa/i.test(message.message.trim()) || /^!катиса/i.test(message.message.trim()));
 
   useEffect(() => {
     setTimeout(() => {
@@ -69,119 +73,141 @@ export function Message({ message, onRemove }: Props) {
           </div>
         </div>
         <div className={styles.right}>
-          {parts?.map(part => {
-            if (message.isBroadcaster || message.isVip || message.isModerator) {
-              // Особые пользователи — всегда градиент
-              if (part.type === "text") {
-                // Получаем результат с эмодзи
-                const emoteContent =
-                  parser && parserToLink
-                    ? replaceEmotes({
-                        text: part.content,
-                        parser,
-                        newParser: parserToLink,
-                      })
-                    : part.content;
-                // Если это строка — старый способ, если массив/ReactNode — новый
-                return (
-                  <GradientText
-                    key={part.id}
-                    speed="very-fast"
-                    fontWeight={600}
-                  >
-                    {emoteContent}
-                  </GradientText>
-                );
-              }
-              if (part.type === "image") {
-                return (
-                  <img
-                    key={part.id}
-                    src={part.content}
-                    alt="image"
-                    style={{
-                      maxWidth: "120px",
-                      maxHeight: "120px",
-                      margin: "0 4px",
-                    }}
-                  />
-                );
-              }
-              if (part.type === "video") {
-                return (
-                  <video
-                    key={part.id}
-                    src={part.content}
-                    controls
-                    style={{
-                      maxWidth: "180px",
-                      maxHeight: "120px",
-                      margin: "0 4px",
-                    }}
-                  />
-                );
-              }
-              if (part.type === "link") {
-                return (
-                  <span key={part.id} className={styles.linkStub}>
-                    ссылка
-                  </span>
-                );
-              }
-              return null;
-            } else {
-              // Обычные пользователи — белый текст, но с поддержкой смайлов
-              if (part.type === "text") {
-                return (
-                  <span key={part.id} style={{ color: "white" }}>
-                    {parser && parserToLink
+          {isCatisa ? (
+            <video
+              src={catisaVideo}
+              autoPlay
+              loop
+              muted
+              controls={false}
+              style={{
+                maxWidth: "180px",
+                maxHeight: "120px",
+                margin: "0 4px",
+                borderRadius: 12,
+                background: "black",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+              }}
+            />
+          ) : (
+            parts?.map(part => {
+              if (
+                message.isBroadcaster ||
+                message.isVip ||
+                message.isModerator
+              ) {
+                // Особые пользователи — всегда градиент
+                if (part.type === "text") {
+                  // Получаем результат с эмодзи
+                  const emoteContent =
+                    parser && parserToLink
                       ? replaceEmotes({
                           text: part.content,
                           parser,
                           newParser: parserToLink,
                         })
-                      : part.content}
-                  </span>
-                );
+                      : part.content;
+                  // Если это строка — старый способ, если массив/ReactNode — новый
+                  return (
+                    <GradientText
+                      key={part.id}
+                      speed="very-fast"
+                      fontWeight={600}
+                    >
+                      {emoteContent}
+                    </GradientText>
+                  );
+                }
+                if (part.type === "image") {
+                  return (
+                    <img
+                      key={part.id}
+                      src={part.content}
+                      alt="image"
+                      style={{
+                        maxWidth: "120px",
+                        maxHeight: "120px",
+                        margin: "0 4px",
+                      }}
+                    />
+                  );
+                }
+                if (part.type === "video") {
+                  return (
+                    <video
+                      key={part.id}
+                      src={part.content}
+                      controls
+                      style={{
+                        maxWidth: "180px",
+                        maxHeight: "120px",
+                        margin: "0 4px",
+                      }}
+                    />
+                  );
+                }
+                if (part.type === "link") {
+                  return (
+                    <span key={part.id} className={styles.linkStub}>
+                      ссылка
+                    </span>
+                  );
+                }
+                return null;
+              } else {
+                // Обычные пользователи — белый текст, но с поддержкой смайлов
+                if (part.type === "text") {
+                  return (
+                    <span key={part.id} style={{ color: "white" }}>
+                      {parser && parserToLink
+                        ? replaceEmotes({
+                            text: part.content,
+                            parser,
+                            newParser: parserToLink,
+                          })
+                        : part.content}
+                    </span>
+                  );
+                }
+                if (part.type === "image") {
+                  return (
+                    <img
+                      key={part.id}
+                      src={part.content}
+                      alt="image"
+                      style={{
+                        maxWidth: "120px",
+                        maxHeight: "120px",
+                        margin: "0 4px",
+                      }}
+                    />
+                  );
+                }
+                if (part.type === "video") {
+                  return (
+                    <video
+                      key={part.id}
+                      src={part.content}
+                      controls
+                      style={{
+                        maxWidth: "180px",
+                        maxHeight: "120px",
+                        margin: "0 4px",
+                      }}
+                    />
+                  );
+                }
+                if (part.type === "link") {
+                  return (
+                    <span key={part.id} className={styles.linkStub}>
+                      ссылка
+                    </span>
+                  );
+                }
+                return null;
               }
-              if (part.type === "image") {
-                return (
-                  <img
-                    key={part.id}
-                    src={part.content}
-                    alt="image"
-                    style={{
-                      maxWidth: "120px",
-                      maxHeight: "120px",
-                      margin: "0 4px",
-                    }}
-                  />
-                );
-              }
-              if (part.type === "video") {
-                return (
-                  <video
-                    key={part.id}
-                    src={part.content}
-                    controls
-                    style={{
-                      maxWidth: "180px",
-                      maxHeight: "120px",
-                      margin: "0 4px",
-                    }}
-                  />
-                );
-              }
-              if (part.type === "link") {
-                return (
-                  <span key={part.id} className={styles.linkStub}>
-                    ссылка
-                  </span>
-                );
-              }
-              return null;
-            }
-          })}
+            })
+          )}
         </div>
       </div>
     )
