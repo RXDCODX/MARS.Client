@@ -29,6 +29,15 @@ const DocsPage: React.FC = () => {
   const textAccent = colors.text.accent;
   const borderColor = colors.border.primary;
 
+  const colors = useSiteColors();
+  const bgPrimary = colors.background.primary;
+  const bgSecondary = colors.background.secondary;
+  const bgCard = colors.background.card;
+  const textPrimary = colors.text.primary;
+  const textSecondary = colors.text.secondary;
+  const textAccent = colors.text.accent;
+  const borderColor = colors.border.primary;
+
   const tabs = [
     { id: "getting-started", label: "Начало работы" },
     { id: "obs-components", label: "OBS Компоненты" },

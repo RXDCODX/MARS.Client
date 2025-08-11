@@ -103,7 +103,7 @@ const Header: React.FC = () => {
               <Menu.Content bg={cardBg} borderColor={borderColor}>
                 {obsComponents.map((item, index) => (
                   <Menu.Root key={index} positioning={{ placement: "right-start" }}>
-                    <Menu.TriggerItem value={item.label}>
+                    <Menu.TriggerItem>
                       {item.label} <ChevronRightIcon style={{ marginLeft: 8 }} />
                     </Menu.TriggerItem>
                     <Menu.Content bg={cardBg} borderColor={borderColor}>
