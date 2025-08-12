@@ -1,330 +1,287 @@
 import {
   Box,
-  Container,
+  Button,
   Flex,
   Grid,
-  GridItem,
   Heading,
-  Stack,
   Text,
+  VStack,
+  Image,
+  Badge,
+  Divider,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
-const AboutPage: React.FC = () => {
-  const bgPrimary = "white";
-  const bgSecondary = "gray.50";
-  const bgAccent = "blue.500";
-  const bgCard = "white";
-  const textPrimary = "gray.800";
-  const textSecondary = "gray.600";
-  const textLight = "white";
-  const borderColor = "gray.200";
-  const textAccent = "blue.500";
-
-  const teamMembers = [
+const AboutPage = () => {
+  const features = [
     {
-      name: "Команда разработки",
-      role: "Backend & Frontend",
-      description: "Создание мощной архитектуры и современного интерфейса",
+      icon: "🎮",
+      title: "OBS Интеграция",
+      description: "Полная интеграция с OBS Studio для создания профессиональных стримов",
     },
     {
-      name: "Дизайн команда",
-      role: "UI/UX Design",
-      description: "Создание красивых и удобных интерфейсов",
+      icon: "⚡",
+      title: "Высокая производительность",
+      description: "Оптимизированная архитектура для работы с большими нагрузками",
     },
     {
-      name: "QA команда",
-      role: "Тестирование",
-      description: "Обеспечение качества и стабильности работы",
+      icon: "🔧",
+      title: "Гибкая настройка",
+      description: "Модульная система с возможностью кастомизации под любые нужды",
+    },
+    {
+      icon: "🌐",
+      title: "Web интерфейс",
+      description: "Современный веб-интерфейс для управления всеми компонентами",
     },
   ];
 
-  const milestones = [
+  const technologies = [
+    { name: "ASP.NET Core", type: "Backend", color: "purple" },
+    { name: "React", type: "Frontend", color: "blue" },
+    { name: "SignalR", type: "Real-time", color: "green" },
+    { name: "TypeScript", type: "Language", color: "cyan" },
+    { name: "Chakra UI", type: "UI Framework", color: "teal" },
+    { name: "PostgreSQL", type: "Database", color: "orange" },
+  ];
+
+  const team = [
     {
-      year: "2024",
-      title: "Запуск проекта",
-      description: "Начало разработки MARS Client",
+      name: "Команда разработки",
+      role: "Core Team",
+      description: "Основная команда разработчиков MARS",
+      avatar: "👨‍💻",
     },
     {
-      year: "2024",
-      title: "Первая версия",
-      description: "Базовые OBS компоненты и панель управления",
+      name: "Тестировщики",
+      role: "QA Team",
+      description: "Обеспечивают качество и стабильность системы",
+      avatar: "🧪",
     },
     {
-      year: "2024",
-      title: "Расширение функционала",
-      description: "Добавление новых компонентов и улучшение UI",
+      name: "DevOps",
+      role: "Infrastructure",
+      description: "Поддерживают инфраструктуру и развертывание",
+      avatar: "🚀",
     },
   ];
 
   return (
-    <Box>
-      {/* Hero Section */}
-      <Box bg={bgSecondary} py={20}>
-        <Container maxW="container.xl" textAlign="center">
-          <Stack gap={6}>
-            <Heading as="h1" size="2xl" color={textPrimary}>
-              О проекте MARS Client
-            </Heading>
-            <Text fontSize="xl" color={textSecondary} maxW="2xl">
-              Мощная платформа для создания профессиональных стримов с
-              интерактивными компонентами
+    <Box p={8} bg="white" minH="100vh">
+      <VStack gap={16} align="stretch">
+        {/* Hero Section */}
+        <Box textAlign="center" py={12}>
+          <VStack gap={8}>
+            <Text fontSize="6xl" fontWeight="bold">
+              🚀
             </Text>
-          </Stack>
-        </Container>
-      </Box>
-
-      {/* Mission Section */}
-      <Box bg={bgPrimary} py={20}>
-        <Container maxW="container.xl">
-          <Flex
-            direction={{ base: "column", lg: "row" }}
-            align="center"
-            gap={12}
-          >
-            <Box flex={1}>
-              <Stack gap={6} align="start">
-                <Heading as="h2" size="xl" color={textPrimary}>
-                  Наша миссия
-                </Heading>
-                <Stack gap={4} align="start">
-                  <Text fontSize="lg" color={textSecondary}>
-                    MARS Client создан для того, чтобы помочь стримерам
-                    создавать качественный контент с минимальными усилиями. Мы
-                    предоставляем готовые решения для всех аспектов стриминга:
-                    от красивых алертов до мощной панели управления.
-                  </Text>
-                  <Text fontSize="lg" color={textSecondary}>
-                    Наша цель - сделать стриминг доступным и профессиональным
-                    для всех, кто хочет делиться своим контентом с миром.
-                  </Text>
-                </Stack>
-              </Stack>
-            </Box>
-            <Box flex={1}>
-              <Grid templateColumns="repeat(3, 1fr)" gap={6}>
-                <Box
-                  bg={bgCard}
-                  p={6}
-                  borderRadius="xl"
-                  textAlign="center"
-                  border="1px solid"
-                  borderColor={borderColor}
-                  shadow="md"
-                >
-                  <Text fontSize="3xl" fontWeight="bold" color={textAccent}>
-                    100+
-                  </Text>
-                  <Text color={textSecondary}>Компонентов</Text>
-                </Box>
-                <Box
-                  bg={bgCard}
-                  p={6}
-                  borderRadius="xl"
-                  textAlign="center"
-                  border="1px solid"
-                  borderColor={borderColor}
-                  shadow="md"
-                >
-                  <Text fontSize="3xl" fontWeight="bold" color={textAccent}>
-                    1000+
-                  </Text>
-                  <Text color={textSecondary}>Пользователей</Text>
-                </Box>
-                <Box
-                  bg={bgCard}
-                  p={6}
-                  borderRadius="xl"
-                  textAlign="center"
-                  border="1px solid"
-                  borderColor={borderColor}
-                  shadow="md"
-                >
-                  <Text fontSize="3xl" fontWeight="bold" color={textAccent}>
-                    24/7
-                  </Text>
-                  <Text color={textSecondary}>Поддержка</Text>
-                </Box>
-              </Grid>
-            </Box>
-          </Flex>
-        </Container>
-      </Box>
-
-      {/* Team Section */}
-      <Box bg={bgSecondary} py={20}>
-        <Container maxW="container.xl">
-          <Stack gap={12}>
-            <Heading as="h2" size="xl" color={textPrimary} textAlign="center">
-              Наша команда
+            <Heading as="h1" size="2xl" color="gray.800">
+              О проекте MARS
             </Heading>
-            <Grid
-              templateColumns={{
-                base: "1fr",
-                md: "repeat(2, 1fr)",
-                lg: "repeat(3, 1fr)",
-              }}
-              gap={8}
-            >
-              {teamMembers.map((member, index) => (
-                <GridItem key={index}>
-                  <Box
-                    bg={bgCard}
-                    p={8}
-                    borderRadius="xl"
-                    textAlign="center"
-                    border="1px solid"
-                    borderColor={borderColor}
-                    shadow="md"
-                    _hover={{ transform: "translateY(-4px)", shadow: "lg" }}
-                    transition="all 0.2s"
-                  >
-                    <Box
-                      w="80px"
-                      h="80px"
-                      borderRadius="full"
-                      bg={textAccent}
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      mx="auto"
-                      mb={4}
-                    >
-                      <Text fontSize="2xl" fontWeight="bold" color={textLight}>
-                        {member.name.charAt(0)}
-                      </Text>
-                    </Box>
-                    <Heading as="h3" size="md" mb={2} color={textPrimary}>
-                      {member.name}
-                    </Heading>
-                    <Text
-                      fontSize="md"
-                      fontWeight="semibold"
-                      color={textAccent}
-                      mb={3}
-                    >
-                      {member.role}
+            <Text fontSize="xl" color="gray.600" maxW="3xl">
+              MARS (Media And Real-time Streaming) - это инновационная платформа для создания 
+              интерактивных стримов и управления OBS компонентами, построенная на современном 
+              стеке технологий
+            </Text>
+          </VStack>
+        </Box>
+
+        {/* Mission Section */}
+        <Box
+          p={8}
+          bg="gray.50"
+          borderRadius="xl"
+          border="1px solid"
+          borderColor="gray.200"
+        >
+          <VStack gap={6}>
+            <Heading as="h2" size="xl" color="gray.800" textAlign="center">
+              Наша миссия
+            </Heading>
+            <Text fontSize="lg" color="gray.600" textAlign="center" maxW="2xl">
+              Мы стремимся сделать создание профессиональных стримов доступным для всех. 
+              MARS предоставляет инструменты, которые позволяют стримерам сосредоточиться 
+              на контенте, а не на технических деталях.
+            </Text>
+          </VStack>
+        </Box>
+
+        {/* Features Grid */}
+        <Box>
+          <Heading as="h2" size="xl" color="gray.800" textAlign="center" mb={12}>
+            Ключевые особенности
+          </Heading>
+          <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" }} gap={6}>
+            {features.map((feature, index) => (
+              <Box
+                key={index}
+                p={6}
+                bg="gray.50"
+                borderRadius="xl"
+                border="1px solid"
+                borderColor="gray.200"
+                textAlign="center"
+                transition="all 0.3s ease"
+                _hover={{
+                  transform: "translateY(-4px)",
+                  boxShadow: "lg",
+                }}
+              >
+                <VStack gap={4}>
+                  <Text fontSize="4xl" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.1))">
+                    {feature.icon}
+                  </Text>
+                  <Heading as="h3" size="md" color="gray.800">
+                    {feature.title}
+                  </Heading>
+                  <Text color="gray.600" fontSize="sm">
+                    {feature.description}
+                  </Text>
+                </VStack>
+              </Box>
+            ))}
+          </Grid>
+        </Box>
+
+        {/* Technologies Section */}
+        <Box
+          p={8}
+          bg="gray.50"
+          borderRadius="xl"
+          border="1px solid"
+          borderColor="gray.200"
+        >
+          <VStack gap={8}>
+            <Heading as="h2" size="xl" color="gray.800" textAlign="center">
+              Технологический стек
+            </Heading>
+            <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)", lg: "repeat(6, 1fr)" }} gap={4} w="full">
+              {technologies.map((tech, index) => (
+                <Box key={index} textAlign="center">
+                  <VStack gap={2}>
+                    <Badge colorScheme={tech.color} variant="solid" px={3} py={1} borderRadius="full">
+                      {tech.name}
+                    </Badge>
+                    <Text fontSize="xs" color="gray.500" textTransform="uppercase">
+                      {tech.type}
                     </Text>
-                    <Text color={textSecondary}>{member.description}</Text>
-                  </Box>
-                </GridItem>
+                  </VStack>
+                </Box>
               ))}
             </Grid>
-          </Stack>
-        </Container>
-      </Box>
+          </VStack>
+        </Box>
 
-      {/* Timeline Section */}
-      <Box bg={bgPrimary} py={20}>
-        <Container maxW="container.xl">
-          <Stack gap={12}>
-            <Heading as="h2" size="xl" color={textPrimary} textAlign="center">
-              История развития
-            </Heading>
-            <Stack gap={8} align="stretch">
-              {milestones.map((milestone, index) => (
-                <Flex
-                  key={index}
-                  direction={{ base: "column", md: "row" }}
-                  align={{ base: "start", md: "center" }}
-                  gap={6}
-                  p={6}
-                  bg={bgCard}
-                  borderRadius="xl"
-                  border="1px solid"
-                  borderColor={borderColor}
-                  shadow="md"
-                >
-                  <Box
-                    bg={textAccent}
-                    color={textLight}
-                    px={4}
-                    py={2}
-                    borderRadius="full"
-                    fontWeight="bold"
-                    minW="80px"
-                    textAlign="center"
-                  >
-                    {milestone.year}
-                  </Box>
-                  <Box flex={1}>
-                    <Heading as="h3" size="md" mb={2} color={textPrimary}>
-                      {milestone.title}
-                    </Heading>
-                    <Text color={textSecondary}>{milestone.description}</Text>
-                  </Box>
-                </Flex>
-              ))}
-            </Stack>
-          </Stack>
-        </Container>
-      </Box>
+        {/* Team Section */}
+        <Box>
+          <Heading as="h2" size="xl" color="gray.800" textAlign="center" mb={12}>
+            Наша команда
+          </Heading>
+          <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={8}>
+            {team.map((member, index) => (
+              <Box
+                key={index}
+                p={6}
+                bg="gray.50"
+                borderRadius="xl"
+                border="1px solid"
+                borderColor="gray.200"
+                textAlign="center"
+                transition="all 0.3s ease"
+                _hover={{
+                  transform: "translateY(-4px)",
+                  boxShadow: "lg",
+                }}
+              >
+                <VStack gap={4}>
+                  <Text fontSize="4xl" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.1))">
+                    {member.avatar}
+                  </Text>
+                  <Heading as="h3" size="md" color="gray.800">
+                    {member.name}
+                  </Heading>
+                  <Badge colorScheme="blue" variant="outline">
+                    {member.role}
+                  </Badge>
+                  <Text color="gray.600" fontSize="sm">
+                    {member.description}
+                  </Text>
+                </VStack>
+              </Box>
+            ))}
+          </Grid>
+        </Box>
 
-      {/* CTA Section */}
-      <Box bg={bgAccent} py={20} color={textLight}>
-        <Container maxW="container.xl" textAlign="center">
-          <Stack gap={8}>
-            <Heading as="h2" size="xl">
-              Готовы присоединиться?
+        {/* History Section */}
+        <Box
+          p={8}
+          bg="gray.50"
+          borderRadius="xl"
+          border="1px solid"
+          borderColor="gray.200"
+        >
+          <VStack gap={6}>
+            <Heading as="h2" size="xl" color="gray.800" textAlign="center">
+              История проекта
             </Heading>
-            <Text fontSize="xl" opacity={0.9}>
-              Начните использовать MARS Client уже сегодня
+            <VStack gap={4} align="stretch">
+              <Box>
+                <Heading as="h3" size="md" color="gray.800" mb={2}>
+                  2023 - Начало разработки
+                </Heading>
+                <Text color="gray.600">
+                  Проект MARS был запущен как внутренний инструмент для стриминга. 
+                  Первые версии включали базовые OBS компоненты и простую панель управления.
+                </Text>
+              </Box>
+              <Divider />
+              <Box>
+                <Heading as="h3" size="md" color="gray.800" mb={2}>
+                  2024 - Расширение функциональности
+                </Heading>
+                <Text color="gray.600">
+                  Добавлены новые компоненты, улучшена производительность, 
+                  создан полноценный веб-интерфейс и API для интеграций.
+                </Text>
+              </Box>
+              <Divider />
+              <Box>
+                <Heading as="h3" size="md" color="gray.800" mb={2}>
+                  Будущее - Открытая платформа
+                </Heading>
+                <Text color="gray.600">
+                  Планируется открытие платформы для сообщества, создание 
+                  экосистемы плагинов и расширений.
+                </Text>
+              </Box>
+            </VStack>
+          </VStack>
+        </Box>
+
+        {/* CTA Section */}
+        <Box textAlign="center" py={8}>
+          <VStack gap={6}>
+            <Heading as="h2" size="xl" color="gray.800">
+              Присоединяйтесь к проекту
+            </Heading>
+            <Text fontSize="lg" color="gray.600" maxW="md">
+              Изучите документацию, попробуйте компоненты или свяжитесь с нами для сотрудничества
             </Text>
-            <Flex
-              direction={{ base: "column", sm: "row" }}
-              gap={4}
-              justify="center"
-            >
-              <Link
-                to="/pyroalerts"
-                style={{
-                  display: "inline-block",
-                  padding: "12px 24px",
-                  backgroundColor: bgPrimary,
-                  color: textPrimary,
-                  textDecoration: "none",
-                  borderRadius: "8px",
-                  fontSize: "18px",
-                  fontWeight: "bold",
-                  transition: "background-color 0.2s",
-                }}
-                onMouseEnter={e =>
-                  (e.currentTarget.style.backgroundColor = bgSecondary)
-                }
-                onMouseLeave={e =>
-                  (e.currentTarget.style.backgroundColor = bgPrimary)
-                }
-              >
-                Попробовать бесплатно
+            <Flex gap={4} flexWrap="wrap" justify="center">
+              <Link to="/docs">
+                <Button size="lg" colorScheme="blue">
+                  📚 Документация
+                </Button>
               </Link>
-              <Link
-                to="/contacts"
-                style={{
-                  display: "inline-block",
-                  padding: "12px 24px",
-                  backgroundColor: "transparent",
-                  color: textLight,
-                  textDecoration: "none",
-                  borderRadius: "8px",
-                  fontSize: "18px",
-                  fontWeight: "bold",
-                  border: `2px solid ${textLight}`,
-                  transition: "background-color 0.2s",
-                }}
-                onMouseEnter={e =>
-                  (e.currentTarget.style.backgroundColor =
-                    "rgba(255, 255, 255, 0.2)")
-                }
-                onMouseLeave={e =>
-                  (e.currentTarget.style.backgroundColor = "transparent")
-                }
-              >
-                Связаться с нами
+              <Link to="/contacts">
+                <Button size="lg" variant="outline" colorScheme="gray">
+                  💬 Связаться с нами
+                </Button>
               </Link>
             </Flex>
-          </Stack>
-        </Container>
-      </Box>
+          </VStack>
+        </Box>
+      </VStack>
     </Box>
   );
 };

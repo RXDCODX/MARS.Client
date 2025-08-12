@@ -1,298 +1,224 @@
 import {
   Box,
   Button,
-  Card,
-  CardBody,
-  Container,
   Flex,
   Grid,
-  GridItem,
   Heading,
   Text,
-  useColorModeValue,
   VStack,
 } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
-const WelcomePage: React.FC = () => {
-  const bgPrimary = useColorModeValue("white", "gray.800");
-  const bgSecondary = useColorModeValue("gray.50", "gray.700");
-  const bgAccent = useColorModeValue("blue.500", "blue.600");
-  const bgCard = useColorModeValue("white", "gray.700");
-  const textPrimary = useColorModeValue("gray.800", "white");
-  const textSecondary = useColorModeValue("gray.600", "gray.300");
-  const textAccent = useColorModeValue("blue.500", "blue.300");
-  const textLight = useColorModeValue("white", "white");
-  const borderColor = useColorModeValue("gray.200", "gray.600");
-  const shadowLight = useColorModeValue("sm", "lg");
-  const shadowMedium = useColorModeValue("md", "xl");
+import { useSiteColors } from "@/shared/Utils/useSiteColors";
+
+const WelcomePage = () => {
+  const colors = useSiteColors();
+
+  const bgColor = "white";
+  const textColor = "gray.800";
+  const borderColor = "gray.200";
+  const cardBg = "gray.50";
+  const textSecondary = "gray.600";
 
   const features = [
     {
       icon: "🎮",
       title: "OBS Компоненты",
-      description:
-        "Множество готовых компонентов для OBS Studio: чаты, алерты, анимации и многое другое.",
-      link: "/pyroalerts",
-    },
-    {
-      icon: "⚙️",
-      title: "Панель управления",
-      description:
-        "Мощная админ-панель для управления всеми аспектами вашего стрима.",
-      link: "/admin",
+      description: "Готовые компоненты для стриминга: алерты, чаты, счетчики",
+      path: "/obs",
+      color: "blue" as const,
     },
     {
       icon: "📊",
-      title: "Аналитика",
-      description:
-        "Детальная статистика и аналитика для отслеживания успеха вашего контента.",
-      link: "/dashboard",
+      title: "Панель управления",
+      description: "Мониторинг сервисов и управление системой MARS",
+      path: "/admin",
+      color: "green" as const,
     },
     {
       icon: "🔧",
-      title: "API Интеграция",
-      description: "Полная интеграция с различными платформами и сервисами.",
-      link: "/services",
+      title: "API и интеграции",
+      description: "REST API, SignalR хабы и готовые SDK",
+      path: "/api",
+      color: "purple" as const,
     },
     {
-      icon: "⌨️",
-      title: "Выполнение команд",
-      description:
-        "Интерфейс для выполнения команд с разделенными инпутами для разных параметров.",
-      link: "/commands",
+      icon: "📚",
+      title: "Документация",
+      description: "Подробные руководства и примеры использования",
+      path: "/docs",
+      color: "orange" as const,
     },
   ];
 
-  const obsComponents = [
+  const actions = [
     {
-      name: "Pyro Alerts",
-      path: "/pyroalerts",
-      description: "Красивые алерты для донатов",
+      icon: "🚀",
+      label: "Начать работу",
+      path: "/docs",
+      color: "blue" as const,
     },
     {
-      name: "Waifu Alerts",
-      path: "/waifu",
-      description: "Алерты с аниме персонажами",
+      icon: "💬",
+      label: "Поддержка",
+      path: "/contacts",
+      color: "green" as const,
     },
     {
-      name: "Chat Horizontal",
-      path: "/chath",
-      description: "Горизонтальный чат",
+      icon: "📖",
+      label: "О проекте",
+      path: "/about",
+      color: "purple" as const,
     },
-    { name: "Chat Vertical", path: "/chatv", description: "Вертикальный чат" },
-    { name: "Fumo Friday", path: "/fumofriday", description: "Пятничные фумо" },
-    {
-      name: "Screen Particles",
-      path: "/confetti",
-      description: "Экранные эффекты",
-    },
+  ];
+
+  const stats = [
+    { value: "100+", label: "OBS компонентов" },
+    { value: "24/7", label: "Доступность" },
+    { value: "99.9%", label: "Время работы" },
+    { value: "1000+", label: "Активных пользователей" },
   ];
 
   return (
-    <Box>
-      {/* Hero Section */}
-      <Box bg={bgSecondary} py={20}>
-        <Container maxW="container.xl">
-          <Flex
-            direction={{ base: "column", lg: "row" }}
-            align="center"
-            gap={8}
-          >
-            <Box flex={1} textAlign="center">
-              <Heading
-                as="h1"
-                size="2xl"
-                mb={6}
-                color={textPrimary}
-                fontWeight="bold"
-              >
-                Добро пожаловать в{" "}
-                <Text as="span" color={textAccent}>
-                  MARS Client
-                </Text>
-              </Heading>
-              <Text fontSize="xl" mb={6} color={textSecondary}>
-                Мощная платформа для создания профессиональных стримов с
-                интерактивными компонентами
-              </Text>
-            </Box>
-            <Box flex={1} textAlign="center">
-              <Card
-                bg={bgCard}
-                borderColor={borderColor}
-                shadow={shadowMedium}
-                borderRadius="xl"
-                overflow="hidden"
-              >
-                <CardBody p={8} textAlign="center">
-                  <Text fontSize="6xl" mb={4}>
-                    🚀
-                  </Text>
-                  <Heading as="h3" size="lg" mb={3} color={textPrimary}>
-                    Быстрый старт
-                  </Heading>
-                  <Text color={textSecondary}>
-                    Начните использовать компоненты за минуты
-                  </Text>
-                </CardBody>
-              </Card>
-            </Box>
-          </Flex>
-        </Container>
-      </Box>
-
-      {/* Features Section */}
-      <Box bg={bgPrimary} py={20}>
-        <Container maxW="container.xl">
-          <VStack spacing={12}>
-            <Box textAlign="center">
-              <Heading as="h2" size="xl" mb={4} color={textPrimary}>
-                Возможности платформы
-              </Heading>
-            </Box>
-            <Grid
-              templateColumns={{
-                base: "1fr",
-                md: "repeat(2, 1fr)",
-                lg: "repeat(3, 1fr)",
-              }}
-              gap={6}
-            >
-              {features.map((feature, index) => (
-                <GridItem key={index}>
-                  <Card
-                    h="100%"
-                    borderColor={borderColor}
-                    shadow={shadowLight}
-                    borderRadius="xl"
-                    overflow="hidden"
-                    _hover={{ transform: "translateY(-2px)", shadow: "lg" }}
-                    transition="all 0.2s"
-                  >
-                    <CardBody p={6} textAlign="center">
-                      <Text fontSize="5xl" mb={4}>
-                        {feature.icon}
-                      </Text>
-                      <Heading as="h3" size="md" mb={3} color={textPrimary}>
-                        {feature.title}
-                      </Heading>
-                      <Text mb={4} color={textSecondary}>
-                        {feature.description}
-                      </Text>
-                      <Button
-                        as={Link}
-                        to={feature.link}
-                        variant="outline"
-                        colorScheme="blue"
-                        size="sm"
-                      >
-                        Узнать больше →
-                      </Button>
-                    </CardBody>
-                  </Card>
-                </GridItem>
-              ))}
-            </Grid>
-          </VStack>
-        </Container>
-      </Box>
-
-      {/* OBS Components Section */}
-      <Box bg={bgSecondary} py={20}>
-        <Container maxW="container.xl">
-          <VStack spacing={12}>
-            <Box textAlign="center">
-              <Heading as="h2" size="xl" mb={4} color={textPrimary}>
-                OBS Компоненты
-              </Heading>
-              <Text fontSize="xl" color={textSecondary}>
-                Готовые компоненты для интеграции в OBS Studio
-              </Text>
-            </Box>
-            <Grid
-              templateColumns={{
-                base: "1fr",
-                md: "repeat(2, 1fr)",
-                lg: "repeat(3, 1fr)",
-              }}
-              gap={6}
-            >
-              {obsComponents.map((component, index) => (
-                <GridItem key={index}>
-                  <Card
-                    as={Link}
-                    to={component.path}
-                    h="100%"
-                    borderColor={borderColor}
-                    shadow={shadowLight}
-                    borderRadius="xl"
-                    overflow="hidden"
-                    _hover={{ transform: "translateY(-2px)", shadow: "lg" }}
-                    transition="all 0.2s"
-                    textDecoration="none"
-                  >
-                    <CardBody p={6}>
-                      <Heading as="h3" size="md" mb={2} color={textPrimary}>
-                        {component.name}
-                      </Heading>
-                      <Text mb={3} color={textSecondary}>
-                        {component.description}
-                      </Text>
-                      <Text color={textAccent} fontSize="xl">
-                        →
-                      </Text>
-                    </CardBody>
-                  </Card>
-                </GridItem>
-              ))}
-            </Grid>
-          </VStack>
-        </Container>
-      </Box>
-
-      {/* CTA Section */}
-      <Box bg={bgAccent} py={20} color={textLight}>
-        <Container maxW="container.xl">
-          <VStack spacing={8} textAlign="center">
-            <Heading as="h2" size="xl" mb={4}>
-              Готовы начать?
-            </Heading>
-            <Text fontSize="xl" opacity={0.9}>
-              Присоединяйтесь к тысячам стримеров, которые уже используют MARS
-              Client
+    <Box p={8} bg={bgColor} minH="100vh">
+      <VStack gap={16} align="stretch">
+        {/* Hero Section */}
+        <Box textAlign="center" py={12}>
+          <VStack gap={8}>
+            <Text fontSize="6xl" fontWeight="bold">
+              🚀
             </Text>
-            <Flex
-              direction={{ base: "column", sm: "row" }}
-              gap={4}
-              justify="center"
-            >
-              <Button
-                as={Link}
-                to="/admin"
-                size="lg"
-                bg={bgPrimary}
-                color={textPrimary}
-                borderColor={borderColor}
-                _hover={{ bg: bgSecondary }}
-              >
-                Перейти к панели управления
-              </Button>
-              <Button
-                as={Link}
-                to="/contacts"
-                size="lg"
-                variant="outline"
-                borderColor={textLight}
-                color={textLight}
-                _hover={{ bg: "whiteAlpha.200" }}
-              >
-                Связаться с нами
-              </Button>
+            <Heading as="h1" size="2xl" color={textColor}>
+              Добро пожаловать в MARS
+            </Heading>
+            <Text fontSize="xl" color={textSecondary} maxW="2xl">
+              Мощная платформа для создания интерактивных стримов и управления 
+              OBS компонентами с интеграцией в ASP.NET приложения
+            </Text>
+            <Flex gap={4} flexWrap="wrap" justify="center">
+              {actions.map((action, index) => (
+                <Link key={index} to={action.path}>
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    colorScheme={action.color}
+                    _hover={{ transform: "translateY(-2px)", boxShadow: "lg" }}
+                    transition="all 0.2s ease"
+                  >
+                    {action.icon} {action.label}
+                  </Button>
+                </Link>
+              ))}
             </Flex>
           </VStack>
-        </Container>
-      </Box>
+        </Box>
+
+        {/* Features Section */}
+        <Box>
+          <Heading as="h2" size="xl" color={textColor} textAlign="center" mb={12}>
+            Основные возможности
+          </Heading>
+          <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" }} gap={6}>
+            {features.map((feature, index) => (
+              <Box
+                key={index}
+                p={6}
+                bg={cardBg}
+                borderRadius="xl"
+                border="1px solid"
+                borderColor={borderColor}
+                textAlign="center"
+                cursor="pointer"
+                transition="all 0.3s ease"
+                _hover={{
+                  transform: "translateY(-8px)",
+                  boxShadow: "xl",
+                  borderColor: `${feature.color}.400`,
+                }}
+                onClick={() => window.location.href = feature.path}
+              >
+                <VStack gap={4}>
+                  <Text fontSize="5xl" filter="drop-shadow(0 4px 8px rgba(0,0,0,0.1))">
+                    {feature.icon}
+                  </Text>
+                  <Heading as="h3" size="md" color={textColor}>
+                    {feature.title}
+                  </Heading>
+                  <Text color={textSecondary} fontSize="sm">
+                    {feature.description}
+                  </Text>
+                  <Button
+                    colorScheme={feature.color}
+                    size="sm"
+                    variant="outline"
+                    _hover={{ bg: `${feature.color}.500`, color: "white" }}
+                  >
+                    Подробнее
+                  </Button>
+                </VStack>
+              </Box>
+            ))}
+          </Grid>
+        </Box>
+
+        {/* Stats Section */}
+        <Box
+          p={8}
+          bg={cardBg}
+          borderRadius="xl"
+          border="1px solid"
+          borderColor={borderColor}
+        >
+          <VStack gap={8}>
+            <Heading as="h2" size="xl" color={textColor} textAlign="center">
+              MARS в цифрах
+            </Heading>
+            <Grid templateColumns={{ base: "1fr", md: "repeat(4, 1fr)" }} gap={8} w="full">
+              {stats.map((stat, index) => (
+                <Box key={index} textAlign="center">
+                  <Text fontSize="4xl" fontWeight="bold" color={colors.text.accent} mb={2}>
+                    {stat.value}
+                  </Text>
+                  <Text color={textSecondary}>
+                    {stat.label}
+                  </Text>
+                </Box>
+              ))}
+            </Grid>
+          </VStack>
+        </Box>
+
+        {/* CTA Section */}
+        <Box textAlign="center" py={8}>
+          <VStack gap={6}>
+            <Heading as="h2" size="xl" color={textColor}>
+              Готовы начать?
+            </Heading>
+            <Text fontSize="lg" color={textSecondary} maxW="md">
+              Присоединяйтесь к сообществу MARS и создавайте потрясающие стримы
+            </Text>
+            <Flex gap={4} flexWrap="wrap" justify="center">
+              <Link to="/docs">
+                <Button
+                  size="lg"
+                  colorScheme="blue"
+                >
+                  📚 Изучить документацию
+                </Button>
+              </Link>
+              <Link to="/contacts">
+                <Button
+                  size="lg"
+                  variant="outline"
+                  colorScheme="gray"
+                >
+                  💬 Связаться с нами
+                </Button>
+              </Link>
+            </Flex>
+          </VStack>
+        </Box>
+      </VStack>
     </Box>
   );
 };

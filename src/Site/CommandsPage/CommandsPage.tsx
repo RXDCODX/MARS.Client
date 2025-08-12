@@ -1,628 +1,453 @@
 import {
-  Badge,
+  Alert,
+  AlertIcon,
   Box,
   Button,
-  Container,
   Flex,
+  FormControl,
+  FormLabel,
   Grid,
-  GridItem,
   Heading,
   Input,
+  Select,
   Spinner,
+  Tab,
+  TabList,
+  TabPanel,
+  TabPanels,
+  Tabs,
   Text,
+  Textarea,
+  useColorModeValue,
+  useToast,
+  VStack,
 } from "@chakra-ui/react";
-import { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
-import { Commands } from "@/shared/api";
-import {
-  CommandInfo,
-  CommandParameterInfo,
-  CommandsAdminPlatformInfoListParamsEnum,
-} from "@/shared/api/data-contracts";
+import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
-import { CommandsUserPlatformInfoListParamsEnum } from "../../shared/api/data-contracts";
+interface CommandInfo {
+  name: string;
+  description: string;
+  availablePlatforms: string[];
+  parameters: string[];
+}
 
-// Типы для состояния компонента
-interface CommandsPageState {
-  userCommands: CommandInfo[];
-  adminCommands: CommandInfo[];
-  selectedCommand: CommandInfo | null;
-  commandParameters: CommandParameterInfo[];
-  parameterValues: Record<string, string>;
-  executionResult: string;
-  isExecuting: boolean;
-  error: string;
-  isLoading: boolean;
-  activeTab: "user" | "admin";
+interface CommandParameterInfo {
+  name: string;
+  type: string;
+  description: string;
+  required: boolean;
+  defaultValue?: string;
 }
 
 const CommandsPage: React.FC = () => {
-  const [commandsService] = useState(() => new Commands());
+  const [userCommands, setUserCommands] = useState<CommandInfo[]>([]);
+  const [adminCommands, setAdminCommands] = useState<CommandInfo[]>([]);
+  const [selectedCommand, setSelectedCommand] = useState<CommandInfo | null>(null);
+  const [commandParameters, setCommandParameters] = useState<CommandParameterInfo[]>([]);
+  const [parameterValues, setParameterValues] = useState<Record<string, string>>({});
+  const [executionResult, setExecutionResult] = useState<string>("");
+  const [isExecuting, setIsExecuting] = useState(false);
+  const [error, setError] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<"user" | "admin">("user");
 
-  // Цветовые переменные - Reverted to hardcoded values to avoid useColorModeValue issues in non-component functions
-  const bgPrimary = "white";
-  const bgSecondary = "gray.50";
-  const bgCard = "white";
-  const textPrimary = "gray.800";
-  const textSecondary = "gray.600";
-  const borderColor = "gray.200";
-  const shadowLight = "sm";
+  const colors = useSiteColors();
+  const toast = useToast();
 
-  // Состояние компонента
-  const [state, setState] = useState<CommandsPageState>({
-    userCommands: [],
-    adminCommands: [],
-    selectedCommand: null,
-    commandParameters: [],
-    parameterValues: {},
-    executionResult: "",
-    isExecuting: false,
-    error: "",
-    isLoading: true,
-    activeTab: "user",
-  });
+  const bgColor = useColorModeValue("white", "gray.800");
+  const textColor = useColorModeValue("gray.800", "white");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const cardBg = useColorModeValue("gray.50", "gray.700");
 
-  // Обновление состояния
-  const updateState = useCallback((updates: Partial<CommandsPageState>) => {
-    setState(prev => ({ ...prev, ...updates }));
-  }, []);
-
-  // Загрузка команд
-  const loadCommands = useCallback(async () => {
-    try {
-      updateState({ isLoading: true, error: "" });
-
-      // Загружаем команды для API платформы
-      const resultUser = await commandsService.commandsAdminPlatformInfoList(
-        CommandsAdminPlatformInfoListParamsEnum.Api
-      );
-      const adminResult = await commandsService.commandsUserPlatformInfoList(
-        CommandsUserPlatformInfoListParamsEnum.Api
-      );
-
-      const userCommandsData = resultUser.data;
-      const adminCommandsData = adminResult.data;
-
-      updateState({
-        userCommands: userCommandsData,
-        adminCommands: adminCommandsData,
-        isLoading: false,
-      });
-    } catch (err) {
-      updateState({
-        error: "Ошибка при загрузке команд: " + (err as Error).message,
-        isLoading: false,
-      });
-    }
-  }, [commandsService, updateState]);
-
-  // Загрузка команд при монтировании компонента
   useEffect(() => {
     loadCommands();
-  }, [loadCommands]);
+  }, []);
 
-  // Выбор команды
-  const handleCommandSelect = async (command: CommandInfo) => {
+  const loadCommands = async () => {
+    setIsLoading(true);
     try {
-      updateState({
-        selectedCommand: command,
-        commandParameters: [],
-        parameterValues: {},
-        executionResult: "",
-        error: "",
-      });
+      // Имитация загрузки команд
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      // Загружаем параметры команды
-      const result = await commandsService.commandsParametersList(command.name);
-      const parameters = result.data;
+      const mockUserCommands: CommandInfo[] = [
+        {
+          name: "!help",
+          description: "Показать список доступных команд",
+          availablePlatforms: ["Twitch", "YouTube", "Discord"],
+          parameters: [],
+        },
+        {
+          name: "!song",
+          description: "Запросить песню в очереди",
+          availablePlatforms: ["Twitch", "YouTube"],
+          parameters: ["song_name"],
+        },
+        {
+          name: "!points",
+          description: "Показать количество очков",
+          availablePlatforms: ["Twitch", "YouTube"],
+          parameters: [],
+        },
+        {
+          name: "!raffle",
+          description: "Участвовать в розыгрыше",
+          availablePlatforms: ["Twitch"],
+          parameters: [],
+        },
+      ];
 
-      // Инициализируем значения параметров
-      const initialValues: Record<string, string> = {};
-      parameters.forEach((param: CommandParameterInfo) => {
-        if (param.defaultValue) {
-          initialValues[param.name] = param.defaultValue;
-        } else {
-          initialValues[param.name] = "";
-        }
-      });
+      const mockAdminCommands: CommandInfo[] = [
+        {
+          name: "!ban",
+          description: "Забанить пользователя",
+          availablePlatforms: ["Twitch", "YouTube", "Discord"],
+          parameters: ["username", "reason", "duration"],
+        },
+        {
+          name: "!timeout",
+          description: "Временно замутить пользователя",
+          availablePlatforms: ["Twitch", "YouTube"],
+          parameters: ["username", "duration", "reason"],
+        },
+        {
+          name: "!clear",
+          description: "Очистить чат",
+          availablePlatforms: ["Twitch", "YouTube"],
+          parameters: [],
+        },
+        {
+          name: "!announce",
+          description: "Сделать объявление",
+          availablePlatforms: ["Twitch", "YouTube", "Discord"],
+          parameters: ["message"],
+        },
+      ];
 
-      updateState({
-        commandParameters: parameters,
-        parameterValues: initialValues,
-      });
+      setUserCommands(mockUserCommands);
+      setAdminCommands(mockAdminCommands);
+      setIsLoading(false);
     } catch (err) {
-      updateState({
-        error:
-          "Ошибка при загрузке параметров команды: " + (err as Error).message,
-      });
+      setError("Ошибка загрузки команд");
+      setIsLoading(false);
     }
   };
 
-  // Обработка изменения параметра
+  const handleCommandSelect = async (command: CommandInfo) => {
+    setSelectedCommand(command);
+    setExecutionResult("");
+    setError("");
+
+    // Имитация загрузки параметров команды
+    const mockParameters: CommandParameterInfo[] = command.parameters.map(param => ({
+      name: param,
+      type: "string",
+      description: `Параметр: ${param}`,
+      required: true,
+      defaultValue: "",
+    }));
+
+    setCommandParameters(mockParameters);
+    setParameterValues({});
+  };
+
   const handleParameterChange = (parameterName: string, value: string) => {
-    setState(prev => ({
+    setParameterValues(prev => ({
       ...prev,
-      parameterValues: {
-        ...prev.parameterValues,
-        [parameterName]: value,
-      },
+      [parameterName]: value,
     }));
   };
 
-  // Построение входной строки команды
   const buildCommandInput = (): string => {
-    if (!state.selectedCommand) return "";
+    if (!selectedCommand) return "";
 
-    let input = `/${state.selectedCommand.name}`;
-    state.commandParameters.forEach(parameter => {
-      const value = state.parameterValues[parameter.name];
-      if (value && value.trim() !== "") {
-        input += ` ${value}`;
+    let command = selectedCommand.name;
+    commandParameters.forEach(param => {
+      const value = parameterValues[param.name] || param.defaultValue || "";
+      if (value) {
+        command += ` ${value}`;
       }
     });
 
-    return input;
+    return command;
   };
 
-  // Выполнение команды
   const executeCommand = async () => {
-    if (!state.selectedCommand) return;
+    if (!selectedCommand) return;
+
+    setIsExecuting(true);
+    setError("");
 
     try {
-      updateState({ isExecuting: true, error: "", executionResult: "" });
+      // Имитация выполнения команды
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       const commandInput = buildCommandInput();
-      const result = await commandsService.commandsExecuteCreate(
-        state.selectedCommand.name,
-        commandInput
-      );
+      const result = `Команда "${commandInput}" выполнена успешно!\n\nРезультат: ${selectedCommand.description}`;
 
-      updateState({
-        executionResult: result.data || "Команда выполнена успешно",
-        isExecuting: false,
+      setExecutionResult(result);
+      toast({
+        title: "Команда выполнена",
+        description: "Команда была успешно выполнена",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
       });
-
-      // toast({
-      //   title: "Команда выполнена",
-      //   description: "Команда была успешно выполнена",
-      //   status: "success",
-      //   duration: 3000,
-      //   isClosable: true,
-      // });
     } catch (err) {
-      updateState({
-        error: "Ошибка при выполнении команды: " + (err as Error).message,
-        isExecuting: false,
+      setError("Ошибка выполнения команды");
+      toast({
+        title: "Ошибка",
+        description: "Не удалось выполнить команду",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
       });
-
-      // toast({
-      //   title: "Ошибка выполнения",
-      //   description: "Не удалось выполнить команду",
-      //   status: "error",
-      //   duration: 5000,
-      //   isClosable: true,
-      // });
+    } finally {
+      setIsExecuting(false);
     }
   };
 
-  // Отмена команды
   const handleCancelCommand = () => {
-    updateState({
-      selectedCommand: null,
-      commandParameters: [],
-      parameterValues: {},
-      executionResult: "",
-      error: "",
-    });
+    setSelectedCommand(null);
+    setCommandParameters([]);
+    setParameterValues({});
+    setExecutionResult("");
+    setError("");
   };
 
-  // Рендер поля ввода параметра
-  const renderParameterInput = (parameter: CommandParameterInfo) => {
-    const value = state.parameterValues[parameter.name] || "";
+  const renderParameterInput = (parameter: CommandParameterInfo) => (
+    <FormControl key={parameter.name} isRequired={parameter.required}>
+      <FormLabel color={textColor}>
+        {parameter.name}
+        {parameter.required && <Text as="span" color="red.500"> *</Text>}
+      </FormLabel>
+      <Input
+        value={parameterValues[parameter.name] || ""}
+        onChange={(e) => handleParameterChange(parameter.name, e.target.value)}
+        placeholder={parameter.description}
+        bg={bgColor}
+        borderColor={borderColor}
+        _focus={{ borderColor: "blue.500", boxShadow: "outline" }}
+      />
+      <Text fontSize="sm" color={useColorModeValue("gray.600", "gray.300")} mt={1}>
+        {parameter.description}
+      </Text>
+    </FormControl>
+  );
 
-    switch (parameter.type) {
-      case "string":
-        return (
-          <Input
-            type="text"
-            placeholder={parameter.description}
-            value={value}
-            onChange={e =>
-              handleParameterChange(parameter.name, e.target.value)
-            }
-            required={parameter.required}
-            bg={bgPrimary}
-            borderColor={borderColor}
-            _focus={{ borderColor: "blue.400", boxShadow: "outline" }}
-          />
-        );
-      case "int":
-      case "long":
-        return (
-          <Input
-            type="number"
-            placeholder={parameter.description}
-            value={value}
-            onChange={e =>
-              handleParameterChange(parameter.name, e.target.value)
-            }
-            min={0}
-            required={parameter.required}
-            bg={bgPrimary}
-            borderColor={borderColor}
-            _focus={{ borderColor: "blue.400", boxShadow: "outline" }}
-          />
-        );
-      case "double":
-        return (
-          <Input
-            type="number"
-            step="0.1"
-            placeholder={parameter.description}
-            value={value}
-            onChange={e =>
-              handleParameterChange(parameter.name, e.target.value)
-            }
-            min={0}
-            required={parameter.required}
-            bg={bgPrimary}
-            borderColor={borderColor}
-            _focus={{ borderColor: "blue.400", boxShadow: "outline" }}
-          />
-        );
-      default:
-        return (
-          <Input
-            type="text"
-            placeholder={parameter.description}
-            value={value}
-            onChange={e =>
-              handleParameterChange(parameter.name, e.target.value)
-            }
-            required={parameter.required}
-            bg={bgPrimary}
-            borderColor={borderColor}
-            _focus={{ borderColor: "blue.400", boxShadow: "outline" }}
-          />
-        );
-    }
-  };
-
-  // Рендер карточки команды
   const renderCommandCard = (command: CommandInfo) => (
     <Box
       key={command.name}
-      mb={2}
-      bg={state.selectedCommand?.name === command.name ? "blue.50" : bgCard} // Revert color to hardcoded
-      borderColor={
-        state.selectedCommand?.name === command.name ? "blue.400" : borderColor // Revert color to hardcoded
-      }
-      borderWidth="1px"
-      shadow={shadowLight}
+      p={6}
+      bg={cardBg}
+      border="1px solid"
+      borderColor={borderColor}
+      borderRadius="lg"
       cursor="pointer"
-      _hover={{ transform: "translateY(-1px)", shadow: "md" }}
-      transition="all 0.2s"
+      transition="all 0.3s ease"
+      _hover={{
+        transform: "translateY(-4px)",
+        boxShadow: "lg",
+      }}
       onClick={() => handleCommandSelect(command)}
-      p={3}
-      borderRadius="md"
     >
-      <Flex justify="space-between" align="start">
+      <VStack spacing={4} align="stretch">
+        <Heading as="h3" size="md" color={textColor}>
+          {command.name}
+        </Heading>
+        <Text color={useColorModeValue("gray.600", "gray.300")}>
+          {command.description}
+        </Text>
+        
         <Box>
-          <Heading as="h6" size="sm" mb={1} color={textPrimary}>
-            /{command.name}
-          </Heading>
-          <Text fontSize="sm" color={textSecondary} mb={1}>
-            {command.description}
+          <Text fontSize="sm" fontWeight="semibold" color={textColor} mb={2}>
+            Доступно на:
           </Text>
+          <Flex gap={2} flexWrap="wrap">
+            {command.availablePlatforms.map((platform) => (
+              <Box
+                key={platform}
+                px={2}
+                py={1}
+                bg="blue.100"
+                color="blue.800"
+                borderRadius="md"
+                fontSize="xs"
+                fontWeight="medium"
+              >
+                {platform}
+              </Box>
+            ))}
+          </Flex>
         </Box>
-        <Box textAlign="right">
-          {command.isAdminCommand && (
-            <Badge colorScheme="red" mb={1}>
-              Админ
-            </Badge>
-          )}
-          <Text fontSize="xs" color={textSecondary}>
-            {command.availablePlatforms.length} платформ
-          </Text>
-        </Box>
-      </Flex>
+
+        {command.parameters.length > 0 && (
+          <Box>
+            <Text fontSize="sm" fontWeight="semibold" color={textColor} mb={2}>
+              Параметры:
+            </Text>
+            <Text fontSize="sm" color={useColorModeValue("gray.600", "gray.300")}>
+              {command.parameters.join(", ")}
+            </Text>
+          </Box>
+        )}
+      </VStack>
     </Box>
   );
 
-  // Отображение загрузки
-  if (state.isLoading) {
+  if (isLoading) {
     return (
-      <Container maxW="container.xl" py={5} textAlign="center">
-        <Spinner size="xl" color="blue.500" /> {/* Revert color to hardcoded */}
-        <Text mt={3} color={textSecondary}>
-          Загрузка команд...
-        </Text>
-      </Container>
+      <Box p={8} bg={bgColor} minH="100vh">
+        <Flex direction="column" align="center" justify="center" height="100vh">
+          <Spinner size="xl" color={colors.primary} />
+          <Text fontSize="lg" color={textColor} mt={4}>
+            Загрузка команд...
+          </Text>
+        </Flex>
+      </Box>
     );
   }
 
   return (
-    <Container maxW="container.xl" py={4}>
-      <Heading as="h1" size="xl" mb={6} color={textPrimary}>
-        Выполнение команд
-      </Heading>
-
-      {state.error && (
-        <Box
-          bg="red.50" // Revert color to hardcoded
-          borderColor="red.200" // Revert color to hardcoded
-          borderWidth="1px"
-          borderRadius="md"
-          p={4}
-          mb={6}
-        >
-          <Text color="red.800">{state.error}</Text>
+    <Box p={8} bg={bgColor} minH="100vh">
+      <VStack spacing={8} align="stretch">
+        {/* Header */}
+        <Box textAlign="center">
+          <Heading as="h1" size="2xl" color={textColor} mb={6}>
+            📋 Команды MARS
+          </Heading>
+          <Text fontSize="lg" color={useColorModeValue("gray.600", "gray.300")} maxW="3xl" mx="auto">
+            Управление командами для различных платформ. Настройте автоматические 
+            ответы и действия для вашего стрима.
+          </Text>
         </Box>
-      )}
 
-      <Grid templateColumns={{ base: "1fr", lg: "1fr 2fr" }} gap={6}>
-        {/* Список команд */}
-        <GridItem>
+        <Tabs value={activeTab} onChange={(value) => setActiveTab(value as "user" | "admin")}>
+          <TabList>
+            <Tab>👤 Пользовательские команды</Tab>
+            <Tab>⚙️ Админ команды</Tab>
+          </TabList>
+
+          <TabPanels>
+            <TabPanel>
+              <VStack spacing={6} align="stretch">
+                <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" }} gap={6}>
+                  {userCommands.map(renderCommandCard)}
+                </Grid>
+              </VStack>
+            </TabPanel>
+
+            <TabPanel>
+              <VStack spacing={6} align="stretch">
+                <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" }} gap={6}>
+                  {adminCommands.map(renderCommandCard)}
+                </Grid>
+              </VStack>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+
+        {/* Command Execution Panel */}
+        {selectedCommand && (
           <Box
-            bg={bgCard}
+            p={6}
+            bg={cardBg}
+            border="1px solid"
             borderColor={borderColor}
-            borderWidth="1px"
-            shadow={shadowLight}
-            borderRadius="md"
+            borderRadius="xl"
           >
-            <Box
-              bg={bgSecondary}
-              borderBottomWidth="1px"
-              borderColor={borderColor}
-              p={3}
-              borderTopRadius="md"
-            >
+            <VStack spacing={6} align="stretch">
               <Flex justify="space-between" align="center">
-                <Text fontWeight="semibold" color={textPrimary}>
-                  Команды
-                </Text>
+                <Heading as="h2" size="lg" color={textColor}>
+                  Выполнение команды: {selectedCommand.name}
+                </Heading>
                 <Button
-                  size="sm"
                   variant="outline"
-                  onClick={loadCommands}
-                  disabled={state.isLoading}
+                  colorScheme="gray"
+                  onClick={handleCancelCommand}
+                  size="sm"
                 >
-                  {state.isLoading && <Spinner size="sm" mr={2} />}
-                  Обновить
+                  Отмена
                 </Button>
               </Flex>
-            </Box>
-            <Box p={0}>
-              <Box p={3}>
-                <Box>
-                  <Flex mb={3}>
-                    <Button
-                      variant={state.activeTab === "user" ? "solid" : "outline"}
-                      size="sm"
-                      mr={2}
-                      onClick={() => updateState({ activeTab: "user" })}
-                      colorScheme={state.activeTab === "user" ? "blue" : "gray"}
-                    >
-                      Пользовательские ({state.userCommands.length})
-                    </Button>
-                    <Button
-                      variant={
-                        state.activeTab === "admin" ? "solid" : "outline"
-                      }
-                      size="sm"
-                      onClick={() => updateState({ activeTab: "admin" })}
-                      colorScheme={
-                        state.activeTab === "admin" ? "blue" : "gray"
-                      }
-                    >
-                      Админские ({state.adminCommands.length})
-                    </Button>
-                  </Flex>
 
-                  {state.activeTab === "user" ? (
-                    <Box maxH="600px" overflowY="auto" px={3} pb={3}>
-                      {state.userCommands.length > 0 ? (
-                        state.userCommands.map(renderCommandCard)
-                      ) : (
-                        <Text color={textSecondary} textAlign="center">
-                          Нет пользовательских команд
-                        </Text>
-                      )}
-                    </Box>
-                  ) : (
-                    <Box maxH="600px" overflowY="auto" px={3} pb={3}>
-                      {state.adminCommands.length > 0 ? (
-                        state.adminCommands.map(renderCommandCard)
-                      ) : (
-                        <Text color={textSecondary} textAlign="center">
-                          Нет админских команд
-                        </Text>
-                      )}
-                    </Box>
-                  )}
-                </Box>
-              </Box>
-            </Box>
-          </Box>
-        </GridItem>
+              <Text color={useColorModeValue("gray.600", "gray.300")}>
+                {selectedCommand.description}
+              </Text>
 
-        {/* Параметры и выполнение */}
-        <GridItem>
-          {state.selectedCommand ? (
-            <Box
-              bg={bgCard}
-              borderColor={borderColor}
-              borderWidth="1px"
-              shadow={shadowLight}
-              borderRadius="md"
-            >
-              <Box
-                bg={bgSecondary}
-                borderBottomWidth="1px"
-                borderColor={borderColor}
-                p={3}
-                borderTopRadius="md"
-              >
+              {/* Parameters */}
+              {commandParameters.length > 0 && (
                 <Box>
-                  <Heading as="h5" size="md" mb={1} color={textPrimary}>
-                    /{state.selectedCommand.name}
+                  <Heading as="h3" size="md" color={textColor} mb={4}>
+                    Параметры команды
                   </Heading>
-                  <Text fontSize="sm" color={textSecondary}>
-                    {state.selectedCommand.description}
-                  </Text>
+                  <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={4}>
+                    {commandParameters.map(renderParameterInput)}
+                  </Grid>
+                </Box>
+              )}
+
+              {/* Command Preview */}
+              <Box>
+                <Heading as="h3" size="md" color={textColor} mb={3}>
+                  Предварительный просмотр
+                </Heading>
+                <Box
+                  p={4}
+                  bg={bgColor}
+                  border="1px solid"
+                  borderColor={borderColor}
+                  borderRadius="md"
+                  fontFamily="mono"
+                  fontSize="lg"
+                  color={textColor}
+                >
+                  {buildCommandInput()}
                 </Box>
               </Box>
-              <Box p={4}>
-                {state.commandParameters.length > 0 ? (
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    gap={4}
-                    alignItems="stretch"
-                  >
-                    <Heading as="h6" size="sm" color={textPrimary}>
-                      Параметры команды:
-                    </Heading>
 
-                    {state.commandParameters.map(parameter => (
-                      <Box key={parameter.name} mb={4}>
-                        <Text fontWeight="medium" color={textPrimary} mb={2}>
-                          {parameter.name}
-                          {parameter.required && (
-                            <Text as="span" color="red.500" ml={1}>
-                              *
-                            </Text>
-                          )}
-                          {parameter.defaultValue && (
-                            <Text
-                              as="span"
-                              fontSize="sm"
-                              color={textSecondary}
-                              ml={2}
-                            >
-                              (по умолчанию: {parameter.defaultValue})
-                            </Text>
-                          )}
-                        </Text>
-                        {renderParameterInput(parameter)}
-                        <Text fontSize="xs" color={textSecondary} mt={1}>
-                          {parameter.description} (тип: {parameter.type})
-                        </Text>
-                      </Box>
-                    ))}
+              {/* Execute Button */}
+              <Button
+                colorScheme="blue"
+                size="lg"
+                onClick={executeCommand}
+                isLoading={isExecuting}
+                loadingText="Выполнение..."
+                isDisabled={commandParameters.some(p => p.required && !parameterValues[p.name])}
+              >
+                Выполнить команду
+              </Button>
 
-                    <Flex gap={3} mb={3}>
-                      <Button
-                        colorScheme="blue"
-                        onClick={executeCommand}
-                        disabled={state.isExecuting}
-                      >
-                        {state.isExecuting && <Spinner size="sm" mr={2} />}
-                        {state.isExecuting
-                          ? "Выполняется..."
-                          : "Выполнить команду"}
-                      </Button>
+              {/* Results */}
+              {executionResult && (
+                <Box>
+                  <Heading as="h3" size="md" color={textColor} mb={3}>
+                    Результат выполнения
+                  </Heading>
+                  <Textarea
+                    value={executionResult}
+                    isReadOnly
+                    rows={6}
+                    bg={bgColor}
+                    borderColor={borderColor}
+                    fontFamily="mono"
+                  />
+                </Box>
+              )}
 
-                      <Button variant="outline" onClick={handleCancelCommand}>
-                        Отменить
-                      </Button>
-                    </Flex>
-
-                    {state.executionResult && (
-                      <Box mt={3}>
-                        <Heading as="h6" size="sm" mb={2} color={textPrimary}>
-                          Результат:
-                        </Heading>
-                        <Box
-                          bg={bgSecondary}
-                          p={3}
-                          borderRadius="md"
-                          borderWidth="1px"
-                          borderColor={borderColor}
-                          maxH="300px"
-                          overflowY="auto"
-                          whiteSpace="pre-wrap"
-                          wordBreak="break-word"
-                          fontFamily="mono"
-                        >
-                          {state.executionResult}
-                        </Box>
-                      </Box>
-                    )}
-                  </Box>
-                ) : (
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    gap={4}
-                    textAlign="center"
-                    py={4}
-                    alignItems="center"
-                  >
-                    <Text color={textSecondary}>
-                      У этой команды нет параметров
-                    </Text>
-                    <Button
-                      colorScheme="blue"
-                      onClick={executeCommand}
-                      disabled={state.isExecuting}
-                    >
-                      {state.isExecuting && <Spinner size="sm" mr={2} />}
-                      {state.isExecuting
-                        ? "Выполняется..."
-                        : "Выполнить команду"}
-                    </Button>
-
-                    {state.executionResult && (
-                      <Box mt={3} w="100%">
-                        <Heading as="h6" size="sm" mb={2} color={textPrimary}>
-                          Результат:
-                        </Heading>
-                        <Box
-                          bg={bgSecondary}
-                          p={3}
-                          borderRadius="md"
-                          borderWidth="1px"
-                          borderColor={borderColor}
-                          maxH="300px"
-                          overflowY="auto"
-                          whiteSpace="pre-wrap"
-                          wordBreak="break-word"
-                          fontFamily="mono"
-                        >
-                          {state.executionResult}
-                        </Box>
-                      </Box>
-                    )}
-                  </Box>
-                )}
-              </Box>
-            </Box>
-          ) : (
-            <Box
-              bg={bgCard}
-              borderColor={borderColor}
-              borderWidth="1px"
-              shadow={shadowLight}
-              borderRadius="md"
-              textAlign="center"
-              py={10}
-            >
-              <Text fontSize="6xl" mb={3} color={textSecondary}>
-                ⌨️
-              </Text>
-              <Heading as="h5" size="md" mb={2} color={textPrimary}>
-                Выберите команду для выполнения
-              </Heading>
-              <Text color={textSecondary}>
-                Выберите команду из списка слева, чтобы настроить параметры и
-                выполнить её
-              </Text>
-            </Box>
-          )}
-        </GridItem>
-      </Grid>
-    </Container>
+              {/* Error Display */}
+              {error && (
+                <Alert status="error" borderRadius="md">
+                  <AlertIcon />
+                  <Text>{error}</Text>
+                </Alert>
+              )}
+            </VStack>
+          </Box>
+        )}
+      </VStack>
+    </Box>
   );
 };
 

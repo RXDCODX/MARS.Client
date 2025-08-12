@@ -1,6 +1,5 @@
-import { Box, Container } from "@chakra-ui/react";
-
-import { useSiteColors } from "@/shared/Utils/useSiteColors";
+import { Box, Flex, useColorModeValue } from "@chakra-ui/react";
+import React from "react";
 
 import Footer from "./Footer/Footer";
 import Header from "./Header/Header";
@@ -10,23 +9,17 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const colors = useSiteColors();
+  const bgColor = useColorModeValue("white", "gray.900");
+  const minH = "100vh";
 
   return (
-    <Box
-      className="site-component"
-      bg={colors.background.primary}
-      color={colors.text.primary}
-      minH="100vh"
-      display="flex"
-      flexDirection="column"
-    >
+    <Flex direction="column" minH={minH} bg={bgColor}>
       <Header />
-      <Container maxW="full" flex="1" px={4} py={6}>
+      <Box as="main" flex="1">
         {children}
-      </Container>
+      </Box>
       <Footer />
-    </Box>
+    </Flex>
   );
 };
 

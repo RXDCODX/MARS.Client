@@ -1,467 +1,572 @@
-import { CheckIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
-  Code,
-  Container,
   Flex,
   Grid,
-  GridItem,
   Heading,
-  VStack,
   Text,
+  VStack,
+  HStack,
+  Badge,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+  Code,
+  Link as ChakraLink,
+  Divider,
+  List,
+  ListItem,
+  ListIcon,
 } from "@chakra-ui/react";
-import { List } from "@chakra-ui/react";
-import { useSiteColors } from "@/shared/Utils/useSiteColors";
-
-import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
-const DocsPage: React.FC = () => {
+const DocsPage = () => {
   const [activeTab, setActiveTab] = useState("getting-started");
 
-  const colors = useSiteColors();
-  const bgPrimary = colors.background.primary;
-  const bgSecondary = colors.background.secondary;
-  const bgCard = colors.background.card;
-  const textPrimary = colors.text.primary;
-  const textSecondary = colors.text.secondary;
-  const textAccent = colors.text.accent;
-  const borderColor = colors.border.primary;
-
-  const colors = useSiteColors();
-  const bgPrimary = colors.background.primary;
-  const bgSecondary = colors.background.secondary;
-  const bgCard = colors.background.card;
-  const textPrimary = colors.text.primary;
-  const textSecondary = colors.text.secondary;
-  const textAccent = colors.text.accent;
-  const borderColor = colors.border.primary;
-
   const tabs = [
-    { id: "getting-started", label: "Начало работы" },
-    { id: "obs-components", label: "OBS Компоненты" },
-    { id: "admin-panel", label: "Панель управления" },
-    { id: "api", label: "API Документация" },
-  ];
-
-  const obsComponents = [
-    {
-      name: "Pyro Alerts",
-      path: "/pyroalerts",
-      description: "Красивые алерты для донатов и подписок",
-      features: [
-        "Настраиваемые анимации",
-        "Поддержка различных платформ",
-        "Кастомные звуки",
-      ],
-    },
-    {
-      name: "Waifu Alerts",
-      path: "/waifu",
-      description: "Алерты с аниме персонажами",
-      features: [
-        "Аниме персонажи",
-        "Интерактивные элементы",
-        "Настраиваемые реакции",
-      ],
-    },
-    {
-      name: "Chat Horizontal",
-      path: "/chath",
-      description: "Горизонтальный чат для стримов",
-      features: [
-        "Горизонтальное отображение",
-        "Фильтрация сообщений",
-        "Настройка стилей",
-      ],
-    },
-    {
-      name: "Chat Vertical",
-      path: "/chatv",
-      description: "Вертикальный чат с анимациями",
-      features: [
-        "Вертикальное отображение",
-        "Плавные анимации",
-        "Кастомные эффекты",
-      ],
-    },
-    {
-      name: "Fumo Friday",
-      path: "/fumofriday",
-      description: "Пятничные фумо анимации",
-      features: ["Фумо персонажи", "Пятничные эффекты", "Интерактивность"],
-    },
-    {
-      name: "Screen Particles",
-      path: "/confetti",
-      description: "Экранные эффекты и частицы",
-      features: [
-        "Конфетти эффекты",
-        "Настраиваемые частицы",
-        "Триггеры событий",
-      ],
-    },
+    { id: "getting-started", label: "Начало работы", icon: "🚀" },
+    { id: "obs-components", label: "OBS Компоненты", icon: "🎮" },
+    { id: "admin-panel", label: "Панель управления", icon: "⚙️" },
+    { id: "api", label: "API", icon: "🔧" },
   ];
 
   const renderGettingStarted = () => (
-    <Box>
-      <VStack spacing={6} align="stretch">
-        <Heading as="h2" size="xl" color={textPrimary}>
-          Быстрый старт
+    <VStack gap={8} align="stretch">
+      <Box>
+        <Heading as="h2" size="xl" color="gray.800" mb={6}>
+          🚀 Быстрый старт
         </Heading>
-        <Text fontSize="lg" color={textSecondary}>
-          Добро пожаловать в документацию MARS Client! Этот раздел поможет вам
-          быстро начать работу с платформой.
+        <Text fontSize="lg" color="gray.600" mb={6}>
+          MARS - это платформа для создания интерактивных стримов. Следуйте этому руководству, 
+          чтобы быстро настроить и запустить ваши первые компоненты.
         </Text>
+      </Box>
 
-        <Box
-          bg={bgCard}
-          p={6}
-          borderRadius="xl"
-          border="1px solid"
-          borderColor={borderColor}
-          shadow="md"
-        >
-          <Heading as="h3" size="md" mb={3} color={textPrimary}>
-            Шаг 1: Установка
-          </Heading>
-          <Text mb={3} color={textSecondary}>
-            Скачайте и установите MARS Client на ваш компьютер.
-          </Text>
-          <Code p={3} borderRadius="md" bg={bgSecondary} color={textPrimary}>
-            npm install mars-client
-          </Code>
-        </Box>
+      <Box>
+        <Heading as="h3" size="lg" color="gray.800" mb={4}>
+          📋 Предварительные требования
+        </Heading>
+        <List spacing={3}>
+          <ListItem>
+            <ListIcon color="green.500" />
+            OBS Studio версии 28.0 или выше
+          </ListItem>
+          <ListItem>
+            <ListIcon color="green.500" />
+            Современный веб-браузер (Chrome, Firefox, Safari, Edge)
+          </ListItem>
+          <ListItem>
+            <ListIcon color="green.500" />
+            Стабильное интернет-соединение
+          </ListItem>
+          <ListItem>
+            <ListIcon color="green.500" />
+            Аккаунт на платформе MARS
+          </ListItem>
+        </List>
+      </Box>
 
-        <Box
-          bg={bgCard}
-          p={6}
-          borderRadius="xl"
-          border="1px solid"
-          borderColor={borderColor}
-          shadow="md"
-        >
-          <Heading as="h3" size="md" mb={3} color={textPrimary}>
-            Шаг 2: Настройка OBS
-          </Heading>
-          <Text mb={3} color={textSecondary}>
-            Добавьте компоненты в OBS Studio как Browser Source.
-          </Text>
-          <Code p={3} borderRadius="md" bg={bgSecondary} color={textPrimary}>
-            URL: http://localhost:3000/pyroalerts
-          </Code>
-        </Box>
+      <Box>
+        <Heading as="h3" size="lg" color="gray.800" mb={4}>
+          ⚡ Установка за 5 минут
+        </Heading>
+        <VStack gap={4} align="stretch">
+          <Box p={4} bg="blue.50" borderRadius="md" border="1px solid" borderColor="blue.200">
+            <Text fontWeight="semibold" color="blue.800" mb={2}>
+              Шаг 1: Регистрация
+            </Text>
+            <Text color="blue.700" fontSize="sm">
+              Создайте аккаунт на <ChakraLink color="blue.600" href="/register">mars-project.com</ChakraLink> 
+              и подтвердите email адрес.
+            </Text>
+          </Box>
 
-        <Box
-          bg={bgCard}
-          p={6}
-          borderRadius="xl"
-          border="1px solid"
-          borderColor={borderColor}
-          shadow="md"
-        >
-          <Heading as="h3" size="md" mb={3} color={textPrimary}>
-            Шаг 3: Настройка панели управления
-          </Heading>
-          <Text mb={3} color={textSecondary}>
-            Откройте панель управления для настройки компонентов.
-          </Text>
-          <Button
-            as={Link}
-            to="/admin"
-            colorScheme="blue"
-            leftIcon={<ExternalLinkIcon />}
-          >
-            Открыть панель управления
-          </Button>
-        </Box>
-      </VStack>
-    </Box>
+          <Box p={4} bg="green.50" borderRadius="md" border="1px solid" borderColor="green.200">
+            <Text fontWeight="semibold" color="green.800" mb={2}>
+              Шаг 2: Скачивание компонентов
+            </Text>
+            <Text color="green.700" fontSize="sm">
+              Перейдите в раздел OBS компонентов и скачайте нужные вам компоненты.
+            </Text>
+          </Box>
+
+          <Box p={4} bg="purple.50" borderRadius="md" border="1px solid" borderColor="purple.200">
+            <Text fontWeight="semibold" color="purple.800" mb={2}>
+              Шаг 3: Установка в OBS
+            </Text>
+            <Text color="purple.700" fontSize="sm">
+              Добавьте компоненты как источники в OBS Studio и настройте параметры.
+            </Text>
+          </Box>
+
+          <Box p={4} bg="orange.50" borderRadius="md" border="1px solid" borderColor="orange.200">
+            <Text fontWeight="semibold" color="orange.800" mb={2}>
+              Шаг 4: Настройка
+            </Text>
+            <Text color="orange.700" fontSize="sm">
+              Настройте компоненты через веб-интерфейс MARS и начните стрим!
+            </Text>
+          </Box>
+        </VStack>
+      </Box>
+
+      <Box>
+        <Heading as="h3" size="lg" color="gray.800" mb={4}>
+          🎯 Первые шаги
+        </Heading>
+        <Text color="gray.600" mb={4}>
+          После установки рекомендуем начать с простых компонентов:
+        </Text>
+        <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={4}>
+          <Link to="/pyroalerts">
+            <Button variant="outline" colorScheme="blue" w="full" h="auto" p={4}>
+              <VStack>
+                <Text fontSize="lg">🎆</Text>
+                <Text fontWeight="semibold">Pyro Alerts</Text>
+                <Text fontSize="sm" color="gray.600">Алерты для донатов</Text>
+              </VStack>
+            </Button>
+          </Link>
+          <Link to="/chatv">
+            <Button variant="outline" colorScheme="green" w="full" h="auto" p={4}>
+              <VStack>
+                <Text fontSize="lg">💬</Text>
+                <Text fontWeight="semibold">Chat Vertical</Text>
+                <Text fontSize="sm" color="gray.600">Вертикальный чат</Text>
+              </VStack>
+            </Button>
+          </Link>
+        </Grid>
+      </Box>
+    </VStack>
   );
 
   const renderObsComponents = () => (
-    <Box>
-      <VStack spacing={8} align="stretch">
-        <Box>
-          <Heading as="h2" size="xl" mb={3} color={textPrimary}>
-            OBS Компоненты
-          </Heading>
-          <Text fontSize="lg" color={textSecondary}>
-            Все доступные компоненты для интеграции в OBS Studio.
-          </Text>
-        </Box>
+    <VStack gap={8} align="stretch">
+      <Box>
+        <Heading as="h2" size="xl" color="gray.800" mb={6}>
+          🎮 OBS Компоненты
+        </Heading>
+        <Text fontSize="lg" color="gray.600" mb={6}>
+          MARS предоставляет широкий набор готовых компонентов для OBS Studio, 
+          которые можно легко настроить и интегрировать в ваши стримы.
+        </Text>
+      </Box>
 
-        <Grid
-          templateColumns={{
-            base: "1fr",
-            md: "repeat(2, 1fr)",
-            lg: "repeat(3, 1fr)",
-          }}
-          gap={6}
-        >
-          {obsComponents.map((component, index) => (
-            <GridItem key={index}>
-              <Box
-                bg={bgCard}
-                p={6}
-                borderRadius="xl"
-                border="1px solid"
-                borderColor={borderColor}
-                shadow="md"
-                h="100%"
-                _hover={{ transform: "translateY(-2px)", shadow: "lg" }}
-                transition="all 0.2s"
-              >
-                <VStack spacing={4} align="stretch" h="100%">
-                  <Heading as="h3" size="md" color={textPrimary}>
-                    {component.name}
-                  </Heading>
-                  <Text color={textSecondary} flex={1}>
-                    {component.description}
-                  </Text>
-                  <List spacing={2}>
-                    {component.features.map((feature, featureIndex) => (
-                      <ListItem key={featureIndex} color={textSecondary}>
-                        <ListIcon as={CheckIcon} color={textAccent} />
-                        {feature}
-                      </ListItem>
-                    ))}
-                  </List>
-                  <Button
-                    as={Link}
-                    to={component.path}
-                    colorScheme="blue"
-                    variant="outline"
-                    size="sm"
-                    w="100%"
-                  >
-                    Попробовать
+      <Box>
+        <Heading as="h3" size="lg" color="gray.800" mb={4}>
+          📊 Категории компонентов
+        </Heading>
+        <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={6}>
+          <Box p={6} bg="gray.50" borderRadius="xl" border="1px solid" borderColor="gray.200">
+            <VStack gap={4} align="stretch">
+              <HStack>
+                <Text fontSize="2xl">🎆</Text>
+                <Heading as="h4" size="md" color="gray.800">
+                  Алерты
+                </Heading>
+              </HStack>
+              <Text color="gray.600" fontSize="sm">
+                Компоненты для отображения уведомлений о донатах, подписках, 
+                рейдах и других событиях.
+              </Text>
+              <VStack gap={2} align="stretch">
+                <Link to="/pyroalerts">
+                  <Button size="sm" variant="outline" colorScheme="red" w="full">
+                    Pyro Alerts
                   </Button>
-                </VStack>
-              </Box>
-            </GridItem>
-          ))}
+                </Link>
+                <Link to="/waifu">
+                  <Button size="sm" variant="outline" colorScheme="pink" w="full">
+                    Waifu Alerts
+                  </Button>
+                </Link>
+              </VStack>
+            </VStack>
+          </Box>
+
+          <Box p={6} bg="gray.50" borderRadius="xl" border="1px solid" borderColor="gray.200">
+            <VStack gap={4} align="stretch">
+              <HStack>
+                <Text fontSize="2xl">💬</Text>
+                <Heading as="h4" size="md" color="gray.800">
+                  Чат
+                </Heading>
+              </HStack>
+              <Text color="gray.600" fontSize="sm">
+                Компоненты для отображения чата зрителей в различных стилях 
+                и конфигурациях.
+              </Text>
+              <VStack gap={2} align="stretch">
+                <Link to="/chath">
+                  <Button size="sm" variant="outline" colorScheme="blue" w="full">
+                    Chat Horizontal
+                  </Button>
+                </Link>
+                <Link to="/chatv">
+                  <Button size="sm" variant="outline" colorScheme="green" w="full">
+                    Chat Vertical
+                  </Button>
+                </Link>
+              </VStack>
+            </VStack>
+          </Box>
+
+          <Box p={6} bg="gray.50" borderRadius="xl" border="1px solid" borderColor="gray.200">
+            <VStack gap={4} align="stretch">
+              <HStack>
+                <Text fontSize="2xl">🎵</Text>
+                <Heading as="h4" size="md" color="gray.800">
+                  Звук
+                </Heading>
+              </HStack>
+              <Text color="gray.600" fontSize="sm">
+                Компоненты для управления звуком, отображения текущего трека 
+                и запросов музыки от зрителей.
+              </Text>
+              <VStack gap={2} align="stretch">
+                <Link to="/sr/currenttrack">
+                  <Button size="sm" variant="outline" colorScheme="purple" w="full">
+                    Current Track
+                  </Button>
+                </Link>
+              </VStack>
+            </VStack>
+          </Box>
+
+          <Box p={6} bg="gray.50" borderRadius="xl" border="1px solid" borderColor="gray.200">
+            <VStack gap={4} align="stretch">
+              <HStack>
+                <Text fontSize="2xl">🎉</Text>
+                <Heading as="h4" size="md" color="gray.800">
+                  Развлечения
+                </Heading>
+              </HStack>
+              <Text color="gray.600" fontSize="sm">
+                Интерактивные компоненты для развлечения зрителей: 
+                частицы, мемы, игры.
+              </Text>
+              <VStack gap={2} align="stretch">
+                <Link to="/fumofriday">
+                  <Button size="sm" variant="outline" colorScheme="orange" w="full">
+                    Fumo Friday
+                  </Button>
+                </Link>
+                <Link to="/confetti">
+                  <Button size="sm" variant="outline" colorScheme="teal" w="full">
+                    Screen Particles
+                  </Button>
+                </Link>
+              </VStack>
+            </VStack>
+          </Box>
         </Grid>
-      </VStack>
-    </Box>
+      </Box>
+
+      <Box>
+        <Heading as="h3" size="lg" color="gray.800" mb={4}>
+          🔧 Настройка компонентов
+        </Heading>
+        <Accordion allowToggle>
+          <AccordionItem>
+            <AccordionButton>
+              <Box flex="1" textAlign="left">
+                <Text fontWeight="semibold">Как добавить компонент в OBS?</Text>
+              </Box>
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel pb={4}>
+              <VStack gap={3} align="stretch">
+                <Text fontSize="sm" color="gray.600">
+                  1. Скачайте компонент с сайта MARS
+                </Text>
+                <Text fontSize="sm" color="gray.600">
+                  2. В OBS Studio нажмите "+" в разделе "Источники"
+                </Text>
+                <Text fontSize="sm" color="gray.600">
+                  3. Выберите "Браузер" и вставьте URL компонента
+                </Text>
+                <Text fontSize="sm" color="gray.600">
+                  4. Настройте размеры и позицию
+                </Text>
+              </VStack>
+            </AccordionPanel>
+          </AccordionItem>
+
+          <AccordionItem>
+            <AccordionButton>
+              <Box flex="1" textAlign="left">
+                <Text fontWeight="semibold">Как настроить параметры компонента?</Text>
+              </Box>
+              <AccordionIcon />
+            </AccordionButton>
+            <AccordionPanel pb={4}>
+              <Text fontSize="sm" color="gray.600">
+                Каждый компонент имеет веб-интерфейс для настройки. 
+                Откройте компонент в браузере и используйте панель управления 
+                для изменения цветов, размеров, анимаций и других параметров.
+              </Text>
+            </AccordionPanel>
+          </AccordionItem>
+        </Accordion>
+      </Box>
+    </VStack>
   );
 
   const renderAdminPanel = () => (
-    <Box>
-      <VStack spacing={8} align="stretch">
-        <Box>
-          <Heading as="h2" size="xl" mb={3} color={textPrimary}>
-            Панель управления
-          </Heading>
-          <Text fontSize="lg" color={textSecondary}>
-            Мощная админ-панель для управления всеми аспектами вашего стрима.
-          </Text>
-        </Box>
+    <VStack gap={8} align="stretch">
+      <Box>
+        <Heading as="h2" size="xl" color="gray.800" mb={6}>
+          ⚙️ Панель управления
+        </Heading>
+        <Text fontSize="lg" color="gray.600" mb={6}>
+          Панель управления MARS предоставляет полный контроль над системой, 
+          мониторинг производительности и управление сервисами.
+        </Text>
+      </Box>
 
-        <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={6}>
-          <GridItem>
-            <Box
-              bg={bgCard}
-              p={6}
-              borderRadius="xl"
-              border="1px solid"
-              borderColor={borderColor}
-              shadow="md"
-              textAlign="center"
-            >
-              <Text fontSize="4xl" mb={3}>
-                📊
+      <Box>
+        <Heading as="h3" size="lg" color="gray.800" mb={4}>
+          📊 Основные функции
+        </Heading>
+        <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={6}>
+          <Box p={6} bg="gray.50" borderRadius="xl" border="1px solid" borderColor="gray.200">
+            <VStack gap={4} align="stretch">
+              <HStack>
+                <Text fontSize="2xl">📈</Text>
+                <Heading as="h4" size="md" color="gray.800">
+                  Мониторинг
+                </Heading>
+              </HStack>
+              <Text color="gray.600" fontSize="sm">
+                Отслеживание производительности системы, использование ресурсов 
+                и статистика работы компонентов.
               </Text>
-              <Heading as="h3" size="md" mb={3} color={textPrimary}>
-                Дашборд
-              </Heading>
-              <Text mb={4} color={textSecondary}>
-                Мониторинг статистики и производительности в реальном времени.
-              </Text>
-              <Button
-                as={Link}
-                to="/dashboard"
-                colorScheme="blue"
-                size="sm"
-                leftIcon={<ExternalLinkIcon />}
-              >
-                Открыть дашборд
-              </Button>
-            </Box>
-          </GridItem>
+            </VStack>
+          </Box>
 
-          <GridItem>
-            <Box
-              bg={bgCard}
-              p={6}
-              borderRadius="xl"
-              border="1px solid"
-              borderColor={borderColor}
-              shadow="md"
-              textAlign="center"
-            >
-              <Text fontSize="4xl" mb={3}>
-                ⚙️
+          <Box p={6} bg="gray.50" borderRadius="xl" border="1px solid" borderColor="gray.200">
+            <VStack gap={4} align="stretch">
+              <HStack>
+                <Text fontSize="2xl">🖥️</Text>
+                <Heading as="h4" size="md" color="gray.800">
+                  Управление сервисами
+                </Heading>
+              </HStack>
+              <Text color="gray.600" fontSize="sm">
+                Запуск, остановка и перезапуск сервисов, просмотр логов 
+                и управление конфигурацией.
               </Text>
-              <Heading as="h3" size="md" mb={3} color={textPrimary}>
-                Настройки
-              </Heading>
-              <Text mb={4} color={textSecondary}>
-                Конфигурация всех компонентов и интеграций.
-              </Text>
-              <Button
-                as={Link}
-                to="/admin"
-                colorScheme="blue"
-                size="sm"
-                leftIcon={<ExternalLinkIcon />}
-              >
-                Открыть настройки
-              </Button>
-            </Box>
-          </GridItem>
+            </VStack>
+          </Box>
 
-          <GridItem>
-            <Box
-              bg={bgCard}
-              p={6}
-              borderRadius="xl"
-              border="1px solid"
-              borderColor={borderColor}
-              shadow="md"
-              textAlign="center"
-            >
-              <Text fontSize="4xl" mb={3}>
-                🔧
+          <Box p={6} bg="gray.50" borderRadius="xl" border="1px solid" borderColor="gray.200">
+            <VStack gap={4} align="stretch">
+              <HStack>
+                <Text fontSize="2xl">👥</Text>
+                <Heading as="h4" size="md" color="gray.800">
+                  Пользователи
+                </Heading>
+              </HStack>
+              <Text color="gray.600" fontSize="sm">
+                Управление пользователями, правами доступа и настройками 
+                безопасности системы.
               </Text>
-              <Heading as="h3" size="md" mb={3} color={textPrimary}>
-                Сервисы
-              </Heading>
-              <Text mb={4} color={textSecondary}>
-                Управление подключенными сервисами и API.
+            </VStack>
+          </Box>
+
+          <Box p={6} bg="gray.50" borderRadius="xl" border="1px solid" borderColor="gray.200">
+            <VStack gap={4} align="stretch">
+              <HStack>
+                <Text fontSize="2xl">📝</Text>
+                <Heading as="h4" size="md" color="gray.800">
+                  Логи и аналитика
+                </Heading>
+              </HStack>
+              <Text color="gray.600" fontSize="sm">
+                Просмотр системных логов, анализ ошибок и генерация 
+                отчетов о работе системы.
               </Text>
-              <Button
-                as={Link}
-                to="/services"
-                colorScheme="blue"
-                size="sm"
-                leftIcon={<ExternalLinkIcon />}
-              >
-                Управление сервисами
-              </Button>
-            </Box>
-          </GridItem>
+            </VStack>
+          </Box>
         </Grid>
-      </VStack>
-    </Box>
+      </Box>
+
+      <Box>
+        <Heading as="h3" size="lg" color="gray.800" mb={4}>
+          🚀 Доступ к панели
+        </Heading>
+        <Box p={6} bg="blue.50" borderRadius="xl" border="1px solid" borderColor="blue.200">
+          <VStack gap={4}>
+            <Text color="blue.800" fontWeight="semibold">
+              Панель управления доступна по адресу:
+            </Text>
+            <Code p={3} bg="white" borderRadius="md" fontSize="lg">
+              https://your-domain.com/admin
+            </Code>
+            <Text color="blue.700" fontSize="sm" textAlign="center">
+              Для доступа требуются права администратора. 
+              Обратитесь к системному администратору для получения доступа.
+            </Text>
+            <Link to="/admin">
+              <Button colorScheme="blue" variant="solid">
+                🚀 Открыть панель управления
+              </Button>
+            </Link>
+          </VStack>
+        </Box>
+      </Box>
+    </VStack>
   );
 
   const renderApi = () => (
-    <Box>
-      <VStack spacing={8} align="stretch">
-        <Box>
-          <Heading as="h2" size="xl" mb={3} color={textPrimary}>
-            API Документация
-          </Heading>
-          <Text fontSize="lg" color={textSecondary}>
-            Полная документация по API для разработчиков.
+    <VStack gap={8} align="stretch">
+      <Box>
+        <Heading as="h2" size="xl" color="gray.800" mb={6}>
+          🔧 API и интеграции
+        </Heading>
+        <Text fontSize="lg" color="gray.600" mb={6}>
+          MARS предоставляет мощный REST API и SignalR хабы для интеграции 
+          с внешними системами и создания собственных приложений.
+        </Text>
+      </Box>
+
+      <Box>
+        <Heading as="h3" size="lg" color="gray.800" mb={4}>
+          🌐 REST API
+        </Heading>
+        <VStack gap={4} align="stretch">
+          <Box p={4} bg="gray.50" borderRadius="md" border="1px solid" borderColor="gray.200">
+            <Text fontWeight="semibold" color="gray.800" mb={2}>
+              Базовый URL
+            </Text>
+            <Code p={2} bg="white" borderRadius="sm">
+              https://your-domain.com/api/v1
+            </Code>
+          </Box>
+
+          <Box p={4} bg="gray.50" borderRadius="md" border="1px solid" borderColor="gray.200">
+            <Text fontWeight="semibold" color="gray.800" mb={2}>
+              Аутентификация
+            </Text>
+            <Text color="gray.600" fontSize="sm" mb={2}>
+              API использует Bearer токены для аутентификации:
+            </Text>
+            <Code p={2} bg="white" borderRadius="sm">
+              Authorization: Bearer YOUR_API_TOKEN
+            </Code>
+          </Box>
+
+          <Box p={4} bg="gray.50" borderRadius="md" border="1px solid" borderColor="gray.200">
+            <Text fontWeight="semibold" color="gray.800" mb={2}>
+              Основные эндпоинты
+            </Text>
+            <VStack gap={2} align="stretch">
+              <HStack>
+                <Badge colorScheme="green">GET</Badge>
+                <Code>/components</Code>
+                <Text fontSize="sm" color="gray.600">Список компонентов</Text>
+              </HStack>
+              <HStack>
+                <Badge colorScheme="blue">POST</Badge>
+                <Code>/components/{'{id}'}/trigger</Code>
+                <Text fontSize="sm" color="gray.600">Запуск компонента</Text>
+              </HStack>
+              <HStack>
+                <Badge colorScheme="purple">PUT</Badge>
+                <Code>/components/{'{id}'}/config</Code>
+                <Text fontSize="sm" color="gray.600">Обновление конфигурации</Text>
+              </HStack>
+            </VStack>
+          </Box>
+        </VStack>
+      </Box>
+
+      <Box>
+        <Heading as="h3" size="lg" color="gray.800" mb={4}>
+          ⚡ SignalR Хабы
+        </Heading>
+        <VStack gap={4} align="stretch">
+          <Text color="gray.600">
+            SignalR хабы обеспечивают реальное время обновления данных и 
+            двустороннюю связь между клиентами и сервером.
           </Text>
-        </Box>
 
-        <Box
-          bg={bgCard}
-          p={6}
-          borderRadius="xl"
-          border="1px solid"
-          borderColor={borderColor}
-          shadow="md"
-        >
-          <VStack spacing={6} align="stretch">
-            <Box>
-              <Heading as="h3" size="md" mb={2} color={textPrimary}>
-                Базовый URL
-              </Heading>
-              <Code
-                p={3}
-                borderRadius="md"
-                bg={bgSecondary}
-                color={textPrimary}
-              >
-                https://api.marsclient.com/v1
-              </Code>
-            </Box>
+          <Box p={4} bg="gray.50" borderRadius="md" border="1px solid" borderColor="gray.200">
+            <Text fontWeight="semibold" color="gray.800" mb={2}>
+              Доступные хабы
+            </Text>
+            <VStack gap={2} align="stretch">
+              <HStack>
+                <Text fontSize="sm" fontWeight="semibold" color="blue.600">ScoreboardHub</Text>
+                <Text fontSize="sm" color="gray.600">Управление счетчиками</Text>
+              </HStack>
+              <HStack>
+                <Text fontSize="sm" fontWeight="semibold" color="green.600">SoundRequestHub</Text>
+                <Text fontSize="sm" color="gray.600">Запросы музыки</Text>
+              </HStack>
+              <HStack>
+                <Text fontSize="sm" fontWeight="semibold" color="purple.600">TelegramusHub</Text>
+                <Text fontSize="sm" color="gray.600">Интеграция с Telegram</Text>
+              </HStack>
+            </VStack>
+          </Box>
 
-            <Box>
-              <Heading as="h3" size="md" mb={2} color={textPrimary}>
-                Аутентификация
-              </Heading>
-              <Text mb={2} color={textSecondary}>
-                Все API запросы требуют API ключ в заголовке:
+          <Box p={4} bg="gray.50" borderRadius="md" border="1px solid" borderColor="gray.200">
+            <Text fontWeight="semibold" color="gray.800" mb={2}>
+              Пример подключения
+            </Text>
+            <Code p={3} bg="white" borderRadius="sm" fontSize="sm" whiteSpace="pre-wrap">
+{`const connection = new signalR.HubConnectionBuilder()
+  .withUrl("/hubs/scoreboard")
+  .build();
+
+connection.on("UpdateScore", (data) => {
+  console.log("Score updated:", data);
+});
+
+await connection.start();`}
+            </Code>
+          </Box>
+        </VStack>
+      </Box>
+
+      <Box>
+        <Heading as="h3" size="lg" color="gray.800" mb={4}>
+          📚 SDK и библиотеки
+        </Heading>
+        <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={4}>
+          <Box p={4} bg="gray.50" borderRadius="md" border="1px solid" borderColor="gray.200">
+            <VStack gap={3}>
+              <Text fontSize="lg">🔵</Text>
+              <Heading as="h4" size="sm" color="gray.800">JavaScript SDK</Heading>
+              <Text fontSize="sm" color="gray.600" textAlign="center">
+                Официальная библиотека для веб-приложений
               </Text>
-              <Code
-                p={3}
-                borderRadius="md"
-                bg={bgSecondary}
-                color={textPrimary}
-              >
-                Authorization: Bearer YOUR_API_KEY
-              </Code>
-            </Box>
+              <Button size="sm" variant="outline" colorScheme="blue">
+                Скачать
+              </Button>
+            </VStack>
+          </Box>
 
-            <Divider />
-
-            <Box>
-              <Heading as="h3" size="md" mb={4} color={textPrimary}>
-                Примеры запросов
-              </Heading>
-              <VStack spacing={4} align="stretch">
-                <Box>
-                  <Heading as="h4" size="sm" mb={2} color={textPrimary}>
-                    Получение алертов
-                  </Heading>
-                  <Code
-                    p={3}
-                    borderRadius="md"
-                    bg={bgSecondary}
-                    color={textPrimary}
-                    display="block"
-                    whiteSpace="pre"
-                  >
-                    GET /alerts{`\n`}
-                    Response: {`{`}
-                    {`\n`}
-                    &nbsp;&nbsp;"alerts": [...]{`\n`}
-                    {`}`}
-                  </Code>
-                </Box>
-
-                <Box>
-                  <Heading as="h4" size="sm" mb={2} color={textPrimary}>
-                    Создание алерта
-                  </Heading>
-                  <Code
-                    p={3}
-                    borderRadius="md"
-                    bg={bgSecondary}
-                    color={textPrimary}
-                    display="block"
-                    whiteSpace="pre"
-                  >
-                    POST /alerts{`\n`}
-                    Body: {`{`}
-                    {`\n`}
-                    &nbsp;&nbsp;"type": "donation",{`\n`}
-                    &nbsp;&nbsp;"message": "Спасибо за донат!"{`\n`}
-                    {`}`}
-                  </Code>
-                </Box>
-              </VStack>
-            </Box>
-          </VStack>
-        </Box>
-      </VStack>
-    </Box>
+          <Box p={4} bg="gray.50" borderRadius="md" border="1px solid" borderColor="gray.200">
+            <VStack gap={3}>
+              <Text fontSize="lg">🟢</Text>
+              <Heading as="h4" size="sm" color="gray.800">Python SDK</Heading>
+              <Text fontSize="sm" color="gray.600" textAlign="center">
+                Библиотека для Python приложений
+              </Text>
+              <Button size="sm" variant="outline" colorScheme="green">
+                Скачать
+              </Button>
+            </VStack>
+          </Box>
+        </Grid>
+      </Box>
+    </VStack>
   );
 
   const renderTabContent = () => {
@@ -480,55 +585,75 @@ const DocsPage: React.FC = () => {
   };
 
   return (
-    <Box bg={bgPrimary} minH="100vh">
-      <Container maxW="container.xl" py={8}>
-        <Flex direction={{ base: "column", lg: "row" }} gap={8} align="start">
-          {/* Sidebar */}
-          <Box
-            w={{ base: "100%", lg: "250px" }}
-            flexShrink={0}
-            bg={bgCard}
-            p={6}
-            borderRadius="xl"
-            border="1px solid"
-            borderColor={borderColor}
-            shadow="md"
-          >
-            <VStack spacing={6} align="stretch">
-              <Heading as="h2" size="lg" color={textPrimary}>
-                Документация
-              </Heading>
-              <VStack spacing={2} align="stretch">
-                {tabs.map(tab => (
-                  <Button
-                    key={tab.id}
-                    variant={activeTab === tab.id ? "solid" : "ghost"}
-                    colorScheme={activeTab === tab.id ? "blue" : "gray"}
-                    justifyContent="start"
-                    onClick={() => setActiveTab(tab.id)}
-                    size="lg"
-                  >
-                    {tab.label}
-                  </Button>
-                ))}
-              </VStack>
-            </VStack>
-          </Box>
+    <Box p={8} bg="white" minH="100vh">
+      <VStack gap={8} align="stretch">
+        {/* Header */}
+        <Box textAlign="center" py={8}>
+          <VStack gap={6}>
+            <Text fontSize="6xl" fontWeight="bold">
+              📚
+            </Text>
+            <Heading as="h1" size="2xl" color="gray.800">
+              Документация MARS
+            </Heading>
+            <Text fontSize="lg" color="gray.600" maxW="3xl">
+              Подробные руководства по установке, настройке и использованию 
+              всех компонентов платформы MARS
+            </Text>
+          </VStack>
+        </Box>
 
-          {/* Content */}
-          <Box
-            flex={1}
-            bg={bgCard}
-            p={8}
-            borderRadius="xl"
-            border="1px solid"
-            borderColor={borderColor}
-            shadow="md"
-          >
-            {renderTabContent()}
-          </Box>
-        </Flex>
-      </Container>
+        {/* Navigation Tabs */}
+        <Box>
+          <Flex gap={2} flexWrap="wrap" justify="center">
+            {tabs.map((tab) => (
+              <Button
+                key={tab.id}
+                variant={activeTab === tab.id ? "solid" : "outline"}
+                colorScheme={activeTab === tab.id ? "blue" : "gray"}
+                onClick={() => setActiveTab(tab.id)}
+                size="lg"
+                px={6}
+                py={3}
+                borderRadius="lg"
+                fontWeight="medium"
+                _hover={{ transform: "translateY(-2px)" }}
+                transition="all 0.3s ease"
+              >
+                {tab.icon} {tab.label}
+              </Button>
+            ))}
+          </Flex>
+        </Box>
+
+        <Divider />
+
+        {/* Content */}
+        <Box>
+          {renderTabContent()}
+        </Box>
+
+        {/* Footer */}
+        <Box textAlign="center" py={8}>
+          <VStack gap={4}>
+            <Text color="gray.500" fontSize="sm">
+              Нужна дополнительная помощь?
+            </Text>
+            <Flex gap={4} flexWrap="wrap" justify="center">
+              <Link to="/contacts">
+                <Button variant="outline" colorScheme="blue">
+                  💬 Связаться с поддержкой
+                </Button>
+              </Link>
+              <Link to="/about">
+                <Button variant="outline" colorScheme="gray">
+                  ℹ️ О проекте
+                </Button>
+              </Link>
+            </Flex>
+          </VStack>
+        </Box>
+      </VStack>
     </Box>
   );
 };

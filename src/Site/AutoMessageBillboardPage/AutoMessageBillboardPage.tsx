@@ -1,168 +1,237 @@
-import { Box, Button, Container, Heading, Input, Stack, Text } from "@chakra-ui/react";
-import { useSiteColors } from "@/shared/Utils/useSiteColors";
-import { useState } from "react";
+import {
+  Box,
+  Button,
+  Flex,
+  Heading,
+  Text,
+  useColorModeValue,
+  VStack,
+  Grid,
+} from "@chakra-ui/react";
+import React, { useState } from "react";
 
-import AutoMessageBillboardTest from "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboardTest";
+import AutoMessageBillboard from "@/components/OBS_Components/AutoMessageBillboard";
 
 export default function AutoMessageBillboardPage() {
-  const [testMessage, setTestMessage] = useState("");
+  const [isRunning, setIsRunning] = useState(false);
+  const [currentMessage, setCurrentMessage] = useState("");
 
-  // Цветовые переменные
-  const colors = useSiteColors();
-  const bgPrimary = colors.background.primary;
-  const bgSecondary = colors.background.secondary;
-  const textPrimary = colors.text.primary;
-  const textSecondary = colors.text.secondary;
-  const borderColor = colors.border.primary;
+  const bgColor = useColorModeValue("white", "gray.800");
+  const textColor = useColorModeValue("gray.800", "white");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
+  const cardBg = useColorModeValue("gray.50", "gray.700");
 
   const handleSendTestMessage = () => {
-    if (testMessage.trim()) {
-      // Симулируем SignalR событие
-      const event = new CustomEvent("AutoMessage", { detail: testMessage });
-      window.dispatchEvent(event);
-      setTestMessage("");
-    }
+    setCurrentMessage("Тестовое сообщение от пользователя");
+    setTimeout(() => setCurrentMessage(""), 5000);
   };
 
   const sendRandomMessages = () => {
     const messages = [
-      "Привет всем! Как дела?",
-      "Не забудьте подписаться на канал!",
-      "Спасибо за поддержку!",
-      "Сегодня отличный день для стрима!",
-      "Донатеры - вы лучшие!",
-      "Нажмите на колокольчик!",
-      "Лайк за старания!",
-      "Комментарий для алгоритма!",
+      "Привет всем! 👋",
+      "Как дела? 😊",
+      "Отличный стрим! 🎉",
+      "Спасибо за контент! 🙏",
+      "У вас классно получается! ⭐",
     ];
 
-    messages.forEach((message, index) => {
-      setTimeout(() => {
-        const event = new CustomEvent("AutoMessage", { detail: message });
-        window.dispatchEvent(event);
-      }, index * 2000); // Каждые 2 секунды
-    });
+    setIsRunning(true);
+    let index = 0;
+
+    const interval = setInterval(() => {
+      setCurrentMessage(messages[index]);
+      index = (index + 1) % messages.length;
+    }, 3000);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      setIsRunning(false);
+      setCurrentMessage("");
+    }, 15000);
   };
 
   const sendEmoteMessages = () => {
     const emoteMessages = [
-      "Kappa это круто!",
-      "PogChamp момент!",
-      "FeelsGoodMan",
-      "monkaS",
-      "LUL",
-      "PepeHands",
+      "Kappa 👻",
+      "PogChamp 😮",
+      "monkaS 😰",
+      "FeelsGoodMan 😌",
+      "PepeHands 😢",
     ];
 
-    emoteMessages.forEach((message, index) => {
-      setTimeout(() => {
-        const event = new CustomEvent("AutoMessage", { detail: message });
-        window.dispatchEvent(event);
-      }, index * 2000); // Каждые 2 секунды
-    });
+    setIsRunning(true);
+    let index = 0;
+
+    const interval = setInterval(() => {
+      setCurrentMessage(emoteMessages[index]);
+      index = (index + 1) % emoteMessages.length;
+    }, 2000);
+
+    setTimeout(() => {
+      clearInterval(interval);
+      setIsRunning(false);
+      setCurrentMessage("");
+    }, 10000);
   };
 
   return (
-    <Container maxW="container.xl" py={6}>
-      <Stack gap={8} align="stretch">
-        {/* Заголовок и описание */}
+    <Box p={8} bg={bgColor} minH="100vh">
+      <VStack spacing={8} align="stretch">
+        {/* Header */}
         <Box textAlign="center">
-          <Heading as="h1" size="xl" color={textPrimary} mb={3}>
-            AutoMessageBillboard Demo
+          <Heading as="h1" size="2xl" color={textColor} mb={4}>
+            Auto Message Billboard
           </Heading>
-          <Text fontSize="lg" color={textSecondary}>
-            Демонстрация компонента для отображения автоматических сообщений
+          <Text fontSize="lg" color={useColorModeValue("gray.600", "gray.300")} maxW="2xl" mx="auto">
+            Автоматическое отображение сообщений в виде красивого билборда для OBS.
+            Идеально подходит для стримов и презентаций.
           </Text>
         </Box>
 
-        {/* Управление */}
+        {/* Controls */}
         <Box
-          bg={bgSecondary}
           p={6}
-          borderRadius="xl"
-          borderWidth="1px"
+          bg={cardBg}
+          border="1px solid"
           borderColor={borderColor}
-          shadow="md"
+          borderRadius="xl"
+          maxW="2xl"
+          mx="auto"
+          w="full"
         >
-          <Stack gap={4} align="stretch">
-            {/* Поле ввода и кнопка отправки */}
-            <Box>
-              <Input
-                type="text"
-                value={testMessage}
-                onChange={e => setTestMessage(e.target.value)}
-                placeholder="Введите тестовое сообщение..."
-                bg={bgPrimary}
-                borderColor={borderColor}
-                _focus={{ borderColor: "blue.400", boxShadow: "outline" }}
-                size="lg"
-                mb={3}
-              />
+          <VStack spacing={6}>
+            <Heading as="h2" size="lg" color={textColor}>
+              Управление
+            </Heading>
+            
+            <Flex gap={4} flexWrap="wrap" justify="center">
               <Button
-                onClick={handleSendTestMessage}
                 colorScheme="blue"
-                size="lg"
-                w="100%"
+                onClick={handleSendTestMessage}
+                isDisabled={isRunning}
               >
-                Отправить
+                Тестовое сообщение
               </Button>
-            </Box>
+              
+              <Button
+                colorScheme="green"
+                onClick={sendRandomMessages}
+                isDisabled={isRunning}
+              >
+                Случайные сообщения
+              </Button>
+              
+              <Button
+                colorScheme="purple"
+                onClick={sendEmoteMessages}
+                isDisabled={isRunning}
+              >
+                Emote сообщения
+              </Button>
+            </Flex>
 
-            {/* Кнопки для отправки серий сообщений */}
-            <Button
-              onClick={sendRandomMessages}
-              colorScheme="green"
-              variant="outline"
-              size="lg"
-            >
-              Отправить серию сообщений
-            </Button>
+            {isRunning && (
+              <Text color="green.500" fontWeight="semibold">
+                🔄 Автоматическая отправка активна...
+              </Text>
+            )}
 
-            <Button
-              onClick={sendEmoteMessages}
-              colorScheme="purple"
-              variant="outline"
-              size="lg"
-            >
-              Отправить сообщения с эмодзи
-            </Button>
-          </Stack>
+            {currentMessage && (
+              <Box
+                p={4}
+                bg="blue.50"
+                border="1px solid"
+                borderColor="blue.200"
+                borderRadius="md"
+                textAlign="center"
+              >
+                <Text color="blue.800" fontWeight="medium">
+                  Текущее сообщение: {currentMessage}
+                </Text>
+              </Box>
+            )}
+          </VStack>
         </Box>
 
-        {/* Информация о работе */}
-        <Box
-          bg={bgSecondary}
-          p={6}
-          borderRadius="xl"
-          borderWidth="1px"
-          borderColor={borderColor}
-          shadow="md"
-        >
-          <Heading as="h3" size="md" color={textPrimary} mb={4}>
-            Как это работает:
+        {/* Component Preview */}
+        <Box>
+          <Heading as="h2" size="lg" color={textColor} mb={6} textAlign="center">
+            Предварительный просмотр
           </Heading>
-          <Box as="ul" color={textSecondary} pl={6}>
-            <Box as="li" mb={2}>
-              Компонент подписывается на SignalR событие "AutoMessage"
-            </Box>
-            <Box as="li" mb={2}>
-              При получении сообщения появляется билборд справа
-            </Box>
-            <Box as="li" mb={2}>
-              Билборд отображается 3 секунды с анимацией пульсации
-            </Box>
-            <Box as="li" mb={2}>
-              Затем плавно исчезает за пределы экрана
-            </Box>
-            <Box as="li">Поддерживает эмодзи 7TV, BTTV, FFZ и Twitch</Box>
+          <Box
+            border="2px dashed"
+            borderColor={borderColor}
+            borderRadius="xl"
+            p={8}
+            bg={cardBg}
+            minH="400px"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <AutoMessageBillboard />
           </Box>
         </Box>
 
-        {/* Тестовый компонент */}
+        {/* Features */}
         <Box>
-          <AutoMessageBillboardTest />
+          <Heading as="h2" size="lg" color={textColor} mb={6} textAlign="center">
+            Возможности
+          </Heading>
+          <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" }} gap={6}>
+            <Box
+              p={6}
+              bg={cardBg}
+              border="1px solid"
+              borderColor={borderColor}
+              borderRadius="lg"
+              textAlign="center"
+            >
+              <Text fontSize="4xl" mb={4}>🎨</Text>
+              <Heading as="h3" size="md" color={textColor} mb={3}>
+                Красивый дизайн
+              </Heading>
+              <Text color={useColorModeValue("gray.600", "gray.300")} fontSize="sm">
+                Современный и привлекательный интерфейс с плавными анимациями
+              </Text>
+            </Box>
+            
+            <Box
+              p={6}
+              bg={cardBg}
+              border="1px solid"
+              borderColor={borderColor}
+              borderRadius="lg"
+              textAlign="center"
+            >
+              <Text fontSize="4xl" mb={4}>⚡</Text>
+              <Heading as="h3" size="md" color={textColor} mb={3}>
+                Быстрая настройка
+              </Heading>
+              <Text color={useColorModeValue("gray.600", "gray.300")} fontSize="sm">
+                Простая настройка и интеграция с OBS Studio
+              </Text>
+            </Box>
+            
+            <Box
+              p={6}
+              bg={cardBg}
+              border="1px solid"
+              borderColor={borderColor}
+              borderRadius="lg"
+              textAlign="center"
+            >
+              <Text fontSize="4xl" mb={4}>🔧</Text>
+              <Heading as="h3" size="md" color={textColor} mb={3}>
+                Гибкая настройка
+              </Heading>
+              <Text color={useColorModeValue("gray.600", "gray.300")} fontSize="sm">
+                Настройка цветов, размеров и поведения компонента
+              </Text>
+            </Box>
+          </Grid>
         </Box>
-      </Stack>
-    </Container>
+      </VStack>
+    </Box>
   );
 }

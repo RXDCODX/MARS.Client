@@ -1,43 +1,85 @@
 import {
-  ChatIcon,
-  EmailIcon,
-  ExternalLinkIcon,
-  PhoneIcon,
-} from "@chakra-ui/icons";
-import {
   Box,
   Button,
-  Container,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
   Grid,
-  GridItem,
   Heading,
-  Icon,
-  Link as ChakraLink, // Import Link from Chakra UI
+  Input,
+  Select,
   Text,
+  Textarea,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { Form, Toast, ToastContainer } from "react-bootstrap"; // Import Form, Toast, ToastContainer from react-bootstrap
 
-const ContactsPage: React.FC = () => {
+const ContactsPage = () => {
+  const toast = useToast();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     subject: "",
     message: "",
+    category: "",
   });
-
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showToast, setShowToast] = useState(false);
-  const [toastMessage, setToastMessage] = useState("");
-  const [toastStatus, setToastStatus] = useState("success");
 
-  const bgPrimary = "white";
-  const bgSecondary = "gray.50";
-  const bgCard = "white";
-  const textPrimary = "gray.800";
-  const textSecondary = "gray.600";
-  const borderColor = "gray.200";
+  const contactMethods = [
+    {
+      icon: "📧",
+      title: "Email",
+      description: "Основной способ связи",
+      value: "info@mars-project.com",
+      action: "Написать письмо",
+    },
+    {
+      icon: "💬",
+      title: "Discord",
+      description: "Присоединяйтесь к нашему серверу",
+      value: "@mars-project",
+      action: "Присоединиться",
+    },
+    {
+      icon: "🐙",
+      title: "GitHub",
+      description: "Исходный код и issues",
+      value: "github.com/mars-project",
+      action: "Перейти",
+    },
+    {
+      icon: "📖",
+      title: "Документация",
+      description: "Подробные руководства",
+      value: "docs.mars-project.com",
+      action: "Изучить",
+    },
+  ];
+
+  const faqItems = [
+    {
+      question: "Как начать использовать MARS?",
+      answer:
+        "Начните с изучения документации, затем установите базовые компоненты и настройте их под свои нужды.",
+    },
+    {
+      question: "Поддерживается ли мобильная версия?",
+      answer:
+        "Да, веб-интерфейс MARS полностью адаптивен и работает на всех устройствах.",
+    },
+    {
+      question: "Можно ли создавать собственные компоненты?",
+      answer:
+        "Конечно! MARS предоставляет API для создания кастомных компонентов и интеграций.",
+    },
+    {
+      question: "Есть ли платная версия?",
+      answer: "В настоящее время MARS полностью бесплатен для использования.",
+    },
+  ];
 
   const handleInputChange = (
     e: React.ChangeEvent<
@@ -45,389 +87,354 @@ const ContactsPage: React.FC = () => {
     >
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.name.trim()) {
+      newErrors.name = "Имя обязательно для заполнения";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email обязателен для заполнения";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Введите корректный email";
+    }
+
+    if (!formData.subject.trim()) {
+      newErrors.subject = "Тема обязательна для заполнения";
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = "Сообщение обязательно для заполнения";
+    }
+
+    if (!formData.category) {
+      newErrors.category = "Выберите категорию";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     setIsSubmitting(true);
 
-    // Имитация отправки формы
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setFormData({ name: "", email: "", subject: "", message: "" });
+    try {
+      // Имитация отправки формы
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
-      setToastMessage("Сообщение отправлено!");
-      setToastStatus("success");
-      setShowToast(true);
-    }, 2000);
+      toast({
+        title: "Сообщение отправлено!",
+        description: "Мы свяжемся с вами в ближайшее время.",
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
+
+      // Сброс формы
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+        category: "",
+      });
+    } catch (error) {
+      toast({
+        title: "Ошибка отправки",
+        description: "Попробуйте отправить сообщение позже.",
+        status: "error",
+        duration: 5000,
+        isClosable: true,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  const contactInfo = [
-    {
-      icon: EmailIcon,
-      title: "Email",
-      value: "support@marsclient.com",
-      link: "mailto:support@marsclient.com",
-    },
-    {
-      icon: ChatIcon,
-      title: "Discord",
-      value: "MARS Client Community",
-      link: "#",
-    },
-    {
-      icon: ExternalLinkIcon,
-      title: "GitHub",
-      value: "github.com/marsclient",
-      link: "#",
-    },
-    {
-      icon: PhoneIcon,
-      title: "Telegram",
-      value: "@marsclient_support",
-      link: "#",
-    },
-  ];
-
   return (
-    <Box>
-      {/* Hero Section */}
-      <Box bg={bgSecondary} py={20}>
-        <Container maxW="container.xl" textAlign="center">
-          <Box display="flex" flexDirection="column" gap={6}>
-            {/* Keep spacing for now */}
-            <Heading as="h1" size="2xl" color={textPrimary}>
+    <Box p={8} bg="white" minH="100vh">
+      <VStack gap={16} align="stretch">
+        {/* Hero Section */}
+        <Box textAlign="center" py={12}>
+          <VStack gap={8}>
+            <Text fontSize="6xl" fontWeight="bold">
+              📞
+            </Text>
+            <Heading as="h1" size="2xl" color="gray.800">
               Свяжитесь с нами
             </Heading>
-            <Text fontSize="xl" color={textSecondary} maxW="2xl" mx="auto">
-              У вас есть вопросы или предложения? Мы будем рады услышать от вас!
+            <Text fontSize="xl" color="gray.600" maxW="2xl">
+              У вас есть вопросы по MARS? Хотите поделиться идеями или сообщить
+              об ошибке? Мы всегда готовы помочь и выслушать ваши предложения.
             </Text>
-          </Box>
-        </Container>
-      </Box>
+          </VStack>
+        </Box>
 
-      {/* Main Content */}
-      <Container maxW="container.xl" py={20}>
-        <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={12}>
-          {/* Contact Info */}
-          <GridItem>
-            <Box
-              display="flex"
-              flexDirection="column"
-              gap={8}
-              alignItems="flex-start"
-            >
-              {/* Keep spacing for now */}
-              <Box>
-                <Heading as="h2" size="xl" mb={4} color={textPrimary}>
-                  Контактная информация
-                </Heading>
-                <Text fontSize="lg" color={textSecondary} mb={6}>
-                  Выберите удобный для вас способ связи
-                </Text>
-              </Box>
-
+        {/* Contact Methods Grid */}
+        <Box>
+          <Heading
+            as="h2"
+            size="xl"
+            color="gray.800"
+            textAlign="center"
+            mb={12}
+          >
+            Способы связи
+          </Heading>
+          <Grid
+            templateColumns={{
+              base: "1fr",
+              md: "repeat(2, 1fr)",
+              lg: "repeat(4, 1fr)",
+            }}
+            gap={6}
+          >
+            {contactMethods.map((method, index) => (
               <Box
-                display="flex"
-                flexDirection="column"
-                gap={4}
-                alignItems="stretch"
-                w="100%"
+                key={index}
+                p={6}
+                bg="gray.50"
+                borderRadius="xl"
+                border="1px solid"
+                borderColor="gray.200"
+                textAlign="center"
+                transition="all 0.3s ease"
+                _hover={{
+                  transform: "translateY(-4px)",
+                  boxShadow: "lg",
+                }}
               >
-                {" "}
-                {/* Keep spacing for now */}
-                {contactInfo.map((contact, index) => (
-                  <ChakraLink
-                    key={index}
-                    href={contact.link}
-                    target={
-                      contact.link.startsWith("http") ? "_blank" : undefined
-                    }
-                    rel={
-                      contact.link.startsWith("http")
-                        ? "noopener noreferrer"
-                        : undefined
-                    }
-                    p={4}
-                    bg={bgCard}
-                    border="1px solid"
-                    borderColor={borderColor}
-                    borderRadius="lg"
-                    _hover={{
-                      bg: bgSecondary,
-                      transform: "translateY(-2px)",
-                      shadow: "lg",
-                    }}
-                    transition="all 0.2s"
-                    display="flex"
-                    alignItems="center"
-                    gap={3}
+                <VStack gap={4}>
+                  <Text
+                    fontSize="4xl"
+                    filter="drop-shadow(0 2px 4px rgba(0,0,0,0.1))"
                   >
-                    <Icon as={contact.icon} boxSize={6} color="blue.500" />
-                    <Box>
-                      <Text fontWeight="semibold" color={textPrimary}>
-                        {contact.title}
-                      </Text>
-                      <Text fontSize="sm" color={textSecondary}>
-                        {contact.value}
-                      </Text>
-                    </Box>
-                  </ChakraLink>
-                ))}
+                    {method.icon}
+                  </Text>
+                  <Heading as="h3" size="md" color="gray.800">
+                    {method.title}
+                  </Heading>
+                  <Text color="gray.600" fontSize="sm">
+                    {method.description}
+                  </Text>
+                  <Text fontWeight="semibold" color="blue.600" fontSize="sm">
+                    {method.value}
+                  </Text>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    colorScheme="blue"
+                    _hover={{ bg: "blue.500", color: "white" }}
+                  >
+                    {method.action}
+                  </Button>
+                </VStack>
               </Box>
-            </Box>
-          </GridItem>
+            ))}
+          </Grid>
+        </Box>
 
+        {/* Contact Form and FAQ */}
+        <Grid templateColumns={{ base: "1fr", lg: "1fr 1fr" }} gap={12}>
           {/* Contact Form */}
-          <GridItem>
+          <Box>
+            <Heading as="h2" size="xl" color="gray.800" mb={8}>
+              Отправить сообщение
+            </Heading>
             <Box
-              bg={bgCard}
-              p={8}
+              as="form"
+              onSubmit={handleSubmit}
+              p={6}
+              bg="gray.50"
               borderRadius="xl"
               border="1px solid"
-              borderColor={borderColor}
-              shadow="md"
+              borderColor="gray.200"
             >
-              <Box
-                display="flex"
-                flexDirection="column"
-                gap={6}
-                alignItems="stretch"
-              >
-                <Box>
-                  <Heading as="h2" size="lg" mb={2} color={textPrimary}>
-                    Отправить сообщение
-                  </Heading>
-                  <Text color={textSecondary}>
-                    Заполните форму ниже, и мы свяжемся с вами в ближайшее время
-                  </Text>
-                </Box>
+              <VStack gap={6}>
+                <FormControl isInvalid={!!errors.name}>
+                  <FormLabel>Имя *</FormLabel>
+                  <Input
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    placeholder="Ваше имя"
+                    bg="white"
+                    borderColor="gray.300"
+                    _focus={{
+                      borderColor: "blue.500",
+                      boxShadow: "0 0 0 1px blue.500",
+                    }}
+                  />
+                  <FormErrorMessage>{errors.name}</FormErrorMessage>
+                </FormControl>
 
-                <Form onSubmit={handleSubmit}>
-                  {" "}
-                  {/* Use react-bootstrap Form */}
-                  <Box
-                    display="flex"
-                    flexDirection="column"
-                    gap={4}
-                    alignItems="stretch"
+                <FormControl isInvalid={!!errors.email}>
+                  <FormLabel>Email *</FormLabel>
+                  <Input
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="your@email.com"
+                    bg="white"
+                    borderColor="gray.300"
+                    _focus={{
+                      borderColor: "blue.500",
+                      boxShadow: "0 0 0 1px blue.500",
+                    }}
+                  />
+                  <FormErrorMessage>{errors.email}</FormErrorMessage>
+                </FormControl>
+
+                <FormControl isInvalid={!!errors.category}>
+                  <FormLabel>Категория *</FormLabel>
+                  <Select
+                    name="category"
+                    value={formData.category}
+                    onChange={handleInputChange}
+                    placeholder="Выберите категорию"
+                    bg="white"
+                    borderColor="gray.300"
+                    _focus={{
+                      borderColor: "blue.500",
+                      boxShadow: "0 0 0 1px blue.500",
+                    }}
                   >
-                    <Form.Group controlId="formName" className="mb-4">
-                      {" "}
-                      {/* Use Form.Group and className for margin */}
-                      <Form.Label style={{ color: textPrimary }}>
-                        Имя
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        placeholder="Ваше имя"
-                        style={{
-                          backgroundColor: bgPrimary,
-                          borderColor: borderColor,
-                          color: textPrimary,
-                        }}
-                      />
-                    </Form.Group>
+                    <option value="general">Общие вопросы</option>
+                    <option value="technical">Техническая поддержка</option>
+                    <option value="feature">Предложение функций</option>
+                    <option value="bug">Сообщение об ошибке</option>
+                    <option value="partnership">Сотрудничество</option>
+                  </Select>
+                  <FormErrorMessage>{errors.category}</FormErrorMessage>
+                </FormControl>
 
-                    <Form.Group controlId="formEmail" className="mb-4">
-                      {" "}
-                      {/* Use Form.Group and className for margin */}
-                      <Form.Label style={{ color: textPrimary }}>
-                        Email
-                      </Form.Label>
-                      <Form.Control
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        placeholder="your@email.com"
-                        style={{
-                          backgroundColor: bgPrimary,
-                          borderColor: borderColor,
-                          color: textPrimary,
-                        }}
-                      />
-                    </Form.Group>
+                <FormControl isInvalid={!!errors.subject}>
+                  <FormLabel>Тема *</FormLabel>
+                  <Input
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleInputChange}
+                    placeholder="Краткое описание вопроса"
+                    bg="white"
+                    borderColor="gray.300"
+                    _focus={{
+                      borderColor: "blue.500",
+                      boxShadow: "0 0 0 1px blue.500",
+                    }}
+                  />
+                  <FormErrorMessage>{errors.subject}</FormErrorMessage>
+                </FormControl>
 
-                    <Form.Group controlId="formSubject" className="mb-4">
-                      {" "}
-                      {/* Use Form.Group and className for margin */}
-                      <Form.Label style={{ color: textPrimary }}>
-                        Тема
-                      </Form.Label>
-                      <Form.Select
-                        name="subject"
-                        value={formData.subject}
-                        onChange={handleInputChange}
-                        style={{
-                          backgroundColor: bgPrimary,
-                          borderColor: borderColor,
-                          color: textPrimary,
-                        }}
-                      >
-                        <option value="">Выберите тему</option>
-                        <option value="general">Общий вопрос</option>
-                        <option value="technical">Техническая поддержка</option>
-                        <option value="partnership">Сотрудничество</option>
-                        <option value="feedback">Обратная связь</option>
-                        <option value="other">Другое</option>
-                      </Form.Select>
-                    </Form.Group>
+                <FormControl isInvalid={!!errors.message}>
+                  <FormLabel>Сообщение *</FormLabel>
+                  <Textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    placeholder="Подробно опишите ваш вопрос или предложение..."
+                    rows={6}
+                    bg="white"
+                    borderColor="gray.300"
+                    _focus={{
+                      borderColor: "blue.500",
+                      boxShadow: "0 0 0 1px blue.500",
+                    }}
+                  />
+                  <FormErrorMessage>{errors.message}</FormErrorMessage>
+                </FormControl>
 
-                    <Form.Group controlId="formMessage" className="mb-4">
-                      {" "}
-                      {/* Use Form.Group and className for margin */}
-                      <Form.Label style={{ color: textPrimary }}>
-                        Сообщение
-                      </Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        name="message"
-                        value={formData.message}
-                        onChange={handleInputChange}
-                        rows={6}
-                        placeholder="Опишите ваш вопрос или предложение..."
-                        style={{
-                          backgroundColor: bgPrimary,
-                          borderColor: borderColor,
-                          color: textPrimary,
-                        }}
-                      />
-                    </Form.Group>
-
-                    <Button
-                      type="submit"
-                      colorScheme="blue"
-                      size="lg"
-                      loading={isSubmitting}
-                      loadingText="Отправка..."
-                      w="100%"
-                    >
-                      Отправить сообщение
-                    </Button>
-                  </Box>
-                </Form>
-              </Box>
+                <Button
+                  type="submit"
+                  colorScheme="blue"
+                  size="lg"
+                  w="full"
+                  isLoading={isSubmitting}
+                  loadingText="Отправка..."
+                >
+                  Отправить сообщение
+                </Button>
+              </VStack>
             </Box>
-          </GridItem>
-        </Grid>
-      </Container>
+          </Box>
 
-      {/* FAQ Section */}
-      <Box bg={bgSecondary} py={20}>
-        <Container maxW="container.xl">
-          <Box display="flex" flexDirection="column" gap={12}>
-            <Heading as="h2" size="xl" color={textPrimary} textAlign="center">
+          {/* FAQ Section */}
+          <Box>
+            <Heading as="h2" size="xl" color="gray.800" mb={8}>
               Часто задаваемые вопросы
             </Heading>
-            <Grid
-              templateColumns={{
-                base: "1fr",
-                md: "repeat(2, 1fr)",
-              }}
-              gap={8}
-            >
-              <GridItem>
+            <VStack gap={4} align="stretch">
+              {faqItems.map((item, index) => (
                 <Box
-                  bg={bgCard}
+                  key={index}
                   p={6}
+                  bg="gray.50"
                   borderRadius="xl"
                   border="1px solid"
-                  borderColor={borderColor}
-                  shadow="md"
+                  borderColor="gray.200"
+                  transition="all 0.3s ease"
+                  _hover={{
+                    transform: "translateX(4px)",
+                    boxShadow: "md",
+                  }}
                 >
-                  <Heading as="h3" size="md" mb={3} color={textPrimary}>
-                    Как начать использовать MARS Client?
-                  </Heading>
-                  <Text color={textSecondary}>
-                    Скачайте приложение, создайте аккаунт и следуйте инструкциям
-                    по настройке. Наша документация поможет вам быстро освоить
-                    все функции.
-                  </Text>
+                  <VStack gap={3} align="stretch">
+                    <Heading as="h3" size="md" color="gray.800">
+                      {item.question}
+                    </Heading>
+                    <Text color="gray.600" fontSize="sm">
+                      {item.answer}
+                    </Text>
+                  </VStack>
                 </Box>
-              </GridItem>
-
-              <GridItem>
-                <Box
-                  bg={bgCard}
-                  p={6}
-                  borderRadius="xl"
-                  border="1px solid"
-                  borderColor={borderColor}
-                  shadow="md"
-                >
-                  <Heading as="h3" size="md" mb={3} color={textPrimary}>
-                    Поддерживаются ли мобильные устройства?
-                  </Heading>
-                  <Text color={textSecondary}>
-                    Да, MARS Client работает на всех современных устройствах,
-                    включая смартфоны и планшеты.
-                  </Text>
-                </Box>
-              </GridItem>
-
-              <GridItem>
-                <Box
-                  bg={bgCard}
-                  p={6}
-                  borderRadius="xl"
-                  border="1px solid"
-                  borderColor={borderColor}
-                  shadow="md"
-                >
-                  <Heading as="h3" size="md" mb={3} color={textPrimary}>
-                    Есть ли бесплатная версия?
-                  </Heading>
-                  <Text color={textSecondary}>
-                    Да, мы предлагаем бесплатный план с базовыми функциями. Для
-                    расширенных возможностей доступны платные подписки.
-                  </Text>
-                </Box>
-              </GridItem>
-
-              <GridItem>
-                <Box
-                  bg={bgCard}
-                  p={6}
-                  borderRadius="xl"
-                  border="1px solid"
-                  borderColor={borderColor}
-                  shadow="md"
-                >
-                  <Heading as="h3" size="md" mb={3} color={textPrimary}>
-                    Как получить техническую поддержку?
-                  </Heading>
-                  <Text color={textSecondary}>
-                    Вы можете обратиться к нам через форму выше, Discord сервер
-                    или email. Мы отвечаем в течение 24 часов.
-                  </Text>
-                </Box>
-              </GridItem>
-            </Grid>
+              ))}
+            </VStack>
           </Box>
-        </Container>
-      </Box>
-      <ToastContainer position="bottom-end" className="p-3">
-        <Toast
-          onClose={() => setShowToast(false)}
-          show={showToast}
-          delay={3000}
-          autohide
-          bg={toastStatus}
+        </Grid>
+
+        {/* Additional Info */}
+        <Box
+          p={8}
+          bg="blue.50"
+          borderRadius="xl"
+          border="1px solid"
+          borderColor="blue.200"
+          textAlign="center"
         >
-          <Toast.Header>
-            <strong className="me-auto">Уведомление</strong>
-          </Toast.Header>
-          <Toast.Body>{toastMessage}</Toast.Body>
-        </Toast>
-      </ToastContainer>
+          <VStack gap={6}>
+            <Heading as="h2" size="xl" color="blue.800">
+              Нужна срочная помощь?
+            </Heading>
+            <Text fontSize="lg" color="blue.700" maxW="2xl">
+              Для критических проблем или срочных вопросов используйте Discord
+              сервер. Наша команда обычно отвечает в течение нескольких часов.
+            </Text>
+            <Button
+              size="lg"
+              colorScheme="blue"
+              variant="solid"
+              _hover={{ transform: "translateY(-2px)", boxShadow: "lg" }}
+            >
+              🚀 Присоединиться к Discord
+            </Button>
+          </VStack>
+        </Box>
+      </VStack>
     </Box>
   );
 };
