@@ -6,12 +6,11 @@ import { ChatMessage } from "@/shared/api";
 import animate from "@/shared/styles/animate.module.scss";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import {
-  type FaceAsset,
   getNotWhiteColor,
   getRandomFace,
-  getRandomFaceByType,
   isWhiteColor,
   replaceBadges,
+  type FaceAsset,
 } from "@/shared/Utils";
 
 import { SignalRContext } from "../../../app";

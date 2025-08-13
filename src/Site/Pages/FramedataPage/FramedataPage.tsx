@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Alert, Button, Container } from "react-bootstrap";
 
+import { defaultApiConfig, Framedata } from "@/shared/api";
 import { TekkenCharacter } from "@/shared/api/data-contracts";
 
 import CharacterDetails from "./CharacterDetails";
@@ -11,6 +12,10 @@ import { NavigationState } from "./FramedataPage.types";
 import MovesView from "./MovesView";
 
 const FramedataPage: React.FC = () => {
+  const api = useMemo(
+    () => new Framedata({ baseURL: defaultApiConfig.baseURL }),
+    []
+  );
   const [navigationState, setNavigationState] = useState<NavigationState>({
     currentView: "characters",
     selectedCharacter: null,
@@ -33,14 +38,8 @@ const FramedataPage: React.FC = () => {
   const loadCharacters = useCallback(async () => {
     try {
       updateNavigationState({ isLoadingCharacters: true, error: "" });
-      const response = await fetch("/api/framedata/characters");
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const charactersData = await response.json();
-      setCharacters(charactersData);
+      const response = await api.framedataCharactersList();
+      setCharacters(response.data ?? []);
       updateNavigationState({ isLoadingCharacters: false });
     } catch (error) {
       console.error("Ошибка загрузки персонажей:", error);
@@ -49,22 +48,15 @@ const FramedataPage: React.FC = () => {
         error: error instanceof Error ? error.message : "Неизвестная ошибка",
       });
     }
-  }, [updateNavigationState]);
+  }, [api, updateNavigationState]);
 
   // Загрузка ударов для персонажа
   const loadCharacterMoves = useCallback(
     async (character: TekkenCharacter) => {
       try {
         updateNavigationState({ isLoadingMoves: true, error: "" });
-        const response = await fetch(
-          `/api/framedata/characters/${encodeURIComponent(character.name)}/moves`
-        );
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const moves = await response.json();
+        const response = await api.framedataCharactersMovesList(character.name);
+        const moves = response.data ?? [];
         const updatedCharacter = { ...character, movelist: moves };
 
         // Обновляем персонажа в списке
@@ -86,7 +78,7 @@ const FramedataPage: React.FC = () => {
         });
       }
     },
-    [updateNavigationState]
+    [api, updateNavigationState]
   );
 
   // Обработчики навигации

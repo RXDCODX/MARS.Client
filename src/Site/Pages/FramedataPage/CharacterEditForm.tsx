@@ -37,6 +37,7 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
       character.name.slice(1).toLowerCase(),
     description: character.description || "",
     linkToImage: character.linkToImage || "",
+    pageUrl: character.pageUrl || "",
     strengths: character.strengths || [],
     weaknesses: character.weaknesess || [],
   });
@@ -206,6 +207,7 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
           formData.name.slice(1).toLowerCase(),
         description: formData.description,
         linkToImage: formData.linkToImage,
+        pageUrl: formData.pageUrl,
         strengths: formData.strengths,
         weaknesess: formData.weaknesses,
       };
@@ -214,7 +216,10 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
       if (selectedAvatarImage) {
         const arrayBuffer = await selectedAvatarImage.arrayBuffer();
         const byteArray = new Uint8Array(arrayBuffer);
-        updatedCharacter.avatarImage = Array.from(byteArray);
+        // В новом API avatarImage имеет тип string (base64)
+        updatedCharacter.avatarImage = Array.from(byteArray)
+          .map(byte => String.fromCharCode(byte))
+          .join("");
 
         // Определяем расширение файла
         const extension = selectedAvatarImage.name
@@ -229,7 +234,10 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
       if (selectedFullBodyImage) {
         const arrayBuffer = await selectedFullBodyImage.arrayBuffer();
         const byteArray = new Uint8Array(arrayBuffer);
-        updatedCharacter.fullBodyImage = Array.from(byteArray);
+        // В новом API fullBodyImage имеет тип string (base64)
+        updatedCharacter.fullBodyImage = Array.from(byteArray)
+          .map(byte => String.fromCharCode(byte))
+          .join("");
 
         // Определяем расширение файла
         const extension = selectedFullBodyImage.name
@@ -308,6 +316,17 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
                     value={formData.linkToImage}
                     onChange={handleInputChange}
                     placeholder="https://example.com/image.jpg"
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3">
+                  <Form.Label>URL страницы</Form.Label>
+                  <Form.Control
+                    type="url"
+                    name="pageUrl"
+                    value={formData.pageUrl}
+                    onChange={handleInputChange}
+                    placeholder="https://example.com/character-page"
                   />
                 </Form.Group>
 

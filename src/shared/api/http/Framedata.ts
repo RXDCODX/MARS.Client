@@ -10,7 +10,12 @@
  * ---------------------------------------------------------------
  */
 
-import { Move, TekkenCharacter } from "./data-contracts";
+import {
+  Move,
+  ParseRequest,
+  ParseResult,
+  TekkenCharacter,
+} from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class Framedata<
@@ -22,6 +27,7 @@ export class Framedata<
    * @tags Framedata
    * @name FramedataCharactersList
    * @request GET:/api/Framedata/characters
+   * @response `200` `(TekkenCharacter)[]` OK
    */
   framedataCharactersList = (params: RequestParams = {}) =>
     this.request<TekkenCharacter[], any>({
@@ -36,6 +42,7 @@ export class Framedata<
    * @tags Framedata
    * @name FramedataCharactersCreate
    * @request POST:/api/Framedata/characters
+   * @response `200` `TekkenCharacter` OK
    */
   framedataCharactersCreate = (
     data: TekkenCharacter,
@@ -55,6 +62,7 @@ export class Framedata<
    * @tags Framedata
    * @name FramedataCharactersDetail
    * @request GET:/api/Framedata/characters/{name}
+   * @response `200` `TekkenCharacter` OK
    */
   framedataCharactersDetail = (name: string, params: RequestParams = {}) =>
     this.request<TekkenCharacter, any>({
@@ -69,6 +77,7 @@ export class Framedata<
    * @tags Framedata
    * @name FramedataCharactersUpdate
    * @request PUT:/api/Framedata/characters/{name}
+   * @response `200` `TekkenCharacter` OK
    */
   framedataCharactersUpdate = (
     name: string,
@@ -89,6 +98,7 @@ export class Framedata<
    * @tags Framedata
    * @name FramedataCharactersDelete
    * @request DELETE:/api/Framedata/characters/{name}
+   * @response `200` `void` OK
    */
   framedataCharactersDelete = (name: string, params: RequestParams = {}) =>
     this.request<void, any>({
@@ -102,6 +112,7 @@ export class Framedata<
    * @tags Framedata
    * @name FramedataCharactersMovesList
    * @request GET:/api/Framedata/characters/{characterName}/moves
+   * @response `200` `(Move)[]` OK
    */
   framedataCharactersMovesList = (
     characterName: string,
@@ -119,6 +130,7 @@ export class Framedata<
    * @tags Framedata
    * @name FramedataCharactersMovesCreate
    * @request POST:/api/Framedata/characters/{characterName}/moves
+   * @response `200` `Move` OK
    */
   framedataCharactersMovesCreate = (
     characterName: string,
@@ -139,6 +151,7 @@ export class Framedata<
    * @tags Framedata
    * @name FramedataCharactersMovesDetail
    * @request GET:/api/Framedata/characters/{characterName}/moves/{command}
+   * @response `200` `Move` OK
    */
   framedataCharactersMovesDetail = (
     characterName: string,
@@ -157,6 +170,7 @@ export class Framedata<
    * @tags Framedata
    * @name FramedataCharactersMovesUpdate
    * @request PUT:/api/Framedata/characters/{characterName}/moves/{command}
+   * @response `200` `Move` OK
    */
   framedataCharactersMovesUpdate = (
     characterName: string,
@@ -178,6 +192,7 @@ export class Framedata<
    * @tags Framedata
    * @name FramedataCharactersMovesDelete
    * @request DELETE:/api/Framedata/characters/{characterName}/moves/{command}
+   * @response `200` `void` OK
    */
   framedataCharactersMovesDelete = (
     characterName: string,
@@ -195,6 +210,7 @@ export class Framedata<
    * @tags Framedata
    * @name FramedataMovesSearchList
    * @request GET:/api/Framedata/moves/search
+   * @response `200` `(Move)[]` OK
    */
   framedataMovesSearchList = (
     query?: {
@@ -214,22 +230,86 @@ export class Framedata<
       format: "json",
       ...params,
     });
-
   /**
-   * Получить изображение персонажа
+   * No description
    *
    * @tags Framedata
-   * @name FramedataCharactersImageDetail
+   * @name FramedataCharactersImageList
    * @request GET:/api/Framedata/characters/{name}/image
+   * @response `200` `void` OK
    */
-  framedataCharactersImageDetail = (
+  framedataCharactersImageList = (name: string, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/Framedata/characters/${name}/image`,
+      method: "GET",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Framedata
+   * @name FramedataCharactersAvatarList
+   * @request GET:/api/Framedata/characters/{name}/avatar
+   * @response `200` `void` OK
+   */
+  framedataCharactersAvatarList = (name: string, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/Framedata/characters/${name}/avatar`,
+      method: "GET",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Framedata
+   * @name FramedataCharactersFullbodyList
+   * @request GET:/api/Framedata/characters/{name}/fullbody
+   * @response `200` `void` OK
+   */
+  framedataCharactersFullbodyList = (
     name: string,
     params: RequestParams = {},
   ) =>
-    this.request<Blob, any>({
-      path: `/api/Framedata/characters/${name}/image`,
+    this.request<void, any>({
+      path: `/api/Framedata/characters/${name}/fullbody`,
       method: "GET",
-      format: "blob",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Framedata
+   * @name FramedataParseCreate
+   * @request POST:/api/Framedata/parse
+   * @response `200` `ParseResult` OK
+   */
+  framedataParseCreate = (data: ParseRequest, params: RequestParams = {}) =>
+    this.request<ParseResult, any>({
+      path: `/api/Framedata/parse`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Framedata
+   * @name FramedataParseCharactersOnlyCreate
+   * @request POST:/api/Framedata/parse-characters-only
+   * @response `200` `ParseResult` OK
+   */
+  framedataParseCharactersOnlyCreate = (
+    data: ParseRequest,
+    params: RequestParams = {},
+  ) =>
+    this.request<ParseResult, any>({
+      path: `/api/Framedata/parse-characters-only`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
       ...params,
     });
 }

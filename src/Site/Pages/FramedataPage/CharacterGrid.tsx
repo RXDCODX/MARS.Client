@@ -3,11 +3,7 @@ import { Alert, Badge, Button, Card, Col, Row, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 import { defaultApiConfig, FramedataChanges } from "@/shared/api";
-import {
-  FramedataChange,
-  FramedataChangeChangeTypeEnum,
-  TekkenCharacter,
-} from "@/shared/api/data-contracts";
+import { TekkenCharacter } from "@/shared/api/data-contracts";
 
 import styles from "./FramedataPage.module.scss";
 import { getCharacterAvatar, handleImageError } from "./imageUtils";
@@ -17,6 +13,25 @@ interface CharacterGridProps {
   isLoading: boolean;
   error: string;
   onCharacterSelect: (character: TekkenCharacter) => void;
+}
+
+// Создаем интерфейс для изменений фреймдаты
+interface FramedataChange {
+  id: string;
+  characterName: string;
+  changeType: string;
+  status: string;
+  description: string;
+  detectedAt: string;
+}
+
+// Enum для типов изменений
+enum FramedataChangeChangeTypeEnum {
+  NewCharacter = "NewCharacter",
+  NewMove = "NewMove",
+  MoveUpdate = "MoveUpdate",
+  MoveRemoval = "MoveRemoval",
+  CharacterUpdate = "CharacterUpdate",
 }
 
 const CharacterGrid: React.FC<CharacterGridProps> = ({
@@ -41,10 +56,45 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
     () => () => {
       setIsLoadingPending(true);
       setPendingError("");
-      api
-        .framedataChangesPendingList()
-        .then(res => {
-          setPendingChanges(res.data ?? []);
+
+      // Загружаем pending characters и moves
+      Promise.all([
+        api.framedataChangesPendingCharactersList(),
+        api.framedataChangesPendingMovesList(),
+      ])
+        .then(([charactersRes, movesRes]) => {
+          const characters = charactersRes.data ?? [];
+          const moves = movesRes.data ?? [];
+
+          // Создаем FramedataChange объекты из полученных данных
+          const changes: FramedataChange[] = [
+            ...characters.map(char => ({
+              id: `char-${char.name}`,
+              characterName: char.name,
+              changeType: char.isNew
+                ? FramedataChangeChangeTypeEnum.NewCharacter
+                : FramedataChangeChangeTypeEnum.CharacterUpdate,
+              status: "Pending",
+              description: char.isNew
+                ? `Новый персонаж: ${char.name}`
+                : `Обновление персонажа: ${char.name}`,
+              detectedAt: char.lastUpdateTime,
+            })),
+            ...moves.map(move => ({
+              id: `move-${move.characterName}-${move.command}`,
+              characterName: move.characterName,
+              changeType: move.isNew
+                ? FramedataChangeChangeTypeEnum.NewMove
+                : FramedataChangeChangeTypeEnum.MoveUpdate,
+              status: "Pending",
+              description: move.isNew
+                ? `Новый удар: ${move.command}`
+                : `Обновление удара: ${move.command}`,
+              detectedAt: new Date().toISOString(),
+            })),
+          ];
+
+          setPendingChanges(changes);
           setIsLoadingPending(false);
         })
         .catch(err => {
@@ -65,7 +115,8 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
   const statsByType = useMemo(() => {
     const map: Partial<Record<FramedataChangeChangeTypeEnum, number>> = {};
     for (const ch of pendingChanges) {
-      map[ch.changeType] = (map[ch.changeType] || 0) + 1;
+      const changeType = ch.changeType as FramedataChangeChangeTypeEnum;
+      map[changeType] = (map[changeType] || 0) + 1;
     }
     return map;
   }, [pendingChanges]);
@@ -89,9 +140,7 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
     setIsBulkActionInProgress(true);
     setPendingError("");
     try {
-      await Promise.all(
-        pendingChanges.map(ch => api.framedataChangesApplyCreate(ch.id))
-      );
+      await api.framedataChangesApproveAllCreate();
       loadPending();
     } catch (e) {
       setPendingError(
@@ -107,9 +156,7 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
     setIsBulkActionInProgress(true);
     setPendingError("");
     try {
-      await Promise.all(
-        pendingChanges.map(ch => api.framedataChangesRejectCreate(ch.id))
-      );
+      await api.framedataChangesRejectAllCreate();
       loadPending();
     } catch (e) {
       setPendingError(

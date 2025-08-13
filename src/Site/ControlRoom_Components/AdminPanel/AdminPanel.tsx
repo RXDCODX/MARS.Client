@@ -1,7 +1,7 @@
 import React, { useState } from "react";
+import { Nav, Navbar as BootstrapNavbar, Container } from "react-bootstrap";
 
 import Dashboard from "../Dashboard/Dashboard";
-import Navbar from "../Navbar/Navbar";
 import styles from "./AdminPanel.module.scss";
 import { AdminPanelProps } from "./AdminPanel.types";
 
@@ -54,7 +54,22 @@ const AdminPanel: React.FC<AdminPanelProps> = () => {
 
   return (
     <div className={styles.adminPanel}>
-      <Navbar activeTab={activeTab} onTabChange={setActiveTab} />
+      <BootstrapNavbar bg="dark" variant="dark" expand="lg" className="mb-3">
+        <Container>
+          <BootstrapNavbar.Brand>Админ панель</BootstrapNavbar.Brand>
+          <BootstrapNavbar.Toggle aria-controls="admin-navbar-nav" />
+          <BootstrapNavbar.Collapse id="admin-navbar-nav">
+            <Nav className="me-auto" activeKey={activeTab} onSelect={(k) => setActiveTab(k || "dashboard")}>
+              <Nav.Link eventKey="dashboard">Дашборд</Nav.Link>
+              <Nav.Link eventKey="servers">Серверы</Nav.Link>
+              <Nav.Link eventKey="logs">Логи</Nav.Link>
+              <Nav.Link eventKey="users">Пользователи</Nav.Link>
+              <Nav.Link eventKey="performance">Производительность</Nav.Link>
+              <Nav.Link eventKey="settings">Настройки</Nav.Link>
+            </Nav>
+          </BootstrapNavbar.Collapse>
+        </Container>
+      </BootstrapNavbar>
       <main className={styles.content}>{renderContent()}</main>
     </div>
   );

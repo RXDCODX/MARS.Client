@@ -21,6 +21,7 @@ export class Twitch<
    * @tags Twitch
    * @name TwitchtokenList
    * @request GET:/twitchtoken
+   * @response `200` `void` OK
    */
   twitchtokenList = (
     query?: {

@@ -100,7 +100,7 @@ const AFKScreenDemo: React.FC = () => {
 
       {isPlaying && (
         <div className="demo-player">
-          <AFKScreen {...config} />
+          <AFKScreen />
         </div>
       )}
     </div>

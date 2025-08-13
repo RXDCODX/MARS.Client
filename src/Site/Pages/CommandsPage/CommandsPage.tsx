@@ -489,7 +489,7 @@ const CommandsPage: React.FC = () => {
                               Результат:
                             </h6>
                             <pre
-                              className="bg-light p-3 rounded"
+                              className="p-3 rounded"
                               style={{
                                 backgroundColor: colors.background.secondary,
                                 border: `1px solid ${colors.border.primary}`,
@@ -534,7 +534,7 @@ const CommandsPage: React.FC = () => {
                               Результат:
                             </h6>
                             <pre
-                              className="bg-light p-3 rounded"
+                              className="p-3 rounded"
                               style={{
                                 backgroundColor: colors.background.secondary,
                                 border: `1px solid ${colors.border.primary}`,

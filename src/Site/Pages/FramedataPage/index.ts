@@ -4,5 +4,6 @@ export { default as CharacterGrid } from "./CharacterGrid";
 export { default as FramedataPage } from "./FramedataPage";
 export { default as MovesView } from "./MovesView";
 export { default as PendingChangesPage } from "./PendingChangesPage";
+export { default as ChangeDetailsPage } from "./ChangeDetailsPage";
 export * from "./FramedataPage.types";
-export * from './imageUtils';
+export * from "./imageUtils";

@@ -4,8 +4,7 @@ import {
   getRandomFace, 
   getRandomFaceByType, 
   getFaceByName, 
-  isVideoFile,
-  type FaceAsset 
+  isVideoFile
 } from './faceUtils';
 
 describe('Face Utils', () => {

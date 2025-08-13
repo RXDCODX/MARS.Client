@@ -2,10 +2,21 @@ import { useState } from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
+import ThemeToggle from "@/components/ThemeToggle";
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
-import ThemeToggle from "@/components/ThemeToggle";
 import styles from "./Header.module.scss";
+
+// Интерфейсы для типизации навигации
+interface NavigationItem {
+  label: string;
+  path: string;
+}
+
+interface NavigationGroup {
+  label: string;
+  children: NavigationItem[];
+}
 
 const Header: React.FC = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
@@ -14,19 +25,26 @@ const Header: React.FC = () => {
   );
   const colors = useSiteColors();
 
-  const sitePages = [
+  const sitePages: NavigationItem[] = [
     { label: "Главная", path: "/" },
     { label: "О проекте", path: "/about" },
     { label: "Документация", path: "/docs" },
     { label: "Команды", path: "/commands" },
-    { label: "Фреймдата", path: "/framedata" },
     { label: "Контакты", path: "/contacts" },
   ];
 
-  const obsComponents: {
-    label: string;
-    children: { label: string; path: string }[];
-  }[] = [
+  const framedataPages: NavigationItem[] = [
+    {
+      label: "Просмотр фреймдаты",
+      path: "/framedata",
+    },
+    {
+      label: "Изменения",
+      path: "/framedata/pending",
+    },
+  ];
+
+  const obsComponents: NavigationGroup[] = [
     {
       label: "Чат",
       children: [
@@ -58,7 +76,7 @@ const Header: React.FC = () => {
     },
   ];
 
-  const controlRoomPages = [
+  const controlRoomPages: NavigationItem[] = [
     { label: "Панель управления", path: "/admin" },
     { label: "Дашборд", path: "/dashboard" },
     { label: "Просмотр серверов", path: "/main" },
@@ -130,6 +148,41 @@ const Header: React.FC = () => {
                   }}
                 >
                   {sitePages.map((item, index) => (
+                    <div key={index} className={styles.dropdownItem}>
+                      <Link
+                        to={item.path}
+                        onClick={handleLinkClick}
+                        style={colors.utils.getTextStyle("primary")}
+                      >
+                        {item.label}
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Фреймдата */}
+            <div className={styles.dropdownContainer}>
+              <button
+                className={styles.dropdownButton}
+                onClick={() => handleDropdownToggle("framedata")}
+                onMouseEnter={() => setActiveDropdown("framedata")}
+                style={colors.utils.getTextStyle("primary")}
+              >
+                Фреймдата <i className="bi bi-chevron-down ms-1"></i>
+              </button>
+              {activeDropdown === "framedata" && (
+                <div
+                  className={styles.dropdownMenu}
+                  onMouseLeave={handleMouseLeave}
+                  style={{
+                    backgroundColor: colors.background.card,
+                    border: `1px solid ${colors.border.primary}`,
+                    boxShadow: colors.shadow.medium,
+                  }}
+                >
+                  {framedataPages.map((item, index) => (
                     <div key={index} className={styles.dropdownItem}>
                       <Link
                         to={item.path}

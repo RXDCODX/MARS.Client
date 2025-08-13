@@ -10,7 +10,7 @@
  * ---------------------------------------------------------------
  */
 
-import { FramedataChange } from "./data-contracts";
+import { MovePendingDto, TekkenCharacterPendingDto } from "./data-contracts";
 import { HttpClient, RequestParams } from "./http-client";
 
 export class FramedataChanges<
@@ -20,12 +20,13 @@ export class FramedataChanges<
    * No description
    *
    * @tags FramedataChanges
-   * @name FramedataChangesPendingList
-   * @request GET:/api/FramedataChanges/pending
+   * @name FramedataChangesPendingCharactersList
+   * @request GET:/api/FramedataChanges/pending/characters
+   * @response `200` `(TekkenCharacterPendingDto)[]` OK
    */
-  framedataChangesPendingList = (params: RequestParams = {}) =>
-    this.request<FramedataChange[], any>({
-      path: `/api/FramedataChanges/pending`,
+  framedataChangesPendingCharactersList = (params: RequestParams = {}) =>
+    this.request<TekkenCharacterPendingDto[], any>({
+      path: `/api/FramedataChanges/pending/characters`,
       method: "GET",
       format: "json",
       ...params,
@@ -34,15 +35,37 @@ export class FramedataChanges<
    * No description
    *
    * @tags FramedataChanges
-   * @name FramedataChangesApplyCreate
-   * @request POST:/api/FramedataChanges/apply/{changeId}
+   * @name FramedataChangesPendingMovesList
+   * @request GET:/api/FramedataChanges/pending/moves
+   * @response `200` `(MovePendingDto)[]` OK
    */
-  framedataChangesApplyCreate = (
-    changeId: number,
+  framedataChangesPendingMovesList = (
+    query?: {
+      characterName: string;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<MovePendingDto[], any>({
+      path: `/api/FramedataChanges/pending/moves`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags FramedataChanges
+   * @name FramedataChangesApproveCharacterCreate
+   * @request POST:/api/FramedataChanges/approve/character/{name}
+   * @response `200` `void` OK
+   */
+  framedataChangesApproveCharacterCreate = (
+    name: string,
     params: RequestParams = {},
   ) =>
     this.request<void, any>({
-      path: `/api/FramedataChanges/apply/${changeId}`,
+      path: `/api/FramedataChanges/approve/character/${name}`,
       method: "POST",
       ...params,
     });
@@ -50,15 +73,16 @@ export class FramedataChanges<
    * No description
    *
    * @tags FramedataChanges
-   * @name FramedataChangesRejectCreate
-   * @request POST:/api/FramedataChanges/reject/{changeId}
+   * @name FramedataChangesRejectCharacterCreate
+   * @request POST:/api/FramedataChanges/reject/character/{name}
+   * @response `200` `void` OK
    */
-  framedataChangesRejectCreate = (
-    changeId: number,
+  framedataChangesRejectCharacterCreate = (
+    name: string,
     params: RequestParams = {},
   ) =>
     this.request<void, any>({
-      path: `/api/FramedataChanges/reject/${changeId}`,
+      path: `/api/FramedataChanges/reject/character/${name}`,
       method: "POST",
       ...params,
     });
@@ -66,12 +90,77 @@ export class FramedataChanges<
    * No description
    *
    * @tags FramedataChanges
-   * @name FramedataChangesDetectCreate
-   * @request POST:/api/FramedataChanges/detect
+   * @name FramedataChangesApproveMoveCreate
+   * @request POST:/api/FramedataChanges/approve/move/{characterName}/{command}
+   * @response `200` `void` OK
    */
-  framedataChangesDetectCreate = (params: RequestParams = {}) =>
+  framedataChangesApproveMoveCreate = (
+    characterName: string,
+    command: string,
+    params: RequestParams = {},
+  ) =>
     this.request<void, any>({
-      path: `/api/FramedataChanges/detect`,
+      path: `/api/FramedataChanges/approve/move/${characterName}/${command}`,
+      method: "POST",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags FramedataChanges
+   * @name FramedataChangesRejectMoveCreate
+   * @request POST:/api/FramedataChanges/reject/move/{characterName}/{command}
+   * @response `200` `void` OK
+   */
+  framedataChangesRejectMoveCreate = (
+    characterName: string,
+    command: string,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/api/FramedataChanges/reject/move/${characterName}/${command}`,
+      method: "POST",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags FramedataChanges
+   * @name FramedataChangesApproveAllCreate
+   * @request POST:/api/FramedataChanges/approve/all
+   * @response `200` `void` OK
+   */
+  framedataChangesApproveAllCreate = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/FramedataChanges/approve/all`,
+      method: "POST",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags FramedataChanges
+   * @name FramedataChangesRejectAllCreate
+   * @request POST:/api/FramedataChanges/reject/all
+   * @response `200` `void` OK
+   */
+  framedataChangesRejectAllCreate = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/FramedataChanges/reject/all`,
+      method: "POST",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags FramedataChanges
+   * @name FramedataChangesScrapeCreate
+   * @request POST:/api/FramedataChanges/scrape
+   * @response `200` `void` OK
+   */
+  framedataChangesScrapeCreate = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/FramedataChanges/scrape`,
       method: "POST",
       ...params,
     });
@@ -81,6 +170,7 @@ export class FramedataChanges<
    * @tags FramedataChanges
    * @name FramedataChangesStatsList
    * @request GET:/api/FramedataChanges/stats
+   * @response `200` `void` OK
    */
   framedataChangesStatsList = (params: RequestParams = {}) =>
     this.request<void, any>({

@@ -29,6 +29,7 @@ export class Commands<
    * @tags Commands
    * @name CommandsUserList
    * @request GET:/api/Commands/user
+   * @response `200` `string` OK
    */
   commandsUserList = (params: RequestParams = {}) =>
     this.request<string, any>({
@@ -43,6 +44,7 @@ export class Commands<
    * @tags Commands
    * @name CommandsAdminList
    * @request GET:/api/Commands/admin
+   * @response `200` `string` OK
    */
   commandsAdminList = (params: RequestParams = {}) =>
     this.request<string, any>({
@@ -57,6 +59,7 @@ export class Commands<
    * @tags Commands
    * @name CommandsUserPlatformDetail
    * @request GET:/api/Commands/user/platform/{platform}
+   * @response `200` `(string)[]` OK
    */
   commandsUserPlatformDetail = (
     platform: CommandsUserPlatformDetailParamsEnum,
@@ -74,6 +77,7 @@ export class Commands<
    * @tags Commands
    * @name CommandsAdminPlatformDetail
    * @request GET:/api/Commands/admin/platform/{platform}
+   * @response `200` `(string)[]` OK
    */
   commandsAdminPlatformDetail = (
     platform: CommandsAdminPlatformDetailParamsEnum,
@@ -91,6 +95,7 @@ export class Commands<
    * @tags Commands
    * @name CommandsUserPlatformInfoList
    * @request GET:/api/Commands/user/platform/{platform}/info
+   * @response `200` `(CommandInfo)[]` OK
    */
   commandsUserPlatformInfoList = (
     platform: CommandsUserPlatformInfoListParamsEnum,
@@ -108,6 +113,7 @@ export class Commands<
    * @tags Commands
    * @name CommandsAdminPlatformInfoList
    * @request GET:/api/Commands/admin/platform/{platform}/info
+   * @response `200` `(CommandInfo)[]` OK
    */
   commandsAdminPlatformInfoList = (
     platform: CommandsAdminPlatformInfoListParamsEnum,
@@ -125,6 +131,7 @@ export class Commands<
    * @tags Commands
    * @name CommandsParametersList
    * @request GET:/api/Commands/{commandName}/parameters
+   * @response `200` `(CommandParameterInfo)[]` OK
    */
   commandsParametersList = (commandName: string, params: RequestParams = {}) =>
     this.request<CommandParameterInfo[], any>({
@@ -139,6 +146,7 @@ export class Commands<
    * @tags Commands
    * @name CommandsExecuteCreate
    * @request POST:/api/Commands/{commandName}/execute
+   * @response `200` `string` OK
    */
   commandsExecuteCreate = (
     commandName: string,

@@ -22,6 +22,7 @@ export class ServiceManager<
    * @tags ServiceManager
    * @name ServiceManagerStatusList
    * @request GET:/api/ServiceManager/status
+   * @response `200` `Record<string,"Running" | "Stopped" | "Starting" | "Stopping" | "Error" | "Unknown">` OK
    */
   serviceManagerStatusList = (params: RequestParams = {}) =>
     this.request<
@@ -42,6 +43,7 @@ export class ServiceManager<
    * @tags ServiceManager
    * @name ServiceManagerServiceDetail
    * @request GET:/api/ServiceManager/service/{serviceName}
+   * @response `200` `ServiceInfo` OK
    */
   serviceManagerServiceDetail = (
     serviceName: string,
@@ -59,6 +61,7 @@ export class ServiceManager<
    * @tags ServiceManager
    * @name ServiceManagerServiceStartCreate
    * @request POST:/api/ServiceManager/service/{serviceName}/start
+   * @response `200` `void` OK
    */
   serviceManagerServiceStartCreate = (
     serviceName: string,
@@ -75,6 +78,7 @@ export class ServiceManager<
    * @tags ServiceManager
    * @name ServiceManagerServiceStopCreate
    * @request POST:/api/ServiceManager/service/{serviceName}/stop
+   * @response `200` `void` OK
    */
   serviceManagerServiceStopCreate = (
     serviceName: string,
@@ -91,6 +95,7 @@ export class ServiceManager<
    * @tags ServiceManager
    * @name ServiceManagerServiceRestartCreate
    * @request POST:/api/ServiceManager/service/{serviceName}/restart
+   * @response `200` `void` OK
    */
   serviceManagerServiceRestartCreate = (
     serviceName: string,
@@ -107,6 +112,7 @@ export class ServiceManager<
    * @tags ServiceManager
    * @name ServiceManagerServiceLogsList
    * @request GET:/api/ServiceManager/service/{serviceName}/logs
+   * @response `200` `(ServiceLog)[]` OK
    */
   serviceManagerServiceLogsList = (
     serviceName: string,
@@ -132,6 +138,7 @@ export class ServiceManager<
    * @tags ServiceManager
    * @name ServiceManagerServiceActiveCreate
    * @request POST:/api/ServiceManager/service/{serviceName}/active
+   * @response `200` `void` OK
    */
   serviceManagerServiceActiveCreate = (
     serviceName: string,
@@ -151,6 +158,7 @@ export class ServiceManager<
    * @tags ServiceManager
    * @name ServiceManagerServicesList
    * @request GET:/api/ServiceManager/services
+   * @response `200` `(ServiceInfo)[]` OK
    */
   serviceManagerServicesList = (params: RequestParams = {}) =>
     this.request<ServiceInfo[], any>({

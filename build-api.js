@@ -80,12 +80,110 @@ const OUTPUT_DIR_SIGNALR_WRAPPERS = resolve(OUTPUT_DIR_ROOT, "./SignalR/");
   }
 });
 
+// Функция для создания файла с общими enum'ами
+function createCommonEnumsFile(enumGroups) {
+  const commonEnumsContent = `/**
+ * Общие enum'ы для переиспользования в API
+ * Этот файл автоматически создан на основе найденных дубликатов
+ */
+
+${Array.from(enumGroups.entries())
+  .filter(([, group]) => group.length > 1)
+  .map(([, group]) => {
+    const baseEnum = group[0];
+    // Извлекаем значения enum'а
+    const valuesMatch = baseEnum.value.match(/=\s*([\s\S]*?);/);
+    if (valuesMatch) {
+      const values = valuesMatch[1].trim();
+      return `/**
+ * PlatformEnum - автоматически созданный enum для переиспользования
+ */
+export type PlatformEnum = ${values};`;
+    }
+    return "";
+  })
+  .filter(content => content.length > 0)
+  .join("\n\n")}
+
+/**
+ * Legacy type aliases для обратной совместимости
+ * Эти типы ссылаются на общие enum'ы выше
+ */
+${Array.from(enumGroups.entries())
+  .filter(([, group]) => group.length > 1)
+  .map(([, group]) =>
+    group
+      .slice(1)
+      .map(duplicateEnum => `export type ${duplicateEnum.name} = PlatformEnum;`)
+      .join("\n")
+  )
+  .filter(content => content.length > 0)
+  .join("\n")}
+`;
+
+  const commonEnumsPath = resolve(OUTPUT_DIR_ROOT, "common-enums.ts");
+  fs.writeFileSync(commonEnumsPath, commonEnumsContent);
+  console.log("✅ Файл с общими enum'ами создан в common-enums.ts");
+}
+
+// Функция для дедупликации enum'ов в сгенерированном файле
+function deduplicateEnums(filePath) {
+  let content = fs.readFileSync(filePath, "utf-8");
+
+  // Находим все enum'ы с одинаковыми значениями
+  const enumPattern = /export type (\w+) =[\s\S]*?;/g;
+  const enums = [];
+  let match;
+
+  while ((match = enumPattern.exec(content)) !== null) {
+    const enumName = match[1];
+    const enumValue = match[0];
+    enums.push({ name: enumName, value: enumValue });
+  }
+
+  // Группируем enum'ы по их значениям
+  const enumGroups = new Map();
+  enums.forEach(enumItem => {
+    const key = enumItem.value.replace(enumItem.name, "PLACEHOLDER");
+    if (!enumGroups.has(key)) {
+      enumGroups.set(key, []);
+    }
+    enumGroups.get(key).push(enumItem);
+  });
+
+  // Для каждой группы оставляем только первый enum, остальные заменяем на type alias
+  enumGroups.forEach(group => {
+    if (group.length > 1) {
+      const baseEnum = group[0];
+      const baseName = baseEnum.name;
+
+      // Заменяем все дублирующиеся enum'ы на type alias
+      group.slice(1).forEach(duplicateEnum => {
+        const aliasPattern = new RegExp(
+          `export type ${duplicateEnum.name} =[\\s\\S]*?;`,
+          "g"
+        );
+        content = content.replace(
+          aliasPattern,
+          `export type ${duplicateEnum.name} = ${baseName};`
+        );
+      });
+    }
+  });
+
+  fs.writeFileSync(filePath, content);
+  console.log(`✅ Дедупликация enum'ов выполнена для ${filePath}`);
+
+  // Возвращаем группы enum'ов для создания общего файла
+  return enumGroups;
+}
+
 // Функция для генерации HTTP клиентов и типов в отдельную папку
 async function generateHttpTypes() {
   // Читаем swagger_api.json и фильтруем до /api/*
   const swaggerApiJsonPath = resolve(process.cwd(), "./api/swagger_api.json");
 
-  const params = {
+  await generateApi({
     input: swaggerApiJsonPath,
     output: OUTPUT_DIR_HTTP,
     name: "Api.ts",
@@ -100,6 +198,8 @@ async function generateHttpTypes() {
     modular: true,
     moduleNameFirstTag: true,
     sortTypes: true,
+    enumNamesAsValues: false,
+    generateResponses: true,
     extractEnums: true,
     codeGenConstructs: constructs => ({
       ...constructs,
@@ -116,9 +216,19 @@ async function generateHttpTypes() {
         return `${readonly ? "readonly " : ""}${key}${optionalMark}: ${cleaned}`;
       },
     }),
-  };
+  });
 
-  await generateApi(params);
+  // Применяем дедупликацию enum'ов
+  const dataContractsPath = resolve(OUTPUT_DIR_HTTP, "data-contracts.ts");
+  let enumGroups = null;
+  if (fs.existsSync(dataContractsPath)) {
+    enumGroups = deduplicateEnums(dataContractsPath);
+  }
+
+  // Создаем файл с общими enum'ами если есть дубликаты
+  if (enumGroups) {
+    createCommonEnumsFile(enumGroups);
+  }
 
   // Шим-файл для обратной совместимости импорта типов из корня
   const rootTypesShim = resolve(OUTPUT_DIR_ROOT, "data-contracts.ts");
@@ -130,7 +240,7 @@ async function generateHttpTypes() {
 async function generateSignalRTypes() {
   // Читаем swagger_hubs.json и генерируем только типы
   const swaggerHubsJsonPath = resolve(process.cwd(), "./api/swagger_hubs.json");
-  const params = {
+  await generateApi({
     input: swaggerHubsJsonPath,
     output: OUTPUT_DIR_SIGNALR_TYPES,
     name: "types.ts",
@@ -160,9 +270,16 @@ async function generateSignalRTypes() {
         return `${readonly ? "readonly " : ""}${key}${optionalMark}: ${cleaned}`;
       },
     }),
-  };
+  });
 
-  await generateApi(params);
+  // Применяем дедупликацию enum'ов
+  const signalrDataContractsPath = resolve(
+    OUTPUT_DIR_SIGNALR_TYPES,
+    "data-contracts.ts"
+  );
+  if (fs.existsSync(signalrDataContractsPath)) {
+    deduplicateEnums(signalrDataContractsPath);
+  }
 
   // Создаем shim для обратной совместимости старого импорта signalr-types
   const legacySignalRTypesDir = resolve(OUTPUT_DIR_ROOT, "./SignalR/types/");

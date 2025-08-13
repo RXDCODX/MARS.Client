@@ -21,6 +21,7 @@ export class PyroAlerts<
    * @tags PyroAlerts
    * @name MemoryDetail
    * @request GET:/memory/{escapedFileName}
+   * @response `200` `void` OK
    */
   memoryDetail = (escapedFileName: string, params: RequestParams = {}) =>
     this.request<void, any>({

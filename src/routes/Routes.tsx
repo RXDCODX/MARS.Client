@@ -20,6 +20,7 @@ import AboutPage from "@/Site/Pages/AboutPage";
 import CommandsPage from "@/Site/Pages/CommandsPage/CommandsPage";
 import ContactsPage from "@/Site/Pages/ContactsPage";
 import DocsPage from "@/Site/Pages/DocsPage";
+import ChangeDetailsPage from "@/Site/Pages/FramedataPage/ChangeDetailsPage";
 import FramedataPage from "@/Site/Pages/FramedataPage/FramedataPage";
 import PendingChangesPage from "@/Site/Pages/FramedataPage/PendingChangesPage";
 import WelcomePage from "@/Site/Pages/WelcomePage";
@@ -96,6 +97,14 @@ const PrivateRoutes = () => (
         element={
           <Layout>
             <PendingChangesPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/framedata/pending/:changeId"
+        element={
+          <Layout>
+            <ChangeDetailsPage />
           </Layout>
         }
       />

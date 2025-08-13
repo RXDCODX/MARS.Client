@@ -14,7 +14,11 @@ import {
 import { TekkenCharacter } from "@/shared/api/data-contracts";
 
 import styles from "./FramedataPage.module.scss";
-import { getCharacterAvatar, getCharacterFullBody, handleImageError } from "./imageUtils";
+import {
+  getCharacterAvatar,
+  getCharacterFullBody,
+  handleImageError,
+} from "./imageUtils";
 
 interface MovesViewProps {
   character: TekkenCharacter;
@@ -34,20 +38,22 @@ const MovesView: React.FC<MovesViewProps> = ({
   const [showHeatOnly, setShowHeatOnly] = useState(false);
   const [showPowerCrushOnly, setShowPowerCrushOnly] = useState(false);
   const [showThrow, setShowThrow] = useState(false);
-  const [showHoming, setShowHomings] = useState(false);
+  const [showHoming, setShowHoming] = useState(false);
   const [showTornado, setShowTornado] = useState(false);
 
-  const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>({
-    command: true,
-    hitLevel: true,
-    damage: true,
-    startUpFrame: true,
-    blockFrame: true,
-    hitFrame: true,
-    counterHitFrame: true,
-    features: true,
-    notes: true,
-  });
+  const [visibleColumns, setVisibleColumns] = useState<Record<string, boolean>>(
+    {
+      command: true,
+      hitLevel: true,
+      damage: true,
+      startUpFrame: true,
+      blockFrame: true,
+      hitFrame: true,
+      counterHitFrame: true,
+      features: true,
+      notes: true,
+    }
+  );
 
   const filteredMoves = useMemo(() => {
     if (!character.movelist) return [];
@@ -56,7 +62,10 @@ const MovesView: React.FC<MovesViewProps> = ({
       const matchesSearch =
         move.command.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (move.notes &&
-          move.notes.toLowerCase().includes(searchTerm.toLowerCase()));
+          move.notes
+            ?.join(" ")
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase()));
 
       const matchesStance = !stanceFilter || move.stanceCode === stanceFilter;
 
@@ -115,10 +124,10 @@ const MovesView: React.FC<MovesViewProps> = ({
           src={getCharacterFullBody(character, "800x1200")}
           alt={`${charName} full body`}
           className={styles.fullBodyImage}
-          onError={(e) => handleImageError(e, charName, "800x1200")}
+          onError={e => handleImageError(e, charName, "800x1200")}
         />
       </div>
-      
+
       <div className={styles.movesContent}>
         <div className="d-flex align-items-center mb-4">
           <Button variant="outline-secondary" onClick={onBack} className="me-3">
@@ -135,209 +144,233 @@ const MovesView: React.FC<MovesViewProps> = ({
           </div>
         </div>
 
-      <Card className="mb-4">
-        <Card.Header className="justify-items-center">
-          <h5>Фильтры</h5>
-        </Card.Header>
-        <Card.Body>
-          <Row>
-            <Col lg={6} md={12} className="mb-3">
-              <Form.Group>
-                <Form.Label>Поиск по команде или заметкам</Form.Label>
-                <Form.Control
-                  type="text"
-                  placeholder="Введите команду или заметку..."
-                  value={searchTerm}
-                  onChange={e => setSearchTerm(e.target.value)}
-                />
-              </Form.Group>
-            </Col>
-            <Col lg={3} md={6} className="mb-3">
-              <Form.Group>
-                <Form.Label>Стойка</Form.Label>
-                <Form.Select
-                  value={stanceFilter}
-                  onChange={e => setStanceFilter(e.target.value)}
-                >
-                  <option value="">Все стойки</option>
-                  {uniqueStances.map(stance => (
-                    <option key={stance} value={stance}>
-                      {stance}
-                    </option>
-                  ))}
-                </Form.Select>
-              </Form.Group>
-            </Col>
-            <Col lg={3} md={6} className="mb-3">
-              <Form.Group>
-                <Form.Label>Фильтры</Form.Label>
-                <div className="d-flex flex-wrap gap-2">
-                  <Form.Check
-                    type="checkbox"
-                    label="Heat удары"
-                    checked={showHeatOnly}
-                    onChange={e => setShowHeatOnly(e.target.checked)}
+        <Card className="mb-4">
+          <Card.Header className="justify-items-center">
+            <h5>Фильтры</h5>
+          </Card.Header>
+          <Card.Body>
+            <Row>
+              <Col lg={6} md={12} className="mb-3">
+                <Form.Group>
+                  <Form.Label>Поиск по команде или заметкам</Form.Label>
+                  <Form.Control
+                    type="text"
+                    placeholder="Введите команду или заметку..."
+                    value={searchTerm}
+                    onChange={e => setSearchTerm(e.target.value)}
                   />
-                  <Form.Check
-                    type="checkbox"
-                    label="Power Crush"
-                    checked={showPowerCrushOnly}
-                    onChange={e => setShowPowerCrushOnly(e.target.checked)}
-                  />
-                  <Form.Check
-                    type="checkbox"
-                    label="Throw"
-                    checked={showThrow}
-                    onChange={e => setShowThrow(e.target.checked)}
-                  />
-                  <Form.Check
-                    type="checkbox"
-                    label="Homing"
-                    checked={showHoming}
-                    onChange={e => setShowHoming(e.target.checked)}
-                  />
-                  <Form.Check
-                    type="checkbox"
-                    label="Tornado"
-                    checked={showTornado}
-                    onChange={e => setShowTornado(e.target.checked)}
-                  />
-                </div>
-              </Form.Group>
-            </Col>
-            <Col lg={12} md={12} className="mb-3">
-              <Form.Group>
-                <Form.Label>Видимые столбцы</Form.Label>
-                <div className="d-flex flex-wrap gap-2">
-                  {Object.keys(visibleColumns).map((columnKey) => (
+                </Form.Group>
+              </Col>
+              <Col lg={3} md={6} className="mb-3">
+                <Form.Group>
+                  <Form.Label>Стойка</Form.Label>
+                  <Form.Select
+                    value={stanceFilter}
+                    onChange={e => setStanceFilter(e.target.value)}
+                  >
+                    <option value="">Все стойки</option>
+                    {uniqueStances.map(stance => (
+                      <option key={stance} value={stance}>
+                        {stance}
+                      </option>
+                    ))}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+              <Col lg={3} md={6} className="mb-3">
+                <Form.Group>
+                  <Form.Label>Фильтры</Form.Label>
+                  <div className="d-flex flex-wrap gap-2">
                     <Form.Check
-                      key={columnKey}
                       type="checkbox"
-                      label={(() => {
-                        switch (columnKey) {
-                          case 'command': return 'Команда';
-                          case 'hitLevel': return 'Уровень';
-                          case 'damage': return 'Урон';
-                          case 'startUpFrame': return 'Старт';
-                          case 'blockFrame': return 'Блок';
-                          case 'hitFrame': return 'Попадание';
-                          case 'counterHitFrame': return 'Контр-удар';
-                          case 'features': return 'Особенности';
-                          case 'notes': return 'Заметки';
-                          default: return columnKey;
-                        }
-                      })()}
-                      checked={visibleColumns[columnKey]}
-                      onChange={() =>
-                        setVisibleColumns((prev) => ({
-                          ...prev,
-                          [columnKey]: !prev[columnKey],
-                        }))
-                      }
+                      label="Heat удары"
+                      checked={showHeatOnly}
+                      onChange={e => setShowHeatOnly(e.target.checked)}
                     />
-                  ))}
-                </div>
-              </Form.Group>
-            </Col>
-          </Row>
-        </Card.Body>
-      </Card>
+                    <Form.Check
+                      type="checkbox"
+                      label="Power Crush"
+                      checked={showPowerCrushOnly}
+                      onChange={e => setShowPowerCrushOnly(e.target.checked)}
+                    />
+                    <Form.Check
+                      type="checkbox"
+                      label="Throw"
+                      checked={showThrow}
+                      onChange={e => setShowThrow(e.target.checked)}
+                    />
+                    <Form.Check
+                      type="checkbox"
+                      label="Homing"
+                      checked={showHoming}
+                      onChange={e => setShowHoming(e.target.checked)}
+                    />
+                    <Form.Check
+                      type="checkbox"
+                      label="Tornado"
+                      checked={showTornado}
+                      onChange={e => setShowTornado(e.target.checked)}
+                    />
+                  </div>
+                </Form.Group>
+              </Col>
+              <Col lg={12} md={12} className="mb-3">
+                <Form.Group>
+                  <Form.Label>Видимые столбцы</Form.Label>
+                  <div className="d-flex flex-wrap gap-2">
+                    {Object.keys(visibleColumns).map(columnKey => (
+                      <Form.Check
+                        key={columnKey}
+                        type="checkbox"
+                        label={(() => {
+                          switch (columnKey) {
+                            case "command":
+                              return "Команда";
+                            case "hitLevel":
+                              return "Уровень";
+                            case "damage":
+                              return "Урон";
+                            case "startUpFrame":
+                              return "Старт";
+                            case "blockFrame":
+                              return "Блок";
+                            case "hitFrame":
+                              return "Попадание";
+                            case "counterHitFrame":
+                              return "Контр-удар";
+                            case "features":
+                              return "Особенности";
+                            case "notes":
+                              return "Заметки";
+                            default:
+                              return columnKey;
+                          }
+                        })()}
+                        checked={visibleColumns[columnKey]}
+                        onChange={() =>
+                          setVisibleColumns(prev => ({
+                            ...prev,
+                            [columnKey]: !prev[columnKey],
+                          }))
+                        }
+                      />
+                    ))}
+                  </div>
+                </Form.Group>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
 
-      {filteredMoves.length === 0 ? (
-        <Alert variant="info">
-          <Alert.Heading>Удары не найдены</Alert.Heading>
-          <p>Попробуйте изменить фильтры поиска.</p>
-        </Alert>
-      ) : (
-        <div className={styles.movesTableContainer}>
-          <Table responsive="lg" striped hover className={styles.movesTable}>
-            <thead>
-              <tr>
-                {visibleColumns.command && <th>Команда</th>}
-                {visibleColumns.hitLevel && <th>Уровень</th>}
-                {visibleColumns.damage && <th>Урон</th>}
-                {visibleColumns.startUpFrame && <th>Старт</th>}
-                {visibleColumns.blockFrame && <th>Блок</th>}
-                {visibleColumns.hitFrame && <th>Попадание</th>}
-                {visibleColumns.counterHitFrame && <th>Контр-удар</th>}
-                {visibleColumns.features && <th>Особенности</th>}
-                {visibleColumns.notes && <th>Заметки</th>}
-              </tr>
-            </thead>
-            <tbody>
-              {filteredMoves.map((move, index) => (
-                <tr key={`${move.command}-${index}`}>
-                  {visibleColumns.command && (
-                    <td className={styles.commandCell}>
-                      <code>{move.command}</code>
-                    </td>
-                  )}
-                  {visibleColumns.hitLevel && <td>{move.hitLevel || "-"}</td>}
-                  {visibleColumns.damage && <td>{move.damage || "-"}</td>}
-                  {visibleColumns.startUpFrame && <td>{move.startUpFrame || "-"}</td>}
-                  {visibleColumns.blockFrame && <td>{move.blockFrame || "-"}</td>}
-                  {visibleColumns.hitFrame && <td>{move.hitFrame || "-"}</td>}
-                  {visibleColumns.counterHitFrame && <td>{move.counterHitFrame || "-"}</td>}
-                  {visibleColumns.features && (
-                    <td>
-                      <div className={styles.moveBadges}>
-                        {move.heatEngage && (
-                          <Badge bg="warning" className="me-1 text-wrap">
-                            Heat Engage
-                          </Badge>
-                        )}
-                        {move.heatSmash && (
-                          <Badge bg="danger" className="me-1 text-wrap">
-                            Heat Smash
-                          </Badge>
-                        )}
-                        {move.powerCrush && (
-                          <Badge bg="info" className="me-1 text-wrap">
-                            Power Crush
-                          </Badge>
-                        )}
-                        {move.throw && (
-                          <Badge bg="secondary" className="me-1 text-wrap">
-                            Throw
-                          </Badge>
-                        )}
-                        {move.homing && (
-                          <Badge bg="primary" className="me-1 text-wrap">
-                            Homing
-                          </Badge>
-                        )}
-                        {move.tornado && (
-                          <Badge bg="success" className="me-1 text-wrap">
-                            Tornado
-                          </Badge>
-                        )}
-                        {move.heatBurst && (
-                          <Badge bg="dark" className="me-1 text-wrap">
-                            Heat Burst
-                          </Badge>
-                        )}
-                        {move.requiresHeat && (
-                          <Badge bg="warning" className="me-1 text-wrap">
-                            Requires Heat
-                          </Badge>
-                        )}
-                      </div>
-                    </td>
-                  )}
-                  {visibleColumns.notes && <td className={styles.notesCell}>{move.notes || "-"}</td>}
+        {filteredMoves.length === 0 ? (
+          <Alert variant="info">
+            <Alert.Heading>Удары не найдены</Alert.Heading>
+            <p>Попробуйте изменить фильтры поиска.</p>
+          </Alert>
+        ) : (
+          <div className={styles.movesTableContainer}>
+            <Table responsive="lg" striped hover className={styles.movesTable}>
+              <thead>
+                <tr>
+                  {visibleColumns.command && <th>Команда</th>}
+                  {visibleColumns.hitLevel && <th>Уровень</th>}
+                  {visibleColumns.damage && <th>Урон</th>}
+                  {visibleColumns.startUpFrame && <th>Старт</th>}
+                  {visibleColumns.blockFrame && <th>Блок</th>}
+                  {visibleColumns.hitFrame && <th>Попадание</th>}
+                  {visibleColumns.counterHitFrame && <th>Контр-удар</th>}
+                  {visibleColumns.features && <th>Особенности</th>}
+                  {visibleColumns.notes && <th>Заметки</th>}
                 </tr>
-              ))}
-            </tbody>
-          </Table>
-        </div>
-      )}
+              </thead>
+              <tbody>
+                {filteredMoves.map((move, index) => (
+                  <tr key={`${move.command}-${index}`}>
+                    {visibleColumns.command && (
+                      <td className={styles.commandCell}>
+                        <code>{move.command}</code>
+                      </td>
+                    )}
+                    {visibleColumns.hitLevel && <td>{move.hitLevel || "-"}</td>}
+                    {visibleColumns.damage && <td>{move.damage || "-"}</td>}
+                    {visibleColumns.startUpFrame && (
+                      <td>{move.startUpFrame || "-"}</td>
+                    )}
+                    {visibleColumns.blockFrame && (
+                      <td>{move.blockFrame || "-"}</td>
+                    )}
+                    {visibleColumns.hitFrame && <td>{move.hitFrame || "-"}</td>}
+                    {visibleColumns.counterHitFrame && (
+                      <td>{move.counterHitFrame || "-"}</td>
+                    )}
+                    {visibleColumns.features && (
+                      <td>
+                        <div className={styles.moveBadges}>
+                          {move.heatEngage && (
+                            <Badge bg="warning" className="me-1 text-wrap">
+                              Heat Engage
+                            </Badge>
+                          )}
+                          {move.heatSmash && (
+                            <Badge bg="danger" className="me-1 text-wrap">
+                              Heat Smash
+                            </Badge>
+                          )}
+                          {move.powerCrush && (
+                            <Badge bg="info" className="me-1 text-wrap">
+                              Power Crush
+                            </Badge>
+                          )}
+                          {move.throw && (
+                            <Badge bg="secondary" className="me-1 text-wrap">
+                              Throw
+                            </Badge>
+                          )}
+                          {move.homing && (
+                            <Badge bg="primary" className="me-1 text-wrap">
+                              Homing
+                            </Badge>
+                          )}
+                          {move.tornado && (
+                            <Badge bg="success" className="me-1 text-wrap">
+                              Tornado
+                            </Badge>
+                          )}
+                          {move.heatBurst && (
+                            <Badge bg="dark" className="me-1 text-wrap">
+                              Heat Burst
+                            </Badge>
+                          )}
+                          {move.requiresHeat && (
+                            <Badge bg="warning" className="me-1 text-wrap">
+                              Requires Heat
+                            </Badge>
+                          )}
+                        </div>
+                      </td>
+                    )}
+                    {visibleColumns.notes && (
+                      <td className={styles.notesCell}>
+                        {move.notes && move.notes.length > 0
+                          ? move.notes.map((note, index) => (
+                              <div key={index}>{note}</div>
+                            ))
+                          : "-"}
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+        )}
 
-      <div className="mt-3">
-        <small className="text-muted">
-          Найдено ударов: {filteredMoves.length} из{" "}
-          {character.movelist?.length || 0}
-        </small>
-      </div>
+        <div className="mt-3">
+          <small className="text-muted">
+            Найдено ударов: {filteredMoves.length} из{" "}
+            {character.movelist?.length || 0}
+          </small>
+        </div>
       </div>
     </div>
   );

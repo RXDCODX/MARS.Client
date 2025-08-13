@@ -168,7 +168,7 @@ export default function MessageDemo() {
           message={message}
           color={color}
           faceImage={faceImage}
-          onRemove={() => removeMessage(message.id)}
+          onRemove={() => removeMessage(message.id || '')}
         />
       ))}
       

@@ -33,8 +33,8 @@ export interface CharacterFormData {
   linkToImage: string;
   pageUrl: string;
   description: string;
-  strengths: string;
-  weaknesess: string;
+  strengths: string[];
+  weaknesess: string[];
 }
 
 export interface MoveFormData {
