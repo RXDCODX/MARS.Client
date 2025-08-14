@@ -1,7 +1,8 @@
 import { useCallback, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { SignalRContext } from "../../../app";
+import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
+
 import { Cirno } from "./Cirno";
 import { Reimu } from "./Reimu";
 import styles from "./Styles.module.scss";
@@ -21,7 +22,7 @@ export function FumoFridayController() {
 
   SignalRContext.useSignalREffect(
     "fumofriday",
-    (message, color) => {
+    (message: string, color: string) => {
       const id = uuidv4();
       const newMessage: Message = { id: id, message: message, color: color };
       handleAddEvent(newMessage);

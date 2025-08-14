@@ -58,9 +58,11 @@
   0% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
+
   100% {
     opacity: 1;
   }
@@ -115,13 +117,13 @@
 }
 
 .tabGroup {
-  .btn-check:checked + .btn-outline-primary {
+  .btn-check:checked+.btn-outline-primary {
     background-color: var(--bs-primary);
     border-color: var(--bs-primary);
     color: white;
   }
 
-  .btn-check:checked + .btn-outline-danger {
+  .btn-check:checked+.btn-outline-danger {
     background-color: var(--bs-danger);
     border-color: var(--bs-danger);
     color: white;

@@ -15,11 +15,9 @@ import { Commands } from "@/shared/api";
 import {
   CommandInfo,
   CommandParameterInfo,
-  CommandsAdminPlatformInfoListParamsEnum,
-} from "@/shared/api/data-contracts";
+} from "@/shared/api/http-clients/data-contracts";
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
-import { CommandsUserPlatformInfoListParamsEnum } from "@/shared/api/data-contracts";
 import styles from "./CommandsPage.module.scss";
 
 // Типы для состояния компонента
@@ -65,12 +63,10 @@ const CommandsPage: React.FC = () => {
       updateState({ isLoading: true, error: "" });
 
       // Загружаем команды для API платформы
-      const resultUser = await commandsService.commandsAdminPlatformInfoList(
-        CommandsAdminPlatformInfoListParamsEnum.Api
-      );
-      const adminResult = await commandsService.commandsUserPlatformInfoList(
-        CommandsUserPlatformInfoListParamsEnum.Api
-      );
+      const resultUser =
+        await commandsService.commandsAdminPlatformInfoList("Api");
+      const adminResult =
+        await commandsService.commandsUserPlatformInfoList("Api");
 
       const userCommandsData = resultUser.data;
       const adminCommandsData = adminResult.data;

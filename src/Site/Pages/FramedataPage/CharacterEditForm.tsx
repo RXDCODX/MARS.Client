@@ -10,7 +10,7 @@ import {
   Spinner,
 } from "react-bootstrap";
 
-import { defaultApiConfig, Framedata } from "@/shared/api";
+import { Framedata } from "@/shared/api";
 import { TekkenCharacter } from "@/shared/api/data-contracts";
 
 import styles from "./FramedataPage.module.scss";
@@ -250,7 +250,7 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
       }
 
       // Обновляем персонажа через API
-      const api = new Framedata(defaultApiConfig);
+      const api = new Framedata();
       const result = await api.framedataCharactersUpdate(
         character.name,
         updatedCharacter

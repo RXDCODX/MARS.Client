@@ -7396,7 +7396,6 @@ __metadata:
     react-bootstrap-icons: "npm:^1.11.6"
     react-canvas-confetti: "npm:^2.0.7"
     react-dom: "npm:^19.0.0"
-    react-hook-form: "npm:^7.62.0"
     react-icons: "npm:^5.3.0"
     react-is: "npm:^19.1.0"
     react-roulette-pro: "npm:^3.2.2"
@@ -7406,6 +7405,7 @@ __metadata:
     react-simple-animate: "npm:^3.5.3"
     react-switch: "npm:^7.1.0"
     react-textfit: "npm:^1.1.1"
+    react-toastify: "npm:^11.0.5"
     react-transition-group: "npm:^4.4.5"
     recharts: "npm:^3.0.2"
     repomix: "npm:^0.3.9"
@@ -8831,15 +8831,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.62.0":
-  version: 7.62.0
-  resolution: "react-hook-form@npm:7.62.0"
-  peerDependencies:
-    react: ^16.8.0 || ^17 || ^18 || ^19
-  checksum: 10c0/451a25a2ddf07be14f690d2ad3f2f970e0b933fd059ef141c6da9e19d0566d739e9d5cc9c482e3533f3fd01d97e658b896a01ce45a1259ad7b0d4638ba0112c6
-  languageName: node
-  linkType: hard
-
 "react-icons@npm:^5.3.0":
   version: 5.5.0
   resolution: "react-icons@npm:5.5.0"
@@ -9021,6 +9012,18 @@ __metadata:
     react: ^15.0.0 || ^16.0.0
     react-dom: ^15.0.0 || ^16.0.0
   checksum: 10c0/6dc8eb8d27a1c6e6c7bffd5c8c3bbe5394eaa733b7b7bc52334c59709e38577b6877006f56762a783a2bab80b073752771a045fb570b901aebd42b9e58930e2a
+  languageName: node
+  linkType: hard
+
+"react-toastify@npm:^11.0.5":
+  version: 11.0.5
+  resolution: "react-toastify@npm:11.0.5"
+  dependencies:
+    clsx: "npm:^2.1.1"
+  peerDependencies:
+    react: ^18 || ^19
+    react-dom: ^18 || ^19
+  checksum: 10c0/50f5b81323ebb1957b2efd0963fac24aa1407155d16ab756ffd6d0f42f8af17e796b3958a9fce13e9d1b945d6c3a5a9ebf13529478474d8a2af4bf1dd0db67d2
   languageName: node
   linkType: hard
 

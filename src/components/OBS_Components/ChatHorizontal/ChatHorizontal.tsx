@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 
 import { ChatMessage } from "@/shared/api";
+import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
 import Announce from "@/shared/Utils/Announce/Announce";
 
-import { SignalRContext } from "../../../app";
 import { Message } from "./Message";
 
 interface ChatHorizontalProps {

@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 
+import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
 import { ChatMessage } from "@/shared/api";
 import { TelegramusMakeScreenParticlesCreateParamsParticlesEnum } from "@/shared/api/";
 
-import { SignalRContext } from "../../../app";
 import { Confettyv2 } from "./Confetty";
 import EmojiParticles from "./EmojiParticles";
 import Firework from "./Firework";

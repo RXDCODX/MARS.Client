@@ -1,5 +1,5 @@
-import ColorDemo from "@/Site/Site_Components/ColorDemo/ColorDemo";
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
+import ColorDemo from "@/Site/Site_Components/ColorDemo/ColorDemo";
 
 import styles from "./ColorDemoPage.module.scss";
 

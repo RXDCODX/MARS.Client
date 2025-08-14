@@ -1,10 +1,12 @@
-import anime from "@/shared/styles/animate.module.scss";
-import catisaVideo from "@/assets/catisa.mp4";
 import { useEffect, useRef, useState } from "react";
+
+import catisaVideo from "@/assets/catisa.mp4";
 import { ChatMessage } from "@/shared/api";
+import anime from "@/shared/styles/animate.module.scss";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import { parseContent, replaceBadges, replaceEmotes } from "@/shared/Utils";
 import GradientText from "@/shared/Utils/Animations/GradientText";
+
 import { CSS_ANIMATION_CONFIG } from "./animationTimings";
 import styles from "./Message.module.scss";
 
@@ -32,7 +34,8 @@ export function Message({ message, onRemove }: Props) {
   // Проверка на catisa-триггер
   const isCatisa =
     typeof message.message === "string" &&
-    (/^!catisa/i.test(message.message.trim()) || /^!катиса/i.test(message.message.trim()));
+    (/^!catisa/i.test(message.message.trim()) ||
+      /^!катиса/i.test(message.message.trim()));
 
   useEffect(() => {
     setTimeout(() => {

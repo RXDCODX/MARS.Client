@@ -2,7 +2,7 @@ import { HubConnection, HubConnectionState } from "@microsoft/signalr";
 import { create } from "zustand";
 
 import { ScoreboardDto } from "@/shared/api";
-import { ScoreboardHubSignalRContext } from "@/shared/api";
+import { ScoreboardHubSignalRConnectionBuilder } from "@/shared/api";
 
 import {
   ColorInfoWIthTimestamp,
@@ -18,7 +18,6 @@ import {
 // Интерфейс состояния
 export interface ScoreboardState {
   _connection: HubConnection;
-
   // Данные игроков
   player1: PlayerWithTimestamp;
   player2: PlayerWithTimestamp;
@@ -84,7 +83,7 @@ export type ScoreboardStore = ScoreboardState & ScoreboardActions;
 
 // Начальное состояние
 const initialState: ScoreboardState = {
-  _connection: ScoreboardHubSignalRContext.build(),
+  _connection: ScoreboardHubSignalRConnectionBuilder.build(),
   player1: {
     name: "Daigo Umehara",
     sponsor: "Red Bull",
@@ -120,7 +119,7 @@ const initialState: ScoreboardState = {
 // Создание store
 export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
   // Инициализируем соединение
-  const connection = ScoreboardHubSignalRContext.build();
+  const connection = get()._connection;
 
   const firstActiveFunction = (state: ScoreboardState) => {
     get().handleReceiveState(state);
@@ -312,7 +311,6 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
     // Внутренние действия
     _sendToServer: (method, data) => {
       try {
-        const connection = get()._connection;
         if (!connection || connection.state !== HubConnectionState.Connected) {
           console.log(
             "SignalR connection not available, using local state only"

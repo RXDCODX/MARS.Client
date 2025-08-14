@@ -2,9 +2,9 @@ import { AnimatePresence } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
+import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
 import Announce from "@/shared/Utils/Announce/Announce";
 
-import { SignalRContext } from "../../../app";
 import AutoMessageAlert from "./AutoMessageAlert";
 
 interface AutoMessageData {

@@ -14,6 +14,7 @@ import ScoreboardAdminPanel from "@/components/OBS_Components/Scoreboard/AdminPa
 import Manager from "@/components/OBS_Components/ScreenParticles/Manager";
 import CurrentTrackSignalRHubWrapper from "@/components/OBS_Components/SoundRequest/CurrentTrack/SignalRHubWrapper";
 import WaifuAlerts from "@/components/OBS_Components/WaifuAlerts/WaifuAlerts";
+import { OBSComponentWrapper } from "@/components/OBS_Components/wrapper";
 import ServerViewer from "@/Site/ControlRoom_Components/ServerViewer/ServerViewer";
 import ServiceDetails from "@/Site/ControlRoom_Components/ServerViewer/ServiceDetails";
 import AboutPage from "@/Site/Pages/AboutPage";
@@ -23,6 +24,8 @@ import DocsPage from "@/Site/Pages/DocsPage";
 import ChangeDetailsPage from "@/Site/Pages/FramedataPage/ChangeDetailsPage";
 import FramedataPage from "@/Site/Pages/FramedataPage/FramedataPage";
 import PendingChangesPage from "@/Site/Pages/FramedataPage/PendingChangesPage";
+import { MediaInfoEditPage } from "@/Site/Pages/MediaInfoPage/MediaInfoEditPage";
+import { MediaInfoListPage } from "@/Site/Pages/MediaInfoPage/MediaInfoListPage";
 import WelcomePage from "@/Site/Pages/WelcomePage";
 import { Layout } from "@/Site/Site_Components/Layout";
 
@@ -33,11 +36,6 @@ const ServiceDetailsPage = () => (
   <div style={{ padding: "20px" }}>
     <ServiceDetails onClose={() => window.history.back()} />
   </div>
-);
-
-// Компонент-обертка для OBS компонентов
-const OBSComponentWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="obs-component">{children}</div>
 );
 
 const PrivateRoutes = () => (
@@ -105,6 +103,22 @@ const PrivateRoutes = () => (
         element={
           <Layout>
             <ChangeDetailsPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/media-info"
+        element={
+          <Layout>
+            <MediaInfoListPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/media-info/edit/:id"
+        element={
+          <Layout>
+            <MediaInfoEditPage />
           </Layout>
         }
       />

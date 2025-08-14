@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import AFKScreen from './AFKScreen';
-import './AFKScreenDemo.scss';
+import "./AFKScreenDemo.scss";
+
+import React, { useState } from "react";
+
+import AFKScreen from "./AFKScreen";
 
 const AFKScreenDemo: React.FC = () => {
   const [config, setConfig] = useState({
-    videoId: '6oMsWcCDGnw',
-    playlistId: 'PLB6r_8YDnipME_VANRWiiBgI9-rabmmL1',
+    videoId: "6oMsWcCDGnw",
+    playlistId: "PLB6r_8YDnipME_VANRWiiBgI9-rabmmL1",
     autoplay: true,
     controls: true,
     loop: true,
@@ -26,14 +28,14 @@ const AFKScreenDemo: React.FC = () => {
     <div className="afk-demo">
       <div className="demo-controls">
         <h2>AFKScreen Demo</h2>
-        
+
         <div className="control-group">
           <label>
             Video ID:
             <input
               type="text"
               value={config.videoId}
-              onChange={(e) => handleConfigChange('videoId', e.target.value)}
+              onChange={e => handleConfigChange("videoId", e.target.value)}
             />
           </label>
         </div>
@@ -44,7 +46,7 @@ const AFKScreenDemo: React.FC = () => {
             <input
               type="text"
               value={config.playlistId}
-              onChange={(e) => handleConfigChange('playlistId', e.target.value)}
+              onChange={e => handleConfigChange("playlistId", e.target.value)}
             />
           </label>
         </div>
@@ -54,7 +56,7 @@ const AFKScreenDemo: React.FC = () => {
             <input
               type="checkbox"
               checked={config.autoplay}
-              onChange={(e) => handleConfigChange('autoplay', e.target.checked)}
+              onChange={e => handleConfigChange("autoplay", e.target.checked)}
             />
             Autoplay
           </label>
@@ -65,7 +67,7 @@ const AFKScreenDemo: React.FC = () => {
             <input
               type="checkbox"
               checked={config.controls}
-              onChange={(e) => handleConfigChange('controls', e.target.checked)}
+              onChange={e => handleConfigChange("controls", e.target.checked)}
             />
             Show Controls
           </label>
@@ -76,7 +78,7 @@ const AFKScreenDemo: React.FC = () => {
             <input
               type="checkbox"
               checked={config.loop}
-              onChange={(e) => handleConfigChange('loop', e.target.checked)}
+              onChange={e => handleConfigChange("loop", e.target.checked)}
             />
             Loop
           </label>
@@ -87,14 +89,14 @@ const AFKScreenDemo: React.FC = () => {
             <input
               type="checkbox"
               checked={config.muted}
-              onChange={(e) => handleConfigChange('muted', e.target.checked)}
+              onChange={e => handleConfigChange("muted", e.target.checked)}
             />
             Muted
           </label>
         </div>
 
         <button onClick={togglePlay} className="demo-button">
-          {isPlaying ? 'Stop Demo' : 'Start Demo'}
+          {isPlaying ? "Stop Demo" : "Start Demo"}
         </button>
       </div>
 

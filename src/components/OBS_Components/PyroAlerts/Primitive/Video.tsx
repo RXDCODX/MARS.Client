@@ -1,19 +1,19 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Textfit } from "react-textfit";
 
+import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
 import {
   MediaDto,
   MediaFileInfo,
-  MediaInfo,
   MediaMetaInfo,
   MediaPositionInfo,
   MediaStylesInfo,
   MediaTextInfo,
 } from "@/shared/api";
+import { MediaInfo } from "@/shared/api";
 import { KeyWordText } from "@/shared/components/KeyWordText";
 import { getCoordinates, getRandomRotation } from "@/shared/Utils";
 
-import { SignalRContext } from "../../../../app";
 import styles from "./Media.module.scss";
 
 interface Props {

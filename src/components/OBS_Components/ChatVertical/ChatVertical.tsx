@@ -1,10 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
+import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
 import { ChatMessage } from "@/shared/api";
 import Announce from "@/shared/Utils/Announce/Announce";
 
-import { SignalRContext } from "../../../app";
 import {
   FRAMER_MOTION_CONFIG,
   SCROLL_CONFIG,

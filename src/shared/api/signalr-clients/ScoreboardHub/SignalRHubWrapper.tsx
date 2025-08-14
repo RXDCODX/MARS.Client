@@ -2,17 +2,17 @@ import * as signalR from "react-signalr";
 
 import { logger } from "@/shared/logger";
 
-const SignalRContext = signalR.createSignalRContext({});
+export const ScoreboardHubSignalRContext = signalR.createSignalRContext({});
 
 interface ScoreboardHubProps {
   children: React.ReactNode;
 }
 
-export default function ScoreboardHubSignalRHubWrapper({
+export function ScoreboardHubSignalRHubWrapper({
   children,
 }: ScoreboardHubProps) {
   return (
-    <SignalRContext.Provider
+    <ScoreboardHubSignalRContext.Provider
       automaticReconnect={true}
       onError={error => new Promise(resolve => resolve(console.log(error)))}
       onClosed={event => console.log(event)}
@@ -23,6 +23,6 @@ export default function ScoreboardHubSignalRHubWrapper({
       logMessageContent
     >
       {children}
-    </SignalRContext.Provider>
+    </ScoreboardHubSignalRContext.Provider>
   );
 }

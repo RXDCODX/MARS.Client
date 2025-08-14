@@ -6,7 +6,7 @@ import { ChatMessage } from "@twurple/chat";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
-import { SignalRContext } from "../../app";
+import { TelegramusHubSignalRConnectionBuilder } from "../api";
 
 interface Actions {
   init: (clientId: string, clientSecret: string) => void;
@@ -30,64 +30,77 @@ const initialState: State = {
 };
 
 export const useTwitchStore = create<State & Actions>()(
-  devtools((set, get) => ({
-    ...initialState,
-    init: (clientId: string, clientSecret: string) => {
-      const { client, fetcher, parser, newParser } = initialization(
-        clientId,
-        clientSecret
-      );
-      getBadges(client)
-        .then(badges => set({ badges }))
-        .catch(err => {
-          console.error(err);
-          set({ badges: [] });
-        });
+  devtools((set, get) => {
+    const connection = TelegramusHubSignalRConnectionBuilder.build();
 
-      Promise.all([
-        // Twitch global
-        fetcher.fetchTwitchEmotes(),
-        // Twitch channel
-        fetcher.fetchTwitchEmotes(785975641),
-        //BTTV global
-        fetcher.fetchBTTVEmotes(),
-        // 7TV global
-        fetcher.fetchSevenTVEmotes(),
-        // 7TV channel
-        fetcher.fetchSevenTVEmotes(785975641),
-        // FFZ global
-        fetcher.fetchFFZEmotes(),
-      ])
-        .then(() => {
-          console.log("Emotes loaded");
-          set({
-            fetcher,
-            parser,
-            twitchApiClient: client,
-            parseToLink: newParser,
-          });
-        })
-        .catch(err => {
-          console.error("Error loading emotes...");
-          console.error(err);
-          set({
-            fetcher,
-            parser,
-            twitchApiClient: client,
-            parseToLink: newParser,
-          });
-        });
-    },
-    setBadges: (badges: HelixChatBadgeSet[]) => set({ badges }),
-    parse: (text: string, size?: number) => {
-      const parser = get().parser ?? get().parseToLink;
-      if (!parser) return text;
-      return parser.parse(text, size);
-    },
-    sendMsgToPyrokxnezxz: async (msg: string) => {
-      await SignalRContext.invoke("TwitchMsg", msg);
-    },
-  }))
+    connection.on(
+      "posttwitchinfo",
+      (clientId: string, clientSecret: string) => {
+        const { fetcher, parser } = get();
+        if (!fetcher || !parser) {
+          const { client, fetcher, parser, newParser } = initialization(
+            clientId,
+            clientSecret
+          );
+          getBadges(client)
+            .then(badges => set({ badges }))
+            .catch(err => {
+              console.error(err);
+              set({ badges: [] });
+            });
+
+          Promise.all([
+            // Twitch global
+            fetcher.fetchTwitchEmotes(),
+            // Twitch channel
+            fetcher.fetchTwitchEmotes(785975641),
+            //BTTV global
+            fetcher.fetchBTTVEmotes(),
+            // 7TV global
+            fetcher.fetchSevenTVEmotes(),
+            // 7TV channel
+            fetcher.fetchSevenTVEmotes(785975641),
+            // FFZ global
+            fetcher.fetchFFZEmotes(),
+          ])
+            .then(() => {
+              console.log("Emotes loaded");
+              set({
+                fetcher,
+                parser,
+                twitchApiClient: client,
+                parseToLink: newParser,
+              });
+            })
+            .catch(err => {
+              console.error("Error loading emotes...");
+              console.error(err);
+              set({
+                fetcher,
+                parser,
+                twitchApiClient: client,
+                parseToLink: newParser,
+              });
+            });
+        }
+      }
+    );
+
+    connection.start();
+
+    return {
+      ...initialState,
+      setBadges: (badges: HelixChatBadgeSet[]) => set({ badges }),
+      parse: (text: string, size?: number) => {
+        const parser = get().parser ?? get().parseToLink;
+        if (!parser) return text;
+        return parser.parse(text, size);
+      },
+      sendMsgToPyrokxnezxz: async (msg: string) => {
+        await connection.invoke("TwitchMsg", msg);
+      },
+    };
+  })
 );
 
 function initialization(clientId: string, clientSecret: string) {

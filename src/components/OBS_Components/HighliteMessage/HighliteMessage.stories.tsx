@@ -86,7 +86,8 @@ export const Demo: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Демонстрация работы компонента с тестовыми сообщениями и лицами из ассетов.",
+        story:
+          "Демонстрация работы компонента с тестовыми сообщениями и лицами из ассетов.",
       },
     },
   },
@@ -113,9 +114,9 @@ export const Demo: Story = {
     expect(bubbles.length).toBeGreaterThan(0);
 
     // Проверяем кнопку добавления сообщений
-    const addButton = canvasElement.querySelector('button');
+    const addButton = canvasElement.querySelector("button");
     expect(addButton).toBeInTheDocument();
-    expect(addButton).toHaveTextContent('Добавить сообщение');
+    expect(addButton).toHaveTextContent("Добавить сообщение");
   },
 };
 
@@ -145,8 +146,8 @@ export const ImagesOnly: Story = {
 
     // Проверяем, что изображения загружены
     for (const img of Array.from(images)) {
-      expect(img).toHaveAttribute('src');
-      expect(img).toHaveAttribute('alt');
+      expect(img).toHaveAttribute("src");
+      expect(img).toHaveAttribute("alt");
     }
   },
 };
@@ -177,10 +178,10 @@ export const VideosOnly: Story = {
 
     // Проверяем, что видео настроены правильно
     for (const video of Array.from(videos)) {
-      expect(video).toHaveAttribute('src');
-      expect(video).toHaveAttribute('autoPlay');
-      expect(video).toHaveAttribute('loop');
-      expect(video).toHaveAttribute('muted');
+      expect(video).toHaveAttribute("src");
+      expect(video).toHaveAttribute("autoPlay");
+      expect(video).toHaveAttribute("loop");
+      expect(video).toHaveAttribute("muted");
     }
   },
 };

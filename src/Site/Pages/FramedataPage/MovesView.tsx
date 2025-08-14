@@ -269,7 +269,12 @@ const MovesView: React.FC<MovesViewProps> = ({
           </Alert>
         ) : (
           <div className={styles.movesTableContainer}>
-            <Table responsive="lg" striped hover className={styles.movesTable}>
+            <Table
+              responsive="lg"
+              striped
+              hover
+              className={styles.compactMovesTable}
+            >
               <thead>
                 <tr>
                   {visibleColumns.command && <th>Команда</th>}
@@ -291,21 +296,49 @@ const MovesView: React.FC<MovesViewProps> = ({
                         <code>{move.command}</code>
                       </td>
                     )}
-                    {visibleColumns.hitLevel && <td>{move.hitLevel || "-"}</td>}
-                    {visibleColumns.damage && <td>{move.damage || "-"}</td>}
+                    {visibleColumns.hitLevel && (
+                      <td className={styles.numericCell}>
+                        {move.hitLevel || "-"}
+                      </td>
+                    )}
+                    {visibleColumns.damage && (
+                      <td
+                        className={`${styles.numericCell} ${styles.damageCell}`}
+                      >
+                        {move.damage || "-"}
+                      </td>
+                    )}
                     {visibleColumns.startUpFrame && (
-                      <td>{move.startUpFrame || "-"}</td>
+                      <td
+                        className={`${styles.numericCell} ${styles.frameCell}`}
+                      >
+                        {move.startUpFrame || "-"}
+                      </td>
                     )}
                     {visibleColumns.blockFrame && (
-                      <td>{move.blockFrame || "-"}</td>
+                      <td
+                        className={`${styles.numericCell} ${styles.frameCell}`}
+                      >
+                        {move.blockFrame || "-"}
+                      </td>
                     )}
-                    {visibleColumns.hitFrame && <td>{move.hitFrame || "-"}</td>}
+                    {visibleColumns.hitFrame && (
+                      <td
+                        className={`${styles.numericCell} ${styles.frameCell}`}
+                      >
+                        {move.hitFrame || "-"}
+                      </td>
+                    )}
                     {visibleColumns.counterHitFrame && (
-                      <td>{move.counterHitFrame || "-"}</td>
+                      <td
+                        className={`${styles.numericCell} ${styles.frameCell}`}
+                      >
+                        {move.counterHitFrame || "-"}
+                      </td>
                     )}
                     {visibleColumns.features && (
-                      <td>
-                        <div className={styles.moveBadges}>
+                      <td className={styles.featuresCell}>
+                        <div className={styles.compactMoveBadges}>
                           {move.heatEngage && (
                             <Badge bg="warning" className="me-1 text-wrap">
                               Heat Engage
@@ -351,11 +384,20 @@ const MovesView: React.FC<MovesViewProps> = ({
                     )}
                     {visibleColumns.notes && (
                       <td className={styles.notesCell}>
-                        {move.notes && move.notes.length > 0
-                          ? move.notes.map((note, index) => (
-                              <div key={index}>{note}</div>
-                            ))
-                          : "-"}
+                        {move.notes && move.notes.length > 0 ? (
+                          <div className={styles.notesContainer}>
+                            {move.notes.map((note, noteIndex) => (
+                              <div key={noteIndex} className={styles.noteItem}>
+                                <span className={styles.noteNumber}>
+                                  #{noteIndex + 1}
+                                </span>
+                                <span className={styles.noteText}>{note}</span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          "-"
+                        )}
                       </td>
                     )}
                   </tr>

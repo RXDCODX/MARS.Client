@@ -11,17 +11,17 @@ export const getCharacterAvatar = (
   if (character.avatarImage && character.avatarImage.length > 0) {
     return `/api/framedata/characters/${encodeURIComponent(character.name)}/avatar`;
   }
-  
+
   // Если есть старое изображение, используем его
   if (character.image && character.image.length > 0) {
     return `/api/framedata/characters/${encodeURIComponent(character.name)}/image`;
   }
-  
+
   // Если есть ссылка на изображение, используем её
   if (character.linkToImage) {
     return character.linkToImage;
   }
-  
+
   // Fallback на placeholder
   return `https://via.placeholder.com/${fallbackSize}/cccccc/666666?text=${encodeURIComponent(character.name)}`;
 };
@@ -37,17 +37,17 @@ export const getCharacterFullBody = (
   if (character.fullBodyImage && character.fullBodyImage.length > 0) {
     return `/api/framedata/characters/${encodeURIComponent(character.name)}/fullbody`;
   }
-  
+
   // Если есть старое изображение, используем его
   if (character.image && character.image.length > 0) {
     return `/api/framedata/characters/${encodeURIComponent(character.name)}/image`;
   }
-  
+
   // Если есть ссылка на изображение, используем её
   if (character.linkToImage) {
     return character.linkToImage;
   }
-  
+
   // Fallback на placeholder
   return `https://via.placeholder.com/${fallbackSize}/cccccc/666666?text=${encodeURIComponent(character.name)}`;
 };
@@ -59,9 +59,7 @@ export const getCharacterFullBody = (
 export const getCharacterImage = (
   character: TekkenCharacter,
   fallbackSize: string = "200x300"
-): string => {
-  return getCharacterAvatar(character, fallbackSize);
-};
+): string => getCharacterAvatar(character, fallbackSize);
 
 /**
  * Обработчик ошибки загрузки изображения

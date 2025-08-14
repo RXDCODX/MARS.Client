@@ -10,7 +10,8 @@ const meta: Meta<typeof TrackList> = {
     layout: "centered",
     docs: {
       description: {
-        component: "Компонент для отображения списка треков в системе звуковых запросов.",
+        component:
+          "Компонент для отображения списка треков в системе звуковых запросов.",
       },
     },
   },

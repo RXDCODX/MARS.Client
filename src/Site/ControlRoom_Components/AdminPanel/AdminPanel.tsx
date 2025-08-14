@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Nav, Navbar as BootstrapNavbar, Container } from "react-bootstrap";
+import { Container, Nav, Navbar as BootstrapNavbar } from "react-bootstrap";
 
 import Dashboard from "../Dashboard/Dashboard";
 import styles from "./AdminPanel.module.scss";
@@ -59,7 +59,11 @@ const AdminPanel: React.FC<AdminPanelProps> = () => {
           <BootstrapNavbar.Brand>Админ панель</BootstrapNavbar.Brand>
           <BootstrapNavbar.Toggle aria-controls="admin-navbar-nav" />
           <BootstrapNavbar.Collapse id="admin-navbar-nav">
-            <Nav className="me-auto" activeKey={activeTab} onSelect={(k) => setActiveTab(k || "dashboard")}>
+            <Nav
+              className="me-auto"
+              activeKey={activeTab}
+              onSelect={k => setActiveTab(k || "dashboard")}
+            >
               <Nav.Link eventKey="dashboard">Дашборд</Nav.Link>
               <Nav.Link eventKey="servers">Серверы</Nav.Link>
               <Nav.Link eventKey="logs">Логи</Nav.Link>

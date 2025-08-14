@@ -2,27 +2,27 @@ import * as signalR from "react-signalr";
 
 import { logger } from "@/shared/logger";
 
-const SignalRContext = signalR.createSignalRContext({});
+export const TunaHubSignalRContext = signalR.createSignalRContext({});
 
-interface SoundRequestHubProps {
+interface TunaHubProps {
   children: React.ReactNode;
 }
 
-export default function SoundRequestHubSignalRHubWrapper({
+export function TunaHubSignalRHubWrapper({
   children,
-}: SoundRequestHubProps) {
+}: TunaHubProps) {
   return (
-    <SignalRContext.Provider
+    <TunaHubSignalRContext.Provider
       automaticReconnect={true}
       onError={error => new Promise(resolve => resolve(console.log(error)))}
       onClosed={event => console.log(event)}
       onOpen={event => console.log(event)}
       logger={logger}
       withCredentials={false}
-      url={import.meta.env.VITE_BASE_PATH + "/hubs/soundrequest"}
+      url={import.meta.env.VITE_BASE_PATH + "/hubs/tuna"}
       logMessageContent
     >
       {children}
-    </SignalRContext.Provider>
+    </TunaHubSignalRContext.Provider>
   );
 }

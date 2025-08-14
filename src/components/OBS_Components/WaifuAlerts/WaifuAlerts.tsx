@@ -4,12 +4,12 @@ import { PrizeType } from "react-roulette-pro";
 import { Textfit } from "react-textfit";
 
 import { Host, Waifu } from "@/shared/api";
+import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api/signalr-clients/TelegramusHub/SignalRHubWrapper";
 import animate from "@/shared/styles/animate.module.scss";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import { arrayExcept, getRandomColor } from "@/shared/Utils";
 import Announce from "@/shared/Utils/Announce/Announce";
 
-import { SignalRContext } from "../../../app";
 import {
   getHusbandText,
   getText,

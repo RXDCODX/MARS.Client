@@ -10,6 +10,16 @@
  * ---------------------------------------------------------------
  */
 
+export interface ApiMediaInfo {
+  fileInfo: MediaFileInfo;
+  /** @format uuid */
+  id: string;
+  metaInfo: MediaMetaInfo;
+  positionInfo: MediaPositionInfo;
+  stylesInfo: MediaStylesInfo;
+  textInfo: MediaTextInfo;
+}
+
 export interface CommandInfo {
   availablePlatforms: CommandInfoAvailablePlatformsEnum[];
   description: string;
@@ -107,6 +117,77 @@ export enum CommandsUserPlatformInfoListParamsPlatformEnum {
   Vk = "Vk",
 }
 
+export interface MediaFileInfo {
+  extension: string;
+  fileName: string;
+  filePath: string;
+  isLocalFile: boolean;
+  type: MediaFileInfoTypeEnum;
+}
+
+export enum MediaFileInfoTypeEnum {
+  None = "None",
+  Image = "Image",
+  Audio = "Audio",
+  Video = "Video",
+  TelegramSticker = "TelegramSticker",
+  Voice = "Voice",
+  Gif = "Gif",
+}
+
+export interface MediaMetaInfo {
+  displayName: string;
+  /** @format int32 */
+  duration: number;
+  isLooped: boolean;
+  priority: MediaMetaInfoPriorityEnum;
+  /** @format uuid */
+  twitchGuid?: string;
+  /** @format int32 */
+  twitchPointsCost: number;
+  vip: boolean;
+  /** @format int32 */
+  volume: number;
+}
+
+export enum MediaMetaInfoPriorityEnum {
+  Low = "Low",
+  Normal = "Normal",
+  High = "High",
+}
+
+export interface MediaPositionInfo {
+  /** @format int32 */
+  height: number;
+  isHorizontalCenter: boolean;
+  isProportion: boolean;
+  isResizeRequires: boolean;
+  isRotated: boolean;
+  isUseOriginalWidthAndHeight: boolean;
+  isVerticallCenter: boolean;
+  randomCoordinates: boolean;
+  /** @format int32 */
+  rotation: number;
+  /** @format int32 */
+  width: number;
+  /** @format int32 */
+  xCoordinate: number;
+  /** @format int32 */
+  yCoordinate: number;
+}
+
+export interface MediaStylesInfo {
+  isBorder: boolean;
+}
+
+export interface MediaTextInfo {
+  keyWordSybmolDelimiter?: string;
+  keyWordsColor?: string;
+  text?: string;
+  textColor?: string;
+  triggerWord?: string;
+}
+
 export interface Move {
   blockFrame?: string;
   characterName: string;
@@ -193,6 +274,7 @@ export interface ParseRequest {
 }
 
 export enum ParseRequestSourceEnum {
+  None = "None",
   Wavu = "Wavu",
   Tekkendocs = "Tekkendocs",
 }

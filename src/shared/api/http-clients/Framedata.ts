@@ -215,11 +215,11 @@ export class Framedata<
   framedataMovesSearchList = (
     query?: {
       characterName: string;
-      heatEngage: boolean;
-      homing: boolean;
-      isThrow: boolean;
-      powerCrush: boolean;
       stanceCode: string;
+      heatEngage: boolean;
+      powerCrush: boolean;
+      isThrow: boolean;
+      homing: boolean;
     },
     params: RequestParams = {},
   ) =>

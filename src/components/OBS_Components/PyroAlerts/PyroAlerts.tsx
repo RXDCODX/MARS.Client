@@ -2,9 +2,9 @@ import { useCallback, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { MediaDto, MediaMetaInfoPriorityEnum } from "@/shared/api";
+import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
 import Announce from "@/shared/Utils/Announce/Announce";
 
-import { SignalRContext } from "../../../app";
 import Alert from "./Alert";
 import HighPriorityAlert from "./HighPriorityAlert";
 

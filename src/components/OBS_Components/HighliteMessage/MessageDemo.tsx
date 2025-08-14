@@ -1,14 +1,14 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Textfit } from "react-textfit";
 
 import { ChatMessage } from "@/shared/api";
 import animate from "@/shared/styles/animate.module.scss";
 import {
+  type FaceAsset,
   getNotWhiteColor,
-  isWhiteColor,
   getRandomFace,
   getRandomFaceByType,
-  type FaceAsset,
+  isWhiteColor,
 } from "@/shared/Utils";
 
 import styles from "./Message.module.scss";
@@ -20,7 +20,12 @@ interface DemoMessageProps {
   onRemove: () => void;
 }
 
-function DemoMessage({ message, color, faceImage, onRemove }: DemoMessageProps) {
+function DemoMessage({
+  message,
+  color,
+  faceImage,
+  onRemove,
+}: DemoMessageProps) {
   const divRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,11 +35,7 @@ function DemoMessage({ message, color, faceImage, onRemove }: DemoMessageProps) 
           onRemove();
         };
         divRef.current.className =
-          styles.container +
-          " " +
-          animate.fadeOut +
-          " " +
-          animate.animated;
+          styles.container + " " + animate.fadeOut + " " + animate.animated;
       }
     }, 5000);
 
@@ -52,20 +53,11 @@ function DemoMessage({ message, color, faceImage, onRemove }: DemoMessageProps) 
     >
       {/* IMAGE */}
       <div className={styles["buble-image"]}>
-        {faceImage.type === 'image' && (
-          <img
-            alt={`Face: ${faceImage.name}`}
-            src={faceImage.url}
-          />
+        {faceImage.type === "image" && (
+          <img alt={`Face: ${faceImage.name}`} src={faceImage.url} />
         )}
-        {faceImage.type === 'video' && (
-          <video
-            src={faceImage.url}
-            autoPlay
-            controls={false}
-            loop
-            muted
-          />
+        {faceImage.type === "video" && (
+          <video src={faceImage.url} autoPlay controls={false} loop muted />
         )}
       </div>
       {/* TEXT */}
@@ -91,12 +83,7 @@ function DemoMessage({ message, color, faceImage, onRemove }: DemoMessageProps) 
               {message.displayName}:
             </Textfit>
           </div>
-          <Textfit
-            min={1}
-            max={1500}
-            mode="multi"
-            className={styles.emotes}
-          >
+          <Textfit min={1} max={1500} mode="multi" className={styles.emotes}>
             {message.message}
           </Textfit>
         </div>
@@ -106,11 +93,13 @@ function DemoMessage({ message, color, faceImage, onRemove }: DemoMessageProps) 
 }
 
 export default function MessageDemo() {
-  const [messages, setMessages] = useState<Array<{
-    message: ChatMessage;
-    color: string;
-    faceImage: FaceAsset;
-  }>>([]);
+  const [messages, setMessages] = useState<
+    Array<{
+      message: ChatMessage;
+      color: string;
+      faceImage: FaceAsset;
+    }>
+  >([]);
 
   const addDemoMessage = () => {
     const demoMessages = [
@@ -130,7 +119,7 @@ export default function MessageDemo() {
           message: "Отличный стрим! Спасибо за контент 😊",
         } as ChatMessage,
         color: "#4ECDC4",
-        faceImage: getRandomFaceByType('video'),
+        faceImage: getRandomFaceByType("video"),
       },
       {
         message: {
@@ -143,7 +132,8 @@ export default function MessageDemo() {
       },
     ];
 
-    const randomMessage = demoMessages[Math.floor(Math.random() * demoMessages.length)];
+    const randomMessage =
+      demoMessages[Math.floor(Math.random() * demoMessages.length)];
     setMessages(prev => [...prev, randomMessage]);
   };
 
@@ -161,30 +151,37 @@ export default function MessageDemo() {
   }, []);
 
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
+    <div
+      style={{
+        position: "relative",
+        width: "100vw",
+        height: "100vh",
+        overflow: "hidden",
+      }}
+    >
       {messages.map(({ message, color, faceImage }) => (
         <DemoMessage
           key={message.id}
           message={message}
           color={color}
           faceImage={faceImage}
-          onRemove={() => removeMessage(message.id || '')}
+          onRemove={() => removeMessage(message.id || "")}
         />
       ))}
-      
+
       <button
         onClick={addDemoMessage}
         style={{
-          position: 'fixed',
-          top: '20px',
-          left: '20px',
+          position: "fixed",
+          top: "20px",
+          left: "20px",
           zIndex: 1000,
-          padding: '10px 20px',
-          backgroundColor: '#007bff',
-          color: 'white',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
+          padding: "10px 20px",
+          backgroundColor: "#007bff",
+          color: "white",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
         }}
       >
         Добавить сообщение

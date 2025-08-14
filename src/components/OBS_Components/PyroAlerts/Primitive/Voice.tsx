@@ -1,9 +1,9 @@
 import { useCallback, useState } from "react";
 import { Textfit } from "react-textfit";
 
+import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
 import { MediaDto } from "@/shared/api";
 
-import { SignalRContext } from "../../../../app";
 import styles from "./Media.module.scss";
 
 interface Props {

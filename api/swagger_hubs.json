@@ -1614,7 +1614,8 @@
           "isLooped",
           "priority",
           "twitchPointsCost",
-          "vip"
+          "vip",
+          "volume"
         ],
         "type": "object",
         "properties": {
@@ -1647,6 +1648,10 @@
               "High"
             ],
             "type": "string"
+          },
+          "volume": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

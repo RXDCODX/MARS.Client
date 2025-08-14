@@ -1,4 +1,5 @@
 import { MessageDemo } from "@/components/OBS_Components/HighliteMessage";
+
 import styles from "./HighliteMessageDemoPage.module.scss";
 
 export default function HighliteMessageDemoPage() {

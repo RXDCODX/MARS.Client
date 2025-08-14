@@ -2,17 +2,17 @@ export interface AFKScreenProps {
   // Основные настройки
   videoId?: string;
   playlistId?: string;
-  
+
   // Управление плеером
   autoplay?: boolean;
   controls?: boolean;
   loop?: boolean;
   muted?: boolean;
-  
+
   // Размеры
   width?: string | number;
   height?: string | number;
-  
+
   // Стилизация
   className?: string;
 }
@@ -35,7 +35,7 @@ export interface YouTubePlayerInstance {
 }
 
 export interface PlayerEvent {
-  type: 'ready' | 'stateChange' | 'error';
+  type: "ready" | "stateChange" | "error";
   data?: any;
   timestamp: number;
 }

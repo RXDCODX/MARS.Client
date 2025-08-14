@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Alert, Button, Container } from "react-bootstrap";
 
-import { defaultApiConfig, Framedata } from "@/shared/api";
+import { Framedata } from "@/shared/api";
 import { TekkenCharacter } from "@/shared/api/data-contracts";
 
 import CharacterDetails from "./CharacterDetails";
@@ -12,10 +12,7 @@ import { NavigationState } from "./FramedataPage.types";
 import MovesView from "./MovesView";
 
 const FramedataPage: React.FC = () => {
-  const api = useMemo(
-    () => new Framedata({ baseURL: defaultApiConfig.baseURL }),
-    []
-  );
+  const api = useMemo(() => new Framedata(), []);
   const [navigationState, setNavigationState] = useState<NavigationState>({
     currentView: "characters",
     selectedCharacter: null,

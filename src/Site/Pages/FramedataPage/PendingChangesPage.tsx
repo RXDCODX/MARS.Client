@@ -13,12 +13,15 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-import { defaultApiConfig, FramedataChanges } from "@/shared/api";
-import { MovePendingDto, TekkenCharacterPendingDto } from "@/shared/api/http/data-contracts";
+import {
+  FramedataChanges,
+  MovePendingDto,
+  TekkenCharacterPendingDto,
+} from "@/shared/api";
 
 import styles from "./FramedataPage.module.scss";
 
-const api = new FramedataChanges({ baseURL: defaultApiConfig.baseURL });
+const api = new FramedataChanges();
 
 const statusVariantMap: Record<string, string> = {
   Pending: "warning",
@@ -92,17 +95,21 @@ const PendingChangesPage: React.FC = () => {
         api.framedataChangesPendingMovesList(),
       ]);
 
-      const characters = charactersRes.data ?? [];
-      const moves = movesRes.data ?? [];
+      const characters: TekkenCharacterPendingDto[] = charactersRes.data ?? [];
+      const moves: MovePendingDto[] = movesRes.data ?? [];
 
       // Создаем FramedataChange объекты из полученных данных
       const allChanges: FramedataChange[] = [
         ...characters.map(char => ({
           id: `char-${char.name}`,
           characterName: char.name,
-          changeType: char.isNew ? FramedataChangeChangeTypeEnum.NewCharacter : FramedataChangeChangeTypeEnum.CharacterUpdate,
+          changeType: char.isNew
+            ? FramedataChangeChangeTypeEnum.NewCharacter
+            : FramedataChangeChangeTypeEnum.CharacterUpdate,
           status: "Pending",
-          description: char.isNew ? `Новый персонаж: ${char.name}` : `Обновление персонажа: ${char.name}`,
+          description: char.isNew
+            ? `Новый персонаж: ${char.name}`
+            : `Обновление персонажа: ${char.name}`,
           detectedAt: char.lastUpdateTime,
           newData: char,
           isNew: char.isNew,
@@ -110,9 +117,13 @@ const PendingChangesPage: React.FC = () => {
         ...moves.map(move => ({
           id: `move-${move.characterName}-${move.command}`,
           characterName: move.characterName,
-          changeType: move.isNew ? FramedataChangeChangeTypeEnum.NewMove : FramedataChangeChangeTypeEnum.MoveUpdate,
+          changeType: move.isNew
+            ? FramedataChangeChangeTypeEnum.NewMove
+            : FramedataChangeChangeTypeEnum.MoveUpdate,
           status: "Pending",
-          description: move.isNew ? `Новый удар: ${move.command}` : `Обновление удара: ${move.command}`,
+          description: move.isNew
+            ? `Новый удар: ${move.command}`
+            : `Обновление удара: ${move.command}`,
           detectedAt: new Date().toISOString(),
           newData: move,
           isNew: move.isNew,
@@ -121,7 +132,11 @@ const PendingChangesPage: React.FC = () => {
 
       setChanges(allChanges);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Ошибка загрузки ожидающих изменений");
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Ошибка загрузки ожидающих изменений"
+      );
     } finally {
       setIsLoading(false);
     }
@@ -129,7 +144,7 @@ const PendingChangesPage: React.FC = () => {
 
   useEffect(() => {
     let isMounted = true;
-    
+
     loadChanges().then(() => {
       if (!isMounted) return;
     });
@@ -204,13 +219,17 @@ const PendingChangesPage: React.FC = () => {
   // Обработчики действий
   const handleApprove = async (change: FramedataChange) => {
     try {
-      if (change.changeType === FramedataChangeChangeTypeEnum.NewCharacter || 
-          change.changeType === FramedataChangeChangeTypeEnum.CharacterUpdate) {
+      if (
+        change.changeType === FramedataChangeChangeTypeEnum.NewCharacter ||
+        change.changeType === FramedataChangeChangeTypeEnum.CharacterUpdate
+      ) {
         await api.framedataChangesApproveCharacterCreate(change.characterName);
-      } else if (change.changeType === FramedataChangeChangeTypeEnum.NewMove || 
-                 change.changeType === FramedataChangeChangeTypeEnum.MoveUpdate) {
+      } else if (
+        change.changeType === FramedataChangeChangeTypeEnum.NewMove ||
+        change.changeType === FramedataChangeChangeTypeEnum.MoveUpdate
+      ) {
         // Извлекаем command из ID для moves
-        const command = change.id.replace(`move-${change.characterName}-`, '');
+        const command = change.id.replace(`move-${change.characterName}-`, "");
         await api.framedataChangesApproveMoveCreate(
           change.characterName,
           command
@@ -220,19 +239,25 @@ const PendingChangesPage: React.FC = () => {
       loadChanges();
     } catch (err) {
       console.error("Ошибка при принятии изменения:", err);
-      setError(err instanceof Error ? err.message : "Не удалось принять изменение");
+      setError(
+        err instanceof Error ? err.message : "Не удалось принять изменение"
+      );
     }
   };
 
   const handleReject = async (change: FramedataChange) => {
     try {
-      if (change.changeType === FramedataChangeChangeTypeEnum.NewCharacter || 
-          change.changeType === FramedataChangeChangeTypeEnum.CharacterUpdate) {
+      if (
+        change.changeType === FramedataChangeChangeTypeEnum.NewCharacter ||
+        change.changeType === FramedataChangeChangeTypeEnum.CharacterUpdate
+      ) {
         await api.framedataChangesRejectCharacterCreate(change.characterName);
-      } else if (change.changeType === FramedataChangeChangeTypeEnum.NewMove || 
-                 change.changeType === FramedataChangeChangeTypeEnum.MoveUpdate) {
+      } else if (
+        change.changeType === FramedataChangeChangeTypeEnum.NewMove ||
+        change.changeType === FramedataChangeChangeTypeEnum.MoveUpdate
+      ) {
         // Извлекаем command из ID для moves
-        const command = change.id.replace(`move-${change.characterName}-`, '');
+        const command = change.id.replace(`move-${change.characterName}-`, "");
         await api.framedataChangesRejectMoveCreate(
           change.characterName,
           command
@@ -242,7 +267,9 @@ const PendingChangesPage: React.FC = () => {
       loadChanges();
     } catch (err) {
       console.error("Ошибка при отклонении изменения:", err);
-      setError(err instanceof Error ? err.message : "Не удалось отклонить изменение");
+      setError(
+        err instanceof Error ? err.message : "Не удалось отклонить изменение"
+      );
     }
   };
 
@@ -492,11 +519,19 @@ const PendingChangesPage: React.FC = () => {
                           changeTypeVariantMap[change.changeType] || "secondary"
                         }
                       >
-                        {change.changeType === FramedataChangeChangeTypeEnum.NewCharacter ? "Новый персонаж" :
-                         change.changeType === FramedataChangeChangeTypeEnum.CharacterUpdate ? "Обновление персонажа" :
-                         change.changeType === FramedataChangeChangeTypeEnum.NewMove ? "Новый удар" :
-                         change.changeType === FramedataChangeChangeTypeEnum.MoveUpdate ? "Обновление удара" :
-                         change.changeType}
+                        {change.changeType ===
+                        FramedataChangeChangeTypeEnum.NewCharacter
+                          ? "Новый персонаж"
+                          : change.changeType ===
+                              FramedataChangeChangeTypeEnum.CharacterUpdate
+                            ? "Обновление персонажа"
+                            : change.changeType ===
+                                FramedataChangeChangeTypeEnum.NewMove
+                              ? "Новый удар"
+                              : change.changeType ===
+                                  FramedataChangeChangeTypeEnum.MoveUpdate
+                                ? "Обновление удара"
+                                : change.changeType}
                       </Badge>
                     </div>
                     {change.description && (

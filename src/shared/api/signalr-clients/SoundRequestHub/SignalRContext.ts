@@ -6,7 +6,7 @@ const policy: IRetryPolicy = { nextRetryDelayInMilliseconds: () => 5000 };
 
 const baseUrl = import.meta.env.VITE_BASE_PATH;
 
-export const TunaHubSignalRContext = new HubConnectionBuilder()
-  .withUrl(baseUrl + "/hubs/tuna")
+export const SoundRequestHubSignalRConnectionBuilder = new HubConnectionBuilder()
+  .withUrl(baseUrl + "/hubs/soundrequest")
   .withAutomaticReconnect(policy)
   .configureLogging(logger);

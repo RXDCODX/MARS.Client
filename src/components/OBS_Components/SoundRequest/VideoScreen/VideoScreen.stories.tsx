@@ -10,7 +10,8 @@ const meta: Meta<typeof VideoScreen> = {
     layout: "fullscreen",
     docs: {
       description: {
-        component: "Компонент для отображения видео экрана в системе звуковых запросов.",
+        component:
+          "Компонент для отображения видео экрана в системе звуковых запросов.",
       },
     },
   },

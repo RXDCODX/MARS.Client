@@ -1,1 +1,1 @@
-export * from "./http/data-contracts";
+export * from "./types/types";

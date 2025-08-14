@@ -1,21 +1,30 @@
 // Автоматически сгенерированный индексный файл
 // Импорты утилит конфигурации
 export * from "./api-config";
-export * from "./data-contracts";
-export * from "./signalr/types/signalr-types"; // Волосатые ножки
 
-// Импорты клиентов контроллеров
-export { Commands } from "./http/Commands";
-export { Framedata } from "./http/Framedata";
-export { FramedataChanges } from "./http/FramedataChanges";
-export { ServiceManager } from "./http/ServiceManager";
+// Импорты типов (основной источник)
+export * from "./types/types";
+
+// Импорты SignalR типов
+export * from "./signalr-types/signalr-types";
+
+// Импорты HTTP клиентов
+export { Commands } from "./http-clients/Commands";
+export { Framedata } from "./http-clients/Framedata";
+export { FramedataChanges } from "./http-clients/FramedataChanges";
+export { MediaInfoApi } from "./http-clients/MediaInfoApi";
+export { ServiceManager } from "./http-clients/ServiceManager";
 
 // Импорты SignalR клиентов
-export { ScoreboardHubSignalRContext } from "./signalr/ScoreboardHub/SignalRContext";
-export { SoundRequestHubSignalRContext } from "./signalr/SoundRequestHub/SignalRContext";
-export { TelegramusHubSignalRContext } from "./signalr/TelegramusHub/SignalRContext";
-export { TunaHubSignalRContext } from "./signalr/TunaHub/SignalRContext";
-export { default as ScoreboardHubSignalRHubWrapper } from "./signalr/ScoreboardHub/SignalRHubWrapper";
-export { default as SoundRequestHubSignalRHubWrapper } from "./signalr/SoundRequestHub/SignalRHubWrapper";
-export { default as TelegramusHubSignalRHubWrapper } from "./signalr/TelegramusHub/SignalRHubWrapper";
-export { default as TunaHubSignalRHubWrapper } from "./signalr/TunaHub/SignalRHubWrapper";
+export { ScoreboardHubSignalRConnectionBuilder } from "./signalr-clients/ScoreboardHub/SignalRContext";
+export { SoundRequestHubSignalRConnectionBuilder } from "./signalr-clients/SoundRequestHub/SignalRContext";
+export { TelegramusHubSignalRConnectionBuilder } from "./signalr-clients/TelegramusHub/SignalRContext";
+export { TunaHubSignalRConnectionBuilder } from "./signalr-clients/TunaHub/SignalRContext";
+export { ScoreboardHubSignalRContext } from "./signalr-clients/ScoreboardHub/SignalRHubWrapper";
+export { SoundRequestHubSignalRContext } from "./signalr-clients/SoundRequestHub/SignalRHubWrapper";
+export { TelegramusHubSignalRContext } from "./signalr-clients/TelegramusHub/SignalRHubWrapper";
+export { TunaHubSignalRContext } from "./signalr-clients/TunaHub/SignalRHubWrapper";
+export { ScoreboardHubSignalRHubWrapper } from "./signalr-clients/ScoreboardHub/SignalRHubWrapper";
+export { SoundRequestHubSignalRHubWrapper } from "./signalr-clients/SoundRequestHub/SignalRHubWrapper";
+export { TelegramusHubSignalRHubWrapper } from "./signalr-clients/TelegramusHub/SignalRHubWrapper";
+export { TunaHubSignalRHubWrapper } from "./signalr-clients/TunaHub/SignalRHubWrapper";

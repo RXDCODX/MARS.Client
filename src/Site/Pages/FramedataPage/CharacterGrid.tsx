@@ -2,8 +2,12 @@ import { useEffect, useMemo, useState } from "react";
 import { Alert, Badge, Button, Card, Col, Row, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
-import { defaultApiConfig, FramedataChanges } from "@/shared/api";
-import { TekkenCharacter } from "@/shared/api/data-contracts";
+import type {
+  MovePendingDto,
+  TekkenCharacter,
+  TekkenCharacterPendingDto,
+} from "@/shared/api";
+import { FramedataChanges } from "@/shared/api";
 
 import styles from "./FramedataPage.module.scss";
 import { getCharacterAvatar, handleImageError } from "./imageUtils";
@@ -47,10 +51,7 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
   const [isBulkActionInProgress, setIsBulkActionInProgress] =
     useState<boolean>(false);
 
-  const api = useMemo(
-    () => new FramedataChanges({ baseURL: defaultApiConfig.baseURL }),
-    []
-  );
+  const api = useMemo(() => new FramedataChanges(), []);
 
   const loadPending = useMemo(
     () => () => {
@@ -68,7 +69,7 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
 
           // Создаем FramedataChange объекты из полученных данных
           const changes: FramedataChange[] = [
-            ...characters.map(char => ({
+            ...characters.map((char: TekkenCharacterPendingDto) => ({
               id: `char-${char.name}`,
               characterName: char.name,
               changeType: char.isNew
@@ -80,7 +81,7 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
                 : `Обновление персонажа: ${char.name}`,
               detectedAt: char.lastUpdateTime,
             })),
-            ...moves.map(move => ({
+            ...moves.map((move: MovePendingDto) => ({
               id: `move-${move.characterName}-${move.command}`,
               characterName: move.characterName,
               changeType: move.isNew

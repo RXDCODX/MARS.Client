@@ -31,6 +31,7 @@ const Header: React.FC = () => {
     { label: "Документация", path: "/docs" },
     { label: "Команды", path: "/commands" },
     { label: "Контакты", path: "/contacts" },
+    { label: "Управление алертами", path: "/media-info" },
   ];
 
   const framedataPages: NavigationItem[] = [

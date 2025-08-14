@@ -62,69 +62,30 @@ function getSignalRHubsFromSwagger(swaggerSource) {
 let CONTROLLERS = [];
 let SIGNALR_HUBS = [];
 
-// Базовые директории вывода
+// Новая структура папок для разделения типов и клиентов
 const OUTPUT_DIR_ROOT = resolve(process.cwd(), "./src/shared/api/");
-const OUTPUT_DIR_HTTP = resolve(OUTPUT_DIR_ROOT, "./http/");
-const OUTPUT_DIR_SIGNALR_TYPES = resolve(OUTPUT_DIR_ROOT, "./signalr/");
-const OUTPUT_DIR_SIGNALR_WRAPPERS = resolve(OUTPUT_DIR_ROOT, "./SignalR/");
+const OUTPUT_DIR_TYPES = resolve(OUTPUT_DIR_ROOT, "./types/"); // Общие типы
+const OUTPUT_DIR_DATA_CONTRACTS = resolve(OUTPUT_DIR_ROOT, "./data-contracts/"); // Data contracts
+const OUTPUT_DIR_HTTP_CLIENTS = resolve(OUTPUT_DIR_ROOT, "./http-clients/"); // HTTP клиенты
+const OUTPUT_DIR_SIGNALR_TYPES = resolve(OUTPUT_DIR_ROOT, "./signalr-types/"); // SignalR типы
+const OUTPUT_DIR_SIGNALR_CLIENTS = resolve(
+  OUTPUT_DIR_ROOT,
+  "./signalr-clients/"
+); // SignalR клиенты
 
 // Создаем директории если их нет
 [
   OUTPUT_DIR_ROOT,
-  OUTPUT_DIR_HTTP,
+  OUTPUT_DIR_TYPES,
+  OUTPUT_DIR_DATA_CONTRACTS,
+  OUTPUT_DIR_HTTP_CLIENTS,
   OUTPUT_DIR_SIGNALR_TYPES,
-  OUTPUT_DIR_SIGNALR_WRAPPERS,
+  OUTPUT_DIR_SIGNALR_CLIENTS,
 ].forEach(dir => {
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
   }
 });
-
-// Функция для создания файла с общими enum'ами
-function createCommonEnumsFile(enumGroups) {
-  const commonEnumsContent = `/**
- * Общие enum'ы для переиспользования в API
- * Этот файл автоматически создан на основе найденных дубликатов
- */
-
-${Array.from(enumGroups.entries())
-  .filter(([, group]) => group.length > 1)
-  .map(([, group]) => {
-    const baseEnum = group[0];
-    // Извлекаем значения enum'а
-    const valuesMatch = baseEnum.value.match(/=\s*([\s\S]*?);/);
-    if (valuesMatch) {
-      const values = valuesMatch[1].trim();
-      return `/**
- * PlatformEnum - автоматически созданный enum для переиспользования
- */
-export type PlatformEnum = ${values};`;
-    }
-    return "";
-  })
-  .filter(content => content.length > 0)
-  .join("\n\n")}
-
-/**
- * Legacy type aliases для обратной совместимости
- * Эти типы ссылаются на общие enum'ы выше
- */
-${Array.from(enumGroups.entries())
-  .filter(([, group]) => group.length > 1)
-  .map(([, group]) =>
-    group
-      .slice(1)
-      .map(duplicateEnum => `export type ${duplicateEnum.name} = PlatformEnum;`)
-      .join("\n")
-  )
-  .filter(content => content.length > 0)
-  .join("\n")}
-`;
-
-  const commonEnumsPath = resolve(OUTPUT_DIR_ROOT, "common-enums.ts");
-  fs.writeFileSync(commonEnumsPath, commonEnumsContent);
-  console.log("✅ Файл с общими enum'ами создан в common-enums.ts");
-}
 
 // Функция для дедупликации enum'ов в сгенерированном файле
 function deduplicateEnums(filePath) {
@@ -178,71 +139,15 @@ function deduplicateEnums(filePath) {
   return enumGroups;
 }
 
-// Функция для генерации HTTP клиентов и типов в отдельную папку
-async function generateHttpTypes() {
-  // Читаем swagger_api.json и фильтруем до /api/*
+// Функция для генерации только типов (без клиентов)
+async function generateTypesOnly() {
+  console.log("🔧 Генерируем только типы...");
+
   const swaggerApiJsonPath = resolve(process.cwd(), "./api/swagger_api.json");
 
   await generateApi({
     input: swaggerApiJsonPath,
-    output: OUTPUT_DIR_HTTP,
-    name: "Api.ts",
-    cleanOutput: true,
-    httpClientType: "axios",
-    prettier: {
-      trailingComma: "all",
-      tabWidth: 4,
-      printWidth: 160,
-    },
-    generateClient: true,
-    modular: true,
-    moduleNameFirstTag: true,
-    sortTypes: true,
-    enumNamesAsValues: false,
-    generateResponses: true,
-    extractEnums: true,
-    codeGenConstructs: constructs => ({
-      ...constructs,
-      NullValue: () => "undefined",
-      TypeField: ({ readonly, key, value }) => {
-        const hadNull = typeof value === "string" && /\|\s*null\b/.test(value);
-        const hadUndefined =
-          typeof value === "string" && /\|\s*undefined\b/.test(value);
-        let cleaned = String(value)
-          .replace(/\s*\|\s*null\b/g, "")
-          .replace(/\s*\|\s*undefined\b/g, "")
-          .trim();
-        const optionalMark = hadNull || hadUndefined ? "?" : "";
-        return `${readonly ? "readonly " : ""}${key}${optionalMark}: ${cleaned}`;
-      },
-    }),
-  });
-
-  // Применяем дедупликацию enum'ов
-  const dataContractsPath = resolve(OUTPUT_DIR_HTTP, "data-contracts.ts");
-  let enumGroups = null;
-  if (fs.existsSync(dataContractsPath)) {
-    enumGroups = deduplicateEnums(dataContractsPath);
-  }
-
-  // Создаем файл с общими enum'ами если есть дубликаты
-  if (enumGroups) {
-    createCommonEnumsFile(enumGroups);
-  }
-
-  // Шим-файл для обратной совместимости импорта типов из корня
-  const rootTypesShim = resolve(OUTPUT_DIR_ROOT, "data-contracts.ts");
-  fs.writeFileSync(rootTypesShim, 'export * from "./http/data-contracts";\n');
-
-  console.log("✅ HTTP клиенты и типы сгенерированы в src/shared/api/http/");
-}
-
-async function generateSignalRTypes() {
-  // Читаем swagger_hubs.json и генерируем только типы
-  const swaggerHubsJsonPath = resolve(process.cwd(), "./api/swagger_hubs.json");
-  await generateApi({
-    input: swaggerHubsJsonPath,
-    output: OUTPUT_DIR_SIGNALR_TYPES,
+    output: OUTPUT_DIR_TYPES,
     name: "types.ts",
     cleanOutput: true,
     httpClientType: "axios",
@@ -251,8 +156,151 @@ async function generateSignalRTypes() {
       tabWidth: 4,
       printWidth: 160,
     },
-    generateClient: false,
-    modular: true,
+    generateClient: false, // Только типы
+    modular: false, // Один файл с типами
+    sortTypes: true,
+    enumNamesAsValues: false,
+    generateResponses: false,
+    extractEnums: true,
+    codeGenConstructs: constructs => ({
+      ...constructs,
+      NullValue: () => "undefined",
+      TypeField: ({ readonly, key, value }) => {
+        const hadNull = typeof value === "string" && /\|\s*null\b/.test(value);
+        const hadUndefined =
+          typeof value === "string" && /\|\s*undefined\b/.test(value);
+        let cleaned = String(value)
+          .replace(/\s*\|\s*null\b/g, "")
+          .replace(/\s*\|\s*undefined\b/g, "")
+          .trim();
+        const optionalMark = hadNull || hadUndefined ? "?" : "";
+        return `${readonly ? "readonly " : ""}${key}${optionalMark}: ${cleaned}`;
+      },
+    }),
+  });
+
+  // Переименовываем файл если он создался с неправильным именем
+  const apiFilePath = resolve(OUTPUT_DIR_TYPES, "Api.ts");
+  const typesFilePath = resolve(OUTPUT_DIR_TYPES, "types.ts");
+  if (fs.existsSync(apiFilePath)) {
+    fs.renameSync(apiFilePath, typesFilePath);
+  }
+
+  console.log("✅ Типы сгенерированы в types/types.ts");
+}
+
+// Функция для генерации data-contracts отдельно
+async function generateDataContracts() {
+  console.log("📋 Генерируем data-contracts...");
+
+  // Вместо генерации новых data-contracts, просто копируем типы из types
+  // и переименовываем файл для обратной совместимости
+  const typesFilePath = resolve(OUTPUT_DIR_TYPES, "types.ts");
+  const dataContractsFilePath = resolve(
+    OUTPUT_DIR_DATA_CONTRACTS,
+    "data-contracts.ts"
+  );
+
+  if (fs.existsSync(typesFilePath)) {
+    fs.copyFileSync(typesFilePath, dataContractsFilePath);
+    console.log(
+      "✅ Data-contracts скопированы из types/ для обратной совместимости"
+    );
+  } else {
+    console.log(
+      "⚠️ Файл types/types.ts не найден, пропускаем генерацию data-contracts"
+    );
+  }
+}
+
+// Функция для генерации HTTP клиентов (без типов)
+async function generateHttpClients() {
+  console.log("🌐 Генерируем HTTP клиенты...");
+
+  const swaggerApiJsonPath = resolve(process.cwd(), "./api/swagger_api.json");
+
+  await generateApi({
+    input: swaggerApiJsonPath,
+    output: OUTPUT_DIR_HTTP_CLIENTS,
+    name: "Api.ts",
+    cleanOutput: true,
+    httpClientType: "axios",
+    prettier: {
+      trailingComma: "all",
+      tabWidth: 4,
+      printWidth: 160,
+    },
+    generateClient: true, // Только клиенты
+    modular: true, // Модульная структура
+    moduleNameFirstTag: true,
+    sortTypes: false, // Не нужно для клиентов
+    enumNamesAsValues: false,
+    generateResponses: true,
+    extractEnums: false, // Типы уже есть отдельно
+    codeGenConstructs: constructs => ({
+      ...constructs,
+      NullValue: () => "undefined",
+      TypeField: ({ readonly, key, value }) => {
+        const hadNull = typeof value === "string" && /\|\s*null\b/.test(value);
+        const hadUndefined =
+          typeof value === "string" && /\|\s*undefined\b/.test(value);
+        let cleaned = String(value)
+          .replace(/\s*\|\s*null\b/g, "")
+          .replace(/\s*\|\s*undefined\b/g, "")
+          .trim();
+        const optionalMark = hadNull || hadUndefined ? "?" : "";
+        return `${readonly ? "readonly " : ""}${key}${optionalMark}: ${cleaned}`;
+      },
+    }),
+  });
+
+  // // Исправляем импорты в каждом клиенте
+  // const clientFiles = fs
+  //   .readdirSync(OUTPUT_DIR_HTTP_CLIENTS)
+  //   .filter(file => file.endsWith(".ts"));
+  // clientFiles.forEach(file => {
+  //   const filePath = resolve(OUTPUT_DIR_HTTP_CLIENTS, file);
+  //   let content = fs.readFileSync(filePath, "utf-8");
+
+  //   // Заменяем все неправильные импорты на правильные
+  //   content = content.replace(
+  //     /import \{ ([^}]+) \} from "\.\/data-contracts";/g,
+  //     'import type { $1 } from "../../types/types";'
+  //   );
+
+  //   content = content.replace(
+  //     /import \{ ([^}]+) \} from "\.\/http-client";/g,
+  //     'import type { $1 } from "../../types/types";'
+  //   );
+
+  //   // Убираем лишние пустые строки
+  //   content = content.replace(/\n\s*\n\s*\n/g, "\n\n");
+
+  //   fs.writeFileSync(filePath, content);
+  // });
+
+  console.log("✅ HTTP клиенты сгенерированы в http-clients/");
+}
+
+// Функция для генерации SignalR типов отдельно
+async function generateSignalRTypes() {
+  console.log("📡 Генерируем SignalR типы...");
+
+  const swaggerHubsJsonPath = resolve(process.cwd(), "./api/swagger_hubs.json");
+
+  await generateApi({
+    input: swaggerHubsJsonPath,
+    output: OUTPUT_DIR_SIGNALR_TYPES,
+    name: "signalr-types.ts",
+    cleanOutput: true,
+    httpClientType: "axios",
+    prettier: {
+      trailingComma: "all",
+      tabWidth: 4,
+      printWidth: 160,
+    },
+    generateClient: false, // Только типы
+    modular: false, // Один файл
     sortTypes: true,
     extractEnums: true,
     codeGenConstructs: constructs => ({
@@ -272,28 +320,72 @@ async function generateSignalRTypes() {
     }),
   });
 
-  // Применяем дедупликацию enum'ов
-  const signalrDataContractsPath = resolve(
+  // Переименовываем файл если он создался с неправильным именем
+  const apiFilePath = resolve(OUTPUT_DIR_SIGNALR_TYPES, "Api.ts");
+  const signalrTypesFilePath = resolve(
     OUTPUT_DIR_SIGNALR_TYPES,
-    "data-contracts.ts"
+    "signalr-types.ts"
   );
-  if (fs.existsSync(signalrDataContractsPath)) {
-    deduplicateEnums(signalrDataContractsPath);
+  if (fs.existsSync(apiFilePath)) {
+    fs.renameSync(apiFilePath, signalrTypesFilePath);
   }
 
-  // Создаем shim для обратной совместимости старого импорта signalr-types
-  const legacySignalRTypesDir = resolve(OUTPUT_DIR_ROOT, "./SignalR/types/");
-  if (!fs.existsSync(legacySignalRTypesDir)) {
-    fs.mkdirSync(legacySignalRTypesDir, { recursive: true });
+  // Теперь фильтруем файл, оставляя только уникальные типы
+  if (fs.existsSync(signalrTypesFilePath)) {
+    let content = fs.readFileSync(signalrTypesFilePath, "utf-8");
+
+    // Список типов, которые уже есть в основных типах API
+    const duplicateTypes = [
+      "MediaFileInfo",
+      "MediaFileInfoTypeEnum",
+      "MediaMetaInfo",
+      "MediaMetaInfoPriorityEnum",
+      "MediaPositionInfo",
+      "MediaStylesInfo",
+      "MediaTextInfo",
+      "Move",
+      "MovePending",
+      "MovePendingDto",
+      "ParseRequest",
+      "ParseRequestSourceEnum",
+      "ParseResult",
+      "ServiceInfo",
+      "ServiceInfoStatusEnum",
+      "ServiceLog",
+      "TekkenCharacter",
+      "TekkenCharacterPendingDto",
+    ];
+
+    // Удаляем дублирующиеся типы
+    duplicateTypes.forEach(typeName => {
+      // Удаляем interface
+      content = content.replace(
+        new RegExp(`export interface ${typeName}[\\s\\S]*?}\\s*`, "g"),
+        ""
+      );
+      // Удаляем enum
+      content = content.replace(
+        new RegExp(`export enum ${typeName}[\\s\\S]*?}\\s*`, "g"),
+        ""
+      );
+      // Удаляем type
+      content = content.replace(
+        new RegExp(`export type ${typeName}[\\s\\S]*?;\\s*`, "g"),
+        ""
+      );
+    });
+
+    // Очищаем пустые строки
+    content = content.replace(/\n\s*\n\s*\n/g, "\n\n");
+
+    fs.writeFileSync(signalrTypesFilePath, content);
+
+    // Применяем дедупликацию enum'ов
+    deduplicateEnums(signalrTypesFilePath);
   }
-  const legacyShimPath = resolve(legacySignalRTypesDir, "signalr-types.ts");
-  fs.writeFileSync(
-    legacyShimPath,
-    'export * from "../../signalr/data-contracts";\n'
-  );
 
   console.log(
-    "✅ SignalR типы сгенерированы в signalr/types.ts (и совместимость сохранена через SignalR/types/signalr-types.ts)"
+    "✅ SignalR типы сгенерированы в signalr-types/signalr-types.ts (дубликаты удалены)"
   );
 }
 
@@ -360,7 +452,7 @@ async function generateSignalRClients() {
 
   for (const hub of SIGNALR_HUBS) {
     // Создаем папку для каждого хаба
-    const hubDir = resolve(OUTPUT_DIR_SIGNALR_WRAPPERS, `${hub.name}`);
+    const hubDir = resolve(OUTPUT_DIR_SIGNALR_CLIENTS, `${hub.name}`);
     if (!fs.existsSync(hubDir)) {
       fs.mkdirSync(hubDir, { recursive: true });
     }
@@ -377,7 +469,7 @@ const policy: IRetryPolicy = { nextRetryDelayInMilliseconds: () => 5000 };
 
 const baseUrl = import.meta.env.VITE_BASE_PATH;
 
-export const ${hub.name}SignalRContext = new HubConnectionBuilder()
+export const ${hub.name}SignalRConnectionBuilder = new HubConnectionBuilder()
   .withUrl(baseUrl + "${hubUrl}")
   .withAutomaticReconnect(policy)
   .configureLogging(logger);
@@ -393,17 +485,17 @@ export const ${hub.name}SignalRContext = new HubConnectionBuilder()
 
 import { logger } from "@/shared/logger";
 
-const SignalRContext = signalR.createSignalRContext({});
+export const ${hub.name}SignalRContext = signalR.createSignalRContext({});
 
 interface ${hub.name}Props {
   children: React.ReactNode;
 }
 
-export default function ${hub.name}SignalRHubWrapper({
+export function ${hub.name}SignalRHubWrapper({
   children,
 }: ${hub.name}Props) {
   return (
-    <SignalRContext.Provider
+    <${hub.name}SignalRContext.Provider
       automaticReconnect={true}
       onError={error => new Promise(resolve => resolve(console.log(error)))}
       onClosed={event => console.log(event)}
@@ -414,7 +506,7 @@ export default function ${hub.name}SignalRHubWrapper({
       logMessageContent
     >
       {children}
-    </SignalRContext.Provider>
+    </${hub.name}SignalRContext.Provider>
   );
 }
 `;
@@ -425,7 +517,7 @@ export default function ${hub.name}SignalRHubWrapper({
     );
 
     console.log(
-      `✅ SignalR клиент для ${hub.name} создан в SignalR/${hub.name}/`
+      `✅ SignalR клиент для ${hub.name} создан в signalr-clients/${hub.name}/`
     );
   }
 }
@@ -435,25 +527,50 @@ function createIndexFile() {
   const indexContent = `// Автоматически сгенерированный индексный файл
 // Импорты утилит конфигурации
 export * from "./api-config";
-export * from "./data-contracts";
-export * from "./signalr/types/signalr-types"; // Волосатые ножки
 
-// Импорты клиентов контроллеров
-${CONTROLLERS.map(controller => `export { ${controller} } from "./http/${controller}";`).join("\n")}
+// Импорты типов (основной источник)
+export * from "./types/types";
+
+// Импорты SignalR типов
+export * from "./signalr-types/signalr-types";
+
+// Импорты HTTP клиентов
+${CONTROLLERS.map(controller => `export { ${controller} } from "./http-clients/${controller}";`).join("\n")}
 
 // Импорты SignalR клиентов
-${SIGNALR_HUBS.map(hub => `export { ${hub.name}SignalRContext } from "./signalr/${hub.name}/SignalRContext";`).join("\n")}
-${SIGNALR_HUBS.map(hub => `export { default as ${hub.name}SignalRHubWrapper } from "./signalr/${hub.name}/SignalRHubWrapper";`).join("\n")}
+${SIGNALR_HUBS.map(hub => `export { ${hub.name}SignalRConnectionBuilder } from "./signalr-clients/${hub.name}/SignalRContext";`).join("\n")}
+${SIGNALR_HUBS.map(hub => `export { ${hub.name}SignalRContext } from "./signalr-clients/${hub.name}/SignalRHubWrapper";`).join("\n")}
+${SIGNALR_HUBS.map(hub => `export { ${hub.name}SignalRHubWrapper } from "./signalr-clients/${hub.name}/SignalRHubWrapper";`).join("\n")}
 `;
 
   fs.writeFileSync(resolve(OUTPUT_DIR_ROOT, "index.ts"), indexContent);
   console.log("✅ Индексный файл создан");
 }
 
+// Функция для создания файла с типами для обратной совместимости
+function createLegacyCompatibilityFiles() {
+  // Создаем shim для обратной совместимости старого импорта data-contracts
+  const legacyDataContractsPath = resolve(OUTPUT_DIR_ROOT, "data-contracts.ts");
+  fs.writeFileSync(legacyDataContractsPath, 'export * from "./types/types";\n');
+
+  // Создаем shim для обратной совместимости старого импорта signalr-types
+  const legacySignalRTypesDir = resolve(OUTPUT_DIR_ROOT, "./SignalR/types/");
+  if (!fs.existsSync(legacySignalRTypesDir)) {
+    fs.mkdirSync(legacySignalRTypesDir, { recursive: true });
+  }
+  const legacyShimPath = resolve(legacySignalRTypesDir, "signalr-types.ts");
+  fs.writeFileSync(
+    legacyShimPath,
+    'export * from "../../signalr-types/signalr-types";\n'
+  );
+
+  console.log("✅ Файлы обратной совместимости созданы");
+}
+
 // Основная функция
 async function main() {
   try {
-    console.log("🚀 Начинаем генерацию API...");
+    console.log("🚀 Начинаем генерацию API с разделением типов и клиентов...");
 
     // Читаем swagger файлы для контроллеров и хабов
     const swaggerApiJsonPath = resolve(process.cwd(), "./api/swagger_api.json");
@@ -477,20 +594,31 @@ async function main() {
       `📋 Найдено SignalR хабов: ${SIGNALR_HUBS.map(hub => `${hub.name} (${hub.path})`).join(", ")}`
     );
 
-    // Генерируем типы
-    await generateHttpTypes();
+    // Генерируем типы отдельно
+    await generateTypesOnly();
+    await generateDataContracts();
     await generateSignalRTypes();
 
     // Создаем утилиты конфигурации API
     createApiConfig();
 
-    // Генерируем SignalR клиенты
+    // Генерируем клиенты отдельно (без типов)
+    await generateHttpClients();
     await generateSignalRClients();
+
+    // Создаем файлы обратной совместимости
+    createLegacyCompatibilityFiles();
 
     // Создаем индексный файл
     createIndexFile();
 
     console.log("🎉 Генерация API завершена успешно!");
+    console.log("📁 Структура папок:");
+    console.log("   - types/ - общие типы");
+    console.log("   - data-contracts/ - data contracts");
+    console.log("   - http-clients/ - HTTP клиенты");
+    console.log("   - signalr-types/ - SignalR типы");
+    console.log("   - signalr-clients/ - SignalR клиенты");
   } catch (error) {
     console.error("❌ Ошибка при генерации API:", error);
     process.exit(1);

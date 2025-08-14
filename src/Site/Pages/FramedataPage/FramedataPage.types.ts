@@ -17,7 +17,11 @@ export interface FramedataPageState {
 }
 
 // Новые типы для многоуровневой навигации
-export type PageView = "characters" | "character-details" | "moves" | "edit-character";
+export type PageView =
+  | "characters"
+  | "character-details"
+  | "moves"
+  | "edit-character";
 
 export interface NavigationState {
   currentView: PageView;
