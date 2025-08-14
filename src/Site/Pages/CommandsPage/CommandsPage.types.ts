@@ -21,6 +21,7 @@ export interface CommandsState {
   commandParameters: CommandParameterInfo[];
   isLoading: boolean;
   activeTab: "user" | "admin";
+  displayMode: "list" | "grid";
 }
 
 export type PlatformType = CommandInfoAvailablePlatformsEnum;

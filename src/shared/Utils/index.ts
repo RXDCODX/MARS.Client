@@ -20,6 +20,9 @@ export * from "./faceUtils";
 export { useSiteColors } from "./useSiteColors";
 export type * from "./siteColors.types";
 
+// Экспорт компонента ToastModal
+export * from "./ToastModal/ToastModal.all";
+
 export function replaceEmotes({
   text,
   parser,

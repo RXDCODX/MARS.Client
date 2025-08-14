@@ -6,10 +6,33 @@
 
 .commandCard {
   transition: all 0.2s ease-in-out;
+  height: 100%;
 
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+// Стили для сетки команд
+.commandGrid {
+  .commandCard {
+    height: 100%;
+    min-height: 120px;
+    
+    .card-body {
+      display: flex;
+      flex-direction: column;
+      
+      .commandDescription {
+        flex-grow: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
   }
 }
 
@@ -127,5 +150,28 @@
     background-color: var(--bs-danger);
     border-color: var(--bs-danger);
     color: white;
+  }
+}
+
+// Стили для переключателя режимов
+.displayModeToggle {
+  .btn-group {
+    .btn {
+      min-width: 80px;
+      
+      i {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+// Адаптивность для сетки
+@media (max-width: 768px) {
+  .commandGrid {
+    .row {
+      --bs-gutter-x: 0.5rem;
+      --bs-gutter-y: 0.5rem;
+    }
   }
 }
