@@ -119,7 +119,7 @@ const initialState: ScoreboardState = {
 // Создание store
 export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
   // Инициализируем соединение
-  const connection = get()._connection;
+  const connection = initialState._connection;
 
   const firstActiveFunction = (state: ScoreboardState) => {
     get().handleReceiveState(state);

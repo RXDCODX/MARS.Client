@@ -458,7 +458,7 @@ async function generateSignalRClients() {
     }
 
     // Используем путь к хабу напрямую из swagger.json
-    const hubUrl = hub.path;
+    const hubUrl = hub.path.startsWith("/") ? hub.path.slice(1) : hub.path;
 
     // Первый файл - SignalR контекст
     const signalRContextContent = `import { HubConnectionBuilder, IRetryPolicy } from "@microsoft/signalr";

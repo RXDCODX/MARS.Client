@@ -14,40 +14,38 @@ export default function CurrentTrack({ track, shouldAnimate = true }: Props) {
   return (
     <AnimationControl AnimationStart={shouldAnimate}>
       <div className={styles.wrapper}>
+        <div className={styles.cover}>
+          {track.cover && <img src={track.cover} alt="Album cover" />}
+        </div>
         <div className={styles.container}>
-          <div className={styles.main}>
-            <div className={styles.cover}>
-              {track.cover && <img src={track.cover} alt="Album cover" />}
-            </div>
-            <div className={styles.trackinfo}>
-              <div className={styles.info}>
-                <Textfit
-                  mode="multi"
-                  className={styles.textContainer}
-                  max={9999}
-                  min={20}
-                  style={{
-                    width: "100%",
-                    textAlign: "end",
-                    color: "var(--site-text-warning) !important",
-                  }}
-                >
-                  {track.artists.join(", ")}
-                </Textfit>
-                <Textfit
-                  mode="multi"
-                  className={styles.textContainer}
-                  max={9999}
-                  min={30}
-                  style={{
-                    width: "100%",
-                    textAlign: "end",
-                    color: "var(--site-text-light)",
-                  }}
-                >
-                  {track.title}
-                </Textfit>
-              </div>
+          <div className={styles.trackinfo}>
+            <div className={styles.info}>
+              <Textfit
+                mode="multi"
+                className={styles.textContainer}
+                max={9999}
+                min={20}
+                style={{
+                  width: "100%",
+                  textAlign: "end",
+                  color: "var(--site-text-warning) !important",
+                }}
+              >
+                {track.artists.join(", ")}
+              </Textfit>
+              <Textfit
+                mode="multi"
+                className={styles.textContainer}
+                max={9999}
+                min={30}
+                style={{
+                  width: "100%",
+                  textAlign: "end",
+                  color: "var(--site-text-light)",
+                }}
+              >
+                {track.title}
+              </Textfit>
             </div>
           </div>
         </div>
