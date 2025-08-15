@@ -44,6 +44,9 @@ export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
         <audio
           autoPlay
           src={bellSrc}
+          onCanPlay={e => {
+            e.currentTarget.volume = metaInfo.volume / 100;
+          }}
           onEnded={() => setIsBellPlayed(true)}
           onError={() => error()}
           onErrorCapture={() => error()}
@@ -54,6 +57,9 @@ export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
         <audio
           autoPlay
           src={voiceSrc}
+          onCanPlay={e => {
+            e.currentTarget.volume = metaInfo.volume / 100;
+          }}
           onEnded={() => {
             unmuteAll();
             callback();

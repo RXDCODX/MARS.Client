@@ -11,7 +11,7 @@ interface Props {
 }
 
 export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
-  const { fileInfo, id: Id } = mediaInfo.mediaInfo;
+  const { fileInfo, id: Id, metaInfo } = mediaInfo.mediaInfo;
 
   const audioRef = useRef<HTMLAudioElement>(null);
   const divRef = useRef<HTMLDivElement>(null);
@@ -56,6 +56,7 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
           }, 1000);
         }}
         onCanPlay={event => {
+          event.currentTarget.volume = metaInfo.volume / 100;
           event.currentTarget?.play();
         }}
         onCanPlayThrough={() => muteAll()}

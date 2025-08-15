@@ -72,12 +72,12 @@ export const MediaInfoListPage: React.FC = () => {
         </div>
       )}
 
-      <div className="alerts-list">
+      <div className="alerts-grid">
         {alerts.length === 0 ? (
           <p>Алерты не найдены</p>
         ) : (
           alerts.map(alert => (
-            <div key={alert.id} className="alert-item">
+            <div key={alert.id} className="alert-card">
               <div className="alert-header">
                 <h3>{alert.fileInfo.filePath || "Без названия"}</h3>
                 <div className="alert-actions">

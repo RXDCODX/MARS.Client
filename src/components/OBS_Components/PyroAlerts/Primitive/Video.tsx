@@ -250,6 +250,9 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
           width: baseStyles.width,
           height: baseStyles.height,
         }}
+        onCanPlay={e => {
+          e.currentTarget.volume = metaInfo.volume / 100;
+        }}
         onError={e => {
           console.log(
             "%c" + e,
