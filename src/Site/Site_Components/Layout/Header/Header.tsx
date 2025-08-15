@@ -104,11 +104,6 @@ const Header: React.FC = () => {
     setActiveSubDropdown(null);
   };
 
-  const handleReloadAndNavigate = (path: string) => {
-    navigate(path);
-    window.location.reload();
-  };
-
   return (
     <Navbar
       expand="lg"
@@ -346,13 +341,15 @@ const Header: React.FC = () => {
                 transition: "all 0.3s ease",
               }}
               title="Перейти на /ui"
+              href="/ui"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               <i className="bi bi-layers" />
             </Nav.Link>
 
             {/* Иконка для перехода на /static с релоудом */}
             <Nav.Link
-              onClick={() => handleReloadAndNavigate("/static")}
               className="ms-2"
               style={{
                 ...colors.utils.getTextStyle("primary"),
@@ -368,6 +365,11 @@ const Header: React.FC = () => {
                 cursor: "pointer",
               }}
               title="Перейти на /static с обновлением страницы"
+              href="/static"
+              as={Link}
+              to="/static"
+              rel="noopener noreferrer"
+              target="_blank"
             >
               <i className="bi bi-arrow-clockwise" />
             </Nav.Link>

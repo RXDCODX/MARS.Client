@@ -1,0 +1,6 @@
+---
+description: result of button activation and any api operation
+alwaysApply: false
+---
+
+use toast from ./src/shared/Utils/ToastModal as result of any operation
