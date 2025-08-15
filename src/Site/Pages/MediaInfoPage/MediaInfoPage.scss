@@ -744,8 +744,8 @@
 
     .search-input-wrapper {
       position: relative;
-      max-width: 500px;
-      margin: 0 auto;
+      width: 100%;
+      max-width: none;
 
       .search-input {
         width: 100%;
@@ -798,11 +798,13 @@
     margin-bottom: 20px;
     align-items: flex-end;
     justify-content: center;
+    width: 100%;
 
     .filter-group {
       display: flex;
       flex-direction: column;
       gap: 8px;
+      flex: 1;
       min-width: 150px;
 
       label {
@@ -812,6 +814,7 @@
       }
 
       .filter-select {
+        width: 100%;
         padding: 10px 14px;
         border: 2px solid var(--site-border-primary);
         border-radius: 6px;
@@ -841,6 +844,7 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      flex-shrink: 0;
 
       &:hover {
         background: var(--bs-secondary-dark);
@@ -1314,19 +1318,21 @@
 
       .search-section {
         .search-input-wrapper {
-          max-width: 100%;
+          width: 100%;
+          max-width: none;
         }
       }
 
       .filters-section {
         flex-direction: column;
         gap: 15px;
-        align-items: center;
+        align-items: stretch;
+        width: 100%;
 
         .filter-group {
           min-width: auto;
           width: 100%;
-          max-width: 300px;
+          flex: none;
 
           .filter-select {
             width: 100%;
@@ -1335,8 +1341,8 @@
 
         .clear-filters-btn {
           width: 100%;
-          max-width: 300px;
           justify-content: center;
+          flex-shrink: 0;
         }
       }
 

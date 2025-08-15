@@ -2,7 +2,6 @@ import "./MediaInfoPage.scss";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { Textfit } from "react-textfit";
 
 import { ApiMediaInfo, MediaInfoApi } from "@/shared/api";
 
@@ -236,7 +235,7 @@ export const MediaInfoListPage: React.FC = () => {
             <input
               type="text"
               className="search-input"
-              placeholder="�� Поиск по названию, пути к файлу, триггеру..."
+              placeholder="Поиск по названию, пути к файлу, триггеру..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
             />
