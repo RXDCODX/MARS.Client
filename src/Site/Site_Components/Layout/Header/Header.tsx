@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import ThemeToggle from "@/components/ThemeToggle";
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
@@ -24,7 +24,6 @@ const Header: React.FC = () => {
     null
   );
   const colors = useSiteColors();
-  const navigate = useNavigate();
 
   const sitePages: NavigationItem[] = [
     { label: "Главная", path: "/" },
