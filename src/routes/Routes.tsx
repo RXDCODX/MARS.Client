@@ -21,9 +21,11 @@ import AboutPage from "@/Site/Pages/AboutPage";
 import CommandsPage from "@/Site/Pages/CommandsPage/CommandsPage";
 import ContactsPage from "@/Site/Pages/ContactsPage";
 import DocsPage from "@/Site/Pages/DocsPage";
-import ChangeDetailsPage from "@/Site/Pages/FramedataPage/ChangeDetailsPage";
+import {
+  ChangeDetailsPage,
+  PendingChangesPage,
+} from "@/Site/Pages/FramedataPage";
 import FramedataPage from "@/Site/Pages/FramedataPage/FramedataPage";
-import PendingChangesPage from "@/Site/Pages/FramedataPage/PendingChangesPage";
 import { MediaInfoEditPage } from "@/Site/Pages/MediaInfoPage/MediaInfoEditPage";
 import { MediaInfoListPage } from "@/Site/Pages/MediaInfoPage/MediaInfoListPage";
 import WelcomePage from "@/Site/Pages/WelcomePage";

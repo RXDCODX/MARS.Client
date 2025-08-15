@@ -13,12 +13,12 @@ import {
 
 import { TekkenCharacter } from "@/shared/api/data-contracts";
 
-import styles from "./FramedataPage.module.scss";
+import styles from "../../FramedataPage.module.scss";
 import {
   getCharacterAvatar,
   getCharacterFullBody,
   handleImageError,
-} from "./imageUtils";
+} from "../Shared/imageUtils";
 
 interface MovesViewProps {
   character: TekkenCharacter;

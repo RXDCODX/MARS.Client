@@ -9,8 +9,8 @@ import type {
 } from "@/shared/api";
 import { FramedataChanges } from "@/shared/api";
 
-import styles from "./FramedataPage.module.scss";
-import { getCharacterAvatar, handleImageError } from "./imageUtils";
+import styles from "../../FramedataPage.module.scss";
+import { getCharacterAvatar, handleImageError } from "../Shared/imageUtils";
 
 interface CharacterGridProps {
   characters: TekkenCharacter[];

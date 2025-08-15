@@ -338,3 +338,61 @@
     word-break: keep-all;
   }
 }
+
+// Стили для иконок в правой части навбара
+.navbar-nav .nav-link {
+  &:hover {
+    color: var(--site-text-accent) !important;
+    transform: translateY(-1px);
+    text-shadow: var(--site-shadow-medium);
+    background-color: var(--site-bg-tertiary);
+  }
+}
+
+// Специальные стили для иконок навигации
+.navbar-nav .nav-link[title*="/ui"],
+.navbar-nav .nav-link[title*="/static"] {
+  &:hover {
+    background-color: var(--site-bg-tertiary);
+    transform: translateY(-1px) scale(1.05);
+    box-shadow: var(--site-shadow-medium);
+    border: 1px solid var(--site-border-accent);
+  }
+  
+  &:active {
+    transform: translateY(0) scale(0.98);
+    background-color: var(--site-bg-accent);
+    color: var(--site-text-light) !important;
+  }
+  
+  &:focus {
+    outline: 2px solid var(--site-border-accent);
+    outline-offset: 2px;
+  }
+}
+
+// Анимация для иконки обновления
+.navbar-nav .nav-link[title*="/static"] {
+  i {
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover i {
+    transform: rotate(180deg);
+  }
+  
+  &:active i {
+    transform: rotate(360deg);
+  }
+}
+
+// Анимация для иконки UI
+.navbar-nav .nav-link[title*="/ui"] {
+  i {
+    transition: transform 0.3s ease;
+  }
+  
+  &:hover i {
+    transform: scale(1.1);
+  }
+}

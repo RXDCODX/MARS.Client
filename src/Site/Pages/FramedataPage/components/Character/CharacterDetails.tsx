@@ -2,8 +2,8 @@ import { Badge, Button, Card, Col, Row } from "react-bootstrap";
 
 import { TekkenCharacter } from "@/shared/api/data-contracts";
 
-import styles from "./FramedataPage.module.scss";
-import { getCharacterAvatar, handleImageError } from "./imageUtils";
+import styles from "../../FramedataPage.module.scss";
+import { getCharacterAvatar, handleImageError } from "../Shared/imageUtils";
 
 interface CharacterDetailsProps {
   character: TekkenCharacter;

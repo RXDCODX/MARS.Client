@@ -15,7 +15,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Framedata, FramedataChanges } from "@/shared/api";
 import { Move } from "@/shared/api/data-contracts";
 
-import styles from "./FramedataPage.module.scss";
+import styles from "../../FramedataPage.module.scss";
 
 const api = new FramedataChanges();
 const framedataApi = new Framedata();

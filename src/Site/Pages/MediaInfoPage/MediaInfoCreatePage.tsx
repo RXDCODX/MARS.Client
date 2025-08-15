@@ -87,7 +87,7 @@ export const MediaInfoCreatePage: React.FC = () => {
       navigate("/media-info");
     } catch (err) {
       setError(
-        err instanceof Error ? err.message : "Ошибка при создании алерта"
+        err instanceof Error ? err.message : "Ошибка при создании файла"
       );
     } finally {
       setLoading(false);
@@ -101,7 +101,7 @@ export const MediaInfoCreatePage: React.FC = () => {
   return (
     <div className="media-info-page">
       <div className="page-header">
-        <h1>Создание нового алерта</h1>
+        <h1>Создание нового медиафайла</h1>
         <button className="btn btn-secondary" onClick={handleCancel}>
           Отмена
         </button>

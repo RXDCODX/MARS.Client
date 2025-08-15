@@ -13,12 +13,12 @@ import {
 import { Framedata } from "@/shared/api";
 import { TekkenCharacter } from "@/shared/api/data-contracts";
 
-import styles from "./FramedataPage.module.scss";
+import styles from "../../FramedataPage.module.scss";
 import {
   getCharacterAvatar,
   getCharacterFullBody,
   handleImageError,
-} from "./imageUtils";
+} from "../Shared/imageUtils";
 
 interface CharacterEditFormProps {
   character: TekkenCharacter;
@@ -172,7 +172,7 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
       };
       reader.onerror = () => {
         setError("Ошибка при загрузке изображения");
-        setIsFullBodyImageLoading(false);
+        setIsAvatarImageLoading(false);
       };
       reader.readAsDataURL(file);
     }

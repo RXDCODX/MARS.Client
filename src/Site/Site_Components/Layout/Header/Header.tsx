@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import ThemeToggle from "@/components/ThemeToggle";
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
@@ -24,6 +24,7 @@ const Header: React.FC = () => {
     null
   );
   const colors = useSiteColors();
+  const navigate = useNavigate();
 
   const sitePages: NavigationItem[] = [
     { label: "Главная", path: "/" },
@@ -101,6 +102,11 @@ const Header: React.FC = () => {
   const handleLinkClick = () => {
     setActiveDropdown(null);
     setActiveSubDropdown(null);
+  };
+
+  const handleReloadAndNavigate = (path: string) => {
+    navigate(path);
+    window.location.reload();
   };
 
   return (
@@ -321,6 +327,50 @@ const Header: React.FC = () => {
 
           <Nav className="ms-auto">
             <ThemeToggle />
+
+            {/* Иконка для перехода на /ui */}
+            <Nav.Link
+              as={Link}
+              to="/ui"
+              className="ms-3"
+              style={{
+                ...colors.utils.getTextStyle("primary"),
+                fontSize: "1.2rem",
+                padding: "0.5rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                minWidth: "40px",
+                height: "40px",
+                borderRadius: "8px",
+                transition: "all 0.3s ease",
+              }}
+              title="Перейти на /ui"
+            >
+              <i className="bi bi-layers" />
+            </Nav.Link>
+
+            {/* Иконка для перехода на /static с релоудом */}
+            <Nav.Link
+              onClick={() => handleReloadAndNavigate("/static")}
+              className="ms-2"
+              style={{
+                ...colors.utils.getTextStyle("primary"),
+                fontSize: "1.2rem",
+                padding: "0.5rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                minWidth: "40px",
+                height: "40px",
+                borderRadius: "8px",
+                transition: "all 0.3s ease",
+                cursor: "pointer",
+              }}
+              title="Перейти на /static с обновлением страницы"
+            >
+              <i className="bi bi-arrow-clockwise" />
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

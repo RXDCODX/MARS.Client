@@ -19,7 +19,7 @@ import {
   TekkenCharacterPendingDto,
 } from "@/shared/api";
 
-import styles from "./FramedataPage.module.scss";
+import styles from "../../FramedataPage.module.scss";
 
 const api = new FramedataChanges();
 

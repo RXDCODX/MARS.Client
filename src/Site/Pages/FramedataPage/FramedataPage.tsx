@@ -4,12 +4,14 @@ import { Alert, Button, Container } from "react-bootstrap";
 import { Framedata } from "@/shared/api";
 import { TekkenCharacter } from "@/shared/api/data-contracts";
 
-import CharacterDetails from "./CharacterDetails";
-import CharacterEditForm from "./CharacterEditForm";
-import CharacterGrid from "./CharacterGrid";
+import {
+  CharacterDetails,
+  CharacterEditForm,
+  CharacterGrid,
+  MovesView,
+} from "./components";
 import styles from "./FramedataPage.module.scss";
 import { NavigationState } from "./FramedataPage.types";
-import MovesView from "./MovesView";
 
 const FramedataPage: React.FC = () => {
   const api = useMemo(() => new Framedata(), []);

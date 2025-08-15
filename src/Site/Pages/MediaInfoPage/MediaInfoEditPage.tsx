@@ -485,7 +485,7 @@ export const MediaInfoEditPage: React.FC = () => {
       setError(null);
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Ошибка при загрузке алерта";
+        err instanceof Error ? err.message : "Ошибка при загрузке файла";
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -543,7 +543,7 @@ export const MediaInfoEditPage: React.FC = () => {
       navigate("/media-info");
     } catch (err) {
       const errorMessage =
-        err instanceof Error ? err.message : "Ошибка при обновлении алерта";
+        err instanceof Error ? err.message : "Ошибка при обновлении файла";
       setError(errorMessage);
       toast.error(`❌ ${errorMessage}`, {
         position: "top-right",
@@ -567,7 +567,7 @@ export const MediaInfoEditPage: React.FC = () => {
       <div className="media-info-page">
         <div className="loading-container">
           <div className="loading-spinner"></div>
-          <p>Загрузка данных алерта...</p>
+          <p>Загрузка данных файла...</p>
         </div>
       </div>
     );
@@ -577,8 +577,8 @@ export const MediaInfoEditPage: React.FC = () => {
     return (
       <div className="media-info-page">
         <div className="error-container">
-          <h2>Алерт не найден</h2>
-          <p>Запрашиваемый алерт не существует или был удален.</p>
+          <h2>Файл не найден</h2>
+          <p>Запрашиваемый файл не существует или был удален.</p>
           <button
             className="btn btn-primary"
             onClick={() => navigate("/media-info")}
@@ -594,7 +594,7 @@ export const MediaInfoEditPage: React.FC = () => {
     <div className="media-info-page">
       <div className="page-header">
         <div className="header-content">
-          <h1>✏️ Редактирование алерта</h1>
+          <h1>✏️ Редактирование медиафайла</h1>
           <p className="header-subtitle">{alert.metaInfo.displayName}</p>
         </div>
         <div className="header-actions">
@@ -639,7 +639,7 @@ export const MediaInfoEditPage: React.FC = () => {
                       const newName = e.target.value;
                       updateNestedObject("metaInfo.displayName", newName);
                     }}
-                    placeholder="Введите название алерта"
+                    placeholder="Введите название файла"
                     required
                   />
                 </div>
@@ -656,7 +656,7 @@ export const MediaInfoEditPage: React.FC = () => {
                       const newTrigger = e.target.value;
                       updateNestedObject("textInfo.triggerWord", newTrigger);
                     }}
-                    placeholder="Слово для активации алерта"
+                    placeholder="Слово для активации файла"
                   />
                 </div>
 
@@ -681,7 +681,7 @@ export const MediaInfoEditPage: React.FC = () => {
             <div className="form-card">
               <div className="card-header">
                 <div className="card-icon">📁</div>
-                <h3>Файл</h3>
+                <h3>Информация о файле</h3>
               </div>
               <div className="card-content">
                 <div className="form-group">
@@ -781,7 +781,7 @@ export const MediaInfoEditPage: React.FC = () => {
             <div className="form-card">
               <div className="card-header">
                 <div className="card-icon">⚙️</div>
-                <h3>Настройки</h3>
+                <h3>Настройки воспроизведения</h3>
               </div>
               <div className="card-content">
                 <div className="form-row">
@@ -909,7 +909,7 @@ export const MediaInfoEditPage: React.FC = () => {
             <div className="form-card">
               <div className="card-header">
                 <div className="card-icon">📍</div>
-                <h3>Позиция</h3>
+                <h3>Позиция и размеры</h3>
               </div>
               <div className="card-content">
                 <div className="form-row">
@@ -1090,7 +1090,7 @@ export const MediaInfoEditPage: React.FC = () => {
             <div className="form-card center-card">
               <div className="card-header">
                 <div className="card-icon">🎨</div>
-                <h3>Стили</h3>
+                <h3>Визуальные стили</h3>
               </div>
               <div className="card-content">
                 <div className="form-group checkbox-group">
