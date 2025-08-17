@@ -16,17 +16,10 @@
 
 /* Скругления только внешних углов */
 .slide[data-position="top"] {
-  border-top-left-radius: 3vw;
-  border-top-right-radius: 3vw;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+  border-radius: 3vw;
 }
-
 .slide[data-position="bottom"] {
-  border-bottom-left-radius: 3vw;
-  border-bottom-right-radius: 3vw;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
+  border-radius: 3vw;
 }
 
 /* CurrentTrack.module.scss */
@@ -104,7 +97,7 @@
 
   &:first-child {
     width: 100%;
-    height: auto;
+    height: 100%;
     align-items: center;
 
     >div {
@@ -114,7 +107,7 @@
 
   &:last-child {
     width: 100%;
-    height: auto;
+    height: 100%;
     align-items: center;
 
     >div {
