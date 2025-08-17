@@ -111,6 +111,12 @@ export default function AnimationControl({
     },
   };
 
+  // Маска области видимости текста NOW PLAYING — совпадает с "окном" между полосами
+  const maskVariants: { [key: string]: Variant } = {
+    idle: { top: 0, bottom: 0 },
+    compress: { top: "50%", bottom: "50%" },
+  };
+
   // Варианты для children
   const bezierEase = cubicBezier(0.25, 0.46, 0.45, 0.94);
 
@@ -181,61 +187,79 @@ export default function AnimationControl({
         transition={{ duration: 0.6, ease: bezierEase }}
       />
 
-      {/* NOW PLAYING текст */}
-      <AnimatePresence
-        mode="wait"
-        onExitComplete={() => {
-          if (animationStage === "nowPlayingExit") {
-            handleAnimationComplete("nowPlayingExit");
-          }
+      {/* NOW PLAYING текст с маской по окну между красными полосами */}
+      <motion.div
+        style={{
+          position: "absolute",
+          left: "2vw",
+          right: "2vw",
+          zIndex: 6,
+          overflow: "hidden",
+          pointerEvents: "none",
         }}
+        variants={maskVariants}
+        initial="idle"
+        animate={
+          animationStage === "compressIn" || animationStage === "compressInFinal"
+            ? "compress"
+            : "idle"
+        }
+        transition={{ duration: 0.6, ease: bezierEase }}
       >
-        {animationStage === "nowPlaying" && (
-          <motion.div
-            key={`now-playing-${nowPlayingCount}`}
-            style={{
-              position: "fixed",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              zIndex: 5,
-              pointerEvents: "none",
-            }}
-            variants={nowPlayingVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            onAnimationComplete={definition => {
-              if (definition === "visible") {
-                if (nowPlayingCount < 1) {
-                  setTimeout(() => setNowPlayingCount(prev => prev + 1), 200);
-                } else {
-                  // Запускаем выход NOW PLAYING, после onExitComplete начнётся второй цикл полос
-                  setAnimationStage("nowPlayingExit");
-                }
-              }
-            }}
-          >
-            <motion.span
+        <AnimatePresence
+          mode="wait"
+          onExitComplete={() => {
+            if (animationStage === "nowPlayingExit") {
+              handleAnimationComplete("nowPlayingExit");
+            }
+          }}
+        >
+          {animationStage === "nowPlaying" && (
+            <motion.div
+              key={`now-playing-${nowPlayingCount}`}
               style={{
-                fontSize: "clamp(2rem, 8vw, 12rem)",
-                fontWeight: "bold",
-                color: "#fff",
-                fontFamily: "Arial, sans-serif",
-                letterSpacing: "0.2em",
-                textAlign: "center",
-                padding: "0 20px",
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                pointerEvents: "none",
+              }}
+              variants={nowPlayingVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              onAnimationComplete={definition => {
+                if (definition === "visible") {
+                  if (nowPlayingCount < 2) {
+                    setTimeout(() => setNowPlayingCount(prev => prev + 1), 200);
+                  } else {
+                    // Запускаем выход NOW PLAYING, после onExitComplete начнётся второй цикл полос
+                    setAnimationStage("nowPlayingExit");
+                  }
+                }
               }}
             >
-              NOW PLAYING
-            </motion.span>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <motion.span
+                style={{
+                  fontSize: "clamp(2rem, 8vw, 12rem)",
+                  fontWeight: "bold",
+                  color: "#fff",
+                  fontFamily: "Arial, sans-serif",
+                  letterSpacing: "0.2em",
+                  textAlign: "center",
+                  padding: "0 20px",
+                }}
+              >
+                NOW PLAYING
+              </motion.span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
 
       {/* Контент между полосами */}
       <motion.div
