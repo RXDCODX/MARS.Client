@@ -5,7 +5,7 @@ import {
   Variant,
   Variants,
 } from "framer-motion";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import styles from "./CurrentTrack.module.scss";
 
@@ -33,18 +33,21 @@ export default function AnimationControl({
   const [animationStage, setAnimationStage] = useState<AnimationStage>("idle");
   const [nowPlayingCount, setNowPlayingCount] = useState(0);
 
-  const startAnimation = useCallback(() => {
-    if (!AnimationStart || animationStage !== "idle") return;
-
-    setAnimationStage("compressIn");
-    setNowPlayingCount(0);
-  }, [AnimationStart, animationStage]);
-
+  // Запускаем анимацию ровно один раз на цикл AnimationStart=true
+  const hasTriggeredRef = useRef(false);
+  const hasSwappedRef = useRef(false);
   useEffect(() => {
-    if (AnimationStart) {
-      startAnimation();
+    if (AnimationStart && !hasTriggeredRef.current) {
+      hasTriggeredRef.current = true;
+      setAnimationStage("compressIn");
+      setNowPlayingCount(0);
+      hasSwappedRef.current = false;
     }
-  }, [AnimationStart, startAnimation]);
+    if (!AnimationStart) {
+      hasTriggeredRef.current = false;
+      hasSwappedRef.current = false;
+    }
+  }, [AnimationStart]);
 
   const handleAnimationComplete = (stage: AnimationStage) => {
     switch (stage) {
@@ -59,7 +62,10 @@ export default function AnimationControl({
         break;
       case "compressInFinal":
         setAnimationStage("compressOutFinal");
-        swapTrack();
+        if (!hasSwappedRef.current) {
+          hasSwappedRef.current = true;
+          swapTrack();
+        }
         break;
       case "compressOutFinal":
         setAnimationStage("showChildren");

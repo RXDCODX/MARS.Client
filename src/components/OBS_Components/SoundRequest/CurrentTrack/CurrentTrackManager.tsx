@@ -109,7 +109,7 @@ export function CurrentTrackManager() {
   );
 
   // Общая длительность ступенчатой анимации (сжатие/разжатие → NOW PLAYING → сжатие/разжатие → показ контента)
-  const ANIMATION_TOTAL_MS = 6200;
+  const ANIMATION_TOTAL_MS = 8000;
 
   // Таймер завершения анимации
   const animationTimer = useRef<number | null>(null);
