@@ -34,6 +34,9 @@ export function CurrentTrackManager() {
     shouldAnimate: false,
   });
 
+  // Общая длительность ступенчатой анимации (сжатие/разжатие → NOW PLAYING → сжатие/разжатие → показ контента)
+  const ANIMATION_TOTAL_MS = 6200;
+
   const changeTrack = useCallback(
     (data: TunaMusicData) => {
       // Сначала запускаем анимацию
@@ -50,7 +53,7 @@ export function CurrentTrackManager() {
           ...prev,
           shouldAnimate: false,
         }));
-      }, 3500); // Общее время анимации (слайды + NOW PLAYING + финальная анимация)
+      }, ANIMATION_TOTAL_MS);
     },
     [counter]
   );
@@ -102,7 +105,19 @@ export function CurrentTrackManager() {
 const CurrentTrackInfo = () => (
   <>
     <TunaHubSignalRHubWrapper>
-      <CurrentTrackManager />
+      <div
+        id="current-track-container"
+        style={{
+          position: "fixed",
+          inset: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+        }}
+      >
+        <CurrentTrackManager />
+      </div>
     </TunaHubSignalRHubWrapper>
   </>
 );

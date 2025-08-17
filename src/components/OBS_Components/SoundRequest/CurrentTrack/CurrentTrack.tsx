@@ -27,8 +27,7 @@ export default function CurrentTrack({ track, shouldAnimate = true }: Props) {
                 min={20}
                 style={{
                   width: "100%",
-                  textAlign: "end",
-                  color: "var(--site-text-warning) !important",
+                  textAlign: "center",
                 }}
               >
                 {track.artists.join(", ")}
@@ -40,8 +39,7 @@ export default function CurrentTrack({ track, shouldAnimate = true }: Props) {
                 min={30}
                 style={{
                   width: "100%",
-                  textAlign: "end",
-                  color: "var(--site-text-light)",
+                  textAlign: "center",
                 }}
               >
                 {track.title}

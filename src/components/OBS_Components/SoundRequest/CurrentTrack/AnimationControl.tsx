@@ -1,8 +1,6 @@
 import { AnimatePresence, motion, Variant } from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 
-import AnimatedGradientBackground from "@/shared/Utils/Animations/AnimatedGradientBackground";
-
 import styles from "./CurrentTrack.module.scss";
 
 interface Props {
@@ -12,11 +10,12 @@ interface Props {
 
 type AnimationStage =
   | "idle"
-  | "slidesCover"
-  | "slidesReveal"
+  | "compressIn"
+  | "compressOut"
   | "nowPlaying"
-  | "slidesCoverFinal"
-  | "slidesRevealFinal"
+  | "nowPlayingExit"
+  | "compressInFinal"
+  | "compressOutFinal"
   | "showChildren";
 
 export default function AnimationControl({ children, AnimationStart }: Props) {
@@ -26,7 +25,7 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
   const startAnimation = useCallback(() => {
     if (!AnimationStart || animationStage !== "idle") return;
 
-    setAnimationStage("slidesCover");
+    setAnimationStage("compressIn");
     setNowPlayingCount(0);
   }, [AnimationStart, animationStage]);
 
@@ -38,26 +37,23 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
 
   const handleAnimationComplete = (stage: AnimationStage) => {
     switch (stage) {
-      case "slidesCover":
-        setTimeout(() => setAnimationStage("slidesReveal"), 300);
-        break;
-      case "slidesReveal":
-        setTimeout(() => setAnimationStage("nowPlaying"), 200);
+      case "compressIn":
+        setAnimationStage("compressOut");
         break;
       case "nowPlaying":
-        if (nowPlayingCount < 2) {
-          setTimeout(() => {
-            setNowPlayingCount(prev => prev + 1);
-          }, 800);
-        } else {
-          setTimeout(() => setAnimationStage("slidesCoverFinal"), 200);
-        }
+        // цикл NOW PLAYING управляется самим блоком через AnimatePresence
         break;
-      case "slidesCoverFinal":
-        setTimeout(() => setAnimationStage("slidesRevealFinal"), 300);
+      case "compressOut":
+        setAnimationStage("nowPlaying");
         break;
-      case "slidesRevealFinal":
-        setTimeout(() => setAnimationStage("showChildren"), 200);
+      case "compressInFinal":
+        setAnimationStage("compressOutFinal");
+        break;
+      case "compressOutFinal":
+        setAnimationStage("showChildren");
+        break;
+      case "nowPlayingExit":
+        setAnimationStage("compressInFinal");
         break;
       case "showChildren":
         setTimeout(() => setAnimationStage("idle"), 500);
@@ -65,18 +61,15 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
     }
   };
 
-  // Варианты анимации для слайдов
-  const slideVariants: { [key: string]: { [key: string]: Variant } } = {
-    top: {
-      cover: { y: "0%" },
-      reveal: { y: "-100%" },
-      idle: { y: "-100%" },
-    },
-    bottom: {
-      cover: { y: "0%" },
-      reveal: { y: "100%" },
-      idle: { y: "100%" },
-    },
+  // Варианты анимации для красных полос: каждая полоса двигается к центру
+  const topBarVariants: { [key: string]: Variant } = {
+    idle: { top: "0%", y: "0%" },
+    compress: { top: "50%", y: "-50%" },
+  };
+
+  const bottomBarVariants: { [key: string]: Variant } = {
+    idle: { top: "100%", y: "-100%" },
+    compress: { top: "50%", y: "-50%" },
   };
 
   // Варианты для NOW PLAYING текста
@@ -109,87 +102,77 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
     hidden: {
       scale: 0,
       opacity: 0,
+      transition: { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] },
     },
     visible: {
       scale: 1,
       opacity: 1,
-      transition: {
-        type: "spring" as const,
-        damping: 15,
-        stiffness: 200,
-        delay: 0.2,
-      },
+      transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] },
     },
   };
 
   return (
-    <AnimatedGradientBackground>
-      {/* Верхний слайд */}
+    <div className={styles.stageContainer}>
+      {/* Верхняя красная полоса */}
+      <motion.div
+        className={styles.slide}
+        style={{
+          position: "absolute",
+          left: "2vw",
+          right: "2vw",
+          zIndex: 10,
+        }}
+        data-position="top"
+        variants={topBarVariants}
+        animate={
+          animationStage === "compressIn" ||
+          animationStage === "compressInFinal"
+            ? "compress"
+            : "idle"
+        }
+        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+        onAnimationComplete={() => {
+          if (animationStage === "compressIn")
+            handleAnimationComplete("compressIn");
+          if (animationStage === "compressOut")
+            handleAnimationComplete("compressOut");
+          if (animationStage === "compressInFinal")
+            handleAnimationComplete("compressInFinal");
+          if (animationStage === "compressOutFinal")
+            handleAnimationComplete("compressOutFinal");
+        }}
+      />
+
+      {/* Нижняя красная полоса */}
       <motion.div
         className={styles.slide}
         style={{
           position: "absolute",
           top: 0,
-          left: 0,
-          right: 0,
-          height: "50%",
+          left: "2vw",
+          right: "2vw",
           zIndex: 10,
         }}
-        variants={slideVariants.top}
+        data-position="bottom"
+        variants={bottomBarVariants}
         animate={
-          animationStage === "slidesCover" ||
-          animationStage === "slidesCoverFinal"
-            ? "cover"
-            : animationStage === "slidesReveal" ||
-                animationStage === "slidesRevealFinal"
-              ? "reveal"
-              : "idle"
+          animationStage === "compressIn" ||
+          animationStage === "compressInFinal"
+            ? "compress"
+            : "idle"
         }
-        transition={{
-          duration: 0.6,
-          ease: [0.25, 0.46, 0.45, 0.94],
-        }}
-        onAnimationComplete={() => {
-          if (animationStage === "slidesCover")
-            handleAnimationComplete("slidesCover");
-          if (animationStage === "slidesReveal")
-            handleAnimationComplete("slidesReveal");
-          if (animationStage === "slidesCoverFinal")
-            handleAnimationComplete("slidesCoverFinal");
-          if (animationStage === "slidesRevealFinal")
-            handleAnimationComplete("slidesRevealFinal");
-        }}
-      />
-
-      {/* Нижний слайд */}
-      <motion.div
-        className={styles.slide}
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "50%",
-          zIndex: 10,
-        }}
-        variants={slideVariants.bottom}
-        animate={
-          animationStage === "slidesCover" ||
-          animationStage === "slidesCoverFinal"
-            ? "cover"
-            : animationStage === "slidesReveal" ||
-                animationStage === "slidesRevealFinal"
-              ? "reveal"
-              : "idle"
-        }
-        transition={{
-          duration: 0.6,
-          ease: [0.25, 0.46, 0.45, 0.94],
-        }}
+        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
       />
 
       {/* NOW PLAYING текст */}
-      <AnimatePresence mode="wait">
+      <AnimatePresence
+        mode="wait"
+        onExitComplete={() => {
+          if (animationStage === "nowPlayingExit") {
+            handleAnimationComplete("nowPlayingExit");
+          }
+        }}
+      >
         {animationStage === "nowPlaying" && (
           <motion.div
             key={`now-playing-${nowPlayingCount}`}
@@ -211,7 +194,12 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
             exit="exit"
             onAnimationComplete={definition => {
               if (definition === "visible") {
-                handleAnimationComplete("nowPlaying");
+                if (nowPlayingCount < 1) {
+                  setTimeout(() => setNowPlayingCount(prev => prev + 1), 200);
+                } else {
+                  // Запускаем выход NOW PLAYING, после onExitComplete начнётся второй цикл полос
+                  setAnimationStage("nowPlayingExit");
+                }
               }
             }}
           >
@@ -232,7 +220,7 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
         )}
       </AnimatePresence>
 
-      {/* Children контент */}
+      {/* Контент между полосами */}
       <motion.div
         style={{
           position: "relative",
@@ -245,7 +233,9 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
         }}
         variants={childrenVariants}
         animate={
-          animationStage === "showChildren" || animationStage === "idle"
+          animationStage === "showChildren" ||
+          animationStage === "idle" ||
+          animationStage === "compressOutFinal"
             ? "visible"
             : "hidden"
         }
@@ -257,6 +247,6 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
       >
         {children}
       </motion.div>
-    </AnimatedGradientBackground>
+    </div>
   );
 }
