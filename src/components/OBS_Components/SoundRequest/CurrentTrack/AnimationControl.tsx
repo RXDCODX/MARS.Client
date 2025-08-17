@@ -56,10 +56,10 @@ export default function AnimationControl({
         break;
       case "compressOut":
         setAnimationStage("nowPlaying");
-        swapTrack();
         break;
       case "compressInFinal":
         setAnimationStage("compressOutFinal");
+        swapTrack();
         break;
       case "compressOutFinal":
         setAnimationStage("showChildren");
@@ -75,12 +75,14 @@ export default function AnimationControl({
 
   // Варианты анимации для красных полос: каждая полоса двигается к центру
   const topBarVariants: { [key: string]: Variant } = {
-    idle: { top: "0%", y: "0%" },
+    // Стартуем чуть выше контейнера, чтобы при входе полоса заезжала и закрывала контент
+    idle: { top: "-3%", y: "0%" },
     compress: { top: "50%", y: "-50%" },
   };
 
   const bottomBarVariants: { [key: string]: Variant } = {
-    idle: { top: "100%", y: "-100%" },
+    // Стартуем ниже контейнера, чтобы при входе полоса поднималась и закрывала контент
+    idle: { top: "100%", y: "0%" },
     compress: { top: "50%", y: "-50%" },
   };
 
@@ -116,7 +118,7 @@ export default function AnimationControl({
     hidden: {
       scale: 0,
       opacity: 0,
-      transition: { duration: 0.1, ease: bezierEase },
+      transition: { duration: 0.6, ease: bezierEase },
     },
     visible: {
       scale: 1,
@@ -138,17 +140,14 @@ export default function AnimationControl({
         }}
         data-position="top"
         variants={topBarVariants}
+        initial="idle"
         animate={
           animationStage === "compressIn" ||
           animationStage === "compressInFinal"
             ? "compress"
             : "idle"
         }
-        transition={
-          animationStage === "compressIn"
-            ? { duration: 0.3, ease: bezierEase }
-            : { duration: 0.6, ease: bezierEase }
-        }
+        transition={{ duration: 0.6, ease: bezierEase }}
         onAnimationComplete={() => {
           if (animationStage === "compressIn")
             handleAnimationComplete("compressIn");
@@ -166,24 +165,20 @@ export default function AnimationControl({
         className={styles.slide}
         style={{
           position: "absolute",
-          top: 0,
           left: "2vw",
           right: "2vw",
           zIndex: 10,
         }}
         data-position="bottom"
         variants={bottomBarVariants}
+        initial="idle"
         animate={
           animationStage === "compressIn" ||
           animationStage === "compressInFinal"
             ? "compress"
             : "idle"
         }
-        transition={
-          animationStage === "compressIn"
-            ? { duration: 0.3, ease: bezierEase }
-            : { duration: 0.6, ease: bezierEase }
-        }
+        transition={{ duration: 0.6, ease: bezierEase }}
       />
 
       {/* NOW PLAYING текст */}

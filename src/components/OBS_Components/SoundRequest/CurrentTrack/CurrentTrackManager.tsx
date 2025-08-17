@@ -157,8 +157,12 @@ export function CurrentTrackManager() {
 
   useEffect(() => {
     // no-op; keep for potential debug
-    console.warn(state.currentTrack?.artists);
-  }, [state.currentTrack?.artists]);
+    console.warn(trackKey);
+  }, [trackKey]);
+
+  useEffect(() => {
+    console.warn(state.currentTrack?.title);
+  }, [state.currentTrack?.title]);
 
   const displayed = state.currentTrack ?? defaultValue;
   return (
