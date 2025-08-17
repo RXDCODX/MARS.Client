@@ -50,7 +50,7 @@
 .cover {
   display: flex;
   border-radius: 2vw;
-  width: var(--cover-size);
+  width: auto;
   height: var(--cover-size);
   z-index: 2;
   aspect-ratio: 1/1;
