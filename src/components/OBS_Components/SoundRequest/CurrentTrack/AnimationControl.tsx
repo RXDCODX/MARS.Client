@@ -1,4 +1,10 @@
-import { AnimatePresence, motion, Variant } from "framer-motion";
+import {
+  AnimatePresence,
+  cubicBezier,
+  motion,
+  Variant,
+  Variants,
+} from "framer-motion";
 import { useCallback, useEffect, useState } from "react";
 
 import styles from "./CurrentTrack.module.scss";
@@ -6,6 +12,7 @@ import styles from "./CurrentTrack.module.scss";
 interface Props {
   children: React.ReactNode;
   AnimationStart: boolean;
+  swapTrack: () => void;
 }
 
 type AnimationStage =
@@ -18,7 +25,11 @@ type AnimationStage =
   | "compressOutFinal"
   | "showChildren";
 
-export default function AnimationControl({ children, AnimationStart }: Props) {
+export default function AnimationControl({
+  children,
+  AnimationStart,
+  swapTrack,
+}: Props) {
   const [animationStage, setAnimationStage] = useState<AnimationStage>("idle");
   const [nowPlayingCount, setNowPlayingCount] = useState(0);
 
@@ -45,6 +56,7 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
         break;
       case "compressOut":
         setAnimationStage("nowPlaying");
+        swapTrack();
         break;
       case "compressInFinal":
         setAnimationStage("compressOutFinal");
@@ -98,16 +110,18 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
   };
 
   // Варианты для children
-  const childrenVariants = {
+  const bezierEase = cubicBezier(0.25, 0.46, 0.45, 0.94);
+
+  const childrenVariants: Variants = {
     hidden: {
       scale: 0,
       opacity: 0,
-      transition: { duration: 0.45, ease: [0.25, 0.46, 0.45, 0.94] },
+      transition: { duration: 0.1, ease: bezierEase },
     },
     visible: {
       scale: 1,
       opacity: 1,
-      transition: { duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] },
+      transition: { duration: 0.6, ease: bezierEase },
     },
   };
 
@@ -130,7 +144,11 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
             ? "compress"
             : "idle"
         }
-        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+        transition={
+          animationStage === "compressIn"
+            ? { duration: 0.3, ease: bezierEase }
+            : { duration: 0.6, ease: bezierEase }
+        }
         onAnimationComplete={() => {
           if (animationStage === "compressIn")
             handleAnimationComplete("compressIn");
@@ -161,7 +179,11 @@ export default function AnimationControl({ children, AnimationStart }: Props) {
             ? "compress"
             : "idle"
         }
-        transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+        transition={
+          animationStage === "compressIn"
+            ? { duration: 0.3, ease: bezierEase }
+            : { duration: 0.6, ease: bezierEase }
+        }
       />
 
       {/* NOW PLAYING текст */}

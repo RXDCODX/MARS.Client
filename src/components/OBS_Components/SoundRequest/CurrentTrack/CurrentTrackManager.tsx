@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
 
 import {
   TunaHubSignalRContext,
@@ -20,83 +20,157 @@ const defaultValue: TunaMusicData & { isDefaultValue: boolean } = {
   isDefaultValue: true,
 };
 
-interface TrackInfo {
-  track: TunaMusicData & { isDefaultValue: boolean };
-  count: number;
-  shouldAnimate: boolean;
+// NOTE: legacy interface left for reference was removed to avoid unused warnings
+
+interface State {
+  currentTrack: (TunaMusicData & { isDefaultValue?: boolean }) | null;
+  incomingTrack: (TunaMusicData & { isDefaultValue?: boolean }) | null;
+  isAnimating: boolean;
+  swap: boolean;
+  counter: number;
 }
 
+type Action =
+  | { type: "RECEIVE"; data: TunaMusicData }
+  | { type: "SWAP" }
+  | { type: "ANIMATION_END" };
+
 export function CurrentTrackManager() {
-  const [counter, setCounter] = useState(0);
-  const [track, setTrack] = useState<TrackInfo>({
-    track: defaultValue,
-    count: counter,
-    shouldAnimate: false,
-  });
+  const [state, dispatch] = useReducer(
+    (s: State, a: Action): State => {
+      const key = (t: TunaMusicData | null | undefined) =>
+        t ? `${t.artists.join(",")}-${t.title}` : "";
+
+      switch (a.type) {
+        case "RECEIVE": {
+          // Первый трек — просто устанавливаем без анимации
+          if (!s.currentTrack) {
+            return {
+              ...s,
+              currentTrack: { ...a.data, isDefaultValue: false },
+              incomingTrack: null,
+              isAnimating: false,
+              swap: false,
+            };
+          }
+
+          // Если уже идёт анимация — только обновляем incomingTrack
+          if (s.isAnimating) {
+            return {
+              ...s,
+              incomingTrack: { ...a.data, isDefaultValue: false },
+            };
+          }
+
+          // Если трек изменился — запускаем анимацию
+          if (key(a.data) !== key(s.currentTrack)) {
+            return {
+              ...s,
+              incomingTrack: { ...a.data, isDefaultValue: false },
+              isAnimating: true,
+              swap: false,
+              counter: s.counter + 1,
+            };
+          }
+
+          // Трек тот же — просто обновляем текущий
+          return {
+            ...s,
+            currentTrack: { ...a.data, isDefaultValue: false },
+          };
+        }
+        case "SWAP": {
+          if (!s.incomingTrack) return s;
+          return {
+            ...s,
+            currentTrack: s.incomingTrack,
+            swap: true,
+          };
+        }
+        case "ANIMATION_END": {
+          return {
+            ...s,
+            isAnimating: false,
+            swap: false,
+            incomingTrack: null,
+          };
+        }
+        default:
+          return s;
+      }
+    },
+    {
+      currentTrack: null,
+      incomingTrack: null,
+      isAnimating: false,
+      swap: false,
+      counter: 0,
+    }
+  );
 
   // Общая длительность ступенчатой анимации (сжатие/разжатие → NOW PLAYING → сжатие/разжатие → показ контента)
   const ANIMATION_TOTAL_MS = 6200;
 
-  const changeTrack = useCallback(
-    (data: TunaMusicData) => {
-      // Сначала запускаем анимацию
-      setCounter(prev => prev + 1);
-      setTrack({
-        track: { ...data, isDefaultValue: false },
-        count: counter,
-        shouldAnimate: true,
-      });
-
-      // Через время анимации меняем трек
-      setTimeout(() => {
-        setTrack(prev => ({
-          ...prev,
-          shouldAnimate: false,
-        }));
+  // Таймер завершения анимации
+  const animationTimer = useRef<number | null>(null);
+  useEffect(() => {
+    if (state.isAnimating) {
+      if (animationTimer.current) window.clearTimeout(animationTimer.current);
+      animationTimer.current = window.setTimeout(() => {
+        dispatch({ type: "ANIMATION_END" });
       }, ANIMATION_TOTAL_MS);
-    },
-    [counter]
-  );
+    }
+    return () => {
+      if (animationTimer.current) {
+        window.clearTimeout(animationTimer.current);
+        animationTimer.current = null;
+      }
+    };
+  }, [state.isAnimating]);
 
-  const trackKey = useMemo(
-    () =>
-      `${track.track.artists.join(", ")}-${track.track.title}-${track.count}`,
-    [track.track.artists, track.track.title, track.count]
-  );
+  const trackKey = useMemo(() => `${state.counter}`, [state.counter]);
+
+  const isDifferentTrack = useCallback((a: TunaMusicData, b: TunaMusicData) => {
+    const mk = (t: TunaMusicData) => `${t.artists.join(",")}-${t.title}`;
+    return mk(a) !== mk(b);
+  }, []);
 
   TunaHubSignalRContext.useSignalREffect(
     "TunaMusicInfo",
     (data: TunaMusicDTO) => {
-      // Проверяем, изменился ли трек
-      const isNewTrack =
-        data.data.artists.join(", ") !== track.track.artists.join(", ") ||
-        data.data.title !== track.track.title;
-
-      if (isNewTrack) {
-        changeTrack(data.data);
+      // Если первый приходящий трек
+      if (!state.currentTrack) {
+        dispatch({ type: "RECEIVE", data: data.data });
         return;
       }
 
-      // Если трек тот же, просто обновляем данные без анимации
-      setTrack(prev => ({
-        ...prev,
-        track: { ...data.data, isDefaultValue: false },
-      }));
+      const isNewTrack = isDifferentTrack(data.data, state.currentTrack);
+
+      if (isNewTrack || state.isAnimating) {
+        dispatch({ type: "RECEIVE", data: data.data });
+      } else {
+        dispatch({ type: "RECEIVE", data: data.data });
+      }
     },
-    [track.track.artists, track.track.title, changeTrack]
+    [state.currentTrack?.artists, state.currentTrack?.title, state.isAnimating]
   );
 
   useEffect(() => {
-    console.log(counter);
-  }, [counter]);
+    // no-op; keep for potential debug
+    console.warn(state.currentTrack?.artists);
+  }, [state.currentTrack?.artists]);
 
+  const displayed = state.currentTrack ?? defaultValue;
   return (
-    !track.track.isDefaultValue &&
-    track.track.status !== "stopped" && (
+    !displayed.isDefaultValue &&
+    displayed.status !== "stopped" && (
       <CurrentTrack
-        track={track.track}
+        oldTrack={state.currentTrack ?? defaultValue}
+        track={state.incomingTrack ?? state.currentTrack ?? defaultValue}
+        swap={state.swap}
+        swapChange={() => dispatch({ type: "SWAP" })}
         key={trackKey}
-        shouldAnimate={track.shouldAnimate}
+        shouldAnimate={state.isAnimating}
       />
     )
   );
