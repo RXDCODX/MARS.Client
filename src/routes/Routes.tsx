@@ -12,7 +12,7 @@ import RandomMem from "@/components/OBS_Components/RandomMem/RandomMem";
 import Scoreboard from "@/components/OBS_Components/Scoreboard";
 import ScoreboardAdminPanel from "@/components/OBS_Components/Scoreboard/AdminPanel/AdminPanel";
 import Manager from "@/components/OBS_Components/ScreenParticles/Manager";
-import CurrentTrackSignalRHubWrapper from "@/components/OBS_Components/SoundRequest/CurrentTrack/SignalRHubWrapper";
+import CurrentTrackInfo from "@/components/OBS_Components/SoundRequest/CurrentTrack/CurrentTrackManager";
 import WaifuAlerts from "@/components/OBS_Components/WaifuAlerts/WaifuAlerts";
 import { OBSComponentWrapper } from "@/components/OBS_Components/wrapper";
 import ServerViewer from "@/Site/ControlRoom_Components/ServerViewer/ServerViewer";
@@ -218,7 +218,7 @@ const PrivateRoutes = () => (
         path="/sr/currenttrack"
         element={
           <OBSComponentWrapper>
-            <CurrentTrackSignalRHubWrapper />
+            <CurrentTrackInfo />
           </OBSComponentWrapper>
         }
       />

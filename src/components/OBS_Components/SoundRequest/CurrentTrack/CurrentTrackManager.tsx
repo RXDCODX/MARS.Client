@@ -1,8 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { TunaMusicData, TunaMusicDTO } from "@/shared/api";
+import {
+  TunaHubSignalRContext,
+  TunaHubSignalRHubWrapper,
+  TunaMusicData,
+  TunaMusicDTO,
+} from "@/shared/api";
 
-import { SignalRContext } from ".";
 import CurrentTrack from "./CurrentTrack";
 
 const defaultValue: TunaMusicData & { isDefaultValue: boolean } = {
@@ -22,7 +26,7 @@ interface TrackInfo {
   shouldAnimate: boolean;
 }
 
-export default function CurrentTrackManager() {
+export function CurrentTrackManager() {
   const [counter, setCounter] = useState(0);
   const [track, setTrack] = useState<TrackInfo>({
     track: defaultValue,
@@ -57,7 +61,7 @@ export default function CurrentTrackManager() {
     [track.track.artists, track.track.title, track.count]
   );
 
-  SignalRContext.useSignalREffect(
+  TunaHubSignalRContext.useSignalREffect(
     "TunaMusicInfo",
     (data: TunaMusicDTO) => {
       // Проверяем, изменился ли трек
@@ -94,3 +98,13 @@ export default function CurrentTrackManager() {
     )
   );
 }
+
+const CurrentTrackInfo = () => (
+  <>
+    <TunaHubSignalRHubWrapper>
+      <CurrentTrackManager />
+    </TunaHubSignalRHubWrapper>
+  </>
+);
+
+export default CurrentTrackInfo;
