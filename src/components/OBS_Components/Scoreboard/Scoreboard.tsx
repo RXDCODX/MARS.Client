@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useState } from "react";
+import { Textfit } from "react-textfit";
 
 import { useScoreboardStore } from "./AdminPanel";
 import {
@@ -253,18 +254,20 @@ const ScoreboardContent: React.FC = () => {
               </div>
               <div className={styles.playerInfo}>
                 <h2 style={{ color: colors.playerNamesColor }}>
-                  {player1.final === "winner" && "[W] "}
-                  {player1.final === "loser" && "[L] "}
-                  {layout.showTags && isValidTag(player1.tag) && (
-                    <span
-                      className={styles.playerTag}
-                      style={{ color: colors.mainColor }}
-                    >
-                      {player1.tag}
-                    </span>
-                  )}
-                  {layout.showTags && isValidTag(player1.tag) && " | "}
-                  {player1.name}
+                  <Textfit forceSingleModeWidth mode="single" max={35}>
+                    {player1.final === "winner" && "[W] "}
+                    {player1.final === "loser" && "[L] "}
+                    {layout.showTags && isValidTag(player1.tag) && (
+                      <span
+                        className={styles.playerTag}
+                        style={{ color: colors.mainColor }}
+                      >
+                        {player1.tag}
+                      </span>
+                    )}
+                    {layout.showTags && isValidTag(player1.tag) && " | "}
+                    {player1.name}
+                  </Textfit>
                 </h2>
               </div>
             </motion.div>
@@ -299,18 +302,20 @@ const ScoreboardContent: React.FC = () => {
 
               <div className={styles.playerInfo}>
                 <h2 style={{ color: colors.playerNamesColor }}>
-                  {player2.final === "winner" && "[W] "}
-                  {player2.final === "loser" && "[L] "}
-                  {player2.name}
-                  {layout.showTags && isValidTag(player2.tag) && " | "}
-                  {layout.showTags && isValidTag(player2.tag) && (
-                    <span
-                      className={styles.playerTag}
-                      style={{ color: colors.mainColor }}
-                    >
-                      {player2.tag}
-                    </span>
-                  )}
+                  <Textfit forceSingleModeWidth mode="single" max={35}>
+                    {player2.final === "winner" && "[W] "}
+                    {player2.final === "loser" && "[L] "}
+                    {player2.name}
+                    {layout.showTags && isValidTag(player2.tag) && " | "}
+                    {layout.showTags && isValidTag(player2.tag) && (
+                      <span
+                        className={styles.playerTag}
+                        style={{ color: colors.mainColor }}
+                      >
+                        {player2.tag}
+                      </span>
+                    )}
+                  </Textfit>
                 </h2>
               </div>
 

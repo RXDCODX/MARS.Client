@@ -4,7 +4,7 @@
 
 ## Структура файлов
 
-```
+```text
 src/AdminPanel/
 ├── index.ts              # Экспорты всех компонентов
 ├── types.ts              # TypeScript типы

@@ -78,7 +78,8 @@ $font-size-small: 14px;
     letter-spacing: 1px;
     opacity: 0.9;
   }
-  > .headerLeftBorder {
+
+  >.headerLeftBorder {
     position: absolute;
     top: -2px;
     left: 3px;
@@ -88,7 +89,8 @@ $font-size-small: 14px;
     transform: rotate(148deg);
     border: 11px solid $border-color;
   }
-  > .headerRightBorder {
+
+  >.headerRightBorder {
     position: absolute;
     top: -2px;
     right: 3px;
@@ -180,7 +182,7 @@ $font-size-small: 14px;
     font-weight: 600;
     color: $secondary-color;
     line-height: 1.2;
-    height: 15px;
+    height: auto;
   }
 
   .playerTag {
@@ -216,23 +218,19 @@ $font-size-small: 14px;
 // Срез для левого счета
 .playerLeft .score {
   margin-left: calc(var(--banner-skew) * -3);
-  clip-path: polygon(
-    0 0,
-    calc(100% - var(--banner-skew)) 0,
-    100% 100%,
-    var(--banner-skew) 100%
-  );
+  clip-path: polygon(0 0,
+      calc(100% - var(--banner-skew)) 0,
+      100% 100%,
+      var(--banner-skew) 100%);
 }
 
 // Срез для правого счета
 .playerRight .score {
   margin-right: calc(var(--banner-skew) * -3);
-  clip-path: polygon(
-    var(--banner-skew) 0,
-    100% 0,
-    calc(100% - var(--banner-skew)) 100%,
-    0 100%
-  );
+  clip-path: polygon(var(--banner-skew) 0,
+      100% 0,
+      calc(100% - var(--banner-skew)) 100%,
+      0 100%);
 }
 
 // Флаг
@@ -274,6 +272,7 @@ $font-size-small: 14px;
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -281,10 +280,12 @@ $font-size-small: 14px;
 }
 
 @keyframes pulse {
+
   0%,
   100% {
     transform: scale(1);
   }
+
   50% {
     transform: scale(1.05);
   }

@@ -134,7 +134,7 @@ const LayoutCard: React.FC = () => {
             <Form.Group className="mb-3">
               <Form.Label>Высота заголовка (px)</Form.Label>
               <Form.Range
-                min="40"
+                min="10"
                 max="120"
                 value={layout.headerHeight}
                 onChange={e =>
@@ -164,7 +164,7 @@ const LayoutCard: React.FC = () => {
             <Form.Group className="mb-3">
               <Form.Label>Высота карточки игрока (px)</Form.Label>
               <Form.Range
-                min="60"
+                min="10"
                 max="150"
                 value={layout.playerBarHeight}
                 onChange={e =>
