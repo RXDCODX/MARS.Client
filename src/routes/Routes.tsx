@@ -7,6 +7,11 @@ import ChatHorizontal from "@/components/OBS_Components/ChatHorizontal/ChatHoriz
 import ChatVertical from "@/components/OBS_Components/ChatVertical/ChatVertical";
 import { FumoFriday } from "@/components/OBS_Components/FumoFriday";
 import HighliteMessage from "@/components/OBS_Components/HighliteMessage/HighliteMessage";
+import {
+  AvatarWithFire,
+  AvatarWithFireSvg,
+  PNGTuber,
+} from "@/components/OBS_Components/PNGTuber";
 import PyroAlerts from "@/components/OBS_Components/PyroAlerts/PyroAlerts";
 import RandomMem from "@/components/OBS_Components/RandomMem/RandomMem";
 import Scoreboard from "@/components/OBS_Components/Scoreboard";
@@ -227,6 +232,30 @@ const PrivateRoutes = () => (
         element={
           <OBSComponentWrapper>
             <AFKScreen />
+          </OBSComponentWrapper>
+        }
+      />
+      <Route
+        path="/avatarka"
+        element={
+          <OBSComponentWrapper>
+            <PNGTuber />
+          </OBSComponentWrapper>
+        }
+      />
+      <Route
+        path="/avatarka-fire"
+        element={
+          <OBSComponentWrapper>
+            <AvatarWithFire />
+          </OBSComponentWrapper>
+        }
+      />
+      <Route
+        path="/avatarka-fire-svg"
+        element={
+          <OBSComponentWrapper>
+            <AvatarWithFireSvg />
           </OBSComponentWrapper>
         }
       />

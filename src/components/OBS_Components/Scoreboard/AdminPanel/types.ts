@@ -97,14 +97,14 @@ export type LayoutSettings = {
 
 export const defaultLayout: LayoutSettings = {
   // Позиционирование
-  headerTop: 16,
+  headerTop: 0,
   headerLeft: 50,
   playersTop: 0,
   playersLeft: 0,
   playersRight: 0,
 
   // Размеры
-  headerHeight: 60,
+  headerHeight: 20,
   headerWidth: 400,
   playerBarHeight: 80,
   playerBarWidth: 500,

@@ -140,7 +140,9 @@ export function Message({ message, onRemove }: Props) {
                     <video
                       key={part.id}
                       src={part.content}
-                      controls
+                      controls={false}
+                      autoPlay
+                      muted
                       style={{
                         maxWidth: "180px",
                         maxHeight: "120px",
@@ -172,35 +174,11 @@ export function Message({ message, onRemove }: Props) {
                     </span>
                   );
                 }
-                if (part.type === "image") {
-                  return (
-                    <img
-                      key={part.id}
-                      src={part.content}
-                      alt="image"
-                      style={{
-                        maxWidth: "120px",
-                        maxHeight: "120px",
-                        margin: "0 4px",
-                      }}
-                    />
-                  );
-                }
-                if (part.type === "video") {
-                  return (
-                    <video
-                      key={part.id}
-                      src={part.content}
-                      controls
-                      style={{
-                        maxWidth: "180px",
-                        maxHeight: "120px",
-                        margin: "0 4px",
-                      }}
-                    />
-                  );
-                }
-                if (part.type === "link") {
+                if (
+                  part.type === "link" ||
+                  part.type === "video" ||
+                  part.type === "image"
+                ) {
                   return (
                     <span key={part.id} className={styles.linkStub}>
                       ссылка
