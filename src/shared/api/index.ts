@@ -9,10 +9,13 @@ export * from "./types/types";
 export * from "./signalr-types/signalr-types";
 
 // Импорты HTTP клиентов
+export { CinemaQueue } from "./http-clients/CinemaQueue";
 export { Commands } from "./http-clients/Commands";
 export { Framedata } from "./http-clients/Framedata";
 export { FramedataChanges } from "./http-clients/FramedataChanges";
+export { Honkai } from "./http-clients/Honkai";
 export { MediaInfoApi } from "./http-clients/MediaInfoApi";
+export { RxdcodxViewers } from "./http-clients/RxdcodxViewers";
 export { ServiceManager } from "./http-clients/ServiceManager";
 
 // Импорты SignalR клиентов

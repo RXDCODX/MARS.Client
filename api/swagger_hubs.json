@@ -1566,8 +1566,7 @@
         "properties": {
           "id": {
             "type": "string",
-            "format": "uuid",
-            "readOnly": true
+            "format": "uuid"
           },
           "textInfo": {
             "allOf": [

@@ -20,6 +20,21 @@ export interface ApiMediaInfo {
   stylesInfo: MediaStylesInfo;
 }
 
+export interface CinemaQueueStatistics {
+  /** @format int32 */
+  totalItems: number;
+  /** @format int32 */
+  pendingItems: number;
+  /** @format int32 */
+  inProgressItems: number;
+  /** @format int32 */
+  completedItems: number;
+  /** @format int32 */
+  cancelledItems: number;
+  /** @format int32 */
+  postponedItems: number;
+}
+
 export interface CommandInfo {
   name: string;
   description: string;
@@ -43,6 +58,44 @@ export interface CommandParameterInfo {
   defaultValue?: string;
 }
 
+export interface CreateMediaItemRequest {
+  title: string;
+  description?: string;
+  mediaUrl: string;
+  /** @format int32 */
+  priority: number;
+  /** @format date-time */
+  scheduledFor?: string;
+  addedBy?: string;
+  twitchUserId?: string;
+  twitchUsername?: string;
+  notes?: string;
+}
+
+export interface CreateUserRequest {
+  twitchId?: string;
+  /** @format int64 */
+  telegramId?: number;
+  ltmidV2: string;
+  lTokenV2: string;
+  ltuidV2: string;
+}
+
+export interface DailyAutoMarkupUser {
+  /** @format uuid */
+  id: string;
+  twitchId?: string;
+  /** @format int64 */
+  telegramId?: number;
+  /** @format date-time */
+  createdAt?: string;
+  ltmidV2: string;
+  lTokenV2: string;
+  ltuidV2: string;
+  /** @format date-time */
+  lastAutoMarkup: string;
+}
+
 export interface MediaFileInfo {
   type:
     | "None"
@@ -56,6 +109,28 @@ export interface MediaFileInfo {
   isLocalFile: boolean;
   fileName: string;
   extension: string;
+}
+
+export interface MediaItemDto {
+  /** @format uuid */
+  id: string;
+  title: string;
+  description?: string;
+  mediaUrl: string;
+  status: "Pending" | "InProgress" | "Completed" | "Cancelled" | "Postponed";
+  /** @format int32 */
+  priority: number;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  scheduledFor?: string;
+  addedBy?: string;
+  twitchUserId?: string;
+  twitchUsername?: string;
+  notes?: string;
+  isNext: boolean;
+  /** @format date-time */
+  lastModified?: string;
 }
 
 export interface MediaMetaInfo {
@@ -271,4 +346,26 @@ export interface TekkenCharacterPendingDto {
   strengths?: string[];
   weaknesess?: string[];
   isNew: boolean;
+}
+
+export interface UpdateMediaItemRequest {
+  title?: string;
+  description?: string;
+  mediaUrl?: string;
+  status?: "Pending" | "InProgress" | "Completed" | "Cancelled" | "Postponed";
+  /** @format int32 */
+  priority?: number;
+  /** @format date-time */
+  scheduledFor?: string;
+  notes?: string;
+  isNext?: boolean;
+}
+
+export interface UpdateUserRequest {
+  twitchId?: string;
+  /** @format int64 */
+  telegramId?: number;
+  ltmidV2?: string;
+  lTokenV2?: string;
+  ltuidV2?: string;
 }

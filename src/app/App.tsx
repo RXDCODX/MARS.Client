@@ -1,12 +1,15 @@
 import "./global.scss";
 
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { ToastModalProvider } from "@/shared/Utils/ToastModal";
 import Routes from "@/routes/Routes";
 
 function App() {
   return (
     <ThemeProvider>
-      <Routes />
+      <ToastModalProvider>
+        <Routes />
+      </ToastModalProvider>
     </ThemeProvider>
   );
 }

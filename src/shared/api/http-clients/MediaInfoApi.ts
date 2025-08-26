@@ -98,4 +98,18 @@ export class MediaInfoApi<
       method: "DELETE",
       ...params,
     });
+  /**
+   * No description
+   *
+   * @tags MediaInfoApi
+   * @name MediaInfoApiFileList
+   * @request GET:/api/MediaInfoApi/{id}/file
+   * @response `200` `void` OK
+   */
+  mediaInfoApiFileList = (id: string, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/MediaInfoApi/${id}/file`,
+      method: "GET",
+      ...params,
+    });
 }

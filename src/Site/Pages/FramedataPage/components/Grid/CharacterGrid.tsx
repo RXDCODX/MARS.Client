@@ -10,6 +10,7 @@ import type {
 import { FramedataChanges } from "@/shared/api";
 
 import styles from "../../FramedataPage.module.scss";
+import { GlobalSearch } from "../Search";
 import { getCharacterAvatar, handleImageError } from "../Shared/imageUtils";
 
 interface CharacterGridProps {
@@ -198,6 +199,9 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
 
   return (
     <div className={`${styles.characterGrid} ${styles.compactGrid}`}>
+      {/* Глобальный поиск по фреймдате */}
+      <GlobalSearch characters={characters} />
+
       <Card className="mb-4">
         <Card.Header>
           <h5 className="mb-0">Ожидающие изменения фреймдаты</h5>

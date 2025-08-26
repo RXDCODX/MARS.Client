@@ -20,6 +20,37 @@ export interface ApiMediaInfo {
   textInfo: MediaTextInfo;
 }
 
+export interface CinemaQueueStatistics {
+  /** @format int32 */
+  cancelledItems: number;
+  /** @format int32 */
+  completedItems: number;
+  /** @format int32 */
+  inProgressItems: number;
+  /** @format int32 */
+  pendingItems: number;
+  /** @format int32 */
+  postponedItems: number;
+  /** @format int32 */
+  totalItems: number;
+}
+
+export enum CinemaQueueStatusDetailParamsEnum {
+  Pending = "Pending",
+  InProgress = "InProgress",
+  Completed = "Completed",
+  Cancelled = "Cancelled",
+  Postponed = "Postponed",
+}
+
+export enum CinemaQueueStatusDetailParamsStatusEnum {
+  Pending = "Pending",
+  InProgress = "InProgress",
+  Completed = "Completed",
+  Cancelled = "Cancelled",
+  Postponed = "Postponed",
+}
+
 export interface CommandInfo {
   availablePlatforms: CommandInfoAvailablePlatformsEnum[];
   description: string;
@@ -117,6 +148,44 @@ export enum CommandsUserPlatformInfoListParamsPlatformEnum {
   Vk = "Vk",
 }
 
+export interface CreateMediaItemRequest {
+  addedBy?: string;
+  description?: string;
+  mediaUrl: string;
+  notes?: string;
+  /** @format int32 */
+  priority: number;
+  /** @format date-time */
+  scheduledFor?: string;
+  title: string;
+  twitchUserId?: string;
+  twitchUsername?: string;
+}
+
+export interface CreateUserRequest {
+  lTokenV2: string;
+  ltmidV2: string;
+  ltuidV2: string;
+  /** @format int64 */
+  telegramId?: number;
+  twitchId?: string;
+}
+
+export interface DailyAutoMarkupUser {
+  lTokenV2: string;
+  ltmidV2: string;
+  ltuidV2: string;
+  /** @format date-time */
+  createdAt?: string;
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  lastAutoMarkup: string;
+  /** @format int64 */
+  telegramId?: number;
+  twitchId?: string;
+}
+
 export interface MediaFileInfo {
   extension: string;
   fileName: string;
@@ -133,6 +202,36 @@ export enum MediaFileInfoTypeEnum {
   TelegramSticker = "TelegramSticker",
   Voice = "Voice",
   Gif = "Gif",
+}
+
+export interface MediaItemDto {
+  addedBy?: string;
+  /** @format date-time */
+  createdAt: string;
+  description?: string;
+  /** @format uuid */
+  id: string;
+  isNext: boolean;
+  /** @format date-time */
+  lastModified?: string;
+  mediaUrl: string;
+  notes?: string;
+  /** @format int32 */
+  priority: number;
+  /** @format date-time */
+  scheduledFor?: string;
+  status: MediaItemDtoStatusEnum;
+  title: string;
+  twitchUserId?: string;
+  twitchUsername?: string;
+}
+
+export enum MediaItemDtoStatusEnum {
+  Pending = "Pending",
+  InProgress = "InProgress",
+  Completed = "Completed",
+  Cancelled = "Cancelled",
+  Postponed = "Postponed",
 }
 
 export interface MediaMetaInfo {
@@ -369,4 +468,34 @@ export interface TekkenCharacterPendingDto {
   pageUrl: string;
   strengths?: string[];
   weaknesess?: string[];
+}
+
+export interface UpdateMediaItemRequest {
+  description?: string;
+  isNext?: boolean;
+  mediaUrl?: string;
+  notes?: string;
+  /** @format int32 */
+  priority?: number;
+  /** @format date-time */
+  scheduledFor?: string;
+  status: UpdateMediaItemRequestStatusEnum;
+  title?: string;
+}
+
+export enum UpdateMediaItemRequestStatusEnum {
+  Pending = "Pending",
+  InProgress = "InProgress",
+  Completed = "Completed",
+  Cancelled = "Cancelled",
+  Postponed = "Postponed",
+}
+
+export interface UpdateUserRequest {
+  lTokenV2?: string;
+  ltmidV2?: string;
+  ltuidV2?: string;
+  /** @format int64 */
+  telegramId?: number;
+  twitchId?: string;
 }

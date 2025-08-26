@@ -23,6 +23,7 @@ import { OBSComponentWrapper } from "@/components/OBS_Components/wrapper";
 import ServerViewer from "@/Site/ControlRoom_Components/ServerViewer/ServerViewer";
 import ServiceDetails from "@/Site/ControlRoom_Components/ServerViewer/ServiceDetails";
 import AboutPage from "@/Site/Pages/AboutPage";
+import CinemaQueuePage from "@/Site/Pages/CinemaQueuePage/CinemaQueuePage";
 import CommandsPage from "@/Site/Pages/CommandsPage/CommandsPage";
 import ContactsPage from "@/Site/Pages/ContactsPage";
 import DocsPage from "@/Site/Pages/DocsPage";
@@ -34,7 +35,7 @@ import FramedataPage from "@/Site/Pages/FramedataPage/FramedataPage";
 import { MediaInfoEditPage } from "@/Site/Pages/MediaInfoPage/MediaInfoEditPage";
 import { MediaInfoListPage } from "@/Site/Pages/MediaInfoPage/MediaInfoListPage";
 import WelcomePage from "@/Site/Pages/WelcomePage";
-import { Layout } from "@/Site/Site_Components/Layout";
+import Layout from "@/Site/Site_Components/Layout/Layout";
 
 import { LinktreeMenu } from "./LinkTree/LinkTreeMenu";
 
@@ -126,6 +127,14 @@ const PrivateRoutes = () => (
         element={
           <Layout>
             <MediaInfoEditPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/cinema-queue"
+        element={
+          <Layout>
+            <CinemaQueuePage />
           </Layout>
         }
       />
