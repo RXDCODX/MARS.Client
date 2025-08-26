@@ -1,8 +1,11 @@
 import { HubConnection, HubConnectionState } from "@microsoft/signalr";
 import { create } from "zustand";
 
-import { ScoreboardDto } from "@/shared/api";
-import { ScoreboardHubSignalRConnectionBuilder } from "@/shared/api";
+import {
+  ScoreboardColorsDto,
+  ScoreboardDto,
+  ScoreboardHubSignalRConnectionBuilder,
+} from "@/shared/api";
 
 import {
   ColorInfoWIthTimestamp,
@@ -339,11 +342,24 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
     ) => {
       const state = get();
 
+      // Функция для преобразования ColorPreset в ScoreboardColorsDto
+      const convertColorPresetToDto = (
+        colorPreset: ColorPreset
+      ): ScoreboardColorsDto => ({
+        backgroundColor: colorPreset.backgroundColor,
+        borderColor: colorPreset.borderColor,
+        fightModeColor: colorPreset.fightModeColor,
+        mainColor: colorPreset.mainColor,
+        playerNamesColor: colorPreset.playerNamesColor,
+        scoreColor: colorPreset.scoreColor,
+        tournamentTitleColor: colorPreset.tournamentTitleColor,
+      });
+
       return {
         player1: updatedPlayer1 || state.player1,
         player2: updatedPlayer2 || state.player2,
         meta: updatedMeta || state.meta,
-        colors: updatedColor || state.color,
+        colors: convertColorPresetToDto(updatedColor || state.color),
         layout: updatedLayout || state.layout,
         isVisible:
           updatedVisibility !== undefined ? updatedVisibility : state.isVisible,
