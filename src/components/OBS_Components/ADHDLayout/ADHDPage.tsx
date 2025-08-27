@@ -4,6 +4,7 @@ import Announce from "@/shared/Utils/Announce/Announce";
 
 import { BreakingNews } from "./components/BreakingNews";
 import { Catisa } from "./components/Catisa";
+import { DVDLogos } from "./components/DVDLogos";
 import { FitnessVideo } from "./components/FitnessVideo";
 import { HydraulicMobileVideo } from "./components/HydraulicMobileVideo";
 import { LOFIGirl } from "./components/LOFI-Girl";
@@ -23,6 +24,7 @@ export function ADHDPage() {
       {!announced && (
         <Announce callback={() => setAnnounced(true)} title={"ADHD Layout"} />
       )}
+      <DVDLogos />
       <BreakingNews />
       <StreamerVideo />
       <FitnessVideo />

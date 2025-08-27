@@ -7,10 +7,10 @@ export const Surfer = () => (
     style={{
       objectFit: "cover",
       position: "absolute",
-      bottom: "0",
+      top: "10vh",
       right: "0",
       zIndex: 1000,
-      transform: "scale(0.45)",
+      transform: "scale(0.65)",
       transformOrigin: "right bottom",
     }}
   >
