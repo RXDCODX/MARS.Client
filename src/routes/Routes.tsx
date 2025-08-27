@@ -20,9 +20,8 @@ import Manager from "@/components/OBS_Components/ScreenParticles/Manager";
 import CurrentTrackInfo from "@/components/OBS_Components/SoundRequest/CurrentTrack/CurrentTrackManager";
 import WaifuAlerts from "@/components/OBS_Components/WaifuAlerts/WaifuAlerts";
 import { OBSComponentWrapper } from "@/components/OBS_Components/wrapper";
-import ServerViewer from "@/Site/ControlRoom_Components/ServerViewer/ServerViewer";
-import ServiceDetails from "@/Site/ControlRoom_Components/ServerViewer/ServiceDetails";
 import AboutPage from "@/Site/Pages/AboutPage";
+import BackupsPage from "@/Site/Pages/BackupsPage";
 import CinemaQueuePage from "@/Site/Pages/CinemaQueuePage/CinemaQueuePage";
 import CommandsPage from "@/Site/Pages/CommandsPage/CommandsPage";
 import ContactsPage from "@/Site/Pages/ContactsPage";
@@ -32,10 +31,12 @@ import {
   PendingChangesPage,
 } from "@/Site/Pages/FramedataPage";
 import FramedataPage from "@/Site/Pages/FramedataPage/FramedataPage";
+import Layout from "@/Site/Pages/Layout/Layout";
 import { MediaInfoEditPage } from "@/Site/Pages/MediaInfoPage/MediaInfoEditPage";
 import { MediaInfoListPage } from "@/Site/Pages/MediaInfoPage/MediaInfoListPage";
+import ServerViewer from "@/Site/Pages/ServerViewer/ServerViewer";
+import ServiceDetails from "@/Site/Pages/ServerViewer/ServiceDetails";
 import WelcomePage from "@/Site/Pages/WelcomePage";
-import Layout from "@/Site/Site_Components/Layout/Layout";
 
 import { LinktreeMenu } from "./LinkTree/LinkTreeMenu";
 
@@ -107,6 +108,14 @@ const PrivateRoutes = () => (
         }
       />
       <Route
+        path="/backups"
+        element={
+          <Layout>
+            <BackupsPage />
+          </Layout>
+        }
+      />
+      <Route
         path="/framedata/pending/:changeId"
         element={
           <Layout>
@@ -135,6 +144,14 @@ const PrivateRoutes = () => (
         element={
           <Layout>
             <CinemaQueuePage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/backups"
+        element={
+          <Layout>
+            <BackupsPage />
           </Layout>
         }
       />

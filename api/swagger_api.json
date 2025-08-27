@@ -863,6 +863,95 @@
         }
       }
     },
+    "/api/DatabaseBackup/create": {
+      "post": {
+        "tags": [
+          "DatabaseBackup"
+        ],
+        "parameters": [
+          {
+            "name": "databaseName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/DatabaseBackup/download": {
+      "get": {
+        "tags": [
+          "DatabaseBackup"
+        ],
+        "parameters": [
+          {
+            "name": "fileName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/DatabaseBackup/list": {
+      "get": {
+        "tags": [
+          "DatabaseBackup"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/DatabaseBackup/cleanup": {
+      "post": {
+        "tags": [
+          "DatabaseBackup"
+        ],
+        "parameters": [
+          {
+            "name": "keepCount",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/DatabaseBackup/status": {
+      "get": {
+        "tags": [
+          "DatabaseBackup"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Framedata/characters": {
       "get": {
         "tags": [

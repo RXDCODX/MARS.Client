@@ -838,6 +838,23 @@
         "responses": { }
       }
     },
+    "/hubs/telegramus/TemplateMessage": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "message",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/telegramus/UpdateWaifuPrizes": {
       "post": {
         "tags": [

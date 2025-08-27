@@ -83,6 +83,7 @@ const Header: React.FC = () => {
     { label: "Дашборд", path: "/dashboard" },
     { label: "Просмотр серверов", path: "/main" },
     { label: "Сервисы", path: "/services" },
+    { label: "Бекапы", path: "/backups" },
   ];
 
   const handleDropdownToggle = (dropdownName: string) => {

@@ -11,6 +11,7 @@ export * from "./signalr-types/signalr-types";
 // Импорты HTTP клиентов
 export { CinemaQueue } from "./http-clients/CinemaQueue";
 export { Commands } from "./http-clients/Commands";
+export { DatabaseBackup } from "./http-clients/DatabaseBackup";
 export { Framedata } from "./http-clients/Framedata";
 export { FramedataChanges } from "./http-clients/FramedataChanges";
 export { Honkai } from "./http-clients/Honkai";
