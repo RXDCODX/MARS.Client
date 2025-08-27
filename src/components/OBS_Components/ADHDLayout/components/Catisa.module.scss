@@ -1,0 +1,14 @@
+.catisaContainer {
+  position: absolute;
+  top: 36vh;
+  right: -5vh;
+  transform: translateY(-50%);
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.catisaImage {
+  width: 400px;
+  height: auto;
+  object-fit: contain;
+}

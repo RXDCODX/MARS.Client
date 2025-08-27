@@ -33,6 +33,7 @@ const Header: React.FC = () => {
     { label: "Контакты", path: "/contacts" },
     { label: "Управление алертами", path: "/media-info" },
     { label: "Cinema Queue", path: "/cinema-queue" },
+    { label: "ADHD News", path: "/adhd" },
   ];
 
   const framedataPages: NavigationItem[] = [
@@ -70,6 +71,7 @@ const Header: React.FC = () => {
         { label: "Random Mem", path: "/randommem" },
         { label: "Экранные частицы", path: "/confetti" },
         { label: "AFK Screen", path: "/afkscreen" },
+        { label: "ADHD News", path: "/adhd" },
       ],
     },
     {

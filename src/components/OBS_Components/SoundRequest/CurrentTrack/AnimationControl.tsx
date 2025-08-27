@@ -206,7 +206,8 @@ export default function AnimationControl({
         variants={maskVariants}
         initial="idle"
         animate={
-          animationStage === "compressIn" || animationStage === "compressInFinal"
+          animationStage === "compressIn" ||
+          animationStage === "compressInFinal"
             ? "compress"
             : "idle"
         }

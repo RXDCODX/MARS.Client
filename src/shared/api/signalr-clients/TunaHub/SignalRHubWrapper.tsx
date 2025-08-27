@@ -8,9 +8,7 @@ interface TunaHubProps {
   children: React.ReactNode;
 }
 
-export function TunaHubSignalRHubWrapper({
-  children,
-}: TunaHubProps) {
+export function TunaHubSignalRHubWrapper({ children }: TunaHubProps) {
   return (
     <TunaHubSignalRContext.Provider
       automaticReconnect={true}

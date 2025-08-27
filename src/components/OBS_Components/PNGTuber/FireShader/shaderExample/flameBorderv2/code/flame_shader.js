@@ -16,8 +16,6 @@ void main(void)
 
 //***************************************************************************** */
 
-
-
 const fragment_shader_source = `#version 300 es
 
 precision mediump float;
@@ -352,28 +350,6 @@ float gradient(float value, float min, float max, float height)
 
 `;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // vec4 render(vec2 input_coords)
 // {
 //     vec3 c = create_colors(input_coords).rgb;
@@ -396,7 +372,7 @@ float gradient(float value, float min, float max, float height)
 //     {
 //         Z += kernel[j];
 //     }
-	
+
 // 	//read out the texels
 //     for (int i=-kSize; i <= kSize; ++i)
 //     {
@@ -405,17 +381,17 @@ float gradient(float value, float min, float max, float height)
 //             finalColor += kernel[kSize+j] * kernel[kSize+i] * c.rgb;
 //         }
 //     }
-	
+
 //     finalColor /= Z * Z;
 
 //     finalColor = c + pow(finalColor, vec3(0.5)) * 0.5;
-	
+
 // 	float alpha = clamp(alpha_percentage * 0.01, 0.0, 1.0);
-	
+
 // 	vec4 col = vec4(finalColor.r, finalColor.g, finalColor.b, alpha);
-	
+
 // 	if (is_apply_to_alpha_layer)
-//     {    
+//     {
 //         vec4 background_color = vec4(0.0, 0.0, 0.0, 0.0);
 
 // 		col = apply_to_alpha_layer(background_color, col, alpha);
