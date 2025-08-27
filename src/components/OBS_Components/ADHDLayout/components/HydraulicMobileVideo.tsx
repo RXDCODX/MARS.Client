@@ -1,6 +1,17 @@
+import { useEffect, useRef } from "react";
+
 export function HydraulicMobileVideo() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.playbackRate = 2.5;
+    }
+  }, []);
+
   return (
     <video
+      ref={videoRef}
       autoPlay
       loop
       muted
