@@ -1,6 +1,6 @@
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
-import { ADHDPage } from "@/components/OBS_Components/ADHDLayout";
+import { ADHDController } from "@/components/OBS_Components/ADHDLayout";
 import AFKScreen from "@/components/OBS_Components/AFKScreen/AFKScreen";
 import AutoMessageBillboard from "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboard";
 import AutoMessageBillboardTest from "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboardTest";
@@ -152,7 +152,7 @@ const PrivateRoutes = () => (
         path="/adhd"
         element={
           <OBSComponentWrapper>
-            <ADHDPage />
+            <ADHDController />
           </OBSComponentWrapper>
         }
       />

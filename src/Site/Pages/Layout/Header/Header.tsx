@@ -71,7 +71,7 @@ const Header: React.FC = () => {
         { label: "Random Mem", path: "/randommem" },
         { label: "Экранные частицы", path: "/confetti" },
         { label: "AFK Screen", path: "/afkscreen" },
-        { label: "ADHD News", path: "/adhd" },
+        { label: "ADHD Controller", path: "/adhd" },
       ],
     },
     {

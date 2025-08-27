@@ -571,6 +571,24 @@
         "responses": { }
       }
     },
+    "/hubs/telegramus/Adhd": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "seconds",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/telegramus/Alert": {
       "post": {
         "tags": [
