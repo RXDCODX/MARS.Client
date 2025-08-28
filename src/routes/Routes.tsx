@@ -37,6 +37,7 @@ import { MediaInfoEditPage } from "@/Site/Pages/MediaInfoPage/MediaInfoEditPage"
 import { MediaInfoListPage } from "@/Site/Pages/MediaInfoPage/MediaInfoListPage";
 import ServerViewer from "@/Site/Pages/ServerViewer/ServerViewer";
 import ServiceDetails from "@/Site/Pages/ServerViewer/ServiceDetails";
+import TwitchRewardsPage from "@/Site/Pages/TwitchRewardsPage";
 import WelcomePage from "@/Site/Pages/WelcomePage";
 
 import { LinktreeMenu } from "./LinkTree/LinkTreeMenu";
@@ -334,6 +335,14 @@ const PrivateRoutes = () => (
         element={
           <Layout>
             <ServiceDetailsPage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/twitch-rewards"
+        element={
+          <Layout>
+            <TwitchRewardsPage />
           </Layout>
         }
       />

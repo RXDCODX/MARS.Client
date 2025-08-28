@@ -18,6 +18,7 @@ export { Honkai } from "./http-clients/Honkai";
 export { MediaInfoApi } from "./http-clients/MediaInfoApi";
 export { RxdcodxViewers } from "./http-clients/RxdcodxViewers";
 export { ServiceManager } from "./http-clients/ServiceManager";
+export { TwitchRewards } from "./http-clients/TwitchRewards";
 
 // Импорты SignalR клиентов
 export { ScoreboardHubSignalRConnectionBuilder } from "./signalr-clients/ScoreboardHub/SignalRContext";

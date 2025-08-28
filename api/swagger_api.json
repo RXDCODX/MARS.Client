@@ -2872,6 +2872,309 @@
           }
         }
       }
+    },
+    "/api/twitch/rewards": {
+      "get": {
+        "tags": [
+          "TwitchRewards"
+        ],
+        "parameters": [
+          {
+            "name": "onlyManageable",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "TwitchRewards"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateCustomRewardsRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateCustomRewardsRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateCustomRewardsRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomReward"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomReward"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomReward"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/twitch/rewards/{rewardId}": {
+      "patch": {
+        "tags": [
+          "TwitchRewards"
+        ],
+        "parameters": [
+          {
+            "name": "rewardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateCustomRewardRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateCustomRewardRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateCustomRewardRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomReward"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomReward"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomReward"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "TwitchRewards"
+        ],
+        "parameters": [
+          {
+            "name": "rewardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/twitch/rewards/{rewardId}/redemptions": {
+      "get": {
+        "tags": [
+          "TwitchRewards"
+        ],
+        "parameters": [
+          {
+            "name": "rewardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "UNFULFILLED"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "first",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCustomRewardRedemptionResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCustomRewardRedemptionResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCustomRewardRedemptionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/twitch/rewards/{rewardId}/redemptions/status": {
+      "post": {
+        "tags": [
+          "TwitchRewards"
+        ],
+        "parameters": [
+          {
+            "name": "rewardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "ids",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateCustomRewardRedemptionStatusRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateCustomRewardRedemptionStatusRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateCustomRewardRedemptionStatusRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3037,6 +3340,70 @@
         },
         "additionalProperties": false
       },
+      "CreateCustomRewardsRequest": {
+        "required": [
+          "cost",
+          "isEnabled",
+          "isGlobalCooldownEnabled",
+          "isMaxPerStreamEnabled",
+          "isMaxPerUserPerStreamEnabled",
+          "isUserInputRequired",
+          "shouldRedemptionsSkipRequestQueue"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "cost": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "backgroundColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "isUserInputRequired": {
+            "type": "boolean"
+          },
+          "isMaxPerStreamEnabled": {
+            "type": "boolean"
+          },
+          "maxPerStream": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isMaxPerUserPerStreamEnabled": {
+            "type": "boolean"
+          },
+          "maxPerUserPerStream": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isGlobalCooldownEnabled": {
+            "type": "boolean"
+          },
+          "globalCooldownSeconds": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "shouldRedemptionsSkipRequestQueue": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "CreateMediaItemRequest": {
         "required": [
           "mediaUrl",
@@ -3112,6 +3479,136 @@
         },
         "additionalProperties": false
       },
+      "CustomReward": {
+        "required": [
+          "cost",
+          "isEnabled",
+          "isInStock",
+          "isPaused",
+          "isUserInputRequired",
+          "shouldRedemptionsSkipQueue"
+        ],
+        "type": "object",
+        "properties": {
+          "broadcasterId": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "broadcasterLogin": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "broadcasterName": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "id": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "cost": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "image": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Image"
+              }
+            ],
+            "nullable": true,
+            "readOnly": true
+          },
+          "defaultImage": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DefaultImage"
+              }
+            ],
+            "nullable": true,
+            "readOnly": true
+          },
+          "backgroundColor": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "isEnabled": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isUserInputRequired": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "maxPerStreamSetting": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MaxPerStreamSetting"
+              }
+            ],
+            "nullable": true,
+            "readOnly": true
+          },
+          "maxPerUserPerStreamSetting": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MaxPerUserPerStreamSetting"
+              }
+            ],
+            "nullable": true,
+            "readOnly": true
+          },
+          "globalCooldownSetting": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GlobalCooldownSetting"
+              }
+            ],
+            "nullable": true,
+            "readOnly": true
+          },
+          "isPaused": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isInStock": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "shouldRedemptionsSkipQueue": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "redemptionsRedeemedCurrentStream": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true,
+            "readOnly": true
+          },
+          "cooldownExpiresAt": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "DailyAutoMarkupUser": {
         "required": [
           "id",
@@ -3152,6 +3649,128 @@
           "lastAutoMarkup": {
             "type": "string",
             "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DefaultImage": {
+        "type": "object",
+        "properties": {
+          "url1x": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "url2x": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "url4x": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetCustomRewardRedemptionResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RewardRedemption"
+            },
+            "nullable": true,
+            "readOnly": true
+          },
+          "pagination": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Pagination"
+              }
+            ],
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GlobalCooldownSetting": {
+        "required": [
+          "globalCooldownSeconds",
+          "isEnabled"
+        ],
+        "type": "object",
+        "properties": {
+          "isEnabled": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "globalCooldownSeconds": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Image": {
+        "type": "object",
+        "properties": {
+          "url1x": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "url2x": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "url4x": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MaxPerStreamSetting": {
+        "required": [
+          "isEnabled",
+          "maxPerStream"
+        ],
+        "type": "object",
+        "properties": {
+          "isEnabled": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "maxPerStream": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MaxPerUserPerStreamSetting": {
+        "required": [
+          "isEnabled",
+          "maxPerUserPerStream"
+        ],
+        "type": "object",
+        "properties": {
+          "isEnabled": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "maxPerUserPerStream": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -3697,6 +4316,17 @@
         },
         "additionalProperties": false
       },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "cursor": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ParseRequest": {
         "required": [
           "source"
@@ -3768,6 +4398,108 @@
           },
           "message": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Reward": {
+        "required": [
+          "cost"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "cost": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RewardRedemption": {
+        "required": [
+          "redeemedAt",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "broadcasterId": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "broadcasterLogin": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "broadcasterName": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "id": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "userId": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "userLogin": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "userName": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "userInput": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "status": {
+            "enum": [
+              "UNFULFILLED",
+              "FULFILLED",
+              "CANCELED"
+            ],
+            "type": "string",
+            "readOnly": true
+          },
+          "redeemedAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "reward": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Reward"
+              }
+            ],
+            "nullable": true,
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -4019,6 +4751,93 @@
           },
           "isNew": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateCustomRewardRedemptionStatusRequest": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "UNFULFILLED",
+              "FULFILLED",
+              "CANCELED"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateCustomRewardRequest": {
+        "type": "object",
+        "properties": {
+          "broadcasterId": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "cost": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isEnabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "backgroundColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "isUserInputRequired": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isMaxPerStreamEnabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "maxPerStream": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isMaxPerUserPerStreamEnabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "maxPerUserPerStream": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isGlobalCooldownEnabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "globalCooldownSeconds": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isPaused": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "shouldRedemptionsSkipRequestQueue": {
+            "type": "boolean",
+            "nullable": true
           }
         },
         "additionalProperties": false

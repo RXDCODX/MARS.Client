@@ -148,6 +148,26 @@ export enum CommandsUserPlatformInfoListParamsPlatformEnum {
   Vk = "Vk",
 }
 
+export interface CreateCustomRewardsRequest {
+  backgroundColor?: string;
+  /** @format int32 */
+  cost: number;
+  /** @format int32 */
+  globalCooldownSeconds?: number;
+  isEnabled: boolean;
+  isGlobalCooldownEnabled: boolean;
+  isMaxPerStreamEnabled: boolean;
+  isMaxPerUserPerStreamEnabled: boolean;
+  isUserInputRequired: boolean;
+  /** @format int32 */
+  maxPerStream?: number;
+  /** @format int32 */
+  maxPerUserPerStream?: number;
+  prompt?: string;
+  shouldRedemptionsSkipRequestQueue: boolean;
+  title?: string;
+}
+
 export interface CreateMediaItemRequest {
   addedBy?: string;
   description?: string;
@@ -171,6 +191,31 @@ export interface CreateUserRequest {
   twitchId?: string;
 }
 
+export interface CustomReward {
+  backgroundColor?: string;
+  broadcasterId?: string;
+  broadcasterLogin?: string;
+  broadcasterName?: string;
+  cooldownExpiresAt?: string;
+  /** @format int32 */
+  cost: number;
+  defaultImage?: DefaultImage;
+  globalCooldownSetting?: GlobalCooldownSetting;
+  id?: string;
+  image?: Image;
+  isEnabled: boolean;
+  isInStock: boolean;
+  isPaused: boolean;
+  isUserInputRequired: boolean;
+  maxPerStreamSetting?: MaxPerStreamSetting;
+  maxPerUserPerStreamSetting?: MaxPerUserPerStreamSetting;
+  prompt?: string;
+  /** @format int32 */
+  redemptionsRedeemedCurrentStream?: number;
+  shouldRedemptionsSkipQueue: boolean;
+  title?: string;
+}
+
 export interface DailyAutoMarkupUser {
   lTokenV2: string;
   ltmidV2: string;
@@ -184,6 +229,41 @@ export interface DailyAutoMarkupUser {
   /** @format int64 */
   telegramId?: number;
   twitchId?: string;
+}
+
+export interface DefaultImage {
+  url1x?: string;
+  url2x?: string;
+  url4x?: string;
+}
+
+export interface GetCustomRewardRedemptionResponse {
+  data?: RewardRedemption[];
+  pagination?: Pagination;
+}
+
+export interface GlobalCooldownSetting {
+  /** @format int32 */
+  globalCooldownSeconds: number;
+  isEnabled: boolean;
+}
+
+export interface Image {
+  url1x?: string;
+  url2x?: string;
+  url4x?: string;
+}
+
+export interface MaxPerStreamSetting {
+  isEnabled: boolean;
+  /** @format int32 */
+  maxPerStream: number;
+}
+
+export interface MaxPerUserPerStreamSetting {
+  isEnabled: boolean;
+  /** @format int32 */
+  maxPerUserPerStream: number;
 }
 
 export interface MediaFileInfo {
@@ -357,6 +437,10 @@ export interface MovePendingDto {
   tornado: boolean;
 }
 
+export interface Pagination {
+  cursor?: string;
+}
+
 export interface ParseRequest {
   /** @format int32 */
   characterDelaySeconds?: number;
@@ -382,6 +466,35 @@ export interface ParseResult {
   message: string;
   parsedCharacters: string[];
   success: boolean;
+}
+
+export interface Reward {
+  /** @format int32 */
+  cost: number;
+  id?: string;
+  prompt?: string;
+  title?: string;
+}
+
+export interface RewardRedemption {
+  broadcasterId?: string;
+  broadcasterLogin?: string;
+  broadcasterName?: string;
+  id?: string;
+  /** @format date-time */
+  redeemedAt: string;
+  reward?: Reward;
+  status: RewardRedemptionStatusEnum;
+  userId?: string;
+  userInput?: string;
+  userLogin?: string;
+  userName?: string;
+}
+
+export enum RewardRedemptionStatusEnum {
+  UNFULFILLED = "UNFULFILLED",
+  FULFILLED = "FULFILLED",
+  CANCELED = "CANCELED",
 }
 
 export interface ServiceInfo {
@@ -468,6 +581,38 @@ export interface TekkenCharacterPendingDto {
   pageUrl: string;
   strengths?: string[];
   weaknesess?: string[];
+}
+
+export interface UpdateCustomRewardRedemptionStatusRequest {
+  status: UpdateCustomRewardRedemptionStatusRequestStatusEnum;
+}
+
+export enum UpdateCustomRewardRedemptionStatusRequestStatusEnum {
+  UNFULFILLED = "UNFULFILLED",
+  FULFILLED = "FULFILLED",
+  CANCELED = "CANCELED",
+}
+
+export interface UpdateCustomRewardRequest {
+  backgroundColor?: string;
+  broadcasterId?: string;
+  /** @format int32 */
+  cost?: number;
+  /** @format int32 */
+  globalCooldownSeconds?: number;
+  isEnabled?: boolean;
+  isGlobalCooldownEnabled?: boolean;
+  isMaxPerStreamEnabled?: boolean;
+  isMaxPerUserPerStreamEnabled?: boolean;
+  isPaused?: boolean;
+  isUserInputRequired?: boolean;
+  /** @format int32 */
+  maxPerStream?: number;
+  /** @format int32 */
+  maxPerUserPerStream?: number;
+  prompt?: string;
+  shouldRedemptionsSkipRequestQueue?: boolean;
+  title?: string;
 }
 
 export interface UpdateMediaItemRequest {

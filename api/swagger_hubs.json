@@ -708,7 +708,7 @@
             "name": "faceUrl",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Image"
+              "$ref": "#/components/schemas/AutoArtImage"
             }
           }
         ],
@@ -934,6 +934,78 @@
   },
   "components": {
     "schemas": {
+      "AutoArtImage": {
+        "required": [
+          "byteSize",
+          "favorites",
+          "height",
+          "imageID",
+          "isNsfw",
+          "uploadedAt",
+          "width"
+        ],
+        "type": "object",
+        "properties": {
+          "signature": {
+            "type": "string",
+            "nullable": true
+          },
+          "extension": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "favorites": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dominantColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "nullable": true
+          },
+          "artist": {
+            "nullable": true
+          },
+          "uploadedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "likedAt": {
+            "nullable": true
+          },
+          "isNsfw": {
+            "type": "boolean"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "byteSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          },
+          "previewURL": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "BaseTrackInfo": {
         "required": [
           "domain",
@@ -1454,78 +1526,6 @@
           "time": {
             "type": "string",
             "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
-      "Image": {
-        "required": [
-          "byteSize",
-          "favorites",
-          "height",
-          "imageID",
-          "isNsfw",
-          "uploadedAt",
-          "width"
-        ],
-        "type": "object",
-        "properties": {
-          "signature": {
-            "type": "string",
-            "nullable": true
-          },
-          "extension": {
-            "type": "string",
-            "nullable": true
-          },
-          "imageID": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "favorites": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "dominantColor": {
-            "type": "string",
-            "nullable": true
-          },
-          "source": {
-            "type": "string",
-            "nullable": true
-          },
-          "artist": {
-            "nullable": true
-          },
-          "uploadedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "likedAt": {
-            "nullable": true
-          },
-          "isNsfw": {
-            "type": "boolean"
-          },
-          "width": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "height": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "byteSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "url": {
-            "type": "string",
-            "nullable": true
-          },
-          "previewURL": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false
