@@ -6,6 +6,7 @@ interface RainDrop {
   speed: number;
   length: number;
   opacity: number;
+  thickness: number;
 }
 
 export const RainEffect = (): React.ReactElement => {
@@ -30,15 +31,16 @@ export const RainEffect = (): React.ReactElement => {
 
     // Создаем капли дождя
     const raindrops: RainDrop[] = [];
-    const maxDrops = 200;
+    const maxDrops = 400; // Увеличил с 200 до 400
 
     for (let i = 0; i < maxDrops; i++) {
       raindrops.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height - canvas.height,
-        speed: 2 + Math.random() * 3,
-        length: 10 + Math.random() * 20,
-        opacity: 0.1 + Math.random() * 0.3,
+        speed: 4 + Math.random() * 6, // Увеличил скорость с 2-5 до 4-10
+        length: 20 + Math.random() * 40, // Увеличил длину с 10-30 до 20-60
+        opacity: 0.3 + Math.random() * 0.7, // Увеличил прозрачность с 0.1-0.4 до 0.3-1.0
+        thickness: 1 + Math.random() * 2, // Добавил толщину капель
       });
     }
 
@@ -46,12 +48,14 @@ export const RainEffect = (): React.ReactElement => {
     const animate = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      ctx.strokeStyle = "#8892b0";
-      ctx.lineWidth = 1;
+      // Более яркий и заметный цвет дождя
+      ctx.strokeStyle = "#4fc3f7"; // Яркий голубой цвет
       ctx.lineCap = "round";
 
       raindrops.forEach(drop => {
         ctx.globalAlpha = drop.opacity;
+        ctx.lineWidth = drop.thickness; // Используем толщину для каждой капли
+
         ctx.beginPath();
         ctx.moveTo(drop.x, drop.y);
         ctx.lineTo(drop.x, drop.y + drop.length);
