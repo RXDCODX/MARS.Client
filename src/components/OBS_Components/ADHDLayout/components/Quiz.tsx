@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+
 import { getDataPath, getImagePath } from "./imageAssets";
 import styles from "./Quiz.module.scss";
 

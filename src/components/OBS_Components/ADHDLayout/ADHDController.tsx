@@ -186,19 +186,18 @@ export function ADHDController() {
       {!announced && (
         <Announce title={"ADHD"} callback={() => setAnnounced(true)} />
       )}
-      {state.isVisible ||
-        (import.meta.env.DEV && (
-          <div className={styles.adhdControllerContainer}>
-            <ADHDPage />
-            <div className={styles.timerOverlay}>
-              <div className={styles.timerContent}>
-                <span className={styles.timerValue}>
-                  {formatTime(state.remainingTime)}
-                </span>
-              </div>
+      {(state.isVisible || import.meta.env.DEV) && (
+        <div className={styles.adhdControllerContainer}>
+          <ADHDPage />
+          <div className={styles.timerOverlay}>
+            <div className={styles.timerContent}>
+              <span className={styles.timerValue}>
+                {formatTime(state.remainingTime)}
+              </span>
             </div>
           </div>
-        ))}
+        </div>
+      )}
       {state.isExploding && (
         <video
           ref={explosionRef}
