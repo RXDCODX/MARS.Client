@@ -179,6 +179,7 @@ $font-size-small: 14px;
   h2 {
     margin: 0;
     font-size: $font-size-medium;
+    -webkit-text-size-adjust: auto;
     font-weight: 600;
     color: $secondary-color;
     line-height: 1.2;

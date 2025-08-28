@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useCallback, useState } from "react";
+import { type CSSProperties, useCallback, useState } from "react";
 
 import { useScoreboardStore } from "./AdminPanel";
 import {
@@ -151,6 +151,35 @@ const ScoreboardContent: React.FC = () => {
     },
   };
 
+  // Dynamic border calculations based on header height
+  const baseHeaderHeight = 60; // reference height matching SCSS defaults
+  const effectiveHeaderHeight = layout?.headerHeight ?? baseHeaderHeight;
+  const delta = baseHeaderHeight - effectiveHeaderHeight;
+
+  // Derived values from provided samples:
+  // top: -2px @60 -> -11px @20  => slope ≈ 0.225 per px
+  // height: 130% @60 -> 211% @20 => slope ≈ 2.025% per px
+  // left rotate: 148deg @60 -> 131deg @20 => slope ≈ 0.425deg per px (decreasing)
+  // right rotate: 32deg @60 -> 49deg @20 => slope ≈ 0.425deg per px (increasing)
+  const borderTopPx = -2 - 0.225 * delta;
+  const borderHeightPercent = 130 + 2.025 * delta;
+  const leftRotateDeg = 148 - 0.425 * delta;
+  const rightRotateDeg = 32 + 0.425 * delta;
+
+  const leftBorderStyle: CSSProperties = {
+    borderColor: colors.borderColor,
+    top: `${borderTopPx}px`,
+    height: `${borderHeightPercent}%`,
+    transform: `rotate(${leftRotateDeg}deg)`,
+  };
+
+  const rightBorderStyle: CSSProperties = {
+    borderColor: colors.borderColor,
+    top: `${borderTopPx}px`,
+    height: `${borderHeightPercent}%`,
+    transform: `rotate(${rightRotateDeg}deg)`,
+  };
+
   return (
     <AnimatePresence>
       {isVisible && (
@@ -180,7 +209,7 @@ const ScoreboardContent: React.FC = () => {
             >
               <div
                 className={styles.headerLeftBorder}
-                style={{ borderColor: colors.borderColor }}
+                style={leftBorderStyle}
               ></div>
               <h1 style={{ color: colors.tournamentTitleColor }}>
                 {meta.title}
@@ -195,7 +224,7 @@ const ScoreboardContent: React.FC = () => {
               )}
               <div
                 className={styles.headerRightBorder}
-                style={{ borderColor: colors.borderColor }}
+                style={rightBorderStyle}
               ></div>
             </motion.div>
           )}

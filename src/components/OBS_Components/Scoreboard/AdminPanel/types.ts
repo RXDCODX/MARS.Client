@@ -104,7 +104,7 @@ export const defaultLayout: LayoutSettings = {
   playersRight: 0,
 
   // Размеры
-  headerHeight: 20,
+  headerHeight: 60,
   headerWidth: 400,
   playerBarHeight: 80,
   playerBarWidth: 500,
