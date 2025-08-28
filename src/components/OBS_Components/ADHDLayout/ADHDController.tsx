@@ -5,6 +5,7 @@ import Announce from "@/shared/Utils/Announce/Announce";
 
 import styles from "./ADHDLayout.module.scss";
 import { ADHDPage } from "./ADHDPage";
+import { videoAssets } from "./components/imageAssets";
 
 interface ADHDState {
   isVisible: boolean;
@@ -202,7 +203,7 @@ export function ADHDController() {
         <video
           ref={explosionRef}
           className={styles.explosionVideo}
-          src="/src/components/OBS_Components/ADHDLayout/content/explosion.webm"
+          src={videoAssets.explosion}
           autoPlay
           muted
         />
