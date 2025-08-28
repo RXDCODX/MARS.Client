@@ -1,3 +1,5 @@
+import { getVideoPath } from "./imageAssets";
+
 export function FitnessVideo() {
   return (
     <video
@@ -16,7 +18,7 @@ export function FitnessVideo() {
       }}
     >
       <source
-        src="/src/components/OBS_Components/ADHDLayout/content/fitness-small.webm"
+        src={getVideoPath("fitness")}
         type="video/webm"
       />
       Ваш браузер не поддерживает видео.

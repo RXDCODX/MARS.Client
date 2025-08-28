@@ -1,3 +1,5 @@
+import { getVideoPath } from "./imageAssets";
+
 export function StreamerVideo() {
   return (
     <video
@@ -16,7 +18,7 @@ export function StreamerVideo() {
       }}
     >
       <source
-        src="/src/components/OBS_Components/ADHDLayout/content/streamer.webm"
+        src={getVideoPath("streamer")}
         type="video/webm"
       />
       Ваш браузер не поддерживает видео.

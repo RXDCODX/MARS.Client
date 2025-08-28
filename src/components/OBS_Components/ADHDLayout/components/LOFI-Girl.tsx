@@ -1,3 +1,5 @@
+import { getImagePath } from "./imageAssets";
+
 export const LOFIGirl = () => (
   <picture
     style={{
@@ -10,10 +12,7 @@ export const LOFIGirl = () => (
       transformOrigin: "bottom",
     }}
   >
-    <source src="/src/components/OBS_Components/ADHDLayout/content/lofi-girl-small.gif" />
-    <img
-      src="/src/components/OBS_Components/ADHDLayout/content/lofi-girl-small.gif"
-      alt="LOFI Girl"
-    />
+    <source src={getImagePath("lofiGirl")} />
+    <img src={getImagePath("lofiGirl")} alt="LOFI Girl" />
   </picture>
 );

@@ -1,3 +1,5 @@
+import { getVideoPath } from "./imageAssets";
+
 export function MukbangVideo() {
   return (
     <video
@@ -15,10 +17,7 @@ export function MukbangVideo() {
         transformOrigin: "left",
       }}
     >
-      <source
-        src="/src/components/OBS_Components/ADHDLayout/content/mukbang-small.webm"
-        type="video/webm"
-      />
+      <source src={getVideoPath("mukbang")} type="video/webm" />
       Ваш браузер не поддерживает видео.
     </video>
   );

@@ -1,3 +1,4 @@
+import { getImagePath } from "./imageAssets";
 import styles from "./Notifications.module.scss";
 
 export const Notifications: React.FC = () => (
@@ -6,7 +7,7 @@ export const Notifications: React.FC = () => (
       <div className={`${styles.notification} ${styles.notificationFirst}`}>
         <div className={styles.notificationIconWrapper}>
           <img
-            src="/src/components/OBS_Components/ADHDLayout/content/email.webp"
+            src={getImagePath("email")}
             className={styles.notificationIcon}
             alt="Email notification"
           />
@@ -22,7 +23,7 @@ export const Notifications: React.FC = () => (
       <div className={`${styles.notification} ${styles.notificationSecond}`}>
         <div className={styles.notificationIconWrapper}>
           <img
-            src="/src/components/OBS_Components/ADHDLayout/content/email.webp"
+            src={getImagePath("email")}
             className={styles.notificationIcon}
             alt="Email notification"
           />
@@ -38,7 +39,7 @@ export const Notifications: React.FC = () => (
       <div className={`${styles.notification} ${styles.notificationThird}`}>
         <div className={styles.notificationIconWrapper}>
           <img
-            src="/src/components/OBS_Components/ADHDLayout/content/email.webp"
+            src={getImagePath("email")}
             className={styles.notificationIcon}
             alt="Email notification"
           />

@@ -1,38 +1,62 @@
-import { useEffect, useState } from "react";
-
 import styles from "./BreakingNews.module.scss";
 
 export function BreakingNews() {
-  const [breakingText, setBreakingText] = useState<string>("");
-
-  useEffect(() => {
-    // Загружаем текст из breaking.txt
-    fetch("/src/components/OBS_Components/ADHDLayout/content/breaking.txt")
-      .then(response => response.text())
-      .then(text => {
-        // Очищаем текст от лишних символов и объединяем в одну строку
-        const cleanedText = text
-          .split("\n")
-          .filter(line => line.trim() && !line.startsWith("•"))
-          .map(line => line.trim())
-          .join(" • ");
-        setBreakingText(cleanedText);
-      })
-      .catch(error => {
-        console.error("Ошибка загрузки breaking.txt:", error);
-        // Fallback текст
-        setBreakingText(
-          "Scientists discover house parties • Frogs missing worldwide • Local grandma says you're too thin"
-        );
-      });
-  }, []);
-
   return (
     <div className={styles.breakingNewsContainer}>
       <div className={styles.breakingNewsContent}>
         <div className={styles.breakingBadge}>BREAKING</div>
-        <div className={styles.breakingNewsText}>{breakingText}</div>
+        <div className={styles.breakingNewsText}>
+          {text.map(element => (
+            <span>
+              {element}
+              {"ㅤ"}•{"ㅤ"}
+            </span>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
+
+const text: string[] = [
+  "Scientists discover house parties",
+  "Are news banners a thing of the past?",
+  "Frogs missing worldwide",
+  "Wall Street analyst says recession will happen, or maybe not, he's not really sure",
+  "The frogs are back",
+  "Are cold showers making you bald?",
+  "My tummy hurts :(",
+  "Lab rats unionize and demand fair compensation",
+  "Op-ed: I've always wanted to write an op-ed",
+  "Local man finally moving away",
+  "Study says that you're looking super cute today :3",
+  "Introverts United meetup deals with disappointing attendance",
+  "Peter Piper, 63, picked up in pickled pepper ponzi plot",
+  "News headline writers facing layoffs, wait does that include me? Please I need this",
+  "President moves to reverse The Louisiana Purchase, “It was just a bad deal”",
+  "Diet Coke shown to cure just about everything",
+  "World's longest game of hide and seek turns into missing persons case",
+  "Mystery Meat Monday causes mass casualty",
+  "Hacker sets everyone's credit score to 7",
+  "Hero dog becomes world's worst DJ",
+  "Shrieking eldritch horror pulls ahead in mayoral race",
+  "Child star steals hearts, faces prison",
+  "Celebrity chef apologizes for asbestos incident",
+  "Father, 34, arrested for stealing son's nose",
+  "Scientists reveal something huge, probably",
+  "Rain expected worldwide today",
+  "Officials warn batteries still not edible",
+  "Winter fashion forecast: Jorts and junderwear",
+  "Orca capsizes hearts, wins Mystic Bay beauty pageant",
+  "Local grandma says you're too thin",
+  "Ketchup truck collision has drivers seeing red",
+  "Gymnastic medalist arrested in murder plot: “She's twisted”",
+  "Hot dog eating competition ends in tragedy",
+  "Scientists invent new form of anxiety",
+  "Local election ends in tie, candidates must kiss",
+  "Five dead in trolley problem",
+  "MPA unveils new rating system for prudes, dorks",
+  "Double trouble: Another Earth is heading our way",
+  "Beloved talk show host's last words revealed: “oof”",
+  "Nine out of ten doctors agree: The other doctor is a menace",
+];

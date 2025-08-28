@@ -1,3 +1,5 @@
+import { getVideoPath } from "./imageAssets";
+
 export const Surfer = () => (
   <video
     autoPlay
@@ -15,7 +17,7 @@ export const Surfer = () => (
     }}
   >
     <source
-      src="/src/components/OBS_Components/ADHDLayout/content/surfer.mp4"
+      src={getVideoPath("surfer")}
       type="video/mp4"
     />
     Ваш браузер не поддерживает видео.

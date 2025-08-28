@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { getVideoPath } from "./imageAssets";
 
 export function HydraulicMobileVideo() {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -27,7 +28,7 @@ export function HydraulicMobileVideo() {
       }}
     >
       <source
-        src="/src/components/OBS_Components/ADHDLayout/content/hydraulic-mobile.webm"
+        src={getVideoPath("hydraulic")}
         type="video/webm"
       />
       Ваш браузер не поддерживает видео.

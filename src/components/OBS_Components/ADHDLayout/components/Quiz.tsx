@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-
+import { getDataPath, getImagePath } from "./imageAssets";
 import styles from "./Quiz.module.scss";
 
 interface QuizQuestion {
@@ -19,16 +19,12 @@ export function Quiz() {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // Загружаем вопросы из owl.json
-    fetch("/src/components/OBS_Components/ADHDLayout/content/owl.json")
-      .then(response => response.json())
-      .then((data: QuizQuestion[]) => {
-        setQuestions(data);
-        setIsActive(true);
-      })
-      .catch(error => {
-        console.error("Ошибка загрузки owl.json:", error);
-      });
+    // Загружаем вопросы из owl.json через imageAssets
+    const owlData = getDataPath("owl");
+    if (Array.isArray(owlData)) {
+      setQuestions(owlData);
+      setIsActive(true);
+    }
   }, []);
 
   const nextQuestion = useCallback(() => {
@@ -96,7 +92,7 @@ export function Quiz() {
         <div className={styles.quizHeader}>
           <div className={styles.headerLeft}>
             <img
-              src="/src/components/OBS_Components/ADHDLayout/content/duolingo-normal.webp"
+              src={getImagePath("duolingo")}
               alt="Duolingo Owl"
               className={styles.owlImage}
             />

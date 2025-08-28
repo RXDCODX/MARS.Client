@@ -1,3 +1,5 @@
+import { getVideoPath } from "./imageAssets";
+
 export function SlimeVideo() {
   return (
     <video
@@ -16,7 +18,7 @@ export function SlimeVideo() {
       }}
     >
       <source
-        src="/src/components/OBS_Components/ADHDLayout/content/slime-small.webm"
+        src={getVideoPath("slime")}
         type="video/webm"
       />
       Ваш браузер не поддерживает видео.
