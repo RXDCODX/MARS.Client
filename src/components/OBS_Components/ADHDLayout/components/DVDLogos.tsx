@@ -205,8 +205,8 @@ export function DVDLogos() {
         position: "absolute",
         top: 0,
         left: 0,
-        width: "1920px",
-        height: "1080px",
+        width: "100vw",
+        height: "100vh",
         pointerEvents: "none",
         zIndex: 1000,
       }}

@@ -7,6 +7,7 @@ import { LOFIGirl } from "./components/LOFI-Girl";
 import { MukbangVideo } from "./components/MukbangVideo";
 import { Notifications } from "./components/Notifications";
 import { Quiz } from "./components/Quiz";
+import { RainEffect } from "./components/RainEffect";
 import { SlimeVideo } from "./components/SlimeVideo";
 import { StreamerVideo } from "./components/StreamerVideo";
 import { Surfer } from "./components/Surfer";
@@ -14,6 +15,7 @@ import { Surfer } from "./components/Surfer";
 export function ADHDPage() {
   return (
     <>
+      <RainEffect />
       <DVDLogos />
       <BreakingNews />
       <StreamerVideo />

@@ -114,7 +114,8 @@ export function Quiz() {
                 showResult
                   ? index === currentQuestion.answer
                     ? styles.correct
-                    : selectedAnswer === index && selectedAnswer !== currentQuestion.answer
+                    : selectedAnswer === index &&
+                        selectedAnswer !== currentQuestion.answer
                       ? styles.incorrect
                       : ""
                   : ""
