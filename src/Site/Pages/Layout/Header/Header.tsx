@@ -34,6 +34,7 @@ const Header: React.FC = () => {
     { label: "Управление алертами", path: "/media-info" },
     { label: "Cinema Queue", path: "/cinema-queue" },
     { label: "ADHD News", path: "/adhd" },
+    { label: "Все маршруты", path: "/routes" },
   ];
 
   const framedataPages: NavigationItem[] = [
@@ -122,7 +123,7 @@ const Header: React.FC = () => {
       <Container>
         <Navbar.Brand
           as={Link}
-          to="/"
+          to="/routes"
           className={styles.logo}
           style={colors.utils.getTextStyle("primary")}
         >

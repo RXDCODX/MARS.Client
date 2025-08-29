@@ -1,0 +1,168 @@
+.container {
+  padding: 2rem 0;
+  min-height: 100vh;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  opacity: 0.8;
+}
+
+.typeCard {
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  }
+}
+
+.cardHeader {
+  padding: 1.5rem;
+}
+
+.typeHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.typeTitle {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0;
+  flex: 1;
+}
+
+.routeCount {
+  font-size: 0.9rem;
+  padding: 0.5rem 0.8rem;
+}
+
+.cardBody {
+  padding: 1.5rem;
+}
+
+.routesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.routeItem {
+  border-radius: 8px;
+  overflow: hidden;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}
+
+.routeLink {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+}
+
+.routeInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.routeName {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.routePath {
+  font-size: 0.85rem;
+  opacity: 0.7;
+  font-family: 'Courier New', monospace;
+}
+
+.stats {
+  margin-top: 3rem;
+}
+
+.statsCard {
+  border-radius: 12px;
+}
+
+.statsBody {
+  padding: 2rem;
+}
+
+.statItem {
+  padding: 1rem;
+}
+
+.statNumber {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  font-size: 1rem;
+  margin: 0;
+  opacity: 0.8;
+}
+
+// Адаптивность для мобильных устройств
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem 0;
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .typeHeader {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .routeLink {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+
+  .statsBody {
+    padding: 1rem;
+  }
+
+  .statNumber {
+    font-size: 2rem;
+  }
+}

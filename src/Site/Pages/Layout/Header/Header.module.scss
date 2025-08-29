@@ -85,6 +85,13 @@
   text-decoration: none;
   color: var(--site-text-primary);
   text-shadow: var(--site-shadow-light);
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: var(--site-text-accent);
+    transform: scale(1.05);
+    text-shadow: var(--site-shadow-medium);
+  }
 }
 
 // Кастомные дропдауны
