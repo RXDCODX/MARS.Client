@@ -2,6 +2,7 @@ import { BreakingNews } from "./components/BreakingNews";
 import { Catisa } from "./components/Catisa";
 import { DVDLogos } from "./components/DVDLogos";
 import { FitnessVideo } from "./components/FitnessVideo";
+import { GTAVideo } from "./components/GTAVideo";
 import { HydraulicMobileVideo } from "./components/HydraulicMobileVideo";
 import { LOFIGirl } from "./components/LOFI-Girl";
 import { MukbangVideo } from "./components/MukbangVideo";
@@ -20,6 +21,7 @@ export function ADHDPage() {
       <BreakingNews />
       <StreamerVideo />
       <FitnessVideo />
+      <GTAVideo />
       <HydraulicMobileVideo />
       <SlimeVideo />
       <MukbangVideo />

@@ -16,10 +16,7 @@ export const Surfer = () => (
       transformOrigin: "right bottom",
     }}
   >
-    <source
-      src={getVideoPath("surfer")}
-      type="video/mp4"
-    />
+    <source src={getVideoPath("surfer")} type="video/mp4" />
     Ваш браузер не поддерживает видео.
   </video>
 );

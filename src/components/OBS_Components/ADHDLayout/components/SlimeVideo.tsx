@@ -8,19 +8,16 @@ export function SlimeVideo() {
       muted
       playsInline
       style={{
-        objectFit: "cover",
+        objectFit: "fill",
         position: "absolute",
-        top: "8vh",
+        top: "6.2vh",
         left: "0px",
         zIndex: 1000,
-        transform: "scale(0.75)",
+        width: "250px",
         transformOrigin: "left",
       }}
     >
-      <source
-        src={getVideoPath("slime")}
-        type="video/webm"
-      />
+      <source src={getVideoPath("slime")} type="video/webm" />
       Ваш браузер не поддерживает видео.
     </video>
   );

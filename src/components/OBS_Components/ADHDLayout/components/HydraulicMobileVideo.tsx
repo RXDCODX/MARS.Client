@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+
 import { getVideoPath } from "./imageAssets";
 
 export function HydraulicMobileVideo() {
@@ -27,10 +28,7 @@ export function HydraulicMobileVideo() {
         height: "19vh",
       }}
     >
-      <source
-        src={getVideoPath("hydraulic")}
-        type="video/webm"
-      />
+      <source src={getVideoPath("hydraulic")} type="video/webm" />
       Ваш браузер не поддерживает видео.
     </video>
   );

@@ -8,12 +8,12 @@ export function MukbangVideo() {
       muted
       playsInline
       style={{
-        objectFit: "cover",
+        objectFit: "fill",
         position: "absolute",
-        top: "38vh",
+        top: "31vh",
         left: "0",
+        width: "300px",
         zIndex: 1000,
-        transform: "scale(0.75)",
         transformOrigin: "left",
       }}
     >
