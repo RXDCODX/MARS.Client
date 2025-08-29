@@ -71,6 +71,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
         : {
             width: memoizedPositionInfo.width + "px",
             height: memoizedPositionInfo.height + "px",
+            maxWidth: "none",
             maxHeight: "max-content",
           },
     [memoizedPositionInfo]
@@ -249,6 +250,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
           maxHeight: baseStyles.maxHeight,
           width: baseStyles.width,
           height: baseStyles.height,
+          objectFit: "fill",
         }}
         onCanPlay={e => {
           e.currentTarget.volume = metaInfo.volume / 100;

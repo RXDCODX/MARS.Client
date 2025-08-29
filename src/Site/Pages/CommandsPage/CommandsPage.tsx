@@ -1,4 +1,19 @@
-import { useCallback, useEffect, useState } from "react";
+import {
+  ArrowLeft,
+  CheckCircle,
+  Grid3x3,
+  Info,
+  List,
+  Play,
+  RefreshCw,
+  Search,
+  Settings,
+  Shield,
+  Terminal,
+  User,
+  XCircle,
+} from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Badge,
@@ -8,8 +23,11 @@ import {
   Col,
   Container,
   Form,
+  InputGroup,
   Row,
   Spinner,
+  Tab,
+  Tabs,
 } from "react-bootstrap";
 
 import { Commands } from "@/shared/api";
@@ -38,6 +56,8 @@ interface CommandsPageState {
   isLoading: boolean;
   activeTab: "user" | "admin";
   displayMode: "list" | "grid";
+  searchQuery: string;
+  showParameters: boolean;
 }
 
 // Компонент для отображения команд в виде списка
@@ -51,7 +71,7 @@ const ListView: React.FC<{
   const renderCommandCard = (command: CommandInfo) => (
     <Card
       key={command.name}
-      className={`mb-2 ${selectedCommand?.name === command.name ? styles.selectedCommand : ""}`}
+      className={`mb-3 ${styles.commandCard} ${selectedCommand?.name === command.name ? styles.selectedCommand : ""}`}
       style={{
         backgroundColor:
           selectedCommand?.name === command.name
@@ -59,31 +79,59 @@ const ListView: React.FC<{
             : colors.background.card,
         borderColor: colors.border.primary,
         cursor: "pointer",
+        transition: "all 0.2s ease-in-out",
       }}
       onClick={() => onCommandSelect(command)}
     >
-      <Card.Body className="p-3">
+      <Card.Body className="p-4">
         <div className="d-flex justify-content-between align-items-start">
-          <div>
-            <h6 className="mb-1" style={colors.utils.getTextStyle("primary")}>
-              /{command.name}
-            </h6>
+          <div className="flex-grow-1">
+            <div className="d-flex align-items-center mb-2">
+              <Terminal
+                size={20}
+                className="me-2"
+                style={{ color: colors.text.primary }}
+              />
+              <h6
+                className="mb-0 fw-bold"
+                style={colors.utils.getTextStyle("primary")}
+              >
+                /{command.name}
+              </h6>
+            </div>
             <p
-              className="mb-1 small"
+              className="mb-2 text-muted"
               style={colors.utils.getTextStyle("secondary")}
             >
               {command.description}
             </p>
-          </div>
-          <div className="text-end">
-            {command.isAdminCommand && (
-              <Badge bg="danger" className="mb-1">
-                Админ
+            <div className="d-flex align-items-center gap-2">
+              <Badge
+                bg={command.isAdminCommand ? "danger" : "primary"}
+                className="d-flex align-items-center gap-1"
+              >
+                {command.isAdminCommand ? (
+                  <Shield size={14} />
+                ) : (
+                  <User size={14} />
+                )}
+                {command.isAdminCommand ? "Админ" : "Пользователь"}
               </Badge>
-            )}
-            <div className="small text-muted">
-              {command.availablePlatforms.length} платформ
+              <Badge bg="secondary" className="d-flex align-items-center gap-1">
+                <Grid3x3 size={14} />
+                {command.availablePlatforms.length} платформ
+              </Badge>
             </div>
+          </div>
+          <div className="ms-3">
+            <Button
+              variant="outline-primary"
+              size="sm"
+              className="d-flex align-items-center gap-1"
+            >
+              <Play size={16} />
+              Выполнить
+            </Button>
           </div>
         </div>
       </Card.Body>
@@ -112,43 +160,366 @@ const GridView: React.FC<{
             : colors.background.card,
         borderColor: colors.border.primary,
         cursor: "pointer",
+        transition: "all 0.2s ease-in-out",
       }}
       onClick={() => onCommandSelect(command)}
     >
-      <Card.Body className="p-3 d-flex flex-column">
-        <div className="text-center mb-2">
-          <h6 className="mb-2" style={colors.utils.getTextStyle("primary")}>
+      <Card.Body className="p-4 d-flex flex-column text-center">
+        <div className="mb-3">
+          <div className="d-flex justify-content-center mb-2">
+            <Terminal size={32} style={{ color: colors.text.primary }} />
+          </div>
+          <h6
+            className="mb-2 fw-bold"
+            style={colors.utils.getTextStyle("primary")}
+          >
             /{command.name}
           </h6>
           {command.isAdminCommand && (
-            <Badge bg="danger" className="mb-2">
+            <Badge
+              bg="danger"
+              className="mb-2 d-flex align-items-center justify-content-center gap-1 mx-auto"
+            >
+              <Shield size={14} />
               Админ
             </Badge>
           )}
         </div>
         <p
-          className="small text-center flex-grow-1"
+          className="small text-muted flex-grow-1 mb-3"
           style={colors.utils.getTextStyle("secondary")}
         >
           {command.description}
         </p>
-        <div className="text-center">
-          <small className="text-muted">
+        <div className="mt-auto">
+          <Badge
+            bg="secondary"
+            className="d-flex align-items-center justify-content-center gap-1 mx-auto"
+          >
+            <Grid3x3 size={14} />
             {command.availablePlatforms.length} платформ
-          </small>
+          </Badge>
         </div>
       </Card.Body>
     </Card>
   );
 
   return (
-    <Row xs={1} sm={2} className="g-2">
+    <Row xs={1} sm={2} lg={3} className="g-3">
       {commands.map(command => (
         <Col key={command.name}>{renderCommandGridCard(command)}</Col>
       ))}
     </Row>
   );
 };
+
+// Компонент для отображения параметров команды
+const CommandParameters: React.FC<{
+  command: CommandInfo;
+  parameters: CommandParameterInfo[];
+  parameterValues: Record<string, string>;
+  onParameterChange: (name: string, value: string) => void;
+  onExecute: () => void;
+  onCancel: () => void;
+  isExecuting: boolean;
+  colors: ReturnType<typeof useSiteColors>;
+}> = ({
+  command,
+  parameters,
+  parameterValues,
+  onParameterChange,
+  onExecute,
+  onCancel,
+  isExecuting,
+  colors,
+}) => {
+  const renderParameterInput = (parameter: CommandParameterInfo) => {
+    const value =
+      parameterValues[parameter.name] || parameter.defaultValue || "";
+
+    switch (parameter.type.toLowerCase()) {
+      case "bool":
+        return (
+          <Form.Check
+            type="checkbox"
+            id={`param-${parameter.name}`}
+            label={parameter.description}
+            checked={value === "true"}
+            onChange={e =>
+              onParameterChange(parameter.name, e.target.checked.toString())
+            }
+            className="mt-2"
+          />
+        );
+      case "int":
+      case "long":
+        return (
+          <Form.Control
+            type="number"
+            placeholder={parameter.description}
+            value={value}
+            onChange={e => onParameterChange(parameter.name, e.target.value)}
+            required={parameter.required}
+            className={styles.parameterInput}
+          />
+        );
+      case "double":
+        return (
+          <Form.Control
+            type="number"
+            step="0.1"
+            placeholder={parameter.description}
+            value={value}
+            onChange={e => onParameterChange(parameter.name, e.target.value)}
+            required={parameter.required}
+            className={styles.parameterInput}
+          />
+        );
+      default:
+        return (
+          <Form.Control
+            type="text"
+            placeholder={parameter.description}
+            value={value}
+            onChange={e => onParameterChange(parameter.name, e.target.value)}
+            required={parameter.required}
+            className={styles.parameterInput}
+          />
+        );
+    }
+  };
+
+  return (
+    <Card
+      style={{
+        backgroundColor: colors.background.card,
+        borderColor: colors.border.primary,
+      }}
+      className="h-100"
+    >
+      <Card.Header
+        style={{
+          backgroundColor: colors.background.secondary,
+          borderColor: colors.border.primary,
+        }}
+        className="d-flex justify-content-between align-items-center"
+      >
+        <div>
+          <h5
+            className="mb-0 d-flex align-items-center gap-2"
+            style={colors.utils.getTextStyle("primary")}
+          >
+            <Terminal size={20} />/{command.name}
+          </h5>
+          <small style={colors.utils.getTextStyle("secondary")}>
+            {command.description}
+          </small>
+        </div>
+        <Button
+          variant="outline-secondary"
+          size="sm"
+          onClick={onCancel}
+          className="d-flex align-items-center gap-1"
+        >
+          <ArrowLeft size={16} />
+          Назад
+        </Button>
+      </Card.Header>
+      <Card.Body className="p-4">
+        {parameters.length > 0 ? (
+          <Form>
+            <div className="d-flex align-items-center gap-2 mb-4">
+              <Settings size={20} style={{ color: colors.text.primary }} />
+              <h6 className="mb-0" style={colors.utils.getTextStyle("primary")}>
+                Параметры команды
+              </h6>
+            </div>
+
+            {parameters.map(parameter => (
+              <Form.Group key={parameter.name} className="mb-4">
+                <Form.Label
+                  className="fw-semibold d-flex align-items-center gap-2"
+                  style={colors.utils.getTextStyle("primary")}
+                >
+                  {parameter.name}
+                  {parameter.required && (
+                    <Badge bg="danger" className="fs-6">
+                      *
+                    </Badge>
+                  )}
+                  {parameter.defaultValue && (
+                    <small className="text-muted ms-2">
+                      (по умолчанию: {parameter.defaultValue})
+                    </small>
+                  )}
+                </Form.Label>
+                {renderParameterInput(parameter)}
+                <Form.Text className="text-muted d-flex align-items-center gap-1 mt-1">
+                  <Info size={14} />
+                  {parameter.description} (тип: {parameter.type})
+                </Form.Text>
+              </Form.Group>
+            ))}
+
+            <div className="d-flex gap-3 mt-4">
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={onExecute}
+                disabled={isExecuting}
+                className={`${styles.executeButton} d-flex align-items-center gap-2`}
+              >
+                {isExecuting ? (
+                  <>
+                    <Spinner animation="border" size="sm" />
+                    Выполняется...
+                  </>
+                ) : (
+                  <>
+                    <Play size={18} />
+                    Выполнить команду
+                  </>
+                )}
+              </Button>
+
+              <Button
+                variant="outline-secondary"
+                size="lg"
+                onClick={onCancel}
+                className={styles.cancelButton}
+              >
+                Отменить
+              </Button>
+            </div>
+          </Form>
+        ) : (
+          <div className="text-center py-5">
+            <Settings size={48} className="text-muted mb-3" />
+            <h6 style={colors.utils.getTextStyle("primary")}>
+              У этой команды нет параметров
+            </h6>
+            <p className="text-muted mb-4">
+              Команда готова к выполнению без дополнительных настроек
+            </p>
+            <Button
+              variant="primary"
+              size="sm"
+              onClick={onExecute}
+              disabled={isExecuting}
+              className="d-flex align-items-center gap-2 mx-auto"
+            >
+              {isExecuting ? (
+                <>
+                  <Spinner animation="border" size="sm" />
+                  Выполняется...
+                </>
+              ) : (
+                <>
+                  <Play size={18} />
+                  Выполнить команду
+                </>
+              )}
+            </Button>
+          </div>
+        )}
+      </Card.Body>
+    </Card>
+  );
+};
+
+// Компонент для поиска команд
+const CommandSearch: React.FC<{
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  onClear: () => void;
+  resultCount: number;
+  colors: ReturnType<typeof useSiteColors>;
+}> = ({ searchQuery, onSearchChange, onClear, resultCount, colors }) => (
+  <Card
+    className="mb-4"
+    style={{
+      backgroundColor: colors.background.card,
+      borderColor: colors.border.primary,
+    }}
+  >
+    <Card.Body className="p-4">
+      <div className="d-flex align-items-center gap-3">
+        <div className="flex-grow-1">
+          <InputGroup>
+            <InputGroup.Text
+              style={{
+                backgroundColor: colors.background.secondary,
+                borderColor: colors.border.primary,
+              }}
+            >
+              <Search size={20} style={{ color: colors.text.secondary }} />
+            </InputGroup.Text>
+            <Form.Control
+              type="text"
+              placeholder="🔍 Поиск команд по названию или описанию..."
+              value={searchQuery}
+              onChange={e => onSearchChange(e.target.value)}
+              style={{
+                backgroundColor: colors.background.card,
+                borderColor: colors.border.primary,
+                color: colors.text.primary,
+              }}
+              className={styles.parameterInput}
+            />
+          </InputGroup>
+        </div>
+        {searchQuery && (
+          <Button
+            variant="outline-secondary"
+            size="sm"
+            onClick={onClear}
+            title="Очистить поиск"
+            className="d-flex align-items-center gap-1"
+          >
+            <XCircle size={16} />
+            Очистить
+          </Button>
+        )}
+      </div>
+      {searchQuery && (
+        <div className="mt-3">
+          <small
+            style={colors.utils.getTextStyle("secondary")}
+            className="d-flex align-items-center gap-1"
+          >
+            <CheckCircle size={14} />
+            Найдено: {resultCount} команд
+          </small>
+        </div>
+      )}
+    </Card.Body>
+  </Card>
+);
+
+// Компонент для переключения режимов отображения
+const DisplayModeToggle: React.FC<{
+  displayMode: "list" | "grid";
+  onModeChange: (mode: "list" | "grid") => void;
+}> = ({ displayMode, onModeChange }) => (
+  <ButtonGroup size="sm" className={styles.displayModeToggle}>
+    <Button
+      variant={displayMode === "list" ? "primary" : "outline-primary"}
+      onClick={() => onModeChange("list")}
+      className="d-flex align-items-center gap-2"
+    >
+      <List size={16} />
+      Список
+    </Button>
+    <Button
+      variant={displayMode === "grid" ? "primary" : "outline-primary"}
+      onClick={() => onModeChange("grid")}
+      className="d-flex align-items-center gap-2"
+    >
+      <Grid3x3 size={16} />
+      Сетка
+    </Button>
+  </ButtonGroup>
+);
 
 const CommandsPage: React.FC = () => {
   const colors = useSiteColors();
@@ -166,7 +537,9 @@ const CommandsPage: React.FC = () => {
     error: "",
     isLoading: true,
     activeTab: "user",
-    displayMode: "list",
+    displayMode: "grid",
+    searchQuery: "",
+    showParameters: false,
   });
 
   // Обновление состояния
@@ -179,7 +552,6 @@ const CommandsPage: React.FC = () => {
     try {
       updateState({ isLoading: true, error: "" });
 
-      // Загружаем команды для API платформы
       const resultUser =
         await commandsService.commandsAdminPlatformInfoList("Api");
       const adminResult =
@@ -206,6 +578,26 @@ const CommandsPage: React.FC = () => {
     loadCommands();
   }, [loadCommands]);
 
+  // Фильтрация команд по поисковому запросу
+  const filteredCommands = useMemo(() => {
+    const allCommands =
+      state.activeTab === "user" ? state.userCommands : state.adminCommands;
+
+    if (!state.searchQuery) return allCommands;
+
+    const query = state.searchQuery.toLowerCase();
+    return allCommands.filter(
+      command =>
+        command.name.toLowerCase().includes(query) ||
+        command.description.toLowerCase().includes(query)
+    );
+  }, [
+    state.activeTab,
+    state.userCommands,
+    state.adminCommands,
+    state.searchQuery,
+  ]);
+
   // Выбор команды
   const handleCommandSelect = async (command: CommandInfo) => {
     try {
@@ -213,13 +605,12 @@ const CommandsPage: React.FC = () => {
         selectedCommand: command,
         parameterValues: {},
         error: "",
+        showParameters: true,
       });
 
       // Загружаем параметры команды
       const result = await commandsService.commandsParametersList(command.name);
-
       const parameters = result.data;
-
       updateState({ commandParameters: parameters });
     } catch (err) {
       updateState({
@@ -246,7 +637,6 @@ const CommandsPage: React.FC = () => {
     }
 
     const inputParts: string[] = [];
-
     state.commandParameters.forEach(param => {
       const value =
         state.parameterValues[param.name] || param.defaultValue || "";
@@ -305,127 +695,93 @@ const CommandsPage: React.FC = () => {
       selectedCommand: null,
       parameterValues: {},
       commandParameters: [],
+      showParameters: false,
     });
-  };
-
-  // Рендер поля ввода параметра
-  const renderParameterInput = (parameter: CommandParameterInfo) => {
-    const value =
-      state.parameterValues[parameter.name] || parameter.defaultValue || "";
-
-    switch (parameter.type.toLowerCase()) {
-      case "bool":
-        return (
-          <Form.Check
-            type="checkbox"
-            id={`param-${parameter.name}`}
-            label={parameter.description}
-            checked={value === "true"}
-            onChange={e =>
-              handleParameterChange(parameter.name, e.target.checked.toString())
-            }
-          />
-        );
-      case "int":
-      case "long":
-        return (
-          <Form.Control
-            type="number"
-            placeholder={parameter.description}
-            value={value}
-            onChange={e =>
-              handleParameterChange(parameter.name, e.target.value)
-            }
-            required={parameter.required}
-          />
-        );
-      case "double":
-        return (
-          <Form.Control
-            type="number"
-            step="0.1"
-            placeholder={parameter.description}
-            value={value}
-            onChange={e =>
-              handleParameterChange(parameter.name, e.target.value)
-            }
-            required={parameter.required}
-          />
-        );
-      default:
-        return (
-          <Form.Control
-            type="text"
-            placeholder={parameter.description}
-            value={value}
-            onChange={e =>
-              handleParameterChange(parameter.name, e.target.value)
-            }
-            required={parameter.required}
-          />
-        );
-    }
   };
 
   // Отображение загрузки
   if (state.isLoading) {
     return (
       <Container className="text-center py-5">
-        <Spinner animation="border" role="status">
-          <span className="visually-hidden">Загрузка...</span>
-        </Spinner>
-        <p className="mt-3" style={colors.utils.getTextStyle("secondary")}>
-          Загрузка команд...
-        </p>
+        <div className="d-flex flex-column align-items-center">
+          <Spinner animation="border" role="status" className="mb-4">
+            <span className="visually-hidden">Загрузка...</span>
+          </Spinner>
+          <h4 style={colors.utils.getTextStyle("primary")}>Загрузка команд</h4>
+          <p style={colors.utils.getTextStyle("secondary")}>
+            Получаем список доступных команд...
+          </p>
+        </div>
       </Container>
     );
   }
 
-  // Получаем текущие команды в зависимости от активной вкладки
-  const currentCommands =
-    state.activeTab === "user" ? state.userCommands : state.adminCommands;
+  // Получаем отфильтрованные команды
+  const currentCommands = filteredCommands;
 
   return (
-    <Container className="py-4">
+    <Container fluid className="py-4">
       <Row>
         <Col>
+          {/* Заголовок страницы */}
           <div className="d-flex justify-content-between align-items-center mb-4">
-            <h1 style={colors.utils.getTextStyle("primary")}>
-              Выполнение команд
-            </h1>
+            <div>
+              <h1
+                className="d-flex align-items-center gap-3 mb-2"
+                style={colors.utils.getTextStyle("primary")}
+              >
+                <Terminal size={32} />
+                Выполнение команд
+              </h1>
+              <p className="text-muted mb-0">
+                Управляйте системой MARS через командный интерфейс
+              </p>
+            </div>
 
-            {/* Переключатель режима отображения */}
-            <ButtonGroup size="sm">
+            <div className="d-flex align-items-center gap-3">
+              <DisplayModeToggle
+                displayMode={state.displayMode}
+                onModeChange={mode => updateState({ displayMode: mode })}
+              />
+
               <Button
-                variant={
-                  state.displayMode === "list" ? "primary" : "outline-primary"
-                }
-                onClick={() => updateState({ displayMode: "list" })}
+                variant="outline-secondary"
+                size="sm"
+                onClick={loadCommands}
+                disabled={state.isLoading}
+                className="d-flex align-items-center gap-2"
+                title="Обновить список команд"
               >
-                <i className="bi bi-list-ul me-1"></i>
-                Список
+                <RefreshCw size={16} />
+                Обновить
               </Button>
-              <Button
-                variant={
-                  state.displayMode === "grid" ? "primary" : "outline-primary"
-                }
-                onClick={() => updateState({ displayMode: "grid" })}
-              >
-                <i className="bi bi-grid-3x3-gap me-1"></i>
-                Сетка
-              </Button>
-            </ButtonGroup>
+            </div>
           </div>
 
+          {/* Ошибки */}
           {state.error && (
-            <Alert variant="danger" className="mb-4">
+            <Alert
+              variant="danger"
+              className="mb-4 d-flex align-items-center gap-2"
+            >
+              <XCircle size={20} />
               {state.error}
             </Alert>
           )}
 
           <Row>
-            {/* Список команд */}
-            <Col lg={state.displayMode === "grid" ? 12 : 4}>
+            {/* Основная область с командами */}
+            <Col lg={state.showParameters ? 8 : 12}>
+              {/* Поиск команд */}
+              <CommandSearch
+                searchQuery={state.searchQuery}
+                onSearchChange={query => updateState({ searchQuery: query })}
+                onClear={() => updateState({ searchQuery: "" })}
+                resultCount={currentCommands.length}
+                colors={colors}
+              />
+
+              {/* Список команд */}
               <Card
                 style={{
                   backgroundColor: colors.background.card,
@@ -437,345 +793,114 @@ const CommandsPage: React.FC = () => {
                     backgroundColor: colors.background.secondary,
                     borderColor: colors.border.primary,
                   }}
+                  className="d-flex justify-content-between align-items-center"
                 >
-                  <div className="d-flex justify-content-between align-items-center">
-                    <span style={colors.utils.getTextStyle("primary")}>
-                      Команды
-                    </span>
-                    <Button
-                      variant="outline-secondary"
-                      size="sm"
-                      onClick={loadCommands}
-                      disabled={state.isLoading}
+                  <div className="d-flex align-items-center gap-2">
+                    <span
+                      style={colors.utils.getTextStyle("primary")}
+                      className="fw-semibold"
                     >
-                      <i className="bi bi-arrow-clockwise"></i>
-                    </Button>
+                      Доступные команды
+                    </span>
+                    <Badge bg="secondary" className="fs-6">
+                      {currentCommands.length}
+                    </Badge>
                   </div>
                 </Card.Header>
-                <Card.Body className="p-0">
-                  <div className="p-3">
-                    <div className="btn-group w-100 mb-3" role="group">
-                      <input
-                        type="radio"
-                        className="btn-check"
-                        name="commandType"
-                        id="userCommands"
-                        checked={state.activeTab === "user"}
-                        onChange={() => updateState({ activeTab: "user" })}
+                <Card.Body className="p-4">
+                  {/* Переключатель типов команд */}
+                  <div className="mb-4">
+                    <Tabs
+                      activeKey={state.activeTab}
+                      onSelect={k =>
+                        updateState({ activeTab: k as "user" | "admin" })
+                      }
+                      className={styles.tabGroup}
+                    >
+                      <Tab
+                        eventKey="user"
+                        title={
+                          <div className="d-flex align-items-center gap-2">
+                            <User size={16} />
+                            Пользовательские ({state.userCommands.length})
+                          </div>
+                        }
                       />
-                      <label
-                        className="btn btn-outline-primary"
-                        htmlFor="userCommands"
-                      >
-                        Пользовательские ({state.userCommands.length})
-                      </label>
-
-                      <input
-                        type="radio"
-                        className="btn-check"
-                        name="commandType"
-                        id="adminCommands"
-                        checked={state.activeTab === "admin"}
-                        onChange={() => updateState({ activeTab: "admin" })}
+                      <Tab
+                        eventKey="admin"
+                        title={
+                          <div className="d-flex align-items-center gap-2">
+                            <Shield size={16} />
+                            Админские ({state.adminCommands.length})
+                          </div>
+                        }
                       />
-                      <label
-                        className="btn btn-outline-danger"
-                        htmlFor="adminCommands"
-                      >
-                        Админские ({state.adminCommands.length})
-                      </label>
-                    </div>
+                    </Tabs>
                   </div>
 
-                  <div
-                    className="px-3 pb-3"
-                    style={{ maxHeight: "600px", overflowY: "auto" }}
-                  >
-                    {currentCommands.length > 0 ? (
-                      state.displayMode === "list" ? (
-                        <ListView
-                          commands={currentCommands}
-                          selectedCommand={state.selectedCommand}
-                          onCommandSelect={handleCommandSelect}
-                          colors={colors}
-                          styles={styles}
-                        />
-                      ) : (
-                        <GridView
-                          commands={currentCommands}
-                          selectedCommand={state.selectedCommand}
-                          onCommandSelect={handleCommandSelect}
-                          colors={colors}
-                          styles={styles}
-                        />
-                      )
+                  {/* Отображение команд */}
+                  {currentCommands.length > 0 ? (
+                    state.displayMode === "list" ? (
+                      <ListView
+                        commands={currentCommands}
+                        selectedCommand={state.selectedCommand}
+                        onCommandSelect={handleCommandSelect}
+                        colors={colors}
+                        styles={styles}
+                      />
                     ) : (
-                      <p className="text-muted text-center">
-                        Нет{" "}
-                        {state.activeTab === "user"
-                          ? "пользовательских"
-                          : "админских"}{" "}
-                        команд
-                      </p>
-                    )}
-                  </div>
+                      <GridView
+                        commands={currentCommands}
+                        selectedCommand={state.selectedCommand}
+                        onCommandSelect={handleCommandSelect}
+                        colors={colors}
+                        styles={styles}
+                      />
+                    )
+                  ) : (
+                    <div className="text-center py-5">
+                      <div className={styles.emptyState}>
+                        <Terminal size={64} className="icon text-muted" />
+                        <h5 style={colors.utils.getTextStyle("primary")}>
+                          {state.searchQuery
+                            ? "Команды не найдены"
+                            : "Нет доступных команд"}
+                        </h5>
+                        <p style={colors.utils.getTextStyle("secondary")}>
+                          {state.searchQuery ? (
+                            <>
+                              По запросу <strong>"{state.searchQuery}"</strong>{" "}
+                              ничего не найдено.
+                              <br />
+                              Попробуйте изменить поисковый запрос.
+                            </>
+                          ) : (
+                            `В данный момент нет ${state.activeTab === "user" ? "пользовательских" : "админских"} команд для выполнения.`
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                  )}
                 </Card.Body>
               </Card>
             </Col>
 
-            {/* Параметры и выполнение - показываем только в режиме списка */}
-            {state.displayMode === "list" && (
-              <Col lg={8}>
-                {state.selectedCommand ? (
-                  <Card
-                    style={{
-                      backgroundColor: colors.background.card,
-                      borderColor: colors.border.primary,
-                    }}
-                  >
-                    <Card.Header
-                      style={{
-                        backgroundColor: colors.background.secondary,
-                        borderColor: colors.border.primary,
-                      }}
-                    >
-                      <h5
-                        className="mb-0"
-                        style={colors.utils.getTextStyle("primary")}
-                      >
-                        /{state.selectedCommand.name}
-                      </h5>
-                      <small style={colors.utils.getTextStyle("secondary")}>
-                        {state.selectedCommand.description}
-                      </small>
-                    </Card.Header>
-                    <Card.Body>
-                      {state.commandParameters.length > 0 ? (
-                        <Form>
-                          <h6
-                            className="mb-3"
-                            style={colors.utils.getTextStyle("primary")}
-                          >
-                            Параметры команды:
-                          </h6>
-
-                          {state.commandParameters.map(parameter => (
-                            <Form.Group key={parameter.name} className="mb-3">
-                              <Form.Label
-                                style={colors.utils.getTextStyle("primary")}
-                              >
-                                {parameter.name}
-                                {parameter.required && (
-                                  <span className="text-danger"> *</span>
-                                )}
-                                {parameter.defaultValue && (
-                                  <small className="text-muted ms-2">
-                                    (по умолчанию: {parameter.defaultValue})
-                                  </small>
-                                )}
-                              </Form.Label>
-                              {renderParameterInput(parameter)}
-                              <Form.Text className="text-muted">
-                                {parameter.description} (тип: {parameter.type})
-                              </Form.Text>
-                            </Form.Group>
-                          ))}
-
-                          <div className="d-flex gap-2 mb-3">
-                            <Button
-                              variant="primary"
-                              onClick={executeCommand}
-                              disabled={state.isExecuting}
-                            >
-                              {state.isExecuting ? (
-                                <>
-                                  <Spinner
-                                    animation="border"
-                                    size="sm"
-                                    className="me-2"
-                                  />
-                                  Выполняется...
-                                </>
-                              ) : (
-                                "Выполнить команду"
-                              )}
-                            </Button>
-
-                            <Button
-                              variant="outline-secondary"
-                              onClick={handleCancelCommand}
-                            >
-                              Отменить
-                            </Button>
-                          </div>
-                        </Form>
-                      ) : (
-                        <div className="text-center py-4">
-                          <p className="text-muted">
-                            У этой команды нет параметров
-                          </p>
-                          <Button
-                            variant="primary"
-                            onClick={executeCommand}
-                            disabled={state.isExecuting}
-                          >
-                            {state.isExecuting ? (
-                              <>
-                                <Spinner
-                                  animation="border"
-                                  size="sm"
-                                  className="me-2"
-                                />
-                                Выполняется...
-                              </>
-                            ) : (
-                              "Выполнить команду"
-                            )}
-                          </Button>
-                        </div>
-                      )}
-                    </Card.Body>
-                  </Card>
-                ) : (
-                  // Показываем div с "Выберите команду" только в режиме списка
-                  <Card
-                    style={{
-                      backgroundColor: colors.background.card,
-                      borderColor: colors.border.primary,
-                    }}
-                  >
-                    <Card.Body className="text-center py-5">
-                      <i className="bi bi-terminal display-1 text-muted mb-3"></i>
-                      <h5 style={colors.utils.getTextStyle("primary")}>
-                        Выберите команду для выполнения
-                      </h5>
-                      <p style={colors.utils.getTextStyle("secondary")}>
-                        Выберите команду из списка слева, чтобы настроить
-                        параметры и выполнить её
-                      </p>
-                    </Card.Body>
-                  </Card>
-                )}
+            {/* Панель параметров */}
+            {state.showParameters && state.selectedCommand && (
+              <Col lg={4}>
+                <CommandParameters
+                  command={state.selectedCommand}
+                  parameters={state.commandParameters}
+                  parameterValues={state.parameterValues}
+                  onParameterChange={handleParameterChange}
+                  onExecute={executeCommand}
+                  onCancel={handleCancelCommand}
+                  isExecuting={state.isExecuting}
+                  colors={colors}
+                />
               </Col>
             )}
           </Row>
-
-          {/* Отдельное окно с параметрами команды в режиме сетки */}
-          {state.displayMode === "grid" && state.selectedCommand && (
-            <Row className="mt-4">
-              <Col>
-                <Card
-                  style={{
-                    backgroundColor: colors.background.card,
-                    borderColor: colors.border.primary,
-                  }}
-                >
-                  <Card.Header
-                    style={{
-                      backgroundColor: colors.background.secondary,
-                      borderColor: colors.border.primary,
-                    }}
-                  >
-                    <h5
-                      className="mb-0"
-                      style={colors.utils.getTextStyle("primary")}
-                    >
-                      /{state.selectedCommand.name}
-                    </h5>
-                    <small style={colors.utils.getTextStyle("secondary")}>
-                      {state.selectedCommand.description}
-                    </small>
-                  </Card.Header>
-                  <Card.Body>
-                    {state.commandParameters.length > 0 ? (
-                      <Form>
-                        <h6
-                          className="mb-3"
-                          style={colors.utils.getTextStyle("primary")}
-                        >
-                          Параметры команды:
-                        </h6>
-
-                        {state.commandParameters.map(parameter => (
-                          <Form.Group key={parameter.name} className="mb-3">
-                            <Form.Label
-                              style={colors.utils.getTextStyle("primary")}
-                            >
-                              {parameter.name}
-                              {parameter.required && (
-                                <span className="text-danger"> *</span>
-                              )}
-                              {parameter.defaultValue && (
-                                <small className="text-muted ms-2">
-                                  (по умолчанию: {parameter.defaultValue})
-                                </small>
-                              )}
-                            </Form.Label>
-                            {renderParameterInput(parameter)}
-                            <Form.Text className="text-muted">
-                              {parameter.description} (тип: {parameter.type})
-                            </Form.Text>
-                          </Form.Group>
-                        ))}
-
-                        <div className="d-flex gap-2 mb-3">
-                          <Button
-                            variant="primary"
-                            onClick={executeCommand}
-                            disabled={state.isExecuting}
-                          >
-                            {state.isExecuting ? (
-                              <>
-                                <Spinner
-                                  animation="border"
-                                  size="sm"
-                                  className="me-2"
-                                />
-                                Выполняется...
-                              </>
-                            ) : (
-                              "Выполнить команду"
-                            )}
-                          </Button>
-
-                          <Button
-                            variant="outline-secondary"
-                            onClick={handleCancelCommand}
-                          >
-                            Отменить
-                          </Button>
-                        </div>
-                      </Form>
-                    ) : (
-                      <div className="text-center py-4">
-                        <p className="text-muted">
-                          У этой команды нет параметров
-                        </p>
-                        <Button
-                          variant="primary"
-                          onClick={executeCommand}
-                          disabled={state.isExecuting}
-                        >
-                          {state.isExecuting ? (
-                            <>
-                              <Spinner
-                                animation="border"
-                                size="sm"
-                                className="me-2"
-                              />
-                              Выполняется...
-                            </>
-                          ) : (
-                            "Выполнить команду"
-                          )}
-                        </Button>
-                      </div>
-                    )}
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
-          )}
         </Col>
       </Row>
     </Container>
