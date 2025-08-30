@@ -74,13 +74,13 @@
   &:focus {
     border-color: var(--bs-primary);
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
-    background: white;
+    background: var(--site-bs-primary);
     transform: translateY(-1px);
   }
 
   &:hover {
     border-color: var(--bs-primary);
-    background: white;
+    background: var(--site-bs-primary);
   }
 }
 

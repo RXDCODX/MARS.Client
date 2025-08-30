@@ -9,6 +9,34 @@ interface QuizQuestion {
   answer: number;
 }
 
+// Функция для перемешивания массива (алгоритм Фишера-Йейтса)
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
+// Функция для перемешивания вариантов ответов с сохранением правильного ответа
+const shuffleChoices = (question: QuizQuestion): QuizQuestion => {
+  const choices = [...question.choices];
+  const correctAnswer = choices[question.answer];
+
+  // Перемешиваем варианты ответов
+  const shuffledChoices = shuffleArray(choices);
+
+  // Находим новый индекс правильного ответа
+  const newAnswerIndex = shuffledChoices.indexOf(correctAnswer);
+
+  return {
+    ...question,
+    choices: shuffledChoices,
+    answer: newAnswerIndex,
+  };
+};
+
 export function Quiz() {
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -20,10 +48,14 @@ export function Quiz() {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    // Загружаем вопросы из owl.json через imageAssets
+    // Загружаем вопросы из owl.json через imageAssets и перемешиваем их
     const owlData = getDataPath("owl");
     if (Array.isArray(owlData)) {
-      setQuestions(owlData);
+      // Перемешиваем порядок вопросов и варианты ответов для каждого вопроса
+      const shuffledQuestions = shuffleArray(owlData as QuizQuestion[]).map(
+        shuffleChoices
+      );
+      setQuestions(shuffledQuestions);
       setIsActive(true);
     }
   }, []);
@@ -31,8 +63,20 @@ export function Quiz() {
   const nextQuestion = useCallback(() => {
     setCurrentQuestionIndex(prevIndex => {
       const isLastQuestion = prevIndex >= questions.length - 1;
-      const nextIndex = isLastQuestion ? 0 : prevIndex + 1;
 
+      if (isLastQuestion) {
+        // Если это последний вопрос, перемешиваем массив и начинаем сначала
+        setQuestions(prevQuestions =>
+          shuffleArray([...prevQuestions]).map(shuffleChoices)
+        );
+        setTimeLeft(30);
+        setSelectedAnswer(null);
+        setShowResult(false);
+        setIsActive(true);
+        return 0;
+      }
+
+      const nextIndex = prevIndex + 1;
       setTimeLeft(30);
       setSelectedAnswer(null);
       setShowResult(false);

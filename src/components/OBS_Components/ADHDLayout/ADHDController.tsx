@@ -106,6 +106,8 @@ export function ADHDController() {
   };
 
   const handleMessage = (duration: number) => {
+    duration = import.meta.env.DEV ? 10 : duration;
+
     if (state.isExploding) {
       // Если идет взрыв, добавляем в очередь продлений
       setPendingExtensions(prev => [...prev, duration]);
@@ -171,6 +173,8 @@ export function ADHDController() {
       // Ждем окончания видео для полного завершения состояния
       const handleVideoEnd = () => {
         dispatch({ type: "COMPLETE_EXPLOSION" });
+        videoElement.pause();
+        videoElement.currentTime = 0;
       };
 
       videoElement.addEventListener("ended", handleVideoEnd);
@@ -187,7 +191,7 @@ export function ADHDController() {
       {!announced && (
         <Announce title={"ADHD"} callback={() => setAnnounced(true)} />
       )}
-      {(state.isVisible || import.meta.env.DEV) && (
+      {state.isVisible && (
         <div className={styles.adhdControllerContainer}>
           <ADHDPage />
           <div className={styles.timerOverlay}>
@@ -199,15 +203,15 @@ export function ADHDController() {
           </div>
         </div>
       )}
-      {state.isExploding && (
-        <video
-          ref={explosionRef}
-          className={styles.explosionVideo}
-          src={videoAssets.explosion}
-          autoPlay
-          muted
-        />
-      )}
+      <video
+        ref={explosionRef}
+        className={styles.explosionVideo}
+        src={videoAssets.explosion}
+        style={{ visibility: state.isExploding ? "visible" : "hidden" }}
+        autoPlay
+        muted
+        preload="auto"
+      />
     </>
   );
 }
