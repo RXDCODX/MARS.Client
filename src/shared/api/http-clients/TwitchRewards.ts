@@ -113,11 +113,6 @@ export class TwitchRewards<
       status: string;
       sort: string;
       after: string;
-      /**
-       * @format int32
-       * @default 50
-       */
-      first: number;
     },
     params: RequestParams = {},
   ) =>

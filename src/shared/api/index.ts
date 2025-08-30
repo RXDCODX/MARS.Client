@@ -1,4 +1,5 @@
 // Автоматически сгенерированный индексный файл
+
 // Импорты утилит конфигурации
 export * from "./api-config";
 
@@ -15,7 +16,9 @@ export { DatabaseBackup } from "./http-clients/DatabaseBackup";
 export { Framedata } from "./http-clients/Framedata";
 export { FramedataChanges } from "./http-clients/FramedataChanges";
 export { Honkai } from "./http-clients/Honkai";
+export { KeyboardHook } from "./http-clients/KeyboardHook";
 export { MediaInfoApi } from "./http-clients/MediaInfoApi";
+export { RandomMeme } from "./http-clients/RandomMeme";
 export { RxdcodxViewers } from "./http-clients/RxdcodxViewers";
 export { ServiceManager } from "./http-clients/ServiceManager";
 export { TwitchRewards } from "./http-clients/TwitchRewards";

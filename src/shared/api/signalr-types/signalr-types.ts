@@ -152,6 +152,14 @@ export interface EmoteSet {
   rawEmoteSetString?: string;
 }
 
+export interface GaoAlertDto {
+  /** @format uuid */
+  id: string;
+  isJustText: boolean;
+  justText?: string;
+  twitchUser?: User;
+}
+
 export interface Host {
   hostCoolDown: HostCoolDown;
   hostGreetings: HostAutoHello;
@@ -320,6 +328,22 @@ export interface TunaMusicData {
 }
 
 export type TunaMusicDtoRoot = object;
+
+export interface User {
+  broadcasterType?: string;
+  /** @format date-time */
+  createdAt: string;
+  description?: string;
+  displayName?: string;
+  email?: string;
+  id?: string;
+  login?: string;
+  offlineImageUrl?: string;
+  profileImageUrl?: string;
+  type?: string;
+  /** @format int64 */
+  viewCount: number;
+}
 
 export interface UserRequestedTrack {
   /** @format uuid */

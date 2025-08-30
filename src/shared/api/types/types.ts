@@ -182,6 +182,23 @@ export interface CreateMediaItemRequest {
   twitchUsername?: string;
 }
 
+export interface CreateMemeOrderDto {
+  /** @minLength 1 */
+  filePath: string;
+  /** @format int32 */
+  memeTypeId?: number;
+}
+
+export interface CreateMemeTypeDto {
+  /** @minLength 1 */
+  folderPath: string;
+  /**
+   * @minLength 1
+   * @maxLength 50
+   */
+  name: string;
+}
+
 export interface CreateUserRequest {
   lTokenV2: string;
   ltmidV2: string;
@@ -367,6 +384,30 @@ export interface MediaTextInfo {
   triggerWord?: string;
 }
 
+export interface MemeOrderDto {
+  /** @minLength 1 */
+  filePath: string;
+  /** @format uuid */
+  id: string;
+  /** @format int32 */
+  memeTypeId?: number;
+  /** @format int32 */
+  order: number;
+  type?: MemeTypeDto;
+}
+
+export interface MemeTypeDto {
+  /** @minLength 1 */
+  folderPath: string;
+  /** @format int32 */
+  id: number;
+  /**
+   * @minLength 1
+   * @maxLength 50
+   */
+  name: string;
+}
+
 export interface Move {
   blockFrame?: string;
   characterName: string;
@@ -466,6 +507,16 @@ export interface ParseResult {
   message: string;
   parsedCharacters: string[];
   success: boolean;
+}
+
+export interface ProblemDetails {
+  detail?: string;
+  instance?: string;
+  /** @format int32 */
+  status?: number;
+  title?: string;
+  type?: string;
+  [key: string]: any;
 }
 
 export interface Reward {
@@ -634,6 +685,16 @@ export enum UpdateMediaItemRequestStatusEnum {
   Completed = "Completed",
   Cancelled = "Cancelled",
   Postponed = "Postponed",
+}
+
+export interface UpdateMemeTypeDto {
+  /** @minLength 1 */
+  folderPath: string;
+  /**
+   * @minLength 1
+   * @maxLength 50
+   */
+  name: string;
 }
 
 export interface UpdateUserRequest {

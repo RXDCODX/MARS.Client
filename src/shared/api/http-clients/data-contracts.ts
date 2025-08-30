@@ -92,6 +92,23 @@ export interface CreateMediaItemRequest {
   notes?: string;
 }
 
+export interface CreateMemeOrderDto {
+  /** @minLength 1 */
+  filePath: string;
+  /** @format int32 */
+  memeTypeId?: number;
+}
+
+export interface CreateMemeTypeDto {
+  /**
+   * @minLength 1
+   * @maxLength 50
+   */
+  name: string;
+  /** @minLength 1 */
+  folderPath: string;
+}
+
 export interface CreateUserRequest {
   twitchId?: string;
   /** @format int64 */
@@ -260,6 +277,30 @@ export interface MediaTextInfo {
   keyWordSybmolDelimiter?: string;
 }
 
+export interface MemeOrderDto {
+  /** @format uuid */
+  id: string;
+  /** @format int32 */
+  order: number;
+  /** @minLength 1 */
+  filePath: string;
+  /** @format int32 */
+  memeTypeId?: number;
+  type?: MemeTypeDto;
+}
+
+export interface MemeTypeDto {
+  /** @format int32 */
+  id: number;
+  /**
+   * @minLength 1
+   * @maxLength 50
+   */
+  name: string;
+  /** @minLength 1 */
+  folderPath: string;
+}
+
 export interface Move {
   characterName: string;
   command: string;
@@ -353,6 +394,16 @@ export interface ParseResult {
   success: boolean;
   parsedCharacters: string[];
   message: string;
+}
+
+export interface ProblemDetails {
+  type?: string;
+  title?: string;
+  /** @format int32 */
+  status?: number;
+  detail?: string;
+  instance?: string;
+  [key: string]: any;
 }
 
 export interface Reward {
@@ -492,6 +543,16 @@ export interface UpdateMediaItemRequest {
   scheduledFor?: string;
   notes?: string;
   isNext?: boolean;
+}
+
+export interface UpdateMemeTypeDto {
+  /**
+   * @minLength 1
+   * @maxLength 50
+   */
+  name: string;
+  /** @minLength 1 */
+  folderPath: string;
 }
 
 export interface UpdateUserRequest {

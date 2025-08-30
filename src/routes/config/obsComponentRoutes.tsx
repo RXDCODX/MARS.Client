@@ -5,6 +5,7 @@ import AutoMessageBillboardTest from "@/components/OBS_Components/AutoMessageBil
 import ChatHorizontal from "@/components/OBS_Components/ChatHorizontal/ChatHorizontal";
 import ChatVertical from "@/components/OBS_Components/ChatVertical/ChatVertical";
 import { FumoFriday } from "@/components/OBS_Components/FumoFriday";
+import GaoAlertController from "@/components/OBS_Components/GaoAlert/GaoAlertController";
 import HighliteMessage from "@/components/OBS_Components/HighliteMessage/HighliteMessage";
 import {
   AvatarWithFire,
@@ -23,6 +24,16 @@ import { RouteConfig } from "./RouteConfig";
 
 // Массив OBS компонентов (без Layout для интеграции в OBS)
 export const obsComponentRoutes: RouteConfig[] = [
+  {
+    path: "/gaoalert",
+    name: "Гао алертс",
+    type: "obs",
+    element: (
+      <OBSComponentWrapper>
+        <GaoAlertController />
+      </OBSComponentWrapper>
+    ),
+  },
   {
     path: "/adhd",
     name: "ADHD Layout",

@@ -684,6 +684,23 @@
         "responses": { }
       }
     },
+    "/hubs/telegramus/GaoAlert": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "gaoAlert",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/GaoAlertDto"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/telegramus/Highlite": {
       "post": {
         "tags": [
@@ -711,6 +728,14 @@
               "$ref": "#/components/schemas/AutoArtImage"
             }
           }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/LeroyAlert": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
         ],
         "responses": { }
       }
@@ -1405,6 +1430,35 @@
             "readOnly": true
           },
           "rawEmoteSetString": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GaoAlertDto": {
+        "required": [
+          "id",
+          "isJustText"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "twitchUser": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              }
+            ],
+            "nullable": true
+          },
+          "isJustText": {
+            "type": "boolean"
+          },
+          "justText": {
             "type": "string",
             "nullable": true
           }
@@ -2172,6 +2226,71 @@
       },
       "TunaMusicDtoRoot": {
         "type": "object",
+        "additionalProperties": false
+      },
+      "User": {
+        "required": [
+          "createdAt",
+          "viewCount"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "login": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "broadcasterType": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "profileImageUrl": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "offlineImageUrl": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "viewCount": {
+            "type": "integer",
+            "format": "int64",
+            "readOnly": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          }
+        },
         "additionalProperties": false
       },
       "UserRequestedTrack": {
