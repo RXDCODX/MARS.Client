@@ -70,18 +70,16 @@
   transition: all 0.3s ease;
   border-radius: 8px;
   border: 2px solid transparent;
-  background: var(--bs-light);
+  background: var(--site-bs-primary);
 
   &:focus {
     border-color: var(--bs-primary);
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
-    background: var(--site-bs-primary);
     transform: translateY(-1px);
   }
 
   &:hover {
     border-color: var(--bs-primary);
-    background: var(--site-bs-primary);
   }
 }
 
