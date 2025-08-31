@@ -1,0 +1,571 @@
+// Основные стили для RandomMemePage
+.randomMemePage {
+  min-height: 100vh;
+  background: var(--bs-body-bg);
+  padding: 1rem 0;
+
+  @media (max-width: 768px) {
+    padding: 0.5rem 0;
+  }
+}
+
+// Карточки элементов
+.memeCard {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--bs-card-bg);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: var(--bs-primary);
+  }
+
+  .card-body {
+    padding: 1.25rem;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: var(--bs-body-color);
+  }
+
+  .card-text {
+    color: var(--bs-body-color);
+    line-height: 1.5;
+  }
+}
+
+// Иконки в карточках
+.memeIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+
+  &.type-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+  }
+
+  &.order-icon {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+  }
+}
+
+// Бейджи
+.memeBadge {
+  font-size: 0.75rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+// Статистика
+.statsCard {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+
+  .display-4 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .stats-label {
+    font-size: 0.9rem;
+    opacity: 0.9;
+  }
+}
+
+// Кнопки действий
+.actionButton {
+  border-radius: 8px;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+  }
+
+  &.btn-success {
+    background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+    border: none;
+  }
+
+  &.btn-danger {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    border: none;
+  }
+}
+
+// Поиск
+.searchContainer {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+
+  .input-group {
+    .form-control {
+      border-radius: 8px 0 0 8px;
+      border-right: none;
+      padding: 0.75rem 1rem;
+
+      &:focus {
+        border-color: var(--bs-primary);
+        box-shadow: none;
+      }
+    }
+
+    .input-group-text {
+      border-radius: 0 8px 8px 0;
+      background: var(--bs-light);
+      border-left: none;
+
+      .search-icon {
+        color: var(--bs-secondary);
+      }
+    }
+  }
+}
+
+// Табы
+.customTabs {
+  .nav-tabs {
+    border-bottom: 2px solid var(--bs-gray-300);
+    margin-bottom: 2rem;
+
+    .nav-link {
+      border: none;
+      border-bottom: 3px solid transparent;
+      border-radius: 0;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      color: var(--bs-gray-600);
+      transition: all 0.3s ease;
+
+      &:hover {
+        border-color: transparent;
+        color: var(--bs-primary);
+        background: transparent;
+      }
+
+      &.active {
+        color: var(--bs-primary);
+        border-bottom-color: var(--bs-primary);
+        background: transparent;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+// Сетка карточек
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+}
+
+// Пустое состояние
+.emptyState {
+  text-align: center;
+  padding: 3rem 2rem;
+  color: var(--bs-gray-500);
+
+  .empty-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.5;
+  }
+
+  .empty-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--bs-gray-700);
+  }
+
+  .empty-description {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 2rem;
+  }
+}
+
+// Детали элемента
+.detailsHeader {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+  border-radius: 12px;
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      text-align: center;
+      gap: 1rem;
+    }
+  }
+
+  .header-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+  }
+
+  .header-text {
+    flex: 1;
+
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+
+      @media (max-width: 768px) {
+        font-size: 2rem;
+      }
+    }
+
+    p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      margin: 0;
+    }
+  }
+}
+
+// Информационные карточки
+.infoCard {
+  border: 1px solid var(--bs-border-color);
+  border-radius: 12px;
+  background: var(--bs-card-bg);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-header {
+    background: var(--bs-light);
+    border-bottom: 1px solid var(--bs-border-color);
+    font-weight: 600;
+    color: var(--bs-body-color);
+  }
+
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--bs-border-color);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .info-label {
+      font-weight: 500;
+      color: var(--bs-gray-600);
+      font-size: 0.9rem;
+    }
+
+    .info-value {
+      font-weight: 600;
+      color: var(--bs-body-color);
+      font-size: 0.95rem;
+    }
+  }
+}
+
+// Форма
+.formCard {
+  border: 1px solid var(--bs-border-color);
+  border-radius: 12px;
+  background: var(--bs-card-bg);
+
+  .card-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+
+    .form-label {
+      font-weight: 600;
+      color: var(--bs-body-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+      border-radius: 8px;
+      border: 2px solid var(--bs-border-color);
+      padding: 0.75rem;
+      transition: all 0.3s ease;
+
+      &:focus {
+        border-color: var(--bs-primary);
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+        transform: translateY(-1px);
+      }
+
+      &.is-invalid {
+        border-color: var(--bs-danger);
+      }
+    }
+
+    .invalid-feedback {
+      font-size: 0.875rem;
+      margin-top: 0.25rem;
+    }
+
+    .form-text {
+      font-size: 0.8rem;
+      color: var(--bs-gray-600);
+      margin-top: 0.25rem;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 1rem;
+    border-top: 1px solid var(--bs-border-color);
+  }
+}
+
+// Модальное окно подтверждения удаления
+.deleteModal {
+  .modal-content {
+    border-radius: 12px;
+    border: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  .modal-header {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    border-bottom: none;
+
+    .btn-close {
+      filter: invert(1);
+    }
+  }
+
+  .modal-body {
+    padding: 2rem;
+
+    .delete-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: rgba(220, 53, 69, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.5rem;
+      font-size: 2rem;
+      color: var(--bs-danger);
+    }
+
+    .delete-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--bs-body-color);
+    }
+
+    .delete-message {
+      color: var(--bs-gray-600);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .warning-alert {
+      background: rgba(255, 193, 7, 0.1);
+      border: 1px solid rgba(255, 193, 7, 0.3);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+
+      .alert-icon {
+        color: var(--bs-warning);
+        margin-right: 0.5rem;
+      }
+    }
+  }
+
+  .modal-footer {
+    border-top: 1px solid var(--bs-border-color);
+    padding: 1.5rem 2rem;
+
+    .btn {
+      border-radius: 8px;
+      font-weight: 500;
+      padding: 0.5rem 1.5rem;
+    }
+  }
+}
+
+// Адаптивность
+@media (max-width: 768px) {
+  .randomMemePage {
+    padding: 0.5rem;
+  }
+
+  .detailsHeader {
+    padding: 1.5rem 0;
+
+    .header-content {
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .header-icon {
+      width: 60px;
+      height: 60px;
+      font-size: 1.5rem;
+    }
+
+    .header-text h1 {
+      font-size: 1.8rem;
+    }
+  }
+
+  .cardsGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .infoCard .info-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .formCard .form-actions {
+    flex-direction: column;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .statsCard .display-4 {
+    font-size: 2rem;
+  }
+
+  .memeCard .card-body {
+    padding: 1rem;
+  }
+
+  .searchContainer {
+    padding: 1rem;
+  }
+
+  .detailsHeader {
+    .header-text h1 {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+// Анимации
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.memeCard {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.statsCard {
+  animation: fadeIn 0.5s ease-out 0.2s both;
+}
+
+// Темная тема
+[data-bs-theme="dark"] {
+  .memeCard {
+    background: var(--bs-dark);
+    border-color: var(--bs-gray-700);
+  }
+
+  .searchContainer {
+    background: var(--bs-dark);
+    border: 1px solid var(--bs-gray-700);
+  }
+
+  .infoCard {
+    background: var(--bs-dark);
+    border-color: var(--bs-gray-700);
+
+    .card-header {
+      background: var(--bs-gray-800);
+      border-color: var(--bs-gray-700);
+    }
+  }
+
+  .formCard {
+    background: var(--bs-dark);
+    border-color: var(--bs-gray-700);
+
+    .form-control {
+      background: var(--bs-gray-900);
+      border-color: var(--bs-gray-700);
+      color: var(--bs-light);
+
+      &::placeholder {
+        color: var(--bs-gray-600);
+      }
+    }
+  }
+}

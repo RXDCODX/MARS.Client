@@ -126,7 +126,7 @@ import Header from "./Header";
 
 ### Структура файлов
 
-```
+```text
 Header/
 ├── Header.tsx              # Основной компонент
 ├── Header.module.scss      # Стили

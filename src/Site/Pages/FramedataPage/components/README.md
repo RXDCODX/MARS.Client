@@ -4,7 +4,7 @@
 
 ## Структура папок
 
-```
+```text
 components/
 ├── Character/           # Компоненты для работы с персонажами
 │   ├── CharacterDetails.tsx

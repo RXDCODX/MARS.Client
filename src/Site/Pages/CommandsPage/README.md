@@ -173,7 +173,7 @@ import CommandsPage from "@/Site/Pages/CommandsPage";
 
 ## 📁 Структура файлов
 
-```
+```text
 CommandsPage/
 ├── CommandsPage.tsx          # Основной компонент
 ├── CommandsPage.module.scss  # Стили

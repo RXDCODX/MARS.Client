@@ -10,6 +10,7 @@ import FramedataPage from "@/Site/Pages/FramedataPage/FramedataPage";
 import Layout from "@/Site/Pages/Layout/Layout";
 import { MediaInfoEditPage } from "@/Site/Pages/MediaInfoPage/MediaInfoEditPage";
 import { MediaInfoListPage } from "@/Site/Pages/MediaInfoPage/MediaInfoListPage";
+import RandomMemePage from "@/Site/Pages/RandomMemePage/RandomMemePage";
 import RoutesPage from "@/Site/Pages/RoutesPage/RoutesPage";
 import WelcomePage from "@/Site/Pages/WelcomePage";
 
@@ -144,6 +145,16 @@ export const mainSiteRoutes: RouteConfig[] = [
     element: (
       <Layout>
         <CinemaQueuePage />
+      </Layout>
+    ),
+  },
+  {
+    path: "/random-meme",
+    name: "Random Meme Manager",
+    type: "site",
+    element: (
+      <Layout>
+        <RandomMemePage />
       </Layout>
     ),
   },

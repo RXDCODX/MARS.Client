@@ -48,7 +48,7 @@
 
 ### Структура файлов
 
-```
+```text
 BackupsPage/
 ├── BackupsPage.tsx          # Основной компонент
 ├── BackupsPage.module.scss  # Стили
