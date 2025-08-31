@@ -687,6 +687,19 @@ export enum UpdateMediaItemRequestStatusEnum {
   Postponed = "Postponed",
 }
 
+export interface UpdateMemeOrderDto {
+  /** @minLength 1 */
+  filePath: string;
+  /** @format int32 */
+  memeTypeId?: number;
+  /**
+   * @format int32
+   * @min 1
+   * @max 2147483647
+   */
+  order: number;
+}
+
 export interface UpdateMemeTypeDto {
   /** @minLength 1 */
   folderPath: string;

@@ -16,6 +16,7 @@ import {
   MemeOrderDto,
   MemeTypeDto,
   ProblemDetails,
+  UpdateMemeOrderDto,
   UpdateMemeTypeDto,
 } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
@@ -187,6 +188,30 @@ export class RandomMeme<
     this.request<MemeOrderDto, ProblemDetails | void>({
       path: `/api/RandomMeme/orders/${id}`,
       method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags RandomMeme
+   * @name RandomMemeOrdersUpdate
+   * @request PUT:/api/RandomMeme/orders/{id}
+   * @response `200` `MemeOrderDto` OK
+   * @response `400` `ProblemDetails` Bad Request
+   * @response `404` `ProblemDetails` Not Found
+   * @response `500` `void` Internal Server Error
+   */
+  randomMemeOrdersUpdate = (
+    id: string,
+    data: UpdateMemeOrderDto,
+    params: RequestParams = {},
+  ) =>
+    this.request<MemeOrderDto, ProblemDetails | void>({
+      path: `/api/RandomMeme/orders/${id}`,
+      method: "PUT",
+      body: data,
+      type: ContentType.Json,
       format: "json",
       ...params,
     });

@@ -8,10 +8,19 @@ function getControllersFromSwagger(swaggerSource) {
   const controllers = new Set();
 
   Object.keys(swaggerSource.paths).forEach(path => {
-    const match = path.match(/^\/api\/([^\\/]+)/);
-    if (match) {
-      controllers.add(match[1]);
-    }
+    const pathData = swaggerSource.paths[path];
+
+    // Проверяем все методы в пути
+    Object.values(pathData).forEach(methodData => {
+      if (methodData.tags && Array.isArray(methodData.tags)) {
+        methodData.tags.forEach(tag => {
+          if (tag && !tag.toLowerCase().includes("hub")) {
+            // Добавляем тег как контроллер, если это не хаб
+            controllers.add(tag);
+          }
+        });
+      }
+    });
   });
 
   return Array.from(controllers);

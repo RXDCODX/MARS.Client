@@ -1,5 +1,4 @@
 // Автоматически сгенерированный индексный файл
-
 // Импорты утилит конфигурации
 export * from "./api-config";
 
@@ -18,9 +17,11 @@ export { FramedataChanges } from "./http-clients/FramedataChanges";
 export { Honkai } from "./http-clients/Honkai";
 export { KeyboardHook } from "./http-clients/KeyboardHook";
 export { MediaInfoApi } from "./http-clients/MediaInfoApi";
+export { PyroAlerts } from "./http-clients/PyroAlerts";
 export { RandomMeme } from "./http-clients/RandomMeme";
 export { RxdcodxViewers } from "./http-clients/RxdcodxViewers";
 export { ServiceManager } from "./http-clients/ServiceManager";
+export { Twitch } from "./http-clients/Twitch";
 export { TwitchRewards } from "./http-clients/TwitchRewards";
 
 // Импорты SignalR клиентов
