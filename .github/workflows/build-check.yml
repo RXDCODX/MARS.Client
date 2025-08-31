@@ -1,13 +1,13 @@
-name: Deploy Storybook to GitHub Pages
+name: Build Check for mars.client
 
 on:
   push:
-    branches: [main, master]
+    branches: [main, master, develop]
   pull_request:
-    branches: [main, master]
+    branches: [main, master, develop]
 
 jobs:
-  build-and-deploy:
+  build-check:
     runs-on: ubuntu-latest
 
     steps:
@@ -39,13 +39,3 @@ jobs:
 
       - name: Test check
         run: yarn test --run
-
-      - name: Build Storybook
-        run: yarn build-storybook
-
-      - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./storybook-static
