@@ -1,4 +1,11 @@
-import React from "react";
+import {
+  ArrowLeft,
+  Edit,
+  Folder,
+  Image,
+  RefreshCw,
+  Trash2,
+} from "lucide-react";
 import {
   Alert,
   Badge,
@@ -9,14 +16,6 @@ import {
   Row,
   Spinner,
 } from "react-bootstrap";
-import {
-  ArrowLeft,
-  Edit,
-  Folder,
-  Image,
-  RefreshCw,
-  Trash2,
-} from "lucide-react";
 
 import { RandomMemeDetailsProps } from "../RandomMemePage.types";
 
@@ -78,11 +77,7 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
               </Button>
               <div>
                 <h1 className="d-flex align-items-center gap-3 mb-1">
-                  {isType ? (
-                    <Folder size={32} />
-                  ) : (
-                    <Image size={32} />
-                  )}
+                  {isType ? <Folder size={32} /> : <Image size={32} />}
                   {isType ? "Тип мема" : "Заказ мема"}
                 </h1>
                 <p className="text-muted mb-0">
@@ -149,7 +144,9 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                   <>
                     <Col sm={6}>
                       <div className="border rounded p-3">
-                        <small className="text-muted d-block mb-1">Название</small>
+                        <small className="text-muted d-block mb-1">
+                          Название
+                        </small>
                         <div className="fw-bold">{memeType!.name}</div>
                       </div>
                     </Col>
@@ -166,7 +163,9 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                   <>
                     <Col sm={6}>
                       <div className="border rounded p-3">
-                        <small className="text-muted d-block mb-1">Порядок</small>
+                        <small className="text-muted d-block mb-1">
+                          Порядок
+                        </small>
                         <div className="fw-bold">#{memeOrder!.order}</div>
                       </div>
                     </Col>
@@ -236,7 +235,9 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                 <Row className="g-3">
                   <Col md={6}>
                     <div className="border rounded p-3">
-                      <small className="text-muted d-block mb-1">Название типа</small>
+                      <small className="text-muted d-block mb-1">
+                        Название типа
+                      </small>
                       <div className="fw-bold">{memeOrder!.type.name}</div>
                     </div>
                   </Col>
@@ -248,7 +249,9 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                   </Col>
                   <Col md={12}>
                     <div className="border rounded p-3">
-                      <small className="text-muted d-block mb-1">Папка типа</small>
+                      <small className="text-muted d-block mb-1">
+                        Папка типа
+                      </small>
                       <code className="bg-light px-2 py-1 rounded">
                         {memeOrder!.type.folderPath}
                       </code>
@@ -273,15 +276,20 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                 <Row className="g-3">
                   <Col md={6}>
                     <div className="border rounded p-3">
-                      <small className="text-muted d-block mb-1">Расширение</small>
+                      <small className="text-muted d-block mb-1">
+                        Расширение
+                      </small>
                       <div className="fw-bold">
-                        {memeOrder!.filePath.split('.').pop()?.toUpperCase() || 'N/A'}
+                        {memeOrder!.filePath.split(".").pop()?.toUpperCase() ||
+                          "N/A"}
                       </div>
                     </div>
                   </Col>
                   <Col md={6}>
                     <div className="border rounded p-3">
-                      <small className="text-muted d-block mb-1">Размер файла</small>
+                      <small className="text-muted d-block mb-1">
+                        Размер файла
+                      </small>
                       <div className="fw-bold text-muted">Недоступно</div>
                       <small className="text-muted">
                         Информация о размере файла недоступна через API
@@ -290,7 +298,9 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                   </Col>
                   <Col md={12}>
                     <div className="border rounded p-3">
-                      <small className="text-muted d-block mb-1">Полный путь</small>
+                      <small className="text-muted d-block mb-1">
+                        Полный путь
+                      </small>
                       <code className="bg-light px-2 py-1 rounded d-block text-break">
                         {memeOrder!.filePath}
                       </code>
