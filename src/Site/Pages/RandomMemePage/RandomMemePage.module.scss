@@ -1,3 +1,7 @@
+#randomRow {
+  gap: 50px !important;
+}
+
 // Основные стили для RandomMemePage
 .randomMemePage {
   min-height: 100vh;
@@ -188,7 +192,7 @@
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: 1.25rem;
   }
 }
 

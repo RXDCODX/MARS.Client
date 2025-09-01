@@ -1,4 +1,5 @@
-import React, { useMemo } from "react";
+import { Folder, Image, Plus, RefreshCw, Search, Trash2 } from "lucide-react";
+import { useMemo } from "react";
 import {
   Alert,
   Badge,
@@ -13,16 +14,13 @@ import {
   Tab,
   Tabs,
 } from "react-bootstrap";
-import {
-  Folder,
-  Image,
-  Plus,
-  RefreshCw,
-  Search,
-  Trash2,
-} from "lucide-react";
 
-import { MemeTypeDto, MemeOrderDto } from "@/shared/api/http-clients/data-contracts";
+import {
+  MemeOrderDto,
+  MemeTypeDto,
+} from "@/shared/api/http-clients/data-contracts";
+
+import styles from "../RandomMemePage.module.scss";
 import { RandomMemeListProps } from "../RandomMemePage.types";
 
 const RandomMemeList: React.FC<RandomMemeListProps> = ({
@@ -45,7 +43,7 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
 
     const query = searchQuery.toLowerCase();
     return memeTypes.filter(
-      (type) =>
+      type =>
         type.name.toLowerCase().includes(query) ||
         type.folderPath.toLowerCase().includes(query)
     );
@@ -56,7 +54,7 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
 
     const query = searchQuery.toLowerCase();
     return memeOrders.filter(
-      (order) =>
+      order =>
         order.filePath.toLowerCase().includes(query) ||
         order.type?.name.toLowerCase().includes(query)
     );
@@ -68,7 +66,7 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
       key={type.id}
       className="h-100 cursor-pointer transition-all hover:shadow-lg"
       onClick={() => onTypeSelect(type)}
-      style={{ cursor: "pointer" }}
+      style={{ cursor: "pointer", gap: "5px !important" }}
     >
       <Card.Body className="d-flex flex-column">
         <div className="d-flex align-items-center mb-3">
@@ -91,7 +89,10 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
         <div className="mt-auto">
           <Badge bg="secondary" className="me-2">
             <Image size={12} className="me-1" />
-            {memeOrders.filter((order) => order.memeTypeId === type.id).length} файлов
+            {
+              memeOrders.filter(order => order.memeTypeId === type.id).length
+            }{" "}
+            файлов
           </Badge>
         </div>
       </Card.Body>
@@ -135,9 +136,7 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
         )}
 
         <div className="mt-auto">
-          <small className="text-muted">
-            Порядок: {order.order}
-          </small>
+          <small className="text-muted">Порядок: {order.order}</small>
         </div>
       </Card.Body>
     </Card>
@@ -220,7 +219,7 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
           <Card className="text-center">
             <Card.Body>
               <div className="display-4 text-info">
-                {new Set(memeOrders.map((o) => o.filePath)).size}
+                {new Set(memeOrders.map(o => o.filePath)).size}
               </div>
               <small className="text-muted">Уникальных файлов</small>
             </Card.Body>
@@ -230,12 +229,17 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
           <Card className="text-center">
             <Card.Body>
               <div className="display-4 text-warning">
-                {Object.keys(
-                  memeTypes.reduce((acc, type) => {
-                    acc[type.folderPath] = true;
-                    return acc;
-                  }, {} as Record<string, boolean>)
-                ).length}
+                {
+                  Object.keys(
+                    memeTypes.reduce(
+                      (acc, type) => {
+                        acc[type.folderPath] = true;
+                        return acc;
+                      },
+                      {} as Record<string, boolean>
+                    )
+                  ).length
+                }
               </div>
               <small className="text-muted">Папок</small>
             </Card.Body>
@@ -264,7 +268,7 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
                   type="text"
                   placeholder={`🔍 Поиск ${activeTab === "types" ? "типов мемов" : "заказов"}...`}
                   value={searchQuery}
-                  onChange={(e) => onSearchChange(e.target.value)}
+                  onChange={e => onSearchChange(e.target.value)}
                 />
                 {searchQuery && (
                   <Button
@@ -297,7 +301,7 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
             <Card.Body>
               <Tabs
                 activeKey={activeTab}
-                onSelect={(k) => onTabChange(k as "types" | "orders")}
+                onSelect={k => onTabChange(k as "types" | "orders")}
                 className="mb-4"
               >
                 <Tab
@@ -310,7 +314,7 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
                   }
                 >
                   {filteredTypes.length > 0 ? (
-                    <Row xs={1} sm={2} lg={3} xl={4} className="g-3">
+                    <Row xs={1} sm={2} lg={3} xl={4} id={styles.randomRow}>
                       {filteredTypes.map(renderTypeCard)}
                     </Row>
                   ) : (
@@ -346,7 +350,7 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
                   }
                 >
                   {filteredOrders.length > 0 ? (
-                    <Row xs={1} sm={2} lg={3} xl={4} className="g-3">
+                    <Row xs={1} sm={2} lg={3} xl={4} id={styles.randomRow}>
                       {filteredOrders.map(renderOrderCard)}
                     </Row>
                   ) : (

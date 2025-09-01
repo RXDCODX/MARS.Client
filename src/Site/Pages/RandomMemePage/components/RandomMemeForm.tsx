@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { ArrowLeft, Save } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -9,14 +10,12 @@ import {
   Row,
   Spinner,
 } from "react-bootstrap";
-import { ArrowLeft, Save } from "lucide-react";
-
 
 import {
-  RandomMemeFormProps,
   MemeFormData,
-  MemeTypeFormData,
   MemeOrderFormData,
+  MemeTypeFormData,
+  RandomMemeFormProps,
 } from "../RandomMemePage.types";
 
 const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
@@ -65,10 +64,7 @@ const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
   }, [memeType, memeOrder, isType]);
 
   // Обработчик изменения полей
-  const handleInputChange = (
-    field: string,
-    value: string | number
-  ) => {
+  const handleInputChange = (field: string, value: string | number) => {
     setFormData(prev => ({
       ...prev,
       [field]: value,
@@ -151,7 +147,7 @@ const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
             <Form.Control
               type="text"
               value={data.name}
-              onChange={(e) => handleInputChange("name", e.target.value)}
+              onChange={e => handleInputChange("name", e.target.value)}
               isInvalid={!!errors.name}
               placeholder="Введите название типа мема"
               maxLength={50}
@@ -159,9 +155,7 @@ const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
             <Form.Control.Feedback type="invalid">
               {errors.name}
             </Form.Control.Feedback>
-            <Form.Text className="text-muted">
-              Максимум 50 символов
-            </Form.Text>
+            <Form.Text className="text-muted">Максимум 50 символов</Form.Text>
           </Form.Group>
         </Col>
 
@@ -173,7 +167,7 @@ const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
             <Form.Control
               type="text"
               value={data.folderPath}
-              onChange={(e) => handleInputChange("folderPath", e.target.value)}
+              onChange={e => handleInputChange("folderPath", e.target.value)}
               isInvalid={!!errors.folderPath}
               placeholder="Введите путь к папке с мемами"
             />
@@ -203,7 +197,7 @@ const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
             <Form.Control
               type="text"
               value={data.filePath}
-              onChange={(e) => handleInputChange("filePath", e.target.value)}
+              onChange={e => handleInputChange("filePath", e.target.value)}
               isInvalid={!!errors.filePath}
               placeholder="Введите путь к файлу мема"
             />
@@ -223,11 +217,13 @@ const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
             </Form.Label>
             <Form.Select
               value={data.memeTypeId}
-              onChange={(e) => handleInputChange("memeTypeId", parseInt(e.target.value))}
+              onChange={e =>
+                handleInputChange("memeTypeId", parseInt(e.target.value))
+              }
               isInvalid={!!errors.memeTypeId}
             >
               <option value={0}>Выберите тип мема</option>
-              {memeTypes.map((type) => (
+              {memeTypes.map(type => (
                 <option key={type.id} value={type.id}>
                   {type.name} (ID: {type.id})
                 </option>
@@ -248,7 +244,9 @@ const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
               type="number"
               min={1}
               value={data.order}
-              onChange={(e) => handleInputChange("order", parseInt(e.target.value) || 1)}
+              onChange={e =>
+                handleInputChange("order", parseInt(e.target.value) || 1)
+              }
               isInvalid={!!errors.order}
               placeholder="1"
             />
@@ -273,13 +271,13 @@ const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
             <div>
               <h1 className="d-flex align-items-center gap-3 mb-2">
                 <Save size={32} />
-                {isEdit ? "Редактирование" : "Создание"} {isType ? "типа мема" : "заказа мема"}
+                {isEdit ? "Редактирование" : "Создание"}{" "}
+                {isType ? "типа мема" : "заказа мема"}
               </h1>
               <p className="text-muted mb-0">
                 {isEdit
                   ? `Редактирование ${isType ? "типа мема" : "заказа мема"}`
-                  : `Создание нового ${isType ? "типа мема" : "заказа мема"}`
-                }
+                  : `Создание нового ${isType ? "типа мема" : "заказа мема"}`}
               </p>
             </div>
 
@@ -367,7 +365,10 @@ const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
             <ul className="mb-0">
               {isType ? (
                 <>
-                  <li>Название типа обязательно и не может быть длиннее 50 символов</li>
+                  <li>
+                    Название типа обязательно и не может быть длиннее 50
+                    символов
+                  </li>
                   <li>Путь к папке обязателен</li>
                 </>
               ) : (

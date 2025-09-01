@@ -70,7 +70,7 @@
   transition: all 0.3s ease;
   border-radius: 8px;
   border: 2px solid transparent;
-  background: var(--site-bs-primary);
+  background: var(--bs-gray-100);
 
   &:focus {
     border-color: var(--bs-primary);
