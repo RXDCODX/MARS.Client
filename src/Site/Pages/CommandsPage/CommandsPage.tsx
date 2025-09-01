@@ -13,7 +13,7 @@ import {
   User,
   XCircle,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
   Badge,
@@ -525,6 +525,7 @@ const CommandsPage: React.FC = () => {
   const colors = useSiteColors();
   const { showToast } = useToastModal();
   const [commandsService] = useState(() => new Commands());
+  const parametersPanelRef = useRef<HTMLDivElement>(null);
 
   // Состояние компонента
   const [state, setState] = useState<CommandsPageState>({
@@ -612,6 +613,32 @@ const CommandsPage: React.FC = () => {
       const result = await commandsService.commandsParametersList(command.name);
       const parameters = result.data;
       updateState({ commandParameters: parameters });
+
+      // Автоматическая прокрутка к панели параметров после загрузки
+      setTimeout(() => {
+        if (parametersPanelRef.current) {
+          const panelElement = parametersPanelRef.current;
+          const panelRect = panelElement.getBoundingClientRect();
+          const viewportHeight = window.innerHeight;
+
+          // Проверяем, помещается ли панель на экране
+          if (panelRect.height > viewportHeight) {
+            // Если панель не помещается, прокручиваем к началу панели
+            panelElement.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+              inline: "nearest",
+            });
+          } else {
+            // Если панель помещается, центрируем её на экране
+            panelElement.scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+              inline: "nearest",
+            });
+          }
+        }
+      }, 100); // Небольшая задержка для завершения рендеринга
     } catch (err) {
       updateState({
         error:
@@ -888,16 +915,18 @@ const CommandsPage: React.FC = () => {
             {/* Панель параметров */}
             {state.showParameters && state.selectedCommand && (
               <Col lg={4}>
-                <CommandParameters
-                  command={state.selectedCommand}
-                  parameters={state.commandParameters}
-                  parameterValues={state.parameterValues}
-                  onParameterChange={handleParameterChange}
-                  onExecute={executeCommand}
-                  onCancel={handleCancelCommand}
-                  isExecuting={state.isExecuting}
-                  colors={colors}
-                />
+                <div ref={parametersPanelRef}>
+                  <CommandParameters
+                    command={state.selectedCommand}
+                    parameters={state.commandParameters}
+                    parameterValues={state.parameterValues}
+                    onParameterChange={handleParameterChange}
+                    onExecute={executeCommand}
+                    onCancel={handleCancelCommand}
+                    isExecuting={state.isExecuting}
+                    colors={colors}
+                  />
+                </div>
               </Col>
             )}
           </Row>
