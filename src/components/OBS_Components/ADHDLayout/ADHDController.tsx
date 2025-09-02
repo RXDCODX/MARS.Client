@@ -1,12 +1,10 @@
 import { useEffect, useReducer, useRef, useState } from "react";
-import { preload } from "react-dom";
 
 import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api/signalr-clients/TelegramusHub/SignalRHubWrapper";
 import Announce from "@/shared/Utils/Announce/Announce";
 
 import styles from "./ADHDLayout.module.scss";
 import { ADHDPage } from "./ADHDPage";
-import { videoAssets } from "./components/imageAssets";
 
 interface ADHDState {
   isVisible: boolean;
@@ -41,12 +39,6 @@ const adhdReducer = (state: ADHDState, action: ADHDAction): ADHDState => {
         isExploding: false,
       };
     case "TICK":
-      if (state.remainingTime <= 1) {
-        return {
-          ...state,
-          isExploding: true,
-        };
-      }
       return {
         ...state,
         remainingTime: state.remainingTime - 1,
@@ -93,8 +85,6 @@ const initialState: ADHDState = {
 };
 
 export function ADHDController() {
-  preload(videoAssets.explosion, { as: "video" });
-
   const [announced, setAnnounced] = useState<boolean>(false);
   const [state, dispatch] = useReducer(adhdReducer, initialState);
   const [pendingExtensions, setPendingExtensions] = useState<number[]>([]);
@@ -138,6 +128,12 @@ export function ADHDController() {
       intervalRef.current = setInterval(() => {
         dispatch({ type: "TICK" });
       }, 1000);
+    } else if (
+      state.isVisible &&
+      state.remainingTime == 0 &&
+      !state.isExploding
+    ) {
+      dispatch({ type: "START_EXPLOSION" });
     } else {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -189,6 +185,10 @@ export function ADHDController() {
     }
   }, [state.isExploding, pendingExtensions]);
 
+  useEffect(() => {
+    console.log(state.isExploding, state.remainingTime);
+  }, [state.isExploding, state.remainingTime]);
+
   return (
     <>
       {!announced && (
@@ -209,10 +209,9 @@ export function ADHDController() {
       <video
         ref={explosionRef}
         className={styles.explosionVideo}
-        src={videoAssets.explosion}
+        src="/Alerts/explosion.webm"
         style={{ visibility: state.isExploding ? "visible" : "hidden" }}
         muted
-        preload="auto"
       />
     </>
   );
