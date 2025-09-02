@@ -16,11 +16,13 @@ export { Framedata } from "./http-clients/Framedata";
 export { FramedataChanges } from "./http-clients/FramedataChanges";
 export { Honkai } from "./http-clients/Honkai";
 export { KeyboardHook } from "./http-clients/KeyboardHook";
+export { Logs } from "./http-clients/Logs";
 export { MediaInfoApi } from "./http-clients/MediaInfoApi";
 export { PyroAlerts } from "./http-clients/PyroAlerts";
 export { RandomMeme } from "./http-clients/RandomMeme";
 export { RxdcodxViewers } from "./http-clients/RxdcodxViewers";
 export { ServiceManager } from "./http-clients/ServiceManager";
+export { TestLogger } from "./http-clients/TestLogger";
 export { Twitch } from "./http-clients/Twitch";
 export { TwitchRewards } from "./http-clients/TwitchRewards";
 

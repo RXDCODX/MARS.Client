@@ -1,3 +1,4 @@
+import { LogsPage } from "@/Site/Pages";
 import Layout from "@/Site/Pages/Layout/Layout";
 import ServerViewer from "@/Site/Pages/ServerViewer/ServerViewer";
 import TwitchRewardsPage from "@/Site/Pages/TwitchRewardsPage";
@@ -7,6 +8,16 @@ import ServiceDetailsPage from "./ServiceDetailsPage";
 
 // Массив панелей управления (с Layout)
 export const adminRoutes: RouteConfig[] = [
+  {
+    path: "/logs",
+    name: "Панель логов",
+    type: "control panel",
+    element: (
+      <Layout>
+        <LogsPage />
+      </Layout>
+    ),
+  },
   {
     path: "/admin",
     name: "Админ панель",

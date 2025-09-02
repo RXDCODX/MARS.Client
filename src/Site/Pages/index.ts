@@ -13,6 +13,7 @@ export { default as Dashboard } from "./Dashboard/Dashboard";
 export { default as AdminPanel } from "./AdminPanel/AdminPanel";
 export { default as ServerViewer } from "./ServerViewer/ServerViewer";
 export { default as BackupsPage } from "./BackupsPage";
+export { default as LogsPage } from "./LogsPage";
 
 // MediaInfo страницы
 export { MediaInfoEditPage } from "./MediaInfoPage";

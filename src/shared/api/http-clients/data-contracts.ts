@@ -181,6 +181,43 @@ export interface Image {
   url4x?: string;
 }
 
+export interface Log {
+  /** @format uuid */
+  id: string;
+  /** @format date-time */
+  whenLogged: string;
+  message: string;
+  stackTrace?: string;
+  logLevel: string;
+}
+
+export interface LogResponse {
+  logs: Log[];
+  /** @format int32 */
+  totalCount: number;
+  /** @format int32 */
+  page: number;
+  /** @format int32 */
+  pageSize: number;
+  /** @format int32 */
+  totalPages: number;
+}
+
+export interface LogsStatistics {
+  /** @format int32 */
+  totalLogs: number;
+  /** @format int32 */
+  warningLogs: number;
+  /** @format int32 */
+  errorLogs: number;
+  /** @format int32 */
+  criticalLogs: number;
+  /** @format date-time */
+  oldestLogDate?: string;
+  /** @format date-time */
+  newestLogDate?: string;
+}
+
 export interface MaxPerStreamSetting {
   isEnabled: boolean;
   /** @format int32 */
@@ -448,6 +485,20 @@ export interface ServiceLog {
   level: string;
   message: string;
   exception?: string;
+}
+
+export interface SupplementRequest {
+  source: "None" | "Wavu" | "Tekkendocs";
+  /** @format int32 */
+  requestDelaySeconds?: number;
+  /** @format int32 */
+  characterDelaySeconds?: number;
+  useStagingService?: boolean;
+  parseMoves?: boolean;
+  /** @format int32 */
+  maxRetries?: number;
+  /** @format int32 */
+  httpTimeoutSeconds?: number;
 }
 
 export interface TekkenCharacter {

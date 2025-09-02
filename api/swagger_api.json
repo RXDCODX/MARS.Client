@@ -1710,6 +1710,110 @@
         }
       }
     },
+    "/api/Framedata/supplement": {
+      "post": {
+        "tags": [
+          "Framedata"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SupplementRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SupplementRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SupplementRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParseResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Framedata/supplement/{source}": {
+      "post": {
+        "tags": [
+          "Framedata"
+        ],
+        "parameters": [
+          {
+            "name": "source",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "None",
+                "Wavu",
+                "Tekkendocs"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParseResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParseResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParseResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/FramedataChanges/pending/characters": {
       "get": {
         "tags": [
@@ -2240,6 +2344,283 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Logs": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": "whenlogged"
+            }
+          },
+          {
+            "name": "sortDescending",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          },
+          {
+            "name": "logLevel",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "searchText",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Logs/by-level/{logLevel}": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "parameters": [
+          {
+            "name": "logLevel",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Log"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Log"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Log"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Logs/by-date-range": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "parameters": [
+          {
+            "name": "fromDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Log"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Log"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Log"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Logs/recent": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "parameters": [
+          {
+            "name": "count",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Log"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Log"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Log"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Logs/statistics": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogsStatistics"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogsStatistics"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogsStatistics"
+                }
+              }
+            }
           }
         }
       }
@@ -3376,6 +3757,97 @@
         }
       }
     },
+    "/api/RandomMeme/file/{id}": {
+      "get": {
+        "tags": [
+          "RandomMeme"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/RandomMeme/file/random": {
+      "get": {
+        "tags": [
+          "RandomMeme"
+        ],
+        "parameters": [
+          {
+            "name": "typeId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/RandomMeme/orders/reorder/{typeId}": {
       "post": {
         "tags": [
@@ -3771,6 +4243,42 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/TestLogger/test-warning": {
+      "post": {
+        "tags": [
+          "TestLogger"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/TestLogger/test-error": {
+      "post": {
+        "tags": [
+          "TestLogger"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/TestLogger/test-critical": {
+      "post": {
+        "tags": [
+          "TestLogger"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -4684,6 +5192,109 @@
             "type": "string",
             "nullable": true,
             "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Log": {
+        "required": [
+          "id",
+          "logLevel",
+          "message",
+          "whenLogged"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "whenLogged": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "message": {
+            "type": "string"
+          },
+          "stackTrace": {
+            "type": "string",
+            "nullable": true
+          },
+          "logLevel": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LogResponse": {
+        "required": [
+          "logs",
+          "page",
+          "pageSize",
+          "totalCount",
+          "totalPages"
+        ],
+        "type": "object",
+        "properties": {
+          "logs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Log"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LogsStatistics": {
+        "required": [
+          "criticalLogs",
+          "errorLogs",
+          "totalLogs",
+          "warningLogs"
+        ],
+        "type": "object",
+        "properties": {
+          "totalLogs": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "warningLogs": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errorLogs": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "criticalLogs": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "oldestLogDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "newestLogDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -5613,6 +6224,51 @@
           },
           "exception": {
             "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SupplementRequest": {
+        "required": [
+          "source"
+        ],
+        "type": "object",
+        "properties": {
+          "source": {
+            "enum": [
+              "None",
+              "Wavu",
+              "Tekkendocs"
+            ],
+            "type": "string"
+          },
+          "requestDelaySeconds": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "characterDelaySeconds": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "useStagingService": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "parseMoves": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "maxRetries": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "httpTimeoutSeconds": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           }
         },

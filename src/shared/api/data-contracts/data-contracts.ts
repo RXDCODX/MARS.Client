@@ -254,6 +254,18 @@ export interface DefaultImage {
   url4x?: string;
 }
 
+export enum FramedataSupplementCreate2ParamsEnum {
+  None = "None",
+  Wavu = "Wavu",
+  Tekkendocs = "Tekkendocs",
+}
+
+export enum FramedataSupplementCreate2ParamsSourceEnum {
+  None = "None",
+  Wavu = "Wavu",
+  Tekkendocs = "Tekkendocs",
+}
+
 export interface GetCustomRewardRedemptionResponse {
   data?: RewardRedemption[];
   pagination?: Pagination;
@@ -269,6 +281,43 @@ export interface Image {
   url1x?: string;
   url2x?: string;
   url4x?: string;
+}
+
+export interface Log {
+  /** @format uuid */
+  id: string;
+  logLevel: string;
+  message: string;
+  stackTrace?: string;
+  /** @format date-time */
+  whenLogged: string;
+}
+
+export interface LogResponse {
+  logs: Log[];
+  /** @format int32 */
+  page: number;
+  /** @format int32 */
+  pageSize: number;
+  /** @format int32 */
+  totalCount: number;
+  /** @format int32 */
+  totalPages: number;
+}
+
+export interface LogsStatistics {
+  /** @format int32 */
+  criticalLogs: number;
+  /** @format int32 */
+  errorLogs: number;
+  /** @format date-time */
+  newestLogDate?: string;
+  /** @format date-time */
+  oldestLogDate?: string;
+  /** @format int32 */
+  totalLogs: number;
+  /** @format int32 */
+  warningLogs: number;
 }
 
 export interface MaxPerStreamSetting {
@@ -576,6 +625,26 @@ export interface ServiceLog {
   message: string;
   /** @format date-time */
   timestamp: string;
+}
+
+export interface SupplementRequest {
+  /** @format int32 */
+  characterDelaySeconds?: number;
+  /** @format int32 */
+  httpTimeoutSeconds?: number;
+  /** @format int32 */
+  maxRetries?: number;
+  parseMoves?: boolean;
+  /** @format int32 */
+  requestDelaySeconds?: number;
+  source: SupplementRequestSourceEnum;
+  useStagingService?: boolean;
+}
+
+export enum SupplementRequestSourceEnum {
+  None = "None",
+  Wavu = "Wavu",
+  Tekkendocs = "Tekkendocs",
 }
 
 export interface TekkenCharacter {

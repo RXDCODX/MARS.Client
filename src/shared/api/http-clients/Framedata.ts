@@ -14,6 +14,7 @@ import {
   Move,
   ParseRequest,
   ParseResult,
+  SupplementRequest,
   TekkenCharacter,
 } from "./data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
@@ -309,6 +310,46 @@ export class Framedata<
       method: "POST",
       body: data,
       type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Framedata
+   * @name FramedataSupplementCreate
+   * @request POST:/api/Framedata/supplement
+   * @response `200` `ParseResult` OK
+   */
+  framedataSupplementCreate = (
+    data: SupplementRequest,
+    params: RequestParams = {},
+  ) =>
+    this.request<ParseResult, any>({
+      path: `/api/Framedata/supplement`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Framedata
+   * @name FramedataSupplementCreate2
+   * @request POST:/api/Framedata/supplement/{source}
+   * @originalName framedataSupplementCreate
+   * @duplicate
+   * @response `200` `ParseResult` OK
+   */
+  framedataSupplementCreate2 = (
+    source: "None" | "Wavu" | "Tekkendocs",
+    params: RequestParams = {},
+  ) =>
+    this.request<ParseResult, any>({
+      path: `/api/Framedata/supplement/${source}`,
+      method: "POST",
       format: "json",
       ...params,
     });

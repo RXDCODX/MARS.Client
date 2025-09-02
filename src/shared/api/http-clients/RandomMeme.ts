@@ -282,6 +282,45 @@ export class RandomMeme<
    * No description
    *
    * @tags RandomMeme
+   * @name RandomMemeFileDetail
+   * @request GET:/api/RandomMeme/file/{id}
+   * @response `200` `void` OK
+   * @response `404` `ProblemDetails` Not Found
+   * @response `500` `void` Internal Server Error
+   */
+  randomMemeFileDetail = (id: string, params: RequestParams = {}) =>
+    this.request<void, ProblemDetails | void>({
+      path: `/api/RandomMeme/file/${id}`,
+      method: "GET",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags RandomMeme
+   * @name RandomMemeFileRandomList
+   * @request GET:/api/RandomMeme/file/random
+   * @response `200` `void` OK
+   * @response `404` `ProblemDetails` Not Found
+   * @response `500` `void` Internal Server Error
+   */
+  randomMemeFileRandomList = (
+    query?: {
+      /** @format int32 */
+      typeId: number;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<void, ProblemDetails | void>({
+      path: `/api/RandomMeme/file/random`,
+      method: "GET",
+      query: query,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags RandomMeme
    * @name RandomMemeOrdersReorderCreate
    * @request POST:/api/RandomMeme/orders/reorder/{typeId}
    * @response `200` `void` OK

@@ -350,7 +350,7 @@ const Header: React.FC = () => {
               rel="noopener noreferrer"
               target="_blank"
             >
-              <i className="bi bi-layers" />
+              <i className="bi bi-window-desktop" />
             </Nav.Link>
 
             {/* Иконка для перехода на /static с релоудом */}
@@ -376,7 +376,7 @@ const Header: React.FC = () => {
               rel="noopener noreferrer"
               target="_blank"
             >
-              <i className="bi bi-arrow-clockwise" />
+              <i className="bi bi-folder2-open" />
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>

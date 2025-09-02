@@ -20,7 +20,6 @@ import {
   MemeTypeDto,
 } from "@/shared/api/http-clients/data-contracts";
 
-import styles from "../RandomMemePage.module.scss";
 import { RandomMemeListProps } from "../RandomMemePage.types";
 
 const RandomMemeList: React.FC<RandomMemeListProps> = ({
@@ -70,7 +69,7 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
     >
       <Card.Body className="d-flex flex-column">
         <div className="d-flex align-items-center mb-3">
-          <div className="bg-primary rounded-circle p-2 me-3">
+          <div className="site-bg-accent rounded-circle p-2 me-3">
             <Folder size={20} className="text-white" />
           </div>
           <div className="flex-grow-1">
@@ -81,13 +80,13 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
 
         <div className="mb-3">
           <small className="text-muted d-block">Папка:</small>
-          <code className="bg-light px-2 py-1 rounded small">
+          <code className="site-bg-secondary px-2 py-1 rounded small">
             {type.folderPath}
           </code>
         </div>
 
         <div className="mt-auto">
-          <Badge bg="secondary" className="me-2">
+          <Badge bg="site-bg-tertiary" className="me-2">
             <Image size={12} className="me-1" />
             {
               memeOrders.filter(order => order.memeTypeId === type.id).length
@@ -109,7 +108,7 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
     >
       <Card.Body className="d-flex flex-column">
         <div className="d-flex align-items-center mb-3">
-          <div className="bg-success rounded-circle p-2 me-3">
+          <div className="site-bg-success rounded-circle p-2 me-3">
             <Image size={20} className="text-white" />
           </div>
           <div className="flex-grow-1">
@@ -120,15 +119,17 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
 
         <div className="mb-3">
           <small className="text-muted d-block">Файл:</small>
-          <code className="bg-light px-2 py-1 rounded small text-truncate d-block">
-            {order.filePath}
+          <code className="site-bg-secondary px-2 py-1 rounded small text-truncate d-block">
+            {order.filePath.length > 30
+              ? `...${order.filePath.slice(-30)}`
+              : order.filePath}
           </code>
         </div>
 
         {order.type && (
           <div className="mb-3">
             <small className="text-muted d-block">Тип:</small>
-            <Badge bg="info" className="me-2">
+            <Badge bg="site-bg-info" className="me-2">
               <Folder size={12} className="me-1" />
               {order.type.name}
             </Badge>
@@ -291,7 +292,7 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
             <Card.Header>
               <div className="d-flex justify-content-between align-items-center">
                 <h5 className="mb-0">Список элементов</h5>
-                <Badge bg="secondary">
+                <Badge bg="site-bg-tertiary">
                   {activeTab === "types"
                     ? `${filteredTypes.length} типов`
                     : `${filteredOrders.length} заказов`}
@@ -314,7 +315,7 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
                   }
                 >
                   {filteredTypes.length > 0 ? (
-                    <Row xs={1} sm={2} lg={3} xl={4} id={styles.randomRow}>
+                    <Row xs={1} sm={2} lg={3} xl={4}>
                       {filteredTypes.map(renderTypeCard)}
                     </Row>
                   ) : (
@@ -350,7 +351,13 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({
                   }
                 >
                   {filteredOrders.length > 0 ? (
-                    <Row xs={1} sm={2} lg={3} xl={4} id={styles.randomRow}>
+                    <Row
+                      xs={1}
+                      sm={2}
+                      lg={4}
+                      xl={4}
+                      className="justify-content-space-around"
+                    >
                       {filteredOrders.map(renderOrderCard)}
                     </Row>
                   ) : (
