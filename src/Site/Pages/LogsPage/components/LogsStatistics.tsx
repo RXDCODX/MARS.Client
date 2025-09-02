@@ -1,11 +1,13 @@
-import { BarChart3, AlertTriangle, AlertCircle, AlertOctagon, Info } from "lucide-react";
+import { BarChart3 } from "lucide-react";
 import { Spinner } from "react-bootstrap";
 
+import styles from "../LogsPage.module.scss";
 import { LogsStatisticsProps } from "../LogsPage.types";
 
-import styles from "../LogsPage.module.scss";
-
-const LogsStatistics: React.FC<LogsStatisticsProps> = ({ statistics, isLoading }) => {
+const LogsStatistics: React.FC<LogsStatisticsProps> = ({
+  statistics,
+  isLoading,
+}) => {
   if (isLoading) {
     return (
       <div className={styles.statsCard}>
@@ -41,42 +43,14 @@ const LogsStatistics: React.FC<LogsStatisticsProps> = ({ statistics, isLoading }
     });
   };
 
-  const getLevelIcon = (level: string) => {
-    switch (level.toLowerCase()) {
-      case "warning":
-        return <AlertTriangle size={24} />;
-      case "error":
-        return <AlertCircle size={24} />;
-      case "critical":
-        return <AlertOctagon size={24} />;
-      case "info":
-        return <Info size={24} />;
-      default:
-        return <BarChart3 size={24} />;
-    }
-  };
-
-  const getLevelColor = (level: string) => {
-    switch (level.toLowerCase()) {
-      case "warning":
-        return "warning";
-      case "error":
-        return "danger";
-      case "critical":
-        return "danger";
-      case "info":
-        return "info";
-      default:
-        return "secondary";
-    }
-  };
-
   return (
     <div className={styles.statsCard}>
       <div className={styles.statsGrid}>
         {/* Общее количество логов */}
         <div className={styles.statItem}>
-          <div className={styles.statNumber}>{statistics.totalLogs.toLocaleString()}</div>
+          <div className={styles.statNumber}>
+            {statistics.totalLogs.toLocaleString()}
+          </div>
           <div className={styles.statLabel}>Всего логов</div>
         </div>
 
@@ -125,7 +99,8 @@ const LogsStatistics: React.FC<LogsStatisticsProps> = ({ statistics, isLoading }
       {statistics.oldestLogDate && statistics.newestLogDate && (
         <div style={{ marginTop: "1rem", textAlign: "center" }}>
           <small className="text-muted">
-            Период: {formatDate(statistics.oldestLogDate)} - {formatDate(statistics.newestLogDate)}
+            Период: {formatDate(statistics.oldestLogDate)} -{" "}
+            {formatDate(statistics.newestLogDate)}
           </small>
         </div>
       )}

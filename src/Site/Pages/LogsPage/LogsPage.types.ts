@@ -1,4 +1,7 @@
-import { Log, LogResponse, LogsStatistics } from "@/shared/api";
+import { Log, LogsStatistics } from "@/shared/api";
+
+// Re-export Log type for use in other components
+export type { Log };
 
 // Состояние страницы логов
 export interface LogsPageState {

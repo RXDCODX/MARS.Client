@@ -2,7 +2,10 @@ import { Filter, RotateCcw, Search } from "lucide-react";
 import { Button, Form } from "react-bootstrap";
 
 import styles from "../LogsPage.module.scss";
-import { LogsFiltersProps } from "../LogsPage.types";
+import {
+  LogsFilters as LogsFiltersType,
+  LogsFiltersProps,
+} from "../LogsPage.types";
 
 const LogsFilters: React.FC<LogsFiltersProps> = ({
   filters,

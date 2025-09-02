@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Eye, Download, Trash2 } from "lucide-react";
-import { Button, Table, Badge, Modal, Spinner } from "react-bootstrap";
+import { Eye, Download } from "lucide-react";
+import { Button, Table, Modal, Spinner } from "react-bootstrap";
 
 import { Log, LogsTableProps } from "../LogsPage.types";
 

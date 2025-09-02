@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Alert, Container } from "react-bootstrap";
 import { FileText, AlertCircle } from "lucide-react";
 
 import { Logs } from "@/shared/api";
-import { Log, LogResponse, LogsStatistics } from "@/shared/api/http-clients/data-contracts";
+import { LogResponse, LogsStatistics } from "@/shared/api/http-clients/data-contracts";
 import { createErrorToast, useToastModal } from "@/shared/Utils/ToastModal";
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
