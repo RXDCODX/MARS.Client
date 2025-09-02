@@ -5,7 +5,7 @@ import Announce from "@/shared/Utils/Announce/Announce";
 
 import styles from "./ADHDLayout.module.scss";
 import { ADHDPage } from "./ADHDPage";
-import { imageAssets, videoAssets } from "./components/imageAssets";
+import { videoAssets } from "./components/imageAssets";
 
 interface ADHDState {
   isVisible: boolean;
