@@ -5,23 +5,18 @@ import Announce from "@/shared/Utils/Announce/Announce";
 
 import styles from "./ADHDLayout.module.scss";
 import { ADHDPage } from "./ADHDPage";
-import { videoAssets } from "./components/imageAssets";
 
 interface ADHDState {
   isVisible: boolean;
   duration: number;
   remainingTime: number;
-  isExploding: boolean;
 }
 
 type ADHDAction =
   | { type: "SHOW"; payload: { duration: number } }
   | { type: "HIDE" }
   | { type: "TICK" }
-  | { type: "EXTEND"; payload: { duration: number } }
-  | { type: "START_EXPLOSION" }
-  | { type: "FINISH_EXPLOSION" }
-  | { type: "COMPLETE_EXPLOSION" };
+  | { type: "EXTEND"; payload: { duration: number } };
 
 const adhdReducer = (state: ADHDState, action: ADHDAction): ADHDState => {
   switch (action.type) {
@@ -30,14 +25,12 @@ const adhdReducer = (state: ADHDState, action: ADHDAction): ADHDState => {
         isVisible: true,
         duration: action.payload.duration,
         remainingTime: action.payload.duration,
-        isExploding: false,
       };
     case "HIDE":
       return {
         ...state,
         isVisible: false,
         remainingTime: 0,
-        isExploding: false,
       };
     case "TICK":
       return {
@@ -45,33 +38,10 @@ const adhdReducer = (state: ADHDState, action: ADHDAction): ADHDState => {
         remainingTime: state.remainingTime - 1,
       };
     case "EXTEND":
-      if (state.isExploding) {
-        // Если идет взрыв, добавляем в очередь
-        return state;
-      }
       return {
         ...state,
         duration: state.duration + action.payload.duration,
         remainingTime: state.remainingTime + action.payload.duration,
-      };
-    case "START_EXPLOSION":
-      return {
-        ...state,
-        isExploding: true,
-      };
-    case "FINISH_EXPLOSION":
-      return {
-        ...state,
-        isVisible: false,
-        remainingTime: 0,
-        // isExploding остается true для продолжения воспроизведения видео
-      };
-    case "COMPLETE_EXPLOSION":
-      return {
-        ...state,
-        isVisible: false,
-        remainingTime: 0,
-        isExploding: false,
       };
     default:
       return state;
@@ -82,7 +52,6 @@ const initialState: ADHDState = {
   isVisible: false,
   duration: 0,
   remainingTime: 0,
-  isExploding: false,
 };
 
 export function ADHDController() {
@@ -90,7 +59,6 @@ export function ADHDController() {
   const [state, dispatch] = useReducer(adhdReducer, initialState);
   const [pendingExtensions, setPendingExtensions] = useState<number[]>([]);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const explosionRef = useRef<HTMLVideoElement | null>(null);
 
   // Функция форматирования времени в формат MM:SS
   const formatTime = (seconds: number): string => {
@@ -102,15 +70,12 @@ export function ADHDController() {
   const handleMessage = (duration: number) => {
     duration = import.meta.env.DEV ? 10 : duration;
 
-    if (state.isExploding) {
-      // Если идет взрыв, добавляем в очередь продлений
-      setPendingExtensions(prev => [...prev, duration]);
-      return;
-    }
-
-    if (state.isVisible) {
-      // Если уже показывается, продлеваем время
+    if (state.isVisible && state.remainingTime > 0) {
+      // Если показывается и время еще есть, продлеваем время
       dispatch({ type: "EXTEND", payload: { duration } });
+    } else if (state.isVisible && state.remainingTime === 0) {
+      // Если показывается, но время истекло (идет взрыв), добавляем в очередь продлений
+      setPendingExtensions(prev => [...prev, duration]);
     } else {
       // Если не показывается, начинаем показ
       dispatch({ type: "SHOW", payload: { duration } });
@@ -121,20 +86,18 @@ export function ADHDController() {
   SignalRContext.useSignalREffect("adhd", handleMessage, [
     handleMessage,
     state.isVisible,
-    state.isExploding,
+    state.remainingTime,
   ]);
 
   useEffect(() => {
-    if (state.isVisible && state.remainingTime > 0 && !state.isExploding) {
+    if (state.isVisible && state.remainingTime > 0) {
       intervalRef.current = setInterval(() => {
         dispatch({ type: "TICK" });
       }, 1000);
-    } else if (
-      state.isVisible &&
-      state.remainingTime == 0 &&
-      !state.isExploding
-    ) {
-      dispatch({ type: "START_EXPLOSION" });
+    } else if (state.isVisible && state.remainingTime === 0) {
+      // Когда время истекло, вызываем взрыв через SignalR
+      SignalRContext.invoke("Explosion");
+      // Не скрываем сразу, ждем 2 секунды
     } else {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
@@ -148,16 +111,13 @@ export function ADHDController() {
         intervalRef.current = null;
       }
     };
-  }, [state.isVisible, state.remainingTime, state.isExploding]);
+  }, [state.isVisible, state.remainingTime]);
 
+  // Обработка скрытия через 2 секунды после взрыва и очереди продлений
   useEffect(() => {
-    if (state.isExploding && explosionRef.current) {
-      const videoElement = explosionRef.current;
-      videoElement.play();
-
-      // Скрываем ADHDPage через 2 секунды после начала взрыва
+    if (state.isVisible && state.remainingTime === 0) {
       const hideTimer = setTimeout(() => {
-        dispatch({ type: "FINISH_EXPLOSION" });
+        dispatch({ type: "HIDE" });
 
         // Проверяем очередь продлений
         if (pendingExtensions.length > 0) {
@@ -170,39 +130,14 @@ export function ADHDController() {
         }
       }, 2000);
 
-      // Ждем окончания видео для полного завершения состояния
-      const handleVideoEnd = () => {
-        dispatch({ type: "COMPLETE_EXPLOSION" });
-        videoElement.pause();
-        videoElement.currentTime = 0;
-      };
-
-      videoElement.addEventListener("ended", handleVideoEnd);
-
       return () => {
         clearTimeout(hideTimer);
-        videoElement.removeEventListener("ended", handleVideoEnd);
       };
     }
-  }, [state.isExploding, pendingExtensions]);
-
-  useEffect(() => {
-    console.log(state.isExploding, state.remainingTime);
-  }, [state.isExploding, state.remainingTime]);
+  }, [state.isVisible, state.remainingTime, pendingExtensions]);
 
   return (
     <>
-      {/* Скрытое видео для предзагрузки */}
-      <video
-        ref={explosionRef}
-        className={styles.explosionVideo}
-        src={videoAssets.explosion}
-        muted
-        autoPlay
-        style={{
-          visibility: state.isExploding ? "visible" : "hidden",
-        }}
-      />
       {!announced && (
         <Announce title={"ADHD"} callback={() => setAnnounced(true)} />
       )}

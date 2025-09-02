@@ -1,4 +1,5 @@
 import { ADHDController } from "@/components/OBS_Components/ADHDLayout";
+import { ExplosionVideo } from "@/components/OBS_Components/ADHDLayout/ExplosionVideo";
 import AFKScreen from "@/components/OBS_Components/AFKScreen/AFKScreen";
 import AutoMessageBillboard from "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboard";
 import AutoMessageBillboardTest from "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboardTest";
@@ -201,6 +202,16 @@ export const obsComponentRoutes: RouteConfig[] = [
     element: (
       <OBSComponentWrapper>
         <AvatarWithFireSvg />
+      </OBSComponentWrapper>
+    ),
+  },
+  {
+    path: "/explosion",
+    name: "Explosion",
+    type: "obs",
+    element: (
+      <OBSComponentWrapper>
+        <ExplosionVideo />
       </OBSComponentWrapper>
     ),
   },
