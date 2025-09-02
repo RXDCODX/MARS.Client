@@ -182,4 +182,11 @@
   object-fit: cover;
   z-index: 1003;
   pointer-events: none;
+  // Оптимизация производительности
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  // Улучшение качества рендеринга
+  image-rendering: optimizeSpeed;
+  image-rendering: -webkit-optimize-contrast;
 }

@@ -189,8 +189,27 @@ export function ADHDController() {
     console.log(state.isExploding, state.remainingTime);
   }, [state.isExploding, state.remainingTime]);
 
+  // Предзагрузка видео при монтировании компонента
+  useEffect(() => {
+    if (explosionRef.current) {
+      explosionRef.current.load();
+    }
+  }, []);
+
   return (
     <>
+      {/* Скрытое видео для предзагрузки */}
+      <video
+        ref={explosionRef}
+        className={styles.explosionVideo}
+        src="/Alerts/explosion.webm"
+        muted
+        preload="auto"
+        style={{
+          display: state.isExploding ? "block" : "none",
+          visibility: state.isExploding ? "visible" : "hidden",
+        }}
+      />
       {!announced && (
         <Announce title={"ADHD"} callback={() => setAnnounced(true)} />
       )}
@@ -206,13 +225,6 @@ export function ADHDController() {
           </div>
         </div>
       )}
-      <video
-        ref={explosionRef}
-        className={styles.explosionVideo}
-        src="/Alerts/explosion.webm"
-        style={{ visibility: state.isExploding ? "visible" : "hidden" }}
-        muted
-      />
     </>
   );
 }
