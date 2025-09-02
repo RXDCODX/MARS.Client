@@ -33,7 +33,6 @@ const Header: React.FC = () => {
     { label: "Контакты", path: "/contacts" },
     { label: "Управление алертами", path: "/media-info" },
     { label: "Cinema Queue", path: "/cinema-queue" },
-    { label: "ADHD News", path: "/adhd" },
     { label: "Все маршруты", path: "/routes" },
   ];
 
@@ -83,6 +82,7 @@ const Header: React.FC = () => {
 
   const controlRoomPages: NavigationItem[] = [
     { label: "Панель управления", path: "/admin" },
+    { label: "Логи", path: "/logs" },
     { label: "Дашборд", path: "/dashboard" },
     { label: "Просмотр серверов", path: "/main" },
     { label: "Сервисы", path: "/services" },

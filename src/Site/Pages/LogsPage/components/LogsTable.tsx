@@ -247,7 +247,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
                   <strong>Сообщение:</strong>
                 </div>
                 <div className="col-md-9">
-                  <div className="p-3 bg-light rounded">
+                  <div className="p-3 site-bg-secondary rounded">
                     {selectedLog.message}
                   </div>
                 </div>

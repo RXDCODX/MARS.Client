@@ -208,9 +208,7 @@ export function ADHDController() {
         className={styles.explosionVideo}
         src={videoAssets.explosion}
         style={{ visibility: state.isExploding ? "visible" : "hidden" }}
-        autoPlay
         muted
-        preload="auto"
       />
     </>
   );

@@ -12,7 +12,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
   isLoading,
 }) => {
   const handleInputChange = (
-    field: keyof LogsFilters,
+    field: keyof LogsFiltersType,
     value: string | boolean
   ) => {
     onFiltersChange({ [field]: value });
@@ -53,18 +53,21 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
   return (
     <div className={styles.controlsCard}>
       <form onSubmit={handleSubmit}>
+        {/* Фильтры */}
         <div className={styles.controlsGrid}>
           {/* Поиск по тексту */}
-          <div className={`${styles.controlGroup} ${styles.searchBox}`}>
+          <div className={styles.controlGroup}>
             <label htmlFor="searchText">Поиск по тексту</label>
-            <Search size={20} className={styles.searchIcon} />
-            <Form.Control
-              type="text"
-              id="searchText"
-              placeholder="Поиск в сообщениях логов..."
-              value={filters.searchText}
-              onChange={e => handleInputChange("searchText", e.target.value)}
-            />
+            <div className={styles.searchBox}>
+              <Search size={20} className={styles.searchIcon} />
+              <Form.Control
+                type="text"
+                id="searchText"
+                placeholder="Поиск в сообщениях логов..."
+                value={filters.searchText}
+                onChange={e => handleInputChange("searchText", e.target.value)}
+              />
+            </div>
           </div>
 
           {/* Уровень логирования */}
@@ -137,47 +140,49 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
           </div>
         </div>
 
-        {/* Кнопки управления */}
-        <div className={styles.buttonsGroup}>
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={isLoading}
-            className="d-flex align-items-center gap-2"
-          >
-            <Search size={16} />
-            {isLoading ? "Поиск..." : "Найти логи"}
-          </Button>
+        {/* Кнопки управления - отдельный row */}
+        <div className={styles.buttonsRow}>
+          <div className={styles.buttonsGroup}>
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={isLoading}
+              className="d-flex align-items-center gap-2"
+            >
+              <Search size={16} />
+              {isLoading ? "Поиск..." : "Найти логи"}
+            </Button>
 
-          <Button
-            type="button"
-            variant="outline-secondary"
-            onClick={handleReset}
-            disabled={isLoading}
-            className="d-flex align-items-center gap-2"
-          >
-            <RotateCcw size={16} />
-            Сбросить
-          </Button>
+            <Button
+              type="button"
+              variant="outline-secondary"
+              onClick={handleReset}
+              disabled={isLoading}
+              className="d-flex align-items-center gap-2"
+            >
+              <RotateCcw size={16} />
+              Сбросить
+            </Button>
 
-          <Button
-            type="button"
-            variant="outline-info"
-            onClick={() => {
-              const now = new Date();
-              const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+            <Button
+              type="button"
+              variant="outline-info"
+              onClick={() => {
+                const now = new Date();
+                const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000);
 
-              onFiltersChange({
-                fromDate: yesterday.toISOString().slice(0, 16),
-                toDate: now.toISOString().slice(0, 16),
-              });
-            }}
-            disabled={isLoading}
-            className="d-flex align-items-center gap-2"
-          >
-            <Filter size={16} />
-            Последние 24 часа
-          </Button>
+                onFiltersChange({
+                  fromDate: yesterday.toISOString().slice(0, 16),
+                  toDate: now.toISOString().slice(0, 16),
+                });
+              }}
+              disabled={isLoading}
+              className="d-flex align-items-center gap-2"
+            >
+              <Filter size={16} />
+              Последние 24 часа
+            </Button>
+          </div>
         </div>
       </form>
     </div>
