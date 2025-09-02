@@ -1,4 +1,5 @@
 import { useEffect, useReducer, useRef, useState } from "react";
+import { preload } from "react-dom";
 
 import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api/signalr-clients/TelegramusHub/SignalRHubWrapper";
 import Announce from "@/shared/Utils/Announce/Announce";
@@ -92,6 +93,8 @@ const initialState: ADHDState = {
 };
 
 export function ADHDController() {
+  preload(videoAssets.explosion, { as: "video" });
+
   const [announced, setAnnounced] = useState<boolean>(false);
   const [state, dispatch] = useReducer(adhdReducer, initialState);
   const [pendingExtensions, setPendingExtensions] = useState<number[]>([]);
@@ -209,6 +212,7 @@ export function ADHDController() {
         src={videoAssets.explosion}
         style={{ visibility: state.isExploding ? "visible" : "hidden" }}
         muted
+        preload="auto"
       />
     </>
   );
