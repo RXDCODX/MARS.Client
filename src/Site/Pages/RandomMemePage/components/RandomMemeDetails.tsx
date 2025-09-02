@@ -9,10 +9,9 @@ import {
   RefreshCw,
   Trash2,
 } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Alert,
-  Badge,
   Button,
   Card,
   Col,
@@ -22,12 +21,6 @@ import {
 } from "react-bootstrap";
 
 import { RandomMeme } from "@/shared/api";
-import {
-  createApiToast,
-  createErrorToast,
-  createSuccessToast,
-  useToastModal,
-} from "@/shared/Utils/ToastModal";
 
 import styles from "../RandomMemePage.module.scss";
 import { RandomMemeDetailsProps } from "../RandomMemePage.types";
@@ -41,16 +34,15 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
   onDelete,
   onRefresh,
 }) => {
-  const api = new RandomMeme();
-  const { showToast } = useToastModal();
+  const api = useMemo(() => new RandomMeme(), []);
 
   const [memeImageUrl, setMemeImageUrl] = useState<string | null>(null);
   const [isImageLoading, setIsImageLoading] = useState(false);
   const [imageError, setImageError] = useState<string | null>(null);
   const [showImage, setShowImage] = useState(true);
 
-  // Загрузка изображения мема
-  const loadMemeImage = useCallback(async () => {
+  // Загрузка медиа файла мема
+  const loadMemeMedia = useCallback(async () => {
     if (!memeOrder?.id) return;
 
     try {
@@ -58,48 +50,49 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
       setImageError(null);
 
       // Получаем файл мема через API
-      const response = await api.randomMemeFileDetail(memeOrder.id);
+      await api.randomMemeFileDetail(memeOrder.id);
 
-      // Создаем URL для отображения изображения
-      // Поскольку API возвращает void, предполагаем, что файл доступен по пути
-      const imageUrl = `/api/RandomMeme/file/${memeOrder.id}`;
-      setMemeImageUrl(imageUrl);
-
-      showToast(
-        createApiToast(
-          "Изображение мема успешно загружено",
-          { fileId: memeOrder.id, filePath: memeOrder.filePath },
-          "success",
-          "Мем загружен"
-        )
-      );
+      // Создаем URL для отображения медиа файла
+      const mediaUrl = `/api/RandomMeme/file/${memeOrder.id}`;
+      setMemeImageUrl(mediaUrl);
     } catch (error) {
-      console.error("Ошибка загрузки изображения мема:", error);
+      console.error("Ошибка загрузки медиа файла мема:", error);
       const errorMessage =
         error instanceof Error ? error.message : "Неизвестная ошибка";
       setImageError(errorMessage);
-
-      showToast(
-        createErrorToast(
-          "Не удалось загрузить изображение мема",
-          error,
-          "Ошибка загрузки"
-        )
-      );
     } finally {
       setIsImageLoading(false);
     }
-  }, [memeOrder?.id, memeOrder?.filePath, api, showToast]);
+  }, [api, memeOrder?.id]);
 
-  // Загружаем изображение при изменении заказа
+  // Определение типа медиа файла по расширению
+  const getMediaType = useCallback((filePath: string) => {
+    const extension = filePath.split(".").pop()?.toLowerCase();
+
+    const imageExtensions = ["jpg", "jpeg", "png", "gif", "bmp", "webp", "svg"];
+    const videoExtensions = ["mp4", "avi", "mov", "wmv", "flv", "webm", "mkv"];
+    const audioExtensions = ["mp3", "wav", "ogg", "aac", "flac", "m4a"];
+
+    if (imageExtensions.includes(extension || "")) {
+      return "image";
+    } else if (videoExtensions.includes(extension || "")) {
+      return "video";
+    } else if (audioExtensions.includes(extension || "")) {
+      return "audio";
+    }
+
+    return "unknown";
+  }, []);
+
+  // Загружаем медиа файл при изменении заказа
   useEffect(() => {
     if (memeOrder?.id) {
-      loadMemeImage();
+      loadMemeMedia();
     } else {
       setMemeImageUrl(null);
       setImageError(null);
     }
-  }, [memeOrder?.id, loadMemeImage]);
+  }, [memeOrder?.id, loadMemeMedia]);
 
   // Отображение загрузки
   if (isLoading) {
@@ -202,7 +195,7 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
             <Card className={styles.memeDisplayCard}>
               <Card.Header>
                 <div className="d-flex justify-content-between align-items-center">
-                  <h5 className="mb-0">Просмотр мема</h5>
+                  <h5 className="mb-0">Просмотр медиа файла</h5>
                   <div className="d-flex gap-2">
                     <Button
                       variant="outline-secondary"
@@ -216,7 +209,7 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                     <Button
                       variant="outline-primary"
                       size="sm"
-                      onClick={loadMemeImage}
+                      onClick={loadMemeMedia}
                       disabled={isImageLoading}
                       className="d-flex align-items-center gap-2"
                     >
@@ -237,16 +230,16 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                         Загрузка изображения...
                       </span>
                     </Spinner>
-                    <p className="text-muted">Загружаем изображение мема...</p>
+                    <p className="text-muted">Загружаем медиа файл мема...</p>
                   </div>
                 ) : imageError ? (
                   <Alert variant="danger">
-                    <Alert.Heading>Ошибка загрузки изображения</Alert.Heading>
+                    <Alert.Heading>Ошибка загрузки медиа файла</Alert.Heading>
                     <p>{imageError}</p>
                     <Button
                       variant="outline-danger"
                       size="sm"
-                      onClick={loadMemeImage}
+                      onClick={loadMemeMedia}
                     >
                       Попробовать снова
                     </Button>
@@ -254,23 +247,82 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                 ) : memeImageUrl && showImage ? (
                   <div className="text-center">
                     <div className="mb-3">
-                      <img
-                        src={memeImageUrl}
-                        alt={`Мем #${memeOrder.order}`}
-                        className={`img-fluid rounded ${styles.memeImage}`}
-                        onError={() => {
-                          setImageError("Не удалось загрузить изображение");
-                          showToast(
-                            createErrorToast(
-                              "Ошибка отображения изображения",
-                              new Error(
-                                "Файл изображения поврежден или недоступен"
-                              ),
-                              "Ошибка отображения"
-                            )
-                          );
-                        }}
-                      />
+                      {(() => {
+                        const mediaType = getMediaType(memeOrder.filePath);
+
+                        switch (mediaType) {
+                          case "image":
+                            return (
+                              <img
+                                src={memeImageUrl}
+                                alt={`Мем #${memeOrder.order}`}
+                                className={`img-fluid rounded ${styles.memeImage}`}
+                                onError={() => {
+                                  setImageError(
+                                    "Не удалось загрузить изображение"
+                                  );
+                                }}
+                              />
+                            );
+
+                          case "video":
+                            return (
+                              <video
+                                src={memeImageUrl}
+                                controls
+                                className={`img-fluid rounded ${styles.memeImage}`}
+                                onError={() => {
+                                  setImageError("Не удалось загрузить видео");
+                                }}
+                              >
+                                Ваш браузер не поддерживает видео элемент.
+                              </video>
+                            );
+
+                          case "audio":
+                            return (
+                              <div className="d-flex flex-column align-items-center">
+                                <div className="mb-3">
+                                  <Image size={64} className="text-muted" />
+                                </div>
+                                <audio
+                                  src={memeImageUrl}
+                                  controls
+                                  className="w-100"
+                                  onError={() => {
+                                    setImageError("Не удалось загрузить аудио");
+                                  }}
+                                >
+                                  Ваш браузер не поддерживает аудио элемент.
+                                </audio>
+                              </div>
+                            );
+
+                          default:
+                            return (
+                              <div className="d-flex flex-column align-items-center">
+                                <div className="mb-3">
+                                  <Image size={64} className="text-muted" />
+                                </div>
+                                <p className="text-muted">
+                                  Неподдерживаемый тип файла:{" "}
+                                  {memeOrder.filePath.split(".").pop()}
+                                </p>
+                                <Button
+                                  variant="outline-primary"
+                                  size="sm"
+                                  onClick={() =>
+                                    window.open(memeImageUrl, "_blank")
+                                  }
+                                  className="d-flex align-items-center gap-2"
+                                >
+                                  <Eye size={16} />
+                                  Открыть файл
+                                </Button>
+                              </div>
+                            );
+                        }
+                      })()}
                     </div>
                     <div className={styles.memeActions}>
                       <Button
@@ -288,18 +340,12 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                         onClick={() => {
                           const link = document.createElement("a");
                           link.href = memeImageUrl;
-                          link.download = `meme_${memeOrder.order}.${memeOrder.filePath.split(".").pop() || "jpg"}`;
+                          const extension =
+                            memeOrder.filePath.split(".").pop() || "file";
+                          link.download = `meme_${memeOrder.order}.${extension}`;
                           document.body.appendChild(link);
                           link.click();
                           document.body.removeChild(link);
-
-                          showToast(
-                            createSuccessToast(
-                              "Мем успешно скачан",
-                              { fileName: link.download },
-                              "Скачивание завершено"
-                            )
-                          );
                         }}
                         className="d-flex align-items-center gap-2"
                       >
@@ -311,14 +357,14 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                 ) : (
                   <div className={styles.memePlaceholder}>
                     <Image size={64} className="placeholder-icon" />
-                    <p className="placeholder-text">Изображение скрыто</p>
+                    <p className="placeholder-text">Медиа файл скрыт</p>
                     <Button
                       variant="outline-primary"
                       size="sm"
                       onClick={() => setShowImage(true)}
                     >
                       <Eye size={16} className="me-2" />
-                      Показать изображение
+                      Показать медиа файл
                     </Button>
                   </div>
                 )}
@@ -329,8 +375,8 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
       )}
 
       {/* Основная информация */}
-      <Row className="mb-4">
-        <Col lg={8}>
+      <Row className="">
+        <Col>
           <Card>
             <Card.Header>
               <h5 className="mb-0">Основная информация</h5>
@@ -396,44 +442,6 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                   </>
                 )}
               </Row>
-            </Card.Body>
-          </Card>
-        </Col>
-
-        <Col lg={4}>
-          <Card>
-            <Card.Header>
-              <h5 className="mb-0">Статистика</h5>
-            </Card.Header>
-            <Card.Body>
-              <div className="text-center">
-                <div className="mb-3">
-                  <div className="display-4 text-primary">
-                    {isType ? (
-                      "?" // Здесь можно добавить количество связанных заказов
-                    ) : (
-                      <Image size={48} />
-                    )}
-                  </div>
-                  <small className="text-muted">
-                    {isType ? "Связанных заказов" : "Файл мема"}
-                  </small>
-                </div>
-
-                {isType && (
-                  <Badge bg="info" className="me-2">
-                    <Folder size={12} className="me-1" />
-                    Тип мема
-                  </Badge>
-                )}
-
-                {!isType && memeOrder!.type && (
-                  <Badge bg="success" className="me-2">
-                    <Folder size={12} className="me-1" />
-                    {memeOrder!.type.name}
-                  </Badge>
-                )}
-              </div>
             </Card.Body>
           </Card>
         </Col>
