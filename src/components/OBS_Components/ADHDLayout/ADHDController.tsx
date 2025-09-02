@@ -5,6 +5,7 @@ import Announce from "@/shared/Utils/Announce/Announce";
 
 import styles from "./ADHDLayout.module.scss";
 import { ADHDPage } from "./ADHDPage";
+import { imageAssets, videoAssets } from "./components/imageAssets";
 
 interface ADHDState {
   isVisible: boolean;
@@ -189,24 +190,16 @@ export function ADHDController() {
     console.log(state.isExploding, state.remainingTime);
   }, [state.isExploding, state.remainingTime]);
 
-  // Предзагрузка видео при монтировании компонента
-  useEffect(() => {
-    if (explosionRef.current) {
-      explosionRef.current.load();
-    }
-  }, []);
-
   return (
     <>
       {/* Скрытое видео для предзагрузки */}
       <video
         ref={explosionRef}
         className={styles.explosionVideo}
-        src="/Alerts/explosion.webm"
+        src={videoAssets.explosion}
         muted
-        preload="auto"
+        autoPlay
         style={{
-          display: state.isExploding ? "block" : "none",
           visibility: state.isExploding ? "visible" : "hidden",
         }}
       />

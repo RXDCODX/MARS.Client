@@ -8,6 +8,7 @@ import duolingoWebp from "../content/duolingo-normal.webp";
 import dvdSvg from "../content/dvd.svg";
 import emailWebp from "../content/email.webp";
 // Видео
+import explosionWebm from "../content/explosion.webm";
 import fitnessWebm from "../content/fitness-small.webm";
 import gtaMp4 from "../content/gta.mp4";
 import hydraulicWebm from "../content/hydraulic-mobile.webm";
@@ -40,6 +41,7 @@ export const imageAssets = {
 };
 
 export const videoAssets = {
+  explosion: explosionWebm,
   fitness: fitnessWebm,
   gta: gtaMp4,
   hydraulic: hydraulicWebm,
