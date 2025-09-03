@@ -205,7 +205,7 @@ const MediaPlayer: React.FC<{
           <input
             type="range"
             min="0"
-            max="1"
+            max="5"
             value={volume}
             onChange={handleVolumeChange}
             className="volume-slider"

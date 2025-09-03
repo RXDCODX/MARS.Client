@@ -16,6 +16,12 @@ import { getCoordinates, getRandomRotation } from "@/shared/Utils";
 
 import styles from "./Media.module.scss";
 
+declare global {
+  interface Window {
+    webkitAudioContext?: typeof AudioContext;
+  }
+}
+
 interface Props {
   callback: () => void;
   MediaInfo: MediaDto;
@@ -28,6 +34,9 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
   const player = useRef<HTMLVideoElement>(null);
   const [, setBackupTimer] = useState<NodeJS.Timeout>();
   const [videoProgress, setVideoProgress] = useState(0);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const gainNodeRef = useRef<GainNode | null>(null);
+  const sourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
 
   // Мемоизируем positionInfo для стабильности зависимостей
   const memoizedPositionInfo = useMemo<MediaPositionInfo>(
@@ -124,6 +133,16 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
     setBaseStyles(initialStyles);
   }, [initialStyles]);
 
+  // Очистка ресурсов при размонтировании
+  useEffect(
+    () => () => {
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
+    },
+    []
+  );
+
   const muteAll = useCallback(() => {
     if (isHighPrior) {
       SignalRContext.invoke("MuteAll", []);
@@ -135,6 +154,44 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
       SignalRContext.invoke("UnmuteSessions");
     }
   }, [isHighPrior]);
+
+  const setupAudioContext = useCallback(() => {
+    if (!player.current) return;
+
+    try {
+      // Создаем AudioContext если его еще нет
+      if (!audioContextRef.current) {
+        const AudioContextClass =
+          window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioContextRef.current = new AudioContextClass();
+        } else {
+          throw new Error("AudioContext is not supported in this browser");
+        }
+      }
+
+      // Создаем источник из video элемента
+      if (!sourceNodeRef.current) {
+        sourceNodeRef.current =
+          audioContextRef.current.createMediaElementSource(player.current);
+      }
+
+      // Создаем GainNode если его еще нет
+      if (!gainNodeRef.current) {
+        gainNodeRef.current = audioContextRef.current.createGain();
+      }
+
+      // Подключаем цепочку: источник -> GainNode -> выход
+      sourceNodeRef.current.connect(gainNodeRef.current);
+      gainNodeRef.current.connect(audioContextRef.current.destination);
+
+      // Устанавливаем громкость (поддерживаем значения больше 100%)
+      const volume = metaInfo.volume / 100;
+      gainNodeRef.current.gain.value = volume;
+    } catch (error) {
+      console.warn("Failed to setup AudioContext for video:", error);
+    }
+  }, [metaInfo.volume]);
 
   const handleTimeUpdate = useCallback(
     (e: React.SyntheticEvent<HTMLVideoElement>) => {
@@ -253,7 +310,11 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
           objectFit: "fill",
         }}
         onCanPlay={e => {
-          e.currentTarget.volume = metaInfo.volume / 100;
+          // Настраиваем AudioContext и GainNode
+          setupAudioContext();
+
+          // Устанавливаем базовую громкость на 1.0, так как реальная громкость контролируется GainNode
+          e.currentTarget.volume = 1.0;
         }}
         onError={e => {
           console.log(
