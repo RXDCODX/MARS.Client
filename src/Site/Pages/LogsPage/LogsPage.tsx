@@ -1,16 +1,25 @@
+import { AlertCircle, FileText } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { Alert, Container } from "react-bootstrap";
-import { FileText, AlertCircle } from "lucide-react";
 
 import { Logs } from "@/shared/api";
-import { LogResponse, LogsStatistics } from "@/shared/api/http-clients/data-contracts";
+import {
+  LogResponse,
+  LogsStatistics,
+} from "@/shared/api/http-clients/data-contracts";
 import { createErrorToast, useToastModal } from "@/shared/Utils/ToastModal";
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
-import { LogsFilters, LogsStatistics as LogsStatisticsComponent, LogsTable } from "./components";
-import { LogsPageState, LogsFilters as LogsFiltersType } from "./LogsPage.types";
-
+import {
+  LogsFilters,
+  LogsStatistics as LogsStatisticsComponent,
+  LogsTable,
+} from "./components";
 import styles from "./LogsPage.module.scss";
+import {
+  LogsFilters as LogsFiltersType,
+  LogsPageState,
+} from "./LogsPage.types";
 
 const LogsPage: React.FC = () => {
   const colors = useSiteColors();
@@ -55,18 +64,16 @@ const LogsPage: React.FC = () => {
     try {
       updateState({ isLoading: true, error: "" });
 
-      const query: any = {
+      const query = {
         page: state.currentPage,
         pageSize: state.pageSize,
         sortBy: filters.sortBy,
         sortDescending: filters.sortDescending,
+        logLevel: filters.logLevel || "",
+        fromDate: filters.fromDate || "",
+        toDate: filters.toDate || "",
+        searchText: filters.searchText || "",
       };
-
-      // Добавляем фильтры только если они заполнены
-      if (filters.logLevel) query.logLevel = filters.logLevel;
-      if (filters.fromDate) query.fromDate = filters.fromDate;
-      if (filters.toDate) query.toDate = filters.toDate;
-      if (filters.searchText) query.searchText = filters.searchText;
 
       const response = await logsService.logsList(query);
       const logResponse: LogResponse = response.data;
@@ -78,19 +85,29 @@ const LogsPage: React.FC = () => {
         isLoading: false,
       });
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Неизвестная ошибка";
+      const errorMessage =
+        error instanceof Error ? error.message : "Неизвестная ошибка";
       updateState({
         error: `Ошибка при загрузке логов: ${errorMessage}`,
         isLoading: false,
       });
 
-      showToast(createErrorToast(
-        "Ошибка загрузки логов",
-        error,
-        "Не удалось загрузить логи приложения"
-      ));
+      showToast(
+        createErrorToast(
+          "Ошибка загрузки логов",
+          error,
+          "Не удалось загрузить логи приложения"
+        )
+      );
     }
-  }, [logsService, state.currentPage, state.pageSize, filters, updateState, showToast]);
+  }, [
+    logsService,
+    state.currentPage,
+    state.pageSize,
+    filters,
+    updateState,
+    showToast,
+  ]);
 
   // Загрузка статистики
   const loadStatistics = useCallback(async () => {
@@ -111,17 +128,23 @@ const LogsPage: React.FC = () => {
   }, [logsService, updateState]);
 
   // Обработчик изменения страницы
-  const handlePageChange = useCallback((page: number) => {
-    updateState({ currentPage: page });
-  }, [updateState]);
+  const handlePageChange = useCallback(
+    (page: number) => {
+      updateState({ currentPage: page });
+    },
+    [updateState]
+  );
 
   // Обработчик изменения размера страницы
-  const handlePageSizeChange = useCallback((size: number) => {
-    updateState({ 
-      pageSize: size, 
-      currentPage: 1, // Сбрасываем на первую страницу при изменении размера
-    });
-  }, [updateState]);
+  const handlePageSizeChange = useCallback(
+    (size: number) => {
+      updateState({
+        pageSize: size,
+        currentPage: 1, // Сбрасываем на первую страницу при изменении размера
+      });
+    },
+    [updateState]
+  );
 
   // Обработчик поиска
   const handleSearch = useCallback(() => {

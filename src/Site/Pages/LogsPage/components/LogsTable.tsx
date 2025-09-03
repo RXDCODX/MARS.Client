@@ -1,10 +1,9 @@
+import { Download, Eye, List, Table as TableIcon } from "lucide-react";
 import { useState } from "react";
-import { Eye, Download } from "lucide-react";
-import { Button, Table, Modal, Spinner } from "react-bootstrap";
-
-import { Log, LogsTableProps } from "../LogsPage.types";
+import { Button, Modal, Spinner, Table } from "react-bootstrap";
 
 import styles from "../LogsPage.module.scss";
+import { Log, LogsTableProps } from "../LogsPage.types";
 
 const LogsTable: React.FC<LogsTableProps> = ({
   logs,
@@ -18,25 +17,30 @@ const LogsTable: React.FC<LogsTableProps> = ({
 }) => {
   const [selectedLog, setSelectedLog] = useState<Log | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const [viewMode, setViewMode] = useState<"table" | "text">("table");
 
-  const formatTimestamp = (timestamp: string) => {
-    return new Date(timestamp).toLocaleString("ru-RU", {
+  const formatTimestamp = (timestamp: string) =>
+    new Date(timestamp).toLocaleString("ru-RU", {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
+      timeZone: "UTC", // Отображаем время в UTC без добавления локального часового пояса
     });
+
+  const formatLogForText = (log: Log) => {
+    const timestamp = formatTimestamp(log.whenLogged);
+    return `[${log.logLevel}](${timestamp}): ${log.message}`;
   };
+
+  const formatAllLogsAsText = () =>
+    logs.map(log => formatLogForText(log)).join("\n");
 
   const getLogLevelBadge = (level: string) => {
     const levelClass = level.toLowerCase();
-    return (
-      <span className={`${styles.logLevel} ${levelClass}`}>
-        {level}
-      </span>
-    );
+    return <span className={`${styles.logLevel} ${levelClass}`}>{level}</span>;
   };
 
   const handleViewDetails = (log: Log) => {
@@ -98,98 +102,166 @@ const LogsTable: React.FC<LogsTableProps> = ({
     <>
       <div className={styles.logsTableCard}>
         <div className={styles.tableHeader}>
-          <h3>Логи приложения ({totalCount.toLocaleString()})</h3>
+          <div className="d-flex justify-content-between align-items-center">
+            <h3>Логи приложения ({totalCount.toLocaleString()})</h3>
+            <div className="d-flex gap-2">
+              <Button
+                variant={viewMode === "table" ? "primary" : "outline-primary"}
+                size="sm"
+                onClick={() => setViewMode("table")}
+                className="d-flex align-items-center gap-1"
+              >
+                <TableIcon size={16} />
+                Таблица
+              </Button>
+              <Button
+                variant={viewMode === "text" ? "primary" : "outline-primary"}
+                size="sm"
+                onClick={() => setViewMode("text")}
+                className="d-flex align-items-center gap-1"
+              >
+                <List size={16} />
+                Текст
+              </Button>
+            </div>
+          </div>
         </div>
 
-        <div style={{ overflowX: "auto" }}>
-          <Table className={styles.logsTable} responsive>
-            <thead>
-              <tr>
-                <th>Время</th>
-                <th>Уровень</th>
-                <th>Сообщение</th>
-                <th>Действия</th>
-              </tr>
-            </thead>
-            <tbody>
-              {logs.map((log) => (
-                <tr key={log.id}>
-                  <td className={styles.timestamp}>
-                    {formatTimestamp(log.whenLogged)}
-                  </td>
-                  <td>{getLogLevelBadge(log.logLevel)}</td>
-                  <td className={styles.message}>
-                    <div style={{ maxWidth: "400px" }}>
-                      {log.message}
-                      {log.stackTrace && (
-                        <div className="mt-2">
-                          <small className="text-muted">
-                            Есть стек-трейс
-                          </small>
-                        </div>
-                      )}
-                    </div>
-                  </td>
-                  <td>
-                    <div className="d-flex gap-2">
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        onClick={() => handleViewDetails(log)}
-                        title="Просмотреть детали"
-                        className="d-flex align-items-center gap-1"
-                      >
-                        <Eye size={14} />
-                        Детали
-                      </Button>
-                      
-                      <Button
-                        variant="outline-success"
-                        size="sm"
-                        onClick={() => handleExportLog(log)}
-                        title="Экспортировать лог"
-                        className="d-flex align-items-center gap-1"
-                      >
-                        <Download size={14} />
-                        Экспорт
-                      </Button>
-                    </div>
-                  </td>
+        {viewMode === "table" ? (
+          <div style={{ overflowX: "auto" }}>
+            <Table className={styles.logsTable} responsive>
+              <thead>
+                <tr>
+                  <th>Время</th>
+                  <th>Уровень</th>
+                  <th>Сообщение</th>
+                  <th>Действия</th>
                 </tr>
-              ))}
-            </tbody>
-          </Table>
-        </div>
+              </thead>
+              <tbody>
+                {logs.map(log => (
+                  <tr key={log.id}>
+                    <td className={styles.timestamp}>
+                      {formatTimestamp(log.whenLogged)}
+                    </td>
+                    <td>{getLogLevelBadge(log.logLevel)}</td>
+                    <td className={styles.message}>
+                      <div style={{ maxWidth: "400px" }}>
+                        {log.message}
+                        {log.stackTrace && (
+                          <div className="mt-2">
+                            <small className="text-muted">
+                              Есть стек-трейс
+                            </small>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="d-flex gap-2">
+                        <Button
+                          variant="outline-primary"
+                          size="sm"
+                          onClick={() => handleViewDetails(log)}
+                          title="Просмотреть детали"
+                          className="d-flex align-items-center gap-1"
+                        >
+                          <Eye size={14} />
+                          Детали
+                        </Button>
+
+                        <Button
+                          variant="outline-success"
+                          size="sm"
+                          onClick={() => handleExportLog(log)}
+                          title="Экспортировать лог"
+                          className="d-flex align-items-center gap-1"
+                        >
+                          <Download size={14} />
+                          Экспорт
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </div>
+        ) : (
+          <div className="p-3">
+            <textarea
+              className="form-control"
+              style={{
+                height: "400px",
+                fontFamily: "monospace",
+                fontSize: "0.9rem",
+                backgroundColor: "var(--site-bg-primary)",
+                color: "var(--site-text-primary)",
+                border: "1px solid var(--site-border-primary)",
+              }}
+              value={formatAllLogsAsText()}
+              readOnly
+              placeholder="Логи будут отображены здесь..."
+            />
+            <div className="mt-2 d-flex justify-content-between align-items-center">
+              <small className="text-muted">
+                Показано {logs.length} из {totalCount.toLocaleString()} записей
+              </small>
+              <Button
+                variant="outline-success"
+                size="sm"
+                onClick={() => {
+                  const textContent = formatAllLogsAsText();
+                  const blob = new Blob([textContent], { type: "text/plain" });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = `logs-${new Date().toISOString().slice(0, 10)}.txt`;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+                }}
+                className="d-flex align-items-center gap-1"
+              >
+                <Download size={14} />
+                Экспорт в TXT
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Пагинация */}
         <div className={styles.paginationContainer}>
           <div className={styles.paginationInfo}>
-            Показано {((currentPage - 1) * pageSize) + 1} - {Math.min(currentPage * pageSize, totalCount)} из {totalCount.toLocaleString()} записей
+            Показано {(currentPage - 1) * pageSize + 1} -{" "}
+            {Math.min(currentPage * pageSize, totalCount)} из{" "}
+            {totalCount.toLocaleString()} записей
           </div>
-          
+
           <div className="d-flex gap-2 align-items-center">
             <span>Страница:</span>
             <select
               value={currentPage}
-              onChange={(e) => onPageChange(Number(e.target.value))}
+              onChange={e => onPageChange(Number(e.target.value))}
               className="form-select form-select-sm"
               style={{ width: "auto" }}
             >
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
                 <option key={page} value={page}>
                   {page}
                 </option>
               ))}
             </select>
-            
+
             <span>из {totalPages}</span>
           </div>
-          
+
           <div className="d-flex gap-2 align-items-center">
             <span>Записей на странице:</span>
             <select
               value={pageSize}
-              onChange={(e) => onPageSizeChange(Number(e.target.value))}
+              onChange={e => onPageSizeChange(Number(e.target.value))}
               className="form-select form-select-sm"
               style={{ width: "auto" }}
             >
@@ -223,7 +295,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
                   <code>{selectedLog.id}</code>
                 </div>
               </div>
-              
+
               <div className="row mb-3">
                 <div className="col-md-3">
                   <strong>Время:</strong>
@@ -232,7 +304,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
                   {formatTimestamp(selectedLog.whenLogged)}
                 </div>
               </div>
-              
+
               <div className="row mb-3">
                 <div className="col-md-3">
                   <strong>Уровень:</strong>
@@ -241,7 +313,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
                   {getLogLevelBadge(selectedLog.logLevel)}
                 </div>
               </div>
-              
+
               <div className="row mb-3">
                 <div className="col-md-3">
                   <strong>Сообщение:</strong>
@@ -252,7 +324,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
                   </div>
                 </div>
               </div>
-              
+
               {selectedLog.stackTrace && (
                 <div className="row mb-3">
                   <div className="col-md-3">

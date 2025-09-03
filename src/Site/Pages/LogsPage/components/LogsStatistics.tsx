@@ -40,6 +40,7 @@ const LogsStatistics: React.FC<LogsStatisticsProps> = ({
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
+      timeZone: "UTC", // Отображаем время в UTC без добавления локального часового пояса
     });
   };
 

@@ -100,6 +100,18 @@ export interface LogsDisplaySettings {
 // Типы для действий с логами
 export type LogAction = "view" | "export" | "delete" | "markAsRead";
 
+// Интерфейс для параметров запроса логов
+export interface LogsQueryParams {
+  page: number;
+  pageSize: number;
+  sortBy: string;
+  sortDescending: boolean;
+  logLevel?: string;
+  fromDate?: string;
+  toDate?: string;
+  searchText?: string;
+}
+
 // Интерфейс для контекста логов
 export interface LogsContextType {
   state: LogsPageState;

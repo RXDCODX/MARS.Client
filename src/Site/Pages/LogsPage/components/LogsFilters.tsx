@@ -185,6 +185,37 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
               <Filter size={16} />
               Последние 24 часа
             </Button>
+
+            <Button
+              type="button"
+              variant="outline-warning"
+              onClick={() => {
+                const now = new Date();
+
+                // Находим понедельник текущей недели
+                const dayOfWeek = now.getDay(); // 0 = воскресенье, 1 = понедельник, ..., 6 = суббота
+                const daysToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1; // Если воскресенье, то 6 дней назад, иначе dayOfWeek - 1
+
+                const monday = new Date(now);
+                monday.setDate(now.getDate() - daysToMonday);
+                monday.setHours(0, 0, 0, 0); // Начало дня
+
+                // Находим воскресенье текущей недели
+                const sunday = new Date(monday);
+                sunday.setDate(monday.getDate() + 6);
+                sunday.setHours(23, 59, 59, 999); // Конец дня
+
+                onFiltersChange({
+                  fromDate: monday.toISOString().slice(0, 16),
+                  toDate: sunday.toISOString().slice(0, 16),
+                });
+              }}
+              disabled={isLoading}
+              className="d-flex align-items-center gap-2"
+            >
+              <Filter size={16} />
+              За эту неделю
+            </Button>
           </div>
         </div>
       </form>
