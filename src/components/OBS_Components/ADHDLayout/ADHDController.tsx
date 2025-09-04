@@ -96,7 +96,7 @@ export function ADHDController() {
       }, 1000);
     } else if (state.isVisible && state.remainingTime === 0) {
       // Когда время истекло, вызываем взрыв через SignalR
-      SignalRContext.invoke("Explosion");
+      SignalRContext.invoke("ExplosionOn");
       // Не скрываем сразу, ждем 2 секунды
     } else {
       if (intervalRef.current) {
