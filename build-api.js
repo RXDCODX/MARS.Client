@@ -1,3 +1,4 @@
+import { exec } from "child_process";
 import fs from "fs";
 import { resolve } from "path";
 import process from "process";
@@ -82,19 +83,19 @@ const OUTPUT_DIR_SIGNALR_CLIENTS = resolve(
   "./signalr-clients/"
 ); // SignalR клиенты
 
-// Создаем директории если их нет
-[
-  OUTPUT_DIR_ROOT,
-  OUTPUT_DIR_TYPES,
-  OUTPUT_DIR_DATA_CONTRACTS,
-  OUTPUT_DIR_HTTP_CLIENTS,
-  OUTPUT_DIR_SIGNALR_TYPES,
-  OUTPUT_DIR_SIGNALR_CLIENTS,
-].forEach(dir => {
-  if (!fs.existsSync(dir)) {
-    fs.mkdirSync(dir, { recursive: true });
+// Функция для очистки папки API
+function cleanApiDirectory() {
+  console.log("🧹 Очищаем папку API...");
+
+  if (fs.existsSync(OUTPUT_DIR_ROOT)) {
+    exec('Remove-Item -Path "./src/shared/api" -Recurse -Force', {
+      shell: "powershell.exe",
+    });
+    console.log("✅ Папка API очищена");
   }
-});
+
+  console.log("✅ Директории API созданы");
+}
 
 // Функция для дедупликации enum'ов в сгенерированном файле
 function deduplicateEnums(filePath) {
@@ -157,7 +158,7 @@ async function generateTypesOnly() {
   await generateApi({
     input: swaggerApiJsonPath,
     output: OUTPUT_DIR_TYPES,
-    name: "types.ts",
+    name: "Api.ts",
     cleanOutput: true,
     httpClientType: "axios",
     prettier: {
@@ -581,18 +582,18 @@ async function main() {
   try {
     console.log("🚀 Начинаем генерацию API с разделением типов и клиентов...");
 
+    // Очищаем папку API перед генерацией
+    cleanApiDirectory();
+
     // Читаем swagger файлы для контроллеров и хабов
     const swaggerApiJsonPath = resolve(process.cwd(), "./api/swagger_api.json");
     const swaggerHubsJsonPath = resolve(
       process.cwd(),
       "./api/swagger_hubs.json"
     );
-    const swaggerApiSource = JSON.parse(
-      fs.readFileSync(swaggerApiJsonPath, "utf-8")
-    );
-    const swaggerHubsSource = JSON.parse(
-      fs.readFileSync(swaggerHubsJsonPath, "utf-8")
-    );
+
+    const swaggerApiSource = JSON.parse(fs.readFileSync(swaggerApiJsonPath));
+    const swaggerHubsSource = JSON.parse(fs.readFileSync(swaggerHubsJsonPath));
 
     // Определяем контроллеры и хабы
     CONTROLLERS = getControllersFromSwagger(swaggerApiSource);
