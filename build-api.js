@@ -72,12 +72,10 @@ function getSignalRHubsFromSwagger(swaggerSource) {
 let CONTROLLERS = [];
 let SIGNALR_HUBS = [];
 
-// Новая структура папок для разделения типов и клиентов
+// Новая структура папок: все типы хранятся в одной папке types
 const OUTPUT_DIR_ROOT = resolve(process.cwd(), "./src/shared/api/");
-const OUTPUT_DIR_TYPES = resolve(OUTPUT_DIR_ROOT, "./types/"); // Общие типы
-const OUTPUT_DIR_DATA_CONTRACTS = resolve(OUTPUT_DIR_ROOT, "./data-contracts/"); // Data contracts
+const OUTPUT_DIR_TYPES = resolve(OUTPUT_DIR_ROOT, "./types/"); // Все общие типы: data-contracts.ts и signalr-types.ts
 const OUTPUT_DIR_HTTP_CLIENTS = resolve(OUTPUT_DIR_ROOT, "./http-clients/"); // HTTP клиенты
-const OUTPUT_DIR_SIGNALR_TYPES = resolve(OUTPUT_DIR_ROOT, "./signalr-types/"); // SignalR типы
 const OUTPUT_DIR_SIGNALR_CLIENTS = resolve(
   OUTPUT_DIR_ROOT,
   "./signalr-clients/"
@@ -158,7 +156,7 @@ async function generateTypesOnly() {
   await generateApi({
     input: swaggerApiJsonPath,
     output: OUTPUT_DIR_TYPES,
-    name: "Api.ts",
+    name: "types.ts",
     cleanOutput: true,
     httpClientType: "axios",
     prettier: {
@@ -166,8 +164,8 @@ async function generateTypesOnly() {
       tabWidth: 4,
       printWidth: 160,
     },
-    generateClient: false, // Только типы
-    modular: false, // Один файл с типами
+    generateClient: true, // Только типы
+    modular: true, // Один файл с типами
     sortTypes: true,
     enumNamesAsValues: false,
     generateResponses: false,
@@ -199,26 +197,24 @@ async function generateTypesOnly() {
   console.log("✅ Типы сгенерированы в types/types.ts");
 }
 
-// Функция для генерации data-contracts отдельно
+// Функция для генерации data-contracts отдельно (внутри папки types)
 async function generateDataContracts() {
   console.log("📋 Генерируем data-contracts...");
 
-  // Вместо генерации новых data-contracts, просто копируем типы из types
-  // и переименовываем файл для обратной совместимости
-  const typesFilePath = resolve(OUTPUT_DIR_TYPES, "types.ts");
-  const dataContractsFilePath = resolve(
-    OUTPUT_DIR_DATA_CONTRACTS,
-    "data-contracts.ts"
-  );
+  // Копируем data-contracts из http-clients в types
+  const httpClientsDataContractsPath = resolve(OUTPUT_DIR_HTTP_CLIENTS, "data-contracts.ts");
+  const typesDataContractsPath = resolve(OUTPUT_DIR_TYPES, "data-contracts.ts");
 
-  if (fs.existsSync(typesFilePath)) {
-    fs.copyFileSync(typesFilePath, dataContractsFilePath);
-    console.log(
-      "✅ Data-contracts скопированы из types/ для обратной совместимости"
-    );
+  if (fs.existsSync(httpClientsDataContractsPath)) {
+    // Гарантируем, что папка types существует
+    if (!fs.existsSync(OUTPUT_DIR_TYPES)) {
+      fs.mkdirSync(OUTPUT_DIR_TYPES, { recursive: true });
+    }
+    fs.copyFileSync(httpClientsDataContractsPath, typesDataContractsPath);
+    console.log("✅ Data-contracts скопированы в types/data-contracts.ts");
   } else {
     console.log(
-      "⚠️ Файл types/types.ts не найден, пропускаем генерацию data-contracts"
+      "⚠️ Файл http-clients/data-contracts.ts не найден, пропускаем генерацию data-contracts"
     );
   }
 }
@@ -232,7 +228,7 @@ async function generateHttpClients() {
   await generateApi({
     input: swaggerApiJsonPath,
     output: OUTPUT_DIR_HTTP_CLIENTS,
-    name: "Api.ts",
+    name: "types.ts",
     cleanOutput: true,
     httpClientType: "axios",
     prettier: {
@@ -246,7 +242,7 @@ async function generateHttpClients() {
     sortTypes: false, // Не нужно для клиентов
     enumNamesAsValues: false,
     generateResponses: true,
-    extractEnums: false, // Типы уже есть отдельно
+    extractEnums: true, // Извлекаем enum'ы для клиентов
     codeGenConstructs: constructs => ({
       ...constructs,
       NullValue: () => "undefined",
@@ -264,35 +260,45 @@ async function generateHttpClients() {
     }),
   });
 
-  // // Исправляем импорты в каждом клиенте
-  // const clientFiles = fs
-  //   .readdirSync(OUTPUT_DIR_HTTP_CLIENTS)
-  //   .filter(file => file.endsWith(".ts"));
-  // clientFiles.forEach(file => {
-  //   const filePath = resolve(OUTPUT_DIR_HTTP_CLIENTS, file);
-  //   let content = fs.readFileSync(filePath, "utf-8");
+  // Исправляем импорты в каждом клиенте на общий источник типов и удаляем локальные data-contracts
+  const clientFiles = fs
+    .readdirSync(OUTPUT_DIR_HTTP_CLIENTS)
+    .filter(file => file.endsWith(".ts"));
+  
+  clientFiles.forEach(file => {
+    const filePath = resolve(OUTPUT_DIR_HTTP_CLIENTS, file);
+    
+    // Если это файл с типами, переименовываем его в data-contracts.ts для обратной совместимости
+    if (file === "types.ts") {
+      const dataContractsPath = resolve(OUTPUT_DIR_HTTP_CLIENTS, "data-contracts.ts");
+      fs.renameSync(filePath, dataContractsPath);
+      console.log("📋 Переименован types.ts в data-contracts.ts для обратной совместимости");
+      return;
+    }
+    
+    // Если это data-contracts.ts, оставляем как есть
+    if (file === "data-contracts.ts") {
+      return;
+    }
+    
+    let content = fs.readFileSync(filePath, "utf-8");
 
-  //   // Заменяем все неправильные импорты на правильные
-  //   content = content.replace(
-  //     /import \{ ([^}]+) \} from "\.\/data-contracts";/g,
-  //     'import type { $1 } from "../../types/types";'
-  //   );
+    // Заменяем импорты локальных контрактов на общий файл типов
+    content = content.replace(
+      /import\s+\{([^}]+)\}\s+from\s+"\.\/data-contracts";/g,
+      (_m, p1) => `import type {${p1}} from "../types/data-contracts";`
+    );
 
-  //   content = content.replace(
-  //     /import \{ ([^}]+) \} from "\.\/http-client";/g,
-  //     'import type { $1 } from "../../types/types";'
-  //   );
+    // Убираем лишние пустые строки
+    content = content.replace(/\n\s*\n\s*\n/g, "\n\n");
 
-  //   // Убираем лишние пустые строки
-  //   content = content.replace(/\n\s*\n\s*\n/g, "\n\n");
-
-  //   fs.writeFileSync(filePath, content);
-  // });
+    fs.writeFileSync(filePath, content);
+  });
 
   console.log("✅ HTTP клиенты сгенерированы в http-clients/");
 }
 
-// Функция для генерации SignalR типов отдельно
+// Функция для генерации SignalR типов отдельно (внутри папки types)
 async function generateSignalRTypes() {
   console.log("📡 Генерируем SignalR типы...");
 
@@ -300,7 +306,7 @@ async function generateSignalRTypes() {
 
   await generateApi({
     input: swaggerHubsJsonPath,
-    output: OUTPUT_DIR_SIGNALR_TYPES,
+    output: OUTPUT_DIR_TYPES,
     name: "signalr-types.ts",
     cleanOutput: true,
     httpClientType: "axios",
@@ -331,11 +337,8 @@ async function generateSignalRTypes() {
   });
 
   // Переименовываем файл если он создался с неправильным именем
-  const apiFilePath = resolve(OUTPUT_DIR_SIGNALR_TYPES, "Api.ts");
-  const signalrTypesFilePath = resolve(
-    OUTPUT_DIR_SIGNALR_TYPES,
-    "signalr-types.ts"
-  );
+  const apiFilePath = resolve(OUTPUT_DIR_TYPES, "Api.ts");
+  const signalrTypesFilePath = resolve(OUTPUT_DIR_TYPES, "signalr-types.ts");
   if (fs.existsSync(apiFilePath)) {
     fs.renameSync(apiFilePath, signalrTypesFilePath);
   }
@@ -395,7 +398,7 @@ async function generateSignalRTypes() {
   }
 
   console.log(
-    "✅ SignalR типы сгенерированы в signalr-types/signalr-types.ts (дубликаты удалены)"
+    "✅ SignalR типы сгенерированы в types/signalr-types.ts (дубликаты удалены)"
   );
 }
 
@@ -538,11 +541,9 @@ function createIndexFile() {
 // Импорты утилит конфигурации
 export * from "./api-config";
 
-// Импорты типов (основной источник)
-export * from "./types/types";
-
-// Импорты SignalR типов
-export * from "./signalr-types/signalr-types";
+// Импорты типов
+export * from "./types/data-contracts";
+export * from "./types/signalr-types";
 
 // Импорты HTTP клиентов
 ${CONTROLLERS.map(controller => `export { ${controller} } from "./http-clients/${controller}";`).join("\n")}
@@ -555,26 +556,6 @@ ${SIGNALR_HUBS.map(hub => `export { ${hub.name}SignalRHubWrapper } from "./signa
 
   fs.writeFileSync(resolve(OUTPUT_DIR_ROOT, "index.ts"), indexContent);
   console.log("✅ Индексный файл создан");
-}
-
-// Функция для создания файла с типами для обратной совместимости
-function createLegacyCompatibilityFiles() {
-  // Создаем shim для обратной совместимости старого импорта data-contracts
-  const legacyDataContractsPath = resolve(OUTPUT_DIR_ROOT, "data-contracts.ts");
-  fs.writeFileSync(legacyDataContractsPath, 'export * from "./types/types";\n');
-
-  // Создаем shim для обратной совместимости старого импорта signalr-types
-  const legacySignalRTypesDir = resolve(OUTPUT_DIR_ROOT, "./SignalR/types/");
-  if (!fs.existsSync(legacySignalRTypesDir)) {
-    fs.mkdirSync(legacySignalRTypesDir, { recursive: true });
-  }
-  const legacyShimPath = resolve(legacySignalRTypesDir, "signalr-types.ts");
-  fs.writeFileSync(
-    legacyShimPath,
-    'export * from "../../signalr-types/signalr-types";\n'
-  );
-
-  console.log("✅ Файлы обратной совместимости созданы");
 }
 
 // Основная функция
@@ -606,7 +587,6 @@ async function main() {
 
     // Генерируем типы отдельно
     await generateTypesOnly();
-    await generateDataContracts();
     await generateSignalRTypes();
 
     // Создаем утилиты конфигурации API
@@ -614,20 +594,23 @@ async function main() {
 
     // Генерируем клиенты отдельно (без типов)
     await generateHttpClients();
+    
+    // Копируем data-contracts в папку types после генерации HTTP клиентов
+    await generateDataContracts();
+    
     await generateSignalRClients();
 
-    // Создаем файлы обратной совместимости
-    createLegacyCompatibilityFiles();
+    // Не создаем файлы обратной совместимости: используем единый источник типов в ./types
 
     // Создаем индексный файл
     createIndexFile();
 
     console.log("🎉 Генерация API завершена успешно!");
     console.log("📁 Структура папок:");
-    console.log("   - types/ - общие типы");
-    console.log("   - data-contracts/ - data contracts");
+    console.log(
+      "   - types/ - общие типы (data-contracts.ts, signalr-types.ts)"
+    );
     console.log("   - http-clients/ - HTTP клиенты");
-    console.log("   - signalr-types/ - SignalR типы");
     console.log("   - signalr-clients/ - SignalR клиенты");
   } catch (error) {
     console.error("❌ Ошибка при генерации API:", error);
