@@ -1,4 +1,4 @@
-import { TekkenCharacter } from "@/shared/api/data-contracts";
+import { TekkenCharacter } from "@/shared/api/types/data-contracts";
 
 /**
  * Получить URL аватара персонажа

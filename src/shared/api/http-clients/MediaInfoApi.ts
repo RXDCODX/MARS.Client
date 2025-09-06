@@ -10,7 +10,7 @@
  * ---------------------------------------------------------------
  */
 
-import { ApiMediaInfo } from "./data-contracts";
+import type { ApiMediaInfo } from "../types/data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class MediaInfoApi<

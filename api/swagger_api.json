@@ -1,8 +1,7 @@
 {
   "openapi": "3.0.4",
   "info": {
-    "title": "Telegramus API",
-    "version": "v1"
+    "title": "Telegramus API"
   },
   "paths": {
     "/api/CinemaQueue": {
@@ -941,6 +940,104 @@
       }
     },
     "/api/DatabaseBackup/status": {
+      "get": {
+        "tags": [
+          "DatabaseBackup"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/DatabaseBackup/pg-dump/settings": {
+      "get": {
+        "tags": [
+          "DatabaseBackup"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "DatabaseBackup"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdatePgDumpSettingsRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdatePgDumpSettingsRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdatePgDumpSettingsRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/DatabaseBackup/pg-dump/validate": {
+      "post": {
+        "tags": [
+          "DatabaseBackup"
+        ],
+        "parameters": [
+          {
+            "name": "pgDumpPath",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/DatabaseBackup/pg-dump/history": {
+      "get": {
+        "tags": [
+          "DatabaseBackup"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/DatabaseBackup/pg-dump/configured": {
       "get": {
         "tags": [
           "DatabaseBackup"
@@ -2348,6 +2445,42 @@
         }
       }
     },
+    "/api/LoggerTest/test-logging": {
+      "post": {
+        "tags": [
+          "LoggerTest"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/LoggerTest/test-exception": {
+      "post": {
+        "tags": [
+          "LoggerTest"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/LoggerTest/test-structured": {
+      "post": {
+        "tags": [
+          "LoggerTest"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/Logs": {
       "get": {
         "tags": [
@@ -2392,6 +2525,15 @@
             "name": "logLevel",
             "in": "query",
             "schema": {
+              "enum": [
+                "Trace",
+                "Debug",
+                "Information",
+                "Warning",
+                "Error",
+                "Critical",
+                "None"
+              ],
               "type": "string"
             }
           },
@@ -2454,6 +2596,15 @@
             "in": "path",
             "required": true,
             "schema": {
+              "enum": [
+                "Trace",
+                "Debug",
+                "Information",
+                "Warning",
+                "Error",
+                "Critical",
+                "None"
+              ],
               "type": "string"
             }
           }
@@ -5221,6 +5372,15 @@
             "nullable": true
           },
           "logLevel": {
+            "enum": [
+              "Trace",
+              "Debug",
+              "Information",
+              "Warning",
+              "Error",
+              "Critical",
+              "None"
+            ],
             "type": "string"
           }
         },
@@ -6049,7 +6209,9 @@
             "nullable": true
           }
         },
-        "additionalProperties": { }
+        "additionalProperties": {
+
+        }
       },
       "Reward": {
         "required": [
@@ -6199,7 +6361,9 @@
           },
           "configuration": {
             "type": "object",
-            "additionalProperties": { }
+            "additionalProperties": {
+
+            }
           }
         },
         "additionalProperties": false
@@ -6623,6 +6787,32 @@
           "folderPath": {
             "minLength": 1,
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdatePgDumpSettingsRequest": {
+        "required": [
+          "pgDumpPath"
+        ],
+        "type": "object",
+        "properties": {
+          "pgDumpPath": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string"
+          },
+          "comment": {
+            "maxLength": 1000,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
+          },
+          "backupPath": {
+            "maxLength": 500,
+            "minLength": 0,
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

@@ -10,12 +10,13 @@
  * ---------------------------------------------------------------
  */
 
-import {
+import type {
   CinemaQueueStatistics,
+  CinemaQueueStatusDetailParamsEnum,
   CreateMediaItemRequest,
   MediaItemDto,
   UpdateMediaItemRequest,
-} from "./data-contracts";
+} from "../types/data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class CinemaQueue<
@@ -130,7 +131,7 @@ export class CinemaQueue<
    * @response `200` `(MediaItemDto)[]` OK
    */
   cinemaQueueStatusDetail = (
-    status: "Pending" | "InProgress" | "Completed" | "Cancelled" | "Postponed",
+    status: CinemaQueueStatusDetailParamsEnum,
     params: RequestParams = {},
   ) =>
     this.request<MediaItemDto[], any>({

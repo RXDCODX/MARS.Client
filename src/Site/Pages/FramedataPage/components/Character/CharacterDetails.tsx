@@ -1,6 +1,6 @@
 import { Badge, Button, Card, Col, Row } from "react-bootstrap";
 
-import { TekkenCharacter } from "@/shared/api/data-contracts";
+import { TekkenCharacter } from "@/shared/api/types/data-contracts";
 
 import styles from "../../FramedataPage.module.scss";
 import { getCharacterAvatar, handleImageError } from "../Shared/imageUtils";

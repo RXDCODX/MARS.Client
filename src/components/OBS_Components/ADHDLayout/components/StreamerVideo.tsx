@@ -17,10 +17,7 @@ export function StreamerVideo() {
         transformOrigin: "bottom left",
       }}
     >
-      <source
-        src={getVideoPath("streamer")}
-        type="video/webm"
-      />
+      <source src={getVideoPath("streamer")} type="video/webm" />
       Ваш браузер не поддерживает видео.
     </video>
   );

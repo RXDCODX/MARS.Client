@@ -10,7 +10,7 @@
  * ---------------------------------------------------------------
  */
 
-import { MovePendingDto, TekkenCharacterPendingDto } from "./data-contracts";
+import type { MovePendingDto, TekkenCharacterPendingDto } from "../types/data-contracts";
 import { HttpClient, RequestParams } from "./http-client";
 
 export class FramedataChanges<

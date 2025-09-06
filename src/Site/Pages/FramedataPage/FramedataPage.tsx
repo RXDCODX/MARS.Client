@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { Alert, Button, Container } from "react-bootstrap";
 
 import { Framedata } from "@/shared/api";
-import { TekkenCharacter } from "@/shared/api/data-contracts";
+import { TekkenCharacter } from "@/shared/api/types/data-contracts";
 
 import {
   CharacterDetails,

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Button, Container, Spinner } from "react-bootstrap";
+import { Alert, Button, Container, Spinner, Form, Row, Col, Collapse } from "react-bootstrap";
 
 import { DatabaseBackup } from "@/shared/api";
 import {
@@ -9,6 +9,7 @@ import {
 } from "@/shared/Utils/ToastModal";
 
 import styles from "./BackupsPage.module.scss";
+import { PgDumpSettings, PathSettings } from "./BackupsPage.types";
 
 // Интерфейс для информации о бекапе
 interface BackupInfo {
@@ -36,7 +37,9 @@ const BackupsPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isCreating, setIsCreating] = useState(false);
   const [isCleaning, setIsCleaning] = useState(false);
+  const [isSavingSettings, setIsSavingSettings] = useState(false);
   const [error, setError] = useState("");
+  const [showSettings, setShowSettings] = useState(false);
 
   // Форма создания бекапа
   const [createForm, setCreateForm] = useState({
@@ -46,6 +49,40 @@ const BackupsPage: React.FC = () => {
   // Форма очистки
   const [cleanupForm, setCleanupForm] = useState({
     keepCount: 10,
+  });
+
+  // Настройки pg_dump
+  const [pgDumpSettings, setPgDumpSettings] = useState<PgDumpSettings>({
+    host: "localhost",
+    port: 5432,
+    username: "postgres",
+    password: "",
+    database: "mars_main",
+    encoding: "UTF8",
+    format: "custom",
+    compression: 6,
+    verbose: true,
+    noOwner: true,
+    noPrivileges: true,
+    noTablespaces: true,
+    ifExists: true,
+    clean: true,
+    create: true,
+    dataOnly: false,
+    schemaOnly: false,
+    excludeTable: [],
+    includeTable: [],
+    excludeSchema: [],
+    includeSchema: [],
+  });
+
+  // Настройки путей
+  const [pathSettings, setPathSettings] = useState<PathSettings>({
+    backupDirectory: "/backups/database",
+    tempDirectory: "/tmp/backups",
+    logDirectory: "/logs/backups",
+    useCustomPath: false,
+    autoCreateDirectories: true,
   });
 
   // Загрузка списка бекапов
@@ -208,6 +245,62 @@ const BackupsPage: React.FC = () => {
     }
   };
 
+  // Сохранение настроек pg_dump
+  const handleSavePgDumpSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      setIsSavingSettings(true);
+      setError("");
+
+      // Здесь будет API вызов для сохранения настроек
+      // await api.savePgDumpSettings(pgDumpSettings);
+
+      showToast(
+        createSuccessToast(
+          "Настройки pg_dump сохранены успешно",
+          null,
+          "Настройки сохранены"
+        )
+      );
+    } catch (err) {
+      const errorMessage =
+        "Ошибка при сохранении настроек: " + (err as Error).message;
+      setError(errorMessage);
+      showToast(createErrorToast(errorMessage, err, "Ошибка сохранения"));
+    } finally {
+      setIsSavingSettings(false);
+    }
+  };
+
+  // Сохранение настроек путей
+  const handleSavePathSettings = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      setIsSavingSettings(true);
+      setError("");
+
+      // Здесь будет API вызов для сохранения настроек путей
+      // await api.savePathSettings(pathSettings);
+
+      showToast(
+        createSuccessToast(
+          "Настройки путей сохранены успешно",
+          null,
+          "Настройки сохранены"
+        )
+      );
+    } catch (err) {
+      const errorMessage =
+        "Ошибка при сохранении настроек путей: " + (err as Error).message;
+      setError(errorMessage);
+      showToast(createErrorToast(errorMessage, err, "Ошибка сохранения"));
+    } finally {
+      setIsSavingSettings(false);
+    }
+  };
+
   // Форматирование размера файла
   const formatFileSize = (size: string) => size;
 
@@ -250,7 +343,17 @@ const BackupsPage: React.FC = () => {
       <Container>
         {/* Секция управления */}
         <div className={styles.controlsSection}>
-          <h2 className={styles.controlsTitle}>Управление бекапами</h2>
+          <div className={styles.sectionHeader}>
+            <h2 className={styles.controlsTitle}>Управление бекапами</h2>
+            <Button
+              onClick={() => setShowSettings(!showSettings)}
+              className={styles.settingsButton}
+              variant="outline-primary"
+            >
+              <i className={`bi bi-gear me-2 ${showSettings ? 'bi-gear-fill' : ''}`}></i>
+              {showSettings ? 'Скрыть настройки' : 'Показать настройки'}
+            </Button>
+          </div>
 
           <div className={styles.controlsGrid}>
             {/* Создание бекапа */}
@@ -348,6 +451,253 @@ const BackupsPage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Секция настроек */}
+        <Collapse in={showSettings}>
+          <div className={styles.settingsSection}>
+            <h2 className={styles.controlsTitle}>Настройки бекапов</h2>
+            
+            <Row>
+              {/* Настройки pg_dump */}
+              <Col lg={6}>
+                <div className={styles.settingsCard}>
+                  <h3 className={styles.settingsCardTitle}>
+                    <i className="bi bi-database-gear me-2"></i>
+                    Настройки pg_dump
+                  </h3>
+                  
+                  <Form onSubmit={handleSavePgDumpSettings}>
+                    <Row>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Хост</Form.Label>
+                          <Form.Control
+                            type="text"
+                            value={pgDumpSettings.host}
+                            onChange={(e) => setPgDumpSettings(prev => ({ ...prev, host: e.target.value }))}
+                            placeholder="localhost"
+                          />
+                        </Form.Group>
+                      </Col>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Порт</Form.Label>
+                          <Form.Control
+                            type="number"
+                            value={pgDumpSettings.port}
+                            onChange={(e) => setPgDumpSettings(prev => ({ ...prev, port: parseInt(e.target.value) }))}
+                            placeholder="5432"
+                          />
+                        </Form.Group>
+                      </Col>
+                    </Row>
+
+                    <Row>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Пользователь</Form.Label>
+                          <Form.Control
+                            type="text"
+                            value={pgDumpSettings.username}
+                            onChange={(e) => setPgDumpSettings(prev => ({ ...prev, username: e.target.value }))}
+                            placeholder="postgres"
+                          />
+                        </Form.Group>
+                      </Col>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Пароль</Form.Label>
+                          <Form.Control
+                            type="password"
+                            value={pgDumpSettings.password}
+                            onChange={(e) => setPgDumpSettings(prev => ({ ...prev, password: e.target.value }))}
+                            placeholder="••••••••"
+                          />
+                        </Form.Group>
+                      </Col>
+                    </Row>
+
+                    <Row>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label>База данных</Form.Label>
+                          <Form.Control
+                            type="text"
+                            value={pgDumpSettings.database}
+                            onChange={(e) => setPgDumpSettings(prev => ({ ...prev, database: e.target.value }))}
+                            placeholder="mars_main"
+                          />
+                        </Form.Group>
+                      </Col>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Кодировка</Form.Label>
+                          <Form.Select
+                            value={pgDumpSettings.encoding}
+                            onChange={(e) => setPgDumpSettings(prev => ({ ...prev, encoding: e.target.value }))}
+                          >
+                            <option value="UTF8">UTF8</option>
+                            <option value="LATIN1">LATIN1</option>
+                            <option value="WIN1251">WIN1251</option>
+                          </Form.Select>
+                        </Form.Group>
+                      </Col>
+                    </Row>
+
+                    <Row>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Формат</Form.Label>
+                          <Form.Select
+                            value={pgDumpSettings.format}
+                            onChange={(e) => setPgDumpSettings(prev => ({ ...prev, format: e.target.value as any }))}
+                          >
+                            <option value="plain">Plain SQL</option>
+                            <option value="custom">Custom</option>
+                            <option value="directory">Directory</option>
+                            <option value="tar">Tar</option>
+                          </Form.Select>
+                        </Form.Group>
+                      </Col>
+                      <Col md={6}>
+                        <Form.Group className="mb-3">
+                          <Form.Label>Сжатие (0-9)</Form.Label>
+                          <Form.Range
+                            min="0"
+                            max="9"
+                            value={pgDumpSettings.compression}
+                            onChange={(e) => setPgDumpSettings(prev => ({ ...prev, compression: parseInt(e.target.value) }))}
+                          />
+                          <div className="text-center text-muted small">{pgDumpSettings.compression}</div>
+                        </Form.Group>
+                      </Col>
+                    </Row>
+
+                    <div className={styles.checkboxGroup}>
+                      <Form.Check
+                        type="checkbox"
+                        id="verbose"
+                        label="Подробный вывод"
+                        checked={pgDumpSettings.verbose}
+                        onChange={(e) => setPgDumpSettings(prev => ({ ...prev, verbose: e.target.checked }))}
+                      />
+                      <Form.Check
+                        type="checkbox"
+                        id="noOwner"
+                        label="Без владельца"
+                        checked={pgDumpSettings.noOwner}
+                        onChange={(e) => setPgDumpSettings(prev => ({ ...prev, noOwner: e.target.checked }))}
+                      />
+                      <Form.Check
+                        type="checkbox"
+                        id="noPrivileges"
+                        label="Без привилегий"
+                        checked={pgDumpSettings.noPrivileges}
+                        onChange={(e) => setPgDumpSettings(prev => ({ ...prev, noPrivileges: e.target.checked }))}
+                      />
+                      <Form.Check
+                        type="checkbox"
+                        id="noTablespaces"
+                        label="Без табличных пространств"
+                        checked={pgDumpSettings.noTablespaces}
+                        onChange={(e) => setPgDumpSettings(prev => ({ ...prev, noTablespaces: e.target.checked }))}
+                      />
+                    </div>
+
+                    <Button
+                      type="submit"
+                      className={`${styles.controlButton} ${styles.controlButtonPrimary}`}
+                      disabled={isSavingSettings}
+                    >
+                      {isSavingSettings ? (
+                        <>
+                          <Spinner as="span" animation="border" size="sm" className="me-2" />
+                          Сохранение...
+                        </>
+                      ) : (
+                        "Сохранить настройки pg_dump"
+                      )}
+                    </Button>
+                  </Form>
+                </div>
+              </Col>
+
+              {/* Настройки путей */}
+              <Col lg={6}>
+                <div className={styles.settingsCard}>
+                  <h3 className={styles.settingsCardTitle}>
+                    <i className="bi bi-folder-gear me-2"></i>
+                    Настройки путей
+                  </h3>
+                  
+                  <Form onSubmit={handleSavePathSettings}>
+                    <Form.Group className="mb-3">
+                      <Form.Label>Папка для бекапов</Form.Label>
+                      <Form.Control
+                        type="text"
+                        value={pathSettings.backupDirectory}
+                        onChange={(e) => setPathSettings(prev => ({ ...prev, backupDirectory: e.target.value }))}
+                        placeholder="/backups/database"
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label>Временная папка</Form.Label>
+                      <Form.Control
+                        type="text"
+                        value={pathSettings.tempDirectory}
+                        onChange={(e) => setPathSettings(prev => ({ ...prev, tempDirectory: e.target.value }))}
+                        placeholder="/tmp/backups"
+                      />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                      <Form.Label>Папка для логов</Form.Label>
+                      <Form.Control
+                        type="text"
+                        value={pathSettings.logDirectory}
+                        onChange={(e) => setPathSettings(prev => ({ ...prev, logDirectory: e.target.value }))}
+                        placeholder="/logs/backups"
+                      />
+                    </Form.Group>
+
+                    <div className={styles.checkboxGroup}>
+                      <Form.Check
+                        type="checkbox"
+                        id="useCustomPath"
+                        label="Использовать пользовательские пути"
+                        checked={pathSettings.useCustomPath}
+                        onChange={(e) => setPathSettings(prev => ({ ...prev, useCustomPath: e.target.checked }))}
+                      />
+                      <Form.Check
+                        type="checkbox"
+                        id="autoCreateDirectories"
+                        label="Автоматически создавать папки"
+                        checked={pathSettings.autoCreateDirectories}
+                        onChange={(e) => setPathSettings(prev => ({ ...prev, autoCreateDirectories: e.target.checked }))}
+                      />
+                    </div>
+
+                    <Button
+                      type="submit"
+                      className={`${styles.controlButton} ${styles.controlButtonSuccess}`}
+                      disabled={isSavingSettings}
+                    >
+                      {isSavingSettings ? (
+                        <>
+                          <Spinner as="span" animation="border" size="sm" className="me-2" />
+                          Сохранение...
+                        </>
+                      ) : (
+                        "Сохранить настройки путей"
+                      )}
+                    </Button>
+                  </Form>
+                </div>
+              </Col>
+            </Row>
+          </div>
+        </Collapse>
 
         {/* Секция статуса */}
         {status && (

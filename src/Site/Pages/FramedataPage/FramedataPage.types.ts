@@ -1,6 +1,6 @@
 // Типы для фреймдаты Tekken
 
-import { Move, TekkenCharacter } from "@/shared/api/data-contracts";
+import { Move, TekkenCharacter } from "@/shared/api/types/data-contracts";
 
 // Типы для состояния компонента
 export interface FramedataPageState {

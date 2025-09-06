@@ -10,7 +10,7 @@
  * ---------------------------------------------------------------
  */
 
-import {
+import type {
   CreateMemeOrderDto,
   CreateMemeTypeDto,
   MemeOrderDto,
@@ -18,7 +18,7 @@ import {
   ProblemDetails,
   UpdateMemeOrderDto,
   UpdateMemeTypeDto,
-} from "./data-contracts";
+} from "../types/data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class RandomMeme<

@@ -1,9 +1,22 @@
 import { RefreshCw } from "lucide-react";
-import { Alert, Button, Card, Col, Container, Row, Spinner } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Card,
+  Col,
+  Container,
+  Row,
+  Spinner,
+} from "react-bootstrap";
 
 import { RandomMemeListProps } from "../RandomMemePage.types";
 
-const RandomMemeList: React.FC<RandomMemeListProps> = ({ memeOrders, isLoading, error, onRefresh }) => {
+const RandomMemeList: React.FC<RandomMemeListProps> = ({
+  memeOrders,
+  isLoading,
+  error,
+  onRefresh,
+}) => {
   const getFileName = (filePath: string) => {
     const parts = filePath.split(/[/\\]/);
     return parts[parts.length - 1] || filePath;
@@ -65,14 +78,23 @@ const RandomMemeList: React.FC<RandomMemeListProps> = ({ memeOrders, isLoading, 
                   <Card.Body>
                     <div className="mb-2">
                       <small className="text-muted d-block">Файл</small>
-                      <div className="fw-bold text-truncate" title={order.filePath}>{getFileName(order.filePath)}</div>
+                      <div
+                        className="fw-bold text-truncate"
+                        title={order.filePath}
+                      >
+                        {getFileName(order.filePath)}
+                      </div>
                     </div>
                     <div className="mb-2">
                       <small className="text-muted d-block">Тип</small>
-                      <div className="fw-semibold">{order.type?.name ?? "Без типа"}</div>
+                      <div className="fw-semibold">
+                        {order.type?.name ?? "Без типа"}
+                      </div>
                     </div>
                     <div>
-                      <small className="text-muted d-block">Номер в очереди</small>
+                      <small className="text-muted d-block">
+                        Номер в очереди
+                      </small>
                       <div className="fw-semibold">#{order.order}</div>
                     </div>
                   </Card.Body>

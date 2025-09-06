@@ -10,13 +10,13 @@
  * ---------------------------------------------------------------
  */
 
-import {
+import type {
   CreateCustomRewardsRequest,
   CustomReward,
   GetCustomRewardRedemptionResponse,
   UpdateCustomRewardRedemptionStatusRequest,
   UpdateCustomRewardRequest,
-} from "./data-contracts";
+} from "../types/data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class TwitchRewards<

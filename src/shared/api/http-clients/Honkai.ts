@@ -10,11 +10,11 @@
  * ---------------------------------------------------------------
  */
 
-import {
+import type {
   CreateUserRequest,
   DailyAutoMarkupUser,
   UpdateUserRequest,
-} from "./data-contracts";
+} from "../types/data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class Honkai<

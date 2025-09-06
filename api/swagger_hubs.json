@@ -1,8 +1,7 @@
 {
   "openapi": "3.0.4",
   "info": {
-    "title": "Telegramus Hubs",
-    "version": "v1"
+    "title": "Telegramus Hubs"
   },
   "paths": {
     "/hubs/scoreboard/ForceProcessPendingUpdates": {
@@ -10,7 +9,9 @@
         "tags": [
           "ScoreboardHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/scoreboard/GetCurrentState": {
@@ -18,7 +19,9 @@
         "tags": [
           "ScoreboardHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/scoreboard/GetHistory": {
@@ -74,7 +77,9 @@
         "tags": [
           "ScoreboardHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/scoreboard/OnConnectedAsync": {
@@ -82,7 +87,9 @@
         "tags": [
           "ScoreboardHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/scoreboard/OnDisconnectedAsync": {
@@ -90,7 +97,9 @@
         "tags": [
           "ScoreboardHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/scoreboard/SetPlayerFinal": {
@@ -115,7 +124,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/scoreboard/SetVisibility": {
@@ -132,7 +143,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/scoreboard/UpdatePlayerScore": {
@@ -158,7 +171,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/scoreboard/UpdateState": {
@@ -175,7 +190,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/soundrequest/AddTrackToQueue": {
@@ -192,7 +209,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/soundrequest/Ended": {
@@ -200,7 +219,9 @@
         "tags": [
           "SoundRequestHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/soundrequest/ErrorPlaying": {
@@ -208,7 +229,9 @@
         "tags": [
           "SoundRequestHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/soundrequest/GetHistory": {
@@ -331,7 +354,9 @@
         "tags": [
           "SoundRequestHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/soundrequest/Mute": {
@@ -339,7 +364,9 @@
         "tags": [
           "SoundRequestHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/soundrequest/Pause": {
@@ -347,7 +374,9 @@
         "tags": [
           "SoundRequestHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/soundrequest/Play": {
@@ -355,7 +384,9 @@
         "tags": [
           "SoundRequestHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/soundrequest/Resume": {
@@ -363,7 +394,9 @@
         "tags": [
           "SoundRequestHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/soundrequest/SetVolume": {
@@ -381,7 +414,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/soundrequest/Skip": {
@@ -389,7 +424,9 @@
         "tags": [
           "SoundRequestHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/soundrequest/Started": {
@@ -397,7 +434,9 @@
         "tags": [
           "SoundRequestHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/soundrequest/Stop": {
@@ -405,7 +444,9 @@
         "tags": [
           "SoundRequestHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/soundrequest/Unmute": {
@@ -413,7 +454,19 @@
         "tags": [
           "SoundRequestHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
+      }
+    },
+    "/hubs/telegramus/ExplosionGo": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/MuteAll": {
@@ -433,7 +486,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/OnConnectedAsync": {
@@ -441,7 +496,9 @@
         "tags": [
           "TelegramusHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/TwitchMsg": {
@@ -458,7 +515,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/UnmuteSessions": {
@@ -466,7 +525,9 @@
         "tags": [
           "TelegramusHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/tuna/BeYm": {
@@ -474,7 +535,9 @@
         "tags": [
           "TunaHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/tuna/GetYandexMusicTracks": {
@@ -520,7 +583,9 @@
         "tags": [
           "TunaHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/tuna/SendPlayerData": {
@@ -537,7 +602,28 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
+      }
+    },
+    "/hubs/logger/Log": {
+      "post": {
+        "tags": [
+          "LoggerHub"
+        ],
+        "parameters": [
+          {
+            "name": "logMessage",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/LogMessageDto"
+            }
+          }
+        ],
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/AddNewWaifu": {
@@ -568,7 +654,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/Adhd": {
@@ -586,7 +674,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/Alert": {
@@ -603,7 +693,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/Alerts": {
@@ -623,7 +715,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/AutoMessage": {
@@ -640,7 +734,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/DeleteMessage": {
@@ -657,7 +753,19 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
+      }
+    },
+    "/hubs/telegramus/Explosion": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/FumoFriday": {
@@ -681,7 +789,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/GaoAlert": {
@@ -698,7 +808,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/Highlite": {
@@ -729,7 +841,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/LeroyAlert": {
@@ -737,7 +851,9 @@
         "tags": [
           "TelegramusHub"
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/MakeScreenEmojisParticles": {
@@ -754,7 +870,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/MakeScreenParticles": {
@@ -775,7 +893,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/MergeWaifu": {
@@ -813,7 +933,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/NewMessage": {
@@ -837,7 +959,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/PostTwitchInfo": {
@@ -861,7 +985,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/RandomMem": {
@@ -878,7 +1004,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/TemplateMessage": {
@@ -895,7 +1023,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/UpdateWaifuPrizes": {
@@ -915,7 +1045,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     },
     "/hubs/telegramus/WaifuRoll": {
@@ -953,7 +1085,9 @@
             }
           }
         ],
-        "responses": { }
+        "responses": {
+
+        }
       }
     }
   },
@@ -1580,6 +1714,56 @@
           "time": {
             "type": "string",
             "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "LogMessageDto": {
+        "required": [
+          "category",
+          "id",
+          "logLevel",
+          "message",
+          "timestamp"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "logLevel": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "exception": {
+            "type": "string",
+            "nullable": true
+          },
+          "stackTrace": {
+            "type": "string",
+            "nullable": true
+          },
+          "eventId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "source": {
+            "type": "string",
+            "nullable": true
+          },
+          "connectionId": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2415,6 +2599,9 @@
     }
   },
   "tags": [
+    {
+      "name": "LoggerHub"
+    },
     {
       "name": "ScoreboardHub"
     },

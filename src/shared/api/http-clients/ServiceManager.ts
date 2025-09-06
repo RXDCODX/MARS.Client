@@ -10,7 +10,7 @@
  * ---------------------------------------------------------------
  */
 
-import { ServiceInfo, ServiceLog } from "./data-contracts";
+import type { ServiceInfo, ServiceLog } from "../types/data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class ServiceManager<

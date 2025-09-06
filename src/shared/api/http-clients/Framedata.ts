@@ -10,13 +10,14 @@
  * ---------------------------------------------------------------
  */
 
-import {
+import type {
+  FramedataSupplementCreate2ParamsEnum,
   Move,
   ParseRequest,
   ParseResult,
   SupplementRequest,
   TekkenCharacter,
-} from "./data-contracts";
+} from "../types/data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class Framedata<
@@ -344,7 +345,7 @@ export class Framedata<
    * @response `200` `ParseResult` OK
    */
   framedataSupplementCreate2 = (
-    source: "None" | "Wavu" | "Tekkendocs",
+    source: FramedataSupplementCreate2ParamsEnum,
     params: RequestParams = {},
   ) =>
     this.request<ParseResult, any>({

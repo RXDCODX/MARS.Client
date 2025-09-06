@@ -26,6 +26,18 @@
    - Количество, размер и дата последнего бекапа
    - Информация о папке хранения
 
+5. **Настройки pg_dump**
+   - Конфигурация подключения к базе данных (хост, порт, пользователь, пароль)
+   - Настройки формата и сжатия бекапа
+   - Дополнительные опции pg_dump (verbose, no-owner, no-privileges и др.)
+   - Выбор кодировки и базы данных
+
+6. **Настройки путей**
+   - Настройка папки для сохранения бекапов
+   - Временная папка для обработки
+   - Папка для логов операций
+   - Автоматическое создание директорий
+
 ### API интеграция
 
 Страница использует `DatabaseBackup` API из `@/shared/api`:
@@ -73,9 +85,13 @@ interface BackupsPageState {
   isLoading: boolean;              // Загрузка списка
   isCreating: boolean;             // Создание бекапа
   isCleaning: boolean;             // Очистка бекапов
+  isSavingSettings: boolean;       // Сохранение настроек
   error: string;                   // Текст ошибки
   createForm: CreateBackupForm;    // Форма создания
   cleanupForm: CleanupForm;        // Форма очистки
+  pgDumpSettings: PgDumpSettings;  // Настройки pg_dump
+  pathSettings: PathSettings;      // Настройки путей
+  showSettings: boolean;           // Показать/скрыть настройки
 }
 ```
 
@@ -156,3 +172,5 @@ import BackupsPage from "@/Site/Pages/BackupsPage";
    - Drag & Drop для файлов
    - Прогресс-бары для операций
    - Фильтрация и поиск по бекапам
+   - Импорт/экспорт настроек
+   - Валидация путей и подключений

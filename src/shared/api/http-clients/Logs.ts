@@ -10,7 +10,13 @@
  * ---------------------------------------------------------------
  */
 
-import { Log, LogResponse, LogsStatistics } from "./data-contracts";
+import type {
+  Log,
+  LogResponse,
+  LogsByLevelDetailParamsEnum,
+  LogsListParamsLogLevelEnum,
+  LogsStatistics,
+} from "../types/data-contracts";
 import { HttpClient, RequestParams } from "./http-client";
 
 export class Logs<
@@ -40,7 +46,7 @@ export class Logs<
       sortBy: string;
       /** @default true */
       sortDescending: boolean;
-      logLevel: string;
+      logLevel: LogsListParamsLogLevelEnum;
       /** @format date-time */
       fromDate: string;
       /** @format date-time */
@@ -64,7 +70,10 @@ export class Logs<
    * @request GET:/api/Logs/by-level/{logLevel}
    * @response `200` `(Log)[]` OK
    */
-  logsByLevelDetail = (logLevel: string, params: RequestParams = {}) =>
+  logsByLevelDetail = (
+    logLevel: LogsByLevelDetailParamsEnum,
+    params: RequestParams = {},
+  ) =>
     this.request<Log[], any>({
       path: `/api/Logs/by-level/${logLevel}`,
       method: "GET",

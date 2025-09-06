@@ -13,7 +13,7 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { Framedata, FramedataChanges } from "@/shared/api";
-import { Move } from "@/shared/api/data-contracts";
+import { Move } from "@/shared/api/types/data-contracts";
 
 import styles from "../../FramedataPage.module.scss";
 

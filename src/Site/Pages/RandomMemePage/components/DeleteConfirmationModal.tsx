@@ -1,6 +1,6 @@
+import { AlertTriangle, Trash2 } from "lucide-react";
 import React from "react";
 import { Button, Modal, Spinner } from "react-bootstrap";
-import { AlertTriangle, Trash2 } from "lucide-react";
 
 import { DeleteConfirmationModalProps } from "../RandomMemePage.types";
 
@@ -20,13 +20,11 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
     }
   };
 
-  const getItemTypeText = () => {
-    return itemType === "type" ? "тип мема" : "заказ мема";
-  };
+  const getItemTypeText = () =>
+    itemType === "type" ? "тип мема" : "заказ мема";
 
-  const getItemTypeTextAccusative = () => {
-    return itemType === "type" ? "тип мема" : "заказ мема";
-  };
+  const getItemTypeTextAccusative = () =>
+    itemType === "type" ? "тип мема" : "заказ мема";
 
   return (
     <Modal show={isOpen} onHide={onCancel} centered>
@@ -42,7 +40,8 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
           <Trash2 size={48} className="text-danger mb-3" />
           <h5 className="mb-3">Вы уверены?</h5>
           <p className="text-muted mb-0">
-            Вы собираетесь удалить {getItemTypeText()} <strong>"{itemName}"</strong>.
+            Вы собираетесь удалить {getItemTypeText()}{" "}
+            <strong>"{itemName}"</strong>.
             <br />
             Это действие нельзя отменить.
           </p>
@@ -50,7 +49,8 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
 
         {itemType === "type" && (
           <div className="alert alert-warning">
-            <strong>Внимание!</strong> При удалении типа мема будут также удалены все связанные с ним заказы.
+            <strong>Внимание!</strong> При удалении типа мема будут также
+            удалены все связанные с ним заказы.
           </div>
         )}
 

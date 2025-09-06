@@ -10,7 +10,8 @@
  * ---------------------------------------------------------------
  */
 
-import { HttpClient, RequestParams } from "./http-client";
+import type { UpdatePgDumpSettingsRequest } from "../types/data-contracts";
+import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class DatabaseBackup<
   SecurityDataType = unknown,
@@ -104,6 +105,87 @@ export class DatabaseBackup<
   databaseBackupStatusList = (params: RequestParams = {}) =>
     this.request<void, any>({
       path: `/api/DatabaseBackup/status`,
+      method: "GET",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags DatabaseBackup
+   * @name DatabaseBackupPgDumpSettingsList
+   * @request GET:/api/DatabaseBackup/pg-dump/settings
+   * @response `200` `void` OK
+   */
+  databaseBackupPgDumpSettingsList = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/DatabaseBackup/pg-dump/settings`,
+      method: "GET",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags DatabaseBackup
+   * @name DatabaseBackupPgDumpSettingsCreate
+   * @request POST:/api/DatabaseBackup/pg-dump/settings
+   * @response `200` `void` OK
+   */
+  databaseBackupPgDumpSettingsCreate = (
+    data: UpdatePgDumpSettingsRequest,
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/api/DatabaseBackup/pg-dump/settings`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags DatabaseBackup
+   * @name DatabaseBackupPgDumpValidateCreate
+   * @request POST:/api/DatabaseBackup/pg-dump/validate
+   * @response `200` `void` OK
+   */
+  databaseBackupPgDumpValidateCreate = (
+    query?: {
+      pgDumpPath: string;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<void, any>({
+      path: `/api/DatabaseBackup/pg-dump/validate`,
+      method: "POST",
+      query: query,
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags DatabaseBackup
+   * @name DatabaseBackupPgDumpHistoryList
+   * @request GET:/api/DatabaseBackup/pg-dump/history
+   * @response `200` `void` OK
+   */
+  databaseBackupPgDumpHistoryList = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/DatabaseBackup/pg-dump/history`,
+      method: "GET",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags DatabaseBackup
+   * @name DatabaseBackupPgDumpConfiguredList
+   * @request GET:/api/DatabaseBackup/pg-dump/configured
+   * @response `200` `void` OK
+   */
+  databaseBackupPgDumpConfiguredList = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/DatabaseBackup/pg-dump/configured`,
       method: "GET",
       ...params,
     });

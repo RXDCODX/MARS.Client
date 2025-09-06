@@ -17,10 +17,7 @@ export function FitnessVideo() {
         transformOrigin: "bottom",
       }}
     >
-      <source
-        src={getVideoPath("fitness")}
-        type="video/webm"
-      />
+      <source src={getVideoPath("fitness")} type="video/webm" />
       Ваш браузер не поддерживает видео.
     </video>
   );

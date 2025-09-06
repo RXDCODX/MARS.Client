@@ -10,7 +10,14 @@
  * ---------------------------------------------------------------
  */
 
-import { CommandInfo, CommandParameterInfo } from "./data-contracts";
+import type {
+  CommandInfo,
+  CommandParameterInfo,
+  CommandsAdminPlatformDetailParamsEnum,
+  CommandsAdminPlatformInfoListParamsEnum,
+  CommandsUserPlatformDetailParamsEnum,
+  CommandsUserPlatformInfoListParamsEnum,
+} from "../types/data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class Commands<
@@ -55,7 +62,7 @@ export class Commands<
    * @response `200` `(string)[]` OK
    */
   commandsUserPlatformDetail = (
-    platform: "None" | "Api" | "Telegram" | "Twitch" | "Discord" | "Vk",
+    platform: CommandsUserPlatformDetailParamsEnum,
     params: RequestParams = {},
   ) =>
     this.request<string[], any>({
@@ -73,7 +80,7 @@ export class Commands<
    * @response `200` `(string)[]` OK
    */
   commandsAdminPlatformDetail = (
-    platform: "None" | "Api" | "Telegram" | "Twitch" | "Discord" | "Vk",
+    platform: CommandsAdminPlatformDetailParamsEnum,
     params: RequestParams = {},
   ) =>
     this.request<string[], any>({
@@ -91,7 +98,7 @@ export class Commands<
    * @response `200` `(CommandInfo)[]` OK
    */
   commandsUserPlatformInfoList = (
-    platform: "None" | "Api" | "Telegram" | "Twitch" | "Discord" | "Vk",
+    platform: CommandsUserPlatformInfoListParamsEnum,
     params: RequestParams = {},
   ) =>
     this.request<CommandInfo[], any>({
@@ -109,7 +116,7 @@ export class Commands<
    * @response `200` `(CommandInfo)[]` OK
    */
   commandsAdminPlatformInfoList = (
-    platform: "None" | "Api" | "Telegram" | "Twitch" | "Discord" | "Vk",
+    platform: CommandsAdminPlatformInfoListParamsEnum,
     params: RequestParams = {},
   ) =>
     this.request<CommandInfo[], any>({

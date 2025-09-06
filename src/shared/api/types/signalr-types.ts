@@ -194,6 +194,21 @@ export interface HostCoolDown {
   time: string;
 }
 
+export interface LogMessageDto {
+  category: string;
+  connectionId?: string;
+  /** @format int32 */
+  eventId?: number;
+  exception?: string;
+  id: string;
+  logLevel: string;
+  message: string;
+  source?: string;
+  stackTrace?: string;
+  /** @format date-time */
+  timestamp: string;
+}
+
 export interface MediaDto {
   mediaInfo: MediaInfo;
   /** @format date-time */
