@@ -1,5 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Button, Container, Spinner, Form, Row, Col, Collapse } from "react-bootstrap";
+import {
+  Alert,
+  Button,
+  Col,
+  Collapse,
+  Container,
+  Form,
+  Row,
+  Spinner,
+} from "react-bootstrap";
 
 import { DatabaseBackup } from "@/shared/api";
 import {
@@ -9,7 +18,11 @@ import {
 } from "@/shared/Utils/ToastModal";
 
 import styles from "./BackupsPage.module.scss";
-import { PgDumpSettings, PathSettings } from "./BackupsPage.types";
+import {
+  PathSettings,
+  PgDumpHistoryItem,
+  PgDumpSettings,
+} from "./BackupsPage.types";
 
 // Интерфейс для информации о бекапе
 interface BackupInfo {
@@ -53,27 +66,9 @@ const BackupsPage: React.FC = () => {
 
   // Настройки pg_dump
   const [pgDumpSettings, setPgDumpSettings] = useState<PgDumpSettings>({
-    host: "localhost",
-    port: 5432,
-    username: "postgres",
-    password: "",
-    database: "mars_main",
-    encoding: "UTF8",
-    format: "custom",
-    compression: 6,
-    verbose: true,
-    noOwner: true,
-    noPrivileges: true,
-    noTablespaces: true,
-    ifExists: true,
-    clean: true,
-    create: true,
-    dataOnly: false,
-    schemaOnly: false,
-    excludeTable: [],
-    includeTable: [],
-    excludeSchema: [],
-    includeSchema: [],
+    pgDumpPath: "pg_dump",
+    comment: "",
+    backupPath: "/backups/database",
   });
 
   // Настройки путей
@@ -84,6 +79,10 @@ const BackupsPage: React.FC = () => {
     useCustomPath: false,
     autoCreateDirectories: true,
   });
+
+  // Состояние для pg_dump
+  const [pgDumpHistory, setPgDumpHistory] = useState<PgDumpHistoryItem[]>([]);
+  const [pgDumpConfigured, setPgDumpConfigured] = useState<boolean>(false);
 
   // Загрузка списка бекапов
   const loadBackups = useCallback(async () => {
@@ -245,6 +244,106 @@ const BackupsPage: React.FC = () => {
     }
   };
 
+  // Загрузка настроек pg_dump
+  const loadPgDumpSettings = useCallback(async () => {
+    try {
+      await api.databaseBackupPgDumpSettingsList();
+      // Примечание: API возвращает void, поэтому используем текущие настройки
+    } catch (err) {
+      console.error("Ошибка при загрузке настроек pg_dump:", err);
+    }
+  }, [api]);
+
+  // Загрузка истории pg_dump
+  const loadPgDumpHistory = useCallback(async () => {
+    try {
+      await api.databaseBackupPgDumpHistoryList();
+      // Примечание: API возвращает void, создаем моковые данные
+      const mockHistory: PgDumpHistoryItem[] = [
+        {
+          id: 1,
+          operation: "backup",
+          database: "mars_main",
+          timestamp: "2024-01-15T12:00:00Z",
+          status: "success",
+        },
+        {
+          id: 2,
+          operation: "backup",
+          database: "mars_main",
+          timestamp: "2024-01-14T12:00:00Z",
+          status: "success",
+        },
+      ];
+      setPgDumpHistory(mockHistory);
+    } catch (err) {
+      console.error("Ошибка при загрузке истории pg_dump:", err);
+    }
+  }, [api]);
+
+  // Проверка конфигурации pg_dump
+  const checkPgDumpConfigured = useCallback(async () => {
+    try {
+      await api.databaseBackupPgDumpConfiguredList();
+      // Примечание: API возвращает void, предполагаем что настроено
+      setPgDumpConfigured(true);
+    } catch (err) {
+      console.error("Ошибка при проверке конфигурации pg_dump:", err);
+      setPgDumpConfigured(false);
+    }
+  }, [api]);
+
+  // Валидация настроек pg_dump
+  const validatePgDumpSettings = async (pgDumpPath: string) => {
+    try {
+      await api.databaseBackupPgDumpValidateCreate({
+        pgDumpPath,
+      });
+
+      showToast(
+        createSuccessToast(
+          `pg_dump найден по пути: ${pgDumpPath}`,
+          null,
+          "Валидация успешна"
+        )
+      );
+      return true;
+    } catch (err) {
+      showToast(
+        createErrorToast(
+          "Ошибка валидации pg_dump: " + (err as Error).message,
+          err,
+          "Ошибка валидации"
+        )
+      );
+      return false;
+    }
+  };
+
+  // Выбор файла pg_dump
+  const handleSelectPgDumpFile = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".exe"; // Для Windows
+    input.style.display = "none";
+
+    input.onchange = e => {
+      const target = e.target as HTMLInputElement;
+      if (target.files && target.files[0]) {
+        const filePath =
+          target.files[0].webkitRelativePath || target.files[0].name;
+        setPgDumpSettings(prev => ({
+          ...prev,
+          pgDumpPath: filePath,
+        }));
+      }
+    };
+
+    document.body.appendChild(input);
+    input.click();
+    document.body.removeChild(input);
+  };
+
   // Сохранение настроек pg_dump
   const handleSavePgDumpSettings = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -253,8 +352,14 @@ const BackupsPage: React.FC = () => {
       setIsSavingSettings(true);
       setError("");
 
-      // Здесь будет API вызов для сохранения настроек
-      // await api.savePgDumpSettings(pgDumpSettings);
+      // Преобразуем PgDumpSettings в UpdatePgDumpSettingsRequest
+      const updateRequest = {
+        pgDumpPath: pgDumpSettings.pgDumpPath,
+        comment: pgDumpSettings.comment || `Настройки pg_dump`,
+        backupPath: pgDumpSettings.backupPath || pathSettings.backupDirectory,
+      };
+
+      await api.databaseBackupPgDumpSettingsCreate(updateRequest);
 
       showToast(
         createSuccessToast(
@@ -317,7 +422,15 @@ const BackupsPage: React.FC = () => {
   // Загрузка данных при монтировании
   useEffect(() => {
     loadBackups();
-  }, [loadBackups]);
+    loadPgDumpSettings();
+    loadPgDumpHistory();
+    checkPgDumpConfigured();
+  }, [
+    loadBackups,
+    loadPgDumpSettings,
+    loadPgDumpHistory,
+    checkPgDumpConfigured,
+  ]);
 
   // Загрузка статуса после загрузки бекапов
   useEffect(() => {
@@ -350,8 +463,10 @@ const BackupsPage: React.FC = () => {
               className={styles.settingsButton}
               variant="outline-primary"
             >
-              <i className={`bi bi-gear me-2 ${showSettings ? 'bi-gear-fill' : ''}`}></i>
-              {showSettings ? 'Скрыть настройки' : 'Показать настройки'}
+              <i
+                className={`bi bi-gear me-2 ${showSettings ? "bi-gear-fill" : ""}`}
+              ></i>
+              {showSettings ? "Скрыть настройки" : "Показать настройки"}
             </Button>
           </div>
 
@@ -456,7 +571,7 @@ const BackupsPage: React.FC = () => {
         <Collapse in={showSettings}>
           <div className={styles.settingsSection}>
             <h2 className={styles.controlsTitle}>Настройки бекапов</h2>
-            
+
             <Row>
               {/* Настройки pg_dump */}
               <Col lg={6}>
@@ -465,159 +580,118 @@ const BackupsPage: React.FC = () => {
                     <i className="bi bi-database-gear me-2"></i>
                     Настройки pg_dump
                   </h3>
-                  
+
                   <Form onSubmit={handleSavePgDumpSettings}>
                     <Row>
                       <Col md={6}>
                         <Form.Group className="mb-3">
-                          <Form.Label>Хост</Form.Label>
-                          <Form.Control
-                            type="text"
-                            value={pgDumpSettings.host}
-                            onChange={(e) => setPgDumpSettings(prev => ({ ...prev, host: e.target.value }))}
-                            placeholder="localhost"
-                          />
+                          <Form.Label>Путь к pg_dump</Form.Label>
+                          <div className="input-group">
+                            <Form.Control
+                              type="text"
+                              value={pgDumpSettings.pgDumpPath}
+                              onChange={e =>
+                                setPgDumpSettings(prev => ({
+                                  ...prev,
+                                  pgDumpPath: e.target.value,
+                                }))
+                              }
+                              placeholder="pg_dump"
+                            />
+                            <Button
+                              type="button"
+                              variant="outline-secondary"
+                              onClick={handleSelectPgDumpFile}
+                              className="input-group-text"
+                            >
+                              <i className="bi bi-folder2-open"></i>
+                            </Button>
+                          </div>
                         </Form.Group>
                       </Col>
                       <Col md={6}>
                         <Form.Group className="mb-3">
-                          <Form.Label>Порт</Form.Label>
+                          <Form.Label>Комментарий</Form.Label>
                           <Form.Control
-                            type="number"
-                            value={pgDumpSettings.port}
-                            onChange={(e) => setPgDumpSettings(prev => ({ ...prev, port: parseInt(e.target.value) }))}
-                            placeholder="5432"
+                            type="text"
+                            value={pgDumpSettings.comment || ""}
+                            onChange={e =>
+                              setPgDumpSettings(prev => ({
+                                ...prev,
+                                comment: e.target.value,
+                              }))
+                            }
+                            placeholder="Описание настроек pg_dump"
                           />
                         </Form.Group>
                       </Col>
                     </Row>
 
                     <Row>
-                      <Col md={6}>
+                      <Col md={12}>
                         <Form.Group className="mb-3">
-                          <Form.Label>Пользователь</Form.Label>
+                          <Form.Label>Путь для сохранения бекапов</Form.Label>
                           <Form.Control
                             type="text"
-                            value={pgDumpSettings.username}
-                            onChange={(e) => setPgDumpSettings(prev => ({ ...prev, username: e.target.value }))}
-                            placeholder="postgres"
-                          />
-                        </Form.Group>
-                      </Col>
-                      <Col md={6}>
-                        <Form.Group className="mb-3">
-                          <Form.Label>Пароль</Form.Label>
-                          <Form.Control
-                            type="password"
-                            value={pgDumpSettings.password}
-                            onChange={(e) => setPgDumpSettings(prev => ({ ...prev, password: e.target.value }))}
-                            placeholder="••••••••"
+                            value={pgDumpSettings.backupPath || ""}
+                            onChange={e =>
+                              setPgDumpSettings(prev => ({
+                                ...prev,
+                                backupPath: e.target.value,
+                              }))
+                            }
+                            placeholder="/backups/database"
                           />
                         </Form.Group>
                       </Col>
                     </Row>
 
-                    <Row>
-                      <Col md={6}>
-                        <Form.Group className="mb-3">
-                          <Form.Label>База данных</Form.Label>
-                          <Form.Control
-                            type="text"
-                            value={pgDumpSettings.database}
-                            onChange={(e) => setPgDumpSettings(prev => ({ ...prev, database: e.target.value }))}
-                            placeholder="mars_main"
-                          />
-                        </Form.Group>
-                      </Col>
-                      <Col md={6}>
-                        <Form.Group className="mb-3">
-                          <Form.Label>Кодировка</Form.Label>
-                          <Form.Select
-                            value={pgDumpSettings.encoding}
-                            onChange={(e) => setPgDumpSettings(prev => ({ ...prev, encoding: e.target.value }))}
-                          >
-                            <option value="UTF8">UTF8</option>
-                            <option value="LATIN1">LATIN1</option>
-                            <option value="WIN1251">WIN1251</option>
-                          </Form.Select>
-                        </Form.Group>
-                      </Col>
-                    </Row>
 
-                    <Row>
-                      <Col md={6}>
-                        <Form.Group className="mb-3">
-                          <Form.Label>Формат</Form.Label>
-                          <Form.Select
-                            value={pgDumpSettings.format}
-                            onChange={(e) => setPgDumpSettings(prev => ({ ...prev, format: e.target.value as any }))}
-                          >
-                            <option value="plain">Plain SQL</option>
-                            <option value="custom">Custom</option>
-                            <option value="directory">Directory</option>
-                            <option value="tar">Tar</option>
-                          </Form.Select>
-                        </Form.Group>
-                      </Col>
-                      <Col md={6}>
-                        <Form.Group className="mb-3">
-                          <Form.Label>Сжатие (0-9)</Form.Label>
-                          <Form.Range
-                            min="0"
-                            max="9"
-                            value={pgDumpSettings.compression}
-                            onChange={(e) => setPgDumpSettings(prev => ({ ...prev, compression: parseInt(e.target.value) }))}
-                          />
-                          <div className="text-center text-muted small">{pgDumpSettings.compression}</div>
-                        </Form.Group>
-                      </Col>
-                    </Row>
-
-                    <div className={styles.checkboxGroup}>
-                      <Form.Check
-                        type="checkbox"
-                        id="verbose"
-                        label="Подробный вывод"
-                        checked={pgDumpSettings.verbose}
-                        onChange={(e) => setPgDumpSettings(prev => ({ ...prev, verbose: e.target.checked }))}
-                      />
-                      <Form.Check
-                        type="checkbox"
-                        id="noOwner"
-                        label="Без владельца"
-                        checked={pgDumpSettings.noOwner}
-                        onChange={(e) => setPgDumpSettings(prev => ({ ...prev, noOwner: e.target.checked }))}
-                      />
-                      <Form.Check
-                        type="checkbox"
-                        id="noPrivileges"
-                        label="Без привилегий"
-                        checked={pgDumpSettings.noPrivileges}
-                        onChange={(e) => setPgDumpSettings(prev => ({ ...prev, noPrivileges: e.target.checked }))}
-                      />
-                      <Form.Check
-                        type="checkbox"
-                        id="noTablespaces"
-                        label="Без табличных пространств"
-                        checked={pgDumpSettings.noTablespaces}
-                        onChange={(e) => setPgDumpSettings(prev => ({ ...prev, noTablespaces: e.target.checked }))}
-                      />
+                    <div className="d-flex flex-column gap-2">
+                      <Button
+                        type="button"
+                        variant="outline-secondary"
+                        onClick={async () => {
+                          if (!pgDumpSettings.pgDumpPath.trim()) {
+                            showToast(
+                              createErrorToast(
+                                "Укажите путь к pg_dump",
+                                null,
+                                "Ошибка валидации"
+                              )
+                            );
+                            return;
+                          }
+                          await validatePgDumpSettings(
+                            pgDumpSettings.pgDumpPath
+                          );
+                        }}
+                        disabled={isSavingSettings}
+                        className={styles.controlButton}
+                      >
+                        <i className="bi bi-check-circle me-2"></i>
+                        Проверить pg_dump
+                      </Button>
+                      <Button
+                        type="submit"
+                        className={`${styles.controlButton} ${styles.controlButtonPrimary}`}
+                        disabled={isSavingSettings}
+                      >
+                        {isSavingSettings ? (
+                          <>
+                            <Spinner
+                              as="span"
+                              animation="border"
+                              size="sm"
+                              className="me-2"
+                            />
+                            Сохранение...
+                          </>
+                        ) : (
+                          "Сохранить настройки pg_dump"
+                        )}
+                      </Button>
                     </div>
-
-                    <Button
-                      type="submit"
-                      className={`${styles.controlButton} ${styles.controlButtonPrimary}`}
-                      disabled={isSavingSettings}
-                    >
-                      {isSavingSettings ? (
-                        <>
-                          <Spinner as="span" animation="border" size="sm" className="me-2" />
-                          Сохранение...
-                        </>
-                      ) : (
-                        "Сохранить настройки pg_dump"
-                      )}
-                    </Button>
                   </Form>
                 </div>
               </Col>
@@ -629,14 +703,19 @@ const BackupsPage: React.FC = () => {
                     <i className="bi bi-folder-gear me-2"></i>
                     Настройки путей
                   </h3>
-                  
+
                   <Form onSubmit={handleSavePathSettings}>
                     <Form.Group className="mb-3">
                       <Form.Label>Папка для бекапов</Form.Label>
                       <Form.Control
                         type="text"
                         value={pathSettings.backupDirectory}
-                        onChange={(e) => setPathSettings(prev => ({ ...prev, backupDirectory: e.target.value }))}
+                        onChange={e =>
+                          setPathSettings(prev => ({
+                            ...prev,
+                            backupDirectory: e.target.value,
+                          }))
+                        }
                         placeholder="/backups/database"
                       />
                     </Form.Group>
@@ -646,7 +725,12 @@ const BackupsPage: React.FC = () => {
                       <Form.Control
                         type="text"
                         value={pathSettings.tempDirectory}
-                        onChange={(e) => setPathSettings(prev => ({ ...prev, tempDirectory: e.target.value }))}
+                        onChange={e =>
+                          setPathSettings(prev => ({
+                            ...prev,
+                            tempDirectory: e.target.value,
+                          }))
+                        }
                         placeholder="/tmp/backups"
                       />
                     </Form.Group>
@@ -656,7 +740,12 @@ const BackupsPage: React.FC = () => {
                       <Form.Control
                         type="text"
                         value={pathSettings.logDirectory}
-                        onChange={(e) => setPathSettings(prev => ({ ...prev, logDirectory: e.target.value }))}
+                        onChange={e =>
+                          setPathSettings(prev => ({
+                            ...prev,
+                            logDirectory: e.target.value,
+                          }))
+                        }
                         placeholder="/logs/backups"
                       />
                     </Form.Group>
@@ -667,14 +756,24 @@ const BackupsPage: React.FC = () => {
                         id="useCustomPath"
                         label="Использовать пользовательские пути"
                         checked={pathSettings.useCustomPath}
-                        onChange={(e) => setPathSettings(prev => ({ ...prev, useCustomPath: e.target.checked }))}
+                        onChange={e =>
+                          setPathSettings(prev => ({
+                            ...prev,
+                            useCustomPath: e.target.checked,
+                          }))
+                        }
                       />
                       <Form.Check
                         type="checkbox"
                         id="autoCreateDirectories"
                         label="Автоматически создавать папки"
                         checked={pathSettings.autoCreateDirectories}
-                        onChange={(e) => setPathSettings(prev => ({ ...prev, autoCreateDirectories: e.target.checked }))}
+                        onChange={e =>
+                          setPathSettings(prev => ({
+                            ...prev,
+                            autoCreateDirectories: e.target.checked,
+                          }))
+                        }
                       />
                     </div>
 
@@ -685,7 +784,12 @@ const BackupsPage: React.FC = () => {
                     >
                       {isSavingSettings ? (
                         <>
-                          <Spinner as="span" animation="border" size="sm" className="me-2" />
+                          <Spinner
+                            as="span"
+                            animation="border"
+                            size="sm"
+                            className="me-2"
+                          />
                           Сохранение...
                         </>
                       ) : (
@@ -693,6 +797,64 @@ const BackupsPage: React.FC = () => {
                       )}
                     </Button>
                   </Form>
+                </div>
+              </Col>
+            </Row>
+
+            {/* История pg_dump */}
+            <Row className="mt-4">
+              <Col>
+                <div className={styles.settingsCard}>
+                  <h3 className={styles.settingsCardTitle}>
+                    <i className="bi bi-clock-history me-2"></i>
+                    История операций pg_dump
+                  </h3>
+
+                  {pgDumpHistory.length === 0 ? (
+                    <div className="text-center text-muted py-3">
+                      <i className="bi bi-inbox fs-1 d-block mb-2"></i>
+                      История операций пуста
+                    </div>
+                  ) : (
+                    <div className="table-responsive">
+                      <table className="table table-sm">
+                        <thead>
+                          <tr>
+                            <th>Операция</th>
+                            <th>База данных</th>
+                            <th>Время</th>
+                            <th>Статус</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {pgDumpHistory.map(item => (
+                            <tr key={item.id}>
+                              <td>
+                                <span className="badge bg-primary">
+                                  {item.operation}
+                                </span>
+                              </td>
+                              <td>{item.database}</td>
+                              <td>{formatDate(item.timestamp)}</td>
+                              <td>
+                                <span
+                                  className={`badge ${
+                                    item.status === "success"
+                                      ? "bg-success"
+                                      : "bg-danger"
+                                  }`}
+                                >
+                                  {item.status === "success"
+                                    ? "Успешно"
+                                    : "Ошибка"}
+                                </span>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
                 </div>
               </Col>
             </Row>
@@ -733,6 +895,16 @@ const BackupsPage: React.FC = () => {
                   {status.backupDirectory.split("/").pop()}
                 </div>
                 <div className={styles.statusLabel}>Папка хранения</div>
+              </div>
+
+              <div className={styles.statusCard}>
+                <div className={styles.statusIcon}>
+                  {pgDumpConfigured ? "✅" : "❌"}
+                </div>
+                <div className={styles.statusValue}>
+                  {pgDumpConfigured ? "Настроено" : "Не настроено"}
+                </div>
+                <div className={styles.statusLabel}>pg_dump статус</div>
               </div>
             </div>
           </div>

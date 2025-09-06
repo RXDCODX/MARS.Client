@@ -26,29 +26,11 @@ export interface CleanupForm {
   keepCount: number;
 }
 
-// Настройки pg_dump
+// Настройки pg_dump (соответствуют серверной части)
 export interface PgDumpSettings {
-  host: string;
-  port: number;
-  username: string;
-  password: string;
-  database: string;
-  encoding: string;
-  format: "plain" | "custom" | "directory" | "tar";
-  compression: number; // 0-9
-  verbose: boolean;
-  noOwner: boolean;
-  noPrivileges: boolean;
-  noTablespaces: boolean;
-  ifExists: boolean;
-  clean: boolean;
-  create: boolean;
-  dataOnly: boolean;
-  schemaOnly: boolean;
-  excludeTable: string[];
-  includeTable: string[];
-  excludeSchema: string[];
-  includeSchema: string[];
+  pgDumpPath: string; // Путь к исполняемому файлу pg_dump
+  comment?: string; // Комментарий к настройкам
+  backupPath?: string; // Путь для сохранения бекапов
 }
 
 // Настройки путей
@@ -58,6 +40,15 @@ export interface PathSettings {
   logDirectory: string;
   useCustomPath: boolean;
   autoCreateDirectories: boolean;
+}
+
+// История операций pg_dump
+export interface PgDumpHistoryItem {
+  id: number;
+  operation: string;
+  database: string;
+  timestamp: string;
+  status: "success" | "error";
 }
 
 // Состояние компонента
