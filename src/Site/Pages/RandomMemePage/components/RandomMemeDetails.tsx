@@ -23,10 +23,167 @@ import {
 import { RandomMeme } from "@/shared/api";
 
 import styles from "../RandomMemePage.module.scss";
-import { RandomMemeDetailsProps } from "../RandomMemePage.types";
+import { RandomMemeTypeDetailsProps, RandomMemeOrderDetailsProps } from "../RandomMemePage.types";
 
-const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
+// Компонент для деталей типа мема
+const RandomMemeTypeDetails: React.FC<RandomMemeTypeDetailsProps> = ({
   memeType,
+  isLoading,
+  onBack,
+  onEdit,
+  onDelete,
+  onRefresh,
+}) => {
+  return (
+    <Container fluid className="py-4">
+      {/* Навигация */}
+      <Row className="mb-4">
+        <Col>
+          <div className="d-flex justify-content-between align-items-center">
+            <div className="d-flex align-items-center gap-3">
+              <Button
+                variant="outline-secondary"
+                size="sm"
+                onClick={onBack}
+                className="d-flex align-items-center gap-2"
+              >
+                <ArrowLeft size={16} />
+                Назад к списку
+              </Button>
+              <div>
+                <h1 className="d-flex align-items-center gap-3 mb-1">
+                  <Folder size={32} />
+                  Тип мема
+                </h1>
+                <p className="text-muted mb-0">{memeType.name}</p>
+              </div>
+            </div>
+
+            <div className="d-flex gap-2">
+              <Button
+                variant="outline-primary"
+                size="sm"
+                onClick={onRefresh}
+                disabled={isLoading}
+                className="d-flex align-items-center gap-2"
+              >
+                <RefreshCw size={16} />
+                Обновить
+              </Button>
+
+              <Button
+                variant="outline-warning"
+                size="sm"
+                onClick={onEdit}
+                className="d-flex align-items-center gap-2"
+              >
+                <Edit size={16} />
+                Редактировать
+              </Button>
+
+              <Button
+                variant="outline-danger"
+                size="sm"
+                onClick={onDelete}
+                className="d-flex align-items-center gap-2"
+              >
+                <Trash2 size={16} />
+                Удалить
+              </Button>
+            </div>
+          </div>
+        </Col>
+      </Row>
+
+      {/* Основная информация */}
+      <Row className="">
+        <Col>
+          <Card>
+            <Card.Header>
+              <h5 className="mb-0">Основная информация</h5>
+            </Card.Header>
+            <Card.Body>
+              <Row className="g-3">
+                <Col sm={6}>
+                  <div className="border rounded p-3">
+                    <small className="text-muted d-block mb-1">ID</small>
+                    <div className="fw-bold">{memeType.id}</div>
+                  </div>
+                </Col>
+
+                <Col sm={6}>
+                  <div className="border rounded p-3">
+                    <small className="text-muted d-block mb-1">Название</small>
+                    <div className="fw-bold">{memeType.name}</div>
+                  </div>
+                </Col>
+
+                <Col sm={12}>
+                  <div className="border rounded p-3">
+                    <small className="text-muted d-block mb-1">Папка</small>
+                    <code
+                      className="px-2 py-1 rounded"
+                      style={{
+                        backgroundColor: "var(--site-bg-secondary)",
+                      }}
+                    >
+                      {memeType.folderPath}
+                    </code>
+                  </div>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Действия */}
+      <Row className="mt-4">
+        <Col>
+          <Card>
+            <Card.Header>
+              <h5 className="mb-0">Действия</h5>
+            </Card.Header>
+            <Card.Body>
+              <div className="d-flex gap-2 flex-wrap">
+                <Button
+                  variant="primary"
+                  onClick={onEdit}
+                  className="d-flex align-items-center gap-2"
+                >
+                  <Edit size={16} />
+                  Редактировать
+                </Button>
+
+                <Button
+                  variant="outline-danger"
+                  onClick={onDelete}
+                  className="d-flex align-items-center gap-2"
+                >
+                  <Trash2 size={16} />
+                  Удалить тип
+                </Button>
+
+                <Button
+                  variant="outline-secondary"
+                  onClick={onRefresh}
+                  disabled={isLoading}
+                  className="d-flex align-items-center gap-2"
+                >
+                  <RefreshCw size={16} />
+                  Обновить данные
+                </Button>
+              </div>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
+    </Container>
+  );
+};
+
+// Компонент для деталей заказа мема
+const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
   memeOrder,
   isLoading,
   onBack,
@@ -108,7 +265,7 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
   }
 
   // Проверка наличия данных
-  if (!memeType && !memeOrder) {
+  if (!memeOrder) {
     return (
       <Container>
         <Alert variant="warning">
@@ -122,8 +279,6 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
       </Container>
     );
   }
-
-  const isType = !!memeType;
 
   return (
     <Container fluid className="py-4">
@@ -143,12 +298,10 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
               </Button>
               <div>
                 <h1 className="d-flex align-items-center gap-3 mb-1">
-                  {isType ? <Folder size={32} /> : <Image size={32} />}
-                  {isType ? "Тип мема" : "Заказ мема"}
+                  <Image size={32} />
+                  Заказ мема
                 </h1>
-                <p className="text-muted mb-0">
-                  {isType ? memeType!.name : `Заказ #${memeOrder!.order}`}
-                </p>
+                <p className="text-muted mb-0">Заказ #{memeOrder.order}</p>
               </div>
             </div>
 
@@ -188,8 +341,8 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
         </Col>
       </Row>
 
-      {/* Отображение мема (только для заказов) */}
-      {!isType && memeOrder && (
+      {/* Отображение мема */}
+      {memeOrder && (
         <Row className="mb-4">
           <Col>
             <Card className={styles.memeDisplayCard}>
@@ -386,61 +539,29 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                 <Col sm={6}>
                   <div className="border rounded p-3">
                     <small className="text-muted d-block mb-1">ID</small>
-                    <div className="fw-bold">
-                      {isType ? memeType!.id : memeOrder!.id.slice(0, 8)}...
-                    </div>
+                    <div className="fw-bold">{memeOrder.id.slice(0, 8)}...</div>
                   </div>
                 </Col>
 
-                {isType ? (
-                  <>
-                    <Col sm={6}>
-                      <div className="border rounded p-3">
-                        <small className="text-muted d-block mb-1">
-                          Название
-                        </small>
-                        <div className="fw-bold">{memeType!.name}</div>
-                      </div>
-                    </Col>
-                    <Col sm={12}>
-                      <div className="border rounded p-3">
-                        <small className="text-muted d-block mb-1">Папка</small>
-                        <code
-                          className="px-2 py-1 rounded"
-                          style={{
-                            backgroundColor: "var(--site-bg-secondary)",
-                          }}
-                        >
-                          {memeType!.folderPath}
-                        </code>
-                      </div>
-                    </Col>
-                  </>
-                ) : (
-                  <>
-                    <Col sm={6}>
-                      <div className="border rounded p-3">
-                        <small className="text-muted d-block mb-1">
-                          Порядок
-                        </small>
-                        <div className="fw-bold">#{memeOrder!.order}</div>
-                      </div>
-                    </Col>
-                    <Col md={12}>
-                      <div className="border rounded p-3">
-                        <small className="text-muted d-block mb-1">Файл</small>
-                        <code
-                          className="px-2 py-1 rounded d-block"
-                          style={{
-                            backgroundColor: "var(--site-bg-secondary)",
-                          }}
-                        >
-                          {memeOrder!.filePath}
-                        </code>
-                      </div>
-                    </Col>
-                  </>
-                )}
+                <Col sm={6}>
+                  <div className="border rounded p-3">
+                    <small className="text-muted d-block mb-1">Порядок</small>
+                    <div className="fw-bold">#{memeOrder.order}</div>
+                  </div>
+                </Col>
+                <Col md={12}>
+                  <div className="border rounded p-3">
+                    <small className="text-muted d-block mb-1">Файл</small>
+                    <code
+                      className="px-2 py-1 rounded d-block"
+                      style={{
+                        backgroundColor: "var(--site-bg-secondary)",
+                      }}
+                    >
+                      {memeOrder.filePath}
+                    </code>
+                  </div>
+                </Col>
               </Row>
             </Card.Body>
           </Card>
@@ -448,7 +569,7 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
       </Row>
 
       {/* Дополнительная информация */}
-      {!isType && memeOrder!.type && (
+      {memeOrder.type && (
         <Row className="mb-4">
           <Col>
             <Card>
@@ -462,13 +583,13 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                       <small className="text-muted d-block mb-1">
                         Название типа
                       </small>
-                      <div className="fw-bold">{memeOrder!.type.name}</div>
+                      <div className="fw-bold">{memeOrder.type.name}</div>
                     </div>
                   </Col>
                   <Col md={6}>
                     <div className="border rounded p-3">
                       <small className="text-muted d-block mb-1">ID типа</small>
-                      <div className="fw-bold">{memeOrder!.type.id}</div>
+                      <div className="fw-bold">{memeOrder.type.id}</div>
                     </div>
                   </Col>
                   <Col md={12}>
@@ -480,7 +601,7 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                         className="px-2 py-1 rounded"
                         style={{ backgroundColor: "var(--site-bg-secondary)" }}
                       >
-                        {memeOrder!.type.folderPath}
+                        {memeOrder.type.folderPath}
                       </code>
                     </div>
                   </Col>
@@ -491,9 +612,8 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
         </Row>
       )}
 
-      {/* Свойства файла (для заказов) */}
-      {!isType && (
-        <Row className="mb-4">
+      {/* Свойства файла */}
+      <Row className="mb-4">
           <Col>
             <Card>
               <Card.Header>
@@ -507,7 +627,7 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                         Расширение
                       </small>
                       <div className="fw-bold">
-                        {memeOrder!.filePath.split(".").pop()?.toUpperCase() ||
+                        {memeOrder.filePath.split(".").pop()?.toUpperCase() ||
                           "N/A"}
                       </div>
                     </div>
@@ -532,7 +652,7 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                         className="px-2 py-1 rounded d-block text-break"
                         style={{ backgroundColor: "var(--site-bg-secondary)" }}
                       >
-                        {memeOrder!.filePath}
+                        {memeOrder.filePath}
                       </code>
                     </div>
                   </Col>
@@ -541,7 +661,6 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
             </Card>
           </Col>
         </Row>
-      )}
 
       {/* Действия */}
       <Row>
@@ -567,7 +686,7 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
                   className="d-flex align-items-center gap-2"
                 >
                   <Trash2 size={16} />
-                  Удалить {isType ? "тип" : "заказ"}
+                  Удалить заказ
                 </Button>
 
                 <Button
@@ -588,4 +707,14 @@ const RandomMemeDetails: React.FC<RandomMemeDetailsProps> = ({
   );
 };
 
+// Объединенный компонент для деталей
+const RandomMemeDetails: React.FC<RandomMemeTypeDetailsProps | RandomMemeOrderDetailsProps> = (props) => {
+  if ('memeType' in props) {
+    return <RandomMemeTypeDetails {...props} />;
+  } else {
+    return <RandomMemeOrderDetails {...props} />;
+  }
+};
+
 export default RandomMemeDetails;
+export { RandomMemeTypeDetails, RandomMemeOrderDetails };
