@@ -10,6 +10,7 @@ import Layout from "@/Site/Pages/Layout/Layout";
 import { MediaInfoEditPage } from "@/Site/Pages/MediaInfoPage/MediaInfoEditPage";
 import { MediaInfoListPage } from "@/Site/Pages/MediaInfoPage/MediaInfoListPage";
 import RandomMemePage from "@/Site/Pages/RandomMemePage/RandomMemePage";
+import { RandomMemeDetailsPage, RandomMemeEditPage } from "@/Site/Pages/RandomMemePage/pages";
 import RoutesPage from "@/Site/Pages/RoutesPage/RoutesPage";
 import WelcomePage from "@/Site/Pages/WelcomePage";
 
@@ -144,6 +145,26 @@ export const mainSiteRoutes: RouteConfig[] = [
     element: (
       <Layout>
         <RandomMemePage />
+      </Layout>
+    ),
+  },
+  {
+    path: "/random-meme/:id",
+    name: "Random Meme Details",
+    type: "site",
+    element: (
+      <Layout>
+        <RandomMemeDetailsPage />
+      </Layout>
+    ),
+  },
+  {
+    path: "/random-meme/edit/:id",
+    name: "Edit Random Meme",
+    type: "site",
+    element: (
+      <Layout>
+        <RandomMemeEditPage />
       </Layout>
     ),
   },

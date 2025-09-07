@@ -45,6 +45,11 @@ export interface RandomMemeOrdersListProps {
   onEdit: (memeOrder: MemeOrderDto) => void;
   onDelete: (memeOrder: MemeOrderDto) => void;
   onCreate: () => void;
+  showToast?: (options: {
+    type: "success" | "error" | "info" | "warning";
+    title: string;
+    message: string;
+  }) => void;
 }
 
 // Пропсы для деталей типа мема

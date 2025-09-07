@@ -1,5 +1,6 @@
-import { Edit, Eye, Filter, Plus, RefreshCw, Trash2, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Edit, Eye, Filter, Plus, RefreshCw, Trash2, X, Copy, Link } from "lucide-react";
+import { useMemo, useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import {
   Alert,
   Button,
@@ -23,9 +24,118 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
   onEdit,
   onDelete,
   onCreate,
+  showToast,
 }) => {
-  const [selectedTypeId, setSelectedTypeId] = useState<number | "all" | "no-type">("all");
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  // Получаем начальные значения из URL параметров
+  const getInitialTypeId = (): number | "all" | "no-type" => {
+    const typeParam = searchParams.get("type");
+    if (typeParam === "no-type") return "no-type";
+    if (typeParam && !isNaN(Number(typeParam))) return Number(typeParam);
+    return "all";
+  };
+
+  const getInitialSearchTerm = (): string => {
+    return searchParams.get("search") || "";
+  };
+
+  const [selectedTypeId, setSelectedTypeId] = useState<number | "all" | "no-type">(getInitialTypeId);
+  const [searchTerm, setSearchTerm] = useState<string>(getInitialSearchTerm);
+  const [searchInput, setSearchInput] = useState<string>(getInitialSearchTerm);
+
+  // Функции для обновления URL параметров
+  const updateTypeFilter = (typeId: number | "all" | "no-type") => {
+    setSelectedTypeId(typeId);
+    const newSearchParams = new URLSearchParams(searchParams);
+    
+    if (typeId === "all") {
+      newSearchParams.delete("type");
+    } else if (typeId === "no-type") {
+      newSearchParams.set("type", "no-type");
+    } else {
+      newSearchParams.set("type", typeId.toString());
+    }
+    
+    setSearchParams(newSearchParams, { replace: true });
+  };
+
+  const updateSearchFilter = (search: string) => {
+    setSearchTerm(search);
+    const newSearchParams = new URLSearchParams(searchParams);
+    
+    if (search.trim()) {
+      newSearchParams.set("search", search.trim());
+    } else {
+      newSearchParams.delete("search");
+    }
+    
+    setSearchParams(newSearchParams, { replace: true });
+  };
+
+  const resetFilters = () => {
+    setSelectedTypeId("all");
+    setSearchTerm("");
+    setSearchInput("");
+    setSearchParams({}, { replace: true });
+  };
+
+  const copyFilteredLink = async () => {
+    const currentUrl = window.location.href;
+    try {
+      await navigator.clipboard.writeText(currentUrl);
+      showToast?.({
+        type: "success",
+        title: "Ссылка скопирована",
+        message: "Ссылка с примененными фильтрами скопирована в буфер обмена",
+      });
+    } catch (err) {
+      console.error("Ошибка копирования ссылки:", err);
+      showToast?.({
+        type: "error",
+        title: "Ошибка копирования",
+        message: "Не удалось скопировать ссылку в буфер обмена",
+      });
+    }
+  };
+
+  // Проверяем, есть ли активные фильтры
+  const hasActiveFilters = selectedTypeId !== "all" || searchTerm.trim() !== "";
+
+  // Debounce для поиска
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchInput !== searchTerm) {
+        updateSearchFilter(searchInput);
+      }
+    }, 500); // 500ms задержка
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  // Синхронизация с URL параметрами при изменении
+  useEffect(() => {
+    const typeParam = searchParams.get("type");
+    const searchParam = searchParams.get("search");
+    
+    if (typeParam !== null) {
+      const newTypeId = typeParam === "no-type" ? "no-type" : 
+                       (!isNaN(Number(typeParam)) ? Number(typeParam) : "all");
+      if (newTypeId !== selectedTypeId) {
+        setSelectedTypeId(newTypeId);
+      }
+    } else if (selectedTypeId !== "all") {
+      setSelectedTypeId("all");
+    }
+    
+    if (searchParam !== null && searchParam !== searchTerm) {
+      setSearchTerm(searchParam);
+      setSearchInput(searchParam);
+    } else if (searchParam === null && searchTerm !== "") {
+      setSearchTerm("");
+      setSearchInput("");
+    }
+  }, [searchParams, selectedTypeId, searchTerm]);
 
   // Фильтрация заказов
   const filteredOrders = useMemo(() => {
@@ -80,8 +190,41 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
       <Row className="mb-3">
         <Col>
           <div className="d-flex justify-content-between align-items-center">
-            <h1 className="mb-0">Очередь заказов ({filteredOrders.length})</h1>
+            <div>
+              <h1 className="mb-0">Очередь заказов ({filteredOrders.length})</h1>
+              {hasActiveFilters && (
+                <div className="mt-1">
+                  <small className="text-muted">
+                    <Filter size={14} className="me-1" />
+                    Фильтры активны
+                    {selectedTypeId !== "all" && (
+                      <span className="ms-2">
+                        Тип: {selectedTypeId === "no-type" ? "Без типа" : 
+                              memeTypes.find(t => t.id === selectedTypeId)?.name || selectedTypeId}
+                      </span>
+                    )}
+                    {searchTerm.trim() && (
+                      <span className="ms-2">
+                        Поиск: "{searchTerm}"
+                      </span>
+                    )}
+                  </small>
+                </div>
+              )}
+            </div>
             <div className="d-flex gap-2">
+              {hasActiveFilters && (
+                <Button
+                  variant="outline-info"
+                  size="sm"
+                  onClick={copyFilteredLink}
+                  className="d-flex align-items-center gap-2"
+                  title="Копировать ссылку с фильтрами"
+                >
+                  <Copy size={16} />
+                  Копировать ссылку
+                </Button>
+              )}
               <Button
                 variant="outline-secondary"
                 size="sm"
@@ -123,11 +266,11 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
                       onChange={(e) => {
                         const value = e.target.value;
                         if (value === "all") {
-                          setSelectedTypeId("all");
+                          updateTypeFilter("all");
                         } else if (value === "no-type") {
-                          setSelectedTypeId("no-type");
+                          updateTypeFilter("no-type");
                         } else {
-                          setSelectedTypeId(parseInt(value));
+                          updateTypeFilter(parseInt(value));
                         }
                       }}
                     >
@@ -150,20 +293,17 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
                     <Form.Control
                       type="text"
                       placeholder="Поиск по файлу, типу или номеру заказа..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
+                      value={searchInput}
+                      onChange={(e) => setSearchInput(e.target.value)}
                     />
                   </Form.Group>
                 </Col>
                 <Col md={2} className="d-flex align-items-end">
                   <Button
                     variant="outline-secondary"
-                    onClick={() => {
-                      setSelectedTypeId("all");
-                      setSearchTerm("");
-                    }}
+                    onClick={resetFilters}
                     className="d-flex align-items-center gap-1"
-                    disabled={selectedTypeId === "all" && !searchTerm}
+                    disabled={selectedTypeId === "all" && !searchInput.trim()}
                   >
                     <X size={16} />
                     Сбросить
@@ -198,10 +338,7 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
               <Button
                 variant="outline-primary"
                 size="sm"
-                onClick={() => {
-                  setSelectedTypeId("all");
-                  setSearchTerm("");
-                }}
+                onClick={resetFilters}
                 className="mt-2"
               >
                 Сбросить фильтры

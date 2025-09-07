@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Container, Nav, Tab } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 
 import { RandomMeme } from "@/shared/api";
 import {
@@ -26,6 +27,7 @@ import {
 const RandomMemePage: React.FC = () => {
   const api = useMemo(() => new RandomMeme(), []);
   const { showToast } = useToastModal();
+  const navigate = useNavigate();
 
   // Состояние навигации
   const [navigation, setNavigation] = useState<NavigationState>({
@@ -76,7 +78,7 @@ const RandomMemePage: React.FC = () => {
     } finally {
       setNavigation(prev => ({ ...prev, isLoading: false }));
     }
-  }, [api]);
+  }, [api, showToast]);
 
   // Загрузка заказов мемов
   const loadOrders = useCallback(async () => {
@@ -97,7 +99,7 @@ const RandomMemePage: React.FC = () => {
     } finally {
       setNavigation(prev => ({ ...prev, isLoading: false }));
     }
-  }, [api]);
+  }, [api, showToast]);
 
   // Загрузка данных при монтировании
   useEffect(() => {
@@ -175,7 +177,7 @@ const RandomMemePage: React.FC = () => {
         },
       });
     },
-    [api, loadTypes]
+    [api, loadTypes, showToast]
   );
 
   const handleTypeCreate = useCallback(() => {
@@ -185,16 +187,16 @@ const RandomMemePage: React.FC = () => {
   // Обработчики для заказов мемов
   const handleOrderViewDetails = useCallback(
     (memeOrder: MemeOrderDto) => {
-      navigateTo("order-details", undefined, memeOrder);
+      navigate(`/random-meme/${memeOrder.id}`);
     },
-    [navigateTo]
+    [navigate]
   );
 
   const handleOrderEdit = useCallback(
     (memeOrder: MemeOrderDto) => {
-      navigateTo("edit-order", undefined, memeOrder);
+      navigate(`/random-meme/edit/${memeOrder.id}`);
     },
-    [navigateTo]
+    [navigate]
   );
 
   const handleOrderDelete = useCallback(
@@ -224,7 +226,7 @@ const RandomMemePage: React.FC = () => {
         },
       });
     },
-    [api, loadOrders]
+    [api, loadOrders, showToast]
   );
 
   const handleOrderCreate = useCallback(() => {
@@ -238,7 +240,7 @@ const RandomMemePage: React.FC = () => {
         setIsSubmitting(true);
 
         if (navigation.currentView.includes("type")) {
-          const typeData = data as MemeTypeFormData;
+          const typeData = data as unknown as MemeTypeFormData;
           if (navigation.currentView === "create-type") {
             await api.randomMemeTypesCreate(typeData);
             showToast({
@@ -259,7 +261,7 @@ const RandomMemePage: React.FC = () => {
           }
           await loadTypes();
         } else {
-          const orderData = data as MemeOrderFormData;
+          const orderData = data as unknown as MemeOrderFormData;
           if (navigation.currentView === "create-order") {
             await api.randomMemeOrdersCreate(orderData);
             showToast({
@@ -293,7 +295,7 @@ const RandomMemePage: React.FC = () => {
         setIsSubmitting(false);
       }
     },
-    [navigation, api, loadTypes, loadOrders, navigateBack]
+    [navigation, api, loadTypes, loadOrders, navigateBack, showToast]
   );
 
   // Рендер текущего представления
@@ -329,6 +331,7 @@ const RandomMemePage: React.FC = () => {
                   onEdit={handleOrderEdit}
                   onDelete={handleOrderDelete}
                   onCreate={handleOrderCreate}
+                  showToast={showToast}
                 />
               </Tab.Pane>
               <Tab.Pane eventKey="types">
@@ -359,20 +362,6 @@ const RandomMemePage: React.FC = () => {
           />
         ) : null;
 
-      case "order-details":
-        return navigation.selectedOrder ? (
-          <RandomMemeDetails
-            memeOrder={navigation.selectedOrder}
-            isLoading={navigation.isLoading}
-            onBack={navigateBack}
-            onEdit={() =>
-              navigateTo("edit-order", undefined, navigation.selectedOrder!)
-            }
-            onDelete={() => handleOrderDelete(navigation.selectedOrder!)}
-            onRefresh={loadOrders}
-          />
-        ) : null;
-
       case "create-type":
       case "edit-type":
         return (
@@ -387,13 +376,12 @@ const RandomMemePage: React.FC = () => {
         );
 
       case "create-order":
-      case "edit-order":
         return (
           <RandomMemeForm
             memeOrder={navigation.selectedOrder}
             memeTypes={memeTypes}
             isSubmitting={isSubmitting}
-            mode={navigation.currentView === "create-order" ? "create" : "edit"}
+            mode="create"
             onSubmit={handleFormSubmit}
             onCancel={navigateBack}
           />
