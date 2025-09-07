@@ -1,5 +1,4 @@
 import AboutPage from "@/Site/Pages/AboutPage";
-import BackupsPage from "@/Site/Pages/BackupsPage";
 import CinemaQueuePage from "@/Site/Pages/CinemaQueuePage/CinemaQueuePage";
 import CommandsPage from "@/Site/Pages/CommandsPage/CommandsPage";
 import ContactsPage from "@/Site/Pages/ContactsPage";
@@ -95,16 +94,6 @@ export const mainSiteRoutes: RouteConfig[] = [
     element: (
       <Layout>
         <PendingChangesPage />
-      </Layout>
-    ),
-  },
-  {
-    path: "/backups",
-    name: "Резервные копии",
-    type: "site",
-    element: (
-      <Layout>
-        <BackupsPage />
       </Layout>
     ),
   },

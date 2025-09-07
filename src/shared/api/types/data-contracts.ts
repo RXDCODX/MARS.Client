@@ -605,24 +605,6 @@ export interface UpdateMemeTypeDto {
   folderPath: string;
 }
 
-export interface UpdatePgDumpSettingsRequest {
-  /**
-   * @minLength 0
-   * @maxLength 500
-   */
-  pgDumpPath: string;
-  /**
-   * @minLength 0
-   * @maxLength 1000
-   */
-  comment?: string;
-  /**
-   * @minLength 0
-   * @maxLength 500
-   */
-  backupPath?: string;
-}
-
 export interface UpdateUserRequest {
   twitchId?: string;
   /** @format int64 */
