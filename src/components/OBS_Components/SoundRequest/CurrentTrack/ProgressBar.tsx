@@ -15,13 +15,36 @@ export const ProgressBar = ({ track }: Props) => {
   const pausedTimeRef = useRef<number>(0);
   const isPausedRef = useRef<boolean>(false);
   const lastTrackKeyRef = useRef<string>("");
+  const lastExternalProgressRef = useRef<number>(0);
 
   // Создаем уникальный ключ для трека
   const trackKey = `${track.artists.join(",")}-${track.title}-${track.duration}`;
 
+  // Отдельный эффект для синхронизации с внешними изменениями прогресса
+  useEffect(() => {
+    if (!track.duration || track.duration === 0) return;
+
+    const externalProgress = track.progress || 0;
+    const progressDiff = Math.abs(
+      externalProgress - lastExternalProgressRef.current
+    );
+
+    // Если прогресс изменился значительно (перемотка), синхронизируемся
+    if (progressDiff > 0.1) {
+      lastExternalProgressRef.current = externalProgress;
+      setProgress(externalProgress);
+
+      // Пересчитываем время начала для корректного продолжения анимации
+      if (track.status === "playing") {
+        startTimeRef.current = Date.now() - externalProgress * 1000;
+      }
+    }
+  }, [track.progress, track.duration, track.status]);
+
   useEffect(() => {
     if (!track.duration || track.duration === 0) {
       setProgress(0);
+      lastExternalProgressRef.current = 0;
       return;
     }
 
@@ -35,6 +58,7 @@ export const ProgressBar = ({ track }: Props) => {
       lastTrackKeyRef.current = trackKey;
       const initialProgress = track.progress || 0;
       setProgress(initialProgress);
+      lastExternalProgressRef.current = initialProgress;
       isPausedRef.current = false;
       pausedTimeRef.current = 0;
       startTimeRef.current = Date.now() - initialProgress * 1000;
@@ -43,6 +67,7 @@ export const ProgressBar = ({ track }: Props) => {
     // Если трек остановлен, сбрасываем прогресс
     if (track.status === "stopped") {
       setProgress(0);
+      lastExternalProgressRef.current = 0;
       isPausedRef.current = false;
       pausedTimeRef.current = 0;
       return;
@@ -86,7 +111,7 @@ export const ProgressBar = ({ track }: Props) => {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [track.status, track.duration, track.progress, trackKey]);
+  }, [track.status, track.duration, trackKey, track.progress]);
 
   // Очищаем анимацию при размонтировании
   useEffect(
@@ -103,9 +128,11 @@ export const ProgressBar = ({ track }: Props) => {
   return (
     <div
       className={styles.progressBarContainer}
-      style={{
-        "--track-progress": `${progressPercentage}%`,
-      } as React.CSSProperties}
+      style={
+        {
+          "--track-progress": `${progressPercentage}%`,
+        } as React.CSSProperties
+      }
     />
   );
 };
