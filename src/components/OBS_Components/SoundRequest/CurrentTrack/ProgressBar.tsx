@@ -24,24 +24,52 @@ export const ProgressBar = ({ track }: Props) => {
   useEffect(() => {
     if (!track.duration || track.duration === 0) return;
 
-    const externalProgress = track.progress || 0;
+    // Конвертируем внешний прогресс из секунд в проценты
+    const externalProgressSeconds = track.progress || 0;
+    const externalProgress =
+      track.duration > 0 ? externalProgressSeconds / track.duration : 0;
     const lastProgress = lastExternalProgressRef.current;
     const progressDiff = externalProgress - lastProgress;
 
-    // Проверяем значительные изменения вперед (перемотка вперед на 3+ секунд)
-    const isSignificantForwardJump = progressDiff > 3;
+    // Проверяем значительные изменения вперед (перемотка вперед на 3+ секунд в процентах)
+    const isSignificantForwardJump = progressDiff > 3 / track.duration;
 
-    // Проверяем значительные изменения назад (перемотка назад на 3+ секунд)
-    const isSignificantBackwardJump = progressDiff < -3;
+    // Проверяем значительные изменения назад (перемотка назад на 3+ секунд в процентах)
+    const isSignificantBackwardJump = progressDiff < -(3 / track.duration);
 
-    // Проверяем резкие изменения в любом направлении (более 1 секунды)
-    const isRapidChange = Math.abs(progressDiff) > 1;
+    // Проверяем резкие изменения в любом направлении (более 1 секунды в процентах)
+    const isRapidChange = Math.abs(progressDiff) > 1 / track.duration;
 
     // Дополнительная проверка для отмотки назад - если прогресс резко уменьшился
-    const isRewindBack = progressDiff < -0.5 && externalProgress < lastProgress;
+    const isRewindBack =
+      progressDiff < -(0.5 / track.duration) && externalProgress < lastProgress;
 
     // Проверяем, что изменение не слишком большое (не больше половины трека)
-    const isReasonableChange = Math.abs(progressDiff) < track.duration / 2;
+    const isReasonableChange = Math.abs(progressDiff) < 0.5;
+
+    // Логируем все изменения прогресса для отладки
+    if (Math.abs(progressDiff) > 0.01) {
+      console.log("🟡 PROGRESS CHANGE:", {
+        externalProgressSeconds,
+        externalProgress,
+        lastProgress,
+        progressDiff,
+        isSignificantForwardJump,
+        isSignificantBackwardJump,
+        isRapidChange,
+        isRewindBack,
+        isReasonableChange,
+        willSync:
+          (isSignificantForwardJump ||
+            isSignificantBackwardJump ||
+            isRapidChange ||
+            isRewindBack) &&
+          isReasonableChange,
+        trackStatus: track.status,
+        currentInternalProgress: progress,
+        trackDuration: track.duration,
+      });
+    }
 
     // Синхронизируемся при значительных перемотках, резких изменениях или отмотке назад
     if (
@@ -51,19 +79,25 @@ export const ProgressBar = ({ track }: Props) => {
         isRewindBack) &&
       isReasonableChange
     ) {
+      console.log("🟢 SYNCING PROGRESS:", {
+        from: progress,
+        to: externalProgress,
+        fromSeconds: progress * track.duration,
+        toSeconds: externalProgressSeconds,
+      });
       lastExternalProgressRef.current = externalProgress;
       setProgress(externalProgress);
 
       // Пересчитываем время начала для корректного продолжения анимации
       if (track.status === "playing") {
-        startTimeRef.current = Date.now() - externalProgress * 1000;
+        startTimeRef.current = Date.now() - externalProgressSeconds * 1000;
       }
     } else {
       // Если изменение незначительное, просто обновляем отслеживаемое значение
       // но не синхронизируемся, чтобы избежать бликов
       lastExternalProgressRef.current = externalProgress;
     }
-  }, [track.progress, track.duration, track.status]);
+  }, [track.progress, track.duration, track.status, progress]);
 
   useEffect(() => {
     if (!track.duration || track.duration === 0) {
@@ -79,17 +113,28 @@ export const ProgressBar = ({ track }: Props) => {
 
     // Если это новый трек, сбрасываем все состояния
     if (lastTrackKeyRef.current !== trackKey) {
+      console.log("🟠 NEW TRACK DETECTED:", {
+        oldTrackKey: lastTrackKeyRef.current,
+        newTrackKey: trackKey,
+        initialProgress: track.progress || 0,
+        trackStatus: track.status,
+        trackDuration: track.duration,
+      });
+
       lastTrackKeyRef.current = trackKey;
-      const initialProgress = track.progress || 0;
+      const initialProgressSeconds = track.progress || 0;
+      const initialProgress =
+        track.duration > 0 ? initialProgressSeconds / track.duration : 0;
       setProgress(initialProgress);
       lastExternalProgressRef.current = initialProgress;
       isPausedRef.current = false;
       pausedTimeRef.current = 0;
-      startTimeRef.current = Date.now() - initialProgress * 1000;
+      startTimeRef.current = Date.now() - initialProgressSeconds * 1000;
     }
 
     // Если трек остановлен, сбрасываем прогресс
     if (track.status === "stopped") {
+      console.log("🔴 TRACK STOPPED - resetting progress");
       setProgress(0);
       lastExternalProgressRef.current = 0;
       isPausedRef.current = false;
@@ -100,6 +145,7 @@ export const ProgressBar = ({ track }: Props) => {
     // Если трек на паузе
     if (track.status === "paused") {
       if (!isPausedRef.current) {
+        console.log("⏸️ TRACK PAUSED");
         isPausedRef.current = true;
         pausedTimeRef.current = Date.now();
       }
@@ -111,6 +157,7 @@ export const ProgressBar = ({ track }: Props) => {
       // Если был на паузе, корректируем время начала
       if (isPausedRef.current) {
         const pauseDuration = Date.now() - pausedTimeRef.current;
+        console.log("▶️ TRACK RESUMED after pause:", { pauseDuration });
         startTimeRef.current += pauseDuration;
         isPausedRef.current = false;
       }
@@ -119,6 +166,21 @@ export const ProgressBar = ({ track }: Props) => {
         const currentTime = Date.now();
         const elapsed = (currentTime - startTimeRef.current) / 1000;
         const newProgress = Math.min(elapsed / track.duration, 1);
+
+        // Логируем изменения прогресса в анимации
+        if (Math.abs(newProgress - progress) > 0.01) {
+          console.log("🔵 ANIMATION PROGRESS:", {
+            newProgress,
+            newProgressSeconds: newProgress * track.duration,
+            currentProgress: progress,
+            currentProgressSeconds: progress * track.duration,
+            elapsed,
+            trackDuration: track.duration,
+            trackStatus: track.status,
+            startTime: startTimeRef.current,
+            currentTime,
+          });
+        }
 
         setProgress(newProgress);
 
@@ -148,6 +210,35 @@ export const ProgressBar = ({ track }: Props) => {
   );
 
   const progressPercentage = Math.min(progress * 100, 100);
+
+  useEffect(() => {
+    if (progressPercentage >= 99) {
+      console.log("🔴 PROGRESS BAR DEBUG - 99%+ reached:", {
+        progressPercentage,
+        progress,
+        trackStatus: track.status,
+        trackDuration: track.duration,
+        externalProgressSeconds: track.progress,
+        externalProgressPercent:
+          track.duration > 0 ? (track.progress || 0) / track.duration : 0,
+        lastExternalProgress: lastExternalProgressRef.current,
+        isPaused: isPausedRef.current,
+        startTime: startTimeRef.current,
+        currentTime: Date.now(),
+        elapsed: (Date.now() - startTimeRef.current) / 1000,
+        trackKey,
+        lastTrackKey: lastTrackKeyRef.current,
+      });
+      debugger;
+    }
+  }, [
+    progressPercentage,
+    progress,
+    track.status,
+    track.duration,
+    track.progress,
+    trackKey,
+  ]);
 
   return (
     <div
