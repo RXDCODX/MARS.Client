@@ -1,4 +1,3 @@
-import { Animate } from "react-simple-animate";
 import { useEffect, useRef, useState } from "react";
 
 import { TunaMusicData } from "@/shared/api";
@@ -16,7 +15,6 @@ export const ProgressBar = ({ track }: Props) => {
   const pausedTimeRef = useRef<number>(0);
   const isPausedRef = useRef<boolean>(false);
   const lastTrackKeyRef = useRef<string>("");
-  const lastProgressRef = useRef<number>(0);
 
   // Создаем уникальный ключ для трека
   const trackKey = `${track.artists.join(",")}-${track.title}-${track.duration}`;
@@ -24,7 +22,6 @@ export const ProgressBar = ({ track }: Props) => {
   useEffect(() => {
     if (!track.duration || track.duration === 0) {
       setProgress(0);
-      lastProgressRef.current = 0;
       return;
     }
 
@@ -38,7 +35,6 @@ export const ProgressBar = ({ track }: Props) => {
       lastTrackKeyRef.current = trackKey;
       const initialProgress = track.progress || 0;
       setProgress(initialProgress);
-      lastProgressRef.current = initialProgress;
       isPausedRef.current = false;
       pausedTimeRef.current = 0;
       startTimeRef.current = Date.now() - initialProgress * 1000;
@@ -47,7 +43,6 @@ export const ProgressBar = ({ track }: Props) => {
     // Если трек остановлен, сбрасываем прогресс
     if (track.status === "stopped") {
       setProgress(0);
-      lastProgressRef.current = 0;
       isPausedRef.current = false;
       pausedTimeRef.current = 0;
       return;
@@ -76,11 +71,7 @@ export const ProgressBar = ({ track }: Props) => {
         const elapsed = (currentTime - startTimeRef.current) / 1000;
         const newProgress = Math.min(elapsed / track.duration, 1);
 
-        // Обновляем прогресс только если он изменился
-        if (Math.abs(newProgress - lastProgressRef.current) > 0.001) {
-          setProgress(newProgress);
-          lastProgressRef.current = newProgress;
-        }
+        setProgress(newProgress);
 
         if (newProgress < 1 && track.status === "playing") {
           animationRef.current = requestAnimationFrame(animate);
@@ -110,15 +101,11 @@ export const ProgressBar = ({ track }: Props) => {
   const progressPercentage = Math.min(progress * 100, 100);
 
   return (
-    <Animate
-      play={true}
-      start={{ width: "0%" }}
-      end={{ width: `${progressPercentage}%` }}
-      duration={0.1}
-      easeType="linear"
-      render={({ style }) => (
-        <div className={styles.progressBar} style={style} />
-      )}
+    <div
+      className={styles.progressBarContainer}
+      style={{
+        "--track-progress": `${progressPercentage}%`,
+      } as React.CSSProperties}
     />
   );
 };

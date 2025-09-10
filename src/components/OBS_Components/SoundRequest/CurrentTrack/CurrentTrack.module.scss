@@ -146,15 +146,20 @@
   // }
 }
 
-/* Прогресс-бар */
-.progressBar {
+/* Прогресс-бар контейнер */
+.progressBarContainer {
   position: absolute;
   top: 0;
   left: 0;
+  right: 0;
   height: 100%;
-  background: rgba(110, 110, 110, 0.45);
-  border-radius: 8% 0 0 8%;
   z-index: -1;
+  background: linear-gradient(to right,
+      rgba(110, 110, 110, 0.45) 0%,
+      rgba(110, 110, 110, 0.45) var(--track-progress, 0%),
+      transparent var(--track-progress, 0%),
+      transparent 100%);
+  border-radius: 8% 0 0 8%;
 }
 
 /* Анимации */
