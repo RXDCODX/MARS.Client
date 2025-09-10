@@ -34,6 +34,8 @@ import { Commands } from "@/shared/api";
 import {
   CommandInfo,
   CommandParameterInfo,
+  CommandsAdminPlatformInfoListParamsEnum,
+  CommandsUserPlatformInfoListParamsEnum,
 } from "@/shared/api/http-clients/data-contracts";
 import {
   createErrorToast,
@@ -554,9 +556,9 @@ const CommandsPage: React.FC = () => {
       updateState({ isLoading: true, error: "" });
 
       const resultUser =
-        await commandsService.commandsAdminPlatformInfoList("Api");
+        await commandsService.commandsAdminPlatformInfoList(CommandsAdminPlatformInfoListParamsEnum.Api);
       const adminResult =
-        await commandsService.commandsUserPlatformInfoList("Api");
+        await commandsService.commandsUserPlatformInfoList(CommandsUserPlatformInfoListParamsEnum.Api);
 
       const userCommandsData = resultUser.data;
       const adminCommandsData = adminResult.data;

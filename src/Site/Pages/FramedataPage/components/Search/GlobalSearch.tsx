@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 
 import { Framedata } from "@/shared/api";
-import { Move, TekkenCharacter } from "@/shared/api/types/types";
+import { Move, TekkenCharacter } from "@/shared/api/types/data-contracts";
 import {
   createErrorToast,
   createInfoToast,
@@ -87,10 +87,10 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ characters }) => {
         // Если у персонажа уже есть удары, используем их
         if (character.movelist && character.movelist.length > 0) {
           return character.movelist.filter(
-            move =>
+            (move: Move) =>
               move.command.toLowerCase().includes(moveQuery.toLowerCase()) ||
               (move.notes &&
-                move.notes.some(note =>
+                move.notes.some((note: string) =>
                   note.toLowerCase().includes(moveQuery.toLowerCase())
                 ))
           );
@@ -140,7 +140,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ characters }) => {
 
     // Бонус за совпадение в заметках
     if (move.notes) {
-      const noteMatch = move.notes.some(note =>
+      const noteMatch = move.notes.some((note: string) =>
         note.toLowerCase().includes(moveQuery.toLowerCase())
       );
       if (noteMatch) score += 25;
@@ -466,7 +466,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ characters }) => {
                             {result.move.notes &&
                             result.move.notes.length > 0 ? (
                               <div className={styles.notesContainer}>
-                                {result.move.notes.map((note, noteIndex) => (
+                                {result.move.notes.map((note: string, noteIndex: number) => (
                                   <div
                                     key={noteIndex}
                                     className={styles.noteItem}

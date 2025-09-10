@@ -11,7 +11,11 @@ import {
 } from "react-bootstrap";
 import { Pencil, PlayCircle, Plus, Trash } from "react-bootstrap-icons";
 
-import { CinemaQueue } from "@/shared/api";
+import { 
+  CinemaQueue,
+  UpdateMediaItemRequest,
+  UpdateMediaItemRequestStatusEnum,
+} from "@/shared/api";
 import {
   createErrorToast,
   createSuccessToast,
@@ -50,16 +54,6 @@ interface CreateMediaItemRequest {
   notes?: string;
 }
 
-interface UpdateMediaItemRequest {
-  title?: string;
-  description?: string;
-  mediaUrl?: string;
-  status?: "Pending" | "InProgress" | "Completed" | "Cancelled" | "Postponed";
-  priority?: number;
-  scheduledFor?: string;
-  notes?: string;
-  isNext?: boolean;
-}
 
 interface CinemaQueueStatistics {
   totalItems: number;
@@ -90,7 +84,7 @@ const CinemaQueuePage: React.FC = () => {
     twitchUsername: "",
     notes: "",
   });
-  const [editFormData, setEditFormData] = useState<UpdateMediaItemRequest>({});
+  const [editFormData, setEditFormData] = useState<Partial<UpdateMediaItemRequest>>({});
 
   const { showToast } = useToastModal();
   const colors = useSiteColors();
@@ -324,8 +318,9 @@ const CinemaQueuePage: React.FC = () => {
 
     try {
       // Convert datetime-local string to ISO string for the API if it exists
-      const apiUpdateData = {
+      const apiUpdateData: UpdateMediaItemRequest = {
         ...updateData,
+        status: updateData.status || UpdateMediaItemRequestStatusEnum.Pending,
         scheduledFor: updateData.scheduledFor
           ? new Date(updateData.scheduledFor).toISOString()
           : undefined,
@@ -463,7 +458,7 @@ const CinemaQueuePage: React.FC = () => {
       title: item.title,
       description: item.description,
       mediaUrl: item.mediaUrl,
-      status: item.status,
+      status: item.status as UpdateMediaItemRequestStatusEnum,
       priority: item.priority,
       scheduledFor: item.scheduledFor,
       isNext: item.isNext,

@@ -1,9 +1,12 @@
-import { Textfit } from "react-textfit";
+import "./animation.scss";
+
+import { CSSProperties } from "react";
 
 import { TunaMusicData } from "@/shared/api";
 
 import AnimationControl from "./AnimationControl";
-import styles from "./CurrentTrack.module.scss";
+import { CurrentTrackElement } from "./CurrentTrackElement";
+import { ProgressBar } from "./ProgressBar";
 
 interface Props {
   oldTrack: TunaMusicData;
@@ -13,6 +16,17 @@ interface Props {
   shouldAnimate?: boolean;
 }
 
+const baseStyles: CSSProperties = {
+  position: "fixed",
+  inset: 0,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  height: "70vh",
+  top: "50%",
+  transform: "translateY(-50%)",
+};
+
 export default function CurrentTrack({
   oldTrack,
   track,
@@ -21,81 +35,21 @@ export default function CurrentTrack({
   shouldAnimate = true,
 }: Props) {
   return (
-    <AnimationControl AnimationStart={shouldAnimate} swapTrack={swapChange}>
-      {shouldAnimate && !swap && (
-        <div className={styles.wrapper}>
-          <div className={styles.cover}>
-            {oldTrack.cover && <img src={oldTrack.cover} alt="Album cover" />}
-          </div>
-          <div className={styles.container}>
-            <div className={styles.trackinfo}>
-              <div className={styles.info}>
-                <Textfit
-                  mode="multi"
-                  className={styles.textContainer}
-                  max={9999}
-                  min={20}
-                  style={{
-                    width: "100%",
-                    textAlign: "center",
-                  }}
-                >
-                  {oldTrack.artists.join(", ")}
-                </Textfit>
-                <Textfit
-                  mode="multi"
-                  className={styles.textContainer}
-                  max={9999}
-                  min={30}
-                  style={{
-                    width: "100%",
-                    textAlign: "center",
-                  }}
-                >
-                  {oldTrack.title}
-                </Textfit>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-      {(shouldAnimate && swap) || !shouldAnimate ? (
-        <div className={styles.wrapper}>
-          <div className={styles.cover}>
-            {track.cover && <img src={track.cover} alt="Album cover" />}
-          </div>
-          <div className={styles.container}>
-            <div className={styles.trackinfo}>
-              <div className={styles.info}>
-                <Textfit
-                  mode="multi"
-                  className={styles.textContainer}
-                  max={9999}
-                  min={20}
-                  style={{
-                    width: "100%",
-                    textAlign: "center",
-                  }}
-                >
-                  {track.artists.join(", ")}
-                </Textfit>
-                <Textfit
-                  mode="multi"
-                  className={styles.textContainer}
-                  max={9999}
-                  min={30}
-                  style={{
-                    width: "100%",
-                    textAlign: "center",
-                  }}
-                >
-                  {track.title}
-                </Textfit>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : null}
-    </AnimationControl>
+    <>
+      <div
+        id="current-track-container"
+        style={{
+          ...baseStyles,
+        }}
+      >
+        <ProgressBar track={track} />
+        <AnimationControl AnimationStart={shouldAnimate} swapTrack={swapChange}>
+          {shouldAnimate && !swap && <CurrentTrackElement track={oldTrack} />}
+          {(shouldAnimate && swap) || !shouldAnimate ? (
+            <CurrentTrackElement track={track} />
+          ) : null}
+        </AnimationControl>
+      </div>
+    </>
   );
 }

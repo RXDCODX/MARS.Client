@@ -18,6 +18,7 @@
 .slide[data-position="top"] {
   border-radius: 3vw;
 }
+
 .slide[data-position="bottom"] {
   border-radius: 3vw;
 }
@@ -143,6 +144,17 @@
   //   width: 30vh;
   //   height: 30vh;
   // }
+}
+
+/* Прогресс-бар */
+.progressBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: rgba(110, 110, 110, 0.45);
+  border-radius: 8% 0 0 8%;
+  z-index: -1;
 }
 
 /* Анимации */

@@ -183,19 +183,7 @@ export function CurrentTrackManager() {
 const CurrentTrackInfo = () => (
   <>
     <TunaHubSignalRHubWrapper>
-      <div
-        id="current-track-container"
-        style={{
-          position: "fixed",
-          inset: 0,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          height: "100vh",
-        }}
-      >
-        <CurrentTrackManager />
-      </div>
+      <CurrentTrackManager />
     </TunaHubSignalRHubWrapper>
   </>
 );
