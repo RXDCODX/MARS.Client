@@ -11,10 +11,10 @@
  */
 
 import type {
+  CinemaMediaItemDto,
   CinemaQueueStatistics,
   CinemaQueueStatusDetailParamsEnum,
   CreateMediaItemRequest,
-  MediaItemDto,
   UpdateMediaItemRequest,
 } from "../types/data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
@@ -28,10 +28,10 @@ export class CinemaQueue<
    * @tags CinemaQueue
    * @name CinemaQueueList
    * @request GET:/api/CinemaQueue
-   * @response `200` `(MediaItemDto)[]` OK
+   * @response `200` `(CinemaMediaItemDto)[]` OK
    */
   cinemaQueueList = (params: RequestParams = {}) =>
-    this.request<MediaItemDto[], any>({
+    this.request<CinemaMediaItemDto[], any>({
       path: `/api/CinemaQueue`,
       method: "GET",
       format: "json",
@@ -43,13 +43,13 @@ export class CinemaQueue<
    * @tags CinemaQueue
    * @name CinemaQueueCreate
    * @request POST:/api/CinemaQueue
-   * @response `200` `MediaItemDto` OK
+   * @response `200` `CinemaMediaItemDto` OK
    */
   cinemaQueueCreate = (
     data: CreateMediaItemRequest,
     params: RequestParams = {},
   ) =>
-    this.request<MediaItemDto, any>({
+    this.request<CinemaMediaItemDto, any>({
       path: `/api/CinemaQueue`,
       method: "POST",
       body: data,
@@ -63,10 +63,10 @@ export class CinemaQueue<
    * @tags CinemaQueue
    * @name CinemaQueueDetail
    * @request GET:/api/CinemaQueue/{id}
-   * @response `200` `MediaItemDto` OK
+   * @response `200` `CinemaMediaItemDto` OK
    */
   cinemaQueueDetail = (id: string, params: RequestParams = {}) =>
-    this.request<MediaItemDto, any>({
+    this.request<CinemaMediaItemDto, any>({
       path: `/api/CinemaQueue/${id}`,
       method: "GET",
       format: "json",
@@ -78,14 +78,14 @@ export class CinemaQueue<
    * @tags CinemaQueue
    * @name CinemaQueueUpdate
    * @request PUT:/api/CinemaQueue/{id}
-   * @response `200` `MediaItemDto` OK
+   * @response `200` `CinemaMediaItemDto` OK
    */
   cinemaQueueUpdate = (
     id: string,
     data: UpdateMediaItemRequest,
     params: RequestParams = {},
   ) =>
-    this.request<MediaItemDto, any>({
+    this.request<CinemaMediaItemDto, any>({
       path: `/api/CinemaQueue/${id}`,
       method: "PUT",
       body: data,
@@ -113,10 +113,10 @@ export class CinemaQueue<
    * @tags CinemaQueue
    * @name CinemaQueueNextList
    * @request GET:/api/CinemaQueue/next
-   * @response `200` `MediaItemDto` OK
+   * @response `200` `CinemaMediaItemDto` OK
    */
   cinemaQueueNextList = (params: RequestParams = {}) =>
-    this.request<MediaItemDto, any>({
+    this.request<CinemaMediaItemDto, any>({
       path: `/api/CinemaQueue/next`,
       method: "GET",
       format: "json",
@@ -128,13 +128,13 @@ export class CinemaQueue<
    * @tags CinemaQueue
    * @name CinemaQueueStatusDetail
    * @request GET:/api/CinemaQueue/status/{status}
-   * @response `200` `(MediaItemDto)[]` OK
+   * @response `200` `(CinemaMediaItemDto)[]` OK
    */
   cinemaQueueStatusDetail = (
     status: CinemaQueueStatusDetailParamsEnum,
     params: RequestParams = {},
   ) =>
-    this.request<MediaItemDto[], any>({
+    this.request<CinemaMediaItemDto[], any>({
       path: `/api/CinemaQueue/status/${status}`,
       method: "GET",
       format: "json",

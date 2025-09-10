@@ -19,6 +19,20 @@ export class RxdcodxViewers<
    * No description
    *
    * @tags RxdcodxViewers
+   * @name RxdcodxViewersAllList
+   * @request GET:/api/RxdcodxViewers/all
+   * @response `200` `void` OK
+   */
+  rxdcodxViewersAllList = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/RxdcodxViewers/all`,
+      method: "GET",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags RxdcodxViewers
    * @name RxdcodxViewersFollowersList
    * @request GET:/api/RxdcodxViewers/followers
    * @response `200` `void` OK

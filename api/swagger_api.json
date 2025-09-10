@@ -17,7 +17,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/MediaItemDto"
+                    "$ref": "#/components/schemas/CinemaMediaItemDto"
                   }
                 }
               },
@@ -25,7 +25,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/MediaItemDto"
+                    "$ref": "#/components/schemas/CinemaMediaItemDto"
                   }
                 }
               },
@@ -33,7 +33,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/MediaItemDto"
+                    "$ref": "#/components/schemas/CinemaMediaItemDto"
                   }
                 }
               }
@@ -82,17 +82,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/MediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDto"
                 }
               }
             }
@@ -122,17 +122,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/MediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDto"
                 }
               }
             }
@@ -191,17 +191,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/MediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDto"
                 }
               }
             }
@@ -241,17 +241,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/MediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDto"
                 }
               }
             }
@@ -289,7 +289,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/MediaItemDto"
+                    "$ref": "#/components/schemas/CinemaMediaItemDto"
                   }
                 }
               },
@@ -297,7 +297,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/MediaItemDto"
+                    "$ref": "#/components/schemas/CinemaMediaItemDto"
                   }
                 }
               },
@@ -305,7 +305,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/MediaItemDto"
+                    "$ref": "#/components/schemas/CinemaMediaItemDto"
                   }
                 }
               }
@@ -858,193 +858,6 @@
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/api/DatabaseBackup/create": {
-      "post": {
-        "tags": [
-          "DatabaseBackup"
-        ],
-        "parameters": [
-          {
-            "name": "databaseName",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/DatabaseBackup/download": {
-      "get": {
-        "tags": [
-          "DatabaseBackup"
-        ],
-        "parameters": [
-          {
-            "name": "fileName",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/DatabaseBackup/list": {
-      "get": {
-        "tags": [
-          "DatabaseBackup"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/DatabaseBackup/cleanup": {
-      "post": {
-        "tags": [
-          "DatabaseBackup"
-        ],
-        "parameters": [
-          {
-            "name": "keepCount",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 10
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/DatabaseBackup/status": {
-      "get": {
-        "tags": [
-          "DatabaseBackup"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/DatabaseBackup/pg-dump/settings": {
-      "get": {
-        "tags": [
-          "DatabaseBackup"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "DatabaseBackup"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/UpdatePgDumpSettingsRequest"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/UpdatePgDumpSettingsRequest"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/UpdatePgDumpSettingsRequest"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/DatabaseBackup/pg-dump/validate": {
-      "post": {
-        "tags": [
-          "DatabaseBackup"
-        ],
-        "parameters": [
-          {
-            "name": "pgDumpPath",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/DatabaseBackup/pg-dump/history": {
-      "get": {
-        "tags": [
-          "DatabaseBackup"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/DatabaseBackup/pg-dump/configured": {
-      "get": {
-        "tags": [
-          "DatabaseBackup"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           }
         }
       }
@@ -4025,6 +3838,18 @@
         }
       }
     },
+    "/api/RxdcodxViewers/all": {
+      "get": {
+        "tags": [
+          "RxdcodxViewers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/RxdcodxViewers/followers": {
       "get": {
         "tags": [
@@ -4805,6 +4630,82 @@
         },
         "additionalProperties": false
       },
+      "CinemaMediaItemDto": {
+        "required": [
+          "createdAt",
+          "id",
+          "isNext",
+          "mediaUrl",
+          "priority",
+          "status",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "mediaUrl": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "Pending",
+              "InProgress",
+              "Completed",
+              "Cancelled",
+              "Postponed"
+            ],
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "scheduledFor": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "addedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "twitchUserId": {
+            "type": "string",
+            "nullable": true
+          },
+          "twitchUsername": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "isNext": {
+            "type": "boolean"
+          },
+          "lastModified": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CinemaQueueStatistics": {
         "required": [
           "cancelledItems",
@@ -5534,82 +5435,6 @@
         },
         "additionalProperties": false
       },
-      "MediaItemDto": {
-        "required": [
-          "createdAt",
-          "id",
-          "isNext",
-          "mediaUrl",
-          "priority",
-          "status",
-          "title"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "title": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "mediaUrl": {
-            "type": "string"
-          },
-          "status": {
-            "enum": [
-              "Pending",
-              "InProgress",
-              "Completed",
-              "Cancelled",
-              "Postponed"
-            ],
-            "type": "string"
-          },
-          "priority": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "scheduledFor": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "addedBy": {
-            "type": "string",
-            "nullable": true
-          },
-          "twitchUserId": {
-            "type": "string",
-            "nullable": true
-          },
-          "twitchUsername": {
-            "type": "string",
-            "nullable": true
-          },
-          "notes": {
-            "type": "string",
-            "nullable": true
-          },
-          "isNext": {
-            "type": "boolean"
-          },
-          "lastModified": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "MediaMetaInfo": {
         "required": [
           "displayName",
@@ -6209,9 +6034,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": {
-
-        }
+        "additionalProperties": { }
       },
       "Reward": {
         "required": [
@@ -6361,9 +6184,7 @@
           },
           "configuration": {
             "type": "object",
-            "additionalProperties": {
-
-            }
+            "additionalProperties": { }
           }
         },
         "additionalProperties": false
@@ -6787,32 +6608,6 @@
           "folderPath": {
             "minLength": 1,
             "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "UpdatePgDumpSettingsRequest": {
-        "required": [
-          "pgDumpPath"
-        ],
-        "type": "object",
-        "properties": {
-          "pgDumpPath": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string"
-          },
-          "comment": {
-            "maxLength": 1000,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
-          },
-          "backupPath": {
-            "maxLength": 500,
-            "minLength": 0,
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false

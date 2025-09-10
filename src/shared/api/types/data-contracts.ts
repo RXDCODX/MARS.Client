@@ -20,6 +20,28 @@ export interface ApiMediaInfo {
   stylesInfo: MediaStylesInfo;
 }
 
+export interface CinemaMediaItemDto {
+  /** @format uuid */
+  id: string;
+  title: string;
+  description?: string;
+  mediaUrl: string;
+  status: CinemaMediaItemDtoStatusEnum;
+  /** @format int32 */
+  priority: number;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  scheduledFor?: string;
+  addedBy?: string;
+  twitchUserId?: string;
+  twitchUsername?: string;
+  notes?: string;
+  isNext: boolean;
+  /** @format date-time */
+  lastModified?: string;
+}
+
 export interface CinemaQueueStatistics {
   /** @format int32 */
   totalItems: number;
@@ -229,28 +251,6 @@ export interface MediaFileInfo {
   isLocalFile: boolean;
   fileName: string;
   extension: string;
-}
-
-export interface MediaItemDto {
-  /** @format uuid */
-  id: string;
-  title: string;
-  description?: string;
-  mediaUrl: string;
-  status: MediaItemDtoStatusEnum;
-  /** @format int32 */
-  priority: number;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  scheduledFor?: string;
-  addedBy?: string;
-  twitchUserId?: string;
-  twitchUsername?: string;
-  notes?: string;
-  isNext: boolean;
-  /** @format date-time */
-  lastModified?: string;
 }
 
 export interface MediaMetaInfo {
@@ -614,6 +614,14 @@ export interface UpdateUserRequest {
   ltuidV2?: string;
 }
 
+export enum CinemaMediaItemDtoStatusEnum {
+  Pending = "Pending",
+  InProgress = "InProgress",
+  Completed = "Completed",
+  Cancelled = "Cancelled",
+  Postponed = "Postponed",
+}
+
 export enum CommandInfoAvailablePlatformsEnum {
   None = "None",
   Api = "Api",
@@ -641,14 +649,6 @@ export enum MediaFileInfoTypeEnum {
   TelegramSticker = "TelegramSticker",
   Voice = "Voice",
   Gif = "Gif",
-}
-
-export enum MediaItemDtoStatusEnum {
-  Pending = "Pending",
-  InProgress = "InProgress",
-  Completed = "Completed",
-  Cancelled = "Cancelled",
-  Postponed = "Postponed",
 }
 
 export enum MediaMetaInfoPriorityEnum {
