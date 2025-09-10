@@ -1,6 +1,6 @@
 import "./animation.scss";
 
-import { CSSProperties } from "react";
+import { CSSProperties, useEffect } from "react";
 
 import { TunaMusicData } from "@/shared/api";
 
@@ -34,6 +34,12 @@ export default function CurrentTrack({
   swapChange,
   shouldAnimate = true,
 }: Props) {
+  useEffect(() => {
+    if (shouldAnimate) {
+      console.log(oldTrack, track, swap, shouldAnimate);
+    }
+  }, [oldTrack, shouldAnimate, swap, track]);
+
   return (
     <>
       <div
@@ -42,7 +48,6 @@ export default function CurrentTrack({
           ...baseStyles,
         }}
       >
-        <ProgressBar track={track} />
         <AnimationControl AnimationStart={shouldAnimate} swapTrack={swapChange}>
           {shouldAnimate && !swap && <CurrentTrackElement track={oldTrack} />}
           {(shouldAnimate && swap) || !shouldAnimate ? (
@@ -50,6 +55,7 @@ export default function CurrentTrack({
           ) : null}
         </AnimationControl>
       </div>
+      <ProgressBar track={track} />
     </>
   );
 }

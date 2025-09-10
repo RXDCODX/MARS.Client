@@ -54,6 +54,20 @@ export function CurrentTrackManager() {
             };
           }
 
+          // Если плеер остановлен и приходит новый трек — просто меняем без анимации
+          if (
+            s.currentTrack.status === "stopped" &&
+            key(a.data) !== key(s.currentTrack)
+          ) {
+            return {
+              ...s,
+              currentTrack: { ...a.data, isDefaultValue: false },
+              incomingTrack: null,
+              isAnimating: false,
+              swap: false,
+            };
+          }
+
           // Если уже идёт анимация — только обновляем incomingTrack
           if (s.isAnimating) {
             return {
