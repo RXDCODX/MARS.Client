@@ -1,4 +1,4 @@
-import { Eye, Folder, Plus, RefreshCw, Trash2, Edit } from "lucide-react";
+import { Edit, Eye, Folder, Plus, RefreshCw, Trash2 } from "lucide-react";
 import {
   Alert,
   Button,
@@ -82,9 +82,9 @@ const RandomMemeTypesList: React.FC<RandomMemeTypesListProps> = ({
         <Row xs={1} sm={2} lg={3} xl={4}>
           {memeTypes.map(type => (
             <Col key={type.id} className="mb-3">
-              <Card 
-                className="h-100 cursor-pointer" 
-                style={{ cursor: 'pointer' }}
+              <Card
+                className="h-100 cursor-pointer"
+                style={{ cursor: "pointer" }}
                 onClick={() => onViewDetails(type)}
               >
                 <Card.Body>
@@ -97,16 +97,16 @@ const RandomMemeTypesList: React.FC<RandomMemeTypesListProps> = ({
                       <small className="text-muted">ID: {type.id}</small>
                     </div>
                   </div>
-                  
+
                   <div className="mb-3">
                     <small className="text-muted d-block">Папка</small>
-                    <code 
-                      className="d-block text-truncate" 
-                      style={{ 
-                        backgroundColor: 'var(--bs-light)', 
-                        padding: '0.25rem 0.5rem',
-                        borderRadius: '0.25rem',
-                        fontSize: '0.8rem'
+                    <code
+                      className="d-block text-truncate"
+                      style={{
+                        backgroundColor: "var(--bs-light)",
+                        padding: "0.25rem 0.5rem",
+                        borderRadius: "0.25rem",
+                        fontSize: "0.8rem",
                       }}
                       title={type.folderPath}
                     >
@@ -118,7 +118,7 @@ const RandomMemeTypesList: React.FC<RandomMemeTypesListProps> = ({
                     <Button
                       variant="outline-primary"
                       size="sm"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         onViewDetails(type);
                       }}
@@ -130,7 +130,7 @@ const RandomMemeTypesList: React.FC<RandomMemeTypesListProps> = ({
                     <Button
                       variant="outline-warning"
                       size="sm"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         onEdit(type);
                       }}
@@ -142,7 +142,7 @@ const RandomMemeTypesList: React.FC<RandomMemeTypesListProps> = ({
                     <Button
                       variant="outline-danger"
                       size="sm"
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         onDelete(type);
                       }}

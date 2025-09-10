@@ -1,10 +1,13 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Container, Spinner, Alert, Button } from "react-bootstrap";
 import { ArrowLeft } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Alert, Button, Container, Spinner } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { RandomMeme } from "@/shared/api";
-import { MemeOrderDto, MemeTypeDto } from "@/shared/api/http-clients/data-contracts";
+import {
+  MemeOrderDto,
+  MemeTypeDto,
+} from "@/shared/api/http-clients/data-contracts";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import { RandomMemeForm } from "./components";
@@ -37,7 +40,7 @@ const RandomMemeEditPage: React.FC = () => {
       // Загружаем заказ мема и типы параллельно
       const [orderResponse, typesResponse] = await Promise.all([
         api.randomMemeOrdersDetail(id),
-        api.randomMemeTypesList()
+        api.randomMemeTypesList(),
       ]);
 
       setMemeOrder(orderResponse.data ?? null);
@@ -48,7 +51,8 @@ const RandomMemeEditPage: React.FC = () => {
       }
     } catch (e) {
       console.error("Ошибка загрузки данных:", e);
-      const errorMessage = e instanceof Error ? e.message : "Неизвестная ошибка";
+      const errorMessage =
+        e instanceof Error ? e.message : "Неизвестная ошибка";
       setError(errorMessage);
       showToast({
         type: "error",
@@ -74,38 +78,41 @@ const RandomMemeEditPage: React.FC = () => {
     }
   }, [navigate, memeOrder]);
 
-  const handleSubmit = useCallback(async (data: Record<string, unknown>) => {
-    if (!memeOrder) return;
+  const handleSubmit = useCallback(
+    async (data: Record<string, unknown>) => {
+      if (!memeOrder) return;
 
-    try {
-      setIsSubmitting(true);
-      
-      const orderData = data as unknown as {
-        filePath: string;
-        memeTypeId: number;
-        order: number;
-      };
+      try {
+        setIsSubmitting(true);
 
-      await api.randomMemeOrdersUpdate(memeOrder.id, orderData);
-      
-      showToast({
-        type: "success",
-        title: "Успешно",
-        message: "Заказ мема успешно обновлен",
-      });
-      
-      navigate(`/random-meme/${memeOrder.id}`);
-    } catch (e) {
-      console.error("Ошибка сохранения:", e);
-      showToast({
-        type: "error",
-        title: "Ошибка",
-        message: "Ошибка сохранения данных",
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [memeOrder, api, showToast, navigate]);
+        const orderData = data as unknown as {
+          filePath: string;
+          memeTypeId: number;
+          order: number;
+        };
+
+        await api.randomMemeOrdersUpdate(memeOrder.id, orderData);
+
+        showToast({
+          type: "success",
+          title: "Успешно",
+          message: "Заказ мема успешно обновлен",
+        });
+
+        navigate(`/random-meme/${memeOrder.id}`);
+      } catch (e) {
+        console.error("Ошибка сохранения:", e);
+        showToast({
+          type: "error",
+          title: "Ошибка",
+          message: "Ошибка сохранения данных",
+        });
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [memeOrder, api, showToast, navigate]
+  );
 
   // Отображение загрузки
   if (isLoading) {

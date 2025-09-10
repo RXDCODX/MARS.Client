@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { Container, Spinner, Alert, Button } from "react-bootstrap";
 import { ArrowLeft } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Alert, Button, Container, Spinner } from "react-bootstrap";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { RandomMeme } from "@/shared/api";
 import { MemeOrderDto } from "@/shared/api/http-clients/data-contracts";
@@ -31,16 +31,17 @@ const RandomMemeDetailsPage: React.FC = () => {
     try {
       setIsLoading(true);
       setError("");
-      
+
       const response = await api.randomMemeOrdersDetail(id);
       setMemeOrder(response.data ?? null);
-      
+
       if (!response.data) {
         setError("Мем с указанным ID не найден");
       }
     } catch (e) {
       console.error("Ошибка загрузки деталей мема:", e);
-      const errorMessage = e instanceof Error ? e.message : "Неизвестная ошибка";
+      const errorMessage =
+        e instanceof Error ? e.message : "Неизвестная ошибка";
       setError(errorMessage);
       showToast({
         type: "error",

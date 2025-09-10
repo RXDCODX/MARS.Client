@@ -5,8 +5,8 @@ import { Alert, Container } from "react-bootstrap";
 import { Logs } from "@/shared/api";
 import {
   LogResponse,
-  LogsStatistics,
   LogsListParamsLogLevelEnum,
+  LogsStatistics,
 } from "@/shared/api/http-clients/data-contracts";
 import { createErrorToast, useToastModal } from "@/shared/Utils/ToastModal";
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
@@ -70,7 +70,9 @@ const LogsPage: React.FC = () => {
         pageSize: state.pageSize,
         sortBy: filters.sortBy,
         sortDescending: filters.sortDescending,
-        logLevel: filters.logLevel ? filters.logLevel as LogsListParamsLogLevelEnum : LogsListParamsLogLevelEnum.None,
+        logLevel: filters.logLevel
+          ? (filters.logLevel as LogsListParamsLogLevelEnum)
+          : LogsListParamsLogLevelEnum.None,
         fromDate: filters.fromDate || "",
         toDate: filters.toDate || "",
         searchText: filters.searchText || "",

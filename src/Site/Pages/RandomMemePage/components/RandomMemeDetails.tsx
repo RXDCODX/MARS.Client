@@ -23,7 +23,10 @@ import {
 import { RandomMeme } from "@/shared/api";
 
 import styles from "../RandomMemePage.module.scss";
-import { RandomMemeTypeDetailsProps, RandomMemeOrderDetailsProps } from "../RandomMemePage.types";
+import {
+  RandomMemeOrderDetailsProps,
+  RandomMemeTypeDetailsProps,
+} from "../RandomMemePage.types";
 
 // Компонент для деталей типа мема
 const RandomMemeTypeDetails: React.FC<RandomMemeTypeDetailsProps> = ({
@@ -33,47 +36,120 @@ const RandomMemeTypeDetails: React.FC<RandomMemeTypeDetailsProps> = ({
   onEdit,
   onDelete,
   onRefresh,
-}) => {
-  return (
-    <Container fluid className="py-4">
-      {/* Навигация */}
-      <Row className="mb-4">
-        <Col>
-          <div className="d-flex justify-content-between align-items-center">
-            <div className="d-flex align-items-center gap-3">
-              <Button
-                variant="outline-secondary"
-                size="sm"
-                onClick={onBack}
-                className="d-flex align-items-center gap-2"
-              >
-                <ArrowLeft size={16} />
-                Назад к списку
-              </Button>
-              <div>
-                <h1 className="d-flex align-items-center gap-3 mb-1">
-                  <Folder size={32} />
-                  Тип мема
-                </h1>
-                <p className="text-muted mb-0">{memeType.name}</p>
-              </div>
+}) => (
+  <Container fluid className="py-4">
+    {/* Навигация */}
+    <Row className="mb-4">
+      <Col>
+        <div className="d-flex justify-content-between align-items-center">
+          <div className="d-flex align-items-center gap-3">
+            <Button
+              variant="outline-secondary"
+              size="sm"
+              onClick={onBack}
+              className="d-flex align-items-center gap-2"
+            >
+              <ArrowLeft size={16} />
+              Назад к списку
+            </Button>
+            <div>
+              <h1 className="d-flex align-items-center gap-3 mb-1">
+                <Folder size={32} />
+                Тип мема
+              </h1>
+              <p className="text-muted mb-0">{memeType.name}</p>
             </div>
+          </div>
 
-            <div className="d-flex gap-2">
-              <Button
-                variant="outline-primary"
-                size="sm"
-                onClick={onRefresh}
-                disabled={isLoading}
-                className="d-flex align-items-center gap-2"
-              >
-                <RefreshCw size={16} />
-                Обновить
-              </Button>
+          <div className="d-flex gap-2">
+            <Button
+              variant="outline-primary"
+              size="sm"
+              onClick={onRefresh}
+              disabled={isLoading}
+              className="d-flex align-items-center gap-2"
+            >
+              <RefreshCw size={16} />
+              Обновить
+            </Button>
 
+            <Button
+              variant="outline-warning"
+              size="sm"
+              onClick={onEdit}
+              className="d-flex align-items-center gap-2"
+            >
+              <Edit size={16} />
+              Редактировать
+            </Button>
+
+            <Button
+              variant="outline-danger"
+              size="sm"
+              onClick={onDelete}
+              className="d-flex align-items-center gap-2"
+            >
+              <Trash2 size={16} />
+              Удалить
+            </Button>
+          </div>
+        </div>
+      </Col>
+    </Row>
+
+    {/* Основная информация */}
+    <Row className="">
+      <Col>
+        <Card>
+          <Card.Header>
+            <h5 className="mb-0">Основная информация</h5>
+          </Card.Header>
+          <Card.Body>
+            <Row className="g-3">
+              <Col sm={6}>
+                <div className="border rounded p-3">
+                  <small className="text-muted d-block mb-1">ID</small>
+                  <div className="fw-bold">{memeType.id}</div>
+                </div>
+              </Col>
+
+              <Col sm={6}>
+                <div className="border rounded p-3">
+                  <small className="text-muted d-block mb-1">Название</small>
+                  <div className="fw-bold">{memeType.name}</div>
+                </div>
+              </Col>
+
+              <Col sm={12}>
+                <div className="border rounded p-3">
+                  <small className="text-muted d-block mb-1">Папка</small>
+                  <code
+                    className="px-2 py-1 rounded"
+                    style={{
+                      backgroundColor: "var(--site-bg-secondary)",
+                    }}
+                  >
+                    {memeType.folderPath}
+                  </code>
+                </div>
+              </Col>
+            </Row>
+          </Card.Body>
+        </Card>
+      </Col>
+    </Row>
+
+    {/* Действия */}
+    <Row className="mt-4">
+      <Col>
+        <Card>
+          <Card.Header>
+            <h5 className="mb-0">Действия</h5>
+          </Card.Header>
+          <Card.Body>
+            <div className="d-flex gap-2 flex-wrap">
               <Button
-                variant="outline-warning"
-                size="sm"
+                variant="primary"
                 onClick={onEdit}
                 className="d-flex align-items-center gap-2"
               >
@@ -83,104 +159,29 @@ const RandomMemeTypeDetails: React.FC<RandomMemeTypeDetailsProps> = ({
 
               <Button
                 variant="outline-danger"
-                size="sm"
                 onClick={onDelete}
                 className="d-flex align-items-center gap-2"
               >
                 <Trash2 size={16} />
-                Удалить
+                Удалить тип
+              </Button>
+
+              <Button
+                variant="outline-secondary"
+                onClick={onRefresh}
+                disabled={isLoading}
+                className="d-flex align-items-center gap-2"
+              >
+                <RefreshCw size={16} />
+                Обновить данные
               </Button>
             </div>
-          </div>
-        </Col>
-      </Row>
-
-      {/* Основная информация */}
-      <Row className="">
-        <Col>
-          <Card>
-            <Card.Header>
-              <h5 className="mb-0">Основная информация</h5>
-            </Card.Header>
-            <Card.Body>
-              <Row className="g-3">
-                <Col sm={6}>
-                  <div className="border rounded p-3">
-                    <small className="text-muted d-block mb-1">ID</small>
-                    <div className="fw-bold">{memeType.id}</div>
-                  </div>
-                </Col>
-
-                <Col sm={6}>
-                  <div className="border rounded p-3">
-                    <small className="text-muted d-block mb-1">Название</small>
-                    <div className="fw-bold">{memeType.name}</div>
-                  </div>
-                </Col>
-
-                <Col sm={12}>
-                  <div className="border rounded p-3">
-                    <small className="text-muted d-block mb-1">Папка</small>
-                    <code
-                      className="px-2 py-1 rounded"
-                      style={{
-                        backgroundColor: "var(--site-bg-secondary)",
-                      }}
-                    >
-                      {memeType.folderPath}
-                    </code>
-                  </div>
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
-      {/* Действия */}
-      <Row className="mt-4">
-        <Col>
-          <Card>
-            <Card.Header>
-              <h5 className="mb-0">Действия</h5>
-            </Card.Header>
-            <Card.Body>
-              <div className="d-flex gap-2 flex-wrap">
-                <Button
-                  variant="primary"
-                  onClick={onEdit}
-                  className="d-flex align-items-center gap-2"
-                >
-                  <Edit size={16} />
-                  Редактировать
-                </Button>
-
-                <Button
-                  variant="outline-danger"
-                  onClick={onDelete}
-                  className="d-flex align-items-center gap-2"
-                >
-                  <Trash2 size={16} />
-                  Удалить тип
-                </Button>
-
-                <Button
-                  variant="outline-secondary"
-                  onClick={onRefresh}
-                  disabled={isLoading}
-                  className="d-flex align-items-center gap-2"
-                >
-                  <RefreshCw size={16} />
-                  Обновить данные
-                </Button>
-              </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
-  );
-};
+          </Card.Body>
+        </Card>
+      </Col>
+    </Row>
+  </Container>
+);
 
 // Компонент для деталей заказа мема
 const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
@@ -614,53 +615,53 @@ const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
 
       {/* Свойства файла */}
       <Row className="mb-4">
-          <Col>
-            <Card>
-              <Card.Header>
-                <h5 className="mb-0">Свойства файла</h5>
-              </Card.Header>
-              <Card.Body>
-                <Row className="g-3">
-                  <Col md={6}>
-                    <div className="border rounded p-3">
-                      <small className="text-muted d-block mb-1">
-                        Расширение
-                      </small>
-                      <div className="fw-bold">
-                        {memeOrder.filePath.split(".").pop()?.toUpperCase() ||
-                          "N/A"}
-                      </div>
+        <Col>
+          <Card>
+            <Card.Header>
+              <h5 className="mb-0">Свойства файла</h5>
+            </Card.Header>
+            <Card.Body>
+              <Row className="g-3">
+                <Col md={6}>
+                  <div className="border rounded p-3">
+                    <small className="text-muted d-block mb-1">
+                      Расширение
+                    </small>
+                    <div className="fw-bold">
+                      {memeOrder.filePath.split(".").pop()?.toUpperCase() ||
+                        "N/A"}
                     </div>
-                  </Col>
-                  <Col md={6}>
-                    <div className="border rounded p-3">
-                      <small className="text-muted d-block mb-1">
-                        Размер файла
-                      </small>
-                      <div className="fw-bold text-muted">Недоступно</div>
-                      <small className="text-muted">
-                        Информация о размере файла недоступна через API
-                      </small>
-                    </div>
-                  </Col>
-                  <Col md={12}>
-                    <div className="border rounded p-3">
-                      <small className="text-muted d-block mb-1">
-                        Полный путь
-                      </small>
-                      <code
-                        className="px-2 py-1 rounded d-block text-break"
-                        style={{ backgroundColor: "var(--site-bg-secondary)" }}
-                      >
-                        {memeOrder.filePath}
-                      </code>
-                    </div>
-                  </Col>
-                </Row>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+                  </div>
+                </Col>
+                <Col md={6}>
+                  <div className="border rounded p-3">
+                    <small className="text-muted d-block mb-1">
+                      Размер файла
+                    </small>
+                    <div className="fw-bold text-muted">Недоступно</div>
+                    <small className="text-muted">
+                      Информация о размере файла недоступна через API
+                    </small>
+                  </div>
+                </Col>
+                <Col md={12}>
+                  <div className="border rounded p-3">
+                    <small className="text-muted d-block mb-1">
+                      Полный путь
+                    </small>
+                    <code
+                      className="px-2 py-1 rounded d-block text-break"
+                      style={{ backgroundColor: "var(--site-bg-secondary)" }}
+                    >
+                      {memeOrder.filePath}
+                    </code>
+                  </div>
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+        </Col>
+      </Row>
 
       {/* Действия */}
       <Row>
@@ -708,8 +709,10 @@ const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
 };
 
 // Объединенный компонент для деталей
-const RandomMemeDetails: React.FC<RandomMemeTypeDetailsProps | RandomMemeOrderDetailsProps> = (props) => {
-  if ('memeType' in props) {
+const RandomMemeDetails: React.FC<
+  RandomMemeTypeDetailsProps | RandomMemeOrderDetailsProps
+> = props => {
+  if ("memeType" in props) {
     return <RandomMemeTypeDetails {...props} />;
   } else {
     return <RandomMemeOrderDetails {...props} />;

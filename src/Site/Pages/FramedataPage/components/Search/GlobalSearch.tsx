@@ -466,19 +466,21 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ characters }) => {
                             {result.move.notes &&
                             result.move.notes.length > 0 ? (
                               <div className={styles.notesContainer}>
-                                {result.move.notes.map((note: string, noteIndex: number) => (
-                                  <div
-                                    key={noteIndex}
-                                    className={styles.noteItem}
-                                  >
-                                    <span className={styles.noteNumber}>
-                                      #{noteIndex + 1}
-                                    </span>
-                                    <span className={styles.noteText}>
-                                      {note}
-                                    </span>
-                                  </div>
-                                ))}
+                                {result.move.notes.map(
+                                  (note: string, noteIndex: number) => (
+                                    <div
+                                      key={noteIndex}
+                                      className={styles.noteItem}
+                                    >
+                                      <span className={styles.noteNumber}>
+                                        #{noteIndex + 1}
+                                      </span>
+                                      <span className={styles.noteText}>
+                                        {note}
+                                      </span>
+                                    </div>
+                                  )
+                                )}
                               </div>
                             ) : (
                               "-"

@@ -555,10 +555,12 @@ const CommandsPage: React.FC = () => {
     try {
       updateState({ isLoading: true, error: "" });
 
-      const resultUser =
-        await commandsService.commandsAdminPlatformInfoList(CommandsAdminPlatformInfoListParamsEnum.Api);
-      const adminResult =
-        await commandsService.commandsUserPlatformInfoList(CommandsUserPlatformInfoListParamsEnum.Api);
+      const resultUser = await commandsService.commandsAdminPlatformInfoList(
+        CommandsAdminPlatformInfoListParamsEnum.Api
+      );
+      const adminResult = await commandsService.commandsUserPlatformInfoList(
+        CommandsUserPlatformInfoListParamsEnum.Api
+      );
 
       const userCommandsData = resultUser.data;
       const adminCommandsData = adminResult.data;

@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 import { Pencil, PlayCircle, Plus, Trash } from "react-bootstrap-icons";
 
-import { 
+import {
   CinemaQueue,
   UpdateMediaItemRequest,
   UpdateMediaItemRequestStatusEnum,
@@ -54,7 +54,6 @@ interface CreateMediaItemRequest {
   notes?: string;
 }
 
-
 interface CinemaQueueStatistics {
   totalItems: number;
   pendingItems: number;
@@ -84,7 +83,9 @@ const CinemaQueuePage: React.FC = () => {
     twitchUsername: "",
     notes: "",
   });
-  const [editFormData, setEditFormData] = useState<Partial<UpdateMediaItemRequest>>({});
+  const [editFormData, setEditFormData] = useState<
+    Partial<UpdateMediaItemRequest>
+  >({});
 
   const { showToast } = useToastModal();
   const colors = useSiteColors();

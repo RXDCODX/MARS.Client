@@ -1,6 +1,14 @@
-import { Edit, Eye, Filter, Plus, RefreshCw, Trash2, X, Copy } from "lucide-react";
-import { useMemo, useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
+import {
+  Copy,
+  Edit,
+  Eye,
+  Filter,
+  Plus,
+  RefreshCw,
+  Trash2,
+  X,
+} from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Button,
@@ -11,6 +19,7 @@ import {
   Row,
   Spinner,
 } from "react-bootstrap";
+import { useSearchParams } from "react-router-dom";
 
 import { RandomMemeOrdersListProps } from "../RandomMemePage.types";
 
@@ -27,7 +36,7 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
   showToast,
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
-  
+
   // Получаем начальные значения из URL параметров
   const getInitialTypeId = (): number | "all" | "no-type" => {
     const typeParam = searchParams.get("type");
@@ -36,11 +45,11 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
     return "all";
   };
 
-  const getInitialSearchTerm = (): string => {
-    return searchParams.get("search") || "";
-  };
+  const getInitialSearchTerm = (): string => searchParams.get("search") || "";
 
-  const [selectedTypeId, setSelectedTypeId] = useState<number | "all" | "no-type">(getInitialTypeId);
+  const [selectedTypeId, setSelectedTypeId] = useState<
+    number | "all" | "no-type"
+  >(getInitialTypeId);
   const [searchTerm, setSearchTerm] = useState<string>(getInitialSearchTerm);
   const [searchInput, setSearchInput] = useState<string>(getInitialSearchTerm);
 
@@ -48,7 +57,7 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
   const updateTypeFilter = (typeId: number | "all" | "no-type") => {
     setSelectedTypeId(typeId);
     const newSearchParams = new URLSearchParams(searchParams);
-    
+
     if (typeId === "all") {
       newSearchParams.delete("type");
     } else if (typeId === "no-type") {
@@ -56,20 +65,20 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
     } else {
       newSearchParams.set("type", typeId.toString());
     }
-    
+
     setSearchParams(newSearchParams, { replace: true });
   };
 
   const updateSearchFilter = (search: string) => {
     setSearchTerm(search);
     const newSearchParams = new URLSearchParams(searchParams);
-    
+
     if (search.trim()) {
       newSearchParams.set("search", search.trim());
     } else {
       newSearchParams.delete("search");
     }
-    
+
     setSearchParams(newSearchParams, { replace: true });
   };
 
@@ -117,17 +126,21 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
   useEffect(() => {
     const typeParam = searchParams.get("type");
     const searchParam = searchParams.get("search");
-    
+
     if (typeParam !== null) {
-      const newTypeId = typeParam === "no-type" ? "no-type" : 
-                       (!isNaN(Number(typeParam)) ? Number(typeParam) : "all");
+      const newTypeId =
+        typeParam === "no-type"
+          ? "no-type"
+          : !isNaN(Number(typeParam))
+            ? Number(typeParam)
+            : "all";
       if (newTypeId !== selectedTypeId) {
         setSelectedTypeId(newTypeId);
       }
     } else if (selectedTypeId !== "all") {
       setSelectedTypeId("all");
     }
-    
+
     if (searchParam !== null && searchParam !== searchTerm) {
       setSearchTerm(searchParam);
       setSearchInput(searchParam);
@@ -145,20 +158,25 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
     if (selectedTypeId !== "all") {
       if (selectedTypeId === "no-type") {
         // Фильтр для заказов без типа
-        filtered = filtered.filter(order => !order.memeTypeId || order.memeTypeId === 0);
+        filtered = filtered.filter(
+          order => !order.memeTypeId || order.memeTypeId === 0
+        );
       } else {
         // Фильтр по конкретному типу
-        filtered = filtered.filter(order => order.memeTypeId === selectedTypeId);
+        filtered = filtered.filter(
+          order => order.memeTypeId === selectedTypeId
+        );
       }
     }
 
     // Фильтр по поиску
     if (searchTerm.trim()) {
       const search = searchTerm.toLowerCase();
-      filtered = filtered.filter(order => 
-        order.filePath.toLowerCase().includes(search) ||
-        order.type?.name?.toLowerCase().includes(search) ||
-        order.order.toString().includes(search)
+      filtered = filtered.filter(
+        order =>
+          order.filePath.toLowerCase().includes(search) ||
+          order.type?.name?.toLowerCase().includes(search) ||
+          order.order.toString().includes(search)
       );
     }
 
@@ -166,9 +184,12 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
   }, [memeOrders, selectedTypeId, searchTerm]);
 
   // Подсчет заказов без типа
-  const ordersWithoutType = useMemo(() => {
-    return memeOrders.filter(order => !order.memeTypeId || order.memeTypeId === 0).length;
-  }, [memeOrders]);
+  const ordersWithoutType = useMemo(
+    () =>
+      memeOrders.filter(order => !order.memeTypeId || order.memeTypeId === 0)
+        .length,
+    [memeOrders]
+  );
   const getFileName = (filePath: string) => {
     const parts = filePath.split(/[/\\]/);
     return parts[parts.length - 1] || filePath;
@@ -191,7 +212,9 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
         <Col>
           <div className="d-flex justify-content-between align-items-center">
             <div>
-              <h1 className="mb-0">Очередь заказов ({filteredOrders.length})</h1>
+              <h1 className="mb-0">
+                Очередь заказов ({filteredOrders.length})
+              </h1>
               {hasActiveFilters && (
                 <div className="mt-1">
                   <small className="text-muted">
@@ -199,14 +222,15 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
                     Фильтры активны
                     {selectedTypeId !== "all" && (
                       <span className="ms-2">
-                        Тип: {selectedTypeId === "no-type" ? "Без типа" : 
-                              memeTypes.find(t => t.id === selectedTypeId)?.name || selectedTypeId}
+                        Тип:{" "}
+                        {selectedTypeId === "no-type"
+                          ? "Без типа"
+                          : memeTypes.find(t => t.id === selectedTypeId)
+                              ?.name || selectedTypeId}
                       </span>
                     )}
                     {searchTerm.trim() && (
-                      <span className="ms-2">
-                        Поиск: "{searchTerm}"
-                      </span>
+                      <span className="ms-2">Поиск: "{searchTerm}"</span>
                     )}
                   </small>
                 </div>
@@ -263,7 +287,7 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
                     </Form.Label>
                     <Form.Select
                       value={selectedTypeId}
-                      onChange={(e) => {
+                      onChange={e => {
                         const value = e.target.value;
                         if (value === "all") {
                           updateTypeFilter("all");
@@ -275,9 +299,13 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
                       }}
                     >
                       <option value="all">Все типы</option>
-                      <option value="no-type">Без типа ({ordersWithoutType})</option>
+                      <option value="no-type">
+                        Без типа ({ordersWithoutType})
+                      </option>
                       {memeTypes.map(type => {
-                        const typeCount = memeOrders.filter(order => order.memeTypeId === type.id).length;
+                        const typeCount = memeOrders.filter(
+                          order => order.memeTypeId === type.id
+                        ).length;
                         return (
                           <option key={type.id} value={type.id}>
                             {type.name} ({typeCount})
@@ -294,7 +322,7 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
                       type="text"
                       placeholder="Поиск по файлу, типу или номеру заказа..."
                       value={searchInput}
-                      onChange={(e) => setSearchInput(e.target.value)}
+                      onChange={e => setSearchInput(e.target.value)}
                     />
                   </Form.Group>
                 </Col>
@@ -329,10 +357,9 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
               {memeOrders.length === 0 ? "Очередь пуста" : "Ничего не найдено"}
             </h5>
             <div className="text-muted">
-              {memeOrders.length === 0 
-                ? "Нет элементов в очереди" 
-                : "Попробуйте изменить фильтры или поисковый запрос"
-              }
+              {memeOrders.length === 0
+                ? "Нет элементов в очереди"
+                : "Попробуйте изменить фильтры или поисковый запрос"}
             </div>
             {memeOrders.length > 0 && (
               <Button
@@ -353,9 +380,9 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
             .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
             .map(order => (
               <Col key={order.id} className="mb-3">
-                <Card 
-                  className="h-100 cursor-pointer" 
-                  style={{ cursor: 'pointer' }}
+                <Card
+                  className="h-100 cursor-pointer"
+                  style={{ cursor: "pointer" }}
                   onClick={() => onViewDetails(order)}
                 >
                   <Card.Body>
@@ -372,9 +399,13 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
                       <small className="text-muted d-block">Тип</small>
                       <div className="fw-semibold">
                         {order.type?.name ? (
-                          <span className="text-primary">{order.type.name}</span>
+                          <span className="text-primary">
+                            {order.type.name}
+                          </span>
                         ) : (
-                          <span className="text-muted fst-italic">Без типа</span>
+                          <span className="text-muted fst-italic">
+                            Без типа
+                          </span>
                         )}
                       </div>
                     </div>
@@ -388,7 +419,7 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
                       <Button
                         variant="outline-primary"
                         size="sm"
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           onViewDetails(order);
                         }}
@@ -400,7 +431,7 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
                       <Button
                         variant="outline-warning"
                         size="sm"
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           onEdit(order);
                         }}
@@ -412,7 +443,7 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
                       <Button
                         variant="outline-danger"
                         size="sm"
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           onDelete(order);
                         }}

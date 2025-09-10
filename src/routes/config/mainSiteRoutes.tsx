@@ -9,8 +9,11 @@ import FramedataPage from "@/Site/Pages/FramedataPage/FramedataPage";
 import Layout from "@/Site/Pages/Layout/Layout";
 import { MediaInfoEditPage } from "@/Site/Pages/MediaInfoPage/MediaInfoEditPage";
 import { MediaInfoListPage } from "@/Site/Pages/MediaInfoPage/MediaInfoListPage";
+import {
+  RandomMemeDetailsPage,
+  RandomMemeEditPage,
+} from "@/Site/Pages/RandomMemePage/pages";
 import RandomMemePage from "@/Site/Pages/RandomMemePage/RandomMemePage";
-import { RandomMemeDetailsPage, RandomMemeEditPage } from "@/Site/Pages/RandomMemePage/pages";
 import RoutesPage from "@/Site/Pages/RoutesPage/RoutesPage";
 import WelcomePage from "@/Site/Pages/WelcomePage";
 
