@@ -25,12 +25,32 @@ export const ProgressBar = ({ track }: Props) => {
     if (!track.duration || track.duration === 0) return;
 
     const externalProgress = track.progress || 0;
-    const progressDiff = Math.abs(
-      externalProgress - lastExternalProgressRef.current
-    );
+    const lastProgress = lastExternalProgressRef.current;
+    const progressDiff = externalProgress - lastProgress;
 
-    // Если прогресс изменился значительно (перемотка), синхронизируемся
-    if (progressDiff > 0.1) {
+    // Проверяем значительные изменения вперед (перемотка вперед на 3+ секунд)
+    const isSignificantForwardJump = progressDiff > 3;
+
+    // Проверяем значительные изменения назад (перемотка назад на 3+ секунд)
+    const isSignificantBackwardJump = progressDiff < -3;
+
+    // Проверяем резкие изменения в любом направлении (более 1 секунды)
+    const isRapidChange = Math.abs(progressDiff) > 1;
+
+    // Дополнительная проверка для отмотки назад - если прогресс резко уменьшился
+    const isRewindBack = progressDiff < -0.5 && externalProgress < lastProgress;
+
+    // Проверяем, что изменение не слишком большое (не больше половины трека)
+    const isReasonableChange = Math.abs(progressDiff) < track.duration / 2;
+
+    // Синхронизируемся при значительных перемотках, резких изменениях или отмотке назад
+    if (
+      (isSignificantForwardJump ||
+        isSignificantBackwardJump ||
+        isRapidChange ||
+        isRewindBack) &&
+      isReasonableChange
+    ) {
       lastExternalProgressRef.current = externalProgress;
       setProgress(externalProgress);
 
@@ -38,6 +58,10 @@ export const ProgressBar = ({ track }: Props) => {
       if (track.status === "playing") {
         startTimeRef.current = Date.now() - externalProgress * 1000;
       }
+    } else {
+      // Если изменение незначительное, просто обновляем отслеживаемое значение
+      // но не синхронизируемся, чтобы избежать бликов
+      lastExternalProgressRef.current = externalProgress;
     }
   }, [track.progress, track.duration, track.status]);
 
@@ -111,7 +135,7 @@ export const ProgressBar = ({ track }: Props) => {
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [track.status, track.duration, trackKey, track.progress]);
+  }, [track.status, track.duration, trackKey, track.progress, progress]);
 
   // Очищаем анимацию при размонтировании
   useEffect(
