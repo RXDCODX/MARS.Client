@@ -99,4 +99,60 @@ export class RxdcodxViewers<
       method: "GET",
       ...params,
     });
+  /**
+   * No description
+   *
+   * @tags RxdcodxViewers
+   * @name RxdcodxViewersRefreshCacheCreate
+   * @request POST:/api/RxdcodxViewers/refresh-cache
+   * @response `200` `void` OK
+   */
+  rxdcodxViewersRefreshCacheCreate = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/RxdcodxViewers/refresh-cache`,
+      method: "POST",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags RxdcodxViewers
+   * @name RxdcodxViewersFollowersInfoList
+   * @request GET:/api/RxdcodxViewers/followers-info
+   * @response `200` `void` OK
+   */
+  rxdcodxViewersFollowersInfoList = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/RxdcodxViewers/followers-info`,
+      method: "GET",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags RxdcodxViewers
+   * @name RxdcodxViewersUserInfoList
+   * @request GET:/api/RxdcodxViewers/user/{userId}/info
+   * @response `200` `void` OK
+   */
+  rxdcodxViewersUserInfoList = (userId: string, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/RxdcodxViewers/user/${userId}/info`,
+      method: "GET",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags RxdcodxViewers
+   * @name RxdcodxViewersClearCacheCreate
+   * @request POST:/api/RxdcodxViewers/clear-cache
+   * @response `200` `void` OK
+   */
+  rxdcodxViewersClearCacheCreate = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/RxdcodxViewers/clear-cache`,
+      method: "POST",
+      ...params,
+    });
 }

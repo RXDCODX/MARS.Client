@@ -5,6 +5,7 @@ import AutoMessageBillboard from "@/components/OBS_Components/AutoMessageBillboa
 import AutoMessageBillboardTest from "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboardTest";
 import ChatHorizontal from "@/components/OBS_Components/ChatHorizontal/ChatHorizontal";
 import ChatVertical from "@/components/OBS_Components/ChatVertical/ChatVertical";
+import Credits from "@/components/OBS_Components/Credits/Credits";
 import { FumoFriday } from "@/components/OBS_Components/FumoFriday";
 import GaoAlertController from "@/components/OBS_Components/GaoAlert/GaoAlertController";
 import HighliteMessage from "@/components/OBS_Components/HighliteMessage/HighliteMessage";
@@ -25,6 +26,16 @@ import { RouteConfig } from "./RouteConfig";
 
 // Массив OBS компонентов (без Layout для интеграции в OBS)
 export const obsComponentRoutes: RouteConfig[] = [
+  {
+    path: "/credits",
+    name: "Титры (RXDCODX)",
+    type: "obs",
+    element: (
+      <OBSComponentWrapper>
+        <Credits />
+      </OBSComponentWrapper>
+    ),
+  },
   {
     path: "/gaoalert",
     name: "Гао алертс",

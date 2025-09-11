@@ -3920,6 +3920,64 @@
         }
       }
     },
+    "/api/RxdcodxViewers/refresh-cache": {
+      "post": {
+        "tags": [
+          "RxdcodxViewers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/RxdcodxViewers/followers-info": {
+      "get": {
+        "tags": [
+          "RxdcodxViewers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/RxdcodxViewers/user/{userId}/info": {
+      "get": {
+        "tags": [
+          "RxdcodxViewers"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/RxdcodxViewers/clear-cache": {
+      "post": {
+        "tags": [
+          "RxdcodxViewers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/ServiceManager/status": {
       "get": {
         "tags": [
