@@ -1,27 +1,45 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import { RxdcodxViewers, TelegramusHubSignalRContext } from "@/shared/api";
+import {
+  FollowerInfo,
+  RxdcodxViewers,
+  TelegramusHubSignalRContext,
+} from "@/shared/api";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import styles from "./Credits.module.scss";
-
-type FollowerInfo = {
-  userId: string;
-  userName: string;
-  userLogin: string;
-  isModerator: boolean;
-  isVip: boolean;
-  followedAt: string | Date;
-  lastUpdated: string | Date;
-};
 
 const SectionTitle: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => <div className={styles.sectionTitle}>{children}</div>;
 
-const NameRow: React.FC<{ name: string }> = ({ name }) => (
-  <div className={styles.nameRow}>{name}</div>
-);
+const NameRow: React.FC<{ follower: FollowerInfo }> = ({ follower }) => {
+  const textColor = follower.chatColor || "#FFFFFF";
+  const textShadow = follower.chatColor
+    ? "1px 1px 2px rgba(0, 0, 0, 0.8)"
+    : "1px 1px 2px rgba(0, 0, 0, 1), -1px -1px 2px rgba(0, 0, 0, 1), 1px -1px 2px rgba(0, 0, 0, 1), -1px 1px 2px rgba(0, 0, 0, 1)";
+
+  return (
+    <div className={styles.nameRow}>
+      {follower.profileImageUrl && (
+        <img
+          src={follower.profileImageUrl}
+          alt={follower.userName || follower.userLogin}
+          className={styles.profileImage}
+        />
+      )}
+      <div
+        className={styles.nameText}
+        style={{
+          color: textColor,
+          textShadow: textShadow,
+        }}
+      >
+        {follower.displayName ?? follower.userName ?? follower.userLogin}
+      </div>
+    </div>
+  );
+};
 
 const Credits: React.FC = () => {
   const api = useMemo(() => new RxdcodxViewers(), []);
@@ -68,7 +86,7 @@ const Credits: React.FC = () => {
     const load = async () => {
       try {
         setLoading(true);
-        const allRes = await api.rxdcodxViewersAllList();
+        const allRes = await api.rxdcodxViewersAllList({ forceUseCash: true });
         const allData = (allRes.data as unknown as FollowerInfo[]) ?? [];
 
         // Фильтруем данные по типам
@@ -81,17 +99,6 @@ const Credits: React.FC = () => {
         setModerators(moderatorsData);
         setVips(vipsData);
         setFollowers(followersData);
-
-        showToast({
-          type: "success",
-          title: "Загружено",
-          message: "Списки модераторов, VIP и фолловеров обновлены",
-          data: {
-            moderators: moderatorsData.length,
-            vips: vipsData.length,
-            followers: followersData.length,
-          },
-        });
       } catch (e) {
         const msg = e instanceof Error ? e.message : "Неизвестная ошибка";
         showToast({ type: "error", title: "Ошибка загрузки", message: msg });
@@ -120,8 +127,13 @@ const Credits: React.FC = () => {
       return <div className={styles.empty}>—</div>;
     return list
       .slice()
-      .sort((a, b) => a.userName.localeCompare(b.userName, "ru"))
-      .map(u => <NameRow key={u.userId} name={u.userName || u.userLogin} />);
+      .sort((a, b) =>
+        (a.userName || a.userLogin).localeCompare(
+          b.userName || b.userLogin,
+          "ru"
+        )
+      )
+      .map(u => <NameRow key={u.userId} follower={u} />);
   };
 
   return (

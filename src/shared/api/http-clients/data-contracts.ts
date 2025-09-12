@@ -179,6 +179,24 @@ export interface DefaultImage {
   url4x?: string;
 }
 
+export interface FollowerInfo {
+  /** @minLength 1 */
+  userId: string;
+  /** @minLength 1 */
+  userName: string;
+  /** @minLength 1 */
+  userLogin: string;
+  displayName?: string;
+  profileImageUrl?: string;
+  chatColor?: string;
+  isModerator: boolean;
+  isVip: boolean;
+  /** @format date-time */
+  followedAt: string;
+  /** @format date-time */
+  lastUpdated: string;
+}
+
 export interface GetCustomRewardRedemptionResponse {
   data?: RewardRedemption[];
   pagination?: Pagination;

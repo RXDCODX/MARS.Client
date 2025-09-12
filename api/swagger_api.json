@@ -3843,137 +3843,44 @@
         "tags": [
           "RxdcodxViewers"
         ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/RxdcodxViewers/followers": {
-      "get": {
-        "tags": [
-          "RxdcodxViewers"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/RxdcodxViewers/vips": {
-      "get": {
-        "tags": [
-          "RxdcodxViewers"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/RxdcodxViewers/moderators": {
-      "get": {
-        "tags": [
-          "RxdcodxViewers"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/RxdcodxViewers/stats": {
-      "get": {
-        "tags": [
-          "RxdcodxViewers"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/RxdcodxViewers/user/{userId}/status": {
-      "get": {
-        "tags": [
-          "RxdcodxViewers"
-        ],
         "parameters": [
           {
-            "name": "userId",
-            "in": "path",
-            "required": true,
+            "name": "forceUseCash",
+            "in": "query",
             "schema": {
-              "type": "string"
+              "type": "boolean"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/RxdcodxViewers/refresh-cache": {
-      "post": {
-        "tags": [
-          "RxdcodxViewers"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/RxdcodxViewers/followers-info": {
-      "get": {
-        "tags": [
-          "RxdcodxViewers"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/RxdcodxViewers/user/{userId}/info": {
-      "get": {
-        "tags": [
-          "RxdcodxViewers"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FollowerInfo"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FollowerInfo"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FollowerInfo"
+                  }
+                }
+              }
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/RxdcodxViewers/clear-cache": {
-      "post": {
-        "tags": [
-          "RxdcodxViewers"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           }
         }
       }
@@ -5239,6 +5146,59 @@
             "type": "string",
             "nullable": true,
             "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "FollowerInfo": {
+        "required": [
+          "followedAt",
+          "isModerator",
+          "isVip",
+          "lastUpdated",
+          "userId",
+          "userLogin",
+          "userName"
+        ],
+        "type": "object",
+        "properties": {
+          "userId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "userName": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "userLogin": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "profileImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "chatColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "isModerator": {
+            "type": "boolean"
+          },
+          "isVip": {
+            "type": "boolean"
+          },
+          "followedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false

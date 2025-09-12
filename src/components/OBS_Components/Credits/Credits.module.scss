@@ -4,8 +4,8 @@
   position: relative;
   width: 100vw;
   height: 100vh;
-  background: var(--bs-black);
-  color: var(--bs-white);
+  background: "black";
+  color: "white";
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -38,24 +38,25 @@
 
 .scroll {
   position: absolute;
-  bottom: -100%;
   width: 100%;
   will-change: transform;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6vh;
+  visibility: hidden;
 }
 
 .play {
   animation: moveUp linear;
+  visibility: visible;
   animation-duration: 45s;
   animation-fill-mode: forwards;
 }
 
 @keyframes moveUp {
   from {
-    transform: translateY(100%);
+    transform: translateY(80%);
   }
 
   to {
@@ -70,12 +71,15 @@
 }
 
 .sectionTitle {
-  font-size: clamp(48px, 10vw, 140px);
+  font-size: clamp(24px, 5vw, 80px);
   font-weight: 900;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--site-text-light);
-  text-shadow: var(--text-shadow-heavy);
+  color: "white";
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .list {
@@ -86,11 +90,32 @@
 }
 
 .nameRow {
+  display: flex;
+  align-items: center;
+  gap: 1vw;
   font-size: clamp(22px, 3.6vw, 56px);
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: "white";
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+}
+
+.profileImage {
+  width: clamp(40px, 6vw, 80px);
+  height: clamp(40px, 6vw, 80px);
+  border-radius: 50%;
+  border: 2px solid rgba(0, 0, 0, 0.8);
+  flex-shrink: 0;
+}
+
+.nameText {
+  flex: 1;
+  min-width: 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .empty {
@@ -103,7 +128,7 @@
   bottom: 2vh;
   left: 50%;
   transform: translateX(-50%);
-  color: var(--site-text-light);
+  color: "white";
   font-size: clamp(16px, 2.2vw, 28px);
   opacity: 0.8;
 }
