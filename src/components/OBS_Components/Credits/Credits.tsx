@@ -68,26 +68,28 @@ const Credits: React.FC = () => {
     const load = async () => {
       try {
         setLoading(true);
-        const [modsRes, vipsRes, followersRes] = await Promise.all([
-          api.rxdcodxViewersModeratorsList(),
-          api.rxdcodxViewersVipsList(),
-          api.rxdcodxViewersFollowersList(),
-        ]);
+        const allRes = await api.rxdcodxViewersAllList();
+        const allData = (allRes.data as unknown as FollowerInfo[]) ?? [];
 
-        setModerators((modsRes.data as unknown as FollowerInfo[]) ?? []);
-        setVips((vipsRes.data as unknown as FollowerInfo[]) ?? []);
-        setFollowers((followersRes.data as unknown as FollowerInfo[]) ?? []);
+        // Фильтруем данные по типам
+        const moderatorsData = allData.filter(user => user.isModerator);
+        const vipsData = allData.filter(user => user.isVip);
+        const followersData = allData.filter(
+          user => !user.isModerator && !user.isVip
+        );
+
+        setModerators(moderatorsData);
+        setVips(vipsData);
+        setFollowers(followersData);
 
         showToast({
           type: "success",
           title: "Загружено",
           message: "Списки модераторов, VIP и фолловеров обновлены",
           data: {
-            moderators:
-              (modsRes.data as unknown as FollowerInfo[])?.length ?? 0,
-            vips: (vipsRes.data as unknown as FollowerInfo[])?.length ?? 0,
-            followers:
-              (followersRes.data as unknown as FollowerInfo[])?.length ?? 0,
+            moderators: moderatorsData.length,
+            vips: vipsData.length,
+            followers: followersData.length,
           },
         });
       } catch (e) {
