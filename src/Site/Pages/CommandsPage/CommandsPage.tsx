@@ -904,7 +904,13 @@ const CommandsPage: React.FC = () => {
             {/* Панель параметров */}
             {state.showParameters && state.selectedCommand && (
               <Col lg={4}>
-                <div ref={parametersPanelRef}>
+                <div
+                  ref={parametersPanelRef}
+                  style={{
+                    position: "sticky",
+                    top: "87px",
+                  }}
+                >
                   <CommandParameters
                     command={state.selectedCommand}
                     parameters={state.commandParameters}
