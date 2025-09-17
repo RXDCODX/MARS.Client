@@ -5,7 +5,6 @@ import {
   Info,
   List,
   Play,
-  RefreshCw,
   Search,
   Settings,
   Shield,
@@ -539,7 +538,7 @@ const CommandsPage: React.FC = () => {
     isExecuting: false,
     error: "",
     isLoading: true,
-    activeTab: "user",
+    activeTab: "admin",
     displayMode: "grid",
     searchQuery: "",
     showParameters: false,
@@ -555,11 +554,11 @@ const CommandsPage: React.FC = () => {
     try {
       updateState({ isLoading: true, error: "" });
 
-      const resultUser = await commandsService.commandsAdminPlatformInfoList(
-        CommandsAdminPlatformInfoListParamsEnum.Api
-      );
-      const adminResult = await commandsService.commandsUserPlatformInfoList(
+      const resultUser = await commandsService.commandsUserPlatformInfoList(
         CommandsUserPlatformInfoListParamsEnum.Api
+      );
+      const adminResult = await commandsService.commandsAdminPlatformInfoList(
+        CommandsAdminPlatformInfoListParamsEnum.Api
       );
 
       const userCommandsData = resultUser.data;
@@ -769,24 +768,10 @@ const CommandsPage: React.FC = () => {
               </p>
             </div>
 
-            <div className="d-flex align-items-center gap-3">
-              <DisplayModeToggle
-                displayMode={state.displayMode}
-                onModeChange={mode => updateState({ displayMode: mode })}
-              />
-
-              <Button
-                variant="outline-secondary"
-                size="sm"
-                onClick={loadCommands}
-                disabled={state.isLoading}
-                className="d-flex align-items-center gap-2"
-                title="Обновить список команд"
-              >
-                <RefreshCw size={16} />
-                Обновить
-              </Button>
-            </div>
+            <DisplayModeToggle
+              displayMode={state.displayMode}
+              onModeChange={mode => updateState({ displayMode: mode })}
+            />
           </div>
 
           {/* Ошибки */}
