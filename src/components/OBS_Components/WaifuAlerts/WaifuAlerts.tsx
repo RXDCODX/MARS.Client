@@ -134,8 +134,14 @@ export default function WaifuAlerts() {
   const sendMessage = useTwitchStore(state => state.sendMsgToPyrokxnezxz);
 
   SignalRContext.useSignalREffect(
-    "waifuroll",
+    "WaifuRoll",
     (message: Waifu, displayName: string, host: Host, color?: string) => {
+      console.log("WaifuRoll event received:", {
+        message,
+        displayName,
+        host,
+        color,
+      });
       const parsedMessage: WaifuAlertProps = {
         waifu: message,
         displayName,
@@ -180,12 +186,14 @@ export default function WaifuAlerts() {
   SignalRContext.useSignalREffect(
     "UpdateWaifuPrizes",
     async (prizes: PrizeType[]) => {
+      console.log("UpdateWaifuPrizes event received:", prizes);
       dispatch({ type: StateStatus.addPrizes, prizes });
     },
     []
   );
 
   function handleAddEvent(waifu: WaifuAlertProps) {
+    console.log("Adding waifu event:", waifu);
     dispatch({ type: StateStatus.add, waifu });
   }
 
@@ -199,11 +207,24 @@ export default function WaifuAlerts() {
 
   useEffect(() => {
     if (currentMessage) {
-      if (prizes) {
+      console.log("Current message changed:", currentMessage);
+      console.log("Prizes available:", prizes.length);
+      if (prizes && prizes.length > 0) {
         const index = prizes.findIndex(
           prize => prize.id === currentMessage.waifu.shikiId
         );
+        console.log("Found prize index:", index);
         setRouletteIndex(index);
+      } else {
+        console.log("No prizes available, skipping roulette");
+        setRouletteIndex(-1);
+        // Если призы не загружены, ждем 3 секунды и показываем алерт
+        const timeout = setTimeout(() => {
+          console.log("Prizes timeout, showing alert directly");
+          setIsRouletted(true);
+        }, 3000);
+
+        return () => clearTimeout(timeout);
       }
     }
   }, [prizes, currentMessage]);
@@ -233,101 +254,134 @@ export default function WaifuAlerts() {
     [unmuteAll]
   );
 
+  // Отладочная информация
+  console.log("WaifuAlerts render state:", {
+    currentMessage: !!currentMessage,
+    isRouletted,
+    rouletteIndex,
+    prizesLength: prizes.length,
+    announced,
+    shouldShowRoulette:
+      currentMessage &&
+      !isRouletted &&
+      rouletteIndex !== -1 &&
+      prizes.length > 0,
+    shouldShowLoading:
+      currentMessage &&
+      !isRouletted &&
+      rouletteIndex === -1 &&
+      prizes.length === 0,
+    shouldShowAlert:
+      currentMessage &&
+      (isRouletted || prizes.length === 0) &&
+      !currentMessage.waifu.isMerged,
+  });
+
   return (
     <div className={styles.textShadow}>
       {!announced && (
         <Announce title={"WaifuRoll"} callback={() => setAnnounced(true)} />
       )}
-      {currentMessage && !isRouletted && rouletteIndex !== -1 && (
-        <WaifuRoulette
-          key={currentMessage.waifu.shikiId}
-          callback={() => {
-            setIsRouletted(true);
-            setRouletteIndex(-1);
-          }}
-          rouletteIndex={rouletteIndex}
-          prizes={prizes || []}
-          name={currentMessage.displayName!}
-          color={currentMessage.color}
-        />
-      )}
-      {currentMessage && isRouletted && !currentMessage.waifu.isMerged && (
-        <div
-          id={currentMessage.waifu.shikiId}
-          key={currentMessage.waifu.shikiId}
-          ref={divHard}
-          className={
-            styles.baza + " " + animate.bounceIn + " " + animate.animated
-          }
-        >
-          <div className={styles["alert-box"]}>
-            <img
-              src={currentMessage.waifu.imageUrl}
-              style={{ height: "498px", width: "320px" }}
-              onLoad={() => {
-                setTimeout(() => {
-                  divHard.current!.onanimationend = () => {
-                    handleRemoveEvent(currentMessage);
-                    setRouletteIndex(-1);
-                    setIsRouletted(false);
-                    shufflePrizesEvent();
-                  };
+      {currentMessage &&
+        !isRouletted &&
+        rouletteIndex !== -1 &&
+        prizes.length > 0 && (
+          <WaifuRoulette
+            key={currentMessage.waifu.shikiId}
+            callback={() => {
+              setIsRouletted(true);
+              setRouletteIndex(-1);
+            }}
+            rouletteIndex={rouletteIndex}
+            prizes={prizes || []}
+            name={currentMessage.displayName!}
+            color={currentMessage.color}
+          />
+        )}
+      {currentMessage &&
+        !isRouletted &&
+        rouletteIndex === -1 &&
+        prizes.length === 0 && (
+          <div className={styles["roulette-name-text"]}>
+            <span>Загрузка рулетки...</span>
+          </div>
+        )}
+      {currentMessage &&
+        (isRouletted || prizes.length === 0) &&
+        !currentMessage.waifu.isMerged && (
+          <div
+            id={currentMessage.waifu.shikiId}
+            key={currentMessage.waifu.shikiId}
+            ref={divHard}
+            className={
+              styles.baza + " " + animate.bounceIn + " " + animate.animated
+            }
+          >
+            <div className={styles["alert-box"]}>
+              <img
+                src={currentMessage.waifu.imageUrl}
+                style={{ height: "498px", width: "320px" }}
+                onLoad={() => {
+                  setTimeout(() => {
+                    divHard.current!.onanimationend = () => {
+                      handleRemoveEvent(currentMessage);
+                      setRouletteIndex(-1);
+                      setIsRouletted(false);
+                      shufflePrizesEvent();
+                    };
 
-                  divHard.current!.className =
-                    styles.baza +
-                    " " +
-                    animate.bounceOut +
-                    " " +
-                    animate.animated;
-                }, 7000);
-                if (!currentMessage.waifu.isAdded) {
-                  sendMessage(
-                    `@${currentMessage.displayName}, ${getText(currentMessage)} ${getTitle(currentMessage)}!${getHusbandText(currentMessage)}`
-                  );
-                }
-              }}
-            />
+                    divHard.current!.className =
+                      styles.baza +
+                      " " +
+                      animate.bounceOut +
+                      " " +
+                      animate.animated;
+                  }, 7000);
+                  if (!currentMessage.waifu.isAdded) {
+                    sendMessage(
+                      `@${currentMessage.displayName}, ${getText(currentMessage)} ${getTitle(currentMessage)}!${getHusbandText(currentMessage)}`
+                    );
+                  }
+                }}
+              />
+            </div>
+            <div className={styles["alert-box"]}>
+              <span
+                className="text-shadow block-text"
+                style={{
+                  color: "white",
+                  WebkitTextStroke: "1px #000000",
+                }}
+              >
+                <Textfit min={1} max={1500} forceSingleModeWidth>
+                  {currentMessage.displayName.toUpperCase()}
+                </Textfit>
+              </span>
+              <span
+                className="text-shadow block-text"
+                style={{
+                  color: "cornflowerblue",
+                  WebkitTextStroke: "1px #000000",
+                }}
+              >
+                <Textfit min={1} max={1500} forceSingleModeWidth>
+                  {getText(currentMessage)}
+                </Textfit>
+              </span>
+              <span
+                className="text-shadow block-text"
+                style={{
+                  color: "red",
+                  WebkitTextStroke: "1px #000000",
+                }}
+              >
+                <Textfit min={1} max={1500} forceSingleModeWidth>
+                  {getTitle(currentMessage)}
+                </Textfit>
+              </span>
+            </div>
           </div>
-          <div className={styles["alert-box"]}>
-            <span
-              className="text-shadow block-text"
-              style={{
-                color: "white",
-                WebkitTextStroke: "2px #000000",
-                textStroke: "2px #000000",
-              }}
-            >
-              <Textfit min={1} max={1500} forceSingleModeWidth>
-                {currentMessage.displayName.toUpperCase()}
-              </Textfit>
-            </span>
-            <span
-              className="text-shadow block-text"
-              style={{
-                color: "cornflowerblue",
-                WebkitTextStroke: "2px #000000",
-                textStroke: "2px #000000",
-              }}
-            >
-              <Textfit min={1} max={1500} forceSingleModeWidth>
-                {getText(currentMessage)}
-              </Textfit>
-            </span>
-            <span
-              className="text-shadow block-text"
-              style={{
-                color: "red",
-                WebkitTextStroke: "2px #000000",
-                textStroke: "2px #000000",
-              }}
-            >
-              <Textfit min={1} max={1500} forceSingleModeWidth>
-                {getTitle(currentMessage)}
-              </Textfit>
-            </span>
-          </div>
-        </div>
-      )}
+        )}
       {currentMessage && isRouletted && currentMessage.waifu.isMerged && (
         <>
           {/** Confetty */}
@@ -364,8 +418,7 @@ export default function WaifuAlerts() {
               <Textfit
                 style={{
                   color: "white",
-                  WebkitTextStroke: "2px #000000",
-                  textStroke: "2px #000000",
+                  WebkitTextStroke: "1px #000000",
                 }}
                 mode="multi"
                 min={1}
@@ -375,8 +428,7 @@ export default function WaifuAlerts() {
                 <span
                   style={{
                     color: currentMessage.color,
-                    WebkitTextStroke: "2px #000000",
-                    textStroke: "2px #000000",
+                    WebkitTextStroke: "1px #000000",
                   }}
                 >
                   {currentMessage.waifuHusband!.name!}
@@ -385,8 +437,7 @@ export default function WaifuAlerts() {
                 <span
                   style={{
                     color: getRandomColor(),
-                    WebkitTextStroke: "2px #000000",
-                    textStroke: "2px #000000",
+                    WebkitTextStroke: "1px #000000",
                   }}
                 >
                   {currentMessage.waifu.name}{" "}
@@ -395,8 +446,7 @@ export default function WaifuAlerts() {
                 <span
                   style={{
                     color: currentMessage.waifu.anime ? "blue" : "gold",
-                    WebkitTextStroke: "2px #000000",
-                    textStroke: "2px #000000",
+                    WebkitTextStroke: "1px #000000",
                   }}
                 >
                   {getTitle(currentMessage)}

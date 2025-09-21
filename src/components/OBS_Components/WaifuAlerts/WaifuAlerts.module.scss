@@ -29,9 +29,7 @@ div#root {
 }
 
 .textShadow {
-  text-shadow: var(--text-shadow-heavy) !important;
-  -webkit-text-stroke: 2px #000000;
-  text-stroke: 2px #000000;
+  -webkit-text-stroke: 1px #000000;
 }
 
 .roulette-name-text {
@@ -43,8 +41,6 @@ div#root {
   text-align: center;
   text-transform: uppercase;
   color: white;
-  -webkit-text-stroke: 2px #000000;
-  text-stroke: 2px #000000;
 }
 
 .smooth-box {
@@ -89,8 +85,6 @@ div#root {
     display: flex;
     width: 100%;
     height: 100%;
-    -webkit-text-stroke: 2px #000000;
-    text-stroke: 2px #000000;
 
     >div {
       width: 100%;
