@@ -289,20 +289,38 @@ export default function WaifuAlerts() {
             />
           </div>
           <div className={styles["alert-box"]}>
-            <span className="text-shadow block-text" style={{ color: "white" }}>
+            <span
+              className="text-shadow block-text"
+              style={{
+                color: "white",
+                WebkitTextStroke: "2px #000000",
+                textStroke: "2px #000000",
+              }}
+            >
               <Textfit min={1} max={1500} forceSingleModeWidth>
                 {currentMessage.displayName.toUpperCase()}
               </Textfit>
             </span>
             <span
               className="text-shadow block-text"
-              style={{ color: "cornflowerblue" }}
+              style={{
+                color: "cornflowerblue",
+                WebkitTextStroke: "2px #000000",
+                textStroke: "2px #000000",
+              }}
             >
               <Textfit min={1} max={1500} forceSingleModeWidth>
                 {getText(currentMessage)}
               </Textfit>
             </span>
-            <span className="text-shadow block-text" style={{ color: "red" }}>
+            <span
+              className="text-shadow block-text"
+              style={{
+                color: "red",
+                WebkitTextStroke: "2px #000000",
+                textStroke: "2px #000000",
+              }}
+            >
               <Textfit min={1} max={1500} forceSingleModeWidth>
                 {getTitle(currentMessage)}
               </Textfit>
@@ -344,23 +362,41 @@ export default function WaifuAlerts() {
             </div>
             <div className={styles["merge-text"]}>
               <Textfit
-                style={{ color: "white" }}
+                style={{
+                  color: "white",
+                  WebkitTextStroke: "2px #000000",
+                  textStroke: "2px #000000",
+                }}
                 mode="multi"
                 min={1}
                 max={2000}
               >
                 Поздравляем{" "}
-                <span style={{ color: currentMessage.color }}>
+                <span
+                  style={{
+                    color: currentMessage.color,
+                    WebkitTextStroke: "2px #000000",
+                    textStroke: "2px #000000",
+                  }}
+                >
                   {currentMessage.waifuHusband!.name!}
                 </span>{" "}
                 и{" "}
-                <span style={{ color: getRandomColor() }}>
+                <span
+                  style={{
+                    color: getRandomColor(),
+                    WebkitTextStroke: "2px #000000",
+                    textStroke: "2px #000000",
+                  }}
+                >
                   {currentMessage.waifu.name}{" "}
                 </span>{" "}
                 из{" "}
                 <span
                   style={{
                     color: currentMessage.waifu.anime ? "blue" : "gold",
+                    WebkitTextStroke: "2px #000000",
+                    textStroke: "2px #000000",
                   }}
                 >
                   {getTitle(currentMessage)}

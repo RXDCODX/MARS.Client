@@ -58,7 +58,7 @@ export type ColorPreset = {
 
 export const defaultPreset: ColorPreset = {
   name: "Default",
-  mainColor: "#3F00FF",
+  mainColor: "#e6ac0c",
   playerNamesColor: "#ffffff",
   tournamentTitleColor: "#3F00FF",
   fightModeColor: "#3F00FF",
@@ -104,9 +104,9 @@ export const defaultLayout: LayoutSettings = {
   playersRight: 0,
 
   // Размеры
-  headerHeight: 60,
+  headerHeight: 40,
   headerWidth: 400,
-  playerBarHeight: 80,
+  playerBarHeight: 40,
   playerBarWidth: 500,
   scoreSize: 60,
   flagSize: 24,

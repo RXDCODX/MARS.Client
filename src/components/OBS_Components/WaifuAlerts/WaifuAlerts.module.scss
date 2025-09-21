@@ -30,6 +30,8 @@ div#root {
 
 .textShadow {
   text-shadow: var(--text-shadow-heavy) !important;
+  -webkit-text-stroke: 2px #000000;
+  text-stroke: 2px #000000;
 }
 
 .roulette-name-text {
@@ -41,6 +43,8 @@ div#root {
   text-align: center;
   text-transform: uppercase;
   color: white;
+  -webkit-text-stroke: 2px #000000;
+  text-stroke: 2px #000000;
 }
 
 .smooth-box {
@@ -51,13 +55,11 @@ div#root {
   left: 0;
   width: 100%;
   height: 100%;
-  mask-image: linear-gradient(
-    to right,
-    rgba(0, 0, 0, 0) 0%,
-    rgba(0, 0, 0, 1) 35%,
-    rgba(0, 0, 0, 1) 75%,
-    rgba(0, 0, 0, 0) 100%
-  );
+  mask-image: linear-gradient(to right,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 1) 35%,
+      rgba(0, 0, 0, 1) 75%,
+      rgba(0, 0, 0, 0) 100%);
   pointer-events: none;
 }
 
@@ -70,27 +72,32 @@ div#root {
   align-content: center;
   justify-items: center;
   flex-wrap: nowrap;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(245, 224, 220, 0.7) 0%,
-    /* Бежевый цвет с прозрачностью 70% */ rgba(245, 245, 220, 0) 70%
+  background: radial-gradient(ellipse at center,
+      rgba(245, 224, 220, 0.7) 0%,
+      /* Бежевый цвет с прозрачностью 70% */
+      rgba(245, 245, 220, 0) 70%
       /* Полная прозрачность у краёв */
-  );
-  border-radius: 50%; /* Делает контейнер овальным */
-  padding: 20px; /* Отступы внутри контейнера */
-  box-sizing: border-box; /* Чтобы padding не влиял на общие размеры */
+    );
+  border-radius: 50%;
+  /* Делает контейнер овальным */
+  padding: 20px;
+  /* Отступы внутри контейнера */
+  box-sizing: border-box;
+  /* Чтобы padding не влиял на общие размеры */
 
   .merge-text {
     display: flex;
     width: 100%;
     height: 100%;
+    -webkit-text-stroke: 2px #000000;
+    text-stroke: 2px #000000;
 
-    > div {
+    >div {
       width: 100%;
       height: 100%;
       align-content: center;
 
-      > div {
+      >div {
         text-align: center;
         vertical-align: middle;
       }
@@ -104,14 +111,14 @@ div#root {
     align-content: center;
     justify-content: center;
 
-    > img {
+    >img {
       width: 100%;
       max-height: 100%;
       justify-self: center;
       object-fit: fill;
     }
 
-    &:first-child > img {
+    &:first-child>img {
       width: 100%;
       max-height: 100%;
       justify-self: center;
