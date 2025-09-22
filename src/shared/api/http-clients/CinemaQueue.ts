@@ -15,6 +15,7 @@ import type {
   CinemaQueueStatistics,
   CinemaQueueStatusDetailParamsEnum,
   CreateMediaItemRequest,
+  MediaMetadata,
   UpdateMediaItemRequest,
 } from "../types/data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
@@ -206,6 +207,27 @@ export class CinemaQueue<
     this.request<CinemaQueueStatistics, any>({
       path: `/api/CinemaQueue/statistics`,
       method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags CinemaQueue
+   * @name CinemaQueueMetadataList
+   * @request GET:/api/CinemaQueue/metadata
+   * @response `200` `MediaMetadata` OK
+   */
+  cinemaQueueMetadataList = (
+    query?: {
+      url: string;
+    },
+    params: RequestParams = {},
+  ) =>
+    this.request<MediaMetadata, any>({
+      path: `/api/CinemaQueue/metadata`,
+      method: "GET",
+      query: query,
       format: "json",
       ...params,
     });

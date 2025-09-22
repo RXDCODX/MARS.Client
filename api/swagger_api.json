@@ -474,6 +474,44 @@
         }
       }
     },
+    "/api/CinemaQueue/metadata": {
+      "get": {
+        "tags": [
+          "CinemaQueue"
+        ],
+        "parameters": [
+          {
+            "name": "url",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaMetadata"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaMetadata"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaMetadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Commands/user": {
       "get": {
         "tags": [
@@ -3885,6 +3923,120 @@
         }
       }
     },
+    "/api/RxdcodxViewers/without-avatars": {
+      "get": {
+        "tags": [
+          "RxdcodxViewers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FollowerInfo"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FollowerInfo"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FollowerInfo"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/RxdcodxViewers/without-avatars/count": {
+      "get": {
+        "tags": [
+          "RxdcodxViewers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/RxdcodxViewers/update-avatars": {
+      "post": {
+        "tags": [
+          "RxdcodxViewers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/RxdcodxViewers/debug/avatars": {
+      "get": {
+        "tags": [
+          "RxdcodxViewers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/ServiceManager/status": {
       "get": {
         "tags": [
@@ -4188,6 +4340,322 @@
         }
       }
     },
+    "/api/ShikimoriRateLimiter/info": {
+      "get": {
+        "tags": [
+          "ShikimoriRateLimiter"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimiterInfo"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimiterInfo"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimiterInfo"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/StreamArchive": {
+      "get": {
+        "tags": [
+          "StreamArchive"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StreamArchiveConfig"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StreamArchiveConfig"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StreamArchiveConfig"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "StreamArchive"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/StreamArchiveConfig"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/StreamArchiveConfig"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/StreamArchiveConfig"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamArchiveConfig"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamArchiveConfig"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamArchiveConfig"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/StreamArchive/{id}": {
+      "get": {
+        "tags": [
+          "StreamArchive"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamArchiveConfig"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamArchiveConfig"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StreamArchiveConfig"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "StreamArchive"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/StreamArchiveConfig"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/StreamArchiveConfig"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/StreamArchiveConfig"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "StreamArchive"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/StreamArchive/validate-folder": {
+      "post": {
+        "tags": [
+          "StreamArchive"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ValidateFolderRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ValidateFolderRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ValidateFolderRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/StreamArchive/{configId}/files": {
+      "get": {
+        "tags": [
+          "StreamArchive"
+        ],
+        "parameters": [
+          {
+            "name": "configId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/StreamArchive/statistics": {
+      "get": {
+        "tags": [
+          "StreamArchive"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/TestLogger/test-warning": {
       "post": {
         "tags": [
@@ -4224,7 +4692,7 @@
         }
       }
     },
-    "/twitchtoken": {
+    "/TwitchUserAuth": {
       "get": {
         "tags": [
           "Twitch"
@@ -4602,8 +5070,7 @@
           "isNext",
           "mediaUrl",
           "priority",
-          "status",
-          "title"
+          "status"
         ],
         "type": "object",
         "properties": {
@@ -4612,7 +5079,8 @@
             "format": "uuid"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "description": {
             "type": "string",
@@ -4715,7 +5183,8 @@
           "description",
           "isAdminCommand",
           "name",
-          "parameters"
+          "parameters",
+          "visibility"
         ],
         "type": "object",
         "properties": {
@@ -4747,6 +5216,15 @@
               ],
               "type": "string"
             }
+          },
+          "visibility": {
+            "enum": [
+              "None",
+              "FullList",
+              "ShortList",
+              "All"
+            ],
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -4846,13 +5324,13 @@
       "CreateMediaItemRequest": {
         "required": [
           "mediaUrl",
-          "priority",
-          "title"
+          "priority"
         ],
         "type": "object",
         "properties": {
           "title": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "description": {
             "type": "string",
@@ -5502,6 +5980,30 @@
         },
         "additionalProperties": false
       },
+      "MediaMetadata": {
+        "required": [
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "sourceUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "MediaPositionInfo": {
         "required": [
           "height",
@@ -6054,6 +6556,34 @@
         },
         "additionalProperties": { }
       },
+      "RateLimiterInfo": {
+        "required": [
+          "availablePerMinute",
+          "availablePerSecond",
+          "timeToResetMinute",
+          "timeToResetSecond"
+        ],
+        "type": "object",
+        "properties": {
+          "availablePerSecond": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "availablePerMinute": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "timeToResetSecond": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "timeToResetMinute": {
+            "type": "string",
+            "format": "date-span"
+          }
+        },
+        "additionalProperties": false
+      },
       "Reward": {
         "required": [
           "cost"
@@ -6158,7 +6688,6 @@
       },
       "ServiceInfo": {
         "required": [
-          "configuration",
           "description",
           "displayName",
           "isEnabled",
@@ -6199,10 +6728,6 @@
           },
           "isEnabled": {
             "type": "boolean"
-          },
-          "configuration": {
-            "type": "object",
-            "additionalProperties": { }
           }
         },
         "additionalProperties": false
@@ -6228,6 +6753,53 @@
           "exception": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "StreamArchiveConfig": {
+        "required": [
+          "checkSpan",
+          "fileConvertType",
+          "fileNameFormat",
+          "folderPath",
+          "id",
+          "isConvertFile",
+          "telegramChannelId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "telegramChannelId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fileNameFormat": {
+            "type": "string"
+          },
+          "checkSpan": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "folderPath": {
+            "type": "string"
+          },
+          "isConvertFile": {
+            "type": "boolean"
+          },
+          "fileConvertType": {
+            "enum": [
+              "None",
+              "Mp4",
+              "Webm",
+              "Mkv",
+              "Avi",
+              "Mov"
+            ],
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -6653,6 +7225,18 @@
           "ltuidV2": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidateFolderRequest": {
+        "required": [
+          "folderPath"
+        ],
+        "type": "object",
+        "properties": {
+          "folderPath": {
+            "type": "string"
           }
         },
         "additionalProperties": false

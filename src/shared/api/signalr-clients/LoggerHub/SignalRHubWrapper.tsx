@@ -8,9 +8,7 @@ interface LoggerHubProps {
   children: React.ReactNode;
 }
 
-export function LoggerHubSignalRHubWrapper({
-  children,
-}: LoggerHubProps) {
+export function LoggerHubSignalRHubWrapper({ children }: LoggerHubProps) {
   return (
     <LoggerHubSignalRContext.Provider
       automaticReconnect={true}

@@ -1,208 +1,37 @@
-import { AlertCircle, FileText } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { AlertCircle } from "lucide-react";
 import { Alert, Container } from "react-bootstrap";
-
-import { Logs } from "@/shared/api";
-import {
-  LogResponse,
-  LogsListParamsLogLevelEnum,
-  LogsStatistics,
-} from "@/shared/api/http-clients/data-contracts";
-import { createErrorToast, useToastModal } from "@/shared/Utils/ToastModal";
-import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
 import {
   LogsFilters,
+  LogsModeToggle,
+  LogsPageHeader,
   LogsStatistics as LogsStatisticsComponent,
   LogsTable,
+  LogsTestButtons,
 } from "./components";
+import { useLogsData } from "./hooks";
 import styles from "./LogsPage.module.scss";
-import {
-  LogsFilters as LogsFiltersType,
-  LogsPageState,
-} from "./LogsPage.types";
 
 const LogsPage: React.FC = () => {
-  const colors = useSiteColors();
-  const { showToast } = useToastModal();
-  const [logsService] = useState(() => new Logs());
-
-  // Состояние страницы
-  const [state, setState] = useState<LogsPageState>({
-    logs: [],
-    statistics: null,
-    isLoading: false,
-    isLoadingStats: false,
-    error: "",
-    currentPage: 1,
-    pageSize: 25,
-    totalPages: 0,
-    totalCount: 0,
-  });
-
-  // Фильтры для поиска
-  const [filters, setFilters] = useState<LogsFiltersType>({
-    logLevel: "",
-    fromDate: "",
-    toDate: "",
-    searchText: "",
-    sortBy: "whenlogged",
-    sortDescending: true,
-  });
-
-  // Обновление состояния
-  const updateState = useCallback((updates: Partial<LogsPageState>) => {
-    setState(prev => ({ ...prev, ...updates }));
-  }, []);
-
-  // Обновление фильтров
-  const updateFilters = useCallback((updates: Partial<LogsFiltersType>) => {
-    setFilters(prev => ({ ...prev, ...updates }));
-  }, []);
-
-  // Загрузка логов
-  const loadLogs = useCallback(async () => {
-    try {
-      updateState({ isLoading: true, error: "" });
-
-      const query = {
-        page: state.currentPage,
-        pageSize: state.pageSize,
-        sortBy: filters.sortBy,
-        sortDescending: filters.sortDescending,
-        logLevel: filters.logLevel
-          ? (filters.logLevel as LogsListParamsLogLevelEnum)
-          : LogsListParamsLogLevelEnum.None,
-        fromDate: filters.fromDate || "",
-        toDate: filters.toDate || "",
-        searchText: filters.searchText || "",
-      };
-
-      const response = await logsService.logsList(query);
-      const logResponse: LogResponse = response.data;
-
-      updateState({
-        logs: logResponse.logs || [],
-        totalPages: logResponse.totalPages || 0,
-        totalCount: logResponse.totalCount || 0,
-        isLoading: false,
-      });
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Неизвестная ошибка";
-      updateState({
-        error: `Ошибка при загрузке логов: ${errorMessage}`,
-        isLoading: false,
-      });
-
-      showToast(
-        createErrorToast(
-          "Ошибка загрузки логов",
-          error,
-          "Не удалось загрузить логи приложения"
-        )
-      );
-    }
-  }, [
-    logsService,
-    state.currentPage,
-    state.pageSize,
+  const {
+    state,
     filters,
+    isRealtime,
     updateState,
-    showToast,
-  ]);
-
-  // Загрузка статистики
-  const loadStatistics = useCallback(async () => {
-    try {
-      updateState({ isLoadingStats: true });
-
-      const response = await logsService.logsStatisticsList();
-      const stats: LogsStatistics = response.data;
-
-      updateState({
-        statistics: stats,
-        isLoadingStats: false,
-      });
-    } catch (error) {
-      console.error("Ошибка при загрузке статистики:", error);
-      updateState({ isLoadingStats: false });
-    }
-  }, [logsService, updateState]);
-
-  // Обработчик изменения страницы
-  const handlePageChange = useCallback(
-    (page: number) => {
-      updateState({ currentPage: page });
-    },
-    [updateState]
-  );
-
-  // Обработчик изменения размера страницы
-  const handlePageSizeChange = useCallback(
-    (size: number) => {
-      updateState({
-        pageSize: size,
-        currentPage: 1, // Сбрасываем на первую страницу при изменении размера
-      });
-    },
-    [updateState]
-  );
-
-  // Обработчик поиска
-  const handleSearch = useCallback(() => {
-    updateState({ currentPage: 1 }); // Сбрасываем на первую страницу при поиске
-    loadLogs();
-  }, [loadLogs, updateState]);
-
-  // Обработчик сброса фильтров
-  const handleResetFilters = useCallback(() => {
-    setFilters({
-      logLevel: "",
-      fromDate: "",
-      toDate: "",
-      searchText: "",
-      sortBy: "whenlogged",
-      sortDescending: true,
-    });
-    updateState({ currentPage: 1 });
-  }, [updateState]);
-
-  // Загрузка данных при изменении фильтров или пагинации
-  useEffect(() => {
-    loadLogs();
-  }, [loadLogs]);
-
-  // Загрузка статистики при монтировании компонента
-  useEffect(() => {
-    loadStatistics();
-  }, [loadStatistics]);
-
-  // Автоматическое обновление каждые 30 секунд
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!state.isLoading) {
-        loadLogs();
-        loadStatistics();
-      }
-    }, 30000);
-
-    return () => clearInterval(interval);
-  }, [loadLogs, loadStatistics, state.isLoading]);
+    updateFilters,
+    loadLogs,
+    handlePageChange,
+    handlePageSizeChange,
+    handleSearch,
+    handleResetFilters,
+    handleModeChange,
+  } = useLogsData();
 
   return (
     <div className={styles.logsPage}>
       <Container fluid>
         {/* Заголовок страницы */}
-        <div className={styles.pageHeader}>
-          <h1 style={colors.utils.getTextStyle("primary")}>
-            <FileText size={32} className="me-3" />
-            Логи приложения
-          </h1>
-          <p style={colors.utils.getTextStyle("secondary")}>
-            Просмотр и анализ логов системы MARS в реальном времени
-          </p>
-        </div>
+        <LogsPageHeader />
 
         {/* Ошибки */}
         {state.error && (
@@ -226,10 +55,20 @@ const LogsPage: React.FC = () => {
           isLoading={state.isLoading}
         />
 
+        {/* Тестовые кнопки */}
+        <LogsTestButtons onLogsRefresh={loadLogs} disabled={state.isLoading} />
+
         {/* Статистика */}
         <LogsStatisticsComponent
           statistics={state.statistics}
           isLoading={state.isLoadingStats}
+        />
+
+        {/* Переключатель режима отображения */}
+        <LogsModeToggle
+          isRealtime={isRealtime}
+          onModeChange={handleModeChange}
+          disabled={state.isLoading}
         />
 
         {/* Таблица логов */}

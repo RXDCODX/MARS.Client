@@ -10,29 +10,25 @@
  * ---------------------------------------------------------------
  */
 
+import type { RateLimiterInfo } from "../types/data-contracts";
 import { HttpClient, RequestParams } from "./http-client";
 
-export class Twitch<
+export class ShikimoriRateLimiter<
   SecurityDataType = unknown,
 > extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags Twitch
-   * @name TwitchUserAuthList
-   * @request GET:/TwitchUserAuth
-   * @response `200` `void` OK
+   * @tags ShikimoriRateLimiter
+   * @name ShikimoriRateLimiterInfoList
+   * @request GET:/api/ShikimoriRateLimiter/info
+   * @response `200` `RateLimiterInfo` OK
    */
-  twitchUserAuthList = (
-    query?: {
-      code: string;
-    },
-    params: RequestParams = {},
-  ) =>
-    this.request<void, any>({
-      path: `/TwitchUserAuth`,
+  shikimoriRateLimiterInfoList = (params: RequestParams = {}) =>
+    this.request<RateLimiterInfo, any>({
+      path: `/api/ShikimoriRateLimiter/info`,
       method: "GET",
-      query: query,
+      format: "json",
       ...params,
     });
 }

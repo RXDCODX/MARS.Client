@@ -23,7 +23,7 @@ export interface ApiMediaInfo {
 export interface CinemaMediaItemDto {
   /** @format uuid */
   id: string;
-  title: string;
+  title?: string;
   description?: string;
   mediaUrl: string;
   status: CinemaMediaItemDtoStatusEnum;
@@ -63,6 +63,7 @@ export interface CommandInfo {
   isAdminCommand: boolean;
   parameters: CommandParameterInfo[];
   availablePlatforms: CommandInfoAvailablePlatformsEnum[];
+  visibility: CommandInfoVisibilityEnum;
 }
 
 export interface CommandParameterInfo {
@@ -94,7 +95,7 @@ export interface CreateCustomRewardsRequest {
 }
 
 export interface CreateMediaItemRequest {
-  title: string;
+  title?: string;
   description?: string;
   mediaUrl: string;
   /** @format int32 */
@@ -286,6 +287,13 @@ export interface MediaMetaInfo {
   volume: number;
 }
 
+export interface MediaMetadata {
+  title: string;
+  description?: string;
+  imageUrl?: string;
+  sourceUrl?: string;
+}
+
 export interface MediaPositionInfo {
   isProportion: boolean;
   isResizeRequires: boolean;
@@ -447,6 +455,17 @@ export interface ProblemDetails {
   [key: string]: any;
 }
 
+export interface RateLimiterInfo {
+  /** @format int32 */
+  availablePerSecond: number;
+  /** @format int32 */
+  availablePerMinute: number;
+  /** @format date-span */
+  timeToResetSecond: string;
+  /** @format date-span */
+  timeToResetMinute: string;
+}
+
 export interface Reward {
   id?: string;
   title?: string;
@@ -480,7 +499,6 @@ export interface ServiceInfo {
   /** @format date-time */
   lastActivity?: string;
   isEnabled: boolean;
-  configuration: Record<string, any>;
 }
 
 export interface ServiceLog {
@@ -489,6 +507,19 @@ export interface ServiceLog {
   level: string;
   message: string;
   exception?: string;
+}
+
+export interface StreamArchiveConfig {
+  /** @format uuid */
+  id: string;
+  /** @format int64 */
+  telegramChannelId: number;
+  fileNameFormat: string;
+  /** @format date-span */
+  checkSpan: string;
+  folderPath: string;
+  isConvertFile: boolean;
+  fileConvertType: StreamArchiveConfigFileConvertTypeEnum;
 }
 
 export interface SupplementRequest {
@@ -632,6 +663,10 @@ export interface UpdateUserRequest {
   ltuidV2?: string;
 }
 
+export interface ValidateFolderRequest {
+  folderPath: string;
+}
+
 export enum CinemaMediaItemDtoStatusEnum {
   Pending = "Pending",
   InProgress = "InProgress",
@@ -647,6 +682,13 @@ export enum CommandInfoAvailablePlatformsEnum {
   Twitch = "Twitch",
   Discord = "Discord",
   Vk = "Vk",
+}
+
+export enum CommandInfoVisibilityEnum {
+  None = "None",
+  FullList = "FullList",
+  ShortList = "ShortList",
+  All = "All",
 }
 
 export enum LogLogLevelEnum {
@@ -694,6 +736,15 @@ export enum ServiceInfoStatusEnum {
   Stopping = "Stopping",
   Error = "Error",
   Unknown = "Unknown",
+}
+
+export enum StreamArchiveConfigFileConvertTypeEnum {
+  None = "None",
+  Mp4 = "Mp4",
+  Webm = "Webm",
+  Mkv = "Mkv",
+  Avi = "Avi",
+  Mov = "Mov",
 }
 
 export enum SupplementRequestSourceEnum {

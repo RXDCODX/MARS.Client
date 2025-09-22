@@ -20,6 +20,8 @@ export { PyroAlerts } from "./http-clients/PyroAlerts";
 export { RandomMeme } from "./http-clients/RandomMeme";
 export { RxdcodxViewers } from "./http-clients/RxdcodxViewers";
 export { ServiceManager } from "./http-clients/ServiceManager";
+export { ShikimoriRateLimiter } from "./http-clients/ShikimoriRateLimiter";
+export { StreamArchive } from "./http-clients/StreamArchive";
 export { TestLogger } from "./http-clients/TestLogger";
 export { Twitch } from "./http-clients/Twitch";
 export { TwitchRewards } from "./http-clients/TwitchRewards";
