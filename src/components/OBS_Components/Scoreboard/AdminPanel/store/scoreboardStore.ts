@@ -88,6 +88,16 @@ export type ScoreboardStore = ScoreboardState & ScoreboardActions;
 const initialState: ScoreboardState = {
   _connection: ScoreboardHubSignalRConnectionBuilder.build(),
   player1: {
+    name: "RXDCODX",
+    sponsor: "Red Bull",
+    score: 0,
+    tag: "STREAMER",
+    flag: "ru",
+    final: "none",
+    _lastEdit: 0,
+    _receivedAt: 0,
+  },
+  player2: {
     name: "Daigo Umehara",
     sponsor: "Red Bull",
     score: 2,
@@ -97,19 +107,9 @@ const initialState: ScoreboardState = {
     _lastEdit: 0,
     _receivedAt: 0,
   },
-  player2: {
-    name: "Tokido",
-    sponsor: "Mad Catz",
-    score: 1,
-    tag: "Murder Face",
-    flag: "jp",
-    final: "none",
-    _lastEdit: 0,
-    _receivedAt: 0,
-  },
   meta: {
     title: "Street Fighter 6",
-    fightRule: "Grand Finals",
+    fightRule: "",
     _lastEdit: 0,
     _receivedAt: 0,
   },

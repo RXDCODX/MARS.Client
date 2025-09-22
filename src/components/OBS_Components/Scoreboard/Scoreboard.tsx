@@ -58,6 +58,14 @@ const ScoreboardContent: React.FC = () => {
   };
 
   const [player1, setPlayer1] = useState<Player>({
+    name: "RXDCODX",
+    sponsor: "Red Bull",
+    score: 0,
+    tag: "STREAMER",
+    flag: "ru",
+    final: "none",
+  });
+  const [player2, setPlayer2] = useState<Player>({
     name: "Daigo Umehara",
     sponsor: "Red Bull",
     score: 2,
@@ -65,17 +73,9 @@ const ScoreboardContent: React.FC = () => {
     flag: "jp",
     final: "none",
   });
-  const [player2, setPlayer2] = useState<Player>({
-    name: "Tokido",
-    sponsor: "Mad Catz",
-    score: 1,
-    tag: "Murder Face",
-    flag: "jp",
-    final: "none",
-  });
   const [meta, setMeta] = useState<MetaInfo>({
-    title: "Street Fighter 6",
-    fightRule: "Grand Finals",
+    title: "TEKKEN 8",
+    fightRule: "",
   });
   const [colors, setColors] = useState<ColorPreset>(defaultPreset);
   const [isVisible, setIsVisible] = useState<boolean>(true);

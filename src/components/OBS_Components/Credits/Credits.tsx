@@ -48,7 +48,7 @@ const Credits: React.FC = () => {
   const [moderators, setModerators] = useState<FollowerInfo[]>([]);
   const [vips, setVips] = useState<FollowerInfo[]>([]);
   const [followers, setFollowers] = useState<FollowerInfo[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [contentReady, setContentReady] = useState(false);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -85,7 +85,6 @@ const Credits: React.FC = () => {
   useEffect(() => {
     const load = async () => {
       try {
-        setLoading(true);
         const allRes = await api.rxdcodxViewersAllList({ forceUseCash: true });
         const allData = (allRes.data as unknown as FollowerInfo[]) ?? [];
 
@@ -99,11 +98,10 @@ const Credits: React.FC = () => {
         setModerators(moderatorsData);
         setVips(vipsData);
         setFollowers(followersData);
+        setContentReady(true);
       } catch (e) {
         const msg = e instanceof Error ? e.message : "Неизвестная ошибка";
         showToast({ type: "error", title: "Ошибка загрузки", message: msg });
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -111,8 +109,8 @@ const Credits: React.FC = () => {
   }, [api, showToast]);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-    // Перезапустить анимацию при обновлении данных
+    if (!containerRef.current || !contentReady) return;
+    // Перезапустить анимацию при обновлении данных только после готовности контента
     const el = containerRef.current;
     // force reflow to restart animation
     void el.offsetHeight;
@@ -120,7 +118,7 @@ const Credits: React.FC = () => {
     // next frame
     const id = requestAnimationFrame(() => el.classList.add(styles.play));
     return () => cancelAnimationFrame(id);
-  }, [moderators.length, vips.length, followers.length]);
+  }, [contentReady, moderators.length, vips.length, followers.length]);
 
   const renderNames = (list: FollowerInfo[]) => {
     if (!list || list.length === 0)
@@ -140,7 +138,10 @@ const Credits: React.FC = () => {
     <div className={styles.root}>
       <div className={styles.maskTop} />
       <div className={styles.maskBottom} />
-      <div ref={containerRef} className={`${styles.scroll} ${styles.play}`}>
+      <div
+        ref={containerRef}
+        className={`${styles.scroll} ${contentReady ? styles.play : ""}`}
+      >
         <div className={styles.block}>
           <SectionTitle>TWITCH.TV/RXDCODX</SectionTitle>
         </div>
@@ -161,7 +162,6 @@ const Credits: React.FC = () => {
         </div>
       </div>
 
-      {loading && <div className={styles.loading}>Загрузка…</div>}
     </div>
   );
 };

@@ -60,11 +60,11 @@ export const defaultPreset: ColorPreset = {
   name: "Default",
   mainColor: "#e6ac0c",
   playerNamesColor: "#ffffff",
-  tournamentTitleColor: "#3F00FF",
-  fightModeColor: "#3F00FF",
+  tournamentTitleColor: "#e6ac0c",
+  fightModeColor: "#e6ac0c",
   scoreColor: "#ffffff",
   backgroundColor: "#23272f",
-  borderColor: "#3F00FF",
+  borderColor: "#e6ac0c",
 };
 
 // Типы для настроек макета
@@ -99,15 +99,15 @@ export const defaultLayout: LayoutSettings = {
   // Позиционирование
   headerTop: 0,
   headerLeft: 50,
-  playersTop: 0,
-  playersLeft: 0,
-  playersRight: 0,
+  playersTop: 20,
+  playersLeft: 125,
+  playersRight: 125,
 
   // Размеры
   headerHeight: 40,
-  headerWidth: 400,
-  playerBarHeight: 40,
-  playerBarWidth: 500,
+  headerWidth: 300,
+  playerBarHeight: 52,
+  playerBarWidth: 550,
   scoreSize: 60,
   flagSize: 24,
 
