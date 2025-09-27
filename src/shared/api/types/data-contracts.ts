@@ -20,6 +20,39 @@ export interface ApiMediaInfo {
   stylesInfo: MediaStylesInfo;
 }
 
+export interface AutoMessageDto {
+  /** @format uuid */
+  id: string;
+  message: string;
+}
+
+export interface ChannelRewardRecord {
+  /** @format uuid */
+  id: string;
+  /** @minLength 1 */
+  title: string;
+  /** @format int32 */
+  cost: number;
+  isEnabled: boolean;
+  prompt?: string;
+  backgroundColor?: string;
+  isUserInputRequired: boolean;
+  isMaxPerStreamEnabled: boolean;
+  /** @format int32 */
+  maxPerStream?: number;
+  isMaxPerUserPerStreamEnabled: boolean;
+  /** @format int32 */
+  maxPerUserPerStream?: number;
+  isGlobalCooldownEnabled: boolean;
+  /** @format int32 */
+  globalCooldownSeconds?: number;
+  shouldRedemptionsSkipRequestQueue: boolean;
+  isDeleted: boolean;
+  twitchRewardId?: string;
+  /** @format uuid */
+  mediaInfoId?: string;
+}
+
 export interface CinemaMediaItemDto {
   /** @format uuid */
   id: string;
@@ -72,6 +105,10 @@ export interface CommandParameterInfo {
   type: string;
   required: boolean;
   defaultValue?: string;
+}
+
+export interface CreateAutoMessageRequest {
+  message: string;
 }
 
 export interface CreateCustomRewardsRequest {
@@ -590,6 +627,30 @@ export interface TekkenCharacterPendingDto {
   strengths?: string[];
   weaknesess?: string[];
   isNew: boolean;
+}
+
+export interface UpdateAutoMessageRequest {
+  message?: string;
+}
+
+export interface UpdateCustomRewardDto {
+  title?: string;
+  /** @format int32 */
+  cost?: number;
+  isEnabled?: boolean;
+  prompt?: string;
+  backgroundColor?: string;
+  isUserInputRequired?: boolean;
+  isMaxPerStreamEnabled?: boolean;
+  /** @format int32 */
+  maxPerStream?: number;
+  isMaxPerUserPerStreamEnabled?: boolean;
+  /** @format int32 */
+  maxPerUserPerStream?: number;
+  isGlobalCooldownEnabled?: boolean;
+  /** @format int32 */
+  globalCooldownSeconds?: number;
+  shouldRedemptionsSkipRequestQueue?: boolean;
 }
 
 export interface UpdateCustomRewardRedemptionStatusRequest {

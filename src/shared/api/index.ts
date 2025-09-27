@@ -7,6 +7,8 @@ export * from "./types/data-contracts";
 export * from "./types/signalr-types";
 
 // Импорты HTTP клиентов
+export { AutoMessages } from "./http-clients/AutoMessages";
+export { ChannelRewardsManager } from "./http-clients/ChannelRewardsManager";
 export { CinemaQueue } from "./http-clients/CinemaQueue";
 export { Commands } from "./http-clients/Commands";
 export { Framedata } from "./http-clients/Framedata";

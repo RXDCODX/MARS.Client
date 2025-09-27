@@ -144,4 +144,18 @@ export class Logs<
       format: "json",
       ...params,
     });
+  /**
+   * No description
+   *
+   * @tags Logs
+   * @name LogsTestCreate
+   * @request POST:/api/Logs/test
+   * @response `200` `void` OK
+   */
+  logsTestCreate = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/Logs/test`,
+      method: "POST",
+      ...params,
+    });
 }

@@ -4,6 +4,427 @@
     "title": "Telegramus API"
   },
   "paths": {
+    "/api/AutoMessages": {
+      "get": {
+        "tags": [
+          "AutoMessages"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AutoMessageDto"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AutoMessageDto"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AutoMessageDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "AutoMessages"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAutoMessageRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAutoMessageRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateAutoMessageRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutoMessageDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutoMessageDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutoMessageDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/AutoMessages/{id}": {
+      "get": {
+        "tags": [
+          "AutoMessages"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutoMessageDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutoMessageDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutoMessageDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "AutoMessages"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateAutoMessageRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateAutoMessageRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateAutoMessageRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutoMessageDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutoMessageDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AutoMessageDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "AutoMessages"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ChannelRewardsManager": {
+      "get": {
+        "tags": [
+          "ChannelRewardsManager"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ChannelRewardsManager/local": {
+      "get": {
+        "tags": [
+          "ChannelRewardsManager"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "ChannelRewardsManager"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ChannelRewardRecord"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ChannelRewardRecord"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ChannelRewardRecord"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ChannelRewardsManager/local/{localId}": {
+      "get": {
+        "tags": [
+          "ChannelRewardsManager"
+        ],
+        "parameters": [
+          {
+            "name": "localId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "ChannelRewardsManager"
+        ],
+        "parameters": [
+          {
+            "name": "localId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateCustomRewardDto"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateCustomRewardDto"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateCustomRewardDto"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "ChannelRewardsManager"
+        ],
+        "parameters": [
+          {
+            "name": "localId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ChannelRewardsManager/{rewardId}": {
+      "get": {
+        "tags": [
+          "ChannelRewardsManager"
+        ],
+        "parameters": [
+          {
+            "name": "rewardId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/ChannelRewardsManager/sync": {
+      "post": {
+        "tags": [
+          "ChannelRewardsManager"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/CinemaQueue": {
       "get": {
         "tags": [
@@ -2627,6 +3048,18 @@
         }
       }
     },
+    "/api/Logs/test": {
+      "post": {
+        "tags": [
+          "Logs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/MediaInfoApi": {
       "get": {
         "tags": [
@@ -5063,6 +5496,106 @@
         },
         "additionalProperties": false
       },
+      "AutoMessageDto": {
+        "required": [
+          "id",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ChannelRewardRecord": {
+        "required": [
+          "cost",
+          "id",
+          "isDeleted",
+          "isEnabled",
+          "isGlobalCooldownEnabled",
+          "isMaxPerStreamEnabled",
+          "isMaxPerUserPerStreamEnabled",
+          "isUserInputRequired",
+          "shouldRedemptionsSkipRequestQueue",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "cost": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "backgroundColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "isUserInputRequired": {
+            "type": "boolean"
+          },
+          "isMaxPerStreamEnabled": {
+            "type": "boolean"
+          },
+          "maxPerStream": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isMaxPerUserPerStreamEnabled": {
+            "type": "boolean"
+          },
+          "maxPerUserPerStream": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isGlobalCooldownEnabled": {
+            "type": "boolean"
+          },
+          "globalCooldownSeconds": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "shouldRedemptionsSkipRequestQueue": {
+            "type": "boolean"
+          },
+          "isDeleted": {
+            "type": "boolean"
+          },
+          "twitchRewardId": {
+            "type": "string",
+            "nullable": true
+          },
+          "mediaInfoId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CinemaMediaItemDto": {
         "required": [
           "createdAt",
@@ -5253,6 +5786,18 @@
           "defaultValue": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateAutoMessageRequest": {
+        "required": [
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -7020,6 +7565,78 @@
           },
           "isNew": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateAutoMessageRequest": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateCustomRewardDto": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "cost": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isEnabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "backgroundColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "isUserInputRequired": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isMaxPerStreamEnabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "maxPerStream": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isMaxPerUserPerStreamEnabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "maxPerUserPerStream": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isGlobalCooldownEnabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "globalCooldownSeconds": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "shouldRedemptionsSkipRequestQueue": {
+            "type": "boolean",
+            "nullable": true
           }
         },
         "additionalProperties": false
