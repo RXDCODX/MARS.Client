@@ -14,6 +14,7 @@ import type {
   CreateCustomRewardsRequest,
   CustomReward,
   GetCustomRewardRedemptionResponse,
+  GetCustomRewardsResponse,
   UpdateCustomRewardRedemptionStatusRequest,
   UpdateCustomRewardRequest,
 } from "../types/data-contracts";
@@ -28,7 +29,7 @@ export class TwitchRewards<
    * @tags TwitchRewards
    * @name TwitchRewardsList
    * @request GET:/api/twitch/rewards
-   * @response `200` `void` OK
+   * @response `200` `GetCustomRewardsResponse` OK
    */
   twitchRewardsList = (
     query?: {
@@ -37,10 +38,11 @@ export class TwitchRewards<
     },
     params: RequestParams = {},
   ) =>
-    this.request<void, any>({
+    this.request<GetCustomRewardsResponse, any>({
       path: `/api/twitch/rewards`,
       method: "GET",
       query: query,
+      format: "json",
       ...params,
     });
   /**

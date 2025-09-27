@@ -425,6 +425,7 @@
     /* Разрешаем поддропдаунам выходить за границы */
     word-wrap: break-word;
     word-break: keep-all;
+    padding: 4px 16px 4px 4px;
   }
 
   .subDropdownMenu {

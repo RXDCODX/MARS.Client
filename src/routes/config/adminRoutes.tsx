@@ -1,4 +1,4 @@
-import { LogsPage } from "@/Site/Pages";
+import { ChannelRewardsPage, LogsPage } from "@/Site/Pages";
 import Layout from "@/Site/Pages/Layout/Layout";
 import ServerViewer from "@/Site/Pages/ServerViewer/ServerViewer";
 import TwitchRewardsPage from "@/Site/Pages/TwitchRewardsPage";
@@ -75,6 +75,16 @@ export const adminRoutes: RouteConfig[] = [
     element: (
       <Layout>
         <TwitchRewardsPage />
+      </Layout>
+    ),
+  },
+  {
+    path: "/channel-rewards",
+    name: "Управление наградами канала",
+    type: "control panel",
+    element: (
+      <Layout>
+        <ChannelRewardsPage />
       </Layout>
     ),
   },

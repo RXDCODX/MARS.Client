@@ -27,10 +27,7 @@ const Header: React.FC = () => {
 
   const sitePages: NavigationItem[] = [
     { label: "Главная", path: "/" },
-    { label: "О проекте", path: "/about" },
-    { label: "Документация", path: "/docs" },
     { label: "Команды", path: "/commands" },
-    { label: "Контакты", path: "/contacts" },
     { label: "Управление алертами", path: "/media-info" },
     { label: "Cinema Queue", path: "/cinema-queue" },
     { label: "Все маршруты", path: "/routes" },
@@ -81,12 +78,9 @@ const Header: React.FC = () => {
   ];
 
   const controlRoomPages: NavigationItem[] = [
-    { label: "Панель управления", path: "/admin" },
     { label: "Логи", path: "/logs" },
-    { label: "Дашборд", path: "/dashboard" },
-    { label: "Просмотр серверов", path: "/main" },
-    { label: "Сервисы", path: "/services" },
     { label: "Твич награды", path: "/twitch-rewards" },
+    { label: "Управление наградами", path: "/channel-rewards" },
   ];
 
   const handleDropdownToggle = (dropdownName: string) => {

@@ -58,13 +58,12 @@ export class RxdcodxViewers<
    * @tags RxdcodxViewers
    * @name RxdcodxViewersWithoutAvatarsCountList
    * @request GET:/api/RxdcodxViewers/without-avatars/count
-   * @response `200` `number` OK
+   * @response `200` `void` OK
    */
   rxdcodxViewersWithoutAvatarsCountList = (params: RequestParams = {}) =>
-    this.request<number, any>({
+    this.request<void, any>({
       path: `/api/RxdcodxViewers/without-avatars/count`,
       method: "GET",
-      format: "json",
       ...params,
     });
   /**
@@ -73,13 +72,12 @@ export class RxdcodxViewers<
    * @tags RxdcodxViewers
    * @name RxdcodxViewersUpdateAvatarsCreate
    * @request POST:/api/RxdcodxViewers/update-avatars
-   * @response `200` `number` OK
+   * @response `200` `void` OK
    */
   rxdcodxViewersUpdateAvatarsCreate = (params: RequestParams = {}) =>
-    this.request<number, any>({
+    this.request<void, any>({
       path: `/api/RxdcodxViewers/update-avatars`,
       method: "POST",
-      format: "json",
       ...params,
     });
   /**

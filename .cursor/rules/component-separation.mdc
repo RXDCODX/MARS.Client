@@ -1,0 +1,196 @@
+---
+description: Правило разделения компонентов для избежания смешивания модалок, списков и других элементов в одном файле
+globs: *.tsx,*.ts
+---
+
+# Правило разделения компонентов
+
+## Основные принципы
+
+### 1. Разделение по функциональности
+
+Каждый компонент должен отвечать за одну конкретную задачу:
+
+- **Списки** - отдельные файлы для отображения коллекций данных
+- **Модальные окна** - отдельные файлы для диалогов и модальных окон
+- **Формы** - отдельные файлы для ввода данных
+- **Детали** - отдельные файлы для отображения подробной информации
+- **Состояния** - отдельные файлы для loading, error, empty состояний
+
+### 2. Структура папки компонентов
+
+```
+PageName/
+├── PageName.tsx                 # Основная страница
+├── PageName.module.scss         # Стили страницы
+├── PageName.types.ts           # Типы для страницы
+├── components/                 # Подкомпоненты
+│   ├── index.ts               # Экспорты компонентов
+│   ├── ListComponent/         # Компонент списка
+│   │   ├── ListComponent.tsx
+│   │   ├── ListComponent.module.scss
+│   │   └── ListComponent.types.ts
+│   ├── ModalComponent/        # Модальное окно
+│   │   ├── ModalComponent.tsx
+│   │   ├── ModalComponent.module.scss
+│   │   └── ModalComponent.types.ts
+│   ├── FormComponent/         # Форма
+│   │   ├── FormComponent.tsx
+│   │   ├── FormComponent.module.scss
+│   │   └── FormComponent.types.ts
+│   ├── DetailsComponent/      # Детальная информация
+│   │   ├── DetailsComponent.tsx
+│   │   ├── DetailsComponent.module.scss
+│   │   └── DetailsComponent.types.ts
+│   ├── LoadingState/          # Состояние загрузки
+│   │   ├── LoadingState.tsx
+│   │   ├── LoadingState.module.scss
+│   │   └── LoadingState.types.ts
+│   ├── ErrorState/            # Состояние ошибки
+│   │   ├── ErrorState.tsx
+│   │   ├── ErrorState.module.scss
+│   │   └── ErrorState.types.ts
+│   └── EmptyState/            # Пустое состояние
+│       ├── EmptyState.tsx
+│       ├── EmptyState.module.scss
+│       └── EmptyState.types.ts
+└── README.md                   # Документация
+```
+
+### 3. Правила именования
+
+- **Списки**: `{Entity}List.tsx` (например, `RewardsList.tsx`)
+- **Модальные окна**: `{Action}Modal.tsx` (например, `DeleteConfirmationModal.tsx`)
+- **Формы**: `{Entity}Form.tsx` (например, `RewardForm.tsx`)
+- **Детали**: `{Entity}Details.tsx` (например, `RewardDetails.tsx`)
+- **Состояния**: `{State}State.tsx` (например, `LoadingState.tsx`, `ErrorState.tsx`)
+
+### 4. Размер файла
+
+- Максимальный размер файла компонента: **300 строк**
+- Если файл превышает лимит, разделить на подкомпоненты
+- Каждый компонент должен быть самодостаточным
+
+### 5. Импорты и экспорты
+
+- Использовать barrel exports через `components/index.ts`
+- Импортировать компоненты только из index файла
+- Не смешивать компоненты разных типов в одном файле
+- Каждый компонент должен иметь свою папку с типами и стилями
+- Типы компонента должны быть в файле `{ComponentName}.types.ts` в папке компонента
+
+### 6. Примеры НЕПРАВИЛЬНОЙ организации
+
+```tsx
+// ❌ Плохо: все в одном файле
+const ChannelRewardsPage = () => {
+  // Список наград
+  const renderRewardsList = () => { /* 100+ строк */ };
+  
+  // Модальное окно удаления
+  const renderDeleteModal = () => { /* 50+ строк */ };
+  
+  // Форма создания/редактирования
+  const renderRewardForm = () => { /* 150+ строк */ };
+  
+  return (
+    <div>
+      {renderRewardsList()}
+      {renderDeleteModal()}
+      {renderRewardForm()}
+    </div>
+  );
+};
+```
+
+### 7. Примеры ПРАВИЛЬНОЙ организации
+
+```tsx
+// ✅ Хорошо: разделение на отдельные компоненты в папках
+// ChannelRewardsPage.tsx
+import { RewardsList, DeleteConfirmationModal, RewardForm } from './components';
+
+const ChannelRewardsPage = () => {
+  return (
+    <div>
+      <RewardsList {...listProps} />
+      <DeleteConfirmationModal {...modalProps} />
+      <RewardForm {...formProps} />
+    </div>
+  );
+};
+
+// ✅ Хорошо: структура папок компонентов
+// components/RewardsList/
+//   ├── RewardsList.tsx
+//   ├── RewardsList.module.scss
+//   └── RewardsList.types.ts
+//
+// components/DeleteConfirmationModal/
+//   ├── DeleteConfirmationModal.tsx
+//   ├── DeleteConfirmationModal.module.scss
+//   └── DeleteConfirmationModal.types.ts
+//
+// components/RewardForm/
+//   ├── RewardForm.tsx
+//   ├── RewardForm.module.scss
+//   └── RewardForm.types.ts
+```
+
+### 8. Обязательные требования
+
+- Каждый компонент должен иметь свою отдельную папку
+- В папке компонента должны быть: `.tsx`, `.module.scss`, `.types.ts`
+- Использовать TypeScript интерфейсы для пропсов в отдельном файле типов
+- Документировать сложную логику компонентов
+- Следовать принципу единственной ответственности
+- Именование файлов типов: `{ComponentName}.types.ts`
+
+### 9. Примеры структуры папок компонентов
+
+#### Для списков
+
+```
+components/RewardsList/
+├── RewardsList.tsx              # Основной компонент списка
+├── RewardsList.module.scss      # Стили для списка
+└── RewardsList.types.ts         # Интерфейсы для пропсов и состояний
+```
+
+#### Для модальных окон
+
+```
+components/DeleteConfirmationModal/
+├── DeleteConfirmationModal.tsx  # Модальное окно подтверждения
+├── DeleteConfirmationModal.module.scss  # Стили модального окна
+└── DeleteConfirmationModal.types.ts     # Типы для модального окна
+```
+
+#### Для форм
+
+```
+components/RewardForm/
+├── RewardForm.tsx               # Форма создания/редактирования
+├── RewardForm.module.scss       # Стили формы
+└── RewardForm.types.ts          # Типы для формы и валидации
+```
+
+#### Для детальной информации
+
+```
+components/RewardDetails/
+├── RewardDetails.tsx            # Компонент детального просмотра
+├── RewardDetails.module.scss    # Стили детального просмотра
+└── RewardDetails.types.ts       # Типы для детального просмотра
+```
+
+### 10. Исключения
+
+Разрешается объединять компоненты в одном файле только если:
+
+- Компоненты тесно связаны (например, Header и HeaderItem)
+- Общий размер не превышает 200 строк
+- Компоненты не используются независимо друг от друга
+- Это простые UI компоненты без сложной логики
+
+Это правило помогает поддерживать чистоту кода, упрощает тестирование и делает компоненты более переиспользуемыми.

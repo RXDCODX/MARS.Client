@@ -21,12 +21,13 @@ export class TestLogger<
    * @tags TestLogger
    * @name TestLoggerTestWarningCreate
    * @request POST:/api/TestLogger/test-warning
-   * @response `200` `void` OK
+   * @response `200` `string` OK
    */
   testLoggerTestWarningCreate = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.request<string, any>({
       path: `/api/TestLogger/test-warning`,
       method: "POST",
+      format: "json",
       ...params,
     });
   /**
@@ -35,12 +36,13 @@ export class TestLogger<
    * @tags TestLogger
    * @name TestLoggerTestErrorCreate
    * @request POST:/api/TestLogger/test-error
-   * @response `200` `void` OK
+   * @response `200` `string` OK
    */
   testLoggerTestErrorCreate = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.request<string, any>({
       path: `/api/TestLogger/test-error`,
       method: "POST",
+      format: "json",
       ...params,
     });
   /**
@@ -49,12 +51,13 @@ export class TestLogger<
    * @tags TestLogger
    * @name TestLoggerTestCriticalCreate
    * @request POST:/api/TestLogger/test-critical
-   * @response `200` `void` OK
+   * @response `200` `string` OK
    */
   testLoggerTestCriticalCreate = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.request<string, any>({
       path: `/api/TestLogger/test-critical`,
       method: "POST",
+      format: "json",
       ...params,
     });
 }

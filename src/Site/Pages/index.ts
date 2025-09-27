@@ -18,3 +18,6 @@ export { default as LogsPage } from "./LogsPage";
 export { MediaInfoEditPage } from "./MediaInfoPage";
 export { MediaInfoCreatePage } from "./MediaInfoPage";
 export { MediaInfoListPage } from "./MediaInfoPage";
+
+// ChannelRewards страницы
+export { default as ChannelRewardsPage } from "./ChannelRewardsPage";

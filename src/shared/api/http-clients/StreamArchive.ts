@@ -10,7 +10,11 @@
  * ---------------------------------------------------------------
  */
 
-import type { StreamArchiveConfig, ValidateFolderRequest } from "../types/data-contracts";
+import type {
+  StreamArchiveConfig,
+  ValidateFolderRequest,
+  ValidateFolderResponse,
+} from "../types/data-contracts";
 import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class StreamArchive<
@@ -106,17 +110,18 @@ export class StreamArchive<
    * @tags StreamArchive
    * @name StreamArchiveValidateFolderCreate
    * @request POST:/api/StreamArchive/validate-folder
-   * @response `200` `void` OK
+   * @response `200` `ValidateFolderResponse` OK
    */
   streamArchiveValidateFolderCreate = (
     data: ValidateFolderRequest,
     params: RequestParams = {},
   ) =>
-    this.request<void, any>({
+    this.request<ValidateFolderResponse, any>({
       path: `/api/StreamArchive/validate-folder`,
       method: "POST",
       body: data,
       type: ContentType.Json,
+      format: "json",
       ...params,
     });
   /**

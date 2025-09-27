@@ -240,6 +240,10 @@ export interface GetCustomRewardRedemptionResponse {
   pagination?: Pagination;
 }
 
+export interface GetCustomRewardsResponse {
+  data?: CustomReward[];
+}
+
 export interface GlobalCooldownSetting {
   isEnabled: boolean;
   /** @format int32 */
@@ -726,6 +730,14 @@ export interface UpdateUserRequest {
 
 export interface ValidateFolderRequest {
   folderPath: string;
+}
+
+export interface ValidateFolderResponse {
+  exists: boolean;
+  accessible: boolean;
+  /** @format int32 */
+  videoFilesCount: number;
+  sampleFiles: string[];
 }
 
 export enum CinemaMediaItemDtoStatusEnum {

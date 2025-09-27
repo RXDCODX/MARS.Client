@@ -323,16 +323,17 @@ export class RandomMeme<
    * @tags RandomMeme
    * @name RandomMemeOrdersReorderCreate
    * @request POST:/api/RandomMeme/orders/reorder/{typeId}
-   * @response `200` `void` OK
+   * @response `200` `string` OK
    * @response `500` `void` Internal Server Error
    */
   randomMemeOrdersReorderCreate = (
     typeId: number,
     params: RequestParams = {},
   ) =>
-    this.request<void, void>({
+    this.request<string, void>({
       path: `/api/RandomMeme/orders/reorder/${typeId}`,
       method: "POST",
+      format: "json",
       ...params,
     });
 }
