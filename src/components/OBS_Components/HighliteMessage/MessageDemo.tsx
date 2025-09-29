@@ -11,6 +11,7 @@ import {
   isWhiteColor,
 } from "@/shared/Utils";
 
+import commonStyles from "../OBSCommon.module.scss";
 import styles from "./Message.module.scss";
 
 interface DemoMessageProps {
@@ -78,12 +79,17 @@ function DemoMessage({
               }}
               mode="single"
               forceSingleModeWidth
-              className={styles.name}
+              className={`${styles.name} ${commonStyles.textStrokeShadow}`}
             >
               {message.displayName}:
             </Textfit>
           </div>
-          <Textfit min={1} max={1500} mode="multi" className={styles.emotes}>
+          <Textfit
+            min={1}
+            max={1500}
+            mode="multi"
+            className={`${styles.emotes} ${commonStyles.textStrokeShadow}`}
+          >
             {message.message}
           </Textfit>
         </div>

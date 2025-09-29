@@ -4,6 +4,8 @@ import { useEffect, useMemo, useRef } from "react";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import { replaceEmotes } from "@/shared/Utils";
 
+import common from "../OBSCommon.module.scss";
+
 interface Props {
   message: string;
   onComplete: () => void;
@@ -117,6 +119,7 @@ export default function AutoMessageAlert({ message, onComplete }: Props) {
       }}
     >
       <div
+        className={common.textStrokeShadow}
         style={{
           wordWrap: "break-word",
           hyphens: "auto",

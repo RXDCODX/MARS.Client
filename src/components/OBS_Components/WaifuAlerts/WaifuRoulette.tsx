@@ -6,6 +6,7 @@ import RoulettePro, { PrizeType } from "react-roulette-pro";
 import animate from "@/shared/styles/animate.module.scss";
 import { getRandomColor } from "@/shared/Utils";
 
+import styles2 from "../OBSCommon.module.scss";
 import styles from "./WaifuAlerts.module.scss";
 
 interface Props {
@@ -105,7 +106,11 @@ export default function WaifuRoulette({
           }}
         />
       </div>
-      <div className={styles["roulette-name-text"]}>
+      <div
+        className={
+          styles["roulette-name-text"] + " " + styles2.textStrokeShadow
+        }
+      >
         <span>рулетка</span>
         <span>для</span>
         <span style={{ color: trueColor }}>{name}</span>

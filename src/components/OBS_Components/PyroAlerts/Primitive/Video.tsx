@@ -15,6 +15,7 @@ import { KeyWordText } from "@/shared/components/KeyWordText";
 import { getCoordinates, getRandomRotation } from "@/shared/Utils";
 
 import styles from "./Media.module.scss";
+import common from "../../OBSCommon.module.scss";
 
 declare global {
   interface Window {
@@ -329,6 +330,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
         onCanPlayThrough={muteAll}
       />
       <Textfit
+        className={common.textStrokeShadow}
         forceSingleModeWidth
         mode="single"
         min={30}

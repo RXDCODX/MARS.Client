@@ -7,6 +7,7 @@ import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import { parseContent, replaceBadges, replaceEmotes } from "@/shared/Utils";
 import GradientText from "@/shared/Utils/Animations/GradientText";
 
+import commonStyles from "../OBSCommon.module.scss";
 import { CSS_ANIMATION_CONFIG } from "./animationTimings";
 import styles from "./Message.module.scss";
 
@@ -68,7 +69,7 @@ export function Message({ message, onRemove }: Props) {
               {replaceBadges(badges, message)}
             </div>
             <div
-              className={styles.nickname}
+              className={`${styles.nickname} ${commonStyles.textStrokeShadow}`}
               style={{ color: message.colorHex ?? "white" }}
             >
               {message.displayName}
@@ -112,13 +113,11 @@ export function Message({ message, onRemove }: Props) {
                       : part.content;
                   // Если это строка — старый способ, если массив/ReactNode — новый
                   return (
-                    <GradientText
-                      key={part.id}
-                      speed="very-fast"
-                      fontWeight={600}
-                    >
-                      {emoteContent}
-                    </GradientText>
+                    <span key={part.id}>
+                      <GradientText speed="very-fast" fontWeight={600}>
+                        {emoteContent}
+                      </GradientText>
+                    </span>
                   );
                 }
                 if (part.type === "image") {
@@ -153,7 +152,10 @@ export function Message({ message, onRemove }: Props) {
                 }
                 if (part.type === "link") {
                   return (
-                    <span key={part.id} className={styles.linkStub}>
+                    <span
+                      key={part.id}
+                      className={`${styles.linkStub} ${commonStyles.textStrokeShadow}`}
+                    >
                       ссылка
                     </span>
                   );
@@ -163,7 +165,11 @@ export function Message({ message, onRemove }: Props) {
                 // Обычные пользователи — белый текст, но с поддержкой смайлов
                 if (part.type === "text") {
                   return (
-                    <span key={part.id} style={{ color: "white" }}>
+                    <span
+                      key={part.id}
+                      style={{ color: "white" }}
+                      className={commonStyles.textStrokeShadow}
+                    >
                       {parser && parserToLink
                         ? replaceEmotes({
                             text: part.content,
@@ -180,7 +186,10 @@ export function Message({ message, onRemove }: Props) {
                   part.type === "image"
                 ) {
                   return (
-                    <span key={part.id} className={styles.linkStub}>
+                    <span
+                      key={part.id}
+                      className={`${styles.linkStub} ${commonStyles.textStrokeShadow}`}
+                    >
                       ссылка
                     </span>
                   );

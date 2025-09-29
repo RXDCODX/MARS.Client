@@ -10,6 +10,7 @@ import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import { arrayExcept, getRandomColor } from "@/shared/Utils";
 import Announce from "@/shared/Utils/Announce/Announce";
 
+import common from "../OBSCommon.module.scss";
 import {
   getHusbandText,
   getText,
@@ -278,7 +279,7 @@ export default function WaifuAlerts() {
   });
 
   return (
-    <div className={styles.textShadow}>
+    <div className={common.textStrokeShadow}>
       {!announced && (
         <Announce title={"WaifuRoll"} callback={() => setAnnounced(true)} />
       )}
@@ -347,10 +348,9 @@ export default function WaifuAlerts() {
             </div>
             <div className={styles["alert-box"]}>
               <span
-                className="text-shadow block-text"
+                className={`${common.textStrokeShadow} text-shadow block-text`}
                 style={{
                   color: "white",
-                  WebkitTextStroke: "1px #000000",
                 }}
               >
                 <Textfit min={1} max={1500} forceSingleModeWidth>
@@ -358,10 +358,9 @@ export default function WaifuAlerts() {
                 </Textfit>
               </span>
               <span
-                className="text-shadow block-text"
+                className={`${common.textStrokeShadow} text-shadow block-text`}
                 style={{
                   color: "cornflowerblue",
-                  WebkitTextStroke: "1px #000000",
                 }}
               >
                 <Textfit min={1} max={1500} forceSingleModeWidth>
@@ -369,10 +368,9 @@ export default function WaifuAlerts() {
                 </Textfit>
               </span>
               <span
-                className="text-shadow block-text"
+                className={`${common.textStrokeShadow} text-shadow block-text`}
                 style={{
                   color: "red",
-                  WebkitTextStroke: "1px #000000",
                 }}
               >
                 <Textfit min={1} max={1500} forceSingleModeWidth>
@@ -416,9 +414,9 @@ export default function WaifuAlerts() {
             </div>
             <div className={styles["merge-text"]}>
               <Textfit
+                className={common.textStrokeShadow}
                 style={{
                   color: "white",
-                  WebkitTextStroke: "1px #000000",
                 }}
                 mode="multi"
                 min={1}
@@ -426,27 +424,27 @@ export default function WaifuAlerts() {
               >
                 Поздравляем{" "}
                 <span
+                  className={common.textStrokeShadow}
                   style={{
                     color: currentMessage.color,
-                    WebkitTextStroke: "1px #000000",
                   }}
                 >
                   {currentMessage.waifuHusband!.name!}
                 </span>{" "}
                 и{" "}
                 <span
+                  className={common.textStrokeShadow}
                   style={{
                     color: getRandomColor(),
-                    WebkitTextStroke: "1px #000000",
                   }}
                 >
                   {currentMessage.waifu.name}{" "}
                 </span>{" "}
                 из{" "}
                 <span
+                  className={common.textStrokeShadow}
                   style={{
                     color: currentMessage.waifu.anime ? "blue" : "gold",
-                    WebkitTextStroke: "1px #000000",
                   }}
                 >
                   {getTitle(currentMessage)}

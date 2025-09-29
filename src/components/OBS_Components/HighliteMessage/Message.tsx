@@ -14,6 +14,7 @@ import {
   replaceBadges,
 } from "@/shared/Utils";
 
+import commonStyles from "../OBSCommon.module.scss";
 import styles from "./Message.module.scss";
 
 enum StateStatus {
@@ -184,7 +185,7 @@ export default function Message() {
                   }}
                   mode="single"
                   forceSingleModeWidth
-                  className={styles.name}
+                  className={`${styles.name} ${commonStyles.textStrokeShadow}`}
                 >
                   {currentMessage.message.displayName}:
                 </Textfit>
@@ -194,7 +195,7 @@ export default function Message() {
                 min={1}
                 max={1500}
                 mode="multi"
-                className={styles.emotes}
+                className={`${styles.emotes} ${commonStyles.textStrokeShadow}`}
               >
                 {currentMessage.message.message}
               </Textfit>

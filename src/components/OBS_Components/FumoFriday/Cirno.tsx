@@ -5,6 +5,7 @@ import RainbowText from "@/shared/components/RainbowText/RainbowText";
 
 import { Message } from "./FumoFridayController";
 import styles from "./Styles.module.scss";
+import commonStyles from "../OBSCommon.module.scss";
 import { getVideoPath } from "./videoAssets";
 
 interface Props {
@@ -21,15 +22,23 @@ export function Cirno({ callback, displayName }: Props) {
         style={{ visibility: show ? "visible" : "hidden" }}
         className={styles.container}
       >
-        <Textfit className={styles.text} mode="single">
+        <Textfit
+          className={`${styles.text} ${commonStyles.textStrokeShadow}`}
+          mode="single"
+        >
           <div>
             Поздравляю{" "}
-            <span style={{ color: displayName.color }}>
+            <span
+              className={commonStyles.textStrokeShadow}
+              style={{ color: displayName.color }}
+            >
               {displayName.message}!
             </span>
           </div>
           <div style={{ display: "inline-flex" }}>
-            <RainbowText text="HAPPY FUMO FRIDAY!" />
+            <span className={commonStyles.textStrokeShadow}>
+              <RainbowText text="HAPPY FUMO FRIDAY!" />
+            </span>
           </div>
         </Textfit>
         <div>

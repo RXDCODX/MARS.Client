@@ -5,6 +5,7 @@ import RainbowText from "@/shared/components/RainbowText/RainbowText";
 
 import { Message } from "./FumoFridayController";
 import styles from "./Styles.module.scss";
+import commonStyles from "../OBSCommon.module.scss";
 import { getVideoPath } from "./videoAssets";
 
 interface Props {
@@ -36,16 +37,21 @@ export function Reimu({ callback, displayName }: Props) {
           />
         </div>
         <div className={styles.text}>
-          <Textfit mode="single">
+          <Textfit mode="single" className={commonStyles.textStrokeShadow}>
             <div>
               Поздравляю{" "}
-              <span style={{ color: displayName.color }}>
+              <span
+                className={commonStyles.textStrokeShadow}
+                style={{ color: displayName.color }}
+              >
                 {displayName.message}
               </span>
               !
             </div>
             <div>
-              <RainbowText text="HAPPY FUMO FRIDAY!" />
+              <span className={commonStyles.textStrokeShadow}>
+                <RainbowText text="HAPPY FUMO FRIDAY!" />
+              </span>
             </div>
           </Textfit>
         </div>

@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { type CSSProperties, useCallback, useState } from "react";
 
+import commonStyles from "../OBSCommon.module.scss";
 import { useScoreboardStore } from "./AdminPanel";
 import {
   defaultLayout,
@@ -211,12 +212,15 @@ const ScoreboardContent: React.FC = () => {
                 className={styles.headerLeftBorder}
                 style={leftBorderStyle}
               ></div>
-              <h1 style={{ color: colors.tournamentTitleColor }}>
+              <h1
+                className={commonStyles.textStrokeShadow}
+                style={{ color: colors.tournamentTitleColor }}
+              >
                 {meta.title}
               </h1>
               {shouldShowFightMode() && (
                 <div
-                  className={styles.fightMode}
+                  className={`${styles.fightMode} ${commonStyles.textStrokeShadow}`}
                   style={{ color: colors.fightModeColor }}
                 >
                   {meta.fightRule}
@@ -278,10 +282,18 @@ const ScoreboardContent: React.FC = () => {
                   height: layout.playerBarHeight,
                 }}
               >
-                <h3 style={{ color: colors.scoreColor }}>{player1.score}</h3>
+                <h3
+                  className={commonStyles.textStrokeShadow}
+                  style={{ color: colors.scoreColor }}
+                >
+                  {player1.score}
+                </h3>
               </div>
               <div className={styles.playerInfo}>
-                <h2 style={{ color: colors.playerNamesColor }}>
+                <h2
+                  className={commonStyles.textStrokeShadow}
+                  style={{ color: colors.playerNamesColor }}
+                >
                   {player1.final === "winner" && "[W] "}
                   {player1.final === "loser" && "[L] "}
                   {layout.showTags && isValidTag(player1.tag) && (
@@ -327,7 +339,10 @@ const ScoreboardContent: React.FC = () => {
               )}
 
               <div className={styles.playerInfo}>
-                <h2 style={{ color: colors.playerNamesColor }}>
+                <h2
+                  className={commonStyles.textStrokeShadow}
+                  style={{ color: colors.playerNamesColor }}
+                >
                   {player2.final === "winner" && "[W] "}
                   {player2.final === "loser" && "[L] "}
                   {player2.name}
@@ -352,7 +367,12 @@ const ScoreboardContent: React.FC = () => {
                   height: layout.playerBarHeight,
                 }}
               >
-                <h3 style={{ color: colors.scoreColor }}>{player2.score}</h3>
+                <h3
+                  className={commonStyles.textStrokeShadow}
+                  style={{ color: colors.scoreColor }}
+                >
+                  {player2.score}
+                </h3>
               </div>
             </motion.div>
           </motion.div>

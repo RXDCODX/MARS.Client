@@ -13,6 +13,7 @@ import {
 } from "@/shared/Utils";
 import GradientText from "@/shared/Utils/Animations/GradientText";
 
+import commonStyles from "../OBSCommon.module.scss";
 import styles from "./Message.module.scss";
 
 interface Props {
@@ -109,14 +110,14 @@ export const Message = ({ message, callback, slotTop }: Props) => {
         >
           <div
             id={`${message.id}_nickname`}
-            className={styles.nickname}
+            className={`${styles.nickname} ${commonStyles.textStrokeShadow}`}
             style={{ color: message.colorHex }}
           >
             {message.displayName}:
           </div>
           <div
-            className={styles.text}
             style={{ color: "white", marginLeft: "10px" }}
+            className={`${styles.text} ${commonStyles.textStrokeShadow}`}
           >
             {message.message}
           </div>
@@ -148,31 +149,48 @@ export const Message = ({ message, callback, slotTop }: Props) => {
           {text?.map((part, idx) => {
             if (message.isBroadcaster || message.isVip || message.isModerator) {
               return (
-                <GradientText
-                  key={idx}
-                  text={
-                    typeof part.content === "string"
-                      ? part.content
-                      : (message.message ?? "")
-                  }
-                  fontWeight={600}
-                  speed="very-fast"
-                />
+                <span key={idx} className={commonStyles.textStrokeShadow}>
+                  <GradientText
+                    text={
+                      typeof part.content === "string"
+                        ? part.content
+                        : (message.message ?? "")
+                    }
+                    fontWeight={600}
+                    speed="very-fast"
+                  />
+                </span>
               );
             }
             switch (part.type) {
               case "text":
-                return replaceEmotes({
-                  text: message,
-                  parser,
-                  newParser: parserToLink,
-                });
+                return (
+                  <span className={commonStyles.textStrokeShadow}>
+                    {replaceEmotes({
+                      text: message,
+                      parser,
+                      newParser: parserToLink,
+                    })}
+                  </span>
+                );
               case "image":
-                return <span key={idx}>Ссылка</span>;
+                return (
+                  <span key={idx} className={commonStyles.textStrokeShadow}>
+                    Ссылка
+                  </span>
+                );
               case "link":
-                return <span key={idx}>Ссылка</span>;
+                return (
+                  <span key={idx} className={commonStyles.textStrokeShadow}>
+                    Ссылка
+                  </span>
+                );
               case "video":
-                return <span key={idx}>Ссылка</span>;
+                return (
+                  <span key={idx} className={commonStyles.textStrokeShadow}>
+                    Ссылка
+                  </span>
+                );
             }
           })}
         </div>
