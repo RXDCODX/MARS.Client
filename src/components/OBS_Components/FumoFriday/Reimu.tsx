@@ -3,9 +3,9 @@ import { Textfit } from "react-textfit";
 
 import RainbowText from "@/shared/components/RainbowText/RainbowText";
 
+import commonStyles from "../OBSCommon.module.scss";
 import { Message } from "./FumoFridayController";
 import styles from "./Styles.module.scss";
-import commonStyles from "../OBSCommon.module.scss";
 import { getVideoPath } from "./videoAssets";
 
 interface Props {
