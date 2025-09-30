@@ -1,3 +1,5 @@
+import "./body.css";
+
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
@@ -5,7 +7,6 @@ import {
   RxdcodxViewers,
   TelegramusHubSignalRContext,
 } from "@/shared/api";
-import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import styles from "./Credits.module.scss";
 
@@ -43,12 +44,13 @@ const NameRow: React.FC<{ follower: FollowerInfo }> = ({ follower }) => {
 
 const Credits: React.FC = () => {
   const api = useMemo(() => new RxdcodxViewers(), []);
-  const { showToast } = useToastModal();
 
   const [moderators, setModerators] = useState<FollowerInfo[]>([]);
   const [vips, setVips] = useState<FollowerInfo[]>([]);
   const [followers, setFollowers] = useState<FollowerInfo[]>([]);
   const [contentReady, setContentReady] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -68,18 +70,22 @@ const Credits: React.FC = () => {
     });
   }, []);
 
-  // Обработчик SignalR события CreditsReset
+  // Обработчик SignalR события Credits — показать экран и запустить титры после затемнения
   TelegramusHubSignalRContext.useSignalREffect(
-    "CreditsReset",
+    "Credits",
     () => {
-      resetCreditsAnimation();
-      showToast({
-        type: "info",
-        title: "Титры сброшены",
-        message: "Анимация титров перезапущена с начала",
-      });
+      setIsActive(true);
+      setIsPlaying(false);
+
+      // Запустить прокрутку спустя 2 секунды (время затемнения фона)
+      const startId = window.setTimeout(() => {
+        resetCreditsAnimation();
+        setIsPlaying(true);
+      }, 2000);
+
+      return () => window.clearTimeout(startId);
     },
-    [resetCreditsAnimation, showToast]
+    [resetCreditsAnimation]
   );
 
   useEffect(() => {
@@ -100,25 +106,28 @@ const Credits: React.FC = () => {
         setFollowers(followersData);
         setContentReady(true);
       } catch (e) {
-        const msg = e instanceof Error ? e.message : "Неизвестная ошибка";
-        showToast({ type: "error", title: "Ошибка загрузки", message: msg });
+        console.error("Ошибка загрузки данных титров:", e);
       }
     };
 
     load();
-  }, [api, showToast]);
+  }, [api]);
 
   useEffect(() => {
-    if (!containerRef.current || !contentReady) return;
-    // Перезапустить анимацию при обновлении данных только после готовности контента
+    if (!containerRef.current || !contentReady || !isPlaying) return;
+    // Перезапустить анимацию при обновлении данных только после готовности контента и команды на проигрывание
     const el = containerRef.current;
-    // force reflow to restart animation
     void el.offsetHeight;
     el.classList.remove(styles.play);
-    // next frame
     const id = requestAnimationFrame(() => el.classList.add(styles.play));
     return () => cancelAnimationFrame(id);
-  }, [contentReady, moderators.length, vips.length, followers.length]);
+  }, [
+    contentReady,
+    isPlaying,
+    moderators.length,
+    vips.length,
+    followers.length,
+  ]);
 
   const renderNames = (list: FollowerInfo[]) => {
     if (!list || list.length === 0)
@@ -135,33 +144,36 @@ const Credits: React.FC = () => {
   };
 
   return (
-    <div className={styles.root}>
-      <div className={styles.maskTop} />
-      <div className={styles.maskBottom} />
-      <div
-        ref={containerRef}
-        className={`${styles.scroll} ${contentReady ? styles.play : ""}`}
-      >
-        <div className={styles.block}>
-          <SectionTitle>TWITCH.TV/RXDCODX</SectionTitle>
-        </div>
+    <div className={`${styles.root} ${isActive ? styles.active : ""}`}>
+      {isActive && (
+        <>
+          <div className={styles.maskTop} />
+          <div className={styles.maskBottom} />
+          <div
+            ref={containerRef}
+            className={`${styles.scroll} ${contentReady && isPlaying ? styles.play : ""}`}
+          >
+            <div className={styles.block}>
+              <SectionTitle>TWITCH.TV/RXDCODX</SectionTitle>
+            </div>
 
-        <div className={styles.block}>
-          <SectionTitle>СПАСИБО МОДЕРАТОРАМ</SectionTitle>
-          <div className={styles.list}>{renderNames(moderators)}</div>
-        </div>
+            <div className={styles.block}>
+              <SectionTitle>СПАСИБО МОДЕРАТОРАМ</SectionTitle>
+              <div className={styles.list}>{renderNames(moderators)}</div>
+            </div>
 
-        <div className={styles.block}>
-          <SectionTitle>СПАСИБО VIP</SectionTitle>
-          <div className={styles.list}>{renderNames(vips)}</div>
-        </div>
+            <div className={styles.block}>
+              <SectionTitle>СПАСИБО VIP</SectionTitle>
+              <div className={styles.list}>{renderNames(vips)}</div>
+            </div>
 
-        <div className={styles.block}>
-          <SectionTitle>СПАСИБО ФОЛОВЕРАМ</SectionTitle>
-          <div className={styles.list}>{renderNames(followers)}</div>
-        </div>
-      </div>
-
+            <div className={styles.block}>
+              <SectionTitle>СПАСИБО ФОЛОВЕРАМ</SectionTitle>
+              <div className={styles.list}>{renderNames(followers)}</div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

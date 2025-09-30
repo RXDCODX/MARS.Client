@@ -4,12 +4,17 @@
   position: relative;
   width: 100vw;
   height: 100vh;
-  background: black;
+  background: transparent;
+  transition: background-color 2s ease;
   color: white;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.active {
+  background-color: black;
 }
 
 .maskTop,
