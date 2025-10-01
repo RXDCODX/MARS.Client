@@ -9,6 +9,7 @@ import Credits from "@/components/OBS_Components/Credits/Credits";
 import { FumoFriday } from "@/components/OBS_Components/FumoFriday";
 import GaoAlertController from "@/components/OBS_Components/GaoAlert/GaoAlertController";
 import HighliteMessage from "@/components/OBS_Components/HighliteMessage/HighliteMessage";
+import MichaelJackson from "@/components/OBS_Components/MichaelJackson";
 import {
   AvatarWithFire,
   AvatarWithFireSvg,
@@ -26,6 +27,16 @@ import { RouteConfig } from "./RouteConfig";
 
 // Массив OBS компонентов (без Layout для интеграции в OBS)
 export const obsComponentRoutes: RouteConfig[] = [
+  {
+    path: "/MichaelJackson",
+    name: "Michael Jackson",
+    type: "obs",
+    element: (
+      <OBSComponentWrapper>
+        <MichaelJackson />
+      </OBSComponentWrapper>
+    ),
+  },
   {
     path: "/credits",
     name: "Титры (RXDCODX)",
