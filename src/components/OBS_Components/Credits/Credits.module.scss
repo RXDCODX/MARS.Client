@@ -43,30 +43,15 @@
 
 .scroll {
   position: absolute;
+  top: 105%;
+  left: 0;
   width: 100%;
   will-change: transform;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6vh;
-  visibility: hidden;
-}
-
-.play {
-  animation: moveUp linear;
   visibility: visible;
-  animation-duration: 45s;
-  animation-fill-mode: forwards;
-}
-
-@keyframes moveUp {
-  from {
-    transform: translateY(80%);
-  }
-
-  to {
-    transform: translateY(-120%);
-  }
 }
 
 .block {
