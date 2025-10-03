@@ -1,6 +1,6 @@
 import "./body.css";
 
-import { motion, useMotionValue } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
@@ -12,9 +12,44 @@ import Announce from "@/shared/Utils/Announce/Announce";
 
 import styles from "./Credits.module.scss";
 
-const SectionTitle: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => <div className={styles.sectionTitle}>{children}</div>;
+// Импортируем список музыкальных треков из папки music (mp3/ogg/wav)
+const musicFiles = import.meta.glob("./music/*.{mp3,ogg,wav}", {
+  eager: true,
+  query: "url",
+  import: "default",
+}) as Record<string, string>;
+
+const musicUrls: string[] = Object.values(musicFiles).sort();
+
+// Ключ для сохранения индекса трека между запусками
+const MUSIC_INDEX_STORAGE_KEY = "credits-music-index";
+
+// Импортируем иконки через import.meta.glob
+const iconFiles = import.meta.glob("./icons/*.png", {
+  eager: true,
+  query: "url",
+  import: "default",
+}) as Record<string, string>;
+
+// Создаем объект с иконками
+const icons = {
+  follower: iconFiles["./icons/follower.png"],
+  mods: iconFiles["./icons/mods.png"],
+  streamer: iconFiles["./icons/streamer.png"],
+  vip: iconFiles["./icons/vip.png"],
+};
+
+const SectionTitle: React.FC<{
+  children: React.ReactNode;
+  leftIcon?: string;
+  rightIcon?: string;
+}> = ({ children, leftIcon, rightIcon }) => (
+  <div className={styles.sectionTitle}>
+    {leftIcon && <img src={leftIcon} alt="" className={styles.sectionIcon} />}
+    <span className={styles.sectionText}>{children}</span>
+    {rightIcon && <img src={rightIcon} alt="" className={styles.sectionIcon} />}
+  </div>
+);
 
 const NameRow: React.FC<{ follower: FollowerInfo }> = ({ follower }) => {
   const textColor = follower.chatColor || "#FFFFFF";
@@ -46,7 +81,7 @@ const NameRow: React.FC<{ follower: FollowerInfo }> = ({ follower }) => {
 
 const Credits: React.FC = () => {
   const api = useMemo(() => new RxdcodxViewers(), []);
-  const y = useMotionValue(0);
+  const controls = useAnimation();
 
   const [moderators, setModerators] = useState<FollowerInfo[]>([]);
   const [vips, setVips] = useState<FollowerInfo[]>([]);
@@ -55,160 +90,340 @@ const Credits: React.FC = () => {
   const [isActive, setIsActive] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [announced, setAnnounced] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const animationTimeoutRef = useRef<number | null>(null);
+  const contentReadyRef = useRef(false);
+  const runIdRef = useRef(0);
 
-  // Функция для запуска анимации титров с framer-motion
-  const startCreditsAnimation = useCallback(async () => {
-    if (!containerRef.current || !contentReady) return;
+  // Аудио и WebAudio для плавного затухания
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const gainNodeRef = useRef<GainNode | null>(null);
+  const sourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const fadeTimeoutRef = useRef<number | null>(null);
+  const selectedTrackUrlRef = useRef<string | null>(null);
 
-    // Ждем несколько кадров, чтобы контент полностью отрендерился
-    await new Promise(resolve => requestAnimationFrame(resolve));
-    await new Promise(resolve => requestAnimationFrame(resolve));
-    await new Promise(resolve => requestAnimationFrame(resolve));
+  const ensureAudioGraph = useCallback(() => {
+    if (!audioRef.current) return;
+    if (!audioContextRef.current) {
+      type WindowWithWebkitAC = typeof window & {
+        webkitAudioContext?: typeof AudioContext;
+      };
+      const AudioContextCtor =
+        (window as WindowWithWebkitAC).webkitAudioContext ?? AudioContext;
+      audioContextRef.current = new AudioContextCtor();
+    }
+    const ctx = audioContextRef.current;
 
-    // Принудительно пересчитываем layout
-    if (containerRef.current) {
-      void containerRef.current.offsetHeight;
+    if (!gainNodeRef.current) {
+      gainNodeRef.current = ctx.createGain();
+      gainNodeRef.current.gain.setValueAtTime(1.0, ctx.currentTime);
     }
 
-    // Дополнительная задержка для полного рендера всех элементов
-    await new Promise(resolve => setTimeout(resolve, 50));
+    if (!sourceNodeRef.current && audioRef.current) {
+      try {
+        sourceNodeRef.current = ctx.createMediaElementSource(audioRef.current);
+      } catch {
+        // Источник уже создан для данного элемента, игнорируем
+      }
+    }
 
-    // Проверяем, что все изображения загружены
-    const images = containerRef.current.querySelectorAll("img");
-    const imagePromises = Array.from(images).map(img => {
-      if (img.complete) return Promise.resolve();
-      return new Promise(resolve => {
-        img.onload = resolve;
-        img.onerror = resolve;
-      });
-    });
-    await Promise.all(imagePromises);
+    // Переподключаем граф
+    try {
+      // Отключаем прежние соединения
+      sourceNodeRef.current?.disconnect();
+    } catch {
+      // ignore
+    }
+    try {
+      gainNodeRef.current?.disconnect();
+    } catch {
+      // ignore
+    }
 
-    // Используем scrollHeight для полной высоты контента и текущую геометрию для смещения
-    const containerHeight = containerRef.current.scrollHeight;
-    const viewportHeight = window.innerHeight;
-    const rect = containerRef.current.getBoundingClientRect();
+    if (sourceNodeRef.current && gainNodeRef.current) {
+      sourceNodeRef.current.connect(gainNodeRef.current);
+      gainNodeRef.current.connect(ctx.destination);
+    }
+  }, []);
 
-    console.log(
-      "Container scrollHeight:",
-      containerHeight,
-      "Viewport height:",
-      viewportHeight,
-      "Container rect:",
-      rect.top,
-      rect.height
+  const stopAndCleanupAudio = useCallback(() => {
+    if (fadeTimeoutRef.current) {
+      window.clearTimeout(fadeTimeoutRef.current);
+      fadeTimeoutRef.current = null;
+    }
+    if (audioRef.current) {
+      try {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current.src = "";
+      } catch {
+        // ignore
+      }
+    }
+    // Возвращаем громкость к 1 на всякий случай
+    if (audioContextRef.current && gainNodeRef.current) {
+      gainNodeRef.current.gain.cancelScheduledValues(
+        audioContextRef.current.currentTime
+      );
+      gainNodeRef.current.gain.setValueAtTime(
+        1.0,
+        audioContextRef.current.currentTime
+      );
+    }
+  }, []);
+
+  const selectNextMusicUrl = useCallback((): string | null => {
+    if (!musicUrls.length) return null;
+    let storedIndex = Number(localStorage.getItem(MUSIC_INDEX_STORAGE_KEY));
+    if (Number.isNaN(storedIndex) || storedIndex < 0) storedIndex = -1;
+    const nextIndex = (storedIndex + 1) % musicUrls.length;
+    localStorage.setItem(MUSIC_INDEX_STORAGE_KEY, String(nextIndex));
+    return musicUrls[nextIndex];
+  }, []);
+
+  const playSelectedTrack = useCallback(
+    async (url: string) => {
+      if (!audioRef.current) return;
+      ensureAudioGraph();
+      audioRef.current.src = url;
+      audioRef.current.loop = false;
+      audioRef.current.muted = false;
+      audioRef.current.preload = "auto";
+      try {
+        await audioRef.current.play();
+      } catch {
+        // Автоплей может запретиться — пробуем с muted
+        audioRef.current.muted = true;
+        await audioRef.current.play().catch(() => {
+          // ignore
+        });
+        // Снимем mute как только можно
+        setTimeout(() => {
+          if (audioRef.current) audioRef.current.muted = false;
+        }, 200);
+      }
+    },
+    [ensureAudioGraph]
+  );
+
+  // Ожидание загрузки всех изображений внутри контейнера
+  const waitImagesLoaded = useCallback(async () => {
+    if (!containerRef.current) return;
+    const images = Array.from(containerRef.current.querySelectorAll("img"));
+    if (!images.length) return;
+    await Promise.all(
+      images.map(img => {
+        const image = img as HTMLImageElement;
+        if (image.complete) return Promise.resolve(undefined);
+        return new Promise<void>(resolve => {
+          image.onload = () => resolve();
+          image.onerror = () => resolve();
+        });
+      })
     );
+  }, []);
 
-    // Цели по позициям относительно текущего top (rect.top):
-    // хотим начать строго под экраном и закончить строго выше экрана
-    const padding = 40; // небольшой отступ
+  // Функция для загрузки данных титров
+  const loadCreditsData = useCallback(async () => {
+    if (isLoading) {
+      console.log("Загрузка уже идет, пропускаем...");
+      return;
+    }
+
+    console.log("Начинаем загрузку данных титров...");
+    setIsLoading(true);
+    setContentReady(false);
+
+    try {
+      const allRes = await api.rxdcodxViewersAllList({ forceUseCash: true });
+      const allData = (allRes.data as unknown as FollowerInfo[]) ?? [];
+
+      // Фильтруем данные по типам
+      const moderatorsData = allData.filter(user => user.isModerator);
+      const vipsData = allData.filter(user => user.isVip);
+      const followersData = allData.filter(
+        user => !user.isModerator && !user.isVip
+      );
+
+      setModerators(moderatorsData);
+      setVips(vipsData);
+      setFollowers(followersData);
+
+      console.log("Данные титров загружены:", {
+        moderators: moderatorsData.length,
+        vips: vipsData.length,
+        followers: followersData.length,
+      });
+
+      setContentReady(true);
+      contentReadyRef.current = true;
+      console.log("contentReady установлен в true");
+    } catch (e) {
+      console.error("Ошибка загрузки данных титров:", e);
+      setContentReady(false);
+      contentReadyRef.current = false;
+    } finally {
+      setIsLoading(false);
+      console.log("Загрузка завершена, isLoading установлен в false");
+    }
+  }, [api, isLoading]);
+
+  // Функция для запуска анимации титров через framer-motion + музыка
+  const startCreditsAnimation = useCallback(async () => {
+    const currentRunId = runIdRef.current;
+    if (!containerRef.current) return;
+    if (!contentReadyRef.current) return;
+    if (isAnimating) return;
+
+    setIsAnimating(true);
+
+    // Ждем рендер и загрузку изображений
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    await new Promise(resolve => requestAnimationFrame(resolve));
+    await waitImagesLoaded();
+
+    if (currentRunId !== runIdRef.current) {
+      setIsAnimating(false);
+      return;
+    }
+
+    const el = containerRef.current;
+    const containerHeight = el.scrollHeight;
+    const viewportHeight = window.innerHeight;
+    const rect = el.getBoundingClientRect();
+    const padding = 40;
     const startY = viewportHeight + padding - rect.top;
     const endY = -containerHeight - padding - rect.top;
 
-    console.log("Start Y:", startY, "End Y:", endY);
-
-    // Длительность анимации: 45 секунд
-    const duration = 45;
-
-    // Устанавливаем стартовую позицию перед показом
-    y.set(startY);
-    console.log("Set initial Y to:", startY);
-
-    // Делаем видимым контент и сразу запускаем анимацию
     setIsPlaying(true);
+    await controls.set({ y: startY });
 
-    // Ждем один кадр, чтобы убедиться, что позиция установлена
-    await new Promise(resolve => requestAnimationFrame(resolve));
-    console.log("Current Y after set:", y.get());
+    if (currentRunId !== runIdRef.current) {
+      setIsPlaying(false);
+      setIsAnimating(false);
+      return;
+    }
 
-    // Используем animate для плавной анимации
-    await new Promise(resolve => {
-      const startTime = Date.now();
-      const animate = () => {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min(elapsed / (duration * 1000), 1);
-        const currentY = startY + (endY - startY) * progress;
-        y.set(currentY);
+    // Продолжительность прокрутки титров
+    const animationDurationSec = 45;
 
-        // Принудительно обновляем стиль
-        if (containerRef.current) {
-          containerRef.current.style.transform = `translateY(${currentY}px)`;
+    // Планируем экспоненциальное затухание за 5 сек до конца анимации
+    if (audioContextRef.current && gainNodeRef.current) {
+      const ctx = audioContextRef.current;
+      const startDelayMs = Math.max(0, (animationDurationSec - 5) * 1000);
+      fadeTimeoutRef.current = window.setTimeout(() => {
+        try {
+          // Устанавливаем текущее значение как старт и уходим в 0.001 за 5 секунд
+          const now = ctx.currentTime;
+          const gain = gainNodeRef.current!.gain;
+          gain.cancelScheduledValues(now);
+          // Стартуем с max(текущего, маленького положительного)
+          const startVal = Math.max(0.01, gain.value || 1.0);
+          gain.setValueAtTime(startVal, now);
+          gain.exponentialRampToValueAtTime(0.001, now + 5);
+        } catch {
+          // ignore
         }
+      }, startDelayMs);
+    }
 
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        } else {
-          resolve(undefined);
-        }
-      };
-      requestAnimationFrame(animate);
+    await controls.start({
+      y: endY,
+      transition: { duration: animationDurationSec, ease: "linear" },
     });
 
-    // После завершения анимации скрываем фон
+    if (currentRunId !== runIdRef.current) return;
+
     setIsPlaying(false);
     setIsActive(false);
-  }, [contentReady, y]);
+    setIsAnimating(false);
+
+    // Останавливаем музыку и размьючиваем
+    stopAndCleanupAudio();
+    TelegramusHubSignalRContext.invoke("UnmuteSessions");
+  }, [controls, isAnimating, waitImagesLoaded, stopAndCleanupAudio]);
 
   // Обработчик SignalR события Credits — показать экран и запустить титры после затемнения
   TelegramusHubSignalRContext.useSignalREffect(
     "Credits",
-    () => {
-      setIsActive(true);
-      setIsPlaying(false);
+    async () => {
+      try {
+        // Новый запуск
+        runIdRef.current += 1;
+        // Сбрасываем состояние
+        setIsActive(true);
+        setIsPlaying(false);
+        setContentReady(false);
+        contentReadyRef.current = false;
 
-      // Запустить прокрутку спустя 2 секунды (время затемнения фона)
-      const startId = window.setTimeout(() => {
-        // Анимация запустится только если контент готов
-        if (contentReady) {
-          startCreditsAnimation();
+        // Выбираем следующий трек
+        const nextUrl = selectNextMusicUrl();
+        selectedTrackUrlRef.current = nextUrl;
+        // На новый запуск гарантированно останавливаем предыдущий звук
+        stopAndCleanupAudio();
+
+        // Сразу запускаем музыку и глушим остальные источники (старт затемнения)
+        if (selectedTrackUrlRef.current) {
+          try {
+            TelegramusHubSignalRContext.invoke("MuteAll", []);
+            await playSelectedTrack(selectedTrackUrlRef.current);
+          } catch {
+            // ignore
+          }
         }
-      }, 2000);
 
-      return () => {
-        window.clearTimeout(startId);
-      };
+        // Загружаем данные титров
+        await loadCreditsData();
+
+        // Запустить прокрутку спустя 2 секунды (время затемнения фона)
+        animationTimeoutRef.current = window.setTimeout(() => {
+          startCreditsAnimation();
+        }, 2000);
+
+        return () => {
+          if (animationTimeoutRef.current) {
+            window.clearTimeout(animationTimeoutRef.current);
+            animationTimeoutRef.current = null;
+          }
+          controls.stop();
+          stopAndCleanupAudio();
+          TelegramusHubSignalRContext.invoke("UnmuteSessions");
+        };
+      } catch {
+        setIsActive(false);
+        setContentReady(false);
+        contentReadyRef.current = false;
+      }
     },
-    [startCreditsAnimation, contentReady]
+    [
+      loadCreditsData,
+      startCreditsAnimation,
+      controls,
+      selectNextMusicUrl,
+      stopAndCleanupAudio,
+    ]
   );
 
-  // Запуск анимации когда контент готов и нужно играть
-  useEffect(() => {
-    if (contentReady && isPlaying) {
-      // Дополнительная задержка для полного рендера контента
-      const timer = setTimeout(() => {
-        startCreditsAnimation();
-      }, 100);
-
-      return () => clearTimeout(timer);
-    }
-  }, [contentReady, isPlaying, startCreditsAnimation]);
-
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const allRes = await api.rxdcodxViewersAllList({ forceUseCash: true });
-        const allData = (allRes.data as unknown as FollowerInfo[]) ?? [];
-
-        // Фильтруем данные по типам
-        const moderatorsData = allData.filter(user => user.isModerator);
-        const vipsData = allData.filter(user => user.isVip);
-        const followersData = allData.filter(
-          user => !user.isModerator && !user.isVip
-        );
-
-        setModerators(moderatorsData);
-        setVips(vipsData);
-        setFollowers(followersData);
-        setContentReady(true);
-      } catch (e) {
-        console.error("Ошибка загрузки данных титров:", e);
+  // Cleanup эффект для очистки таймеров
+  useEffect(
+    () => () => {
+      if (animationTimeoutRef.current) {
+        window.clearTimeout(animationTimeoutRef.current);
+        animationTimeoutRef.current = null;
       }
-    };
-
-    load();
-  }, [api]);
+      if (fadeTimeoutRef.current) {
+        window.clearTimeout(fadeTimeoutRef.current);
+        fadeTimeoutRef.current = null;
+      }
+      stopAndCleanupAudio();
+      TelegramusHubSignalRContext.invoke("UnmuteSessions");
+    },
+    [stopAndCleanupAudio]
+  );
 
   const renderNames = useCallback((list: FollowerInfo[]) => {
     if (!list || list.length === 0)
@@ -229,38 +444,58 @@ const Credits: React.FC = () => {
       {!announced && (
         <Announce title={"Credits"} callback={() => setAnnounced(true)} />
       )}
+      <audio ref={audioRef} style={{ visibility: "hidden" }} />
       <div className={`${styles.root} ${isActive ? styles.active : ""}`}>
         {isActive && (
           <>
             <div className={styles.maskTop} />
             <div className={styles.maskBottom} />
-            <motion.div
-              ref={containerRef}
-              className={styles.scroll}
-              style={{
-                transform: `translateY(${y.get()}px)`,
-                visibility: isPlaying ? "visible" : "hidden",
-              }}
-            >
-              <div className={styles.block}>
-                <SectionTitle>TWITCH.TV/RXDCODX</SectionTitle>
-              </div>
+            {/* Невидимый аудио-элемент для проигрывания музыки титров */}
+            {isLoading && (
+              <div className={styles.loading}>Загрузка данных титров...</div>
+            )}
+            {contentReady && (
+              <motion.div
+                ref={containerRef}
+                className={styles.scroll}
+                animate={controls}
+                initial={{ y: 0 }}
+                style={{ visibility: isPlaying ? "visible" : "hidden" }}
+              >
+                <div className={styles.block}>
+                  <SectionTitle
+                    leftIcon={icons.streamer}
+                    rightIcon={icons.streamer}
+                  >
+                    TWITCH.TV/RXDCODX
+                  </SectionTitle>
+                </div>
 
-              <div className={styles.block}>
-                <SectionTitle>СПАСИБО МОДЕРАТОРАМ</SectionTitle>
-                <div className={styles.list}>{renderNames(moderators)}</div>
-              </div>
+                <div className={styles.block}>
+                  <SectionTitle leftIcon={icons.mods} rightIcon={icons.mods}>
+                    СПАСИБО МОДЕРАТОРАМ
+                  </SectionTitle>
+                  <div className={styles.list}>{renderNames(moderators)}</div>
+                </div>
 
-              <div className={styles.block}>
-                <SectionTitle>СПАСИБО VIP</SectionTitle>
-                <div className={styles.list}>{renderNames(vips)}</div>
-              </div>
+                <div className={styles.block}>
+                  <SectionTitle leftIcon={icons.vip} rightIcon={icons.vip}>
+                    СПАСИБО VIP
+                  </SectionTitle>
+                  <div className={styles.list}>{renderNames(vips)}</div>
+                </div>
 
-              <div className={styles.block}>
-                <SectionTitle>СПАСИБО ФОЛОВЕРАМ</SectionTitle>
-                <div className={styles.list}>{renderNames(followers)}</div>
-              </div>
-            </motion.div>
+                <div className={styles.block}>
+                  <SectionTitle
+                    leftIcon={icons.follower}
+                    rightIcon={icons.follower}
+                  >
+                    СПАСИБО ФОЛОВЕРАМ
+                  </SectionTitle>
+                  <div className={styles.list}>{renderNames(followers)}</div>
+                </div>
+              </motion.div>
+            )}
           </>
         )}
       </div>

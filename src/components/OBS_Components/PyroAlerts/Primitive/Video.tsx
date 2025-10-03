@@ -14,8 +14,8 @@ import { MediaInfo } from "@/shared/api";
 import { KeyWordText } from "@/shared/components/KeyWordText";
 import { getCoordinates, getRandomRotation } from "@/shared/Utils";
 
-import styles from "./Media.module.scss";
 import common from "../../OBSCommon.module.scss";
+import styles from "./Media.module.scss";
 
 declare global {
   interface Window {

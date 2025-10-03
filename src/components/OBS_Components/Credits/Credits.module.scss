@@ -70,6 +70,23 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 1.2vw, 16px);
+}
+
+.sectionIcon {
+  width: clamp(32px, 4vw, 64px);
+  height: clamp(32px, 4vw, 64px);
+  flex-shrink: 0;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+}
+
+.sectionText {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .list {
