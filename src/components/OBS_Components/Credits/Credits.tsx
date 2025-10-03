@@ -8,6 +8,7 @@ import {
   RxdcodxViewers,
   TelegramusHubSignalRContext,
 } from "@/shared/api";
+import { useTwitchStore } from "@/shared/twitchStore/twitchStore";
 import Announce from "@/shared/Utils/Announce/Announce";
 
 import styles from "./Credits.module.scss";
@@ -82,6 +83,7 @@ const NameRow: React.FC<{ follower: FollowerInfo }> = ({ follower }) => {
 const Credits: React.FC = () => {
   const api = useMemo(() => new RxdcodxViewers(), []);
   const controls = useAnimation();
+  const { getStreamerInfo, getStreamerChatColor } = useTwitchStore();
 
   const [moderators, setModerators] = useState<FollowerInfo[]>([]);
   const [vips, setVips] = useState<FollowerInfo[]>([]);
@@ -92,6 +94,11 @@ const Credits: React.FC = () => {
   const [announced, setAnnounced] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [streamerInfo, setStreamerInfo] = useState<{
+    displayName: string;
+    profileImageUrl: string;
+    chatColor: string;
+  } | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const animationTimeoutRef = useRef<number | null>(null);
@@ -227,6 +234,32 @@ const Credits: React.FC = () => {
     );
   }, []);
 
+  // Функция для загрузки информации о стримере
+  const loadStreamerInfo = useCallback(async () => {
+    try {
+      // ID стримера rxdcodx (785975641)
+      const streamerId = "785975641";
+      const [streamerData, chatColor] = await Promise.all([
+        getStreamerInfo(streamerId),
+        getStreamerChatColor(streamerId),
+      ]);
+
+      if (streamerData) {
+        setStreamerInfo({
+          displayName: streamerData.displayName,
+          profileImageUrl: streamerData.profilePictureUrl,
+          chatColor: chatColor || "#FFFFFF",
+        });
+        console.log("Информация о стримере загружена:", {
+          displayName: streamerData.displayName,
+          chatColor: chatColor || "#FFFFFF",
+        });
+      }
+    } catch (error) {
+      console.error("Ошибка загрузки информации о стримере:", error);
+    }
+  }, [getStreamerInfo, getStreamerChatColor]);
+
   // Функция для загрузки данных титров
   const loadCreditsData = useCallback(async () => {
     if (isLoading) {
@@ -239,7 +272,12 @@ const Credits: React.FC = () => {
     setContentReady(false);
 
     try {
-      const allRes = await api.rxdcodxViewersAllList({ forceUseCash: true });
+      // Загружаем данные параллельно
+      const [allRes] = await Promise.all([
+        api.rxdcodxViewersAllList({ forceUseCash: true }),
+        loadStreamerInfo(),
+      ]);
+
       const allData = (allRes.data as unknown as FollowerInfo[]) ?? [];
 
       // Фильтруем данные по типам
@@ -270,7 +308,7 @@ const Credits: React.FC = () => {
       setIsLoading(false);
       console.log("Загрузка завершена, isLoading установлен в false");
     }
-  }, [api, isLoading]);
+  }, [api, isLoading, loadStreamerInfo]);
 
   // Функция для запуска анимации титров через framer-motion + музыка
   const startCreditsAnimation = useCallback(async () => {
@@ -463,12 +501,35 @@ const Credits: React.FC = () => {
                 style={{ visibility: isPlaying ? "visible" : "hidden" }}
               >
                 <div className={styles.block}>
-                  <SectionTitle
-                    leftIcon={icons.streamer}
-                    rightIcon={icons.streamer}
-                  >
-                    TWITCH.TV/RXDCODX
-                  </SectionTitle>
+                  {streamerInfo && (
+                    <div className={styles.streamerSection}>
+                      <img
+                        src={streamerInfo.profileImageUrl}
+                        alt={streamerInfo.displayName}
+                        className={styles.streamerAvatar}
+                      />
+                      <SectionTitle
+                        leftIcon={icons.streamer}
+                        rightIcon={icons.streamer}
+                      >
+                        <span className={styles.twitchPrefix}>TWITCH.TV/</span>
+                        <span
+                          className={styles.streamerName}
+                          style={{ color: streamerInfo.chatColor }}
+                        >
+                          {streamerInfo.displayName.toUpperCase()}
+                        </span>
+                      </SectionTitle>
+                    </div>
+                  )}
+                  {!streamerInfo && (
+                    <SectionTitle
+                      leftIcon={icons.streamer}
+                      rightIcon={icons.streamer}
+                    >
+                      TWITCH.TV/RXDCODX
+                    </SectionTitle>
+                  )}
                 </div>
 
                 <div className={styles.block}>

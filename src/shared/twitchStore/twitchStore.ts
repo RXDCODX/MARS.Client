@@ -1,6 +1,6 @@
 import emoticons from "@mkody/twitch-emoticons";
 import type {} from "@redux-devtools/extension";
-import { ApiClient, HelixChatBadgeSet } from "@twurple/api";
+import { ApiClient, HelixChatBadgeSet, HelixUser } from "@twurple/api";
 import { AppTokenAuthProvider } from "@twurple/auth";
 import { ChatMessage } from "@twurple/chat";
 import { create } from "zustand";
@@ -13,6 +13,8 @@ interface Actions {
   setBadges: (badges: HelixChatBadgeSet[]) => void;
   parse: (text: string, size?: number) => string;
   sendMsgToPyrokxnezxz: (msg: string) => Promise<void>;
+  getStreamerInfo: (userId: string) => Promise<HelixUser | null>;
+  getStreamerChatColor: (userId: string) => Promise<string | null>;
 }
 
 interface State {
@@ -98,6 +100,30 @@ export const useTwitchStore = create<State & Actions>()(
       },
       sendMsgToPyrokxnezxz: async (msg: string) => {
         await connection.invoke("TwitchMsg", msg);
+      },
+      getStreamerInfo: async (userId: string) => {
+        const client = get().twitchApiClient;
+        if (!client) return null;
+
+        try {
+          const user = await client.users.getUserById(userId);
+          return user;
+        } catch (error) {
+          console.error("Ошибка получения информации о стримере:", error);
+          return null;
+        }
+      },
+      getStreamerChatColor: async (userId: string) => {
+        const client = get().twitchApiClient;
+        if (!client) return null;
+
+        try {
+          const color = await client.chat.getColorForUser(userId);
+          return color || null;
+        } catch (error) {
+          console.error("Ошибка получения цвета чата стримера:", error);
+          return null;
+        }
       },
     };
   })
