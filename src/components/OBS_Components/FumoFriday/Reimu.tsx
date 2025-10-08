@@ -50,7 +50,7 @@ export function Reimu({ callback, displayName }: Props) {
             </div>
             <div>
               <span className={commonStyles.textStrokeShadow}>
-                <RainbowText text="HAPPY FUMO FRIDAY!" />
+                <RainbowText>HAPPY FUMO FRIDAY!</RainbowText>
               </span>
             </div>
           </Textfit>

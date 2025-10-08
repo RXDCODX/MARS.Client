@@ -1,7 +1,22 @@
 import "./body.css";
 
-import { motion, useAnimation } from "framer-motion";
+import { motion, useAnimationControls } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+// Импортируем фоны из react-bits, которые не требуют мыши
+import Aurora from "react-bits/src/ts-default/Backgrounds/Aurora/Aurora";
+import Balatro from "react-bits/src/ts-default/Backgrounds/Balatro/Balatro";
+import DarkVeil from "react-bits/src/ts-default/Backgrounds/DarkVeil/DarkVeil";
+import FaultyTerminal from "react-bits/src/ts-default/Backgrounds/FaultyTerminal/FaultyTerminal";
+import Galaxy from "react-bits/src/ts-default/Backgrounds/Galaxy/Galaxy";
+import Iridescence from "react-bits/src/ts-default/Backgrounds/Iridescence/Iridescence";
+import LetterGlitch from "react-bits/src/ts-default/Backgrounds/LetterGlitch/LetterGlitch";
+import Lightning from "react-bits/src/ts-default/Backgrounds/Lightning/Lightning";
+import LightRays from "react-bits/src/ts-default/Backgrounds/LightRays/LightRays";
+import Particles from "react-bits/src/ts-default/Backgrounds/Particles/Particles";
+import Prism from "react-bits/src/ts-default/Backgrounds/Prism/Prism";
+import PrismaticBurst from "react-bits/src/ts-default/Backgrounds/PrismaticBurst/PrismaticBurst";
+import Squares from "react-bits/src/ts-default/Backgrounds/Squares/Squares";
+import Threads from "react-bits/src/ts-default/Backgrounds/Threads/Threads";
 
 import {
   FollowerInfo,
@@ -24,6 +39,165 @@ const musicUrls: string[] = Object.values(musicFiles).sort();
 
 // Ключ для сохранения индекса трека между запусками
 const MUSIC_INDEX_STORAGE_KEY = "credits-music-index";
+
+// Конфигурации фонов, которые не требуют мыши
+// Бекграунды под названием Beams и Silk вместе вызывают баг не рендера app.tsx
+const backgroundConfigs = [
+  {
+    name: "Aurora",
+    element: (
+      <Aurora
+        colorStops={["#5227FF", "#7cff67", "#5227FF"]}
+        amplitude={1.2}
+        blend={0.6}
+      />
+    ),
+  },
+  {
+    name: "DarkVeil",
+    element: (
+      <DarkVeil
+        hueShift={200}
+        noiseIntensity={0.05}
+        scanlineIntensity={0.1}
+        speed={0.8}
+      />
+    ),
+  },
+  {
+    name: "Lightning",
+    element: <Lightning hue={280} speed={1.2} intensity={1.5} size={1.2} />,
+  },
+  {
+    name: "LightRays",
+    element: (
+      <LightRays
+        raysColor="#5227FF"
+        raysSpeed={1.5}
+        lightSpread={1.2}
+        rayLength={2.5}
+        followMouse={false}
+      />
+    ),
+  },
+  {
+    name: "LetterGlitch",
+    element: (
+      <LetterGlitch
+        glitchColors={["#2b4539", "#61dca3", "#61b3dc"]}
+        glitchSpeed={70}
+        smooth={true}
+        centerVignette={true}
+        outerVignette={true}
+        characters="АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ01234567890"
+      />
+    ),
+  },
+  {
+    name: "Squares",
+    element: (
+      <Squares
+        direction="diagonal"
+        speed={1.0}
+        borderColor="#B19EEF"
+        squareSize={40}
+        hoverFillColor="rgba(177, 158, 239, 0.3)"
+      />
+    ),
+  },
+  {
+    name: "Balatro",
+    element: (
+      <Balatro
+        mouseInteraction={false}
+        color1="#DE443B"
+        color2="#006BB4"
+        color3="#162325"
+        isRotate={true}
+        spinSpeed={5}
+      />
+    ),
+  },
+  {
+    name: "FaultyTerminal",
+    element: (
+      <FaultyTerminal
+        mouseReact={false}
+        tint="#5227FF"
+        flickerAmount={0.8}
+        glitchAmount={0.9}
+      />
+    ),
+  },
+  {
+    name: "Galaxy",
+    element: (
+      <Galaxy
+        mouseInteraction={false}
+        hueShift={200}
+        density={1.5}
+        glowIntensity={0.5}
+        transparent={false}
+      />
+    ),
+  },
+  {
+    name: "Iridescence",
+    element: (
+      <Iridescence
+        mouseReact={false}
+        color={[1, 0.8, 1]}
+        speed={1.5}
+        amplitude={0.2}
+      />
+    ),
+  },
+  {
+    name: "Particles",
+    element: (
+      <Particles
+        moveParticlesOnHover={false}
+        particleCount={250}
+        particleColors={["#5227FF", "#FF9FFC", "#B19EEF"]}
+        alphaParticles={true}
+        disableRotation={false}
+      />
+    ),
+  },
+  {
+    name: "Prism",
+    element: (
+      <Prism
+        animationType="rotate"
+        glow={1.5}
+        bloom={1.2}
+        transparent={false}
+      />
+    ),
+  },
+  {
+    name: "PrismaticBurst",
+    element: (
+      <PrismaticBurst
+        animationType="rotate3d"
+        intensity={2.5}
+        speed={0.6}
+        colors={["#5227FF", "#FF9FFC", "#B19EEF", "#7cff67"]}
+      />
+    ),
+  },
+  {
+    name: "Threads",
+    element: (
+      <Threads
+        enableMouseInteraction={false}
+        color={[0.7, 0.5, 1]}
+        amplitude={1.2}
+        distance={0.3}
+      />
+    ),
+  },
+];
 
 // Импортируем иконки через import.meta.glob
 const iconFiles = import.meta.glob("./icons/*.png", {
@@ -82,7 +256,7 @@ const NameRow: React.FC<{ follower: FollowerInfo }> = ({ follower }) => {
 
 const Credits: React.FC = () => {
   const api = useMemo(() => new RxdcodxViewers(), []);
-  const controls = useAnimation();
+  const controls = useAnimationControls();
   const { getStreamerInfo, getStreamerChatColor } = useTwitchStore();
 
   const [moderators, setModerators] = useState<FollowerInfo[]>([]);
@@ -98,6 +272,11 @@ const Credits: React.FC = () => {
     displayName: string;
     profileImageUrl: string;
     chatColor: string;
+  } | null>(null);
+
+  const [selectedBackground, setSelectedBackground] = useState<{
+    name: string;
+    element: React.ReactElement;
   } | null>(null);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -190,6 +369,14 @@ const Credits: React.FC = () => {
     const nextIndex = (storedIndex + 1) % musicUrls.length;
     localStorage.setItem(MUSIC_INDEX_STORAGE_KEY, String(nextIndex));
     return musicUrls[nextIndex];
+  }, []);
+
+  const selectRandomBackground = useCallback(() => {
+    if (!backgroundConfigs.length) return;
+    const randomIndex = Math.floor(Math.random() * backgroundConfigs.length);
+    const selected = backgroundConfigs[randomIndex];
+    console.log("Выбран фон для титров:", selected.name);
+    setSelectedBackground(selected);
   }, []);
 
   const playSelectedTrack = useCallback(
@@ -398,6 +585,9 @@ const Credits: React.FC = () => {
         setContentReady(false);
         contentReadyRef.current = false;
 
+        // Выбираем случайный фон
+        selectRandomBackground();
+
         // Выбираем следующий трек
         const nextUrl = selectNextMusicUrl();
         selectedTrackUrlRef.current = nextUrl;
@@ -442,7 +632,9 @@ const Credits: React.FC = () => {
       startCreditsAnimation,
       controls,
       selectNextMusicUrl,
+      selectRandomBackground,
       stopAndCleanupAudio,
+      playSelectedTrack,
     ]
   );
 
@@ -486,6 +678,12 @@ const Credits: React.FC = () => {
       <div className={`${styles.root} ${isActive ? styles.active : ""}`}>
         {isActive && (
           <>
+            {/* Рендерим выбранный фон */}
+            {selectedBackground && (
+              <div className={styles.backgroundContainer}>
+                {selectedBackground.element}
+              </div>
+            )}
             <div className={styles.maskTop} />
             <div className={styles.maskBottom} />
             {/* Невидимый аудио-элемент для проигрывания музыки титров */}

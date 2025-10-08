@@ -5,11 +5,7 @@ import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
 import { ChatMessage } from "@/shared/api";
 import Announce from "@/shared/Utils/Announce/Announce";
 
-import {
-  FRAMER_MOTION_CONFIG,
-  SCROLL_CONFIG,
-  SCROLL_TIMEOUT,
-} from "./animationTimings";
+import { MOTION, SCROLL_CONFIG, SCROLL_TIMEOUT } from "./animationTimings";
 import styles from "./ChatVertical.module.scss";
 import { Message } from "./Message";
 
@@ -35,16 +31,6 @@ export default function ChatVertical({
     ((id: string) => {
       setInternalMessages(prev => prev.filter(m => m.id !== id));
     });
-
-  // Для jump-анимации всех сообщений
-  const [jumpKey, setJumpKey] = useState(0);
-
-  // Когда появляется новое сообщение — обновляем jumpKey
-  useEffect(() => {
-    if (messages.length > 0) {
-      setJumpKey(k => k + 1);
-    }
-  }, [messages.length]);
 
   // ScrollToBottom после появления нового сообщения (и анимации)
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -79,17 +65,11 @@ export default function ChatVertical({
     []
   );
 
-  // Плавное удаление: сначала помечаем _pendingRemove, потом реально удаляем
-  const handleDeleteMessage = (id: string) => {
-    setInternalMessages(prev =>
-      prev.map(m => (m.id === id ? { ...m, _pendingRemove: true } : m))
-    );
-  };
-
   SignalRContext.useSignalREffect(
     "deletemessage",
     (id: string) => {
-      handleDeleteMessage(id);
+      // Удаляем сообщение, framer-motion проиграет exit-анимацию
+      setInternalMessages(prev => prev.filter(m => m.id !== id));
     },
     []
   );
@@ -100,28 +80,35 @@ export default function ChatVertical({
         <Announce title={"Chat Vertical"} callback={() => setAnnounced(true)} />
       )}
       <div className={styles.chatContainer}>
-        <AnimatePresence initial={false}>
+        <AnimatePresence initial={false} mode="popLayout">
           {internalMessages.map((message: ChatMessageWithPending) => (
             <motion.div
               key={message.id}
-              initial={{ opacity: 0, y: 40 }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                // jump-эффект для всех сообщений при появлении нового
-                scale: jumpKey ? [1, 1.05, 1] : 1,
+              layout="position"
+              initial={{ opacity: 0, x: `-${MOTION.ENTRY.OFFSCREEN_PERCENT}%` }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: `${MOTION.EXIT.OFFSCREEN_PERCENT}%` }}
+              transition={{
+                layout: { duration: MOTION.LAYOUT.DURATION_MS / 1000 },
+                type: "tween",
+                x: {
+                  type: "tween",
+                  ease: "easeOut",
+                  duration: MOTION.ENTRY.DURATION_MS / 1000,
+                  delay:
+                    message === internalMessages[0]
+                      ? MOTION.ENTRY.DELAY_MS / 1000
+                      : 0,
+                },
+                opacity: {
+                  duration: MOTION.OPACITY_DURATION_MS / 1000,
+                  ease: "easeOut",
+                },
               }}
-              exit={{ opacity: 0, y: -40 }}
-              transition={FRAMER_MOTION_CONFIG}
-              layout
             >
               <Message
                 message={message}
-                onRemove={
-                  (message as { _pendingRemove?: boolean })._pendingRemove
-                    ? () => handleRemove(message.id!)
-                    : undefined
-                }
+                onRemove={() => handleRemove(message.id!)}
               />
             </motion.div>
           ))}

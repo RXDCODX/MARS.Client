@@ -37,7 +37,7 @@ export function Cirno({ callback, displayName }: Props) {
           </div>
           <div style={{ display: "inline-flex" }}>
             <span className={commonStyles.textStrokeShadow}>
-              <RainbowText text="HAPPY FUMO FRIDAY!" />
+              <RainbowText>HAPPY FUMO FRIDAY!</RainbowText>
             </span>
           </div>
         </Textfit>
