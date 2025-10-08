@@ -8,7 +8,7 @@ import {
   ChatMessageUserTypeEnum,
 } from "@/shared/api";
 
-import { Message } from "./Message";
+import { Message } from "../Message";
 
 const meta: Meta<typeof Message> = {
   title: "Stream Components/ChatVertical/Message",

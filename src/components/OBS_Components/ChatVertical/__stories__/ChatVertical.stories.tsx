@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 
-import ChatVertical from "./ChatVertical";
+import ChatVertical from "../ChatVertical";
 import { MessageManager } from "./MessageManager";
 
 const meta: Meta<typeof ChatVertical> = {
