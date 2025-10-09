@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import ElectricBorder from "react-bits/src/content/Animations/ElectricBorder/ElectricBorder";
 import GradientText from "react-bits/src/ts-default/TextAnimations/GradientText/GradientText";
 
 import catisaVideo from "@/assets/catisa.mp4";
@@ -50,142 +51,153 @@ export function Message({ message, onRemove }: Props) {
 
   return (
     <>
-      <div ref={msgRef} className={styles.container}>
-        <div
-          className={styles.userInfo}
-          style={{ backgroundColor: roleColor ?? "transparent" }}
+      <div className={styles.wrapper}>
+        <ElectricBorder
+          color={roleColor ?? "transparent"}
+          thickness={2}
+          chaos={0.6}
+          speed={1.2}
         >
-          <div className={styles.badges}>{replaceBadges(badges, message)}</div>
-          <div
-            className={`${styles.nickname} ${commonStyles.textStrokeShadow}`}
-            style={{
-              color: message.colorHex ?? "white",
-            }}
-          >
-            {message.displayName}
+          <div ref={msgRef} className={styles.container}>
+            <div
+              className={styles.userInfo}
+              style={{ backgroundColor: roleColor ?? "transparent" }}
+            >
+              <div className={styles.badges}>
+                {replaceBadges(badges, message)}
+              </div>
+              <div
+                className={`${styles.nickname} ${commonStyles.textStrokeShadow}`}
+                style={{
+                  color: message.colorHex ?? "white",
+                }}
+              >
+                {message.displayName}
+              </div>
+            </div>
+            <div className={styles.message}>
+              {isCatisa ? (
+                <video
+                  src={catisaVideo}
+                  autoPlay
+                  loop
+                  muted
+                  controls={false}
+                  style={{
+                    maxWidth: "180px",
+                    maxHeight: "120px",
+                    margin: "0 4px",
+                    borderRadius: 12,
+                    background: "black",
+                    boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+                  }}
+                />
+              ) : (
+                parts?.map(part => {
+                  if (
+                    message.isBroadcaster ||
+                    message.isVip ||
+                    message.isModerator
+                  ) {
+                    // Особые пользователи — всегда градиент
+                    if (part.type === "text") {
+                      // Получаем результат с эмодзи
+                      const emoteContent =
+                        parser && parserToLink
+                          ? replaceEmotes({
+                              text: part.content,
+                              parser,
+                              newParser: parserToLink,
+                            })
+                          : part.content;
+                      // Если это строка — старый способ, если массив/ReactNode — новый
+                      return (
+                        <span key={part.id}>
+                          <GradientText>{emoteContent}</GradientText>
+                        </span>
+                      );
+                    }
+                    if (part.type === "image") {
+                      return (
+                        <img
+                          key={part.id}
+                          src={part.content}
+                          alt="image"
+                          style={{
+                            maxWidth: "120px",
+                            maxHeight: "120px",
+                            margin: "0 4px",
+                          }}
+                        />
+                      );
+                    }
+                    if (part.type === "video") {
+                      return (
+                        <video
+                          key={part.id}
+                          src={part.content}
+                          controls={false}
+                          autoPlay
+                          muted
+                          style={{
+                            maxWidth: "180px",
+                            maxHeight: "120px",
+                            margin: "0 4px",
+                          }}
+                        />
+                      );
+                    }
+                    if (part.type === "link") {
+                      return (
+                        <span
+                          key={part.id}
+                          className={`${styles.linkStub} ${commonStyles.textStrokeShadow}`}
+                        >
+                          ссылка
+                        </span>
+                      );
+                    }
+                    return null;
+                  } else {
+                    // Обычные пользователи — белый текст, но с поддержкой смайлов
+                    if (part.type === "text") {
+                      return (
+                        <span
+                          key={part.id}
+                          style={{ color: "white" }}
+                          className={commonStyles.textStrokeShadow}
+                        >
+                          {parser && parserToLink
+                            ? replaceEmotes({
+                                text: part.content,
+                                parser,
+                                newParser: parserToLink,
+                              })
+                            : part.content}
+                        </span>
+                      );
+                    }
+                    if (
+                      part.type === "link" ||
+                      part.type === "video" ||
+                      part.type === "image"
+                    ) {
+                      return (
+                        <span
+                          key={part.id}
+                          className={`${styles.linkStub} ${commonStyles.textStrokeShadow}`}
+                        >
+                          ссылка
+                        </span>
+                      );
+                    }
+                    return null;
+                  }
+                })
+              )}
+            </div>
           </div>
-        </div>
-        <div className={styles.message}>
-          {isCatisa ? (
-            <video
-              src={catisaVideo}
-              autoPlay
-              loop
-              muted
-              controls={false}
-              style={{
-                maxWidth: "180px",
-                maxHeight: "120px",
-                margin: "0 4px",
-                borderRadius: 12,
-                background: "black",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
-              }}
-            />
-          ) : (
-            parts?.map(part => {
-              if (
-                message.isBroadcaster ||
-                message.isVip ||
-                message.isModerator
-              ) {
-                // Особые пользователи — всегда градиент
-                if (part.type === "text") {
-                  // Получаем результат с эмодзи
-                  const emoteContent =
-                    parser && parserToLink
-                      ? replaceEmotes({
-                          text: part.content,
-                          parser,
-                          newParser: parserToLink,
-                        })
-                      : part.content;
-                  // Если это строка — старый способ, если массив/ReactNode — новый
-                  return (
-                    <span key={part.id}>
-                      <GradientText>{emoteContent}</GradientText>
-                    </span>
-                  );
-                }
-                if (part.type === "image") {
-                  return (
-                    <img
-                      key={part.id}
-                      src={part.content}
-                      alt="image"
-                      style={{
-                        maxWidth: "120px",
-                        maxHeight: "120px",
-                        margin: "0 4px",
-                      }}
-                    />
-                  );
-                }
-                if (part.type === "video") {
-                  return (
-                    <video
-                      key={part.id}
-                      src={part.content}
-                      controls={false}
-                      autoPlay
-                      muted
-                      style={{
-                        maxWidth: "180px",
-                        maxHeight: "120px",
-                        margin: "0 4px",
-                      }}
-                    />
-                  );
-                }
-                if (part.type === "link") {
-                  return (
-                    <span
-                      key={part.id}
-                      className={`${styles.linkStub} ${commonStyles.textStrokeShadow}`}
-                    >
-                      ссылка
-                    </span>
-                  );
-                }
-                return null;
-              } else {
-                // Обычные пользователи — белый текст, но с поддержкой смайлов
-                if (part.type === "text") {
-                  return (
-                    <span
-                      key={part.id}
-                      style={{ color: "white" }}
-                      className={commonStyles.textStrokeShadow}
-                    >
-                      {parser && parserToLink
-                        ? replaceEmotes({
-                            text: part.content,
-                            parser,
-                            newParser: parserToLink,
-                          })
-                        : part.content}
-                    </span>
-                  );
-                }
-                if (
-                  part.type === "link" ||
-                  part.type === "video" ||
-                  part.type === "image"
-                ) {
-                  return (
-                    <span
-                      key={part.id}
-                      className={`${styles.linkStub} ${commonStyles.textStrokeShadow}`}
-                    >
-                      ссылка
-                    </span>
-                  );
-                }
-                return null;
-              }
-            })
-          )}
-        </div>
+        </ElectricBorder>
       </div>
     </>
   );

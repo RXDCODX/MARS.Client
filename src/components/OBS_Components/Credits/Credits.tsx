@@ -2,6 +2,7 @@ import "./body.css";
 
 import { motion, useAnimationControls } from "framer-motion";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import ElectricBorder from "react-bits/src/content/Animations/ElectricBorder/ElectricBorder";
 // Импортируем фоны из react-bits, которые не требуют мыши
 import Aurora from "react-bits/src/ts-default/Backgrounds/Aurora/Aurora";
 import Balatro from "react-bits/src/ts-default/Backgrounds/Balatro/Balatro";
@@ -9,9 +10,9 @@ import DarkVeil from "react-bits/src/ts-default/Backgrounds/DarkVeil/DarkVeil";
 import FaultyTerminal from "react-bits/src/ts-default/Backgrounds/FaultyTerminal/FaultyTerminal";
 import Galaxy from "react-bits/src/ts-default/Backgrounds/Galaxy/Galaxy";
 import Iridescence from "react-bits/src/ts-default/Backgrounds/Iridescence/Iridescence";
-import LetterGlitch from "react-bits/src/ts-default/Backgrounds/LetterGlitch/LetterGlitch";
 import Lightning from "react-bits/src/ts-default/Backgrounds/Lightning/Lightning";
 import LightRays from "react-bits/src/ts-default/Backgrounds/LightRays/LightRays";
+import LiquidChrome from "react-bits/src/ts-default/Backgrounds/LiquidChrome/LiquidChrome";
 import Particles from "react-bits/src/ts-default/Backgrounds/Particles/Particles";
 import Prism from "react-bits/src/ts-default/Backgrounds/Prism/Prism";
 import PrismaticBurst from "react-bits/src/ts-default/Backgrounds/PrismaticBurst/PrismaticBurst";
@@ -65,6 +66,10 @@ const backgroundConfigs = [
     ),
   },
   {
+    name: "Liquid Chrome",
+    element: <LiquidChrome interactive={false} />,
+  },
+  {
     name: "Lightning",
     element: <Lightning hue={280} speed={1.2} intensity={1.5} size={1.2} />,
   },
@@ -77,19 +82,6 @@ const backgroundConfigs = [
         lightSpread={1.2}
         rayLength={2.5}
         followMouse={false}
-      />
-    ),
-  },
-  {
-    name: "LetterGlitch",
-    element: (
-      <LetterGlitch
-        glitchColors={["#2b4539", "#61dca3", "#61b3dc"]}
-        glitchSpeed={70}
-        smooth={true}
-        centerVignette={true}
-        outerVignette={true}
-        characters="АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ01234567890"
       />
     ),
   },
@@ -701,11 +693,16 @@ const Credits: React.FC = () => {
                 <div className={styles.block}>
                   {streamerInfo && (
                     <div className={styles.streamerSection}>
-                      <img
-                        src={streamerInfo.profileImageUrl}
-                        alt={streamerInfo.displayName}
-                        className={styles.streamerAvatar}
-                      />
+                      <ElectricBorder
+                        style={{ borderRadius: "50%" }}
+                        color="e6acoc"
+                      >
+                        <img
+                          src={streamerInfo.profileImageUrl}
+                          alt={streamerInfo.displayName}
+                          className={styles.streamerAvatar}
+                        />
+                      </ElectricBorder>
                       <SectionTitle
                         leftIcon={icons.streamer}
                         rightIcon={icons.streamer}
