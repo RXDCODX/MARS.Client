@@ -15,7 +15,18 @@ declare module "react-bits/src/content/Animations/ElectricBorder/ElectricBorder"
 }
 
 declare module "react-bits/src/ts-default/TextAnimations/GradientText/GradientText" {
-  import type { PropsWithChildren } from "react";
-  const GradientText: (props: PropsWithChildren<object>) => JSX.Element;
+  import type { PropsWithChildren, ReactNode } from "react";
+
+  export interface GradientTextProps {
+    children: ReactNode;
+    className?: string;
+    colors?: string[];
+    animationSpeed?: number;
+    showBorder?: boolean;
+  }
+
+  const GradientText: (
+    props: PropsWithChildren<GradientTextProps>
+  ) => JSX.Element;
   export default GradientText;
 }
