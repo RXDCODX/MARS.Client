@@ -2,17 +2,20 @@
   margin: 0 12px; // боковые отступы для сообщения
   border-radius: 12px;
   width: fit-content; // сообщение по ширине контента
+  box-sizing: border-box;
+  margin-bottom: 1%;
 }
 
 .container {
-  display: inline-flex;
+  display: inline;
   flex-direction: row; // меняем на row для горизонтального расположения
   align-items: center; // выравниваем по центру
   gap: 8px;
   min-height: 60px;
-  padding: 8px 12px;
   border-radius: 12px;
   width: fit-content; // сообщение по ширине контента
+  max-width: 100%; // ограничиваем ширину
+  box-sizing: border-box;
 }
 
 .userInfo {
@@ -47,8 +50,11 @@
   align-items: center;
   gap: 4px;
   word-wrap: break-word;
+  word-break: break-word; // переносим длинные слова
+  overflow-wrap: break-word; // дополнительная поддержка переноса
   font-size: 2em;
   width: fit-content; // сообщение по ширине контента
+  max-width: 100%; // ограничиваем ширину
   min-width: 0;
 
   & * {
