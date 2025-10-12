@@ -35,12 +35,8 @@ import {
   CommandParameterInfo,
   CommandsAdminPlatformInfoListParamsEnum,
   CommandsUserPlatformInfoListParamsEnum,
-} from "@/shared/api/http-clients/data-contracts";
-import {
-  createErrorToast,
-  createSuccessToast,
-  useToastModal,
-} from "@/shared/Utils/ToastModal";
+} from "@/shared/api";
+import { useToastModal } from "@/shared/Utils/ToastModal";
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
 import styles from "./CommandsPage.module.scss";
@@ -561,8 +557,8 @@ const CommandsPage: React.FC = () => {
         CommandsAdminPlatformInfoListParamsEnum.Api
       );
 
-      const userCommandsData = resultUser.data;
-      const adminCommandsData = adminResult.data;
+      const userCommandsData = resultUser.data.data;
+      const adminCommandsData = adminResult.data.data;
 
       updateState({
         userCommands: userCommandsData,
@@ -614,7 +610,7 @@ const CommandsPage: React.FC = () => {
 
       // Загружаем параметры команды
       const result = await commandsService.commandsParametersList(command.name);
-      const parameters = result.data;
+      const parameters = result.data.data;
       updateState({ commandParameters: parameters });
 
       // Автоматическая прокрутка к панели параметров после загрузки
@@ -691,16 +687,8 @@ const CommandsPage: React.FC = () => {
         input
       );
 
-      const resultData = result.data;
-
       // Показываем результат через toast
-      showToast(
-        createSuccessToast(
-          `Команда /${state.selectedCommand.name} выполнена успешно`,
-          resultData,
-          "Результат выполнения команды"
-        )
-      );
+      showToast(result.data);
 
       updateState({ isExecuting: false });
     } catch (err) {
@@ -708,9 +696,7 @@ const CommandsPage: React.FC = () => {
         "Ошибка при выполнении команды: " + (err as Error).message;
 
       // Показываем ошибку через toast
-      showToast(
-        createErrorToast(errorMessage, err, "Ошибка выполнения команды")
-      );
+      showToast({ success: false, message: errorMessage });
 
       updateState({
         error: errorMessage,

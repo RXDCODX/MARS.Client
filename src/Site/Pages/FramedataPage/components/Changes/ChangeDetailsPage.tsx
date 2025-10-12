@@ -122,14 +122,14 @@ const ChangeDetailsPage: React.FC<ChangeDetailsPageProps> = ({
         const response = await framedataApi.framedataCharactersMovesList(
           change.characterName
         );
-        const existingMoves = response.data || [];
+        const existingMoves = response.data.data || [];
         setOriginalData(existingMoves);
       } else if (change.changeType === "MoveUpdate") {
         // Для обновления удара загружаем оригинальный удар
         const response = await framedataApi.framedataCharactersMovesList(
           change.characterName
         );
-        const existingMoves = response.data || [];
+        const existingMoves = response.data.data || [];
         const originalMove = existingMoves.find(
           (m: Move) => m.command === change.newData?.command
         );
@@ -139,7 +139,7 @@ const ChangeDetailsPage: React.FC<ChangeDetailsPageProps> = ({
         const response = await framedataApi.framedataCharactersMovesList(
           change.characterName
         );
-        const existingMoves = response.data || [];
+        const existingMoves = response.data.data || [];
         const originalMove = existingMoves.find(
           (m: Move) => m.command === change.newData?.command
         );

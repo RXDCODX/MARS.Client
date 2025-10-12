@@ -10,11 +10,7 @@ import {
   UpdateMediaItemRequest,
   UpdateMediaItemRequestStatusEnum,
 } from "@/shared/api";
-import {
-  createErrorToast,
-  createSuccessToast,
-  useToastModal,
-} from "@/shared/Utils/ToastModal";
+import { useToastModal } from "@/shared/Utils/ToastModal";
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
 import styles from "./CinemaQueuePage.module.scss";
@@ -75,18 +71,10 @@ const CinemaQueuePage: React.FC = () => {
     try {
       setLoading(true);
       const response = await cinemaQueueApi.cinemaQueueList();
-      if (response.status === 200) {
-        setMediaItems(response.data);
-      } else {
-        showToast(
-          createErrorToast(
-            "Не удалось загрузить медиа элементы",
-            new Error("API Error")
-          )
-        );
-      }
+      setMediaItems(response.data.data ?? []);
     } catch (error) {
-      showToast(createErrorToast("Ошибка при загрузке медиа элементов", error));
+      const msg = "Ошибка при загрузке медиа элементов";
+      showToast({ success: false, message: msg });
       console.error("Error:", error);
     } finally {
       setLoading(false);
@@ -97,7 +85,7 @@ const CinemaQueuePage: React.FC = () => {
     try {
       const response = await cinemaQueueApi.cinemaQueueStatisticsList();
       if (response.status === 200) {
-        setStatistics(response.data);
+        setStatistics(response.data.data ?? null);
       }
     } catch (error) {
       console.error("Error fetching statistics:", error);
@@ -136,24 +124,13 @@ const CinemaQueuePage: React.FC = () => {
       };
 
       const response = await cinemaQueueApi.cinemaQueueCreate(apiFormData);
-      if (response.status === 200) {
-        showToast(
-          createSuccessToast("Медиа элемент успешно создан", response.data)
-        );
-        setModalVisible(false);
-        resetCreateForm();
-        fetchMediaItems();
-        fetchStatistics();
-      } else {
-        showToast(
-          createErrorToast(
-            "Не удалось создать медиа элемент",
-            new Error("API Error")
-          )
-        );
-      }
+      showToast(response.data);
+      setModalVisible(false);
+      resetCreateForm();
+      fetchMediaItems();
+      fetchStatistics();
     } catch (error) {
-      showToast(createErrorToast("Ошибка при создании медиа элемента", error));
+      showToast({ success: false, message: "Ошибка при создании медиа элемента" });
     }
   };
 
@@ -174,70 +151,34 @@ const CinemaQueuePage: React.FC = () => {
         editingItem.id,
         apiUpdateData
       );
-      if (response.status === 200) {
-        showToast(
-          createSuccessToast("Медиа элемент успешно обновлен", response.data)
-        );
-        setEditingItem(null);
-        setEditFormData({});
-        fetchMediaItems();
-        fetchStatistics();
-      } else {
-        showToast(
-          createErrorToast(
-            "Не удалось обновить медиа элемент",
-            new Error("API Error")
-          )
-        );
-      }
+      showToast(response.data);
+      setEditingItem(null);
+      setEditFormData({});
+      fetchMediaItems();
+      fetchStatistics();
     } catch (error) {
-      showToast(
-        createErrorToast("Ошибка при обновлении медиа элемента", error)
-      );
+      showToast({ success: false, message: "Ошибка при обновлении медиа элемента" });
     }
   };
 
   const handleDelete = async (id: string) => {
     try {
       const response = await cinemaQueueApi.cinemaQueueDelete(id);
-      if (response.status === 200) {
-        showToast(createSuccessToast("Медиа элемент успешно удален"));
-        fetchMediaItems();
-        fetchStatistics();
-      } else {
-        showToast(
-          createErrorToast(
-            "Не удалось удалить медиа элемент",
-            new Error("API Error")
-          )
-        );
-      }
+      showToast(response.data);
+      fetchMediaItems();
+      fetchStatistics();
     } catch (error) {
-      showToast(createErrorToast("Ошибка при удалении медиа элемента", error));
+      showToast({ success: false, message: "Ошибка при удалении медиа элемента" });
     }
   };
 
   const handleMarkAsNext = async (id: string) => {
     try {
       const response = await cinemaQueueApi.cinemaQueueMarkAsNextCreate(id);
-      if (response.status === 200) {
-        showToast(createSuccessToast("Медиа элемент отмечен как следующий"));
-        fetchMediaItems();
-      } else {
-        showToast(
-          createErrorToast(
-            "Не удалось отметить медиа элемент как следующий",
-            new Error("API Error")
-          )
-        );
-      }
+      showToast(response.data);
+      fetchMediaItems();
     } catch (error) {
-      showToast(
-        createErrorToast(
-          "Ошибка при отметке медиа элемента как следующего",
-          error
-        )
-      );
+      showToast({ success: false, message: "Ошибка при отметке медиа элемента как следующего" });
     }
   };
 

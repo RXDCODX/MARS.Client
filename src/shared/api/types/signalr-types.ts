@@ -35,12 +35,10 @@ export interface AutoArtImage {
 }
 
 export interface BaseTrackInfo {
+  artworkUrl?: string;
   authors?: string[];
-  domain: BaseTrackInfoDomainEnum;
   /** @format date-span */
   duration: string;
-  featAuthors?: string[];
-  genre?: string[];
   /** @format uuid */
   id: string;
   /** @format date-time */
@@ -48,15 +46,7 @@ export interface BaseTrackInfo {
   title: string;
   trackName: string;
   url: string;
-  yandexSpecificInfo?: YandexTrackAdditionalInfo;
-}
-
-export enum BaseTrackInfoDomainEnum {
-  None = "None",
-  Youtube = "Youtube",
-  SoundCloud = "SoundCloud",
-  YandexMusic = "YandexMusic",
-  VkMusic = "VkMusic",
+  videoId?: string;
 }
 
 export interface ChatMessage {
@@ -336,6 +326,8 @@ export interface TunaMusicData {
   cover: string;
   /** @format int64 */
   duration: number;
+  /** @format uuid */
+  id: string;
   /** @format int64 */
   progress: number;
   status: string;
@@ -401,9 +393,4 @@ export interface Waifu {
   shikiId: string;
   /** @format date-time */
   whenAdded: string;
-}
-
-export interface YandexTrackAdditionalInfo {
-  mp3TrackUrl?: string;
-  artworkUrl?: string;
 }

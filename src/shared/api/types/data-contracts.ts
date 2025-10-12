@@ -10,6 +10,19 @@
  * ---------------------------------------------------------------
  */
 
+/**
+ * Обобщенный результат операции
+ * @template TData - Тип данных, возвращаемых в поле data
+ */
+export interface OperationResult<TData = any> {
+  /** Флаг успешности операции */
+  success: boolean;
+  /** Сообщение о результате операции */
+  message?: string;
+  /** Данные результата операции */
+  data?: TData;
+}
+
 export interface ApiMediaInfo {
   /** @format uuid */
   id: string;
@@ -24,6 +37,26 @@ export interface AutoMessageDto {
   /** @format uuid */
   id: string;
   message: string;
+}
+
+export interface ChannelRewardDefinition {
+  title: string;
+  /** @format int32 */
+  cost: number;
+  isEnabled: boolean;
+  prompt?: string;
+  backgroundColor?: string;
+  isUserInputRequired: boolean;
+  isMaxPerStreamEnabled: boolean;
+  /** @format int32 */
+  maxPerStream?: number;
+  isMaxPerUserPerStreamEnabled: boolean;
+  /** @format int32 */
+  maxPerUserPerStream?: number;
+  isGlobalCooldownEnabled: boolean;
+  /** @format int32 */
+  globalCooldownSeconds?: number;
+  shouldRedemptionsSkipRequestQueue: boolean;
 }
 
 export interface ChannelRewardRecord {
@@ -238,6 +271,10 @@ export interface FollowerInfo {
 export interface GetCustomRewardRedemptionResponse {
   data?: RewardRedemption[];
   pagination?: Pagination;
+}
+
+export interface GetCustomRewardsResponse {
+  data?: CustomReward[];
 }
 
 export interface GlobalCooldownSetting {
@@ -726,6 +763,14 @@ export interface UpdateUserRequest {
 
 export interface ValidateFolderRequest {
   folderPath: string;
+}
+
+export interface ValidateFolderResponse {
+  exists: boolean;
+  accessible: boolean;
+  /** @format int32 */
+  videoFilesCount: number;
+  sampleFiles: string[];
 }
 
 export enum CinemaMediaItemDtoStatusEnum {

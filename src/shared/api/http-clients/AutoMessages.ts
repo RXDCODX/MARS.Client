@@ -10,12 +10,106 @@
  * ---------------------------------------------------------------
  */
 
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import {
+  HttpClient,
+  RequestParams,
+  ContentType,
+  HttpResponse,
+} from "./http-client";
 import type {
+  ApiMediaInfo,
   AutoMessageDto,
+  ChannelRewardDefinition,
+  ChannelRewardRecord,
+  CinemaMediaItemDto,
+  CinemaQueueStatistics,
+  CommandInfo,
+  CommandParameterInfo,
   CreateAutoMessageRequest,
+  CreateCustomRewardsRequest,
+  CreateMediaItemRequest,
+  CreateMemeOrderDto,
+  CreateMemeTypeDto,
+  CreateUserRequest,
+  CustomReward,
+  DailyAutoMarkupUser,
+  DefaultImage,
+  FollowerInfo,
+  GetCustomRewardRedemptionResponse,
+  GetCustomRewardsResponse,
+  GlobalCooldownSetting,
+  Image,
+  Log,
+  LogResponse,
+  LogsStatistics,
+  MaxPerStreamSetting,
+  MaxPerUserPerStreamSetting,
+  MediaFileInfo,
+  MediaMetaInfo,
+  MediaMetadata,
+  MediaPositionInfo,
+  MediaStylesInfo,
+  MediaTextInfo,
+  MemeOrderDto,
+  MemeTypeDto,
+  Move,
+  MovePending,
+  MovePendingDto,
+  OperationResult,
+  Pagination,
+  ParseRequest,
+  ParseResult,
+  ProblemDetails,
+  RateLimiterInfo,
+  Reward,
+  RewardRedemption,
+  ServiceInfo,
+  ServiceLog,
+  StreamArchiveConfig,
+  StringServiceStatusDictionary,
+  SupplementRequest,
+  TekkenCharacter,
+  TekkenCharacterPendingDto,
   UpdateAutoMessageRequest,
+  UpdateCustomRewardDto,
+  UpdateCustomRewardRedemptionStatusRequest,
+  UpdateCustomRewardRequest,
+  UpdateMediaItemRequest,
+  UpdateMemeOrderDto,
+  UpdateMemeTypeDto,
+  UpdateUserRequest,
+  ValidateFolderRequest,
+  ValidateFolderResponse,
+  CinemaMediaItemDtoStatusEnum,
+  CommandInfoAvailablePlatformsEnum,
+  CommandInfoVisibilityEnum,
+  LogLogLevelEnum,
+  MediaFileInfoTypeEnum,
+  MediaMetaInfoPriorityEnum,
+  ParseRequestSourceEnum,
+  RewardRedemptionStatusEnum,
+  ServiceInfoStatusEnum,
+  StreamArchiveConfigFileConvertTypeEnum,
+  SupplementRequestSourceEnum,
+  UpdateCustomRewardRedemptionStatusRequestStatusEnum,
+  UpdateMediaItemRequestStatusEnum,
+  CinemaQueueStatusDetailParamsEnum,
+  CinemaQueueStatusDetailParamsStatusEnum,
+  CommandsAdminPlatformDetailParamsEnum,
+  CommandsAdminPlatformDetailParamsPlatformEnum,
+  CommandsAdminPlatformInfoListParamsEnum,
+  CommandsAdminPlatformInfoListParamsPlatformEnum,
+  CommandsUserPlatformDetailParamsEnum,
+  CommandsUserPlatformDetailParamsPlatformEnum,
+  CommandsUserPlatformInfoListParamsEnum,
+  CommandsUserPlatformInfoListParamsPlatformEnum,
+  FramedataSupplementCreate2ParamsEnum,
+  FramedataSupplementCreate2ParamsSourceEnum,
+  LogsByLevelDetailParamsEnum,
+  LogsByLevelDetailParamsLogLevelEnum,
+  LogsListParamsLogLevelEnum,
 } from "../types/data-contracts";
-import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class AutoMessages<
   SecurityDataType = unknown,
@@ -26,10 +120,10 @@ export class AutoMessages<
    * @tags AutoMessages
    * @name AutoMessagesList
    * @request GET:/api/AutoMessages
-   * @response `200` `(AutoMessageDto)[]` OK
+   * @response `200` `OperationResult<AutoMessageDto[]>` OK
    */
   autoMessagesList = (params: RequestParams = {}) =>
-    this.request<AutoMessageDto[], any>({
+    this.request<OperationResult<AutoMessageDto[]>, any>({
       path: `/api/AutoMessages`,
       method: "GET",
       format: "json",
@@ -41,13 +135,13 @@ export class AutoMessages<
    * @tags AutoMessages
    * @name AutoMessagesCreate
    * @request POST:/api/AutoMessages
-   * @response `200` `AutoMessageDto` OK
+   * @response `200` `OperationResult<AutoMessageDto>` OK
    */
   autoMessagesCreate = (
     data: CreateAutoMessageRequest,
-    params: RequestParams = {},
+    params: RequestParams = {}
   ) =>
-    this.request<AutoMessageDto, any>({
+    this.request<OperationResult<AutoMessageDto>, any>({
       path: `/api/AutoMessages`,
       method: "POST",
       body: data,
@@ -61,10 +155,10 @@ export class AutoMessages<
    * @tags AutoMessages
    * @name AutoMessagesDetail
    * @request GET:/api/AutoMessages/{id}
-   * @response `200` `AutoMessageDto` OK
+   * @response `200` `OperationResult<AutoMessageDto>` OK
    */
   autoMessagesDetail = (id: string, params: RequestParams = {}) =>
-    this.request<AutoMessageDto, any>({
+    this.request<OperationResult<AutoMessageDto>, any>({
       path: `/api/AutoMessages/${id}`,
       method: "GET",
       format: "json",
@@ -76,14 +170,14 @@ export class AutoMessages<
    * @tags AutoMessages
    * @name AutoMessagesUpdate
    * @request PUT:/api/AutoMessages/{id}
-   * @response `200` `AutoMessageDto` OK
+   * @response `200` `OperationResult<AutoMessageDto>` OK
    */
   autoMessagesUpdate = (
     id: string,
     data: UpdateAutoMessageRequest,
-    params: RequestParams = {},
+    params: RequestParams = {}
   ) =>
-    this.request<AutoMessageDto, any>({
+    this.request<OperationResult<AutoMessageDto>, any>({
       path: `/api/AutoMessages/${id}`,
       method: "PUT",
       body: data,
@@ -97,12 +191,13 @@ export class AutoMessages<
    * @tags AutoMessages
    * @name AutoMessagesDelete
    * @request DELETE:/api/AutoMessages/{id}
-   * @response `200` `void` OK
+   * @response `200` `OperationResult` OK
    */
   autoMessagesDelete = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.request<OperationResult, any>({
       path: `/api/AutoMessages/${id}`,
       method: "DELETE",
+      format: "json",
       ...params,
     });
 }

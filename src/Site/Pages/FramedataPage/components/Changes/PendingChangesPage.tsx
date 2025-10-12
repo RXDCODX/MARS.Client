@@ -18,6 +18,7 @@ import {
   MovePendingDto,
   TekkenCharacterPendingDto,
 } from "@/shared/api";
+import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import styles from "../../FramedataPage.module.scss";
 
@@ -69,6 +70,7 @@ enum SortField {
 
 const PendingChangesPage: React.FC = () => {
   const navigate = useNavigate();
+  const { showToast } = useToastModal();
   const [changes, setChanges] = useState<FramedataChange[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
@@ -95,8 +97,9 @@ const PendingChangesPage: React.FC = () => {
         api.framedataChangesPendingMovesList(),
       ]);
 
-      const characters: TekkenCharacterPendingDto[] = charactersRes.data ?? [];
-      const moves: MovePendingDto[] = movesRes.data ?? [];
+      const characters: TekkenCharacterPendingDto[] =
+        charactersRes.data.data ?? [];
+      const moves: MovePendingDto[] = movesRes.data.data ?? [];
 
       // Создаем FramedataChange объекты из полученных данных
       const allChanges: FramedataChange[] = [
@@ -223,25 +226,30 @@ const PendingChangesPage: React.FC = () => {
         change.changeType === FramedataChangeChangeTypeEnum.NewCharacter ||
         change.changeType === FramedataChangeChangeTypeEnum.CharacterUpdate
       ) {
-        await api.framedataChangesApproveCharacterCreate(change.characterName);
+        const result = await api.framedataChangesApproveCharacterCreate(
+          change.characterName
+        );
+        showToast(result.data);
       } else if (
         change.changeType === FramedataChangeChangeTypeEnum.NewMove ||
         change.changeType === FramedataChangeChangeTypeEnum.MoveUpdate
       ) {
         // Извлекаем command из ID для moves
         const command = change.id.replace(`move-${change.characterName}-`, "");
-        await api.framedataChangesApproveMoveCreate(
+        const result = await api.framedataChangesApproveMoveCreate(
           change.characterName,
           command
         );
+        showToast(result.data);
       }
       // Обновляем список
       loadChanges();
     } catch (err) {
       console.error("Ошибка при принятии изменения:", err);
-      setError(
-        err instanceof Error ? err.message : "Не удалось принять изменение"
-      );
+      const msg =
+        err instanceof Error ? err.message : "Не удалось принять изменение";
+      setError(msg);
+      showToast({ success: false, message: msg });
     }
   };
 
@@ -251,25 +259,30 @@ const PendingChangesPage: React.FC = () => {
         change.changeType === FramedataChangeChangeTypeEnum.NewCharacter ||
         change.changeType === FramedataChangeChangeTypeEnum.CharacterUpdate
       ) {
-        await api.framedataChangesRejectCharacterCreate(change.characterName);
+        const result = await api.framedataChangesRejectCharacterCreate(
+          change.characterName
+        );
+        showToast(result.data);
       } else if (
         change.changeType === FramedataChangeChangeTypeEnum.NewMove ||
         change.changeType === FramedataChangeChangeTypeEnum.MoveUpdate
       ) {
         // Извлекаем command из ID для moves
         const command = change.id.replace(`move-${change.characterName}-`, "");
-        await api.framedataChangesRejectMoveCreate(
+        const result = await api.framedataChangesRejectMoveCreate(
           change.characterName,
           command
         );
+        showToast(result.data);
       }
       // Обновляем список
       loadChanges();
     } catch (err) {
       console.error("Ошибка при отклонении изменения:", err);
-      setError(
-        err instanceof Error ? err.message : "Не удалось отклонить изменение"
-      );
+      const msg =
+        err instanceof Error ? err.message : "Не удалось отклонить изменение";
+      setError(msg);
+      showToast({ success: false, message: msg });
     }
   };
 
@@ -284,12 +297,14 @@ const PendingChangesPage: React.FC = () => {
     setIsBulkActionInProgress(true);
     setError("");
     try {
-      await api.framedataChangesApproveAllCreate();
+      const result = await api.framedataChangesApproveAllCreate();
+      showToast(result.data);
       loadChanges();
     } catch (e) {
-      setError(
-        e instanceof Error ? e.message : "Не удалось применить все изменения"
-      );
+      const msg =
+        e instanceof Error ? e.message : "Не удалось применить все изменения";
+      setError(msg);
+      showToast({ success: false, message: msg });
     } finally {
       setIsBulkActionInProgress(false);
     }
@@ -300,12 +315,14 @@ const PendingChangesPage: React.FC = () => {
     setIsBulkActionInProgress(true);
     setError("");
     try {
-      await api.framedataChangesRejectAllCreate();
+      const result = await api.framedataChangesRejectAllCreate();
+      showToast(result.data);
       loadChanges();
     } catch (e) {
-      setError(
-        e instanceof Error ? e.message : "Не удалось отменить все изменения"
-      );
+      const msg =
+        e instanceof Error ? e.message : "Не удалось отменить все изменения";
+      setError(msg);
+      showToast({ success: false, message: msg });
     } finally {
       setIsBulkActionInProgress(false);
     }

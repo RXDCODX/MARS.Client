@@ -13,13 +13,7 @@ import {
 
 import { Framedata } from "@/shared/api";
 import { Move, TekkenCharacter } from "@/shared/api/types/data-contracts";
-import {
-  createErrorToast,
-  createInfoToast,
-  createSuccessToast,
-  createWarningToast,
-  useToastModal,
-} from "@/shared/Utils/ToastModal";
+import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import styles from "../../FramedataPage.module.scss";
 
@@ -98,15 +92,13 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ characters }) => {
 
         // Иначе загружаем удары с сервера
         const response = await api.framedataCharactersMovesList(character.name);
-        return response.data || [];
+        return response.data.data || [];
       } catch (error) {
         console.error(`Ошибка загрузки ударов для ${character.name}:`, error);
-        showToast(
-          createErrorToast(
-            `Не удалось загрузить удары для ${character.name}`,
-            error
-          )
-        );
+        showToast({
+          success: false,
+          message: `Не удалось загрузить удары для ${character.name}`,
+        });
         return [];
       }
     },
@@ -165,11 +157,10 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ characters }) => {
       const parsed = parseSearchQuery(searchQuery);
       if (!parsed) {
         setSearchResults([]);
-        showToast(
-          createWarningToast(
-            "Неверный формат поискового запроса. Используйте формат: 'имя_персонажа команда'"
-          )
-        );
+        showToast({
+          success: false,
+          message: "Неверный формат поискового запроса. Используйте формат: 'имя_персонажа команда'",
+        });
         return;
       }
 
@@ -180,7 +171,10 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ characters }) => {
 
       if (foundCharacters.length === 0) {
         setSearchResults([]);
-        showToast(createInfoToast(`Персонаж '${characterQuery}' не найден`));
+        showToast({
+          success: false,
+          message: `Персонаж '${characterQuery}' не найден`,
+        });
         return;
       }
 
@@ -214,17 +208,21 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ characters }) => {
       setSearchResults(sortedResults);
 
       if (sortedResults.length > 0) {
-        showToast(
-          createSuccessToast(`Найдено ${sortedResults.length} результатов`)
-        );
+        showToast({
+          success: true,
+          message: `Найдено ${sortedResults.length} результатов`,
+        });
       } else {
-        showToast(createInfoToast("По вашему запросу ничего не найдено"));
+        showToast({
+          success: false,
+          message: "По вашему запросу ничего не найдено",
+        });
       }
     } catch (error) {
       console.error("Ошибка поиска:", error);
       const errorMessage = "Произошла ошибка при поиске";
       setError(errorMessage);
-      showToast(createErrorToast(errorMessage, error));
+      showToast({ success: false, message: errorMessage });
     } finally {
       setIsSearching(false);
     }

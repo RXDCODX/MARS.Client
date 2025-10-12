@@ -3,10 +3,7 @@ import { Container, Nav, Tab } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 import { RandomMeme } from "@/shared/api";
-import {
-  MemeOrderDto,
-  MemeTypeDto,
-} from "@/shared/api/http-clients/data-contracts";
+import { MemeOrderDto, MemeTypeDto } from "@/shared/api";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import {
@@ -64,15 +61,14 @@ const RandomMemePage: React.FC = () => {
     try {
       setNavigation(prev => ({ ...prev, isLoading: true, error: "" }));
       const response = await api.randomMemeTypesList();
-      setMemeTypes(response.data ?? []);
+      setMemeTypes(response.data.data ?? []);
     } catch (e) {
       console.error("Ошибка загрузки типов:", e);
       const errorMessage =
         e instanceof Error ? e.message : "Неизвестная ошибка";
       setNavigation(prev => ({ ...prev, error: errorMessage }));
       showToast({
-        type: "error",
-        title: "Ошибка загрузки типов",
+        success: false,
         message: errorMessage,
       });
     } finally {
@@ -85,15 +81,14 @@ const RandomMemePage: React.FC = () => {
     try {
       setNavigation(prev => ({ ...prev, isLoading: true, error: "" }));
       const response = await api.randomMemeOrdersList();
-      setMemeOrders(response.data ?? []);
+      setMemeOrders(response.data.data ?? []);
     } catch (e) {
       console.error("Ошибка загрузки заказов:", e);
       const errorMessage =
         e instanceof Error ? e.message : "Неизвестная ошибка";
       setNavigation(prev => ({ ...prev, error: errorMessage }));
       showToast({
-        type: "error",
-        title: "Ошибка загрузки заказов",
+        success: false,
         message: errorMessage,
       });
     } finally {
@@ -158,19 +153,14 @@ const RandomMemePage: React.FC = () => {
         itemName: memeType.name,
         onConfirm: async () => {
           try {
-            await api.randomMemeTypesDelete(memeType.id);
-            showToast({
-              type: "success",
-              title: "Успешно",
-              message: "Тип мема успешно удален",
-            });
+            const result = await api.randomMemeTypesDelete(memeType.id);
+            showToast(result.data);
             await loadTypes();
             setDeleteModal(prev => ({ ...prev, isOpen: false }));
           } catch (e) {
             console.error("Ошибка удаления типа:", e);
             showToast({
-              type: "error",
-              title: "Ошибка",
+              success: false,
               message: "Ошибка удаления типа мема",
             });
           }
@@ -207,19 +197,14 @@ const RandomMemePage: React.FC = () => {
         itemName: `Заказ #${memeOrder.order}`,
         onConfirm: async () => {
           try {
-            await api.randomMemeOrdersDelete(memeOrder.id);
-            showToast({
-              type: "success",
-              title: "Успешно",
-              message: "Заказ мема успешно удален",
-            });
+            const result = await api.randomMemeOrdersDelete(memeOrder.id);
+            showToast(result.data);
             await loadOrders();
             setDeleteModal(prev => ({ ...prev, isOpen: false }));
           } catch (e) {
             console.error("Ошибка удаления заказа:", e);
             showToast({
-              type: "error",
-              title: "Ошибка",
+              success: false,
               message: "Ошибка удаления заказа мема",
             });
           }
@@ -242,43 +227,27 @@ const RandomMemePage: React.FC = () => {
         if (navigation.currentView.includes("type")) {
           const typeData = data as unknown as MemeTypeFormData;
           if (navigation.currentView === "create-type") {
-            await api.randomMemeTypesCreate(typeData);
-            showToast({
-              type: "success",
-              title: "Успешно",
-              message: "Тип мема успешно создан",
-            });
+            const result = await api.randomMemeTypesCreate(typeData);
+            showToast(result.data);
           } else {
-            await api.randomMemeTypesUpdate(
+            const result = await api.randomMemeTypesUpdate(
               navigation.selectedType!.id,
               typeData
             );
-            showToast({
-              type: "success",
-              title: "Успешно",
-              message: "Тип мема успешно обновлен",
-            });
+            showToast(result.data);
           }
           await loadTypes();
         } else {
           const orderData = data as unknown as MemeOrderFormData;
           if (navigation.currentView === "create-order") {
-            await api.randomMemeOrdersCreate(orderData);
-            showToast({
-              type: "success",
-              title: "Успешно",
-              message: "Заказ мема успешно создан",
-            });
+            const result = await api.randomMemeOrdersCreate(orderData);
+            showToast(result.data);
           } else {
-            await api.randomMemeOrdersUpdate(
+            const result = await api.randomMemeOrdersUpdate(
               navigation.selectedOrder!.id,
               orderData
             );
-            showToast({
-              type: "success",
-              title: "Успешно",
-              message: "Заказ мема успешно обновлен",
-            });
+            showToast(result.data);
           }
           await loadOrders();
         }
@@ -287,8 +256,7 @@ const RandomMemePage: React.FC = () => {
       } catch (e) {
         console.error("Ошибка сохранения:", e);
         showToast({
-          type: "error",
-          title: "Ошибка",
+          success: false,
           message: "Ошибка сохранения данных",
         });
       } finally {

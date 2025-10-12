@@ -94,15 +94,13 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
     try {
       await navigator.clipboard.writeText(currentUrl);
       showToast?.({
-        type: "success",
-        title: "Ссылка скопирована",
+        success: true,
         message: "Ссылка с примененными фильтрами скопирована в буфер обмена",
       });
     } catch (err) {
       console.error("Ошибка копирования ссылки:", err);
       showToast?.({
-        type: "error",
-        title: "Ошибка копирования",
+        success: false,
         message: "Не удалось скопировать ссылку в буфер обмена",
       });
     }

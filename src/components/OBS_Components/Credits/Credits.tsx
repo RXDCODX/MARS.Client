@@ -695,7 +695,7 @@ const Credits: React.FC = () => {
                     <div className={styles.streamerSection}>
                       <ElectricBorder
                         style={{ borderRadius: "50%" }}
-                        color="e6acoc"
+                        color="rgb(230,172,12)"
                       >
                         <img
                           src={streamerInfo.profileImageUrl}

@@ -10,8 +10,106 @@
  * ---------------------------------------------------------------
  */
 
-import type { FollowerInfo } from "../types/data-contracts";
-import { HttpClient, RequestParams } from "./http-client";
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import {
+  HttpClient,
+  RequestParams,
+  ContentType,
+  HttpResponse,
+} from "./http-client";
+import type {
+  ApiMediaInfo,
+  AutoMessageDto,
+  ChannelRewardDefinition,
+  ChannelRewardRecord,
+  CinemaMediaItemDto,
+  CinemaQueueStatistics,
+  CommandInfo,
+  CommandParameterInfo,
+  CreateAutoMessageRequest,
+  CreateCustomRewardsRequest,
+  CreateMediaItemRequest,
+  CreateMemeOrderDto,
+  CreateMemeTypeDto,
+  CreateUserRequest,
+  CustomReward,
+  DailyAutoMarkupUser,
+  DefaultImage,
+  FollowerInfo,
+  GetCustomRewardRedemptionResponse,
+  GetCustomRewardsResponse,
+  GlobalCooldownSetting,
+  Image,
+  Log,
+  LogResponse,
+  LogsStatistics,
+  MaxPerStreamSetting,
+  MaxPerUserPerStreamSetting,
+  MediaFileInfo,
+  MediaMetaInfo,
+  MediaMetadata,
+  MediaPositionInfo,
+  MediaStylesInfo,
+  MediaTextInfo,
+  MemeOrderDto,
+  MemeTypeDto,
+  Move,
+  MovePending,
+  MovePendingDto,
+  OperationResult,
+  Pagination,
+  ParseRequest,
+  ParseResult,
+  ProblemDetails,
+  RateLimiterInfo,
+  Reward,
+  RewardRedemption,
+  ServiceInfo,
+  ServiceLog,
+  StreamArchiveConfig,
+  StringServiceStatusDictionary,
+  SupplementRequest,
+  TekkenCharacter,
+  TekkenCharacterPendingDto,
+  UpdateAutoMessageRequest,
+  UpdateCustomRewardDto,
+  UpdateCustomRewardRedemptionStatusRequest,
+  UpdateCustomRewardRequest,
+  UpdateMediaItemRequest,
+  UpdateMemeOrderDto,
+  UpdateMemeTypeDto,
+  UpdateUserRequest,
+  ValidateFolderRequest,
+  ValidateFolderResponse,
+  CinemaMediaItemDtoStatusEnum,
+  CommandInfoAvailablePlatformsEnum,
+  CommandInfoVisibilityEnum,
+  LogLogLevelEnum,
+  MediaFileInfoTypeEnum,
+  MediaMetaInfoPriorityEnum,
+  ParseRequestSourceEnum,
+  RewardRedemptionStatusEnum,
+  ServiceInfoStatusEnum,
+  StreamArchiveConfigFileConvertTypeEnum,
+  SupplementRequestSourceEnum,
+  UpdateCustomRewardRedemptionStatusRequestStatusEnum,
+  UpdateMediaItemRequestStatusEnum,
+  CinemaQueueStatusDetailParamsEnum,
+  CinemaQueueStatusDetailParamsStatusEnum,
+  CommandsAdminPlatformDetailParamsEnum,
+  CommandsAdminPlatformDetailParamsPlatformEnum,
+  CommandsAdminPlatformInfoListParamsEnum,
+  CommandsAdminPlatformInfoListParamsPlatformEnum,
+  CommandsUserPlatformDetailParamsEnum,
+  CommandsUserPlatformDetailParamsPlatformEnum,
+  CommandsUserPlatformInfoListParamsEnum,
+  CommandsUserPlatformInfoListParamsPlatformEnum,
+  FramedataSupplementCreate2ParamsEnum,
+  FramedataSupplementCreate2ParamsSourceEnum,
+  LogsByLevelDetailParamsEnum,
+  LogsByLevelDetailParamsLogLevelEnum,
+  LogsListParamsLogLevelEnum,
+} from "../types/data-contracts";
 
 export class RxdcodxViewers<
   SecurityDataType = unknown,
@@ -22,15 +120,15 @@ export class RxdcodxViewers<
    * @tags RxdcodxViewers
    * @name RxdcodxViewersAllList
    * @request GET:/api/RxdcodxViewers/all
-   * @response `200` `(FollowerInfo)[]` OK
+   * @response `200` `OperationResult<FollowerInfo[]>` OK
    */
   rxdcodxViewersAllList = (
     query?: {
       forceUseCash: boolean;
     },
-    params: RequestParams = {},
+    params: RequestParams = {}
   ) =>
-    this.request<FollowerInfo[], any>({
+    this.request<OperationResult<FollowerInfo[]>, any>({
       path: `/api/RxdcodxViewers/all`,
       method: "GET",
       query: query,
@@ -43,10 +141,10 @@ export class RxdcodxViewers<
    * @tags RxdcodxViewers
    * @name RxdcodxViewersWithoutAvatarsList
    * @request GET:/api/RxdcodxViewers/without-avatars
-   * @response `200` `(FollowerInfo)[]` OK
+   * @response `200` `OperationResult<FollowerInfo[]>` OK
    */
   rxdcodxViewersWithoutAvatarsList = (params: RequestParams = {}) =>
-    this.request<FollowerInfo[], any>({
+    this.request<OperationResult<FollowerInfo[]>, any>({
       path: `/api/RxdcodxViewers/without-avatars`,
       method: "GET",
       format: "json",
@@ -58,10 +156,10 @@ export class RxdcodxViewers<
    * @tags RxdcodxViewers
    * @name RxdcodxViewersWithoutAvatarsCountList
    * @request GET:/api/RxdcodxViewers/without-avatars/count
-   * @response `200` `number` OK
+   * @response `200` `OperationResult<Int32>` OK
    */
   rxdcodxViewersWithoutAvatarsCountList = (params: RequestParams = {}) =>
-    this.request<number, any>({
+    this.request<OperationResult<Int32>, any>({
       path: `/api/RxdcodxViewers/without-avatars/count`,
       method: "GET",
       format: "json",
@@ -73,10 +171,10 @@ export class RxdcodxViewers<
    * @tags RxdcodxViewers
    * @name RxdcodxViewersUpdateAvatarsCreate
    * @request POST:/api/RxdcodxViewers/update-avatars
-   * @response `200` `number` OK
+   * @response `200` `OperationResult<Int32>` OK
    */
   rxdcodxViewersUpdateAvatarsCreate = (params: RequestParams = {}) =>
-    this.request<number, any>({
+    this.request<OperationResult<Int32>, any>({
       path: `/api/RxdcodxViewers/update-avatars`,
       method: "POST",
       format: "json",
@@ -88,12 +186,13 @@ export class RxdcodxViewers<
    * @tags RxdcodxViewers
    * @name RxdcodxViewersDebugAvatarsList
    * @request GET:/api/RxdcodxViewers/debug/avatars
-   * @response `200` `void` OK
+   * @response `200` `OperationResult<Object>` OK
    */
   rxdcodxViewersDebugAvatarsList = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.request<OperationResult<Object>, any>({
       path: `/api/RxdcodxViewers/debug/avatars`,
       method: "GET",
+      format: "json",
       ...params,
     });
 }

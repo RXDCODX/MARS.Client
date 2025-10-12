@@ -481,7 +481,7 @@ export const MediaInfoEditPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await mediaInfoApi.mediaInfoApiDetail(id);
-      setAlert(data.data);
+      setAlert(data.data.data ?? null);
       setError(null);
     } catch (err) {
       const errorMessage =

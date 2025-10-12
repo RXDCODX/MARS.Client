@@ -38,7 +38,7 @@ const FramedataPage: React.FC = () => {
     try {
       updateNavigationState({ isLoadingCharacters: true, error: "" });
       const response = await api.framedataCharactersList();
-      setCharacters(response.data ?? []);
+      setCharacters(response.data.data ?? []);
       updateNavigationState({ isLoadingCharacters: false });
     } catch (error) {
       console.error("Ошибка загрузки персонажей:", error);
@@ -55,7 +55,7 @@ const FramedataPage: React.FC = () => {
       try {
         updateNavigationState({ isLoadingMoves: true, error: "" });
         const response = await api.framedataCharactersMovesList(character.name);
-        const moves = response.data ?? [];
+        const moves = response.data.data ?? [];
         const updatedCharacter = { ...character, movelist: moves };
 
         // Обновляем персонажа в списке

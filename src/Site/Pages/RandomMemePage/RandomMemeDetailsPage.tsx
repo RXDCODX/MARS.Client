@@ -4,7 +4,7 @@ import { Alert, Button, Container, Spinner } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { RandomMeme } from "@/shared/api";
-import { MemeOrderDto } from "@/shared/api/http-clients/data-contracts";
+import { MemeOrderDto } from "@/shared/api";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import { RandomMemeDetails } from "./components";
@@ -33,9 +33,9 @@ const RandomMemeDetailsPage: React.FC = () => {
       setError("");
 
       const response = await api.randomMemeOrdersDetail(id);
-      setMemeOrder(response.data ?? null);
+      setMemeOrder(response.data.data ?? null);
 
-      if (!response.data) {
+      if (!response.data.data) {
         setError("Мем с указанным ID не найден");
       }
     } catch (e) {
@@ -44,8 +44,7 @@ const RandomMemeDetailsPage: React.FC = () => {
         e instanceof Error ? e.message : "Неизвестная ошибка";
       setError(errorMessage);
       showToast({
-        type: "error",
-        title: "Ошибка загрузки",
+        success: false,
         message: errorMessage,
       });
     } finally {
@@ -73,18 +72,13 @@ const RandomMemeDetailsPage: React.FC = () => {
     if (!memeOrder) return;
 
     try {
-      await api.randomMemeOrdersDelete(memeOrder.id);
-      showToast({
-        type: "success",
-        title: "Успешно",
-        message: "Заказ мема успешно удален",
-      });
+      const result = await api.randomMemeOrdersDelete(memeOrder.id);
+      showToast(result.data);
       navigate("/random-meme");
     } catch (e) {
       console.error("Ошибка удаления заказа:", e);
       showToast({
-        type: "error",
-        title: "Ошибка",
+        success: false,
         message: "Ошибка удаления заказа мема",
       });
     }

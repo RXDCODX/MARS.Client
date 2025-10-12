@@ -10,7 +10,106 @@
  * ---------------------------------------------------------------
  */
 
-import { HttpClient, RequestParams } from "./http-client";
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import {
+  HttpClient,
+  RequestParams,
+  ContentType,
+  HttpResponse,
+} from "./http-client";
+import type {
+  ApiMediaInfo,
+  AutoMessageDto,
+  ChannelRewardDefinition,
+  ChannelRewardRecord,
+  CinemaMediaItemDto,
+  CinemaQueueStatistics,
+  CommandInfo,
+  CommandParameterInfo,
+  CreateAutoMessageRequest,
+  CreateCustomRewardsRequest,
+  CreateMediaItemRequest,
+  CreateMemeOrderDto,
+  CreateMemeTypeDto,
+  CreateUserRequest,
+  CustomReward,
+  DailyAutoMarkupUser,
+  DefaultImage,
+  FollowerInfo,
+  GetCustomRewardRedemptionResponse,
+  GetCustomRewardsResponse,
+  GlobalCooldownSetting,
+  Image,
+  Log,
+  LogResponse,
+  LogsStatistics,
+  MaxPerStreamSetting,
+  MaxPerUserPerStreamSetting,
+  MediaFileInfo,
+  MediaMetaInfo,
+  MediaMetadata,
+  MediaPositionInfo,
+  MediaStylesInfo,
+  MediaTextInfo,
+  MemeOrderDto,
+  MemeTypeDto,
+  Move,
+  MovePending,
+  MovePendingDto,
+  OperationResult,
+  Pagination,
+  ParseRequest,
+  ParseResult,
+  ProblemDetails,
+  RateLimiterInfo,
+  Reward,
+  RewardRedemption,
+  ServiceInfo,
+  ServiceLog,
+  StreamArchiveConfig,
+  StringServiceStatusDictionary,
+  SupplementRequest,
+  TekkenCharacter,
+  TekkenCharacterPendingDto,
+  UpdateAutoMessageRequest,
+  UpdateCustomRewardDto,
+  UpdateCustomRewardRedemptionStatusRequest,
+  UpdateCustomRewardRequest,
+  UpdateMediaItemRequest,
+  UpdateMemeOrderDto,
+  UpdateMemeTypeDto,
+  UpdateUserRequest,
+  ValidateFolderRequest,
+  ValidateFolderResponse,
+  CinemaMediaItemDtoStatusEnum,
+  CommandInfoAvailablePlatformsEnum,
+  CommandInfoVisibilityEnum,
+  LogLogLevelEnum,
+  MediaFileInfoTypeEnum,
+  MediaMetaInfoPriorityEnum,
+  ParseRequestSourceEnum,
+  RewardRedemptionStatusEnum,
+  ServiceInfoStatusEnum,
+  StreamArchiveConfigFileConvertTypeEnum,
+  SupplementRequestSourceEnum,
+  UpdateCustomRewardRedemptionStatusRequestStatusEnum,
+  UpdateMediaItemRequestStatusEnum,
+  CinemaQueueStatusDetailParamsEnum,
+  CinemaQueueStatusDetailParamsStatusEnum,
+  CommandsAdminPlatformDetailParamsEnum,
+  CommandsAdminPlatformDetailParamsPlatformEnum,
+  CommandsAdminPlatformInfoListParamsEnum,
+  CommandsAdminPlatformInfoListParamsPlatformEnum,
+  CommandsUserPlatformDetailParamsEnum,
+  CommandsUserPlatformDetailParamsPlatformEnum,
+  CommandsUserPlatformInfoListParamsEnum,
+  CommandsUserPlatformInfoListParamsPlatformEnum,
+  FramedataSupplementCreate2ParamsEnum,
+  FramedataSupplementCreate2ParamsSourceEnum,
+  LogsByLevelDetailParamsEnum,
+  LogsByLevelDetailParamsLogLevelEnum,
+  LogsListParamsLogLevelEnum,
+} from "../types/data-contracts";
 
 export class LoggerTest<
   SecurityDataType = unknown,
@@ -21,12 +120,13 @@ export class LoggerTest<
    * @tags LoggerTest
    * @name LoggerTestTestLoggingCreate
    * @request POST:/api/LoggerTest/test-logging
-   * @response `200` `void` OK
+   * @response `200` `OperationResult` OK
    */
   loggerTestTestLoggingCreate = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.request<OperationResult, any>({
       path: `/api/LoggerTest/test-logging`,
       method: "POST",
+      format: "json",
       ...params,
     });
   /**
@@ -35,12 +135,13 @@ export class LoggerTest<
    * @tags LoggerTest
    * @name LoggerTestTestExceptionCreate
    * @request POST:/api/LoggerTest/test-exception
-   * @response `200` `void` OK
+   * @response `200` `OperationResult` OK
    */
   loggerTestTestExceptionCreate = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.request<OperationResult, any>({
       path: `/api/LoggerTest/test-exception`,
       method: "POST",
+      format: "json",
       ...params,
     });
   /**
@@ -49,12 +150,13 @@ export class LoggerTest<
    * @tags LoggerTest
    * @name LoggerTestTestStructuredCreate
    * @request POST:/api/LoggerTest/test-structured
-   * @response `200` `void` OK
+   * @response `200` `OperationResult` OK
    */
   loggerTestTestStructuredCreate = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.request<OperationResult, any>({
       path: `/api/LoggerTest/test-structured`,
       method: "POST",
+      format: "json",
       ...params,
     });
 }

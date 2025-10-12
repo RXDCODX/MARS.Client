@@ -10,14 +10,106 @@
  * ---------------------------------------------------------------
  */
 
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import {
+  HttpClient,
+  RequestParams,
+  ContentType,
+  HttpResponse,
+} from "./http-client";
 import type {
+  ApiMediaInfo,
+  AutoMessageDto,
+  ChannelRewardDefinition,
+  ChannelRewardRecord,
+  CinemaMediaItemDto,
+  CinemaQueueStatistics,
+  CommandInfo,
+  CommandParameterInfo,
+  CreateAutoMessageRequest,
+  CreateCustomRewardsRequest,
+  CreateMediaItemRequest,
+  CreateMemeOrderDto,
+  CreateMemeTypeDto,
+  CreateUserRequest,
+  CustomReward,
+  DailyAutoMarkupUser,
+  DefaultImage,
+  FollowerInfo,
+  GetCustomRewardRedemptionResponse,
+  GetCustomRewardsResponse,
+  GlobalCooldownSetting,
+  Image,
   Log,
   LogResponse,
-  LogsByLevelDetailParamsEnum,
-  LogsListParamsLogLevelEnum,
   LogsStatistics,
+  MaxPerStreamSetting,
+  MaxPerUserPerStreamSetting,
+  MediaFileInfo,
+  MediaMetaInfo,
+  MediaMetadata,
+  MediaPositionInfo,
+  MediaStylesInfo,
+  MediaTextInfo,
+  MemeOrderDto,
+  MemeTypeDto,
+  Move,
+  MovePending,
+  MovePendingDto,
+  OperationResult,
+  Pagination,
+  ParseRequest,
+  ParseResult,
+  ProblemDetails,
+  RateLimiterInfo,
+  Reward,
+  RewardRedemption,
+  ServiceInfo,
+  ServiceLog,
+  StreamArchiveConfig,
+  StringServiceStatusDictionary,
+  SupplementRequest,
+  TekkenCharacter,
+  TekkenCharacterPendingDto,
+  UpdateAutoMessageRequest,
+  UpdateCustomRewardDto,
+  UpdateCustomRewardRedemptionStatusRequest,
+  UpdateCustomRewardRequest,
+  UpdateMediaItemRequest,
+  UpdateMemeOrderDto,
+  UpdateMemeTypeDto,
+  UpdateUserRequest,
+  ValidateFolderRequest,
+  ValidateFolderResponse,
+  CinemaMediaItemDtoStatusEnum,
+  CommandInfoAvailablePlatformsEnum,
+  CommandInfoVisibilityEnum,
+  LogLogLevelEnum,
+  MediaFileInfoTypeEnum,
+  MediaMetaInfoPriorityEnum,
+  ParseRequestSourceEnum,
+  RewardRedemptionStatusEnum,
+  ServiceInfoStatusEnum,
+  StreamArchiveConfigFileConvertTypeEnum,
+  SupplementRequestSourceEnum,
+  UpdateCustomRewardRedemptionStatusRequestStatusEnum,
+  UpdateMediaItemRequestStatusEnum,
+  CinemaQueueStatusDetailParamsEnum,
+  CinemaQueueStatusDetailParamsStatusEnum,
+  CommandsAdminPlatformDetailParamsEnum,
+  CommandsAdminPlatformDetailParamsPlatformEnum,
+  CommandsAdminPlatformInfoListParamsEnum,
+  CommandsAdminPlatformInfoListParamsPlatformEnum,
+  CommandsUserPlatformDetailParamsEnum,
+  CommandsUserPlatformDetailParamsPlatformEnum,
+  CommandsUserPlatformInfoListParamsEnum,
+  CommandsUserPlatformInfoListParamsPlatformEnum,
+  FramedataSupplementCreate2ParamsEnum,
+  FramedataSupplementCreate2ParamsSourceEnum,
+  LogsByLevelDetailParamsEnum,
+  LogsByLevelDetailParamsLogLevelEnum,
+  LogsListParamsLogLevelEnum,
 } from "../types/data-contracts";
-import { HttpClient, RequestParams } from "./http-client";
 
 export class Logs<
   SecurityDataType = unknown,
@@ -28,7 +120,7 @@ export class Logs<
    * @tags Logs
    * @name LogsList
    * @request GET:/api/Logs
-   * @response `200` `LogResponse` OK
+   * @response `200` `OperationResult<LogResponse>` OK
    */
   logsList = (
     query?: {
@@ -53,9 +145,9 @@ export class Logs<
       toDate: string;
       searchText: string;
     },
-    params: RequestParams = {},
+    params: RequestParams = {}
   ) =>
-    this.request<LogResponse, any>({
+    this.request<OperationResult<LogResponse>, any>({
       path: `/api/Logs`,
       method: "GET",
       query: query,
@@ -68,13 +160,13 @@ export class Logs<
    * @tags Logs
    * @name LogsByLevelDetail
    * @request GET:/api/Logs/by-level/{logLevel}
-   * @response `200` `(Log)[]` OK
+   * @response `200` `OperationResult<Log[]>` OK
    */
   logsByLevelDetail = (
     logLevel: LogsByLevelDetailParamsEnum,
-    params: RequestParams = {},
+    params: RequestParams = {}
   ) =>
-    this.request<Log[], any>({
+    this.request<OperationResult<Log[]>, any>({
       path: `/api/Logs/by-level/${logLevel}`,
       method: "GET",
       format: "json",
@@ -86,7 +178,7 @@ export class Logs<
    * @tags Logs
    * @name LogsByDateRangeList
    * @request GET:/api/Logs/by-date-range
-   * @response `200` `(Log)[]` OK
+   * @response `200` `OperationResult<Log[]>` OK
    */
   logsByDateRangeList = (
     query?: {
@@ -95,9 +187,9 @@ export class Logs<
       /** @format date-time */
       toDate: string;
     },
-    params: RequestParams = {},
+    params: RequestParams = {}
   ) =>
-    this.request<Log[], any>({
+    this.request<OperationResult<Log[]>, any>({
       path: `/api/Logs/by-date-range`,
       method: "GET",
       query: query,
@@ -110,7 +202,7 @@ export class Logs<
    * @tags Logs
    * @name LogsRecentList
    * @request GET:/api/Logs/recent
-   * @response `200` `(Log)[]` OK
+   * @response `200` `OperationResult<Log[]>` OK
    */
   logsRecentList = (
     query?: {
@@ -120,9 +212,9 @@ export class Logs<
        */
       count: number;
     },
-    params: RequestParams = {},
+    params: RequestParams = {}
   ) =>
-    this.request<Log[], any>({
+    this.request<OperationResult<Log[]>, any>({
       path: `/api/Logs/recent`,
       method: "GET",
       query: query,
@@ -135,10 +227,10 @@ export class Logs<
    * @tags Logs
    * @name LogsStatisticsList
    * @request GET:/api/Logs/statistics
-   * @response `200` `LogsStatistics` OK
+   * @response `200` `OperationResult<LogsStatistics>` OK
    */
   logsStatisticsList = (params: RequestParams = {}) =>
-    this.request<LogsStatistics, any>({
+    this.request<OperationResult<LogsStatistics>, any>({
       path: `/api/Logs/statistics`,
       method: "GET",
       format: "json",
@@ -150,12 +242,13 @@ export class Logs<
    * @tags Logs
    * @name LogsTestCreate
    * @request POST:/api/Logs/test
-   * @response `200` `void` OK
+   * @response `200` `OperationResult<Object>` OK
    */
   logsTestCreate = (params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.request<OperationResult<Object>, any>({
       path: `/api/Logs/test`,
       method: "POST",
+      format: "json",
       ...params,
     });
 }

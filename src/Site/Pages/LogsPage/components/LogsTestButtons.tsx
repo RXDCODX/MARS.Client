@@ -22,24 +22,21 @@ const LogsTestButtons: React.FC<LogsTestButtonsProps> = ({
 
       if (response.ok) {
         showToast({
-          type: "success",
-          title: "Тестовые логи созданы",
-          message: "Проверьте таблицу логов",
+          success: true,
+          message: "Тестовые логи созданы. Проверьте таблицу логов",
         });
         // Обновляем логи после создания тестовых
         setTimeout(() => onLogsRefresh(), 1000);
       } else {
         const errorText = await response.text();
         showToast({
-          type: "error",
-          title: "Ошибка создания тестовых логов",
+          success: false,
           message: `Статус: ${response.status}, Ошибка: ${errorText}`,
         });
       }
     } catch (error) {
       showToast({
-        type: "error",
-        title: "Ошибка создания тестовых логов",
+        success: false,
         message: error instanceof Error ? error.message : "Неизвестная ошибка",
       });
     }
@@ -52,9 +49,8 @@ const LogsTestButtons: React.FC<LogsTestButtonsProps> = ({
         const stats = await response.json();
         console.log("Статистика логов:", stats);
         showToast({
-          type: "info",
-          title: "Статистика логов",
-          message: `Всего логов: ${stats.totalLogs}, Ошибок: ${stats.errorLogs}, Предупреждений: ${stats.warningLogs}`,
+          success: true,
+          message: `Статистика логов - Всего: ${stats.totalLogs}, Ошибок: ${stats.errorLogs}, Предупреждений: ${stats.warningLogs}`,
         });
       }
     } catch (error) {

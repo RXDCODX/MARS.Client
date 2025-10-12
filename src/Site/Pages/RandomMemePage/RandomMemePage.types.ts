@@ -1,7 +1,4 @@
-import {
-  MemeOrderDto,
-  MemeTypeDto,
-} from "@/shared/api/http-clients/data-contracts";
+import { MemeOrderDto, MemeTypeDto } from "@/shared/api";
 
 // Основные представления страницы
 export type RandomMemeView =
@@ -45,11 +42,9 @@ export interface RandomMemeOrdersListProps {
   onEdit: (memeOrder: MemeOrderDto) => void;
   onDelete: (memeOrder: MemeOrderDto) => void;
   onCreate: () => void;
-  showToast?: (options: {
-    type: "success" | "error" | "info" | "warning";
-    title: string;
-    message: string;
-  }) => void;
+  showToast?: <TData = unknown>(
+    result: import("@/shared/types/OperationResult").OperationResult<TData>
+  ) => void;
 }
 
 // Пропсы для деталей типа мема

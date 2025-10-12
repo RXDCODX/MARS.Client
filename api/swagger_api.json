@@ -15,26 +15,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AutoMessageDto"
-                  }
+                  "$ref": "#/components/schemas/AutoMessageDtoIEnumerableOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AutoMessageDto"
-                  }
+                  "$ref": "#/components/schemas/AutoMessageDtoIEnumerableOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AutoMessageDto"
-                  }
+                  "$ref": "#/components/schemas/AutoMessageDtoIEnumerableOperationResult"
                 }
               }
             }
@@ -82,17 +73,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/AutoMessageDto"
+                  "$ref": "#/components/schemas/AutoMessageDtoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AutoMessageDto"
+                  "$ref": "#/components/schemas/AutoMessageDtoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AutoMessageDto"
+                  "$ref": "#/components/schemas/AutoMessageDtoOperationResult"
                 }
               }
             }
@@ -122,17 +113,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/AutoMessageDto"
+                  "$ref": "#/components/schemas/AutoMessageDtoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AutoMessageDto"
+                  "$ref": "#/components/schemas/AutoMessageDtoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AutoMessageDto"
+                  "$ref": "#/components/schemas/AutoMessageDtoOperationResult"
                 }
               }
             }
@@ -191,17 +182,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/AutoMessageDto"
+                  "$ref": "#/components/schemas/AutoMessageDtoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AutoMessageDto"
+                  "$ref": "#/components/schemas/AutoMessageDtoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AutoMessageDto"
+                  "$ref": "#/components/schemas/AutoMessageDtoOperationResult"
                 }
               }
             }
@@ -225,7 +216,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -237,7 +245,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelRewardRecordIEnumerableOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelRewardRecordIEnumerableOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelRewardRecordIEnumerableOperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -249,7 +274,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelRewardRecordIEnumerableOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelRewardRecordIEnumerableOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelRewardRecordIEnumerableOperationResult"
+                }
+              }
+            }
           }
         }
       },
@@ -263,7 +305,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/ChannelRewardRecord"
+                    "$ref": "#/components/schemas/ChannelRewardDefinition"
                   }
                 ]
               }
@@ -272,7 +314,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/ChannelRewardRecord"
+                    "$ref": "#/components/schemas/ChannelRewardDefinition"
                   }
                 ]
               }
@@ -281,7 +323,7 @@
               "schema": {
                 "allOf": [
                   {
-                    "$ref": "#/components/schemas/ChannelRewardRecord"
+                    "$ref": "#/components/schemas/ChannelRewardDefinition"
                   }
                 ]
               }
@@ -290,7 +332,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelRewardRecordOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelRewardRecordOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelRewardRecordOperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -313,7 +372,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelRewardRecordOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelRewardRecordOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelRewardRecordOperationResult"
+                }
+              }
+            }
           }
         }
       },
@@ -365,7 +441,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       },
@@ -386,7 +479,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -408,7 +518,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelRewardRecordOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelRewardRecordOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChannelRewardRecordOperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -420,7 +547,53 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ChannelRewardsManager/sync-services": {
+      "post": {
+        "tags": [
+          "ChannelRewardsManager"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Int32OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -436,26 +609,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CinemaMediaItemDto"
-                  }
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoListOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CinemaMediaItemDto"
-                  }
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoListOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CinemaMediaItemDto"
-                  }
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoListOperationResult"
                 }
               }
             }
@@ -503,17 +667,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CinemaMediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CinemaMediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CinemaMediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoOperationResult"
                 }
               }
             }
@@ -543,17 +707,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CinemaMediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CinemaMediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CinemaMediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoOperationResult"
                 }
               }
             }
@@ -612,17 +776,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CinemaMediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CinemaMediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CinemaMediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoOperationResult"
                 }
               }
             }
@@ -646,7 +810,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -662,17 +843,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CinemaMediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CinemaMediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CinemaMediaItemDto"
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoOperationResult"
                 }
               }
             }
@@ -708,26 +889,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CinemaMediaItemDto"
-                  }
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoListOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CinemaMediaItemDto"
-                  }
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoListOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CinemaMediaItemDto"
-                  }
+                  "$ref": "#/components/schemas/CinemaMediaItemDtoListOperationResult"
                 }
               }
             }
@@ -753,7 +925,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -816,7 +1005,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -861,7 +1067,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -877,17 +1100,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CinemaQueueStatistics"
+                  "$ref": "#/components/schemas/CinemaQueueStatisticsOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CinemaQueueStatistics"
+                  "$ref": "#/components/schemas/CinemaQueueStatisticsOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CinemaQueueStatistics"
+                  "$ref": "#/components/schemas/CinemaQueueStatisticsOperationResult"
                 }
               }
             }
@@ -915,17 +1138,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/MediaMetadata"
+                  "$ref": "#/components/schemas/MediaMetadataOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MediaMetadata"
+                  "$ref": "#/components/schemas/MediaMetadataOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MediaMetadata"
+                  "$ref": "#/components/schemas/MediaMetadataOperationResult"
                 }
               }
             }
@@ -944,17 +1167,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/StringOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/StringOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/StringOperationResult"
                 }
               }
             }
@@ -973,17 +1196,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/StringOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/StringOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/StringOperationResult"
                 }
               }
             }
@@ -1020,26 +1243,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "$ref": "#/components/schemas/StringArrayOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "$ref": "#/components/schemas/StringArrayOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "$ref": "#/components/schemas/StringArrayOperationResult"
                 }
               }
             }
@@ -1076,26 +1290,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "$ref": "#/components/schemas/StringArrayOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "$ref": "#/components/schemas/StringArrayOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  }
+                  "$ref": "#/components/schemas/StringArrayOperationResult"
                 }
               }
             }
@@ -1132,26 +1337,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CommandInfo"
-                  }
+                  "$ref": "#/components/schemas/CommandInfoArrayOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CommandInfo"
-                  }
+                  "$ref": "#/components/schemas/CommandInfoArrayOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CommandInfo"
-                  }
+                  "$ref": "#/components/schemas/CommandInfoArrayOperationResult"
                 }
               }
             }
@@ -1188,26 +1384,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CommandInfo"
-                  }
+                  "$ref": "#/components/schemas/CommandInfoArrayOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CommandInfo"
-                  }
+                  "$ref": "#/components/schemas/CommandInfoArrayOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CommandInfo"
-                  }
+                  "$ref": "#/components/schemas/CommandInfoArrayOperationResult"
                 }
               }
             }
@@ -1236,26 +1423,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CommandParameterInfo"
-                  }
+                  "$ref": "#/components/schemas/CommandParameterInfoArrayOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CommandParameterInfo"
-                  }
+                  "$ref": "#/components/schemas/CommandParameterInfoArrayOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CommandParameterInfo"
-                  }
+                  "$ref": "#/components/schemas/CommandParameterInfoArrayOperationResult"
                 }
               }
             }
@@ -1303,17 +1481,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/StringOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/StringOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "string"
+                  "$ref": "#/components/schemas/StringOperationResult"
                 }
               }
             }
@@ -1332,26 +1510,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TekkenCharacter"
-                  }
+                  "$ref": "#/components/schemas/TekkenCharacterListOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TekkenCharacter"
-                  }
+                  "$ref": "#/components/schemas/TekkenCharacterListOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TekkenCharacter"
-                  }
+                  "$ref": "#/components/schemas/TekkenCharacterListOperationResult"
                 }
               }
             }
@@ -1399,17 +1568,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacter"
+                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacter"
+                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacter"
+                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
                 }
               }
             }
@@ -1438,17 +1607,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacter"
+                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacter"
+                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacter"
+                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
                 }
               }
             }
@@ -1506,17 +1675,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacter"
+                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacter"
+                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacter"
+                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
                 }
               }
             }
@@ -1539,7 +1708,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -1565,26 +1751,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Move"
-                  }
+                  "$ref": "#/components/schemas/MoveListOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Move"
-                  }
+                  "$ref": "#/components/schemas/MoveListOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Move"
-                  }
+                  "$ref": "#/components/schemas/MoveListOperationResult"
                 }
               }
             }
@@ -1642,17 +1819,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Move"
+                  "$ref": "#/components/schemas/MoveOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Move"
+                  "$ref": "#/components/schemas/MoveOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Move"
+                  "$ref": "#/components/schemas/MoveOperationResult"
                 }
               }
             }
@@ -1689,17 +1866,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Move"
+                  "$ref": "#/components/schemas/MoveOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Move"
+                  "$ref": "#/components/schemas/MoveOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Move"
+                  "$ref": "#/components/schemas/MoveOperationResult"
                 }
               }
             }
@@ -1765,17 +1942,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Move"
+                  "$ref": "#/components/schemas/MoveOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Move"
+                  "$ref": "#/components/schemas/MoveOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Move"
+                  "$ref": "#/components/schemas/MoveOperationResult"
                 }
               }
             }
@@ -1806,7 +1983,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -1866,26 +2060,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Move"
-                  }
+                  "$ref": "#/components/schemas/MoveListOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Move"
-                  }
+                  "$ref": "#/components/schemas/MoveListOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Move"
-                  }
+                  "$ref": "#/components/schemas/MoveListOperationResult"
                 }
               }
             }
@@ -2001,17 +2186,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParseResult"
+                  "$ref": "#/components/schemas/ParseResultOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParseResult"
+                  "$ref": "#/components/schemas/ParseResultOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParseResult"
+                  "$ref": "#/components/schemas/ParseResultOperationResult"
                 }
               }
             }
@@ -2061,17 +2246,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParseResult"
+                  "$ref": "#/components/schemas/ParseResultOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParseResult"
+                  "$ref": "#/components/schemas/ParseResultOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParseResult"
+                  "$ref": "#/components/schemas/ParseResultOperationResult"
                 }
               }
             }
@@ -2121,17 +2306,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParseResult"
+                  "$ref": "#/components/schemas/ParseResultOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParseResult"
+                  "$ref": "#/components/schemas/ParseResultOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParseResult"
+                  "$ref": "#/components/schemas/ParseResultOperationResult"
                 }
               }
             }
@@ -2165,17 +2350,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParseResult"
+                  "$ref": "#/components/schemas/ParseResultOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParseResult"
+                  "$ref": "#/components/schemas/ParseResultOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ParseResult"
+                  "$ref": "#/components/schemas/ParseResultOperationResult"
                 }
               }
             }
@@ -2194,26 +2379,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TekkenCharacterPendingDto"
-                  }
+                  "$ref": "#/components/schemas/TekkenCharacterPendingDtoListOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TekkenCharacterPendingDto"
-                  }
+                  "$ref": "#/components/schemas/TekkenCharacterPendingDtoListOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TekkenCharacterPendingDto"
-                  }
+                  "$ref": "#/components/schemas/TekkenCharacterPendingDtoListOperationResult"
                 }
               }
             }
@@ -2241,26 +2417,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MovePendingDto"
-                  }
+                  "$ref": "#/components/schemas/MovePendingDtoListOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MovePendingDto"
-                  }
+                  "$ref": "#/components/schemas/MovePendingDtoListOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MovePendingDto"
-                  }
+                  "$ref": "#/components/schemas/MovePendingDtoListOperationResult"
                 }
               }
             }
@@ -2285,7 +2452,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -2307,7 +2491,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -2337,7 +2538,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -2367,7 +2585,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -2379,7 +2614,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -2391,7 +2643,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -2403,7 +2672,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -2415,7 +2701,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -2431,26 +2734,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DailyAutoMarkupUser"
-                  }
+                  "$ref": "#/components/schemas/DailyAutoMarkupUserListOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DailyAutoMarkupUser"
-                  }
+                  "$ref": "#/components/schemas/DailyAutoMarkupUserListOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DailyAutoMarkupUser"
-                  }
+                  "$ref": "#/components/schemas/DailyAutoMarkupUserListOperationResult"
                 }
               }
             }
@@ -2498,17 +2792,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUser"
+                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUser"
+                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUser"
+                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
                 }
               }
             }
@@ -2538,17 +2832,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUser"
+                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUser"
+                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUser"
+                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
                 }
               }
             }
@@ -2607,17 +2901,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUser"
+                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUser"
+                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUser"
+                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
                 }
               }
             }
@@ -2641,7 +2935,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -2664,7 +2975,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -2676,7 +3004,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -2724,7 +3069,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -2736,7 +3098,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -2748,7 +3127,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -2839,17 +3235,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/LogResponse"
+                  "$ref": "#/components/schemas/LogResponseOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LogResponse"
+                  "$ref": "#/components/schemas/LogResponseOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LogResponse"
+                  "$ref": "#/components/schemas/LogResponseOperationResult"
                 }
               }
             }
@@ -2887,26 +3283,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Log"
-                  }
+                  "$ref": "#/components/schemas/LogIEnumerableOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Log"
-                  }
+                  "$ref": "#/components/schemas/LogIEnumerableOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Log"
-                  }
+                  "$ref": "#/components/schemas/LogIEnumerableOperationResult"
                 }
               }
             }
@@ -2943,26 +3330,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Log"
-                  }
+                  "$ref": "#/components/schemas/LogIEnumerableOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Log"
-                  }
+                  "$ref": "#/components/schemas/LogIEnumerableOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Log"
-                  }
+                  "$ref": "#/components/schemas/LogIEnumerableOperationResult"
                 }
               }
             }
@@ -2992,26 +3370,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Log"
-                  }
+                  "$ref": "#/components/schemas/LogIEnumerableOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Log"
-                  }
+                  "$ref": "#/components/schemas/LogIEnumerableOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Log"
-                  }
+                  "$ref": "#/components/schemas/LogIEnumerableOperationResult"
                 }
               }
             }
@@ -3030,17 +3399,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/LogsStatistics"
+                  "$ref": "#/components/schemas/LogsStatisticsOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LogsStatistics"
+                  "$ref": "#/components/schemas/LogsStatisticsOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LogsStatistics"
+                  "$ref": "#/components/schemas/LogsStatisticsOperationResult"
                 }
               }
             }
@@ -3055,7 +3424,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -3071,26 +3457,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ApiMediaInfo"
-                  }
+                  "$ref": "#/components/schemas/ApiMediaInfoListOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ApiMediaInfo"
-                  }
+                  "$ref": "#/components/schemas/ApiMediaInfoListOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ApiMediaInfo"
-                  }
+                  "$ref": "#/components/schemas/ApiMediaInfoListOperationResult"
                 }
               }
             }
@@ -3138,17 +3515,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiMediaInfo"
+                  "$ref": "#/components/schemas/ApiMediaInfoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiMediaInfo"
+                  "$ref": "#/components/schemas/ApiMediaInfoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiMediaInfo"
+                  "$ref": "#/components/schemas/ApiMediaInfoOperationResult"
                 }
               }
             }
@@ -3178,17 +3555,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiMediaInfo"
+                  "$ref": "#/components/schemas/ApiMediaInfoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiMediaInfo"
+                  "$ref": "#/components/schemas/ApiMediaInfoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiMediaInfo"
+                  "$ref": "#/components/schemas/ApiMediaInfoOperationResult"
                 }
               }
             }
@@ -3247,17 +3624,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiMediaInfo"
+                  "$ref": "#/components/schemas/ApiMediaInfoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiMediaInfo"
+                  "$ref": "#/components/schemas/ApiMediaInfoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ApiMediaInfo"
+                  "$ref": "#/components/schemas/ApiMediaInfoOperationResult"
                 }
               }
             }
@@ -3281,7 +3658,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -3342,32 +3736,20 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MemeTypeDto"
-                  }
+                  "$ref": "#/components/schemas/MemeTypeDtoListOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MemeTypeDto"
-                  }
+                  "$ref": "#/components/schemas/MemeTypeDtoListOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MemeTypeDto"
-                  }
+                  "$ref": "#/components/schemas/MemeTypeDtoListOperationResult"
                 }
               }
             }
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       },
@@ -3407,48 +3789,25 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "Created",
+          "200": {
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeTypeDto"
+                  "$ref": "#/components/schemas/MemeTypeDtoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeTypeDto"
+                  "$ref": "#/components/schemas/MemeTypeDtoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeTypeDto"
+                  "$ref": "#/components/schemas/MemeTypeDtoOperationResult"
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       }
@@ -3475,43 +3834,20 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeTypeDto"
+                  "$ref": "#/components/schemas/MemeTypeDtoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeTypeDto"
+                  "$ref": "#/components/schemas/MemeTypeDtoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeTypeDto"
+                  "$ref": "#/components/schemas/MemeTypeDtoOperationResult"
                 }
               }
             }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       },
@@ -3567,63 +3903,20 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeTypeDto"
+                  "$ref": "#/components/schemas/MemeTypeDtoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeTypeDto"
+                  "$ref": "#/components/schemas/MemeTypeDtoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeTypeDto"
+                  "$ref": "#/components/schemas/MemeTypeDtoOperationResult"
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       },
@@ -3643,51 +3936,25 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "404": {
-            "description": "Not Found",
+          "200": {
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/OperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/OperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/OperationResult"
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       }
@@ -3703,32 +3970,20 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MemeOrderDto"
-                  }
+                  "$ref": "#/components/schemas/MemeOrderDtoListOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MemeOrderDto"
-                  }
+                  "$ref": "#/components/schemas/MemeOrderDtoListOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MemeOrderDto"
-                  }
+                  "$ref": "#/components/schemas/MemeOrderDtoListOperationResult"
                 }
               }
             }
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       },
@@ -3768,48 +4023,25 @@
           }
         },
         "responses": {
-          "201": {
-            "description": "Created",
+          "200": {
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeOrderDto"
+                  "$ref": "#/components/schemas/MemeOrderDtoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeOrderDto"
+                  "$ref": "#/components/schemas/MemeOrderDtoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeOrderDto"
+                  "$ref": "#/components/schemas/MemeOrderDtoOperationResult"
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       }
@@ -3836,32 +4068,20 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MemeOrderDto"
-                  }
+                  "$ref": "#/components/schemas/MemeOrderDtoListOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MemeOrderDto"
-                  }
+                  "$ref": "#/components/schemas/MemeOrderDtoListOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/MemeOrderDto"
-                  }
+                  "$ref": "#/components/schemas/MemeOrderDtoListOperationResult"
                 }
               }
             }
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       }
@@ -3888,43 +4108,20 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeOrderDto"
+                  "$ref": "#/components/schemas/MemeOrderDtoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeOrderDto"
+                  "$ref": "#/components/schemas/MemeOrderDtoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeOrderDto"
+                  "$ref": "#/components/schemas/MemeOrderDtoOperationResult"
                 }
               }
             }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       },
@@ -3980,63 +4177,20 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeOrderDto"
+                  "$ref": "#/components/schemas/MemeOrderDtoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeOrderDto"
+                  "$ref": "#/components/schemas/MemeOrderDtoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeOrderDto"
+                  "$ref": "#/components/schemas/MemeOrderDtoOperationResult"
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       },
@@ -4056,31 +4210,25 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "404": {
-            "description": "Not Found",
+          "200": {
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/OperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/OperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "$ref": "#/components/schemas/OperationResult"
                 }
               }
             }
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       }
@@ -4106,43 +4254,20 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeOrderDto"
+                  "$ref": "#/components/schemas/MemeOrderDtoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeOrderDto"
+                  "$ref": "#/components/schemas/MemeOrderDtoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MemeOrderDto"
+                  "$ref": "#/components/schemas/MemeOrderDtoOperationResult"
                 }
               }
             }
-          },
-          "404": {
-            "description": "Not Found",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       }
@@ -4168,26 +4293,20 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "$ref": "#/components/schemas/Int32OperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "$ref": "#/components/schemas/Int32OperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "$ref": "#/components/schemas/Int32OperationResult"
                 }
               }
             }
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         }
       }
@@ -4301,10 +4420,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "500": {
-            "description": "Internal Server Error"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -4329,26 +4462,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FollowerInfo"
-                  }
+                  "$ref": "#/components/schemas/FollowerInfoListOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FollowerInfo"
-                  }
+                  "$ref": "#/components/schemas/FollowerInfoListOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FollowerInfo"
-                  }
+                  "$ref": "#/components/schemas/FollowerInfoListOperationResult"
                 }
               }
             }
@@ -4367,26 +4491,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FollowerInfo"
-                  }
+                  "$ref": "#/components/schemas/FollowerInfoListOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FollowerInfo"
-                  }
+                  "$ref": "#/components/schemas/FollowerInfoListOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/FollowerInfo"
-                  }
+                  "$ref": "#/components/schemas/FollowerInfoListOperationResult"
                 }
               }
             }
@@ -4405,20 +4520,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "$ref": "#/components/schemas/Int32OperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "$ref": "#/components/schemas/Int32OperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "$ref": "#/components/schemas/Int32OperationResult"
                 }
               }
             }
@@ -4437,20 +4549,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "$ref": "#/components/schemas/Int32OperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "$ref": "#/components/schemas/Int32OperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "integer",
-                  "format": "int32"
+                  "$ref": "#/components/schemas/Int32OperationResult"
                 }
               }
             }
@@ -4465,7 +4574,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -4481,50 +4607,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "enum": [
-                      "Running",
-                      "Stopped",
-                      "Starting",
-                      "Stopping",
-                      "Error",
-                      "Unknown"
-                    ],
-                    "type": "string"
-                  }
+                  "$ref": "#/components/schemas/StringServiceStatusDictionaryOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "enum": [
-                      "Running",
-                      "Stopped",
-                      "Starting",
-                      "Stopping",
-                      "Error",
-                      "Unknown"
-                    ],
-                    "type": "string"
-                  }
+                  "$ref": "#/components/schemas/StringServiceStatusDictionaryOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "enum": [
-                      "Running",
-                      "Stopped",
-                      "Starting",
-                      "Stopping",
-                      "Error",
-                      "Unknown"
-                    ],
-                    "type": "string"
-                  }
+                  "$ref": "#/components/schemas/StringServiceStatusDictionaryOperationResult"
                 }
               }
             }
@@ -4553,17 +4646,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/ServiceInfo"
+                  "$ref": "#/components/schemas/ServiceInfoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ServiceInfo"
+                  "$ref": "#/components/schemas/ServiceInfoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ServiceInfo"
+                  "$ref": "#/components/schemas/ServiceInfoOperationResult"
                 }
               }
             }
@@ -4588,7 +4681,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -4610,7 +4720,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -4632,7 +4759,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -4667,26 +4811,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ServiceLog"
-                  }
+                  "$ref": "#/components/schemas/ServiceLogIEnumerableOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ServiceLog"
-                  }
+                  "$ref": "#/components/schemas/ServiceLogIEnumerableOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ServiceLog"
-                  }
+                  "$ref": "#/components/schemas/ServiceLogIEnumerableOperationResult"
                 }
               }
             }
@@ -4730,7 +4865,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -4746,26 +4898,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ServiceInfo"
-                  }
+                  "$ref": "#/components/schemas/ServiceInfoIEnumerableOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ServiceInfo"
-                  }
+                  "$ref": "#/components/schemas/ServiceInfoIEnumerableOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ServiceInfo"
-                  }
+                  "$ref": "#/components/schemas/ServiceInfoIEnumerableOperationResult"
                 }
               }
             }
@@ -4784,17 +4927,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/RateLimiterInfo"
+                  "$ref": "#/components/schemas/RateLimiterInfoOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RateLimiterInfo"
+                  "$ref": "#/components/schemas/RateLimiterInfoOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RateLimiterInfo"
+                  "$ref": "#/components/schemas/RateLimiterInfoOperationResult"
                 }
               }
             }
@@ -4813,26 +4956,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/StreamArchiveConfig"
-                  }
+                  "$ref": "#/components/schemas/StreamArchiveConfigListOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/StreamArchiveConfig"
-                  }
+                  "$ref": "#/components/schemas/StreamArchiveConfigListOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/StreamArchiveConfig"
-                  }
+                  "$ref": "#/components/schemas/StreamArchiveConfigListOperationResult"
                 }
               }
             }
@@ -4880,17 +5014,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StreamArchiveConfig"
+                  "$ref": "#/components/schemas/StreamArchiveConfigOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StreamArchiveConfig"
+                  "$ref": "#/components/schemas/StreamArchiveConfigOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StreamArchiveConfig"
+                  "$ref": "#/components/schemas/StreamArchiveConfigOperationResult"
                 }
               }
             }
@@ -4920,17 +5054,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/StreamArchiveConfig"
+                  "$ref": "#/components/schemas/StreamArchiveConfigOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StreamArchiveConfig"
+                  "$ref": "#/components/schemas/StreamArchiveConfigOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/StreamArchiveConfig"
+                  "$ref": "#/components/schemas/StreamArchiveConfigOperationResult"
                 }
               }
             }
@@ -4985,7 +5119,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       },
@@ -5006,7 +5157,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -5049,7 +5217,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidateFolderResponseOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidateFolderResponseOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidateFolderResponseOperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -5072,7 +5257,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -5084,7 +5286,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -5096,7 +5315,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -5108,7 +5344,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -5120,7 +5373,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -5141,7 +5411,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -5163,7 +5450,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCustomRewardsResponseOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCustomRewardsResponseOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetCustomRewardsResponseOperationResult"
+                }
+              }
+            }
           }
         }
       },
@@ -5208,17 +5512,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CustomReward"
+                  "$ref": "#/components/schemas/CustomRewardOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CustomReward"
+                  "$ref": "#/components/schemas/CustomRewardOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CustomReward"
+                  "$ref": "#/components/schemas/CustomRewardOperationResult"
                 }
               }
             }
@@ -5278,17 +5582,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/CustomReward"
+                  "$ref": "#/components/schemas/CustomRewardOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CustomReward"
+                  "$ref": "#/components/schemas/CustomRewardOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CustomReward"
+                  "$ref": "#/components/schemas/CustomRewardOperationResult"
                 }
               }
             }
@@ -5311,7 +5615,24 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -5359,17 +5680,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetCustomRewardRedemptionResponse"
+                  "$ref": "#/components/schemas/GetCustomRewardRedemptionResponseOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetCustomRewardRedemptionResponse"
+                  "$ref": "#/components/schemas/GetCustomRewardRedemptionResponseOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetCustomRewardRedemptionResponse"
+                  "$ref": "#/components/schemas/GetCustomRewardRedemptionResponseOperationResult"
                 }
               }
             }
@@ -5435,7 +5756,24 @@
         },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
           }
         }
       }
@@ -5496,6 +5834,24 @@
         },
         "additionalProperties": false
       },
+      "ApiMediaInfoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа ApiMediaInfo[]",
+        "x-generic-type-argument": "ApiMediaInfo[]"
+      },
+      "ApiMediaInfoOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа ApiMediaInfo",
+        "x-generic-type-argument": "ApiMediaInfo"
+      },
       "AutoMessageDto": {
         "required": [
           "id",
@@ -5509,6 +5865,88 @@
           },
           "message": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AutoMessageDtoIEnumerableOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа AutoMessageDto[]",
+        "x-generic-type-argument": "AutoMessageDto[]"
+      },
+      "AutoMessageDtoOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа AutoMessageDto",
+        "x-generic-type-argument": "AutoMessageDto"
+      },
+      "ChannelRewardDefinition": {
+        "required": [
+          "cost",
+          "isEnabled",
+          "isGlobalCooldownEnabled",
+          "isMaxPerStreamEnabled",
+          "isMaxPerUserPerStreamEnabled",
+          "isUserInputRequired",
+          "shouldRedemptionsSkipRequestQueue",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "cost": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
+          },
+          "backgroundColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "isUserInputRequired": {
+            "type": "boolean"
+          },
+          "isMaxPerStreamEnabled": {
+            "type": "boolean"
+          },
+          "maxPerStream": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isMaxPerUserPerStreamEnabled": {
+            "type": "boolean"
+          },
+          "maxPerUserPerStream": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "isGlobalCooldownEnabled": {
+            "type": "boolean"
+          },
+          "globalCooldownSeconds": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "shouldRedemptionsSkipRequestQueue": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -5596,6 +6034,24 @@
         },
         "additionalProperties": false
       },
+      "ChannelRewardRecordIEnumerableOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа ChannelRewardRecord[]",
+        "x-generic-type-argument": "ChannelRewardRecord[]"
+      },
+      "ChannelRewardRecordOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа ChannelRewardRecord",
+        "x-generic-type-argument": "ChannelRewardRecord"
+      },
       "CinemaMediaItemDto": {
         "required": [
           "createdAt",
@@ -5672,6 +6128,24 @@
         },
         "additionalProperties": false
       },
+      "CinemaMediaItemDtoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа CinemaMediaItemDto[]",
+        "x-generic-type-argument": "CinemaMediaItemDto[]"
+      },
+      "CinemaMediaItemDtoOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа CinemaMediaItemDto",
+        "x-generic-type-argument": "CinemaMediaItemDto"
+      },
       "CinemaQueueStatistics": {
         "required": [
           "cancelledItems",
@@ -5709,6 +6183,15 @@
           }
         },
         "additionalProperties": false
+      },
+      "CinemaQueueStatisticsOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа CinemaQueueStatistics",
+        "x-generic-type-argument": "CinemaQueueStatistics"
       },
       "CommandInfo": {
         "required": [
@@ -5762,6 +6245,15 @@
         },
         "additionalProperties": false
       },
+      "CommandInfoArrayOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа CommandInfo[]",
+        "x-generic-type-argument": "CommandInfo[]"
+      },
       "CommandParameterInfo": {
         "required": [
           "description",
@@ -5789,6 +6281,15 @@
           }
         },
         "additionalProperties": false
+      },
+      "CommandParameterInfoArrayOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа CommandParameterInfo[]",
+        "x-generic-type-argument": "CommandParameterInfo[]"
       },
       "CreateAutoMessageRequest": {
         "required": [
@@ -6108,6 +6609,15 @@
         },
         "additionalProperties": false
       },
+      "CustomRewardOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа CustomReward",
+        "x-generic-type-argument": "CustomReward"
+      },
       "DailyAutoMarkupUser": {
         "required": [
           "id",
@@ -6151,6 +6661,24 @@
           }
         },
         "additionalProperties": false
+      },
+      "DailyAutoMarkupUserListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа DailyAutoMarkupUser[]",
+        "x-generic-type-argument": "DailyAutoMarkupUser[]"
+      },
+      "DailyAutoMarkupUserOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа DailyAutoMarkupUser",
+        "x-generic-type-argument": "DailyAutoMarkupUser"
       },
       "DefaultImage": {
         "type": "object",
@@ -6226,6 +6754,15 @@
         },
         "additionalProperties": false
       },
+      "FollowerInfoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа FollowerInfo[]",
+        "x-generic-type-argument": "FollowerInfo[]"
+      },
       "GetCustomRewardRedemptionResponse": {
         "type": "object",
         "properties": {
@@ -6248,6 +6785,38 @@
           }
         },
         "additionalProperties": false
+      },
+      "GetCustomRewardRedemptionResponseOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа GetCustomRewardRedemptionResponse",
+        "x-generic-type-argument": "GetCustomRewardRedemptionResponse"
+      },
+      "GetCustomRewardsResponse": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CustomReward"
+            },
+            "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetCustomRewardsResponseOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа GetCustomRewardsResponse",
+        "x-generic-type-argument": "GetCustomRewardsResponse"
       },
       "GlobalCooldownSetting": {
         "required": [
@@ -6289,6 +6858,15 @@
         },
         "additionalProperties": false
       },
+      "Int32OperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа number",
+        "x-generic-type-argument": "number"
+      },
       "Log": {
         "required": [
           "id",
@@ -6328,6 +6906,15 @@
         },
         "additionalProperties": false
       },
+      "LogIEnumerableOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа Log[]",
+        "x-generic-type-argument": "Log[]"
+      },
       "LogResponse": {
         "required": [
           "logs",
@@ -6362,6 +6949,15 @@
           }
         },
         "additionalProperties": false
+      },
+      "LogResponseOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа LogResponse",
+        "x-generic-type-argument": "LogResponse"
       },
       "LogsStatistics": {
         "required": [
@@ -6400,6 +6996,15 @@
           }
         },
         "additionalProperties": false
+      },
+      "LogsStatisticsOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа LogsStatistics",
+        "x-generic-type-argument": "LogsStatistics"
       },
       "MaxPerStreamSetting": {
         "required": [
@@ -6549,6 +7154,15 @@
         },
         "additionalProperties": false
       },
+      "MediaMetadataOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа MediaMetadata",
+        "x-generic-type-argument": "MediaMetadata"
+      },
       "MediaPositionInfo": {
         "required": [
           "height",
@@ -6684,6 +7298,24 @@
         },
         "additionalProperties": false
       },
+      "MemeOrderDtoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа MemeOrderDto[]",
+        "x-generic-type-argument": "MemeOrderDto[]"
+      },
+      "MemeOrderDtoOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа MemeOrderDto",
+        "x-generic-type-argument": "MemeOrderDto"
+      },
       "MemeTypeDto": {
         "required": [
           "folderPath",
@@ -6707,6 +7339,24 @@
           }
         },
         "additionalProperties": false
+      },
+      "MemeTypeDtoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа MemeTypeDto[]",
+        "x-generic-type-argument": "MemeTypeDto[]"
+      },
+      "MemeTypeDtoOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа MemeTypeDto",
+        "x-generic-type-argument": "MemeTypeDto"
       },
       "Move": {
         "required": [
@@ -6799,6 +7449,24 @@
           }
         },
         "additionalProperties": false
+      },
+      "MoveListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа Move[]",
+        "x-generic-type-argument": "Move[]"
+      },
+      "MoveOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа Move",
+        "x-generic-type-argument": "Move"
       },
       "MovePending": {
         "required": [
@@ -6988,6 +7656,52 @@
         },
         "additionalProperties": false
       },
+      "MovePendingDtoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа MovePendingDto[]",
+        "x-generic-type-argument": "MovePendingDto[]"
+      },
+      "ObjectOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
+      },
+      "OperationResult": {
+        "required": [
+          "success"
+        ],
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Флаг успешности операции"
+          },
+          "message": {
+            "type": "string",
+            "description": "Сообщение о результате операции",
+            "nullable": true
+          },
+          "data": {
+            "description": "Данные результата операции",
+            "nullable": true,
+            "x-generic-type": "TData"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Обобщенный результат операции",
+        "x-is-generic": true,
+        "x-generic-parameters": [
+          "TData"
+        ]
+      },
       "Pagination": {
         "type": "object",
         "properties": {
@@ -7074,6 +7788,15 @@
         },
         "additionalProperties": false
       },
+      "ParseResultOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа ParseResult",
+        "x-generic-type-argument": "ParseResult"
+      },
       "ProblemDetails": {
         "type": "object",
         "properties": {
@@ -7099,7 +7822,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": { }
+        "additionalProperties": {}
       },
       "RateLimiterInfo": {
         "required": [
@@ -7128,6 +7851,15 @@
           }
         },
         "additionalProperties": false
+      },
+      "RateLimiterInfoOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа RateLimiterInfo",
+        "x-generic-type-argument": "RateLimiterInfo"
       },
       "Reward": {
         "required": [
@@ -7277,6 +8009,24 @@
         },
         "additionalProperties": false
       },
+      "ServiceInfoIEnumerableOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа ServiceInfo[]",
+        "x-generic-type-argument": "ServiceInfo[]"
+      },
+      "ServiceInfoOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа ServiceInfo",
+        "x-generic-type-argument": "ServiceInfo"
+      },
       "ServiceLog": {
         "required": [
           "level",
@@ -7301,6 +8051,15 @@
           }
         },
         "additionalProperties": false
+      },
+      "ServiceLogIEnumerableOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа ServiceLog[]",
+        "x-generic-type-argument": "ServiceLog[]"
       },
       "StreamArchiveConfig": {
         "required": [
@@ -7348,6 +8107,51 @@
           }
         },
         "additionalProperties": false
+      },
+      "StreamArchiveConfigListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа StreamArchiveConfig[]",
+        "x-generic-type-argument": "StreamArchiveConfig[]"
+      },
+      "StreamArchiveConfigOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа StreamArchiveConfig",
+        "x-generic-type-argument": "StreamArchiveConfig"
+      },
+      "StringArrayOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа string[]",
+        "x-generic-type-argument": "string[]"
+      },
+      "StringOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа string",
+        "x-generic-type-argument": "string"
+      },
+      "StringServiceStatusDictionaryOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа object",
+        "x-generic-type-argument": "object"
       },
       "SupplementRequest": {
         "required": [
@@ -7482,6 +8286,24 @@
         },
         "additionalProperties": false
       },
+      "TekkenCharacterListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа TekkenCharacter[]",
+        "x-generic-type-argument": "TekkenCharacter[]"
+      },
+      "TekkenCharacterOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа TekkenCharacter",
+        "x-generic-type-argument": "TekkenCharacter"
+      },
       "TekkenCharacterPendingDto": {
         "required": [
           "isNew",
@@ -7568,6 +8390,15 @@
           }
         },
         "additionalProperties": false
+      },
+      "TekkenCharacterPendingDtoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа TekkenCharacterPendingDto[]",
+        "x-generic-type-argument": "TekkenCharacterPendingDto[]"
       },
       "UpdateAutoMessageRequest": {
         "type": "object",
@@ -7857,6 +8688,43 @@
           }
         },
         "additionalProperties": false
+      },
+      "ValidateFolderResponse": {
+        "required": [
+          "accessible",
+          "exists",
+          "sampleFiles",
+          "videoFilesCount"
+        ],
+        "type": "object",
+        "properties": {
+          "exists": {
+            "type": "boolean"
+          },
+          "accessible": {
+            "type": "boolean"
+          },
+          "videoFilesCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sampleFiles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "ValidateFolderResponseOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа ValidateFolderResponse",
+        "x-generic-type-argument": "ValidateFolderResponse"
       }
     }
   }

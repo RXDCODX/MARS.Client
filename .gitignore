@@ -386,3 +386,4 @@ dist-ssr
 
 *storybook.log
 storybook-static
+tsconfig.app.tsbuildinfo

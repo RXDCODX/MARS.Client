@@ -10,8 +10,106 @@
  * ---------------------------------------------------------------
  */
 
-import type { ApiMediaInfo } from "../types/data-contracts";
-import { ContentType, HttpClient, RequestParams } from "./http-client";
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import {
+  HttpClient,
+  RequestParams,
+  ContentType,
+  HttpResponse,
+} from "./http-client";
+import type {
+  ApiMediaInfo,
+  AutoMessageDto,
+  ChannelRewardDefinition,
+  ChannelRewardRecord,
+  CinemaMediaItemDto,
+  CinemaQueueStatistics,
+  CommandInfo,
+  CommandParameterInfo,
+  CreateAutoMessageRequest,
+  CreateCustomRewardsRequest,
+  CreateMediaItemRequest,
+  CreateMemeOrderDto,
+  CreateMemeTypeDto,
+  CreateUserRequest,
+  CustomReward,
+  DailyAutoMarkupUser,
+  DefaultImage,
+  FollowerInfo,
+  GetCustomRewardRedemptionResponse,
+  GetCustomRewardsResponse,
+  GlobalCooldownSetting,
+  Image,
+  Log,
+  LogResponse,
+  LogsStatistics,
+  MaxPerStreamSetting,
+  MaxPerUserPerStreamSetting,
+  MediaFileInfo,
+  MediaMetaInfo,
+  MediaMetadata,
+  MediaPositionInfo,
+  MediaStylesInfo,
+  MediaTextInfo,
+  MemeOrderDto,
+  MemeTypeDto,
+  Move,
+  MovePending,
+  MovePendingDto,
+  OperationResult,
+  Pagination,
+  ParseRequest,
+  ParseResult,
+  ProblemDetails,
+  RateLimiterInfo,
+  Reward,
+  RewardRedemption,
+  ServiceInfo,
+  ServiceLog,
+  StreamArchiveConfig,
+  StringServiceStatusDictionary,
+  SupplementRequest,
+  TekkenCharacter,
+  TekkenCharacterPendingDto,
+  UpdateAutoMessageRequest,
+  UpdateCustomRewardDto,
+  UpdateCustomRewardRedemptionStatusRequest,
+  UpdateCustomRewardRequest,
+  UpdateMediaItemRequest,
+  UpdateMemeOrderDto,
+  UpdateMemeTypeDto,
+  UpdateUserRequest,
+  ValidateFolderRequest,
+  ValidateFolderResponse,
+  CinemaMediaItemDtoStatusEnum,
+  CommandInfoAvailablePlatformsEnum,
+  CommandInfoVisibilityEnum,
+  LogLogLevelEnum,
+  MediaFileInfoTypeEnum,
+  MediaMetaInfoPriorityEnum,
+  ParseRequestSourceEnum,
+  RewardRedemptionStatusEnum,
+  ServiceInfoStatusEnum,
+  StreamArchiveConfigFileConvertTypeEnum,
+  SupplementRequestSourceEnum,
+  UpdateCustomRewardRedemptionStatusRequestStatusEnum,
+  UpdateMediaItemRequestStatusEnum,
+  CinemaQueueStatusDetailParamsEnum,
+  CinemaQueueStatusDetailParamsStatusEnum,
+  CommandsAdminPlatformDetailParamsEnum,
+  CommandsAdminPlatformDetailParamsPlatformEnum,
+  CommandsAdminPlatformInfoListParamsEnum,
+  CommandsAdminPlatformInfoListParamsPlatformEnum,
+  CommandsUserPlatformDetailParamsEnum,
+  CommandsUserPlatformDetailParamsPlatformEnum,
+  CommandsUserPlatformInfoListParamsEnum,
+  CommandsUserPlatformInfoListParamsPlatformEnum,
+  FramedataSupplementCreate2ParamsEnum,
+  FramedataSupplementCreate2ParamsSourceEnum,
+  LogsByLevelDetailParamsEnum,
+  LogsByLevelDetailParamsLogLevelEnum,
+  LogsListParamsLogLevelEnum,
+} from "../types/data-contracts";
 
 export class MediaInfoApi<
   SecurityDataType = unknown,
@@ -22,10 +120,10 @@ export class MediaInfoApi<
    * @tags MediaInfoApi
    * @name MediaInfoApiList
    * @request GET:/api/MediaInfoApi
-   * @response `200` `(ApiMediaInfo)[]` OK
+   * @response `200` `OperationResult<ApiMediaInfo[]>` OK
    */
   mediaInfoApiList = (params: RequestParams = {}) =>
-    this.request<ApiMediaInfo[], any>({
+    this.request<OperationResult<ApiMediaInfo[]>, any>({
       path: `/api/MediaInfoApi`,
       method: "GET",
       format: "json",
@@ -37,10 +135,10 @@ export class MediaInfoApi<
    * @tags MediaInfoApi
    * @name MediaInfoApiCreate
    * @request POST:/api/MediaInfoApi
-   * @response `200` `ApiMediaInfo` OK
+   * @response `200` `OperationResult<ApiMediaInfo>` OK
    */
   mediaInfoApiCreate = (data: ApiMediaInfo, params: RequestParams = {}) =>
-    this.request<ApiMediaInfo, any>({
+    this.request<OperationResult<ApiMediaInfo>, any>({
       path: `/api/MediaInfoApi`,
       method: "POST",
       body: data,
@@ -54,10 +152,10 @@ export class MediaInfoApi<
    * @tags MediaInfoApi
    * @name MediaInfoApiDetail
    * @request GET:/api/MediaInfoApi/{id}
-   * @response `200` `ApiMediaInfo` OK
+   * @response `200` `OperationResult<ApiMediaInfo>` OK
    */
   mediaInfoApiDetail = (id: string, params: RequestParams = {}) =>
-    this.request<ApiMediaInfo, any>({
+    this.request<OperationResult<ApiMediaInfo>, any>({
       path: `/api/MediaInfoApi/${id}`,
       method: "GET",
       format: "json",
@@ -69,14 +167,14 @@ export class MediaInfoApi<
    * @tags MediaInfoApi
    * @name MediaInfoApiUpdate
    * @request PUT:/api/MediaInfoApi/{id}
-   * @response `200` `ApiMediaInfo` OK
+   * @response `200` `OperationResult<ApiMediaInfo>` OK
    */
   mediaInfoApiUpdate = (
     id: string,
     data: ApiMediaInfo,
-    params: RequestParams = {},
+    params: RequestParams = {}
   ) =>
-    this.request<ApiMediaInfo, any>({
+    this.request<OperationResult<ApiMediaInfo>, any>({
       path: `/api/MediaInfoApi/${id}`,
       method: "PUT",
       body: data,
@@ -90,12 +188,13 @@ export class MediaInfoApi<
    * @tags MediaInfoApi
    * @name MediaInfoApiDelete
    * @request DELETE:/api/MediaInfoApi/{id}
-   * @response `200` `void` OK
+   * @response `200` `OperationResult` OK
    */
   mediaInfoApiDelete = (id: string, params: RequestParams = {}) =>
-    this.request<void, any>({
+    this.request<OperationResult, any>({
       path: `/api/MediaInfoApi/${id}`,
       method: "DELETE",
+      format: "json",
       ...params,
     });
   /**

@@ -12,6 +12,7 @@ import {
 
 import { Framedata } from "@/shared/api";
 import { TekkenCharacter } from "@/shared/api/types/data-contracts";
+import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import styles from "../../FramedataPage.module.scss";
 import {
@@ -31,6 +32,7 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
   onBack,
   onSave,
 }) => {
+  const { showToast } = useToastModal();
   const [formData, setFormData] = useState({
     name:
       character.name.charAt(0).toUpperCase() +
@@ -256,14 +258,15 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
         updatedCharacter
       );
 
-      if (result.data) {
-        onSave(result.data);
-      } else {
-        setError("Ошибка при обновлении персонажа");
+      showToast(result.data);
+      if (result.data.data) {
+        onSave(result.data.data);
       }
     } catch (err) {
       console.error("Ошибка при обновлении персонажа:", err);
-      setError("Произошла ошибка при обновлении персонажа");
+      const errorMessage = "Произошла ошибка при обновлении персонажа";
+      setError(errorMessage);
+      showToast({ success: false, message: errorMessage });
     } finally {
       setIsLoading(false);
     }

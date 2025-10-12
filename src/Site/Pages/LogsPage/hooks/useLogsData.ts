@@ -9,8 +9,8 @@ import {
   LogResponse,
   LogsListParamsLogLevelEnum,
   LogsStatistics,
-} from "@/shared/api/http-clients/data-contracts";
-import { createErrorToast, useToastModal } from "@/shared/Utils/ToastModal";
+} from "@/shared/api";
+import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import { LogsFilters, LogsPageState } from "../LogsPage.types";
 
@@ -92,7 +92,13 @@ export const useLogsData = () => {
       const response = await logsService.logsList(
         query as Parameters<typeof logsService.logsList>[0]
       );
-      const logResponse: LogResponse = response.data;
+      const logResponse: LogResponse = response.data.data ?? {
+        logs: [],
+        totalCount: 0,
+        page: 1,
+        pageSize: 10,
+        totalPages: 0,
+      };
 
       console.log("Ответ от сервера:", logResponse);
 
@@ -110,13 +116,10 @@ export const useLogsData = () => {
         isLoading: false,
       });
 
-      showToast(
-        createErrorToast(
-          "Ошибка загрузки логов",
-          error,
-          "Не удалось загрузить логи приложения"
-        )
-      );
+      showToast({
+        success: false,
+        message: "Не удалось загрузить логи приложения",
+      });
     }
   }, [
     logsService,
@@ -133,7 +136,12 @@ export const useLogsData = () => {
       updateState({ isLoadingStats: true });
 
       const response = await logsService.logsStatisticsList();
-      const stats: LogsStatistics = response.data;
+      const stats: LogsStatistics = response.data.data ?? {
+        totalLogs: 0,
+        warningLogs: 0,
+        errorLogs: 0,
+        criticalLogs: 0,
+      };
 
       updateState({
         statistics: stats,
@@ -263,13 +271,12 @@ export const useLogsData = () => {
     connection.on("Log", onLog);
 
     connection.start().catch(error => {
-      showToast(
-        createErrorToast(
-          "Ошибка подключения к LoggerHub",
-          error,
-          "Не удалось установить соединение для получения логов в реальном времени"
-        )
-      );
+      showToast({
+        success: false,
+        message:
+          "Не удалось установить соединение для получения логов в реальном времени! " +
+          error.message,
+      });
     });
 
     return () => {

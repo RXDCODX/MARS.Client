@@ -21,7 +21,7 @@ export { useSiteColors } from "./useSiteColors";
 export type * from "./siteColors.types";
 
 // Экспорт компонента ToastModal
-export * from "./ToastModal/ToastModal.all";
+export * from "./ToastModal";
 
 export function replaceEmotes({
   text,

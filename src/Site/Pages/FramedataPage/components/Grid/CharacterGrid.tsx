@@ -8,6 +8,7 @@ import type {
   TekkenCharacterPendingDto,
 } from "@/shared/api";
 import { FramedataChanges } from "@/shared/api";
+import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import styles from "../../FramedataPage.module.scss";
 import { GlobalSearch } from "../Search";
@@ -46,6 +47,7 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
   onCharacterSelect,
 }) => {
   const navigate = useNavigate();
+  const { showToast } = useToastModal();
   const [pendingChanges, setPendingChanges] = useState<FramedataChange[]>([]);
   const [pendingError, setPendingError] = useState<string>("");
   const [isLoadingPending, setIsLoadingPending] = useState<boolean>(true);
@@ -65,8 +67,8 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
         api.framedataChangesPendingMovesList(),
       ])
         .then(([charactersRes, movesRes]) => {
-          const characters = charactersRes.data ?? [];
-          const moves = movesRes.data ?? [];
+          const characters = charactersRes.data.data ?? [];
+          const moves = movesRes.data.data ?? [];
 
           // Создаем FramedataChange объекты из полученных данных
           const changes: FramedataChange[] = [
@@ -142,12 +144,13 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
     setIsBulkActionInProgress(true);
     setPendingError("");
     try {
-      await api.framedataChangesApproveAllCreate();
+      const result = await api.framedataChangesApproveAllCreate();
+      showToast(result.data);
       loadPending();
     } catch (e) {
-      setPendingError(
-        e instanceof Error ? e.message : "Не удалось применить все изменения"
-      );
+      const msg = e instanceof Error ? e.message : "Не удалось применить все изменения";
+      setPendingError(msg);
+      showToast({ success: false, message: msg });
     } finally {
       setIsBulkActionInProgress(false);
     }
@@ -158,12 +161,13 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
     setIsBulkActionInProgress(true);
     setPendingError("");
     try {
-      await api.framedataChangesRejectAllCreate();
+      const result = await api.framedataChangesRejectAllCreate();
+      showToast(result.data);
       loadPending();
     } catch (e) {
-      setPendingError(
-        e instanceof Error ? e.message : "Не удалось отменить все изменения"
-      );
+      const msg = e instanceof Error ? e.message : "Не удалось отменить все изменения";
+      setPendingError(msg);
+      showToast({ success: false, message: msg });
     } finally {
       setIsBulkActionInProgress(false);
     }

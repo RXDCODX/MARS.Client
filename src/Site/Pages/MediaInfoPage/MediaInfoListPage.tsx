@@ -48,7 +48,7 @@ export const MediaInfoListPage: React.FC = () => {
     try {
       setLoading(true);
       const data = await mediaInfoApi.mediaInfoApiList();
-      setAlerts(data.data as ApiMediaInfo[]);
+      setAlerts(data.data.data as ApiMediaInfo[]);
       setError(null);
     } catch (err) {
       setError(

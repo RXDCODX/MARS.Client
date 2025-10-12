@@ -16,13 +16,9 @@ import {
   CreateCustomRewardsRequest,
   CustomReward,
   UpdateCustomRewardRequest,
-} from "@/shared/api/http-clients/data-contracts";
+} from "@/shared/api";
 import { TwitchRewards } from "@/shared/api/http-clients/TwitchRewards";
-import {
-  createErrorToast,
-  createSuccessToast,
-  useToastModal,
-} from "@/shared/Utils/ToastModal";
+import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import styles from "./TwitchRewardsPage.module.scss";
 
@@ -74,20 +70,18 @@ const TwitchRewardsPage: React.FC = () => {
     setLoading(true);
     setError("");
     try {
-      // API метод возвращает void по сгенерированным типам, но сервер должен выдавать список.
-      // Предположим, что ответ доступен как data или придёт ошибка — поддержим обе ситуации.
-      const res = await api.twitchRewardsList({ onlyManageable });
-      const base = res.data as unknown as { data: CustomReward[] };
-      const data = Array.isArray(base.data) ? base.data : [];
+      const result = await api.twitchRewardsList({ onlyManageable });
+      const data = Array.isArray(result.data.data) ? result.data.data : [];
       setRewards(data);
     } catch (e) {
       const msg =
         e instanceof Error ? e.message : "Не удалось загрузить награды";
       setError(msg);
+      showToast({ success: false, message: msg });
     } finally {
       setLoading(false);
     }
-  }, [api, onlyManageable]);
+  }, [api, onlyManageable, showToast]);
 
   useEffect(() => {
     loadRewards();
@@ -119,24 +113,13 @@ const TwitchRewardsPage: React.FC = () => {
     };
 
     try {
-      const res = await api.twitchRewardsCreate(payload);
-      const created = (res as unknown as { data?: CustomReward })?.data;
-      if (created) {
-        showToast(
-          createSuccessToast(
-            "Награда создана",
-            created,
-            "Создание награды Twitch"
-          )
-        );
-        setForm({ ...defaultForm });
-        await loadRewards();
-      } else {
-        throw new Error("Сервер не вернул созданную награду");
-      }
+      const result = await api.twitchRewardsCreate(payload);
+      showToast(result.data);
+      setForm({ ...defaultForm });
+      await loadRewards();
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Не удалось создать награду";
-      showToast(createErrorToast(msg, e, "Ошибка создания"));
+      showToast({ success: false, message: msg });
       setError(msg);
     } finally {
       setCreating(false);
@@ -146,18 +129,12 @@ const TwitchRewardsPage: React.FC = () => {
   const handleDelete = async (rewardId?: string) => {
     if (!rewardId) return;
     try {
-      await api.twitchRewardsDelete(rewardId);
-      showToast(
-        createSuccessToast(
-          "Награда удалена",
-          { rewardId },
-          "Удаление Twitch награды"
-        )
-      );
+      const result = await api.twitchRewardsDelete(rewardId);
+      showToast(result.data);
       await loadRewards();
     } catch (e) {
       const msg = e instanceof Error ? e.message : "Не удалось удалить награду";
-      showToast(createErrorToast(msg, e, "Ошибка удаления"));
+      showToast({ success: false, message: msg });
       setError(msg);
     }
   };
@@ -166,7 +143,8 @@ const TwitchRewardsPage: React.FC = () => {
     try {
       // Простая стратегия "пересоздать через API": удалить по id и создать снова с теми же свойствами
       if (reward.id) {
-        await api.twitchRewardsDelete(reward.id);
+        const deleteResult = await api.twitchRewardsDelete(reward.id);
+        showToast(deleteResult.data);
       }
 
       const recreatePayload: CreateCustomRewardsRequest = {
@@ -188,20 +166,13 @@ const TwitchRewardsPage: React.FC = () => {
         shouldRedemptionsSkipRequestQueue: reward.shouldRedemptionsSkipQueue,
       };
 
-      const res = await api.twitchRewardsCreate(recreatePayload);
-      const created = (res as unknown as { data?: CustomReward })?.data;
-      showToast(
-        createSuccessToast(
-          "Награда пересоздана",
-          { oldId: reward.id, new: created },
-          "Пересоздание Twitch награды"
-        )
-      );
+      const result = await api.twitchRewardsCreate(recreatePayload);
+      showToast(result.data);
       await loadRewards();
     } catch (e) {
       const msg =
         e instanceof Error ? e.message : "Не удалось пересоздать награду";
-      showToast(createErrorToast(msg, e, "Ошибка пересоздания"));
+      showToast({ success: false, message: msg });
       setError(msg);
     }
   };
@@ -210,19 +181,13 @@ const TwitchRewardsPage: React.FC = () => {
     if (!reward.id) return;
     try {
       const payload: UpdateCustomRewardRequest = { isEnabled: false };
-      await api.twitchRewardsPartialUpdate(reward.id, payload);
-      showToast(
-        createSuccessToast(
-          "Награда отключена",
-          { id: reward.id },
-          "Обновление Twitch награды"
-        )
-      );
+      const result = await api.twitchRewardsPartialUpdate(reward.id, payload);
+      showToast(result.data);
       await loadRewards();
     } catch (e) {
       const msg =
         e instanceof Error ? e.message : "Не удалось обновить награду";
-      showToast(createErrorToast(msg, e, "Ошибка обновления"));
+      showToast({ success: false, message: msg });
       setError(msg);
     }
   };

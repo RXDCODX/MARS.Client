@@ -184,6 +184,9 @@ async function generateTypesOnly() {
         const optionalMark = hadNull || hadUndefined ? "?" : "";
         return `${readonly ? "readonly " : ""}${key}${optionalMark}: ${cleaned}`;
       },
+      // Используем TypeWithGeneric для автоматической подстановки Generic типов
+      TypeWithGeneric: (typeName, genericArgs) =>
+        `${typeName}<${Array.isArray(genericArgs) ? genericArgs.join(", ") : genericArgs}>`,
     }),
   });
 
@@ -197,12 +200,180 @@ async function generateTypesOnly() {
   console.log("✅ Типы сгенерированы в types/types.ts");
 }
 
+// Функция для замены дублирующихся OperationResult типов на обобщенный
+function replaceOperationResultTypes(filePath) {
+  let content = fs.readFileSync(filePath, "utf-8");
+
+  console.log(`🔧 Обрабатываем OperationResult типы в ${filePath}...`);
+
+  // Паттерн 1: Старый формат - export interface TypeNameOperationResult { ... }
+  // Используем более точный паттерн, который НЕ захватит обычные интерфейсы
+  const oldFormatPattern =
+    /export interface (\w+OperationResult) \{\s*success:\s*boolean[,;]\s*message\?:\s*string[,;]\s*data\?:[\s\S]*?\n\}/g;
+
+  // Паттерн 2: Новый формат с allOf - export type TypeNameOperationResult = { ... }
+  const allOfPattern =
+    /export type (\w+)OperationResult = \{[\s\S]*?\$ref: "#\/components\/schemas\/OperationResult"[\s\S]*?\} & object;/g;
+
+  // Паттерн 3: Простые интерфейсы OperationResult, сгенерированные из allOf
+  const simpleInterfacePattern =
+    /export interface (\w+)OperationResult extends OperationResult \{[\s\S]*?\}/g;
+
+  // Паттерн 4: Некорректные type алиасы вида: export type OperationResult<ConcreteType> = (OperationResult)
+  // С возможным JSDoc комментарием, который начинается с "Результат операции"
+  const incorrectAliasPattern =
+    /(?:\/\*\* Результат операции[\s\S]*?\*\/\s+)?export type OperationResult<[^>]+> = \(OperationResult\)\s*/g;
+
+  // Паттерн 5: Базовый OperationResult без Generic параметра (из Swagger)
+  // /** Обобщенный результат операции */ export interface OperationResult { success, message, data: any }
+  const baseOperationResultPattern =
+    /\/\*\* Обобщенный результат операции \*\/\s+export interface OperationResult \{[\s\S]*?data:\s*any[,;][\s\S]*?\n\}/g;
+
+  const foundTypes = [];
+  let match;
+
+  // Собираем все варианты
+  const patterns = [
+    { regex: oldFormatPattern, name: "old format" },
+    { regex: allOfPattern, name: "allOf format" },
+    { regex: simpleInterfacePattern, name: "simple interface" },
+    { regex: incorrectAliasPattern, name: "incorrect alias" },
+    { regex: baseOperationResultPattern, name: "base OperationResult" },
+  ];
+
+  patterns.forEach(({ regex, name }) => {
+    const contentCopy = content;
+    regex.lastIndex = 0; // Сбрасываем lastIndex для корректной работы
+    while ((match = regex.exec(contentCopy)) !== null) {
+      const fullMatch = match[0];
+      const typeName = match[1] || "Generic";
+      foundTypes.push({ fullMatch, typeName, format: name });
+    }
+  });
+
+  if (foundTypes.length > 0) {
+    console.log(
+      `   Найдено ${foundTypes.length} дублирующихся типов OperationResult`
+    );
+
+    // Показываем первые несколько примеров
+    foundTypes.slice(0, 3).forEach(({ typeName, format, fullMatch }) => {
+      console.log(
+        `   - ${typeName} (${format}): ${fullMatch.substring(0, 80)}...`
+      );
+    });
+  }
+
+  // Удаляем все найденные дублирующиеся типы OperationResult
+  foundTypes.forEach(({ fullMatch }) => {
+    // Простая замена первого вхождения
+    const index = content.indexOf(fullMatch);
+    if (index !== -1) {
+      content =
+        content.slice(0, index) + content.slice(index + fullMatch.length);
+      // console.log(`   Удален: ${typeName}`);
+    }
+  });
+
+  // Проверяем, нет ли уже обобщенного типа OperationResult
+  const hasGenericOperationResult =
+    /export interface OperationResult<TData/.test(content);
+
+  if (!hasGenericOperationResult) {
+    // Добавляем обобщенный тип OperationResult в начало файла
+    const genericOperationResult = `
+/**
+ * Обобщенный результат операции
+ * @template TData - Тип данных, возвращаемых в поле data
+ */
+export interface OperationResult<TData = any> {
+    /** Флаг успешности операции */
+    success: boolean;
+    /** Сообщение о результате операции */
+    message?: string;
+    /** Данные результата операции */
+    data?: TData;
+}
+`;
+
+    // Находим место после служебных комментариев и импортов
+    const insertPosition = content.search(/export (interface|type|class|enum)/);
+    if (insertPosition !== -1) {
+      content =
+        content.slice(0, insertPosition) +
+        genericOperationResult +
+        "\n" +
+        content.slice(insertPosition);
+    } else {
+      // Если не нашли, добавляем в начало после комментариев
+      const commentEndIndex = content.indexOf("*/");
+      if (commentEndIndex !== -1) {
+        content =
+          content.slice(0, commentEndIndex + 2) +
+          "\n" +
+          genericOperationResult +
+          content.slice(commentEndIndex + 2);
+      } else {
+        content = genericOperationResult + content;
+      }
+    }
+
+    console.log("   ✓ Добавлен обобщенный тип OperationResult<TData>");
+  }
+
+  // Заменяем все использования конкретных типов OperationResult на обобщенный
+  const replacements = new Map();
+
+  content = content.replace(
+    /(\w+)(IEnumerable|List|Array)?OperationResult(?!<)/g,
+    (match, typeName, collection) => {
+      // Пропускаем, если это определение интерфейса или типа
+      if (match.startsWith("export ")) {
+        return match;
+      }
+
+      // Формируем замену
+      let replacement;
+      if (collection) {
+        replacement = `OperationResult<${typeName}[]>`;
+      } else {
+        replacement = `OperationResult<${typeName}>`;
+      }
+
+      // Сохраняем статистику замен
+      if (!replacements.has(match)) {
+        replacements.set(match, replacement);
+      }
+
+      return replacement;
+    }
+  );
+
+  if (replacements.size > 0) {
+    console.log(`   ✓ Выполнено ${replacements.size} уникальных замен типов`);
+  }
+
+  // Убираем избыточные пустые строки
+  content = content.replace(/\n{4,}/g, "\n\n");
+
+  fs.writeFileSync(filePath, content);
+  console.log(`✅ OperationResult типы успешно обработаны`);
+
+  return {
+    processedTypes: foundTypes.length,
+    replacements: replacements.size,
+  };
+}
+
 // Функция для генерации data-contracts отдельно (внутри папки types)
 async function generateDataContracts() {
   console.log("📋 Генерируем data-contracts...");
 
   // Копируем data-contracts из http-clients в types
-  const httpClientsDataContractsPath = resolve(OUTPUT_DIR_HTTP_CLIENTS, "data-contracts.ts");
+  const httpClientsDataContractsPath = resolve(
+    OUTPUT_DIR_HTTP_CLIENTS,
+    "data-contracts.ts"
+  );
   const typesDataContractsPath = resolve(OUTPUT_DIR_TYPES, "data-contracts.ts");
 
   if (fs.existsSync(httpClientsDataContractsPath)) {
@@ -212,6 +383,13 @@ async function generateDataContracts() {
     }
     fs.copyFileSync(httpClientsDataContractsPath, typesDataContractsPath);
     console.log("✅ Data-contracts скопированы в types/data-contracts.ts");
+
+    // Заменяем дублирующиеся OperationResult типы на обобщенный
+    replaceOperationResultTypes(typesDataContractsPath);
+
+    // Удаляем временный файл из http-clients (он нам больше не нужен)
+    fs.unlinkSync(httpClientsDataContractsPath);
+    console.log("   🗑️ Временный data-contracts.ts удален из http-clients");
   } else {
     console.log(
       "⚠️ Файл http-clients/data-contracts.ts не найден, пропускаем генерацию data-contracts"
@@ -243,6 +421,34 @@ async function generateHttpClients() {
     enumNamesAsValues: false,
     generateResponses: true,
     extractEnums: true, // Извлекаем enum'ы для клиентов
+    hooks: {
+      onCreateComponent: component => {
+        // Перехватываем создание компонентов типов
+        if (
+          component.typeName &&
+          component.typeName.endsWith("OperationResult")
+        ) {
+          // Помечаем OperationResult типы для последующей обработки
+          component._isOperationResult = true;
+        }
+        return component;
+      },
+      onFormatTypeName: (typeName, formatType) => {
+        // Трансформируем имена типов OperationResult
+        if (typeName.endsWith("OperationResult") && formatType !== "file") {
+          // Извлекаем базовый тип из имени
+          const match = typeName.match(
+            /^(.+?)(IEnumerable|List|Array)?OperationResult$/
+          );
+          if (match) {
+            const [, baseType, collection] = match;
+            const collectionSuffix = collection ? "[]" : "";
+            return `OperationResult<${baseType}${collectionSuffix}>`;
+          }
+        }
+        return typeName;
+      },
+    },
     codeGenConstructs: constructs => ({
       ...constructs,
       NullValue: () => "undefined",
@@ -257,6 +463,9 @@ async function generateHttpClients() {
         const optionalMark = hadNull || hadUndefined ? "?" : "";
         return `${readonly ? "readonly " : ""}${key}${optionalMark}: ${cleaned}`;
       },
+      // Используем TypeWithGeneric для корректной генерации Generic типов
+      TypeWithGeneric: (typeName, genericArgs) =>
+        `${typeName}<${Array.isArray(genericArgs) ? genericArgs.join(", ") : genericArgs}>`,
     }),
   });
 
@@ -264,38 +473,154 @@ async function generateHttpClients() {
   const clientFiles = fs
     .readdirSync(OUTPUT_DIR_HTTP_CLIENTS)
     .filter(file => file.endsWith(".ts"));
-  
+
+  console.log(
+    `\n🔧 Обрабатываем ${clientFiles.length} файлов HTTP клиентов...`
+  );
+
   clientFiles.forEach(file => {
     const filePath = resolve(OUTPUT_DIR_HTTP_CLIENTS, file);
-    
+
     // Если это файл с типами, переименовываем его в data-contracts.ts для обратной совместимости
     if (file === "types.ts") {
-      const dataContractsPath = resolve(OUTPUT_DIR_HTTP_CLIENTS, "data-contracts.ts");
+      const dataContractsPath = resolve(
+        OUTPUT_DIR_HTTP_CLIENTS,
+        "data-contracts.ts"
+      );
       fs.renameSync(filePath, dataContractsPath);
-      console.log("📋 Переименован types.ts в data-contracts.ts для обратной совместимости");
+      console.log(
+        "   📋 Переименован types.ts в data-contracts.ts для обратной совместимости"
+      );
       return;
     }
-    
+
     // Если это data-contracts.ts, оставляем как есть
     if (file === "data-contracts.ts") {
       return;
     }
-    
+
     let content = fs.readFileSync(filePath, "utf-8");
 
     // Заменяем импорты локальных контрактов на общий файл типов
+    const importsBefore = (content.match(/import.*from.*data-contracts/g) || [])
+      .length;
+
+    // Функция для парсинга импортов с учетом Generic типов
+    const parseImports = importString => {
+      const baseTypes = new Set();
+      const enumTypes = new Set();
+      const paramsTypes = new Set();
+
+      // Разбиваем по запятым, учитывая вложенные <>
+      let currentToken = "";
+      let bracketDepth = 0;
+
+      for (let char of importString + ",") {
+        if (char === "<") {
+          bracketDepth++;
+        } else if (char === ">") {
+          bracketDepth--;
+        } else if (char === "," && bracketDepth === 0) {
+          const trimmed = currentToken.trim();
+          if (trimmed) {
+            // Если это OperationResult<ConcreteType>, извлекаем ConcreteType
+            const genericMatch = trimmed.match(/^OperationResult<(.+)>$/);
+            if (genericMatch) {
+              const innerType = genericMatch[1];
+              // Убираем [] для массивов и добавляем базовый тип
+              const cleanType = innerType.replace(/\[\]$/, "");
+              if (
+                !cleanType.match(
+                  /^(string|number|boolean|object|any|Int32|String|Object)$/i
+                )
+              ) {
+                baseTypes.add(cleanType);
+              }
+            }
+            // Проверяем на формат без угловых скобок: OperationResultTypeName или OperationResultTypeName[]
+            else if (trimmed.match(/^OperationResult[A-Z]/)) {
+              // Извлекаем тип: OperationResultApiMediaInfo[] -> ApiMediaInfo
+              const typeMatch = trimmed.match(
+                /^OperationResult([A-Z][a-zA-Z0-9]*)/
+              );
+              if (typeMatch) {
+                const extractedType = typeMatch[1];
+                if (!extractedType.match(/^(Int32|String|Object)$/)) {
+                  baseTypes.add(extractedType);
+                }
+              }
+            } else if (trimmed.includes("Params") && trimmed.endsWith("Enum")) {
+              // Это enum параметров, сохраняем отдельно
+              paramsTypes.add(trimmed);
+            } else if (trimmed.endsWith("Enum")) {
+              // Это обычный enum, сохраняем
+              enumTypes.add(trimmed);
+            } else if (trimmed.endsWith("OperationResult")) {
+              // Пропускаем конкретные OperationResult типы - они будут заменены на generic
+              // Не добавляем их в импорты
+            } else if (trimmed !== "OperationResult") {
+              // Обычный тип, сохраняем
+              baseTypes.add(trimmed);
+            }
+          }
+          currentToken = "";
+        } else {
+          currentToken += char;
+        }
+      }
+
+      return { baseTypes, enumTypes, paramsTypes };
+    };
+
+    // Обрабатываем все импорты (могут быть многострочными)
     content = content.replace(
-      /import\s+\{([^}]+)\}\s+from\s+"\.\/data-contracts";/g,
-      (_m, p1) => `import type {${p1}} from "../types/data-contracts";`
+      /import\s+(?:type\s*)?\{([^}]+)\}\s+from\s+["']\.\/data-contracts["']/gs,
+      (_m, p1) => {
+        const { baseTypes, enumTypes, paramsTypes } = parseImports(p1);
+
+        // Всегда добавляем базовый OperationResult
+        baseTypes.add("OperationResult");
+
+        // Объединяем все типы в правильном порядке
+        const allTypes = [
+          ...Array.from(baseTypes).sort(),
+          ...Array.from(enumTypes).sort(),
+          ...Array.from(paramsTypes).sort(),
+        ];
+
+        const cleanedImports = allTypes.join(", ");
+
+        return `import type { ${cleanedImports} } from "../types/data-contracts";`;
+      }
     );
 
-    // Убираем лишние пустые строки
+    // Заменяем использования конкретных типов OperationResult на обобщенный
+    // в сигнатурах методов и типах возврата
+    content = content.replace(
+      /:\s*Promise<HttpResponse<(\w+)(IEnumerable|List|Array)?OperationResult(?!<)/g,
+      (match, typeName, collection) => {
+        if (collection) {
+          return `: Promise<HttpResponse<OperationResult<${typeName}[]>`;
+        }
+        return `: Promise<HttpResponse<OperationResult<${typeName}>`;
+      }
+    );
+
+    // Убираем лишние пустые строки и запятые в импортах
     content = content.replace(/\n\s*\n\s*\n/g, "\n\n");
+    content = content.replace(/,\s*,/g, ","); // Двойные запятые
+    content = content.replace(/,\s*\}/g, "}"); // Запятая перед закрывающей скобкой
 
     fs.writeFileSync(filePath, content);
+
+    if (importsBefore > 0) {
+      console.log(`   ✓ ${file}: очищено импортов`);
+    }
   });
 
-  console.log("✅ HTTP клиенты сгенерированы в http-clients/");
+  console.log("\n✅ HTTP клиенты сгенерированы и обработаны в http-clients/");
+  console.log("   ✓ Импорты переведены на общий источник типов");
+  console.log("   ✓ Удалены конкретные типы OperationResult<T> из импортов");
 }
 
 // Функция для генерации SignalR типов отдельно (внутри папки types)
@@ -555,7 +880,35 @@ ${SIGNALR_HUBS.map(hub => `export { ${hub.name}SignalRHubWrapper } from "./signa
 `;
 
   fs.writeFileSync(resolve(OUTPUT_DIR_ROOT, "index.ts"), indexContent);
-  console.log("✅ Индексный файл создан");
+  console.log("✅ Индексный файл создан (с экспортом хелперов)");
+}
+
+// Функция для форматирования сгенерированных файлов с помощью Prettier
+async function formatGeneratedFiles() {
+  console.log("\n🎨 Форматируем сгенерированные файлы с помощью Prettier...");
+
+  return new Promise(resolve => {
+    // Запускаем Prettier для папки api
+    const prettierCmd = `yarn prettier --write "src/shared/api/**/*.{ts,tsx}"`;
+
+    exec(prettierCmd, { shell: "powershell.exe" }, (error, stdout, stderr) => {
+      if (error) {
+        console.warn(
+          `⚠️ Prettier завершился с предупреждением: ${error.message}`
+        );
+        // Не прерываем процесс, так как это не критично
+        resolve();
+        return;
+      }
+
+      if (stderr) {
+        console.log(`   ${stderr.trim()}`);
+      }
+
+      console.log("✅ Prettier форматирование завершено");
+      resolve();
+    });
+  });
 }
 
 // Основная функция
@@ -594,10 +947,10 @@ async function main() {
 
     // Генерируем клиенты отдельно (без типов)
     await generateHttpClients();
-    
+
     // Копируем data-contracts в папку types после генерации HTTP клиентов
     await generateDataContracts();
-    
+
     await generateSignalRClients();
 
     // Не создаем файлы обратной совместимости: используем единый источник типов в ./types
@@ -605,15 +958,45 @@ async function main() {
     // Создаем индексный файл
     createIndexFile();
 
+    // Форматируем все сгенерированные файлы с помощью Prettier
+    await formatGeneratedFiles();
+
+    console.log("\n" + "=".repeat(60));
     console.log("🎉 Генерация API завершена успешно!");
-    console.log("📁 Структура папок:");
+    console.log("=".repeat(60));
+    console.log("\n📁 Структура папок:");
+    console.log("   ├─ types/");
     console.log(
-      "   - types/ - общие типы (data-contracts.ts, signalr-types.ts)"
+      "   │  ├─ data-contracts.ts (с обобщенным OperationResult<TData>)"
     );
-    console.log("   - http-clients/ - HTTP клиенты");
-    console.log("   - signalr-clients/ - SignalR клиенты");
+    console.log("   │  └─ signalr-types.ts");
+    console.log("   ├─ http-clients/ (HTTP клиенты)");
+    console.log("   ├─ signalr-clients/ (SignalR клиенты)");
+    console.log("   └─ index.ts (экспорты)");
+
+    console.log("\n✨ Улучшения:");
+    console.log(
+      "   ✓ Все типы *OperationResult заменены на OperationResult<T>"
+    );
+    console.log("   ✓ Единый источник типов в types/data-contracts.ts");
+    console.log("   ✓ Улучшена типизация с Generic типами");
+    console.log("   ✓ HTTP клиенты используют обобщенные типы");
+
+    console.log("\n📝 Пример использования:");
+    console.log(
+      "   import { OperationResult, AutoMessageDto } from '@/shared/api';"
+    );
+    console.log(
+      "   const response: OperationResult<AutoMessageDto> = await api.get();"
+    );
+    console.log("   if (response.success && response.data) { ... }");
+    console.log("\n" + "=".repeat(60) + "\n");
   } catch (error) {
-    console.error("❌ Ошибка при генерации API:", error);
+    console.error("\n" + "=".repeat(60));
+    console.error("❌ Ошибка при генерации API");
+    console.error("=".repeat(60));
+    console.error(error);
+    console.error("=".repeat(60) + "\n");
     process.exit(1);
   }
 }

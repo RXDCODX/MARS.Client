@@ -1,3 +1,8 @@
+/**
+ * Стили для ToastModal
+ */
+
+// Заголовок модального окна
 .modalHeader {
   border-bottom: 1px solid var(--bs-border-color);
 
@@ -7,12 +12,20 @@
   }
 }
 
+// Тело модального окна
 .modalBody {
   padding: 1.5rem;
   max-height: 70vh;
   overflow-y: auto;
 }
 
+// Футер модального окна
+.modalFooter {
+  border-top: 1px solid var(--bs-border-color);
+  padding: 1rem 1.5rem;
+}
+
+// Сообщение
 .message {
   font-size: 1rem;
   line-height: 1.5;
@@ -20,6 +33,7 @@
   word-wrap: break-word;
 }
 
+// Секция с данными
 .dataSection {
   margin-top: 1.5rem;
   padding: 1rem;
@@ -34,6 +48,7 @@
   }
 }
 
+// JSON данные
 .jsonData {
   background-color: var(--bs-dark);
   color: var(--bs-light);
@@ -49,16 +64,7 @@
   overflow-y: auto;
 }
 
-.dataContent {
-  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-  font-size: 0.875rem;
-  background-color: var(--bs-light);
-  padding: 0.5rem;
-  border-radius: 0.25rem;
-  border: 1px solid var(--bs-border-color);
-  word-wrap: break-word;
-}
-
+// Секция метаданных
 .metadataSection {
   margin-top: 1.5rem;
 
@@ -69,16 +75,18 @@
   }
 }
 
+// Сетка метаданных
 .metadataGrid {
   display: grid;
   grid-template-columns: 1fr;
   gap: 0.5rem;
 
   @media (min-width: 768px) {
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr 1fr;
   }
 }
 
+// Элемент метаданных
 .metadataItem {
   display: flex;
   align-items: flex-start;
@@ -87,40 +95,21 @@
   background-color: var(--bs-light);
   border-radius: 0.25rem;
   border: 1px solid var(--bs-border-color);
-
-  @media (min-width: 768px) {
-    flex-direction: column;
-    gap: 0.25rem;
-  }
 }
 
+// Ключ метаданных
 .metadataKey {
   font-weight: 600;
   color: var(--bs-primary);
   min-width: 80px;
   flex-shrink: 0;
-
-  @media (min-width: 768px) {
-    min-width: auto;
-  }
 }
 
+// Значение метаданных
 .metadataValue {
   color: var(--bs-secondary);
   word-wrap: break-word;
   flex: 1;
-}
-
-.timestamp {
-  margin-top: 1.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--bs-border-color);
-  text-align: center;
-}
-
-.modalFooter {
-  border-top: 1px solid var(--bs-border-color);
-  padding: 1rem 1.5rem;
 }
 
 // Стили для тостов
@@ -137,16 +126,8 @@
   background-color: var(--bs-success);
 }
 
-:global(.Toastify__toast--warning) {
-  background-color: var(--bs-warning);
-}
-
 :global(.Toastify__toast--error) {
   background-color: var(--bs-danger);
-}
-
-:global(.Toastify__toast--info) {
-  background-color: var(--bs-info);
 }
 
 // Адаптивность для мобильных устройств

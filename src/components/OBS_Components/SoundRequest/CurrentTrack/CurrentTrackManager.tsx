@@ -10,6 +10,7 @@ import {
 import CurrentTrack from "./CurrentTrack";
 
 const defaultValue: TunaMusicData & { isDefaultValue: boolean } = {
+  id: "00000000-0000-0000-0000-000000000000",
   album_url: "",
   artists: [],
   cover: "",

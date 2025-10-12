@@ -10,16 +10,106 @@
  * ---------------------------------------------------------------
  */
 
+import type { AxiosRequestConfig, AxiosResponse } from "axios";
+import {
+  HttpClient,
+  RequestParams,
+  ContentType,
+  HttpResponse,
+} from "./http-client";
 import type {
+  ApiMediaInfo,
+  AutoMessageDto,
+  ChannelRewardDefinition,
+  ChannelRewardRecord,
+  CinemaMediaItemDto,
+  CinemaQueueStatistics,
+  CommandInfo,
+  CommandParameterInfo,
+  CreateAutoMessageRequest,
+  CreateCustomRewardsRequest,
+  CreateMediaItemRequest,
   CreateMemeOrderDto,
   CreateMemeTypeDto,
+  CreateUserRequest,
+  CustomReward,
+  DailyAutoMarkupUser,
+  DefaultImage,
+  FollowerInfo,
+  GetCustomRewardRedemptionResponse,
+  GetCustomRewardsResponse,
+  GlobalCooldownSetting,
+  Image,
+  Log,
+  LogResponse,
+  LogsStatistics,
+  MaxPerStreamSetting,
+  MaxPerUserPerStreamSetting,
+  MediaFileInfo,
+  MediaMetaInfo,
+  MediaMetadata,
+  MediaPositionInfo,
+  MediaStylesInfo,
+  MediaTextInfo,
   MemeOrderDto,
   MemeTypeDto,
+  Move,
+  MovePending,
+  MovePendingDto,
+  OperationResult,
+  Pagination,
+  ParseRequest,
+  ParseResult,
   ProblemDetails,
+  RateLimiterInfo,
+  Reward,
+  RewardRedemption,
+  ServiceInfo,
+  ServiceLog,
+  StreamArchiveConfig,
+  StringServiceStatusDictionary,
+  SupplementRequest,
+  TekkenCharacter,
+  TekkenCharacterPendingDto,
+  UpdateAutoMessageRequest,
+  UpdateCustomRewardDto,
+  UpdateCustomRewardRedemptionStatusRequest,
+  UpdateCustomRewardRequest,
+  UpdateMediaItemRequest,
   UpdateMemeOrderDto,
   UpdateMemeTypeDto,
+  UpdateUserRequest,
+  ValidateFolderRequest,
+  ValidateFolderResponse,
+  CinemaMediaItemDtoStatusEnum,
+  CommandInfoAvailablePlatformsEnum,
+  CommandInfoVisibilityEnum,
+  LogLogLevelEnum,
+  MediaFileInfoTypeEnum,
+  MediaMetaInfoPriorityEnum,
+  ParseRequestSourceEnum,
+  RewardRedemptionStatusEnum,
+  ServiceInfoStatusEnum,
+  StreamArchiveConfigFileConvertTypeEnum,
+  SupplementRequestSourceEnum,
+  UpdateCustomRewardRedemptionStatusRequestStatusEnum,
+  UpdateMediaItemRequestStatusEnum,
+  CinemaQueueStatusDetailParamsEnum,
+  CinemaQueueStatusDetailParamsStatusEnum,
+  CommandsAdminPlatformDetailParamsEnum,
+  CommandsAdminPlatformDetailParamsPlatformEnum,
+  CommandsAdminPlatformInfoListParamsEnum,
+  CommandsAdminPlatformInfoListParamsPlatformEnum,
+  CommandsUserPlatformDetailParamsEnum,
+  CommandsUserPlatformDetailParamsPlatformEnum,
+  CommandsUserPlatformInfoListParamsEnum,
+  CommandsUserPlatformInfoListParamsPlatformEnum,
+  FramedataSupplementCreate2ParamsEnum,
+  FramedataSupplementCreate2ParamsSourceEnum,
+  LogsByLevelDetailParamsEnum,
+  LogsByLevelDetailParamsLogLevelEnum,
+  LogsListParamsLogLevelEnum,
 } from "../types/data-contracts";
-import { ContentType, HttpClient, RequestParams } from "./http-client";
 
 export class RandomMeme<
   SecurityDataType = unknown,
@@ -30,11 +120,10 @@ export class RandomMeme<
    * @tags RandomMeme
    * @name RandomMemeTypesList
    * @request GET:/api/RandomMeme/types
-   * @response `200` `(MemeTypeDto)[]` OK
-   * @response `500` `void` Internal Server Error
+   * @response `200` `OperationResult<MemeTypeDto[]>` OK
    */
   randomMemeTypesList = (params: RequestParams = {}) =>
-    this.request<MemeTypeDto[], void>({
+    this.request<OperationResult<MemeTypeDto[]>, any>({
       path: `/api/RandomMeme/types`,
       method: "GET",
       format: "json",
@@ -46,15 +135,13 @@ export class RandomMeme<
    * @tags RandomMeme
    * @name RandomMemeTypesCreate
    * @request POST:/api/RandomMeme/types
-   * @response `201` `MemeTypeDto` Created
-   * @response `400` `ProblemDetails` Bad Request
-   * @response `500` `void` Internal Server Error
+   * @response `200` `OperationResult<MemeTypeDto>` OK
    */
   randomMemeTypesCreate = (
     data: CreateMemeTypeDto,
-    params: RequestParams = {},
+    params: RequestParams = {}
   ) =>
-    this.request<MemeTypeDto, ProblemDetails | void>({
+    this.request<OperationResult<MemeTypeDto>, any>({
       path: `/api/RandomMeme/types`,
       method: "POST",
       body: data,
@@ -68,12 +155,10 @@ export class RandomMeme<
    * @tags RandomMeme
    * @name RandomMemeTypesDetail
    * @request GET:/api/RandomMeme/types/{id}
-   * @response `200` `MemeTypeDto` OK
-   * @response `404` `ProblemDetails` Not Found
-   * @response `500` `void` Internal Server Error
+   * @response `200` `OperationResult<MemeTypeDto>` OK
    */
   randomMemeTypesDetail = (id: number, params: RequestParams = {}) =>
-    this.request<MemeTypeDto, ProblemDetails | void>({
+    this.request<OperationResult<MemeTypeDto>, any>({
       path: `/api/RandomMeme/types/${id}`,
       method: "GET",
       format: "json",
@@ -85,17 +170,14 @@ export class RandomMeme<
    * @tags RandomMeme
    * @name RandomMemeTypesUpdate
    * @request PUT:/api/RandomMeme/types/{id}
-   * @response `200` `MemeTypeDto` OK
-   * @response `400` `ProblemDetails` Bad Request
-   * @response `404` `ProblemDetails` Not Found
-   * @response `500` `void` Internal Server Error
+   * @response `200` `OperationResult<MemeTypeDto>` OK
    */
   randomMemeTypesUpdate = (
     id: number,
     data: UpdateMemeTypeDto,
-    params: RequestParams = {},
+    params: RequestParams = {}
   ) =>
-    this.request<MemeTypeDto, ProblemDetails | void>({
+    this.request<OperationResult<MemeTypeDto>, any>({
       path: `/api/RandomMeme/types/${id}`,
       method: "PUT",
       body: data,
@@ -109,15 +191,13 @@ export class RandomMeme<
    * @tags RandomMeme
    * @name RandomMemeTypesDelete
    * @request DELETE:/api/RandomMeme/types/{id}
-   * @response `204` `void` No Content
-   * @response `400` `ProblemDetails` Bad Request
-   * @response `404` `ProblemDetails` Not Found
-   * @response `500` `void` Internal Server Error
+   * @response `200` `OperationResult` OK
    */
   randomMemeTypesDelete = (id: number, params: RequestParams = {}) =>
-    this.request<void, ProblemDetails | void>({
+    this.request<OperationResult, any>({
       path: `/api/RandomMeme/types/${id}`,
       method: "DELETE",
+      format: "json",
       ...params,
     });
   /**
@@ -126,11 +206,10 @@ export class RandomMeme<
    * @tags RandomMeme
    * @name RandomMemeOrdersList
    * @request GET:/api/RandomMeme/orders
-   * @response `200` `(MemeOrderDto)[]` OK
-   * @response `500` `void` Internal Server Error
+   * @response `200` `OperationResult<MemeOrderDto[]>` OK
    */
   randomMemeOrdersList = (params: RequestParams = {}) =>
-    this.request<MemeOrderDto[], void>({
+    this.request<OperationResult<MemeOrderDto[]>, any>({
       path: `/api/RandomMeme/orders`,
       method: "GET",
       format: "json",
@@ -142,15 +221,13 @@ export class RandomMeme<
    * @tags RandomMeme
    * @name RandomMemeOrdersCreate
    * @request POST:/api/RandomMeme/orders
-   * @response `201` `MemeOrderDto` Created
-   * @response `400` `ProblemDetails` Bad Request
-   * @response `500` `void` Internal Server Error
+   * @response `200` `OperationResult<MemeOrderDto>` OK
    */
   randomMemeOrdersCreate = (
     data: CreateMemeOrderDto,
-    params: RequestParams = {},
+    params: RequestParams = {}
   ) =>
-    this.request<MemeOrderDto, ProblemDetails | void>({
+    this.request<OperationResult<MemeOrderDto>, any>({
       path: `/api/RandomMeme/orders`,
       method: "POST",
       body: data,
@@ -164,11 +241,10 @@ export class RandomMeme<
    * @tags RandomMeme
    * @name RandomMemeOrdersTypeDetail
    * @request GET:/api/RandomMeme/orders/type/{typeId}
-   * @response `200` `(MemeOrderDto)[]` OK
-   * @response `500` `void` Internal Server Error
+   * @response `200` `OperationResult<MemeOrderDto[]>` OK
    */
   randomMemeOrdersTypeDetail = (typeId: number, params: RequestParams = {}) =>
-    this.request<MemeOrderDto[], void>({
+    this.request<OperationResult<MemeOrderDto[]>, any>({
       path: `/api/RandomMeme/orders/type/${typeId}`,
       method: "GET",
       format: "json",
@@ -180,12 +256,10 @@ export class RandomMeme<
    * @tags RandomMeme
    * @name RandomMemeOrdersDetail
    * @request GET:/api/RandomMeme/orders/{id}
-   * @response `200` `MemeOrderDto` OK
-   * @response `404` `ProblemDetails` Not Found
-   * @response `500` `void` Internal Server Error
+   * @response `200` `OperationResult<MemeOrderDto>` OK
    */
   randomMemeOrdersDetail = (id: string, params: RequestParams = {}) =>
-    this.request<MemeOrderDto, ProblemDetails | void>({
+    this.request<OperationResult<MemeOrderDto>, any>({
       path: `/api/RandomMeme/orders/${id}`,
       method: "GET",
       format: "json",
@@ -197,17 +271,14 @@ export class RandomMeme<
    * @tags RandomMeme
    * @name RandomMemeOrdersUpdate
    * @request PUT:/api/RandomMeme/orders/{id}
-   * @response `200` `MemeOrderDto` OK
-   * @response `400` `ProblemDetails` Bad Request
-   * @response `404` `ProblemDetails` Not Found
-   * @response `500` `void` Internal Server Error
+   * @response `200` `OperationResult<MemeOrderDto>` OK
    */
   randomMemeOrdersUpdate = (
     id: string,
     data: UpdateMemeOrderDto,
-    params: RequestParams = {},
+    params: RequestParams = {}
   ) =>
-    this.request<MemeOrderDto, ProblemDetails | void>({
+    this.request<OperationResult<MemeOrderDto>, any>({
       path: `/api/RandomMeme/orders/${id}`,
       method: "PUT",
       body: data,
@@ -221,14 +292,13 @@ export class RandomMeme<
    * @tags RandomMeme
    * @name RandomMemeOrdersDelete
    * @request DELETE:/api/RandomMeme/orders/{id}
-   * @response `204` `void` No Content
-   * @response `404` `ProblemDetails` Not Found
-   * @response `500` `void` Internal Server Error
+   * @response `200` `OperationResult` OK
    */
   randomMemeOrdersDelete = (id: string, params: RequestParams = {}) =>
-    this.request<void, ProblemDetails | void>({
+    this.request<OperationResult, any>({
       path: `/api/RandomMeme/orders/${id}`,
       method: "DELETE",
+      format: "json",
       ...params,
     });
   /**
@@ -237,18 +307,16 @@ export class RandomMeme<
    * @tags RandomMeme
    * @name RandomMemeRandomList
    * @request GET:/api/RandomMeme/random
-   * @response `200` `MemeOrderDto` OK
-   * @response `404` `ProblemDetails` Not Found
-   * @response `500` `void` Internal Server Error
+   * @response `200` `OperationResult<MemeOrderDto>` OK
    */
   randomMemeRandomList = (
     query?: {
       /** @format int32 */
       typeId: number;
     },
-    params: RequestParams = {},
+    params: RequestParams = {}
   ) =>
-    this.request<MemeOrderDto, ProblemDetails | void>({
+    this.request<OperationResult<MemeOrderDto>, any>({
       path: `/api/RandomMeme/random`,
       method: "GET",
       query: query,
@@ -261,17 +329,16 @@ export class RandomMeme<
    * @tags RandomMeme
    * @name RandomMemeCountList
    * @request GET:/api/RandomMeme/count
-   * @response `200` `number` OK
-   * @response `500` `void` Internal Server Error
+   * @response `200` `OperationResult<Int32>` OK
    */
   randomMemeCountList = (
     query?: {
       /** @format int32 */
       typeId: number;
     },
-    params: RequestParams = {},
+    params: RequestParams = {}
   ) =>
-    this.request<number, void>({
+    this.request<OperationResult<Int32>, any>({
       path: `/api/RandomMeme/count`,
       method: "GET",
       query: query,
@@ -309,7 +376,7 @@ export class RandomMeme<
       /** @format int32 */
       typeId: number;
     },
-    params: RequestParams = {},
+    params: RequestParams = {}
   ) =>
     this.request<void, ProblemDetails | void>({
       path: `/api/RandomMeme/file/random`,
@@ -323,16 +390,16 @@ export class RandomMeme<
    * @tags RandomMeme
    * @name RandomMemeOrdersReorderCreate
    * @request POST:/api/RandomMeme/orders/reorder/{typeId}
-   * @response `200` `void` OK
-   * @response `500` `void` Internal Server Error
+   * @response `200` `OperationResult` OK
    */
   randomMemeOrdersReorderCreate = (
     typeId: number,
-    params: RequestParams = {},
+    params: RequestParams = {}
   ) =>
-    this.request<void, void>({
+    this.request<OperationResult, any>({
       path: `/api/RandomMeme/orders/reorder/${typeId}`,
       method: "POST",
+      format: "json",
       ...params,
     });
 }

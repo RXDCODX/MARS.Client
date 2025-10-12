@@ -31,6 +31,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 const defaultTrack: TunaMusicData = {
+  id: "00000000-0000-0000-0000-000000000000",
   title: "Test Song",
   artists: ["Test Artist"],
   cover: "https://via.placeholder.com/150",
