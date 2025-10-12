@@ -457,7 +457,7 @@ const Credits: React.FC = () => {
         loadStreamerInfo(),
       ]);
 
-      const allData = (allRes.data as unknown as FollowerInfo[]) ?? [];
+      const allData = allRes.data.data ?? [];
 
       // Фильтруем данные по типам
       const moderatorsData = allData.filter(user => user.isModerator);

@@ -37,7 +37,7 @@ export function Reimu({ callback, displayName }: Props) {
           />
         </div>
         <div className={styles.text}>
-          <Textfit mode="single" className={commonStyles.textStrokeShadow}>
+          <Textfit mode="single">
             <div>
               Поздравляю{" "}
               <span
@@ -50,7 +50,20 @@ export function Reimu({ callback, displayName }: Props) {
             </div>
             <div>
               <span className={commonStyles.textStrokeShadow}>
-                <RainbowText>HAPPY FUMO FRIDAY!</RainbowText>
+                <RainbowText
+                  colors={[
+                    "#FF1744",
+                    "#FF6600",
+                    "#FFD700",
+                    "#00E676",
+                    "#00E5FF",
+                    "#2979FF",
+                    "#D500F9",
+                    "#FF00FF",
+                  ]}
+                >
+                  HAPPY FUMO FRIDAY!
+                </RainbowText>
               </span>
             </div>
           </Textfit>

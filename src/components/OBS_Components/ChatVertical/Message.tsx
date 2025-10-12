@@ -58,7 +58,7 @@ export function Message({ message, onRemove }: Props) {
           chaos={0.6}
           speed={1.2}
         >
-          <div style={{display: "block", padding: "3px 15px"}}>
+          <div style={{ display: "block", padding: "3px 15px" }}>
             <div ref={msgRef} className={styles.container}>
               <div
                 className={styles.userInfo}
