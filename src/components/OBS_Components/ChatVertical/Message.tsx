@@ -95,12 +95,8 @@ export function Message({ message, onRemove }: Props) {
                   />
                 ) : (
                   parts?.map(part => {
-                    if (
-                      message.isBroadcaster ||
-                      message.isVip ||
-                      message.isModerator
-                    ) {
-                      // Особые пользователи — всегда градиент
+                    if (message.isBroadcaster) {
+                      // Стример — всегда градиент
                       if (part.type === "text") {
                         // Получаем результат с эмодзи
                         const emoteContent =
@@ -231,7 +227,7 @@ export function Message({ message, onRemove }: Props) {
                       }
                       return null;
                     } else {
-                      // Обычные пользователи — белый текст, но с поддержкой смайлов
+                      // Обычные пользователи (включая VIP и модераторов) — белый текст, но с поддержкой смайлов
                       if (part.type === "text") {
                         return (
                           <span

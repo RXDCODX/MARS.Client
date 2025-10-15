@@ -1,0 +1,181 @@
+@use "@/app/global.scss" as *;
+
+.container {
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg,
+      var(--bs-primary) 0%,
+      var(--bs-secondary) 100%);
+  overflow: hidden;
+  position: relative;
+}
+
+// Секция с никнеймом пользователя - 20% (2 из 12 частей)
+.userSection {
+  flex: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  background: rgba(0, 0, 0, 0.3);
+  // backdrop-filter: blur(10px);
+  border-bottom: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.label {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: var(--text-shadow-medium);
+}
+
+.userName {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--bs-white);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+// Секция с видео плеером - 70% (7 из 12 частей)
+.videoSection {
+  flex: 7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: var(--bs-black);
+  overflow: hidden;
+
+  // Обертка для плеера для правильного соотношения сторон
+  >div {
+    width: 100% !important;
+    height: 100% !important;
+
+    video,
+    iframe {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: contain;
+    }
+  }
+}
+
+// Секция с информацией о треке - 30% (3 из 12 частей)
+.trackSection {
+  flex: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2rem;
+  background: rgba(0, 0, 0, 0.4);
+  // backdrop-filter: blur(10px);
+  border-top: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.trackInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-align: center;
+  max-width: 90%;
+}
+
+.trackTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--bs-white);
+  text-shadow: var(--text-shadow-heavy);
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.trackArtist {
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: var(--text-shadow-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+// Заглушка для ожидания трека
+.placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  h2 {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--bs-white);
+    text-shadow: var(--text-shadow-heavy);
+    animation: pulse 2s ease-in-out infinite;
+  }
+}
+
+@keyframes pulse {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.5;
+  }
+}
+
+// Адаптивность для меньших экранов
+@media (max-width: 1200px) {
+  .userName {
+    font-size: 2rem;
+  }
+
+  .trackTitle {
+    font-size: 1.5rem;
+  }
+
+  .trackArtist {
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .userName {
+    font-size: 1.5rem;
+  }
+
+  .label {
+    font-size: 1rem;
+  }
+
+  .trackTitle {
+    font-size: 1.2rem;
+  }
+
+  .trackArtist {
+    font-size: 1rem;
+  }
+}

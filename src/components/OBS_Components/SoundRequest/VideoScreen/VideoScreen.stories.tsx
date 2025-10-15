@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect } from "storybook/test";
 
+import { SoundRequestHubSignalRHubWrapper } from "@/shared/api/signalr-clients/SoundRequestHub/SignalRHubWrapper";
+
 import { VideoScreen } from "./VideoScreen";
 
 const meta: Meta<typeof VideoScreen> = {
@@ -11,24 +13,25 @@ const meta: Meta<typeof VideoScreen> = {
     docs: {
       description: {
         component:
-          "Компонент для отображения видео экрана в системе звуковых запросов.",
+          "Компонент для отображения видео экрана в системе звуковых запросов. Подключается к SignalR хабу SoundRequest и отображает текущий воспроизводимый трек с видео.",
       },
     },
   },
   tags: ["autodocs"],
   decorators: [
     Story => (
-      <div
-        style={{
-          width: "100vw",
-          height: "100vh",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          position: "relative",
-          overflow: "hidden",
-        }}
-      >
-        <Story />
-      </div>
+      <SoundRequestHubSignalRHubWrapper>
+        <div
+          style={{
+            width: "100vw",
+            height: "100vh",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          <Story />
+        </div>
+      </SoundRequestHubSignalRHubWrapper>
     ),
   ],
 };
@@ -36,6 +39,9 @@ const meta: Meta<typeof VideoScreen> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/**
+ * Стандартный вид компонента - ожидание подключения к SignalR
+ */
 export const Default: Story = {
   args: {},
   play: async ({ canvasElement }) => {
@@ -44,5 +50,20 @@ export const Default: Story = {
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
+  },
+};
+
+/**
+ * Компонент с пояснением - для реального использования нужно подключение к серверу
+ */
+export const WithDescription: Story = {
+  args: {},
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Этот компонент требует подключения к SignalR хабу SoundRequest. В стандартной демо версии вы увидите состояние ожидания трека. Для полной функциональности подключите компонент к работающему серверу.",
+      },
+    },
   },
 };

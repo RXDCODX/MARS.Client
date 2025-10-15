@@ -219,6 +219,8 @@ export interface PlayerState {
   currentTrack?: BaseTrackInfo;
   /** @format date-span */
   currentTrackDuration?: string;
+  currentTrackRequestedBy?: string;
+  currentTrackRequestedByDisplayName?: string;
   /** @format uuid */
   id: string;
   isMuted: boolean;

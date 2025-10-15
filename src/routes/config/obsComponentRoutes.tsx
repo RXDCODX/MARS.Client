@@ -20,6 +20,7 @@ import RandomMem from "@/components/OBS_Components/RandomMem/RandomMem";
 import Scoreboard from "@/components/OBS_Components/Scoreboard";
 import Manager from "@/components/OBS_Components/ScreenParticles/Manager";
 import CurrentTrackInfo from "@/components/OBS_Components/SoundRequest/CurrentTrack/CurrentTrackManager";
+import { VideoScreen } from "@/components/OBS_Components/SoundRequest/VideoScreen/VideoScreen";
 import WaifuAlerts from "@/components/OBS_Components/WaifuAlerts/WaifuAlerts";
 import { OBSComponentWrapper } from "@/components/OBS_Components/wrapper";
 
@@ -27,6 +28,16 @@ import { RouteConfig } from "./RouteConfig";
 
 // Массив OBS компонентов (без Layout для интеграции в OBS)
 export const obsComponentRoutes: RouteConfig[] = [
+  {
+    path: "/sr/player",
+    name: "SR: Player",
+    type: "obs",
+    element: (
+      <OBSComponentWrapper>
+        <VideoScreen />
+      </OBSComponentWrapper>
+    ),
+  },
   {
     path: "/MichaelJackson",
     name: "Michael Jackson",
