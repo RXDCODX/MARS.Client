@@ -1,10 +1,19 @@
-import { LogsPage } from "@/Site/Pages";
+import { lazy, Suspense } from "react";
+
+import { PageLoader } from "@/components/shared/LazyLoader";
 import Layout from "@/Site/Pages/Layout/Layout";
-import ServerViewer from "@/Site/Pages/ServerViewer/ServerViewer";
-import TwitchRewardsPage from "@/Site/Pages/TwitchRewardsPage";
 
 import { RouteConfig } from "./RouteConfig";
-import ServiceDetailsPage from "./ServiceDetailsPage";
+
+// Тяжелые админ страницы - lazy loading
+const LogsPage = lazy(() =>
+  import("@/Site/Pages").then(m => ({ default: m.LogsPage }))
+);
+const ServerViewer = lazy(
+  () => import("@/Site/Pages/ServerViewer/ServerViewer")
+);
+const TwitchRewardsPage = lazy(() => import("@/Site/Pages/TwitchRewardsPage"));
+const ServiceDetailsPage = lazy(() => import("./ServiceDetailsPage"));
 
 // Массив панелей управления (с Layout)
 export const adminRoutes: RouteConfig[] = [
@@ -14,7 +23,9 @@ export const adminRoutes: RouteConfig[] = [
     type: "control panel",
     element: (
       <Layout>
-        <LogsPage />
+        <Suspense fallback={<PageLoader />}>
+          <LogsPage />
+        </Suspense>
       </Layout>
     ),
   },
@@ -24,7 +35,9 @@ export const adminRoutes: RouteConfig[] = [
     type: "control panel",
     element: (
       <Layout>
-        <ServerViewer />
+        <Suspense fallback={<PageLoader />}>
+          <ServerViewer />
+        </Suspense>
       </Layout>
     ),
   },
@@ -34,7 +47,9 @@ export const adminRoutes: RouteConfig[] = [
     type: "control panel",
     element: (
       <Layout>
-        <ServerViewer />
+        <Suspense fallback={<PageLoader />}>
+          <ServerViewer />
+        </Suspense>
       </Layout>
     ),
   },
@@ -44,7 +59,9 @@ export const adminRoutes: RouteConfig[] = [
     type: "control panel",
     element: (
       <Layout>
-        <ServerViewer />
+        <Suspense fallback={<PageLoader />}>
+          <ServerViewer />
+        </Suspense>
       </Layout>
     ),
   },
@@ -54,7 +71,9 @@ export const adminRoutes: RouteConfig[] = [
     type: "control panel",
     element: (
       <Layout>
-        <ServerViewer />
+        <Suspense fallback={<PageLoader />}>
+          <ServerViewer />
+        </Suspense>
       </Layout>
     ),
   },
@@ -64,7 +83,9 @@ export const adminRoutes: RouteConfig[] = [
     type: "control panel",
     element: (
       <Layout>
-        <ServiceDetailsPage />
+        <Suspense fallback={<PageLoader />}>
+          <ServiceDetailsPage />
+        </Suspense>
       </Layout>
     ),
   },
@@ -74,7 +95,9 @@ export const adminRoutes: RouteConfig[] = [
     type: "control panel",
     element: (
       <Layout>
-        <TwitchRewardsPage />
+        <Suspense fallback={<PageLoader />}>
+          <TwitchRewardsPage />
+        </Suspense>
       </Layout>
     ),
   },

@@ -55,7 +55,6 @@
     "react": "^19.0.0",
     "react-bits": "https://github.com/DavidHDev/react-bits.git",
     "react-bootstrap": "^2.10.10",
-    "react-bootstrap-icons": "^1.11.6",
     "react-canvas-confetti": "^2.0.7",
     "react-dom": "^19.0.0",
     "react-fast-marquee": "^1.6.5",

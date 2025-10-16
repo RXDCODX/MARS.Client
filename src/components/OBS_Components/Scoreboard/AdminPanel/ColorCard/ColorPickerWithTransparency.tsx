@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import { Eye, EyeSlash } from "react-bootstrap-icons";
+import { Eye, EyeOff as EyeSlash } from "lucide-react";
 
 type ColorPickerWithTransparencyProps = {
   value: string;

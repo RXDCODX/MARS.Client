@@ -13,6 +13,13 @@ export function VideoScreen() {
   SoundRequestHubSignalRContext.useSignalREffect(
     "PlayerStateChange",
     (state: PlayerState) => {
+      console.log("[VideoScreen] PlayerStateChange получено:", {
+        hasCurrentTrack: !!state.currentTrack,
+        trackName: state.currentTrack?.trackName,
+        isPaused: state.isPaused,
+        isStoped: state.isStoped,
+        url: state.currentTrack?.url,
+      });
       setPlayerState(state);
     },
     []
@@ -22,15 +29,26 @@ export function VideoScreen() {
   useEffect(() => {
     const fetchInitialState = async () => {
       try {
-        await SoundRequestHubSignalRContext.invoke("BePlayer");
+        console.log("[VideoScreen] Подключаемся к группе player...");
+        await SoundRequestHubSignalRContext.invoke("BePlayer", []);
+        console.log("[VideoScreen] Успешно подключились к группе player");
+
         const state = (await SoundRequestHubSignalRContext.invoke(
           "GetPlayerState"
         )) as PlayerState;
+
+        console.log("[VideoScreen] Получено начальное состояние:", {
+          hasCurrentTrack: !!state?.currentTrack,
+          trackName: state?.currentTrack?.trackName,
+          isPaused: state?.isPaused,
+          isStoped: state?.isStoped,
+        });
+
         if (state) {
           setPlayerState(state);
         }
       } catch (error) {
-        console.error("Failed to fetch initial player state:", error);
+        console.error("[VideoScreen] ОШИБКА при получении состояния:", error);
       }
     };
 
@@ -52,20 +70,40 @@ export function VideoScreen() {
 
   // Если нет текущего трека, показываем заглушку
   if (!playerState?.currentTrack) {
+    console.log("[VideoScreen] Рендерим заглушку - нет трека");
     return (
       <div className={styles.container}>
         <div className={styles.placeholder}>
           <h2>Ожидание трека...</h2>
+          <p style={{ fontSize: "12px", opacity: 0.5, marginTop: "10px" }}>
+            PlayerState: {playerState ? "есть" : "нет"}, CurrentTrack:{" "}
+            {playerState?.currentTrack ? "есть" : "нет"}
+          </p>
         </div>
       </div>
     );
   }
+
+  console.log(
+    "[VideoScreen] Рендерим плеер с треком:",
+    playerState.currentTrack.trackName
+  );
 
   const { currentTrack, currentTrackRequestedByDisplayName } = playerState;
   const userName =
     currentTrackRequestedByDisplayName || "Неизвестный пользователь";
   const authors = currentTrack.authors?.join(", ") || "Неизвестный автор";
   const trackName = currentTrack.trackName;
+
+  const isPlaying = !playerState.isPaused && !playerState.isStoped;
+  console.log("[VideoScreen] ReactPlayer props:", {
+    src: currentTrack.url,
+    playing: isPlaying,
+    isPaused: playerState.isPaused,
+    isStoped: playerState.isStoped,
+    volume: playerState.volume / 100,
+    muted: playerState.isMuted,
+  });
 
   return (
     <div className={styles.container}>
@@ -80,8 +118,9 @@ export function VideoScreen() {
       {/* Средняя секция - видео плеер (70%) */}
       <div className={styles.videoSection}>
         <ReactPlayer
+          key={currentTrack.url} // Перемонтировать плеер при смене трека
           src={currentTrack.url}
-          playing={!playerState.isPaused && !playerState.isStoped}
+          playing={isPlaying}
           volume={playerState.volume / 100}
           muted={playerState.isMuted}
           onEnded={handleEnded}

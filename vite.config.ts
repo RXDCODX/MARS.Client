@@ -25,6 +25,28 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
+        // Разделение на chunks для оптимизации загрузки
+        manualChunks: {
+          // Основные библиотеки React
+          "react-vendor": ["react", "react-dom", "react-router-dom"],
+          // Bootstrap и UI компоненты
+          "ui-vendor": ["react-bootstrap", "bootstrap"],
+          // Иконки (разделены на отдельные чанки)
+          "icons-fa": ["react-icons/fa"],
+          "icons-lucide": ["lucide-react"],
+          // SignalR
+          signalr: ["@microsoft/signalr", "react-signalr"],
+          // Анимации
+          animations: [
+            "framer-motion",
+            "react-simple-animate",
+            "react-canvas-confetti",
+          ],
+          // Chart и визуализация
+          charts: ["recharts"],
+          // Остальные vendor библиотеки
+          vendor: ["axios", "zustand"],
+        },
         assetFileNames: assetInfo => {
           if (!assetInfo.name) {
             return `assets/[name]-[hash][extname]`;
@@ -38,8 +60,25 @@ export default defineConfig({
         },
       },
     },
+    // Увеличиваем chunk size warning limit для больших компонентов
+    chunkSizeWarningLimit: 1000,
   },
   server: {
     port: 44478,
+  },
+  // Оптимизация для dev режима
+  optimizeDeps: {
+    include: [
+      "react",
+      "react-dom",
+      "react-router-dom",
+      "@microsoft/signalr",
+      "react-bootstrap",
+    ],
+    exclude: [
+      // Исключаем из pre-bundling тяжелые библиотеки иконок
+      "@fortawesome/free-solid-svg-icons",
+      "react-icons",
+    ],
   },
 });

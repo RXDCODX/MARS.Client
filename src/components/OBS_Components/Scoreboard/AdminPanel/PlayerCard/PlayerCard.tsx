@@ -1,12 +1,12 @@
 import { Button, Card, Form } from "react-bootstrap";
 import {
   ArrowDown,
-  ArrowRepeat,
   ArrowUp,
-  PersonFill,
-  TrophyFill,
-  XCircleFill,
-} from "react-bootstrap-icons";
+  RotateCw as ArrowRepeat,
+  Trophy as TrophyFill,
+  User as PersonFill,
+  XCircle as XCircleFill,
+} from "lucide-react";
 
 import { useSiteColors } from "../../../../../shared/Utils";
 import FlagSelector from "../FlagCard/FlagSelector";

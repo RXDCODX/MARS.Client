@@ -1,6 +1,6 @@
+import { Plus } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "react-bootstrap";
-import { Plus } from "react-bootstrap-icons";
 
 import {
   CinemaMediaItemDto,
@@ -129,8 +129,11 @@ const CinemaQueuePage: React.FC = () => {
       resetCreateForm();
       fetchMediaItems();
       fetchStatistics();
-    } catch (error) {
-      showToast({ success: false, message: "Ошибка при создании медиа элемента" });
+    } catch {
+      showToast({
+        success: false,
+        message: "Ошибка при создании медиа элемента",
+      });
     }
   };
 
@@ -157,7 +160,10 @@ const CinemaQueuePage: React.FC = () => {
       fetchMediaItems();
       fetchStatistics();
     } catch (error) {
-      showToast({ success: false, message: "Ошибка при обновлении медиа элемента" });
+      showToast({
+        success: false,
+        message: "Ошибка при обновлении медиа элемента",
+      });
     }
   };
 
@@ -168,7 +174,10 @@ const CinemaQueuePage: React.FC = () => {
       fetchMediaItems();
       fetchStatistics();
     } catch (error) {
-      showToast({ success: false, message: "Ошибка при удалении медиа элемента" });
+      showToast({
+        success: false,
+        message: "Ошибка при удалении медиа элемента",
+      });
     }
   };
 
@@ -178,7 +187,10 @@ const CinemaQueuePage: React.FC = () => {
       showToast(response.data);
       fetchMediaItems();
     } catch (error) {
-      showToast({ success: false, message: "Ошибка при отметке медиа элемента как следующего" });
+      showToast({
+        success: false,
+        message: "Ошибка при отметке медиа элемента как следующего",
+      });
     }
   };
 

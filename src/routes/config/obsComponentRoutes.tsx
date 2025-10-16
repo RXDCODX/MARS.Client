@@ -1,30 +1,82 @@
-import { ADHDController } from "@/components/OBS_Components/ADHDLayout";
-import { ExplosionVideo } from "@/components/OBS_Components/ADHDLayout/ExplosionVideo";
+import { lazy, Suspense } from "react";
+
 import AFKScreen from "@/components/OBS_Components/AFKScreen/AFKScreen";
-import AutoMessageBillboard from "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboard";
-import AutoMessageBillboardTest from "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboardTest";
 import ChatHorizontal from "@/components/OBS_Components/ChatHorizontal/ChatHorizontal";
 import ChatVertical from "@/components/OBS_Components/ChatVertical/ChatVertical";
-import Credits from "@/components/OBS_Components/Credits/Credits";
-import { FumoFriday } from "@/components/OBS_Components/FumoFriday";
-import GaoAlertController from "@/components/OBS_Components/GaoAlert/GaoAlertController";
 import HighliteMessage from "@/components/OBS_Components/HighliteMessage/HighliteMessage";
-import MichaelJackson from "@/components/OBS_Components/MichaelJackson";
-import {
-  AvatarWithFire,
-  AvatarWithFireSvg,
-  PNGTuber,
-} from "@/components/OBS_Components/PNGTuber";
-import PyroAlerts from "@/components/OBS_Components/PyroAlerts/PyroAlerts";
-import RandomMem from "@/components/OBS_Components/RandomMem/RandomMem";
-import Scoreboard from "@/components/OBS_Components/Scoreboard";
-import Manager from "@/components/OBS_Components/ScreenParticles/Manager";
 import CurrentTrackInfo from "@/components/OBS_Components/SoundRequest/CurrentTrack/CurrentTrackManager";
 import { VideoScreen } from "@/components/OBS_Components/SoundRequest/VideoScreen/VideoScreen";
-import WaifuAlerts from "@/components/OBS_Components/WaifuAlerts/WaifuAlerts";
 import { OBSComponentWrapper } from "@/components/OBS_Components/wrapper";
+import { OBSLazyLoader } from "@/components/shared/LazyLoader";
+import { SoundRequestHubSignalRHubWrapper } from "@/shared/api";
 
 import { RouteConfig } from "./RouteConfig";
+
+// Тяжелые компоненты - lazy loading
+const Credits = lazy(
+  () => import("@/components/OBS_Components/Credits/Credits")
+);
+const ADHDController = lazy(() =>
+  import("@/components/OBS_Components/ADHDLayout").then(m => ({
+    default: m.ADHDController,
+  }))
+);
+const ExplosionVideo = lazy(() =>
+  import("@/components/OBS_Components/ADHDLayout/ExplosionVideo").then(m => ({
+    default: m.ExplosionVideo,
+  }))
+);
+const AutoMessageBillboard = lazy(
+  () =>
+    import(
+      "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboard"
+    )
+);
+const AutoMessageBillboardTest = lazy(
+  () =>
+    import(
+      "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboardTest"
+    )
+);
+const FumoFriday = lazy(() =>
+  import("@/components/OBS_Components/FumoFriday").then(m => ({
+    default: m.FumoFriday,
+  }))
+);
+const GaoAlertController = lazy(
+  () => import("@/components/OBS_Components/GaoAlert/GaoAlertController")
+);
+const MichaelJackson = lazy(
+  () => import("@/components/OBS_Components/MichaelJackson")
+);
+const PNGTuber = lazy(() =>
+  import("@/components/OBS_Components/PNGTuber").then(m => ({
+    default: m.PNGTuber,
+  }))
+);
+const AvatarWithFire = lazy(() =>
+  import("@/components/OBS_Components/PNGTuber").then(m => ({
+    default: m.AvatarWithFire,
+  }))
+);
+const AvatarWithFireSvg = lazy(() =>
+  import("@/components/OBS_Components/PNGTuber").then(m => ({
+    default: m.AvatarWithFireSvg,
+  }))
+);
+const PyroAlerts = lazy(
+  () => import("@/components/OBS_Components/PyroAlerts/PyroAlerts")
+);
+const RandomMem = lazy(
+  () => import("@/components/OBS_Components/RandomMem/RandomMem")
+);
+const Scoreboard = lazy(() => import("@/components/OBS_Components/Scoreboard"));
+const Manager = lazy(
+  () => import("@/components/OBS_Components/ScreenParticles/Manager")
+);
+const WaifuAlerts = lazy(
+  () => import("@/components/OBS_Components/WaifuAlerts/WaifuAlerts")
+);
 
 // Массив OBS компонентов (без Layout для интеграции в OBS)
 export const obsComponentRoutes: RouteConfig[] = [
@@ -34,7 +86,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <VideoScreen />
+        <SoundRequestHubSignalRHubWrapper>
+          <VideoScreen />
+        </SoundRequestHubSignalRHubWrapper>
       </OBSComponentWrapper>
     ),
   },
@@ -44,7 +98,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <MichaelJackson />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <MichaelJackson />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -54,7 +110,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <Credits />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <Credits />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -64,7 +122,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <GaoAlertController />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <GaoAlertController />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -74,7 +134,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <ADHDController />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <ADHDController />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -84,7 +146,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <AutoMessageBillboard />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <AutoMessageBillboard />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -94,7 +158,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <AutoMessageBillboardTest />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <AutoMessageBillboardTest />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -104,7 +170,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <PyroAlerts />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <PyroAlerts />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -114,7 +182,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <RandomMem />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <RandomMem />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -124,7 +194,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <WaifuAlerts />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <WaifuAlerts />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -134,7 +206,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <FumoFriday />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <FumoFriday />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -154,7 +228,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <Manager />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <Manager />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -164,7 +240,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <Scoreboard />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <Scoreboard />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -214,7 +292,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <PNGTuber />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <PNGTuber />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -224,7 +304,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <AvatarWithFire />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <AvatarWithFire />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -234,7 +316,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <AvatarWithFireSvg />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <AvatarWithFireSvg />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -244,7 +328,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <ExplosionVideo />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <ExplosionVideo />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },

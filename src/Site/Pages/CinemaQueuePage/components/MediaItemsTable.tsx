@@ -1,5 +1,5 @@
+import { Edit as Pencil, PlayCircle, Trash2 as Trash } from "lucide-react";
 import { Badge, Button, Card, Table } from "react-bootstrap";
-import { Pencil, PlayCircle, Trash } from "react-bootstrap-icons";
 
 import { CinemaMediaItemDto } from "@/shared/api";
 

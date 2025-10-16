@@ -9955,7 +9955,6 @@ __metadata:
     react: "npm:^19.0.0"
     react-bits: "https://github.com/DavidHDev/react-bits.git"
     react-bootstrap: "npm:^2.10.10"
-    react-bootstrap-icons: "npm:^1.11.6"
     react-canvas-confetti: "npm:^2.0.7"
     react-dom: "npm:^19.0.0"
     react-fast-marquee: "npm:^1.6.5"
@@ -11609,17 +11608,6 @@ __metadata:
     tailwindcss: "npm:^4.0.3"
     three: "npm:^0.167.1"
   checksum: 10c0/81c74a482818f1d1c4c90de7b08907ac3e587c584da854246d7eb0c37da9ff5c5e972adcceccde439b7a626c0e519e9e5496fe6d8eed23998474aa9f8278ae43
-  languageName: node
-  linkType: hard
-
-"react-bootstrap-icons@npm:^1.11.6":
-  version: 1.11.6
-  resolution: "react-bootstrap-icons@npm:1.11.6"
-  dependencies:
-    prop-types: "npm:^15.7.2"
-  peerDependencies:
-    react: ">=16.8.6"
-  checksum: 10c0/4dfd75c980a4431032e7d861d52efeb18cb141e00300ae1cf055dcfcb1fd7689991d8b467c38f1103563662bbbd61aaf247093e7c04f6f1ad0aae86feff5047d
   languageName: node
   linkType: hard
 

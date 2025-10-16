@@ -1,6 +1,6 @@
 // Bootstrap CSS
 @use "../styles/bootstrap";
-@use "bootstrap-icons/font/bootstrap-icons.css";
+// УДАЛЁН: bootstrap-icons CSS - используем только нужные иконки через react-bootstrap-icons
 
 /* Применяем стили только если не в Storybook */
 html:not([data-storybook]) {

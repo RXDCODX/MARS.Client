@@ -1,23 +1,58 @@
+import { lazy, Suspense } from "react";
+
+import { PageLoader } from "@/components/shared/LazyLoader";
 import AboutPage from "@/Site/Pages/AboutPage";
-import CinemaQueuePage from "@/Site/Pages/CinemaQueuePage/CinemaQueuePage";
-import CommandsPage from "@/Site/Pages/CommandsPage/CommandsPage";
 import ContactsPage from "@/Site/Pages/ContactsPage";
 import DocsPage from "@/Site/Pages/DocsPage";
-import { PendingChangesPage } from "@/Site/Pages/FramedataPage";
-import { ChangeDetailsPage } from "@/Site/Pages/FramedataPage";
-import FramedataPage from "@/Site/Pages/FramedataPage/FramedataPage";
 import Layout from "@/Site/Pages/Layout/Layout";
-import { MediaInfoEditPage } from "@/Site/Pages/MediaInfoPage/MediaInfoEditPage";
-import { MediaInfoListPage } from "@/Site/Pages/MediaInfoPage/MediaInfoListPage";
-import {
-  RandomMemeDetailsPage,
-  RandomMemeEditPage,
-} from "@/Site/Pages/RandomMemePage/pages";
-import RandomMemePage from "@/Site/Pages/RandomMemePage/RandomMemePage";
 import RoutesPage from "@/Site/Pages/RoutesPage/RoutesPage";
 import WelcomePage from "@/Site/Pages/WelcomePage";
 
 import { RouteConfig } from "./RouteConfig";
+
+// Тяжелые страницы - lazy loading для оптимизации производительности
+const FramedataPage = lazy(
+  () => import("@/Site/Pages/FramedataPage/FramedataPage")
+);
+const PendingChangesPage = lazy(() =>
+  import("@/Site/Pages/FramedataPage").then(m => ({
+    default: m.PendingChangesPage,
+  }))
+);
+const ChangeDetailsPage = lazy(() =>
+  import("@/Site/Pages/FramedataPage").then(m => ({
+    default: m.ChangeDetailsPage,
+  }))
+);
+const RandomMemePage = lazy(
+  () => import("@/Site/Pages/RandomMemePage/RandomMemePage")
+);
+const RandomMemeDetailsPage = lazy(() =>
+  import("@/Site/Pages/RandomMemePage/pages").then(m => ({
+    default: m.RandomMemeDetailsPage,
+  }))
+);
+const RandomMemeEditPage = lazy(() =>
+  import("@/Site/Pages/RandomMemePage/pages").then(m => ({
+    default: m.RandomMemeEditPage,
+  }))
+);
+const CinemaQueuePage = lazy(
+  () => import("@/Site/Pages/CinemaQueuePage/CinemaQueuePage")
+);
+const CommandsPage = lazy(
+  () => import("@/Site/Pages/CommandsPage/CommandsPage")
+);
+const MediaInfoListPage = lazy(() =>
+  import("@/Site/Pages/MediaInfoPage/MediaInfoListPage").then(m => ({
+    default: m.MediaInfoListPage,
+  }))
+);
+const MediaInfoEditPage = lazy(() =>
+  import("@/Site/Pages/MediaInfoPage/MediaInfoEditPage").then(m => ({
+    default: m.MediaInfoEditPage,
+  }))
+);
 
 // Массив основных страниц сайта с Layout
 export const mainSiteRoutes: RouteConfig[] = [
@@ -67,7 +102,9 @@ export const mainSiteRoutes: RouteConfig[] = [
     type: "site",
     element: (
       <Layout>
-        <CommandsPage />
+        <Suspense fallback={<PageLoader />}>
+          <CommandsPage />
+        </Suspense>
       </Layout>
     ),
   },
@@ -87,7 +124,9 @@ export const mainSiteRoutes: RouteConfig[] = [
     type: "site",
     element: (
       <Layout>
-        <FramedataPage />
+        <Suspense fallback={<PageLoader />}>
+          <FramedataPage />
+        </Suspense>
       </Layout>
     ),
   },
@@ -97,7 +136,9 @@ export const mainSiteRoutes: RouteConfig[] = [
     type: "site",
     element: (
       <Layout>
-        <PendingChangesPage />
+        <Suspense fallback={<PageLoader />}>
+          <PendingChangesPage />
+        </Suspense>
       </Layout>
     ),
   },
@@ -107,7 +148,9 @@ export const mainSiteRoutes: RouteConfig[] = [
     type: "site",
     element: (
       <Layout>
-        <ChangeDetailsPage />
+        <Suspense fallback={<PageLoader />}>
+          <ChangeDetailsPage />
+        </Suspense>
       </Layout>
     ),
   },
@@ -117,7 +160,9 @@ export const mainSiteRoutes: RouteConfig[] = [
     type: "site",
     element: (
       <Layout>
-        <MediaInfoListPage />
+        <Suspense fallback={<PageLoader />}>
+          <MediaInfoListPage />
+        </Suspense>
       </Layout>
     ),
   },
@@ -127,7 +172,9 @@ export const mainSiteRoutes: RouteConfig[] = [
     type: "site",
     element: (
       <Layout>
-        <MediaInfoEditPage />
+        <Suspense fallback={<PageLoader />}>
+          <MediaInfoEditPage />
+        </Suspense>
       </Layout>
     ),
   },
@@ -137,7 +184,9 @@ export const mainSiteRoutes: RouteConfig[] = [
     type: "site",
     element: (
       <Layout>
-        <CinemaQueuePage />
+        <Suspense fallback={<PageLoader />}>
+          <CinemaQueuePage />
+        </Suspense>
       </Layout>
     ),
   },
@@ -147,7 +196,9 @@ export const mainSiteRoutes: RouteConfig[] = [
     type: "site",
     element: (
       <Layout>
-        <RandomMemePage />
+        <Suspense fallback={<PageLoader />}>
+          <RandomMemePage />
+        </Suspense>
       </Layout>
     ),
   },
@@ -157,7 +208,9 @@ export const mainSiteRoutes: RouteConfig[] = [
     type: "site",
     element: (
       <Layout>
-        <RandomMemeDetailsPage />
+        <Suspense fallback={<PageLoader />}>
+          <RandomMemeDetailsPage />
+        </Suspense>
       </Layout>
     ),
   },
@@ -167,7 +220,9 @@ export const mainSiteRoutes: RouteConfig[] = [
     type: "site",
     element: (
       <Layout>
-        <RandomMemeEditPage />
+        <Suspense fallback={<PageLoader />}>
+          <RandomMemeEditPage />
+        </Suspense>
       </Layout>
     ),
   },

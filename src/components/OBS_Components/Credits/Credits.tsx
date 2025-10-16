@@ -1,23 +1,7 @@
 import "./body.css";
 
 import { motion, useAnimationControls } from "framer-motion";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import ElectricBorder from "react-bits/src/content/Animations/ElectricBorder/ElectricBorder";
-// Импортируем фоны из react-bits, которые не требуют мыши
-import Aurora from "react-bits/src/ts-default/Backgrounds/Aurora/Aurora";
-import Balatro from "react-bits/src/ts-default/Backgrounds/Balatro/Balatro";
-import DarkVeil from "react-bits/src/ts-default/Backgrounds/DarkVeil/DarkVeil";
-import FaultyTerminal from "react-bits/src/ts-default/Backgrounds/FaultyTerminal/FaultyTerminal";
-import Galaxy from "react-bits/src/ts-default/Backgrounds/Galaxy/Galaxy";
-import Iridescence from "react-bits/src/ts-default/Backgrounds/Iridescence/Iridescence";
-import Lightning from "react-bits/src/ts-default/Backgrounds/Lightning/Lightning";
-import LightRays from "react-bits/src/ts-default/Backgrounds/LightRays/LightRays";
-import LiquidChrome from "react-bits/src/ts-default/Backgrounds/LiquidChrome/LiquidChrome";
-import Particles from "react-bits/src/ts-default/Backgrounds/Particles/Particles";
-import Prism from "react-bits/src/ts-default/Backgrounds/Prism/Prism";
-import PrismaticBurst from "react-bits/src/ts-default/Backgrounds/PrismaticBurst/PrismaticBurst";
-import Squares from "react-bits/src/ts-default/Backgrounds/Squares/Squares";
-import Threads from "react-bits/src/ts-default/Backgrounds/Threads/Threads";
+import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   FollowerInfo,
@@ -29,164 +13,214 @@ import Announce from "@/shared/Utils/Announce/Announce";
 
 import styles from "./Credits.module.scss";
 
-// Импортируем список музыкальных треков из папки music (mp3/ogg/wav)
+// ОПТИМИЗАЦИЯ: Lazy loading для тяжелых анимаций - загружаем только когда нужно
+const ElectricBorder = lazy(() => import("react-bits/src/content/Animations/ElectricBorder/ElectricBorder"));
+const Aurora = lazy(() => import("react-bits/src/ts-default/Backgrounds/Aurora/Aurora"));
+const Balatro = lazy(() => import("react-bits/src/ts-default/Backgrounds/Balatro/Balatro"));
+const DarkVeil = lazy(() => import("react-bits/src/ts-default/Backgrounds/DarkVeil/DarkVeil"));
+const FaultyTerminal = lazy(() => import("react-bits/src/ts-default/Backgrounds/FaultyTerminal/FaultyTerminal"));
+const Galaxy = lazy(() => import("react-bits/src/ts-default/Backgrounds/Galaxy/Galaxy"));
+const Iridescence = lazy(() => import("react-bits/src/ts-default/Backgrounds/Iridescence/Iridescence"));
+const Lightning = lazy(() => import("react-bits/src/ts-default/Backgrounds/Lightning/Lightning"));
+const LightRays = lazy(() => import("react-bits/src/ts-default/Backgrounds/LightRays/LightRays"));
+const LiquidChrome = lazy(() => import("react-bits/src/ts-default/Backgrounds/LiquidChrome/LiquidChrome"));
+const Particles = lazy(() => import("react-bits/src/ts-default/Backgrounds/Particles/Particles"));
+const Prism = lazy(() => import("react-bits/src/ts-default/Backgrounds/Prism/Prism"));
+const PrismaticBurst = lazy(() => import("react-bits/src/ts-default/Backgrounds/PrismaticBurst/PrismaticBurst"));
+const Squares = lazy(() => import("react-bits/src/ts-default/Backgrounds/Squares/Squares"));
+const Threads = lazy(() => import("react-bits/src/ts-default/Backgrounds/Threads/Threads"));
+
+// ОПТИМИЗАЦИЯ: Загружаем музыку НЕ eager - только когда нужно
 const musicFiles = import.meta.glob("./music/*.{mp3,ogg,wav}", {
-  eager: true,
+  eager: false,
   query: "url",
   import: "default",
-}) as Record<string, string>;
+}) as Record<string, () => Promise<string>>;
 
-const musicUrls: string[] = Object.values(musicFiles).sort();
+// Получаем URLs музыки
+const musicUrls = Object.keys(musicFiles).sort();
 
 // Ключ для сохранения индекса трека между запусками
 const MUSIC_INDEX_STORAGE_KEY = "credits-music-index";
 
-// Конфигурации фонов, которые не требуют мыши
+// ОПТИМИЗАЦИЯ: Конфигурации фонов теперь возвращают JSX динамически
 // Бекграунды под названием Beams и Silk вместе вызывают баг не рендера app.tsx
 const backgroundConfigs = [
   {
     name: "Aurora",
     element: (
-      <Aurora
-        colorStops={["#5227FF", "#7cff67", "#5227FF"]}
-        amplitude={1.2}
-        blend={0.6}
-      />
+      <Suspense fallback={<div />}>
+        <Aurora
+          colorStops={["#5227FF", "#7cff67", "#5227FF"]}
+          amplitude={1.2}
+          blend={0.6}
+        />
+      </Suspense>
     ),
   },
   {
     name: "DarkVeil",
     element: (
-      <DarkVeil
-        hueShift={200}
-        noiseIntensity={0.05}
-        scanlineIntensity={0.1}
-        speed={0.8}
-      />
+      <Suspense fallback={<div />}>
+        <DarkVeil
+          hueShift={200}
+          noiseIntensity={0.05}
+          scanlineIntensity={0.1}
+          speed={0.8}
+        />
+      </Suspense>
     ),
   },
   {
     name: "Liquid Chrome",
-    element: <LiquidChrome interactive={false} />,
+    element: (
+      <Suspense fallback={<div />}>
+        <LiquidChrome interactive={false} />
+      </Suspense>
+    ),
   },
   {
     name: "Lightning",
-    element: <Lightning hue={280} speed={1.2} intensity={1.5} size={1.2} />,
+    element: (
+      <Suspense fallback={<div />}>
+        <Lightning hue={280} speed={1.2} intensity={1.5} size={1.2} />
+      </Suspense>
+    ),
   },
   {
     name: "LightRays",
     element: (
-      <LightRays
-        raysColor="#5227FF"
-        raysSpeed={1.5}
-        lightSpread={1.2}
-        rayLength={2.5}
-        followMouse={false}
-      />
+      <Suspense fallback={<div />}>
+        <LightRays
+          raysColor="#5227FF"
+          raysSpeed={1.5}
+          lightSpread={1.2}
+          rayLength={2.5}
+          followMouse={false}
+        />
+      </Suspense>
     ),
   },
   {
     name: "Squares",
     element: (
-      <Squares
-        direction="diagonal"
-        speed={1.0}
-        borderColor="#B19EEF"
-        squareSize={40}
-        hoverFillColor="rgba(177, 158, 239, 0.3)"
-      />
+      <Suspense fallback={<div />}>
+        <Squares
+          direction="diagonal"
+          speed={1.0}
+          borderColor="#B19EEF"
+          squareSize={40}
+          hoverFillColor="rgba(177, 158, 239, 0.3)"
+        />
+      </Suspense>
     ),
   },
   {
     name: "Balatro",
     element: (
-      <Balatro
-        mouseInteraction={false}
-        color1="#DE443B"
-        color2="#006BB4"
-        color3="#162325"
-        isRotate={true}
-        spinSpeed={5}
-      />
+      <Suspense fallback={<div />}>
+        <Balatro
+          mouseInteraction={false}
+          color1="#DE443B"
+          color2="#006BB4"
+          color3="#162325"
+          isRotate={true}
+          spinSpeed={5}
+        />
+      </Suspense>
     ),
   },
   {
     name: "FaultyTerminal",
     element: (
-      <FaultyTerminal
-        mouseReact={false}
-        tint="#5227FF"
-        flickerAmount={0.8}
-        glitchAmount={0.9}
-      />
+      <Suspense fallback={<div />}>
+        <FaultyTerminal
+          mouseReact={false}
+          tint="#5227FF"
+          flickerAmount={0.8}
+          glitchAmount={0.9}
+        />
+      </Suspense>
     ),
   },
   {
     name: "Galaxy",
     element: (
-      <Galaxy
-        mouseInteraction={false}
-        hueShift={200}
-        density={1.5}
-        glowIntensity={0.5}
-        transparent={false}
-      />
+      <Suspense fallback={<div />}>
+        <Galaxy
+          mouseInteraction={false}
+          hueShift={200}
+          density={1.5}
+          glowIntensity={0.5}
+          transparent={false}
+        />
+      </Suspense>
     ),
   },
   {
     name: "Iridescence",
     element: (
-      <Iridescence
-        mouseReact={false}
-        color={[1, 0.8, 1]}
-        speed={1.5}
-        amplitude={0.2}
-      />
+      <Suspense fallback={<div />}>
+        <Iridescence
+          mouseReact={false}
+          color={[1, 0.8, 1]}
+          speed={1.5}
+          amplitude={0.2}
+        />
+      </Suspense>
     ),
   },
   {
     name: "Particles",
     element: (
-      <Particles
-        moveParticlesOnHover={false}
-        particleCount={250}
-        particleColors={["#5227FF", "#FF9FFC", "#B19EEF"]}
-        alphaParticles={true}
-        disableRotation={false}
-      />
+      <Suspense fallback={<div />}>
+        <Particles
+          moveParticlesOnHover={false}
+          particleCount={250}
+          particleColors={["#5227FF", "#FF9FFC", "#B19EEF"]}
+          alphaParticles={true}
+          disableRotation={false}
+        />
+      </Suspense>
     ),
   },
   {
     name: "Prism",
     element: (
-      <Prism
-        animationType="rotate"
-        glow={1.5}
-        bloom={1.2}
-        transparent={false}
-      />
+      <Suspense fallback={<div />}>
+        <Prism
+          animationType="rotate"
+          glow={1.5}
+          bloom={1.2}
+          transparent={false}
+        />
+      </Suspense>
     ),
   },
   {
     name: "PrismaticBurst",
     element: (
-      <PrismaticBurst
-        animationType="rotate3d"
-        intensity={2.5}
-        speed={0.6}
-        colors={["#5227FF", "#FF9FFC", "#B19EEF", "#7cff67"]}
-      />
+      <Suspense fallback={<div />}>
+        <PrismaticBurst
+          animationType="rotate3d"
+          intensity={2.5}
+          speed={0.6}
+          colors={["#5227FF", "#FF9FFC", "#B19EEF", "#7cff67"]}
+        />
+      </Suspense>
     ),
   },
   {
     name: "Threads",
     element: (
-      <Threads
-        enableMouseInteraction={false}
-        color={[0.7, 0.5, 1]}
-        amplitude={1.2}
-        distance={0.3}
-      />
+      <Suspense fallback={<div />}>
+        <Threads
+          enableMouseInteraction={false}
+          color={[0.7, 0.5, 1]}
+          amplitude={1.2}
+          distance={0.3}
+        />
+      </Suspense>
     ),
   },
 ];
@@ -354,13 +388,17 @@ const Credits: React.FC = () => {
     }
   }, []);
 
-  const selectNextMusicUrl = useCallback((): string | null => {
+  const selectNextMusicUrl = useCallback(async (): Promise<string | null> => {
     if (!musicUrls.length) return null;
     let storedIndex = Number(localStorage.getItem(MUSIC_INDEX_STORAGE_KEY));
     if (Number.isNaN(storedIndex) || storedIndex < 0) storedIndex = -1;
     const nextIndex = (storedIndex + 1) % musicUrls.length;
     localStorage.setItem(MUSIC_INDEX_STORAGE_KEY, String(nextIndex));
-    return musicUrls[nextIndex];
+    
+    // ОПТИМИЗАЦИЯ: Загружаем только нужный музыкальный файл
+    const musicKey = musicUrls[nextIndex];
+    const musicLoader = musicFiles[musicKey];
+    return musicLoader ? await musicLoader() : null;
   }, []);
 
   const selectRandomBackground = useCallback(() => {
@@ -580,8 +618,8 @@ const Credits: React.FC = () => {
         // Выбираем случайный фон
         selectRandomBackground();
 
-        // Выбираем следующий трек
-        const nextUrl = selectNextMusicUrl();
+        // Выбираем следующий трек (теперь async)
+        const nextUrl = await selectNextMusicUrl();
         selectedTrackUrlRef.current = nextUrl;
         // На новый запуск гарантированно останавливаем предыдущий звук
         stopAndCleanupAudio();
@@ -693,16 +731,18 @@ const Credits: React.FC = () => {
                 <div className={styles.block}>
                   {streamerInfo && (
                     <div className={styles.streamerSection}>
-                      <ElectricBorder
-                        style={{ borderRadius: "50%" }}
-                        color="rgb(230,172,12)"
-                      >
-                        <img
-                          src={streamerInfo.profileImageUrl}
-                          alt={streamerInfo.displayName}
-                          className={styles.streamerAvatar}
-                        />
-                      </ElectricBorder>
+                      <Suspense fallback={<div style={{ width: 400, height: 400 }} />}>
+                        <ElectricBorder
+                          style={{ borderRadius: "50%" }}
+                          color="rgb(230,172,12)"
+                        >
+                          <img
+                            src={streamerInfo.profileImageUrl}
+                            alt={streamerInfo.displayName}
+                            className={styles.streamerAvatar}
+                          />
+                        </ElectricBorder>
+                      </Suspense>
                       <SectionTitle
                         leftIcon={icons.streamer}
                         rightIcon={icons.streamer}

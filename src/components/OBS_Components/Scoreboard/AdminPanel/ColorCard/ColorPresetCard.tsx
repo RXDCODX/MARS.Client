@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Card, Col, Row } from "react-bootstrap";
-import { Palette } from "react-bootstrap-icons";
+import { Palette } from "lucide-react";
 
 import { useSiteColors } from "../../../../../shared/Utils/useSiteColors";
 import { useColor, useColorActions } from "../store/scoreboardStore";
