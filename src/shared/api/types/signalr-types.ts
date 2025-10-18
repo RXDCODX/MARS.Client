@@ -34,21 +34,6 @@ export interface AutoArtImage {
   width: number;
 }
 
-export interface BaseTrackInfo {
-  artworkUrl?: string;
-  authors?: string[];
-  /** @format date-span */
-  duration: string;
-  /** @format uuid */
-  id: string;
-  /** @format date-time */
-  lastTimePlays: string;
-  title: string;
-  trackName: string;
-  url: string;
-  videoId?: string;
-}
-
 export interface ChatMessage {
   badgeInfo?: StringStringKeyValuePair[];
   badges?: StringStringKeyValuePair[];
@@ -215,22 +200,6 @@ export interface MediaInfo {
   textInfo: MediaTextInfo;
 }
 
-export interface PlayerState {
-  currentTrack?: BaseTrackInfo;
-  /** @format date-span */
-  currentTrackDuration?: string;
-  currentTrackRequestedBy?: string;
-  currentTrackRequestedByDisplayName?: string;
-  /** @format uuid */
-  id: string;
-  isMuted: boolean;
-  isPaused: boolean;
-  isStoped: boolean;
-  nextTrack?: BaseTrackInfo;
-  /** @format int32 */
-  volume: number;
-}
-
 export interface PrizeType {
   id: string;
   image: string;
@@ -352,18 +321,6 @@ export interface User {
   type?: string;
   /** @format int64 */
   viewCount: number;
-}
-
-export interface UserRequestedTrack {
-  /** @format uuid */
-  id: string;
-  /** @format int32 */
-  order: number;
-  requestedTrack: BaseTrackInfo;
-  /** @format uuid */
-  requestedTrackId: string;
-  twitchDisplayName?: string;
-  twitchId: string;
 }
 
 export interface Waifu {

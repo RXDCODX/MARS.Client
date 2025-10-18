@@ -1,0 +1,323 @@
+@import "@/app/global.scss";
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.currentTrackCard,
+.queueCard {
+  background: var(--bs-card-bg);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 12px;
+  box-shadow: var(--bs-box-shadow);
+}
+
+.title {
+  color: var(--bs-primary);
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  font-size: 1.25rem;
+}
+
+.currentTrack {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: var(--bs-light);
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+.trackInfo {
+  flex: 1;
+}
+
+.trackName {
+  color: var(--bs-dark);
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.trackAuthor {
+  color: var(--bs-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.requestedBy {
+  color: var(--bs-text-muted);
+  font-size: 0.9rem;
+  margin-bottom: 0;
+}
+
+.duration {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--bs-primary);
+  min-width: 80px;
+  text-align: right;
+}
+
+.noTrack {
+  color: var(--bs-text-muted);
+  font-style: italic;
+  padding: 2rem;
+  text-align: center;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.playbackControls {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.controlButton {
+  min-width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: var(--bs-box-shadow-lg);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.volumeControls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--bs-light);
+  border-radius: 8px;
+}
+
+.muteButton {
+  min-width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.volumeSlider {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.volumeInput {
+  flex: 1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--bs-secondary);
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--bs-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: scale(1.2);
+      background: var(--bs-primary);
+    }
+  }
+
+  &::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--bs-primary);
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: scale(1.2);
+      background: var(--bs-primary);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+
+    &::-webkit-slider-thumb {
+      cursor: not-allowed;
+    }
+
+    &::-moz-range-thumb {
+      cursor: not-allowed;
+    }
+  }
+}
+
+.volumeValue {
+  min-width: 50px;
+  text-align: right;
+  font-weight: 600;
+  color: var(--bs-primary);
+}
+
+.queueList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 0.5rem;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: var(--bs-light);
+    border-radius: 3px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--bs-primary);
+    border-radius: 3px;
+  }
+}
+
+.queueItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: var(--bs-light);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: var(--bs-body-bg);
+    box-shadow: var(--bs-box-shadow-sm);
+  }
+}
+
+.queueItemInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex: 1;
+}
+
+.queueNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  background: var(--bs-primary);
+  color: white;
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.queueTrackInfo {
+  flex: 1;
+}
+
+.queueTrackName {
+  color: var(--bs-dark);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.queueTrackAuthor {
+  color: var(--bs-secondary);
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+
+.queueRequestedBy {
+  color: var(--bs-text-muted);
+  font-size: 0.85rem;
+  margin-bottom: 0;
+}
+
+.queueItemActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.queueDuration {
+  font-weight: 600;
+  color: var(--bs-primary);
+  min-width: 60px;
+  text-align: right;
+}
+
+.emptyQueue {
+  color: var(--bs-text-muted);
+  font-style: italic;
+  padding: 2rem;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .currentTrack {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .duration {
+    text-align: left;
+    margin-top: 0.5rem;
+  }
+
+  .playbackControls {
+    flex-wrap: wrap;
+  }
+
+  .queueItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .queueItemActions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

@@ -23,6 +23,7 @@ export { RandomMeme } from "./http-clients/RandomMeme";
 export { RxdcodxViewers } from "./http-clients/RxdcodxViewers";
 export { ServiceManager } from "./http-clients/ServiceManager";
 export { ShikimoriRateLimiter } from "./http-clients/ShikimoriRateLimiter";
+export { SoundRequest } from "./http-clients/SoundRequest";
 export { StreamArchive } from "./http-clients/StreamArchive";
 export { TestLogger } from "./http-clients/TestLogger";
 export { Twitch } from "./http-clients/Twitch";

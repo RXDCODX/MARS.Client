@@ -1,5 +1,5 @@
+import { Minimize2, Move } from "lucide-react";
 import { Button, Card, Col, Form, Row } from "react-bootstrap";
-import { FaArrowsAlt, FaCompress } from "react-icons/fa";
 
 import { useLayout, useLayoutActions } from "./store/scoreboardStore";
 import { defaultLayout } from "./types";
@@ -26,11 +26,11 @@ const LayoutCard: React.FC = () => {
     <Card className="mb-4">
       <Card.Header className="d-flex justify-content-between align-items-center">
         <h5 className="mb-0">
-          <FaArrowsAlt className="me-2" />
+          <Move className="me-2" />
           Настройка макета
         </h5>
         <Button variant="outline-secondary" size="sm" onClick={resetToDefaults}>
-          <FaCompress className="me-1" />
+          <Minimize2 className="me-1" />
           Сброс
         </Button>
       </Card.Header>

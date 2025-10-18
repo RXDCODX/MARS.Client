@@ -1,16 +1,28 @@
 import { lazy, Suspense } from "react";
 
-import AFKScreen from "@/components/OBS_Components/AFKScreen/AFKScreen";
-import ChatHorizontal from "@/components/OBS_Components/ChatHorizontal/ChatHorizontal";
-import ChatVertical from "@/components/OBS_Components/ChatVertical/ChatVertical";
-import HighliteMessage from "@/components/OBS_Components/HighliteMessage/HighliteMessage";
-import CurrentTrackInfo from "@/components/OBS_Components/SoundRequest/CurrentTrack/CurrentTrackManager";
-import { VideoScreen } from "@/components/OBS_Components/SoundRequest/VideoScreen/VideoScreen";
 import { OBSComponentWrapper } from "@/components/OBS_Components/wrapper";
 import { OBSLazyLoader } from "@/components/shared/LazyLoader";
-import { SoundRequestHubSignalRHubWrapper } from "@/shared/api";
 
 import { RouteConfig } from "./RouteConfig";
+
+// Все OBS компоненты - lazy loading для оптимизации производительности
+const AFKScreen = lazy(
+  () => import("@/components/OBS_Components/AFKScreen/AFKScreen")
+);
+const ChatHorizontal = lazy(
+  () => import("@/components/OBS_Components/ChatHorizontal/ChatHorizontal")
+);
+const ChatVertical = lazy(
+  () => import("@/components/OBS_Components/ChatVertical/ChatVertical")
+);
+const HighliteMessage = lazy(
+  () => import("@/components/OBS_Components/HighliteMessage/HighliteMessage")
+);
+const ChoosePath = lazy(() =>
+  import("@/components/OBS_Components/SoundRequest/ChoosePath").then(m => ({
+    default: m.ChoosePath,
+  }))
+);
 
 // Тяжелые компоненты - lazy loading
 const Credits = lazy(
@@ -81,14 +93,14 @@ const WaifuAlerts = lazy(
 // Массив OBS компонентов (без Layout для интеграции в OBS)
 export const obsComponentRoutes: RouteConfig[] = [
   {
-    path: "/sr/player",
-    name: "SR: Player",
+    path: "/sr/*",
+    name: "SR: SoundRequest",
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <SoundRequestHubSignalRHubWrapper>
-          <VideoScreen />
-        </SoundRequestHubSignalRHubWrapper>
+        <Suspense fallback={<OBSLazyLoader />}>
+          <ChoosePath />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -263,16 +275,6 @@ export const obsComponentRoutes: RouteConfig[] = [
     element: (
       <OBSComponentWrapper>
         <ChatVertical />
-      </OBSComponentWrapper>
-    ),
-  },
-  {
-    path: "/sr/currenttrack",
-    name: "Текущий трек",
-    type: "obs",
-    element: (
-      <OBSComponentWrapper>
-        <CurrentTrackInfo />
       </OBSComponentWrapper>
     ),
   },

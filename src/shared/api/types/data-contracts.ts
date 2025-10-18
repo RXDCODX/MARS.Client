@@ -23,6 +23,18 @@ export interface OperationResult<TData = any> {
   data?: TData;
 }
 
+export interface AddPlaylistRequest {
+  playlistUrl: string;
+  userId: string;
+  displayName: string;
+}
+
+export interface AddTrackRequest {
+  query: string;
+  userId: string;
+  displayName: string;
+}
+
 export interface ApiMediaInfo {
   /** @format uuid */
   id: string;
@@ -37,6 +49,22 @@ export interface AutoMessageDto {
   /** @format uuid */
   id: string;
   message: string;
+}
+
+export interface BaseTrackInfo {
+  /** @format uuid */
+  id: string;
+  trackName: string;
+  authors?: string[];
+  /** @format date-span */
+  duration: string;
+  /** @format uri */
+  url: string;
+  /** @format date-time */
+  lastTimePlays: string;
+  artworkUrl?: string;
+  videoId?: string;
+  title: string;
 }
 
 export interface ChannelRewardDefinition {
@@ -519,6 +547,24 @@ export interface ParseResult {
   message: string;
 }
 
+export interface PlayerState {
+  /** @format uuid */
+  id: string;
+  currentTrack?: BaseTrackInfo;
+  nextTrack?: BaseTrackInfo;
+  /** @format date-span */
+  currentTrackDuration?: string;
+  isPaused: boolean;
+  isMuted: boolean;
+  isStoped: boolean;
+  /** @format int32 */
+  volume: number;
+  /** @maxLength 50 */
+  currentTrackRequestedBy?: string;
+  /** @maxLength 1000 */
+  currentTrackRequestedByDisplayName?: string;
+}
+
 export interface ProblemDetails {
   type?: string;
   title?: string;
@@ -761,6 +807,18 @@ export interface UpdateUserRequest {
   ltuidV2?: string;
 }
 
+export interface UserRequestedTrack {
+  /** @format uuid */
+  id: string;
+  twitchDisplayName?: string;
+  twitchId: string;
+  /** @format int32 */
+  order: number;
+  /** @format uuid */
+  requestedTrackId?: string;
+  requestedTrack: BaseTrackInfo;
+}
+
 export interface ValidateFolderRequest {
   folderPath: string;
 }
@@ -788,6 +846,7 @@ export enum CommandInfoAvailablePlatformsEnum {
   Twitch = "Twitch",
   Discord = "Discord",
   Vk = "Vk",
+  All = "All",
 }
 
 export enum CommandInfoVisibilityEnum {
@@ -896,6 +955,7 @@ export enum CommandsUserPlatformDetailParamsPlatformEnum {
   Twitch = "Twitch",
   Discord = "Discord",
   Vk = "Vk",
+  All = "All",
 }
 
 export enum CommandsUserPlatformDetailParamsEnum {
@@ -905,6 +965,7 @@ export enum CommandsUserPlatformDetailParamsEnum {
   Twitch = "Twitch",
   Discord = "Discord",
   Vk = "Vk",
+  All = "All",
 }
 
 export enum CommandsAdminPlatformDetailParamsPlatformEnum {
@@ -914,6 +975,7 @@ export enum CommandsAdminPlatformDetailParamsPlatformEnum {
   Twitch = "Twitch",
   Discord = "Discord",
   Vk = "Vk",
+  All = "All",
 }
 
 export enum CommandsAdminPlatformDetailParamsEnum {
@@ -923,6 +985,7 @@ export enum CommandsAdminPlatformDetailParamsEnum {
   Twitch = "Twitch",
   Discord = "Discord",
   Vk = "Vk",
+  All = "All",
 }
 
 export enum CommandsUserPlatformInfoListParamsPlatformEnum {
@@ -932,6 +995,7 @@ export enum CommandsUserPlatformInfoListParamsPlatformEnum {
   Twitch = "Twitch",
   Discord = "Discord",
   Vk = "Vk",
+  All = "All",
 }
 
 export enum CommandsUserPlatformInfoListParamsEnum {
@@ -941,6 +1005,7 @@ export enum CommandsUserPlatformInfoListParamsEnum {
   Twitch = "Twitch",
   Discord = "Discord",
   Vk = "Vk",
+  All = "All",
 }
 
 export enum CommandsAdminPlatformInfoListParamsPlatformEnum {
@@ -950,6 +1015,7 @@ export enum CommandsAdminPlatformInfoListParamsPlatformEnum {
   Twitch = "Twitch",
   Discord = "Discord",
   Vk = "Vk",
+  All = "All",
 }
 
 export enum CommandsAdminPlatformInfoListParamsEnum {
@@ -959,6 +1025,7 @@ export enum CommandsAdminPlatformInfoListParamsEnum {
   Twitch = "Twitch",
   Discord = "Discord",
   Vk = "Vk",
+  All = "All",
 }
 
 export enum FramedataSupplementCreate2ParamsSourceEnum {

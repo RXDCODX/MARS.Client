@@ -18,8 +18,11 @@ import {
   HttpResponse,
 } from "./http-client";
 import type {
+  AddPlaylistRequest,
+  AddTrackRequest,
   ApiMediaInfo,
   AutoMessageDto,
+  BaseTrackInfo,
   ChannelRewardDefinition,
   ChannelRewardRecord,
   CinemaMediaItemDto,
@@ -60,6 +63,7 @@ import type {
   Pagination,
   ParseRequest,
   ParseResult,
+  PlayerState,
   ProblemDetails,
   RateLimiterInfo,
   Reward,
@@ -79,6 +83,7 @@ import type {
   UpdateMemeOrderDto,
   UpdateMemeTypeDto,
   UpdateUserRequest,
+  UserRequestedTrack,
   ValidateFolderRequest,
   ValidateFolderResponse,
   CinemaMediaItemDtoStatusEnum,

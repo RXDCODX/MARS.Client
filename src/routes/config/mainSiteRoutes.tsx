@@ -1,14 +1,16 @@
 import { lazy, Suspense } from "react";
 
 import { PageLoader } from "@/components/shared/LazyLoader";
-import AboutPage from "@/Site/Pages/AboutPage";
-import ContactsPage from "@/Site/Pages/ContactsPage";
-import DocsPage from "@/Site/Pages/DocsPage";
 import Layout from "@/Site/Pages/Layout/Layout";
-import RoutesPage from "@/Site/Pages/RoutesPage/RoutesPage";
-import WelcomePage from "@/Site/Pages/WelcomePage";
 
 import { RouteConfig } from "./RouteConfig";
+
+// Все страницы - lazy loading для оптимизации производительности
+const WelcomePage = lazy(() => import("@/Site/Pages/WelcomePage"));
+const AboutPage = lazy(() => import("@/Site/Pages/AboutPage"));
+const DocsPage = lazy(() => import("@/Site/Pages/DocsPage"));
+const ContactsPage = lazy(() => import("@/Site/Pages/ContactsPage"));
+const RoutesPage = lazy(() => import("@/Site/Pages/RoutesPage/RoutesPage"));
 
 // Тяжелые страницы - lazy loading для оптимизации производительности
 const FramedataPage = lazy(
@@ -62,7 +64,9 @@ export const mainSiteRoutes: RouteConfig[] = [
     type: "site",
     element: (
       <Layout>
-        <WelcomePage />
+        <Suspense fallback={<PageLoader />}>
+          <WelcomePage />
+        </Suspense>
       </Layout>
     ),
   },
@@ -72,7 +76,9 @@ export const mainSiteRoutes: RouteConfig[] = [
     type: "site",
     element: (
       <Layout>
-        <AboutPage />
+        <Suspense fallback={<PageLoader />}>
+          <AboutPage />
+        </Suspense>
       </Layout>
     ),
   },
@@ -82,7 +88,9 @@ export const mainSiteRoutes: RouteConfig[] = [
     type: "site",
     element: (
       <Layout>
-        <DocsPage />
+        <Suspense fallback={<PageLoader />}>
+          <DocsPage />
+        </Suspense>
       </Layout>
     ),
   },
@@ -92,7 +100,9 @@ export const mainSiteRoutes: RouteConfig[] = [
     type: "site",
     element: (
       <Layout>
-        <ContactsPage />
+        <Suspense fallback={<PageLoader />}>
+          <ContactsPage />
+        </Suspense>
       </Layout>
     ),
   },
@@ -114,7 +124,9 @@ export const mainSiteRoutes: RouteConfig[] = [
     type: "site",
     element: (
       <Layout>
-        <RoutesPage />
+        <Suspense fallback={<PageLoader />}>
+          <RoutesPage />
+        </Suspense>
       </Layout>
     ),
   },

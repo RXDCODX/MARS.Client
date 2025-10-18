@@ -1,10 +1,19 @@
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vite";
 import path from "path";
+import viteCompression from "vite-plugin-compression";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    // Compression для production
+    viteCompression({
+      algorithm: "gzip",
+      ext: ".gz",
+      threshold: 1024, // Минимальный размер файла для сжатия (1KB)
+    }),
+  ],
   assetsInclude: ["**/*.webm", "**/*.mp4"],
   resolve: {
     alias: {
@@ -26,26 +35,59 @@ export default defineConfig({
     rollupOptions: {
       output: {
         // Разделение на chunks для оптимизации загрузки
-        manualChunks: {
+        manualChunks: id => {
           // Основные библиотеки React
-          "react-vendor": ["react", "react-dom", "react-router-dom"],
+          if (
+            id.includes("node_modules/react") ||
+            id.includes("node_modules/react-dom") ||
+            id.includes("node_modules/react-router-dom")
+          ) {
+            return "react-vendor";
+          }
           // Bootstrap и UI компоненты
-          "ui-vendor": ["react-bootstrap", "bootstrap"],
-          // Иконки (разделены на отдельные чанки)
-          "icons-fa": ["react-icons/fa"],
-          "icons-lucide": ["lucide-react"],
+          if (
+            id.includes("node_modules/react-bootstrap") ||
+            id.includes("node_modules/bootstrap")
+          ) {
+            return "ui-vendor";
+          }
+          // Иконки
+          if (id.includes("node_modules/lucide-react")) {
+            return "icons-lucide";
+          }
+          if (id.includes("node_modules/bootstrap-icons")) {
+            return "icons-bootstrap";
+          }
+          if (id.includes("node_modules/react-icons")) {
+            return "icons-fa";
+          }
           // SignalR
-          signalr: ["@microsoft/signalr", "react-signalr"],
+          if (
+            id.includes("node_modules/@microsoft/signalr") ||
+            id.includes("node_modules/react-signalr")
+          ) {
+            return "signalr";
+          }
+          // Twitch API
+          if (id.includes("node_modules/@twurple")) {
+            return "twitch-vendor";
+          }
           // Анимации
-          animations: [
-            "framer-motion",
-            "react-simple-animate",
-            "react-canvas-confetti",
-          ],
+          if (
+            id.includes("node_modules/framer-motion") ||
+            id.includes("node_modules/react-simple-animate") ||
+            id.includes("node_modules/react-canvas-confetti")
+          ) {
+            return "animations";
+          }
           // Chart и визуализация
-          charts: ["recharts"],
+          if (id.includes("node_modules/recharts")) {
+            return "charts";
+          }
           // Остальные vendor библиотеки
-          vendor: ["axios", "zustand"],
+          if (id.includes("node_modules")) {
+            return "vendor";
+          }
         },
         assetFileNames: assetInfo => {
           if (!assetInfo.name) {
@@ -56,12 +98,25 @@ export default defineConfig({
           if (/webm|mp4/.test(ext)) {
             return `assets/videos/[name]-[hash][extname]`;
           }
+          if (/svg/.test(ext)) {
+            return `assets/icons/[name]-[hash][extname]`;
+          }
           return `assets/[name]-[hash][extname]`;
         },
       },
     },
     // Увеличиваем chunk size warning limit для больших компонентов
     chunkSizeWarningLimit: 1000,
+    // Включить minification
+    minify: "terser",
+    terserOptions: {
+      compress: {
+        drop_console: true, // Удалить console.log в production
+        drop_debugger: true,
+      },
+    } as any,
+    // Включить source maps только для development
+    sourcemap: false,
   },
   server: {
     port: 44478,

@@ -1,10 +1,10 @@
-import { IconType } from "react-icons"; // Предполагаем, что вы используете библиотеку react-icons для иконок
+import { LucideIcon } from "lucide-react";
 
 import styles from "./ErrorPage.module.scss"; // Импортируем стили
 
 interface ErrorPageProps {
   typeError: string;
-  icon?: IconType;
+  icon?: LucideIcon;
 }
 
 export const ErrorPage = ({ typeError, icon: Icon }: ErrorPageProps) => {

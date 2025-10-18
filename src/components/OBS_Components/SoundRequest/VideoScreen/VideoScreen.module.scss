@@ -72,6 +72,12 @@
       object-fit: contain;
     }
   }
+
+  // Полноэкранный режим для не-mainPlayer
+  &.fullScreen {
+    flex: 1;
+    height: 100vh;
+  }
 }
 
 // Секция с информацией о треке - 30% (3 из 12 частей)

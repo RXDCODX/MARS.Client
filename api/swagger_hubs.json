@@ -9,7 +9,7 @@
         "tags": [
           "ScoreboardHub"
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/scoreboard/GetCurrentState": {
@@ -17,7 +17,7 @@
         "tags": [
           "ScoreboardHub"
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/scoreboard/JoinAsClient": {
@@ -25,7 +25,7 @@
         "tags": [
           "ScoreboardHub"
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/scoreboard/OnConnectedAsync": {
@@ -33,7 +33,7 @@
         "tags": [
           "ScoreboardHub"
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/scoreboard/OnDisconnectedAsync": {
@@ -41,7 +41,7 @@
         "tags": [
           "ScoreboardHub"
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/scoreboard/SetPlayerFinal": {
@@ -66,7 +66,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/scoreboard/SetVisibility": {
@@ -83,7 +83,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/scoreboard/UpdatePlayerScore": {
@@ -109,7 +109,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/scoreboard/UpdateState": {
@@ -126,24 +126,7 @@
             }
           }
         ],
-        "responses": {}
-      }
-    },
-    "/hubs/soundrequest/AddTrackToQueue": {
-      "post": {
-        "tags": [
-          "SoundRequestHub"
-        ],
-        "parameters": [
-          {
-            "name": "track",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/UserRequestedTrack"
-            }
-          }
-        ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/soundrequest/Ended": {
@@ -151,7 +134,7 @@
         "tags": [
           "SoundRequestHub"
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/soundrequest/ErrorPlaying": {
@@ -159,188 +142,32 @@
         "tags": [
           "SoundRequestHub"
         ],
-        "responses": {}
+        "responses": { }
       }
     },
-    "/hubs/soundrequest/GetHistory": {
+    "/hubs/soundrequest/Join": {
       "post": {
         "tags": [
           "SoundRequestHub"
         ],
         "parameters": [
           {
-            "name": "count",
+            "name": "groupName",
             "in": "query",
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "type": "string"
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BaseTrackInfo"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BaseTrackInfo"
-                  }
-                }
-              },
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/BaseTrackInfo"
-                  }
-                }
-              }
-            }
-          }
-        }
+        "responses": { }
       }
     },
-    "/hubs/soundrequest/GetPlayerState": {
+    "/hubs/soundrequest/OnDisconnectedAsync": {
       "post": {
         "tags": [
           "SoundRequestHub"
         ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PlayerState"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PlayerState"
-                }
-              },
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/PlayerState"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/hubs/soundrequest/GetQueue": {
-      "post": {
-        "tags": [
-          "SoundRequestHub"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UserRequestedTrack"
-                  }
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UserRequestedTrack"
-                  }
-                }
-              },
-              "text/plain": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UserRequestedTrack"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/hubs/soundrequest/JoinAsClient": {
-      "post": {
-        "tags": [
-          "SoundRequestHub"
-        ],
-        "responses": {}
-      }
-    },
-    "/hubs/soundrequest/Mute": {
-      "post": {
-        "tags": [
-          "SoundRequestHub"
-        ],
-        "responses": {}
-      }
-    },
-    "/hubs/soundrequest/Pause": {
-      "post": {
-        "tags": [
-          "SoundRequestHub"
-        ],
-        "responses": {}
-      }
-    },
-    "/hubs/soundrequest/Play": {
-      "post": {
-        "tags": [
-          "SoundRequestHub"
-        ],
-        "responses": {}
-      }
-    },
-    "/hubs/soundrequest/Resume": {
-      "post": {
-        "tags": [
-          "SoundRequestHub"
-        ],
-        "responses": {}
-      }
-    },
-    "/hubs/soundrequest/SetVolume": {
-      "post": {
-        "tags": [
-          "SoundRequestHub"
-        ],
-        "parameters": [
-          {
-            "name": "volume",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {}
-      }
-    },
-    "/hubs/soundrequest/Skip": {
-      "post": {
-        "tags": [
-          "SoundRequestHub"
-        ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/soundrequest/Started": {
@@ -348,23 +175,7 @@
         "tags": [
           "SoundRequestHub"
         ],
-        "responses": {}
-      }
-    },
-    "/hubs/soundrequest/Stop": {
-      "post": {
-        "tags": [
-          "SoundRequestHub"
-        ],
-        "responses": {}
-      }
-    },
-    "/hubs/soundrequest/Unmute": {
-      "post": {
-        "tags": [
-          "SoundRequestHub"
-        ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/ExplosionGo": {
@@ -372,7 +183,7 @@
         "tags": [
           "TelegramusHub"
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/MuteAll": {
@@ -392,7 +203,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/OnConnectedAsync": {
@@ -400,7 +211,7 @@
         "tags": [
           "TelegramusHub"
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/TwitchMsg": {
@@ -417,7 +228,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/UnmuteSessions": {
@@ -425,7 +236,7 @@
         "tags": [
           "TelegramusHub"
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/tuna/BeYm": {
@@ -433,7 +244,7 @@
         "tags": [
           "TunaHub"
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/tuna/GetYandexMusicTracks": {
@@ -479,7 +290,7 @@
         "tags": [
           "TunaHub"
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/tuna/SendPlayerData": {
@@ -496,7 +307,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/logger/Log": {
@@ -513,7 +324,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/AddNewWaifu": {
@@ -544,7 +355,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/Adhd": {
@@ -562,7 +373,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/Alert": {
@@ -579,7 +390,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/Alerts": {
@@ -599,7 +410,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/AutoMessage": {
@@ -616,7 +427,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/Credits": {
@@ -624,7 +435,7 @@
         "tags": [
           "TelegramusHub"
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/DeleteMessage": {
@@ -641,7 +452,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/Explosion": {
@@ -649,7 +460,7 @@
         "tags": [
           "TelegramusHub"
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/FumoFriday": {
@@ -673,7 +484,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/GaoAlert": {
@@ -690,7 +501,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/Highlite": {
@@ -721,7 +532,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/LeroyAlert": {
@@ -729,7 +540,7 @@
         "tags": [
           "TelegramusHub"
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/MakeScreenEmojisParticles": {
@@ -746,7 +557,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/MakeScreenParticles": {
@@ -767,7 +578,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/MergeWaifu": {
@@ -805,7 +616,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/MichaelJackson": {
@@ -813,7 +624,7 @@
         "tags": [
           "TelegramusHub"
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/NewMessage": {
@@ -837,7 +648,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/PostTwitchInfo": {
@@ -861,7 +672,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/RandomMem": {
@@ -878,7 +689,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/TemplateMessage": {
@@ -895,7 +706,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/UpdateWaifuPrizes": {
@@ -915,7 +726,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/WaifuRoll": {
@@ -953,7 +764,7 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     }
   },
@@ -1027,57 +838,6 @@
           "previewURL": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "BaseTrackInfo": {
-        "required": [
-          "duration",
-          "id",
-          "lastTimePlays",
-          "title",
-          "trackName",
-          "url"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "trackName": {
-            "type": "string"
-          },
-          "authors": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "duration": {
-            "type": "string",
-            "format": "date-span"
-          },
-          "url": {
-            "type": "string"
-          },
-          "lastTimePlays": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "artworkUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "videoId": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -1868,57 +1628,6 @@
         },
         "additionalProperties": false
       },
-      "PlayerState": {
-        "required": [
-          "id",
-          "isMuted",
-          "isPaused",
-          "isStoped",
-          "volume"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "currentTrack": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BaseTrackInfo"
-              }
-            ],
-            "nullable": true
-          },
-          "nextTrack": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BaseTrackInfo"
-              }
-            ],
-            "nullable": true
-          },
-          "currentTrackDuration": {
-            "type": "string",
-            "format": "date-span",
-            "nullable": true
-          },
-          "isPaused": {
-            "type": "boolean"
-          },
-          "isMuted": {
-            "type": "boolean"
-          },
-          "isStoped": {
-            "type": "boolean"
-          },
-          "volume": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
       "PrizeType": {
         "required": [
           "id",
@@ -2319,45 +2028,6 @@
             "type": "string",
             "nullable": true,
             "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "UserRequestedTrack": {
-        "required": [
-          "id",
-          "order",
-          "requestedTrack",
-          "requestedTrackId",
-          "twitchId"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "twitchDisplayName": {
-            "type": "string",
-            "nullable": true
-          },
-          "twitchId": {
-            "type": "string"
-          },
-          "order": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "requestedTrackId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "requestedTrack": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BaseTrackInfo"
-              }
-            ]
           }
         },
         "additionalProperties": false

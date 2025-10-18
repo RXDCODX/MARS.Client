@@ -1231,7 +1231,8 @@
                 "Telegram",
                 "Twitch",
                 "Discord",
-                "Vk"
+                "Vk",
+                "All"
               ],
               "type": "string"
             }
@@ -1278,7 +1279,8 @@
                 "Telegram",
                 "Twitch",
                 "Discord",
-                "Vk"
+                "Vk",
+                "All"
               ],
               "type": "string"
             }
@@ -1325,7 +1327,8 @@
                 "Telegram",
                 "Twitch",
                 "Discord",
-                "Vk"
+                "Vk",
+                "All"
               ],
               "type": "string"
             }
@@ -1372,7 +1375,8 @@
                 "Telegram",
                 "Twitch",
                 "Discord",
-                "Vk"
+                "Vk",
+                "All"
               ],
               "type": "string"
             }
@@ -4945,6 +4949,654 @@
         }
       }
     },
+    "/api/SoundRequest/state": {
+      "get": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerStateOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerStateOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PlayerStateOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/queue": {
+      "get": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRequestedTrackListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRequestedTrackListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRequestedTrackListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/history": {
+      "get": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "parameters": [
+          {
+            "name": "count",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseTrackInfoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseTrackInfoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BaseTrackInfoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/play": {
+      "post": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/pause": {
+      "post": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/toggle-play-pause": {
+      "post": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/stop": {
+      "post": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/skip": {
+      "post": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/play-next": {
+      "post": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/play-track/{trackId}": {
+      "post": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "parameters": [
+          {
+            "name": "trackId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/volume/{volume}": {
+      "post": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "parameters": [
+          {
+            "name": "volume",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/mute/{muted}": {
+      "post": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "parameters": [
+          {
+            "name": "muted",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/toggle-mute": {
+      "post": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/add-track": {
+      "post": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddTrackRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddTrackRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddTrackRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/add-playlist": {
+      "post": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddPlaylistRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddPlaylistRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/AddPlaylistRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/queue/{trackId}": {
+      "delete": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "parameters": [
+          {
+            "name": "trackId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/current-song": {
+      "get": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/user-position/{userId}": {
+      "get": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/StreamArchive": {
       "get": {
         "tags": [
@@ -5781,6 +6433,46 @@
   },
   "components": {
     "schemas": {
+      "AddPlaylistRequest": {
+        "required": [
+          "displayName",
+          "playlistUrl",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "playlistUrl": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddTrackRequest": {
+        "required": [
+          "displayName",
+          "query",
+          "userId"
+        ],
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "ApiMediaInfo": {
         "required": [
           "fileInfo",
@@ -5886,6 +6578,67 @@
         ],
         "description": "Результат операции с данными типа AutoMessageDto",
         "x-generic-type-argument": "AutoMessageDto"
+      },
+      "BaseTrackInfo": {
+        "required": [
+          "duration",
+          "id",
+          "lastTimePlays",
+          "title",
+          "trackName",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "trackName": {
+            "type": "string"
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "duration": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "lastTimePlays": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "artworkUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "videoId": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "BaseTrackInfoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа BaseTrackInfo[]",
+        "x-generic-type-argument": "BaseTrackInfo[]"
       },
       "ChannelRewardDefinition": {
         "required": [
@@ -6228,7 +6981,8 @@
                 "Telegram",
                 "Twitch",
                 "Discord",
-                "Vk"
+                "Vk",
+                "All"
               ],
               "type": "string"
             }
@@ -7797,6 +8551,76 @@
         "description": "Результат операции с данными типа ParseResult",
         "x-generic-type-argument": "ParseResult"
       },
+      "PlayerState": {
+        "required": [
+          "id",
+          "isMuted",
+          "isPaused",
+          "isStoped",
+          "volume"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "currentTrack": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BaseTrackInfo"
+              }
+            ],
+            "nullable": true
+          },
+          "nextTrack": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BaseTrackInfo"
+              }
+            ],
+            "nullable": true
+          },
+          "currentTrackDuration": {
+            "type": "string",
+            "format": "date-span",
+            "nullable": true
+          },
+          "isPaused": {
+            "type": "boolean"
+          },
+          "isMuted": {
+            "type": "boolean"
+          },
+          "isStoped": {
+            "type": "boolean"
+          },
+          "volume": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "currentTrackRequestedBy": {
+            "maxLength": 50,
+            "type": "string",
+            "nullable": true
+          },
+          "currentTrackRequestedByDisplayName": {
+            "maxLength": 1000,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PlayerStateOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа PlayerState",
+        "x-generic-type-argument": "PlayerState"
+      },
       "ProblemDetails": {
         "type": "object",
         "properties": {
@@ -7822,7 +8646,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": {}
+        "additionalProperties": { }
       },
       "RateLimiterInfo": {
         "required": [
@@ -8676,6 +9500,54 @@
           }
         },
         "additionalProperties": false
+      },
+      "UserRequestedTrack": {
+        "required": [
+          "id",
+          "order",
+          "requestedTrack",
+          "twitchId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "twitchDisplayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "twitchId": {
+            "type": "string"
+          },
+          "order": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "requestedTrackId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "requestedTrack": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BaseTrackInfo"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserRequestedTrackListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа UserRequestedTrack[]",
+        "x-generic-type-argument": "UserRequestedTrack[]"
       },
       "ValidateFolderRequest": {
         "required": [

@@ -1,5 +1,6 @@
-import { ChoosePath } from "./ChoosePath";
-import { TrackList } from "./TrackList/TrackList";
-import { VideoScreen } from "./VideoScreen/VideoScreen";
+export { TrackList } from "./TrackList/TrackList";
+export { VideoScreen } from "./VideoScreen/VideoScreen";
+export * from "./Player";
 
-export default { ChoosePath, TrackList, VideoScreen };
+// Default export для обратной совместимости
+export { default } from "./ChoosePath";
