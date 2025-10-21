@@ -18,13 +18,12 @@ import {
   HttpResponse,
 } from "./http-client";
 import type {
-  AddPlaylistRequest,
-  AddTrackRequest,
   ApiMediaInfo,
   AutoMessageDto,
   BaseTrackInfo,
   ChannelRewardDefinition,
   ChannelRewardRecord,
+  CinemaMediaItem,
   CinemaMediaItemDto,
   CinemaQueueStatistics,
   CommandInfo,
@@ -39,9 +38,11 @@ import type {
   DailyAutoMarkupUser,
   DefaultImage,
   FollowerInfo,
+  FumoUser,
   GetCustomRewardRedemptionResponse,
   GetCustomRewardsResponse,
   GlobalCooldownSetting,
+  HelloVideosUsers,
   Image,
   Log,
   LogResponse,
@@ -49,6 +50,7 @@ import type {
   MaxPerStreamSetting,
   MaxPerUserPerStreamSetting,
   MediaFileInfo,
+  MediaInfo,
   MediaMetaInfo,
   MediaMetadata,
   MediaPositionInfo,
@@ -75,6 +77,8 @@ import type {
   SupplementRequest,
   TekkenCharacter,
   TekkenCharacterPendingDto,
+  TwitchLeaderboardUser,
+  TwitchUser,
   UpdateAutoMessageRequest,
   UpdateCustomRewardDto,
   UpdateCustomRewardRedemptionStatusRequest,
@@ -83,10 +87,11 @@ import type {
   UpdateMemeOrderDto,
   UpdateMemeTypeDto,
   UpdateUserRequest,
-  UserRequestedTrack,
   ValidateFolderRequest,
   ValidateFolderResponse,
+  WaifuRollGuarantee,
   CinemaMediaItemDtoStatusEnum,
+  CinemaMediaItemStatusEnum,
   CommandInfoAvailablePlatformsEnum,
   CommandInfoVisibilityEnum,
   LogLogLevelEnum,
@@ -140,10 +145,10 @@ export class SoundRequest<
    * @tags SoundRequest
    * @name SoundRequestQueueList
    * @request GET:/api/SoundRequest/queue
-   * @response `200` `OperationResult<UserRequestedTrack[]>` OK
+   * @response `200` `OperationResult<BaseTrackInfo[]>` OK
    */
   soundRequestQueueList = (params: RequestParams = {}) =>
-    this.request<OperationResult<UserRequestedTrack[]>, any>({
+    this.request<OperationResult<BaseTrackInfo[]>, any>({
       path: `/api/SoundRequest/queue`,
       method: "GET",
       format: "json",
@@ -333,14 +338,15 @@ export class SoundRequest<
    * @response `200` `OperationResult<String>` OK
    */
   soundRequestAddTrackCreate = (
-    data: AddTrackRequest,
+    query?: {
+      request: string;
+    },
     params: RequestParams = {}
   ) =>
     this.request<OperationResult<String>, any>({
       path: `/api/SoundRequest/add-track`,
       method: "POST",
-      body: data,
-      type: ContentType.Json,
+      query: query,
       format: "json",
       ...params,
     });
@@ -353,14 +359,15 @@ export class SoundRequest<
    * @response `200` `OperationResult<String>` OK
    */
   soundRequestAddPlaylistCreate = (
-    data: AddPlaylistRequest,
+    query?: {
+      request: string;
+    },
     params: RequestParams = {}
   ) =>
     this.request<OperationResult<String>, any>({
       path: `/api/SoundRequest/add-playlist`,
       method: "POST",
-      body: data,
-      type: ContentType.Json,
+      query: query,
       format: "json",
       ...params,
     });

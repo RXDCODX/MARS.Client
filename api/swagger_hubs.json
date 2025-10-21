@@ -842,6 +842,80 @@
         },
         "additionalProperties": false
       },
+      "BaseTrackInfo": {
+        "required": [
+          "duration",
+          "id",
+          "isDeleted",
+          "lastTimePlays",
+          "title",
+          "trackName",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "trackName": {
+            "type": "string"
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "duration": {
+            "type": "string",
+            "format": "date-span"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "lastTimePlays": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "artworkUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "videoId": {
+            "type": "string",
+            "nullable": true
+          },
+          "isDeleted": {
+            "type": "boolean"
+          },
+          "queueOrder": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "requestedByTwitchId": {
+            "maxLength": 50,
+            "type": "string",
+            "nullable": true
+          },
+          "requestedByTwitchUser": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TwitchUser"
+              }
+            ],
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ChatMessage": {
         "required": [
           "bits",
@@ -1119,6 +1193,138 @@
         },
         "additionalProperties": false
       },
+      "CinemaMediaItem": {
+        "required": [
+          "createdAt",
+          "id",
+          "isNext",
+          "mediaUrl",
+          "priority",
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "mediaUrl": {
+            "maxLength": 1000,
+            "minLength": 1,
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "Pending",
+              "InProgress",
+              "Completed",
+              "Cancelled",
+              "Postponed"
+            ],
+            "type": "string"
+          },
+          "priority": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "scheduledFor": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "twitchUserId": {
+            "maxLength": 50,
+            "type": "string",
+            "nullable": true
+          },
+          "twitchUser": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TwitchUser"
+              }
+            ],
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "isNext": {
+            "type": "boolean"
+          },
+          "lastModified": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DailyAutoMarkupUser": {
+        "required": [
+          "id",
+          "lastAutoMarkup",
+          "ltmidV2",
+          "lTokenV2",
+          "ltuidV2"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "twitchId": {
+            "maxLength": 50,
+            "type": "string",
+            "nullable": true
+          },
+          "twitchUser": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TwitchUser"
+              }
+            ],
+            "nullable": true
+          },
+          "telegramId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "ltmidV2": {
+            "type": "string"
+          },
+          "lTokenV2": {
+            "type": "string"
+          },
+          "ltuidV2": {
+            "type": "string"
+          },
+          "lastAutoMarkup": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
       "Emote": {
         "required": [
           "endIndex",
@@ -1171,6 +1377,32 @@
         },
         "additionalProperties": false
       },
+      "FumoUser": {
+        "required": [
+          "lastTime",
+          "twitchId"
+        ],
+        "type": "object",
+        "properties": {
+          "twitchId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "twitchUser": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TwitchUser"
+              }
+            ],
+            "nullable": true
+          },
+          "lastTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
       "GaoAlertDto": {
         "required": [
           "id",
@@ -1200,6 +1432,50 @@
         },
         "additionalProperties": false
       },
+      "HelloVideosUsers": {
+        "required": [
+          "id",
+          "lastTimeNotif",
+          "mediaInfo",
+          "mediaInfoId",
+          "twitchId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "twitchId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "twitchUser": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TwitchUser"
+              }
+            ],
+            "nullable": true
+          },
+          "lastTimeNotif": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "mediaInfoId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "mediaInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaInfo"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
       "Host": {
         "required": [
           "hostCoolDown",
@@ -1211,12 +1487,16 @@
         ],
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
           "twitchId": {
             "type": "string"
+          },
+          "twitchUser": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TwitchUser"
+              }
+            ],
+            "nullable": true
           },
           "whenOrdered": {
             "type": "string",
@@ -1628,6 +1908,80 @@
         },
         "additionalProperties": false
       },
+      "PlayerState": {
+        "required": [
+          "id",
+          "isMuted",
+          "isPaused",
+          "isStoped",
+          "volume"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "currentTrackId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "nextTrackId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "currentTrackDuration": {
+            "type": "string",
+            "format": "date-span",
+            "nullable": true
+          },
+          "isPaused": {
+            "type": "boolean"
+          },
+          "isMuted": {
+            "type": "boolean"
+          },
+          "isStoped": {
+            "type": "boolean"
+          },
+          "volume": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "currentTrackRequestedBy": {
+            "maxLength": 50,
+            "type": "string",
+            "nullable": true
+          },
+          "currentTrackRequestedByTwitchUser": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TwitchUser"
+              }
+            ],
+            "nullable": true
+          },
+          "currentTrack": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BaseTrackInfo"
+              }
+            ],
+            "nullable": true
+          },
+          "nextTrack": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BaseTrackInfo"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PrizeType": {
         "required": [
           "id",
@@ -1967,6 +2321,186 @@
         "type": "object",
         "additionalProperties": false
       },
+      "TwitchLeaderboardUser": {
+        "required": [
+          "russianRouletteWins",
+          "russianRouletteWinsWithWaifu",
+          "tekkenVictorinaWins",
+          "tekkenVictorinaWinsWithWaifu",
+          "totalWins",
+          "triviaWins",
+          "triviaWinsWithWaifus",
+          "twitchId"
+        ],
+        "type": "object",
+        "properties": {
+          "twitchId": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "twitchUser": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TwitchUser"
+              }
+            ],
+            "nullable": true
+          },
+          "totalWins": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "tekkenVictorinaWins": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "tekkenVictorinaWinsWithWaifu": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "russianRouletteWins": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "russianRouletteWinsWithWaifu": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "triviaWins": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "triviaWinsWithWaifus": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TwitchUser": {
+        "required": [
+          "cinemaQueueItems",
+          "createdAt",
+          "displayName",
+          "helloVideos",
+          "honkaiMarkups",
+          "isJustFollower",
+          "isModerator",
+          "isVip",
+          "lastUpdated",
+          "playerStates",
+          "requestedTracks",
+          "twitchId",
+          "userLogin"
+        ],
+        "type": "object",
+        "properties": {
+          "twitchId": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "userLogin": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "displayName": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "profileImageUrl": {
+            "maxLength": 500,
+            "type": "string",
+            "nullable": true
+          },
+          "chatColor": {
+            "maxLength": 20,
+            "type": "string",
+            "nullable": true
+          },
+          "isModerator": {
+            "type": "boolean"
+          },
+          "isVip": {
+            "type": "boolean"
+          },
+          "followedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "leaderboardStats": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TwitchLeaderboardUser"
+              }
+            ],
+            "nullable": true
+          },
+          "fumoUser": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FumoUser"
+              }
+            ],
+            "nullable": true
+          },
+          "helloVideos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/HelloVideosUsers"
+            }
+          },
+          "waifuRollGuarantee": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WaifuRollGuarantee"
+              }
+            ],
+            "nullable": true
+          },
+          "honkaiMarkups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DailyAutoMarkupUser"
+            }
+          },
+          "cinemaQueueItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CinemaMediaItem"
+            }
+          },
+          "requestedTracks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BaseTrackInfo"
+            }
+          },
+          "playerStates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlayerState"
+            }
+          },
+          "isJustFollower": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
       "User": {
         "required": [
           "createdAt",
@@ -2094,6 +2628,46 @@
           },
           "isAdded": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "WaifuRollGuarantee": {
+        "required": [
+          "createdAt",
+          "lastRoll",
+          "rollCount",
+          "twitchId",
+          "updatedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "twitchId": {
+            "type": "string"
+          },
+          "twitchUser": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TwitchUser"
+              }
+            ],
+            "nullable": true
+          },
+          "rollCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastRoll": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false

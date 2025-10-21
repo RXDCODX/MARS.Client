@@ -87,7 +87,7 @@ export function VideoScreen({ className, groupName }: Props) {
 
   const { currentTrack } = playerState;
   const userName =
-    playerState.currentTrackRequestedByDisplayName ||
+    playerState.currentTrackRequestedByTwitchUser?.displayName ||
     "Неизвестный пользователь";
   const authors = currentTrack.authors?.join(", ") || "Неизвестный автор";
   const trackName = currentTrack.trackName;

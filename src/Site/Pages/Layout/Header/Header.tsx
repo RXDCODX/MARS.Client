@@ -1,3 +1,4 @@
+import { FolderOpen, Monitor } from "lucide-react";
 import { useState } from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -349,7 +350,7 @@ const Header: React.FC = () => {
               rel="noopener noreferrer"
               target="_blank"
             >
-              <i className="bi bi-window-desktop" />
+              <Monitor size={20} />
             </Nav.Link>
 
             {/* Иконка для перехода на /static с релоудом */}
@@ -375,7 +376,7 @@ const Header: React.FC = () => {
               rel="noopener noreferrer"
               target="_blank"
             >
-              <i className="bi bi-folder2-open" />
+              <FolderOpen size={20} />
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>

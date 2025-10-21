@@ -23,18 +23,6 @@ export interface OperationResult<TData = any> {
   data?: TData;
 }
 
-export interface AddPlaylistRequest {
-  playlistUrl: string;
-  userId: string;
-  displayName: string;
-}
-
-export interface AddTrackRequest {
-  query: string;
-  userId: string;
-  displayName: string;
-}
-
 export interface ApiMediaInfo {
   /** @format uuid */
   id: string;
@@ -64,6 +52,12 @@ export interface BaseTrackInfo {
   lastTimePlays: string;
   artworkUrl?: string;
   videoId?: string;
+  isDeleted: boolean;
+  /** @format int32 */
+  queueOrder?: number;
+  /** @maxLength 50 */
+  requestedByTwitchId?: string;
+  requestedByTwitchUser?: TwitchUser;
   title: string;
 }
 
@@ -112,6 +106,32 @@ export interface ChannelRewardRecord {
   twitchRewardId?: string;
   /** @format uuid */
   mediaInfoId?: string;
+}
+
+export interface CinemaMediaItem {
+  /** @format uuid */
+  id: string;
+  title?: string;
+  description?: string;
+  /**
+   * @minLength 1
+   * @maxLength 1000
+   */
+  mediaUrl: string;
+  status: CinemaMediaItemStatusEnum;
+  /** @format int32 */
+  priority: number;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  scheduledFor?: string;
+  /** @maxLength 50 */
+  twitchUserId?: string;
+  twitchUser?: TwitchUser;
+  notes?: string;
+  isNext: boolean;
+  /** @format date-time */
+  lastModified?: string;
 }
 
 export interface CinemaMediaItemDto {
@@ -260,7 +280,9 @@ export interface CustomReward {
 export interface DailyAutoMarkupUser {
   /** @format uuid */
   id: string;
+  /** @maxLength 50 */
   twitchId?: string;
+  twitchUser?: TwitchUser;
   /** @format int64 */
   telegramId?: number;
   /** @format date-time */
@@ -281,19 +303,15 @@ export interface DefaultImage {
 export interface FollowerInfo {
   /** @minLength 1 */
   userId: string;
+  twitchUser?: TwitchUser;
+}
+
+export interface FumoUser {
   /** @minLength 1 */
-  userName: string;
-  /** @minLength 1 */
-  userLogin: string;
-  displayName?: string;
-  profileImageUrl?: string;
-  chatColor?: string;
-  isModerator: boolean;
-  isVip: boolean;
+  twitchId: string;
+  twitchUser?: TwitchUser;
   /** @format date-time */
-  followedAt: string;
-  /** @format date-time */
-  lastUpdated: string;
+  lastTime: string;
 }
 
 export interface GetCustomRewardRedemptionResponse {
@@ -309,6 +327,19 @@ export interface GlobalCooldownSetting {
   isEnabled: boolean;
   /** @format int32 */
   globalCooldownSeconds: number;
+}
+
+export interface HelloVideosUsers {
+  /** @format uuid */
+  id: string;
+  /** @minLength 1 */
+  twitchId: string;
+  twitchUser?: TwitchUser;
+  /** @format date-time */
+  lastTimeNotif: string;
+  /** @format uuid */
+  mediaInfoId: string;
+  mediaInfo: MediaInfo;
 }
 
 export interface Image {
@@ -372,6 +403,16 @@ export interface MediaFileInfo {
   isLocalFile: boolean;
   fileName: string;
   extension: string;
+}
+
+export interface MediaInfo {
+  /** @format uuid */
+  id: string;
+  textInfo: MediaTextInfo;
+  fileInfo: MediaFileInfo;
+  positionInfo: MediaPositionInfo;
+  metaInfo: MediaMetaInfo;
+  stylesInfo: MediaStylesInfo;
 }
 
 export interface MediaMetaInfo {
@@ -550,8 +591,10 @@ export interface ParseResult {
 export interface PlayerState {
   /** @format uuid */
   id: string;
-  currentTrack?: BaseTrackInfo;
-  nextTrack?: BaseTrackInfo;
+  /** @format uuid */
+  currentTrackId?: string;
+  /** @format uuid */
+  nextTrackId?: string;
   /** @format date-span */
   currentTrackDuration?: string;
   isPaused: boolean;
@@ -561,8 +604,9 @@ export interface PlayerState {
   volume: number;
   /** @maxLength 50 */
   currentTrackRequestedBy?: string;
-  /** @maxLength 1000 */
-  currentTrackRequestedByDisplayName?: string;
+  currentTrackRequestedByTwitchUser?: TwitchUser;
+  currentTrack?: BaseTrackInfo;
+  nextTrack?: BaseTrackInfo;
 }
 
 export interface ProblemDetails {
@@ -712,6 +756,65 @@ export interface TekkenCharacterPendingDto {
   isNew: boolean;
 }
 
+export interface TwitchLeaderboardUser {
+  /** @minLength 1 */
+  twitchId: string;
+  twitchUser?: TwitchUser;
+  /** @format int32 */
+  totalWins: number;
+  /** @format int32 */
+  tekkenVictorinaWins: number;
+  /** @format int32 */
+  tekkenVictorinaWinsWithWaifu: number;
+  /** @format int32 */
+  russianRouletteWins: number;
+  /** @format int32 */
+  russianRouletteWinsWithWaifu: number;
+  /** @format int32 */
+  triviaWins: number;
+  /** @format int32 */
+  triviaWinsWithWaifus: number;
+}
+
+export interface TwitchUser {
+  /**
+   * @minLength 1
+   * @maxLength 50
+   */
+  twitchId: string;
+  /**
+   * @minLength 1
+   * @maxLength 100
+   */
+  userLogin: string;
+  /**
+   * @minLength 1
+   * @maxLength 100
+   */
+  displayName: string;
+  /** @maxLength 500 */
+  profileImageUrl?: string;
+  /** @maxLength 20 */
+  chatColor?: string;
+  isModerator: boolean;
+  isVip: boolean;
+  /** @format date-time */
+  followedAt?: string;
+  /** @format date-time */
+  lastUpdated: string;
+  /** @format date-time */
+  createdAt: string;
+  leaderboardStats?: TwitchLeaderboardUser;
+  fumoUser?: FumoUser;
+  helloVideos: HelloVideosUsers[];
+  waifuRollGuarantee?: WaifuRollGuarantee;
+  honkaiMarkups: DailyAutoMarkupUser[];
+  cinemaQueueItems: CinemaMediaItem[];
+  requestedTracks: BaseTrackInfo[];
+  playerStates: PlayerState[];
+  isJustFollower: boolean;
+}
+
 export interface UpdateAutoMessageRequest {
   message?: string;
 }
@@ -807,18 +910,6 @@ export interface UpdateUserRequest {
   ltuidV2?: string;
 }
 
-export interface UserRequestedTrack {
-  /** @format uuid */
-  id: string;
-  twitchDisplayName?: string;
-  twitchId: string;
-  /** @format int32 */
-  order: number;
-  /** @format uuid */
-  requestedTrackId?: string;
-  requestedTrack: BaseTrackInfo;
-}
-
 export interface ValidateFolderRequest {
   folderPath: string;
 }
@@ -829,6 +920,27 @@ export interface ValidateFolderResponse {
   /** @format int32 */
   videoFilesCount: number;
   sampleFiles: string[];
+}
+
+export interface WaifuRollGuarantee {
+  twitchId: string;
+  twitchUser?: TwitchUser;
+  /** @format int32 */
+  rollCount: number;
+  /** @format date-time */
+  lastRoll: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
+export enum CinemaMediaItemStatusEnum {
+  Pending = "Pending",
+  InProgress = "InProgress",
+  Completed = "Completed",
+  Cancelled = "Cancelled",
+  Postponed = "Postponed",
 }
 
 export enum CinemaMediaItemDtoStatusEnum {
@@ -1068,4 +1180,341 @@ export enum LogsByLevelDetailParamsEnum {
   Error = "Error",
   Critical = "Critical",
   None = "None",
+}
+// ========================================
+// SignalR-специфичные типы
+// ========================================
+
+export interface AutoArtImage {
+  artist: any;
+  /** @format int32 */
+  byteSize: number;
+  dominantColor?: string;
+  extension?: string;
+  /** @format int32 */
+  favorites: number;
+  /** @format int32 */
+  height: number;
+  /** @format int32 */
+  imageID: number;
+  isNsfw: boolean;
+  likedAt: any;
+  previewURL?: string;
+  signature?: string;
+  source?: string;
+  /** @format date-time */
+  uploadedAt: string;
+  url?: string;
+  /** @format int32 */
+  width: number;
+}
+
+export interface ChatMessage {
+  badgeInfo?: StringStringKeyValuePair[];
+  badges?: StringStringKeyValuePair[];
+  /** @format int32 */
+  bits: number;
+  /** @format double */
+  bitsInDollars: number;
+  botUsername?: string;
+  channel?: string;
+  chatReply?: ChatReply;
+  cheerBadge?: CheerBadge;
+  color: any;
+  colorHex?: string;
+  customRewardId?: string;
+  displayName?: string;
+  emoteReplacedMessage?: string;
+  emoteSet?: EmoteSet;
+  id?: string;
+  isBroadcaster: boolean;
+  isFirstMessage: boolean;
+  isHighlighted: boolean;
+  isMe: boolean;
+  isModerator: boolean;
+  isPartner: boolean;
+  isSkippingSubMode: boolean;
+  isStaff: boolean;
+  isSubscriber: boolean;
+  isTurbo: boolean;
+  isVip: boolean;
+  message?: string;
+  noisy: ChatMessageNoisyEnum;
+  rawIrcMessage?: string;
+  roomId?: string;
+  /** @format int32 */
+  subscribedMonthCount: number;
+  tmiSentTs?: string;
+  userId?: string;
+  userType: ChatMessageUserTypeEnum;
+  username?: string;
+}
+
+export interface ChatReply {
+  parentDisplayName?: string;
+  parentMsgBody?: string;
+  parentMsgId?: string;
+  parentUserId?: string;
+  parentUserLogin?: string;
+}
+
+export interface CheerBadge {
+  /** @format int32 */
+  cheerAmount: number;
+  color: CheerBadgeColorEnum;
+}
+
+export interface Emote {
+  /** @format int32 */
+  endIndex: number;
+  id?: string;
+  imageUrl?: string;
+  name?: string;
+  /** @format int32 */
+  startIndex: number;
+}
+
+export interface EmoteSet {
+  emotes?: Emote[];
+  rawEmoteSetString?: string;
+}
+
+export interface GaoAlertDto {
+  /** @format uuid */
+  id: string;
+  isJustText: boolean;
+  justText?: string;
+  twitchUser?: User;
+}
+
+export interface Host {
+  hostCoolDown: HostCoolDown;
+  hostGreetings: HostAutoHello;
+  isPrivated: boolean;
+  /** @format int64 */
+  orderCount: number;
+  twitchId: string;
+  twitchUser?: TwitchUser;
+  waifuBrideId?: string;
+  waifuRollId?: string;
+  /** @format date-time */
+  whenOrdered: string;
+  /** @format date-time */
+  whenPrivated?: string;
+}
+
+export interface HostAutoHello {
+  /** @format uuid */
+  guid: string;
+  host?: Host;
+  hostId: string;
+  /** @format date-time */
+  time: string;
+}
+
+export interface HostCoolDown {
+  /** @format uuid */
+  guid: string;
+  host?: Host;
+  hostId: string;
+  /** @format date-time */
+  time: string;
+}
+
+export interface LogMessageDto {
+  category: string;
+  connectionId?: string;
+  /** @format int32 */
+  eventId?: number;
+  exception?: string;
+  id: string;
+  logLevel: string;
+  message: string;
+  source?: string;
+  stackTrace?: string;
+  /** @format date-time */
+  timestamp: string;
+}
+
+export interface MediaDto {
+  mediaInfo: MediaInfo;
+  /** @format date-time */
+  uploadStartTime: string;
+}
+
+export interface PrizeType {
+  id: string;
+  image: string;
+  text: string;
+}
+
+export interface ScoreboardColorsDto {
+  backgroundColor: string;
+  borderColor: string;
+  fightModeColor: string;
+  mainColor: string;
+  playerNamesColor: string;
+  scoreColor: string;
+  tournamentTitleColor: string;
+}
+
+export interface ScoreboardDto {
+  player1: ScoreboardPlayerDto;
+  player2: ScoreboardPlayerDto;
+  /** @format int32 */
+  animationDuration: number;
+  colors: ScoreboardColorsDto;
+  isVisible: boolean;
+  layout?: ScoreboardLayoutDto;
+  meta: ScoreboardMetaDto;
+}
+
+export interface ScoreboardLayoutDto {
+  /** @format int32 */
+  flagSize: number;
+  /** @format int32 */
+  headerHeight: number;
+  /** @format int32 */
+  headerLeft: number;
+  /** @format int32 */
+  headerTop: number;
+  /** @format int32 */
+  headerWidth: number;
+  /** @format int32 */
+  padding: number;
+  /** @format int32 */
+  playerBarHeight: number;
+  /** @format int32 */
+  playerBarWidth: number;
+  /** @format int32 */
+  playersLeft: number;
+  /** @format int32 */
+  playersRight: number;
+  /** @format int32 */
+  playersTop: number;
+  /** @format int32 */
+  scoreSize: number;
+  showFlags: boolean;
+  showHeader: boolean;
+  showSponsors: boolean;
+  showTags: boolean;
+  /** @format int32 */
+  spacing: number;
+}
+
+export interface ScoreboardMetaDto {
+  fightRule: string;
+  title: string;
+}
+
+export interface ScoreboardPlayerDto {
+  final: string;
+  flag: string;
+  name: string;
+  /** @format int32 */
+  score: number;
+  sponsor: string;
+  tag: string;
+}
+
+export interface StringStringKeyValuePair {
+  key?: string;
+  value?: string;
+}
+
+export interface TunaMusicDTO {
+  data: TunaMusicData;
+  hostname?: string;
+  timestamp?: string;
+}
+
+export interface TunaMusicData {
+  album_url: string;
+  artists: string[];
+  cover: string;
+  /** @format int64 */
+  duration: number;
+  /** @format uuid */
+  id: string;
+  /** @format int64 */
+  progress: number;
+  status: string;
+  title: string;
+}
+
+export interface User {
+  broadcasterType?: string;
+  /** @format date-time */
+  createdAt: string;
+  description?: string;
+  displayName?: string;
+  email?: string;
+  id?: string;
+  login?: string;
+  offlineImageUrl?: string;
+  profileImageUrl?: string;
+  type?: string;
+  /** @format int64 */
+  viewCount: number;
+}
+
+export interface Waifu {
+  /** @format int64 */
+  age: number;
+  anime?: string;
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  imageUrl: string;
+  isAdded: boolean;
+  isMerged: boolean;
+  isPrivated: boolean;
+  /** @format date-time */
+  lastOrder: string;
+  manga?: string;
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  name: string;
+  /** @format int32 */
+  orderCount: number;
+  /**
+   * @minLength 1
+   * @maxLength 20
+   */
+  shikiId: string;
+  /** @format date-time */
+  whenAdded: string;
+}
+
+export type TunaMusicDtoRoot = object;
+
+export enum ChatMessageNoisyEnum {
+  NotSet = "NotSet",
+  True = "True",
+  False = "False",
+}
+
+export enum ChatMessageUserTypeEnum {
+  Viewer = "Viewer",
+  Moderator = "Moderator",
+  GlobalModerator = "GlobalModerator",
+  Broadcaster = "Broadcaster",
+  Admin = "Admin",
+  Staff = "Staff",
+}
+
+export enum CheerBadgeColorEnum {
+  Gray = "Gray",
+  Purple = "Purple",
+  Green = "Green",
+  Blue = "Blue",
+  Red = "Red",
+}
+
+export enum TelegramusMakeScreenParticlesCreateParamsParticlesEnum {
+  Confetty = "Confetty",
+  Fireworks = "Fireworks",
 }

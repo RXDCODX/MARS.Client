@@ -2,9 +2,8 @@
 // Импорты утилит конфигурации
 export * from "./api-config";
 
-// Импорты типов
+// Импорты типов (все типы из одного источника)
 export * from "./types/data-contracts";
-export * from "./types/signalr-types";
 
 // Импорты HTTP клиентов
 export { AutoMessages } from "./http-clients/AutoMessages";

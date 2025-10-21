@@ -9,7 +9,8 @@ import {
   VolumeX,
 } from "lucide-react";
 import { useState } from "react";
-import { Button, Card, Form } from "react-bootstrap";
+import { Button, Card, Carousel, Form } from "react-bootstrap";
+import ReactPlayer from "react-player";
 
 import { useSoundRequestPlayer } from "../hooks";
 import {
@@ -31,12 +32,16 @@ export function SoundRequestPlayerMobile() {
     loading,
     volume,
     isPlaying,
+    nextFiveOrders,
+    displayedVideos,
     handleTogglePlayPause,
     handleStop,
     handleSkip,
+    handlePlayNext,
     handleVolumeChange,
     handleMute,
     handleRemoveFromQueue,
+    handlePlayTrackFromQueue,
   } = useSoundRequestPlayer();
 
   return (
@@ -101,6 +106,15 @@ export function SoundRequestPlayerMobile() {
               >
                 <SkipForward size={20} />
               </Button>
+              <Button
+                variant="secondary"
+                size="lg"
+                onClick={handlePlayNext}
+                disabled={loading}
+                className={styles.controlButton}
+              >
+                Далее
+              </Button>
             </div>
 
             {/* Громкость */}
@@ -129,6 +143,56 @@ export function SoundRequestPlayerMobile() {
               </div>
             </div>
           </div>
+        </Card.Body>
+      </Card>
+
+      {/* Видео и карусель */}
+      <Card className={styles.queueCard}>
+        <Card.Body>
+          <div
+            className={styles.queueHeader}
+            onClick={() => setShowQueue(!showQueue)}
+          >
+            <h5 className={styles.title}>Видео ({displayedVideos.length})</h5>
+            <Button variant="link" className={styles.toggleButton}>
+              {showQueue ? <ChevronUp /> : <ChevronDown />}
+            </Button>
+          </div>
+
+          {showQueue && (
+            <Carousel interval={null} indicators={displayedVideos.length > 1}>
+              {displayedVideos.map(video => (
+                <Carousel.Item key={video.id}>
+                  <div style={{ width: "100%", height: 220 }}>
+                    {playerState?.currentTrack?.id === video.id ? (
+                      <ReactPlayer
+                        key={video.url}
+                        src={video.url}
+                        playing={!!isPlaying}
+                        volume={playerState.volume / 100}
+                        muted={playerState.isMuted}
+                        width="100%"
+                        height="100%"
+                      />
+                    ) : (
+                      <div className={styles.queueItem}>
+                        <div className={styles.queueItemInfo}>
+                          <div className={styles.queueTrackInfo}>
+                            <h6 className={styles.queueTrackName}>
+                              {video.trackName || video.title}
+                            </h6>
+                            <p className={styles.queueTrackAuthor}>
+                              {(video.authors || []).join(", ")}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </Carousel.Item>
+              ))}
+            </Carousel>
+          )}
         </Card.Body>
       </Card>
 
@@ -169,6 +233,14 @@ export function SoundRequestPlayerMobile() {
                         {formatDuration(item.requestedTrack.duration)}
                       </span>
                       <Button
+                        variant="success"
+                        size="sm"
+                        onClick={() => handlePlayTrackFromQueue(item.id)}
+                        disabled={loading}
+                      >
+                        Играть
+                      </Button>
+                      <Button
                         variant="danger"
                         size="sm"
                         onClick={() => handleRemoveFromQueue(item.id)}
@@ -183,6 +255,52 @@ export function SoundRequestPlayerMobile() {
                 <p className={styles.emptyQueue}>Очередь пуста</p>
               )}
             </div>
+          )}
+        </Card.Body>
+      </Card>
+
+      {/* Ближайшие 5 заказов */}
+      <Card className={styles.queueCard}>
+        <Card.Body>
+          <div className={styles.queueHeader}>
+            <h5 className={styles.title}>Ближайшие 5 заказов</h5>
+          </div>
+          {nextFiveOrders.length > 0 ? (
+            <div className={styles.queueList}>
+              {nextFiveOrders.map((item, index) => (
+                <div key={item.id} className={styles.queueItem}>
+                  <div className={styles.queueItemInfo}>
+                    <span className={styles.queueNumber}>{index + 1}</span>
+                    <div className={styles.queueTrackInfo}>
+                      <h6 className={styles.queueTrackName}>
+                        {item.requestedTrack.trackName}
+                      </h6>
+                      <p className={styles.queueTrackAuthor}>
+                        {getAuthorsString(item.requestedTrack.authors)}
+                      </p>
+                      <p className={styles.queueRequestedBy}>
+                        {getRequestedByString(item.twitchDisplayName)}
+                      </p>
+                    </div>
+                  </div>
+                  <div className={styles.queueItemActions}>
+                    <span className={styles.queueDuration}>
+                      {formatDuration(item.requestedTrack.duration)}
+                    </span>
+                    <Button
+                      variant="success"
+                      size="sm"
+                      onClick={() => handlePlayTrackFromQueue(item.id)}
+                      disabled={loading}
+                    >
+                      Играть
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className={styles.emptyQueue}>Нет ближайших заказов</p>
           )}
         </Card.Body>
       </Card>

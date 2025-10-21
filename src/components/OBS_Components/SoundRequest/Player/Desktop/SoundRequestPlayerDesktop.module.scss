@@ -78,6 +78,63 @@
   gap: 1.5rem;
 }
 
+.videoHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.videoContainer {
+  width: 100%;
+  height: 420px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bs-black);
+}
+
+.videoSlide {
+  width: 100%;
+  height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.videoPreview {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bs-dark);
+  color: var(--bs-light);
+}
+
+.previewInfo {
+  text-align: center;
+}
+
+.previewTitle {
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.previewAuthor {
+  color: var(--bs-secondary);
+}
+
+.statsRow {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.statItem {
+  padding: .5rem .75rem;
+  background: var(--bs-light);
+  border-radius: 6px;
+}
+
 .playbackControls {
   display: flex;
   gap: 1rem;

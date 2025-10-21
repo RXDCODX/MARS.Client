@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
 
-import { PlayerState, SoundRequest, UserRequestedTrack } from "@/shared/api";
+import {
+  BaseTrackInfo,
+  PlayerState,
+  SoundRequest,
+  UserRequestedTrack,
+} from "@/shared/api";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 /**
@@ -15,6 +20,7 @@ export const useSoundRequestPlayer = () => {
   const [volume, setVolume] = useState(50);
   const [debouncedVolume, setDebouncedVolume] = useState(50);
   const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [history, setHistory] = useState<BaseTrackInfo[]>([]);
 
   const { showToast } = useToastModal();
   const soundRequestApi = useMemo(() => new SoundRequest(), []);
@@ -77,19 +83,45 @@ export const useSoundRequestPlayer = () => {
     }
   }, [soundRequestApi]);
 
+  // Загрузка истории
+  const fetchHistory = useCallback(
+    async (count: number = 20) => {
+      try {
+        const response = await soundRequestApi.soundRequestHistoryList({
+          count,
+        });
+        if (response.data.success && response.data.data) {
+          setHistory(response.data.data);
+        }
+      } catch {
+        console.error("Ошибка загрузки истории плеера");
+      }
+    },
+    [soundRequestApi]
+  );
+
   // Инициализация
   useEffect(() => {
     fetchPlayerState();
     fetchQueue();
+    fetchHistory(20);
 
     // Обновление каждые 2 секунды
     const interval = setInterval(() => {
       fetchPlayerState();
       fetchQueue();
+      // Историю можно обновлять реже
     }, 2000);
 
-    return () => clearInterval(interval);
-  }, [fetchPlayerState, fetchQueue]);
+    const historyInterval = setInterval(() => {
+      fetchHistory(20);
+    }, 10000);
+
+    return () => {
+      clearInterval(interval);
+      clearInterval(historyInterval);
+    };
+  }, [fetchPlayerState, fetchQueue, fetchHistory]);
 
   // Управление воспроизведением
   const handlePlay = useCallback(async () => {
@@ -174,6 +206,24 @@ export const useSoundRequestPlayer = () => {
     }
   }, [soundRequestApi, showToast, fetchPlayerState, fetchQueue]);
 
+  // Воспроизвести следующий трек из очереди
+  const handlePlayNext = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await soundRequestApi.soundRequestPlayNextCreate();
+      showToast(response.data);
+      await fetchPlayerState();
+      await fetchQueue();
+    } catch {
+      showToast({
+        success: false,
+        message: "Ошибка при запуске следующего трека",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [soundRequestApi, showToast, fetchPlayerState, fetchQueue]);
+
   // Управление громкостью
   const handleVolumeChange = useCallback((newVolume: number) => {
     // Сразу обновляем локальное состояние для UI
@@ -211,9 +261,46 @@ export const useSoundRequestPlayer = () => {
     [soundRequestApi, showToast, fetchQueue]
   );
 
+  // Воспроизвести конкретный трек из очереди
+  const handlePlayTrackFromQueue = useCallback(
+    async (queueItemId: string) => {
+      try {
+        setLoading(true);
+        const response =
+          await soundRequestApi.soundRequestPlayTrackCreate(queueItemId);
+        showToast(response.data);
+        await fetchPlayerState();
+        await fetchQueue();
+      } catch {
+        showToast({
+          success: false,
+          message: "Ошибка при запуске выбранного трека",
+        });
+      } finally {
+        setLoading(false);
+      }
+    },
+    [soundRequestApi, showToast, fetchPlayerState, fetchQueue]
+  );
+
   // Вычисление состояния воспроизведения
   const isPlaying =
     playerState && !playerState.isPaused && !playerState.isStoped;
+
+  // Ближайшие 5 заказов
+  const nextFiveOrders = useMemo(() => queue.slice(0, 5), [queue]);
+
+  // Набор отображаемых видео для карусели: текущее, следующее, первые в очереди
+  const displayedVideos: BaseTrackInfo[] = useMemo(() => {
+    const list: BaseTrackInfo[] = [];
+    if (playerState?.currentTrack) list.push(playerState.currentTrack);
+    if (playerState?.nextTrack) list.push(playerState.nextTrack);
+    for (const item of queue) {
+      if (list.length >= 6) break;
+      list.push(item.requestedTrack);
+    }
+    return list;
+  }, [playerState, queue]);
 
   return {
     // Состояние
@@ -222,6 +309,9 @@ export const useSoundRequestPlayer = () => {
     loading,
     volume,
     isPlaying,
+    history,
+    nextFiveOrders,
+    displayedVideos,
 
     // Обработчики управления воспроизведением
     handlePlay,
@@ -229,6 +319,7 @@ export const useSoundRequestPlayer = () => {
     handleTogglePlayPause,
     handleStop,
     handleSkip,
+    handlePlayNext,
 
     // Обработчики управления громкостью
     handleVolumeChange,
@@ -236,5 +327,6 @@ export const useSoundRequestPlayer = () => {
 
     // Обработчики управления очередью
     handleRemoveFromQueue,
+    handlePlayTrackFromQueue,
   };
 };

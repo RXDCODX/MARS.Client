@@ -174,7 +174,7 @@ export default function WaifuAlerts() {
       message.isMerged = true;
       const parsedMessage: WaifuAlertProps = {
         waifu: message,
-        displayName: host.name!,
+        displayName: host.twitchUser!.displayName!,
         waifuHusband: host,
         color,
         avatarUrl: avatar,
@@ -429,7 +429,7 @@ export default function WaifuAlerts() {
                     color: currentMessage.color,
                   }}
                 >
-                  {currentMessage.waifuHusband!.name!}
+                  {currentMessage.waifuHusband!.twitchUser?.displayName}
                 </span>{" "}
                 и{" "}
                 <span

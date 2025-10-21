@@ -86,11 +86,15 @@ function cleanApiDirectory() {
   console.log("🧹 Очищаем папку API...");
 
   if (fs.existsSync(OUTPUT_DIR_ROOT)) {
-    exec('Remove-Item -Path "./src/shared/api" -Recurse -Force', {
-      shell: "powershell.exe",
-    });
+    fs.rmSync(OUTPUT_DIR_ROOT, { recursive: true, force: true });
     console.log("✅ Папка API очищена");
   }
+
+  // Создаем необходимые директории
+  fs.mkdirSync(OUTPUT_DIR_ROOT, { recursive: true });
+  fs.mkdirSync(OUTPUT_DIR_TYPES, { recursive: true });
+  fs.mkdirSync(OUTPUT_DIR_HTTP_CLIENTS, { recursive: true });
+  fs.mkdirSync(OUTPUT_DIR_SIGNALR_CLIENTS, { recursive: true });
 
   console.log("✅ Директории API созданы");
 }
@@ -145,59 +149,6 @@ function deduplicateEnums(filePath) {
 
   // Возвращаем группы enum'ов для создания общего файла
   return enumGroups;
-}
-
-// Функция для генерации только типов (без клиентов)
-async function generateTypesOnly() {
-  console.log("🔧 Генерируем только типы...");
-
-  const swaggerApiJsonPath = resolve(process.cwd(), "./api/swagger_api.json");
-
-  await generateApi({
-    input: swaggerApiJsonPath,
-    output: OUTPUT_DIR_TYPES,
-    name: "types.ts",
-    cleanOutput: true,
-    httpClientType: "axios",
-    prettier: {
-      trailingComma: "all",
-      tabWidth: 4,
-      printWidth: 160,
-    },
-    generateClient: true, // Только типы
-    modular: true, // Один файл с типами
-    sortTypes: true,
-    enumNamesAsValues: false,
-    generateResponses: false,
-    extractEnums: true,
-    codeGenConstructs: constructs => ({
-      ...constructs,
-      NullValue: () => "undefined",
-      TypeField: ({ readonly, key, value }) => {
-        const hadNull = typeof value === "string" && /\|\s*null\b/.test(value);
-        const hadUndefined =
-          typeof value === "string" && /\|\s*undefined\b/.test(value);
-        let cleaned = String(value)
-          .replace(/\s*\|\s*null\b/g, "")
-          .replace(/\s*\|\s*undefined\b/g, "")
-          .trim();
-        const optionalMark = hadNull || hadUndefined ? "?" : "";
-        return `${readonly ? "readonly " : ""}${key}${optionalMark}: ${cleaned}`;
-      },
-      // Используем TypeWithGeneric для автоматической подстановки Generic типов
-      TypeWithGeneric: (typeName, genericArgs) =>
-        `${typeName}<${Array.isArray(genericArgs) ? genericArgs.join(", ") : genericArgs}>`,
-    }),
-  });
-
-  // Переименовываем файл если он создался с неправильным именем
-  const apiFilePath = resolve(OUTPUT_DIR_TYPES, "Api.ts");
-  const typesFilePath = resolve(OUTPUT_DIR_TYPES, "types.ts");
-  if (fs.existsSync(apiFilePath)) {
-    fs.renameSync(apiFilePath, typesFilePath);
-  }
-
-  console.log("✅ Типы сгенерированы в types/types.ts");
 }
 
 // Функция для замены дублирующихся OperationResult типов на обобщенный
@@ -623,16 +574,139 @@ async function generateHttpClients() {
   console.log("   ✓ Удалены конкретные типы OperationResult<T> из импортов");
 }
 
-// Функция для генерации SignalR типов отдельно (внутри папки types)
-async function generateSignalRTypes() {
-  console.log("📡 Генерируем SignalR типы...");
+// Функция для извлечения всех экспортируемых типов из файла
+function extractExportedTypes(filePath) {
+  if (!fs.existsSync(filePath)) {
+    return new Set();
+  }
+
+  const content = fs.readFileSync(filePath, "utf-8");
+  const exportedTypes = new Set();
+
+  // Паттерны для различных экспортов
+  const patterns = [
+    /export\s+interface\s+(\w+)/g,
+    /export\s+type\s+(\w+)\s*=/g,
+    /export\s+enum\s+(\w+)/g,
+    /export\s+class\s+(\w+)/g,
+  ];
+
+  patterns.forEach(pattern => {
+    let match;
+    while ((match = pattern.exec(content)) !== null) {
+      exportedTypes.add(match[1]);
+    }
+  });
+
+  return exportedTypes;
+}
+
+// Функция для удаления дублирующихся типов из файла
+function removeDuplicateTypes(filePath, typesToRemove) {
+  if (!fs.existsSync(filePath) || typesToRemove.size === 0) {
+    return;
+  }
+
+  let content = fs.readFileSync(filePath, "utf-8");
+  let removedCount = 0;
+
+  typesToRemove.forEach(typeName => {
+    // Удаляем interface с JSDoc комментариями
+    const interfacePattern = new RegExp(
+      `(?:\\/\\*\\*[\\s\\S]*?\\*\\/\\s*)?export\\s+interface\\s+${typeName}\\s*\\{[\\s\\S]*?\\n\\}\\s*`,
+      "g"
+    );
+    const beforeInterface = content;
+    content = content.replace(interfacePattern, "");
+    if (content !== beforeInterface) removedCount++;
+
+    // Удаляем enum с JSDoc комментариями
+    const enumPattern = new RegExp(
+      `(?:\\/\\*\\*[\\s\\S]*?\\*\\/\\s*)?export\\s+enum\\s+${typeName}\\s*\\{[\\s\\S]*?\\n\\}\\s*`,
+      "g"
+    );
+    const beforeEnum = content;
+    content = content.replace(enumPattern, "");
+    if (content !== beforeEnum) removedCount++;
+
+    // Удаляем type с JSDoc комментариями
+    const typePattern = new RegExp(
+      `(?:\\/\\*\\*[\\s\\S]*?\\*\\/\\s*)?export\\s+type\\s+${typeName}\\s*=[\\s\\S]*?;\\s*`,
+      "g"
+    );
+    const beforeType = content;
+    content = content.replace(typePattern, "");
+    if (content !== beforeType) removedCount++;
+  });
+
+  // Очищаем избыточные пустые строки
+  content = content.replace(/\n{3,}/g, "\n\n");
+
+  fs.writeFileSync(filePath, content);
+  return removedCount;
+}
+
+// Функция для извлечения определений типов из файла (полное определение, не только имя)
+function extractTypeDefinitions(filePath) {
+  if (!fs.existsSync(filePath)) {
+    return [];
+  }
+
+  const content = fs.readFileSync(filePath, "utf-8");
+  const definitions = [];
+
+  // Паттерны для различных экспортов с полным определением
+  const patterns = [
+    {
+      // interface с возможным JSDoc
+      regex: /(?:\/\*\*[\s\S]*?\*\/\s*)?export\s+interface\s+(\w+)[\s\S]*?\n}/g,
+      type: "interface",
+    },
+    {
+      // type с возможным JSDoc
+      regex: /(?:\/\*\*[\s\S]*?\*\/\s*)?export\s+type\s+(\w+)\s*=[\s\S]*?;/g,
+      type: "type",
+    },
+    {
+      // enum с возможным JSDoc
+      regex: /(?:\/\*\*[\s\S]*?\*\/\s*)?export\s+enum\s+(\w+)\s*\{[\s\S]*?\n}/g,
+      type: "enum",
+    },
+  ];
+
+  patterns.forEach(({ regex, type }) => {
+    let match;
+    const contentCopy = content;
+    regex.lastIndex = 0;
+    while ((match = regex.exec(contentCopy)) !== null) {
+      definitions.push({
+        name: match[1],
+        type: type,
+        fullDefinition: match[0],
+      });
+    }
+  });
+
+  return definitions;
+}
+
+// Функция для объединения SignalR типов в data-contracts
+async function mergeSignalRTypesIntoDataContracts() {
+  console.log("📡 Добавляем уникальные SignalR типы в data-contracts...");
 
   const swaggerHubsJsonPath = resolve(process.cwd(), "./api/swagger_hubs.json");
+  const tempDir = resolve(OUTPUT_DIR_ROOT, ".temp");
 
+  // Создаем временную директорию
+  if (!fs.existsSync(tempDir)) {
+    fs.mkdirSync(tempDir, { recursive: true });
+  }
+
+  // Генерируем SignalR типы во временную папку
   await generateApi({
     input: swaggerHubsJsonPath,
-    output: OUTPUT_DIR_TYPES,
-    name: "signalr-types.ts",
+    output: tempDir,
+    name: "signalr-temp.ts",
     cleanOutput: true,
     httpClientType: "axios",
     prettier: {
@@ -662,69 +736,60 @@ async function generateSignalRTypes() {
   });
 
   // Переименовываем файл если он создался с неправильным именем
-  const apiFilePath = resolve(OUTPUT_DIR_TYPES, "Api.ts");
-  const signalrTypesFilePath = resolve(OUTPUT_DIR_TYPES, "signalr-types.ts");
+  const apiFilePath = resolve(tempDir, "Api.ts");
+  const tempSignalrFilePath = resolve(tempDir, "signalr-temp.ts");
   if (fs.existsSync(apiFilePath)) {
-    fs.renameSync(apiFilePath, signalrTypesFilePath);
+    fs.renameSync(apiFilePath, tempSignalrFilePath);
   }
 
-  // Теперь фильтруем файл, оставляя только уникальные типы
-  if (fs.existsSync(signalrTypesFilePath)) {
-    let content = fs.readFileSync(signalrTypesFilePath, "utf-8");
+  const dataContractsPath = resolve(OUTPUT_DIR_TYPES, "data-contracts.ts");
 
-    // Список типов, которые уже есть в основных типах API
-    const duplicateTypes = [
-      "MediaFileInfo",
-      "MediaFileInfoTypeEnum",
-      "MediaMetaInfo",
-      "MediaMetaInfoPriorityEnum",
-      "MediaPositionInfo",
-      "MediaStylesInfo",
-      "MediaTextInfo",
-      "Move",
-      "MovePending",
-      "MovePendingDto",
-      "ParseRequest",
-      "ParseRequestSourceEnum",
-      "ParseResult",
-      "ServiceInfo",
-      "ServiceInfoStatusEnum",
-      "ServiceLog",
-      "TekkenCharacter",
-      "TekkenCharacterPendingDto",
-    ];
+  // Извлекаем типы из обоих файлов
+  const dataContractsTypes = extractExportedTypes(dataContractsPath);
+  const signalrDefinitions = extractTypeDefinitions(tempSignalrFilePath);
 
-    // Удаляем дублирующиеся типы
-    duplicateTypes.forEach(typeName => {
-      // Удаляем interface
-      content = content.replace(
-        new RegExp(`export interface ${typeName}[\\s\\S]*?}\\s*`, "g"),
-        ""
-      );
-      // Удаляем enum
-      content = content.replace(
-        new RegExp(`export enum ${typeName}[\\s\\S]*?}\\s*`, "g"),
-        ""
-      );
-      // Удаляем type
-      content = content.replace(
-        new RegExp(`export type ${typeName}[\\s\\S]*?;\\s*`, "g"),
-        ""
-      );
-    });
+  // Находим уникальные типы, которых нет в data-contracts
+  const uniqueSignalRDefinitions = signalrDefinitions.filter(
+    def => !dataContractsTypes.has(def.name)
+  );
 
-    // Очищаем пустые строки
-    content = content.replace(/\n\s*\n\s*\n/g, "\n\n");
-
-    fs.writeFileSync(signalrTypesFilePath, content);
-
-    // Применяем дедупликацию enum'ов
-    deduplicateEnums(signalrTypesFilePath);
-  }
+  const duplicateCount =
+    signalrDefinitions.length - uniqueSignalRDefinitions.length;
 
   console.log(
-    "✅ SignalR типы сгенерированы в types/signalr-types.ts (дубликаты удалены)"
+    `   Найдено ${signalrDefinitions.length} SignalR типов, из них ${duplicateCount} дубликатов`
   );
+
+  if (uniqueSignalRDefinitions.length > 0) {
+    console.log(
+      `   Добавляем ${uniqueSignalRDefinitions.length} уникальных SignalR типов в data-contracts.ts:`
+    );
+    console.log(
+      `   ${uniqueSignalRDefinitions.map(def => def.name).join(", ")}`
+    );
+
+    // Читаем data-contracts
+    let dataContractsContent = fs.readFileSync(dataContractsPath, "utf-8");
+
+    // Добавляем уникальные типы в конец файла
+    const signalRSection = `\n// ========================================\n// SignalR-специфичные типы\n// ========================================\n\n${uniqueSignalRDefinitions.map(def => def.fullDefinition).join("\n\n")}\n`;
+
+    dataContractsContent = dataContractsContent.trimEnd() + signalRSection;
+
+    // Сохраняем и применяем дедупликацию enum'ов
+    fs.writeFileSync(dataContractsPath, dataContractsContent);
+    deduplicateEnums(dataContractsPath);
+
+    console.log("   ✓ Уникальные SignalR типы добавлены в data-contracts.ts");
+  } else {
+    console.log("   ✓ Все SignalR типы уже присутствуют в data-contracts.ts");
+  }
+
+  // Удаляем временную директорию
+  fs.rmSync(tempDir, { recursive: true, force: true });
+  console.log("   🗑️ Временные файлы удалены");
+
+  console.log("✅ Все типы объединены в types/data-contracts.ts");
 }
 
 // Функция для создания утилит конфигурации API
@@ -866,9 +931,8 @@ function createIndexFile() {
 // Импорты утилит конфигурации
 export * from "./api-config";
 
-// Импорты типов
+// Импорты типов (все типы из одного источника)
 export * from "./types/data-contracts";
-export * from "./types/signalr-types";
 
 // Импорты HTTP клиентов
 ${CONTROLLERS.map(controller => `export { ${controller} } from "./http-clients/${controller}";`).join("\n")}
@@ -880,7 +944,7 @@ ${SIGNALR_HUBS.map(hub => `export { ${hub.name}SignalRHubWrapper } from "./signa
 `;
 
   fs.writeFileSync(resolve(OUTPUT_DIR_ROOT, "index.ts"), indexContent);
-  console.log("✅ Индексный файл создан (с экспортом хелперов)");
+  console.log("✅ Индексный файл создан (единый источник типов)");
 }
 
 // Функция для форматирования сгенерированных файлов с помощью Prettier
@@ -938,18 +1002,17 @@ async function main() {
       `📋 Найдено SignalR хабов: ${SIGNALR_HUBS.map(hub => `${hub.name} (${hub.path})`).join(", ")}`
     );
 
-    // Генерируем типы отдельно
-    await generateTypesOnly();
-    await generateSignalRTypes();
-
     // Создаем утилиты конфигурации API
     createApiConfig();
 
-    // Генерируем клиенты отдельно (без типов)
+    // Генерируем HTTP клиенты (они создают data-contracts.ts в http-clients/)
     await generateHttpClients();
 
     // Копируем data-contracts в папку types после генерации HTTP клиентов
     await generateDataContracts();
+
+    // ВАЖНО: Объединяем SignalR типы в data-contracts ПОСЛЕ его создания
+    await mergeSignalRTypesIntoDataContracts();
 
     await generateSignalRClients();
 
@@ -966,10 +1029,7 @@ async function main() {
     console.log("=".repeat(60));
     console.log("\n📁 Структура папок:");
     console.log("   ├─ types/");
-    console.log(
-      "   │  ├─ data-contracts.ts (с обобщенным OperationResult<TData>)"
-    );
-    console.log("   │  └─ signalr-types.ts");
+    console.log("   │  └─ data-contracts.ts (все типы из API и SignalR)");
     console.log("   ├─ http-clients/ (HTTP клиенты)");
     console.log("   ├─ signalr-clients/ (SignalR клиенты)");
     console.log("   └─ index.ts (экспорты)");
@@ -980,7 +1040,8 @@ async function main() {
     );
     console.log("   ✓ Единый источник типов в types/data-contracts.ts");
     console.log("   ✓ Улучшена типизация с Generic типами");
-    console.log("   ✓ HTTP клиенты используют обобщенные типы");
+    console.log("   ✓ HTTP и SignalR клиенты используют один файл типов");
+    console.log("   ✓ Автоматическое объединение типов из API и Hubs");
 
     console.log("\n📝 Пример использования:");
     console.log(
