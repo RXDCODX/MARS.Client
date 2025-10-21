@@ -59,11 +59,11 @@ export function SoundRequestPlayerMobile() {
                 <p className={styles.trackAuthor}>
                   {getAuthorsString(playerState.currentTrack.authors)}
                 </p>
-                {playerState.currentTrackRequestedByDisplayName && (
+                {playerState.currentTrackRequestedByTwitchUser?.displayName && (
                   <p className={styles.requestedBy}>
                     Запросил:{" "}
                     {getRequestedByString(
-                      playerState.currentTrackRequestedByDisplayName
+                      playerState.currentTrackRequestedByTwitchUser.displayName
                     )}
                   </p>
                 )}
@@ -218,19 +218,21 @@ export function SoundRequestPlayerMobile() {
                       <span className={styles.queueNumber}>{index + 1}</span>
                       <div className={styles.queueTrackInfo}>
                         <h6 className={styles.queueTrackName}>
-                          {item.requestedTrack.trackName}
+                          {item.trackName}
                         </h6>
                         <p className={styles.queueTrackAuthor}>
-                          {getAuthorsString(item.requestedTrack.authors)}
+                          {getAuthorsString(item.authors)}
                         </p>
                         <p className={styles.queueRequestedBy}>
-                          {getRequestedByString(item.twitchDisplayName)}
+                          {getRequestedByString(
+                            item.requestedByTwitchUser?.displayName
+                          )}
                         </p>
                       </div>
                     </div>
                     <div className={styles.queueItemActions}>
                       <span className={styles.queueDuration}>
-                        {formatDuration(item.requestedTrack.duration)}
+                        {formatDuration(item.duration)}
                       </span>
                       <Button
                         variant="success"
@@ -273,19 +275,21 @@ export function SoundRequestPlayerMobile() {
                     <span className={styles.queueNumber}>{index + 1}</span>
                     <div className={styles.queueTrackInfo}>
                       <h6 className={styles.queueTrackName}>
-                        {item.requestedTrack.trackName}
+                        {item.trackName}
                       </h6>
                       <p className={styles.queueTrackAuthor}>
-                        {getAuthorsString(item.requestedTrack.authors)}
+                        {getAuthorsString(item.authors)}
                       </p>
                       <p className={styles.queueRequestedBy}>
-                        {getRequestedByString(item.twitchDisplayName)}
+                        {getRequestedByString(
+                          item.requestedByTwitchUser?.displayName
+                        )}
                       </p>
                     </div>
                   </div>
                   <div className={styles.queueItemActions}>
                     <span className={styles.queueDuration}>
-                      {formatDuration(item.requestedTrack.duration)}
+                      {formatDuration(item.duration)}
                     </span>
                     <Button
                       variant="success"

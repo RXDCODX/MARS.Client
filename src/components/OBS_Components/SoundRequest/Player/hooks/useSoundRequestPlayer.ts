@@ -1,12 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
 
-import {
-  BaseTrackInfo,
-  PlayerState,
-  SoundRequest,
-  UserRequestedTrack,
-} from "@/shared/api";
+import { BaseTrackInfo, PlayerState, SoundRequest } from "@/shared/api";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 /**
@@ -15,7 +10,7 @@ import { useToastModal } from "@/shared/Utils/ToastModal";
  */
 export const useSoundRequestPlayer = () => {
   const [playerState, setPlayerState] = useState<PlayerState | null>(null);
-  const [queue, setQueue] = useState<UserRequestedTrack[]>([]);
+  const [queue, setQueue] = useState<BaseTrackInfo[]>([]);
   const [loading, setLoading] = useState(false);
   const [volume, setVolume] = useState(50);
   const [debouncedVolume, setDebouncedVolume] = useState(50);
@@ -297,7 +292,7 @@ export const useSoundRequestPlayer = () => {
     if (playerState?.nextTrack) list.push(playerState.nextTrack);
     for (const item of queue) {
       if (list.length >= 6) break;
-      list.push(item.requestedTrack);
+      list.push(item);
     }
     return list;
   }, [playerState, queue]);

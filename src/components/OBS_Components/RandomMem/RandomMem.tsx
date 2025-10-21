@@ -1,9 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { MediaMetaInfoPriorityEnum } from "@/shared/api";
+import { MediaDto, MediaMetaInfoPriorityEnum } from "@/shared/api";
 import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
-import { MediaDto } from "@/shared/api/types/signalr-types";
 import Announce from "@/shared/Utils/Announce/Announce";
 
 import Alert from "../PyroAlerts/Alert";

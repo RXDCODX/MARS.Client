@@ -1,7 +1,15 @@
 import "./body.css";
 
 import { motion, useAnimationControls } from "framer-motion";
-import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import {
   FollowerInfo,
@@ -14,21 +22,59 @@ import Announce from "@/shared/Utils/Announce/Announce";
 import styles from "./Credits.module.scss";
 
 // ОПТИМИЗАЦИЯ: Lazy loading для тяжелых анимаций - загружаем только когда нужно
-const ElectricBorder = lazy(() => import("react-bits/src/content/Animations/ElectricBorder/ElectricBorder"));
-const Aurora = lazy(() => import("react-bits/src/ts-default/Backgrounds/Aurora/Aurora"));
-const Balatro = lazy(() => import("react-bits/src/ts-default/Backgrounds/Balatro/Balatro"));
-const DarkVeil = lazy(() => import("react-bits/src/ts-default/Backgrounds/DarkVeil/DarkVeil"));
-const FaultyTerminal = lazy(() => import("react-bits/src/ts-default/Backgrounds/FaultyTerminal/FaultyTerminal"));
-const Galaxy = lazy(() => import("react-bits/src/ts-default/Backgrounds/Galaxy/Galaxy"));
-const Iridescence = lazy(() => import("react-bits/src/ts-default/Backgrounds/Iridescence/Iridescence"));
-const Lightning = lazy(() => import("react-bits/src/ts-default/Backgrounds/Lightning/Lightning"));
-const LightRays = lazy(() => import("react-bits/src/ts-default/Backgrounds/LightRays/LightRays"));
-const LiquidChrome = lazy(() => import("react-bits/src/ts-default/Backgrounds/LiquidChrome/LiquidChrome"));
-const Particles = lazy(() => import("react-bits/src/ts-default/Backgrounds/Particles/Particles"));
-const Prism = lazy(() => import("react-bits/src/ts-default/Backgrounds/Prism/Prism"));
-const PrismaticBurst = lazy(() => import("react-bits/src/ts-default/Backgrounds/PrismaticBurst/PrismaticBurst"));
-const Squares = lazy(() => import("react-bits/src/ts-default/Backgrounds/Squares/Squares"));
-const Threads = lazy(() => import("react-bits/src/ts-default/Backgrounds/Threads/Threads"));
+const ElectricBorder = lazy(
+  () =>
+    import("react-bits/src/content/Animations/ElectricBorder/ElectricBorder")
+);
+const Aurora = lazy(
+  () => import("react-bits/src/ts-default/Backgrounds/Aurora/Aurora")
+);
+const Balatro = lazy(
+  () => import("react-bits/src/ts-default/Backgrounds/Balatro/Balatro")
+);
+const DarkVeil = lazy(
+  () => import("react-bits/src/ts-default/Backgrounds/DarkVeil/DarkVeil")
+);
+const FaultyTerminal = lazy(
+  () =>
+    import(
+      "react-bits/src/ts-default/Backgrounds/FaultyTerminal/FaultyTerminal"
+    )
+);
+const Galaxy = lazy(
+  () => import("react-bits/src/ts-default/Backgrounds/Galaxy/Galaxy")
+);
+const Iridescence = lazy(
+  () => import("react-bits/src/ts-default/Backgrounds/Iridescence/Iridescence")
+);
+const Lightning = lazy(
+  () => import("react-bits/src/ts-default/Backgrounds/Lightning/Lightning")
+);
+const LightRays = lazy(
+  () => import("react-bits/src/ts-default/Backgrounds/LightRays/LightRays")
+);
+const LiquidChrome = lazy(
+  () =>
+    import("react-bits/src/ts-default/Backgrounds/LiquidChrome/LiquidChrome")
+);
+const Particles = lazy(
+  () => import("react-bits/src/ts-default/Backgrounds/Particles/Particles")
+);
+const Prism = lazy(
+  () => import("react-bits/src/ts-default/Backgrounds/Prism/Prism")
+);
+const PrismaticBurst = lazy(
+  () =>
+    import(
+      "react-bits/src/ts-default/Backgrounds/PrismaticBurst/PrismaticBurst"
+    )
+);
+const Squares = lazy(
+  () => import("react-bits/src/ts-default/Backgrounds/Squares/Squares")
+);
+const Threads = lazy(
+  () => import("react-bits/src/ts-default/Backgrounds/Threads/Threads")
+);
 
 // ОПТИМИЗАЦИЯ: Загружаем музыку НЕ eager - только когда нужно
 const musicFiles = import.meta.glob("./music/*.{mp3,ogg,wav}", {
@@ -253,17 +299,17 @@ const SectionTitle: React.FC<{
 );
 
 const NameRow: React.FC<{ follower: FollowerInfo }> = ({ follower }) => {
-  const textColor = follower.chatColor || "#FFFFFF";
-  const textShadow = follower.chatColor
+  const textColor = follower.twitchUser?.chatColor || "#FFFFFF";
+  const textShadow = follower.twitchUser?.chatColor
     ? "1px 1px 2px rgba(0, 0, 0, 0.8)"
     : "1px 1px 2px rgba(0, 0, 0, 1), -1px -1px 2px rgba(0, 0, 0, 1), 1px -1px 2px rgba(0, 0, 0, 1), -1px 1px 2px rgba(0, 0, 0, 1)";
 
   return (
     <div className={styles.nameRow}>
-      {follower.profileImageUrl && (
+      {follower.twitchUser?.profileImageUrl && (
         <img
-          src={follower.profileImageUrl}
-          alt={follower.userName || follower.userLogin}
+          src={follower.twitchUser.profileImageUrl}
+          alt={follower.twitchUser.displayName}
           className={styles.profileImage}
         />
       )}
@@ -274,7 +320,7 @@ const NameRow: React.FC<{ follower: FollowerInfo }> = ({ follower }) => {
           textShadow: textShadow,
         }}
       >
-        {follower.displayName ?? follower.userName ?? follower.userLogin}
+        {follower.twitchUser?.displayName ?? follower.userId}
       </div>
     </div>
   );
@@ -394,7 +440,7 @@ const Credits: React.FC = () => {
     if (Number.isNaN(storedIndex) || storedIndex < 0) storedIndex = -1;
     const nextIndex = (storedIndex + 1) % musicUrls.length;
     localStorage.setItem(MUSIC_INDEX_STORAGE_KEY, String(nextIndex));
-    
+
     // ОПТИМИЗАЦИЯ: Загружаем только нужный музыкальный файл
     const musicKey = musicUrls[nextIndex];
     const musicLoader = musicFiles[musicKey];
@@ -498,10 +544,12 @@ const Credits: React.FC = () => {
       const allData = allRes.data.data ?? [];
 
       // Фильтруем данные по типам
-      const moderatorsData = allData.filter(user => user.isModerator);
-      const vipsData = allData.filter(user => user.isVip);
+      const moderatorsData = allData.filter(
+        user => user.twitchUser?.isModerator
+      );
+      const vipsData = allData.filter(user => user.twitchUser?.isVip);
       const followersData = allData.filter(
-        user => !user.isModerator && !user.isVip
+        user => !user.twitchUser?.isModerator && !user.twitchUser?.isVip
       );
 
       setModerators(moderatorsData);
@@ -691,8 +739,12 @@ const Credits: React.FC = () => {
     return list
       .slice()
       .sort((a, b) =>
-        (a.userName || a.userLogin).localeCompare(
-          b.userName || b.userLogin,
+        (
+          a.twitchUser?.displayName ||
+          a.twitchUser?.userLogin ||
+          a.userId
+        ).localeCompare(
+          b.twitchUser?.displayName || b.twitchUser?.userLogin || b.userId,
           "ru"
         )
       )
@@ -731,7 +783,9 @@ const Credits: React.FC = () => {
                 <div className={styles.block}>
                   {streamerInfo && (
                     <div className={styles.streamerSection}>
-                      <Suspense fallback={<div style={{ width: 400, height: 400 }} />}>
+                      <Suspense
+                        fallback={<div style={{ width: 400, height: 400 }} />}
+                      >
                         <ElectricBorder
                           style={{ borderRadius: "50%" }}
                           color="rgb(230,172,12)"

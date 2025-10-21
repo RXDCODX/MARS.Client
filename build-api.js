@@ -601,51 +601,6 @@ function extractExportedTypes(filePath) {
   return exportedTypes;
 }
 
-// Функция для удаления дублирующихся типов из файла
-function removeDuplicateTypes(filePath, typesToRemove) {
-  if (!fs.existsSync(filePath) || typesToRemove.size === 0) {
-    return;
-  }
-
-  let content = fs.readFileSync(filePath, "utf-8");
-  let removedCount = 0;
-
-  typesToRemove.forEach(typeName => {
-    // Удаляем interface с JSDoc комментариями
-    const interfacePattern = new RegExp(
-      `(?:\\/\\*\\*[\\s\\S]*?\\*\\/\\s*)?export\\s+interface\\s+${typeName}\\s*\\{[\\s\\S]*?\\n\\}\\s*`,
-      "g"
-    );
-    const beforeInterface = content;
-    content = content.replace(interfacePattern, "");
-    if (content !== beforeInterface) removedCount++;
-
-    // Удаляем enum с JSDoc комментариями
-    const enumPattern = new RegExp(
-      `(?:\\/\\*\\*[\\s\\S]*?\\*\\/\\s*)?export\\s+enum\\s+${typeName}\\s*\\{[\\s\\S]*?\\n\\}\\s*`,
-      "g"
-    );
-    const beforeEnum = content;
-    content = content.replace(enumPattern, "");
-    if (content !== beforeEnum) removedCount++;
-
-    // Удаляем type с JSDoc комментариями
-    const typePattern = new RegExp(
-      `(?:\\/\\*\\*[\\s\\S]*?\\*\\/\\s*)?export\\s+type\\s+${typeName}\\s*=[\\s\\S]*?;\\s*`,
-      "g"
-    );
-    const beforeType = content;
-    content = content.replace(typePattern, "");
-    if (content !== beforeType) removedCount++;
-  });
-
-  // Очищаем избыточные пустые строки
-  content = content.replace(/\n{3,}/g, "\n\n");
-
-  fs.writeFileSync(filePath, content);
-  return removedCount;
-}
-
 // Функция для извлечения определений типов из файла (полное определение, не только имя)
 function extractTypeDefinitions(filePath) {
   if (!fs.existsSync(filePath)) {
