@@ -16,7 +16,7 @@
 
 // Секция с никнеймом пользователя - 20% (2 из 12 частей)
 .userSection {
-  flex: 2;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -52,7 +52,7 @@
 
 // Секция с видео плеером - 70% (7 из 12 частей)
 .videoSection {
-  flex: 7;
+  flex: 10;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -82,7 +82,7 @@
 
 // Секция с информацией о треке - 30% (3 из 12 частей)
 .trackSection {
-  flex: 3;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -98,6 +98,7 @@ import type {
   MediaFileInfoTypeEnum,
   MediaMetaInfoPriorityEnum,
   ParseRequestSourceEnum,
+  PlayerStateStateEnum,
   RewardRedemptionStatusEnum,
   ServiceInfoStatusEnum,
   StreamArchiveConfigFileConvertTypeEnum,

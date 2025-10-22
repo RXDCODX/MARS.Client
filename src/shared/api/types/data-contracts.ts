@@ -597,9 +597,8 @@ export interface PlayerState {
   nextTrackId?: string;
   /** @format date-span */
   currentTrackDuration?: string;
-  isPaused: boolean;
+  state: PlayerStateStateEnum;
   isMuted: boolean;
-  isStoped: boolean;
   /** @format int32 */
   volume: number;
   /** @maxLength 50 */
@@ -998,6 +997,14 @@ export enum ParseRequestSourceEnum {
   None = "None",
   Wavu = "Wavu",
   Tekkendocs = "Tekkendocs",
+}
+
+export enum PlayerStateStateEnum {
+  Stopped = "Stopped",
+  Playing = "Playing",
+  Paused = "Paused",
+  SwitchingTrack = "SwitchingTrack",
+  WaitingForTrack = "WaitingForTrack",
 }
 
 export enum RewardRedemptionStatusEnum {

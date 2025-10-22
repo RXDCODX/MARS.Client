@@ -1,26 +1,31 @@
 import {
   Pause,
   Play,
+  SkipBack,
   SkipForward,
   Square,
+  Video,
   Volume2,
   VolumeX,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { Button, Card, Carousel } from "react-bootstrap";
-import ReactPlayer from "react-player";
+import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
+import { Button } from "react-bootstrap";
 
 import { useSoundRequestPlayer } from "../hooks";
-import {
-  formatDuration,
-  getAuthorsString,
-  getRequestedByString,
-} from "../utils";
+import { formatDuration } from "../utils";
+import { ElasticSlider } from "./ElasticSlider";
 import styles from "./SoundRequestPlayerDesktop.module.scss";
 
-/**
- * Десктопный плеер для управления SoundRequest
- */
+function parseIsoDurationToSeconds(duration?: string): number {
+  if (!duration) return 0;
+  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!match) return 0;
+  const h = parseInt(match[1] || "0");
+  const m = parseInt(match[2] || "0");
+  const s = parseInt(match[3] || "0");
+  return h * 3600 + m * 60 + s;
+}
+
 export function SoundRequestPlayerDesktop() {
   const {
     playerState,
@@ -29,310 +34,326 @@ export function SoundRequestPlayerDesktop() {
     volume,
     isPlaying,
     history,
-    nextFiveOrders,
-    displayedVideos,
+    // handlePlayNext, // пока не используется в десктоп-версии
     handleTogglePlayPause,
     handleStop,
     handleSkip,
-    handlePlayNext,
     handleVolumeChange,
     handleMute,
-    handleRemoveFromQueue,
     handlePlayTrackFromQueue,
   } = useSoundRequestPlayer();
 
-  const [showVideo, setShowVideo] = useState(true);
-  const [carouselIndex, setCarouselIndex] = useState(0);
+  const current = playerState?.currentTrack || null;
+  const durationSec = parseIsoDurationToSeconds(
+    playerState?.currentTrackDuration || "PT0S"
+  );
 
-  // Вычисляем индекс текущего трека в списке отображаемых видео
-  const currentVideoIndex = useMemo(() => {
-    if (!playerState?.currentTrack) return 0;
-    const idx = displayedVideos.findIndex(
-      v => v.id === playerState.currentTrack!.id
-    );
-    return idx >= 0 ? idx : 0;
-  }, [playerState, displayedVideos]);
+  const [progress, setProgress] = useState(0); // 0..1
+  const startTimeRef = useRef<number>(0);
+  const pausedAtRef = useRef<number>(0);
+  const wasPausedRef = useRef<boolean>(false);
+  const rafRef = useRef<number | null>(null);
 
-  // Синхронизируем карусель с текущим треком
+  // Reset/start progress when track changes
   useEffect(() => {
-    setCarouselIndex(currentVideoIndex);
-  }, [currentVideoIndex]);
+    if (!current || !durationSec) {
+      setProgress(0);
+      return;
+    }
+    startTimeRef.current = Date.now();
+    wasPausedRef.current = false;
+    pausedAtRef.current = 0;
+    setProgress(0);
+  }, [current, current?.id, durationSec]);
+
+  // Drive progress similar to CurrentTrack
+  useEffect(() => {
+    if (!current || !durationSec) return;
+
+    const loop = () => {
+      const elapsedSec = (Date.now() - startTimeRef.current) / 1000;
+      const pr = Math.min(elapsedSec / durationSec, 1);
+      setProgress(pr);
+      if (pr < 1 && isPlaying) {
+        rafRef.current = requestAnimationFrame(loop);
+      }
+    };
+
+    if (isPlaying) {
+      if (wasPausedRef.current) {
+        const pauseDelta = Date.now() - pausedAtRef.current;
+        startTimeRef.current += pauseDelta;
+        wasPausedRef.current = false;
+      }
+      rafRef.current = requestAnimationFrame(loop);
+    } else {
+      if (!wasPausedRef.current) {
+        wasPausedRef.current = true;
+        pausedAtRef.current = Date.now();
+      }
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    }
+
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    };
+  }, [isPlaying, current, current?.id, durationSec]);
+
+  // Build lists: sticky current + rest of queue
+  const queueWithoutCurrent = useMemo(() => {
+    const currentId = current?.id;
+    return queue.filter(x => x.id !== currentId);
+  }, [queue, current?.id]);
+
+  const handlePrev = () => {
+    const prev = history?.[0];
+    if (prev?.id) handlePlayTrackFromQueue(prev.id);
+  };
+
+  const progressStyle = {
+    "--track-progress": `${Math.round(progress * 100)}%`,
+  } as CSSProperties;
+
+  // Обработчики для синхронизации hover между левой и правой колонками
+  const handleItemHover = (trackId: string | undefined, isEnter: boolean) => {
+    if (!trackId) return;
+
+    const items = document.querySelectorAll(`[data-track-id="${trackId}"]`);
+    items.forEach(item => {
+      if (isEnter) {
+        item.classList.add(styles.pairHovered);
+      } else {
+        item.classList.remove(styles.pairHovered);
+      }
+    });
+  };
 
   return (
-    <div className={styles.container}>
-      {/* Текущий трек */}
-      <Card className={styles.currentTrackCard}>
-        <Card.Body>
-          <h5 className={styles.title}>Сейчас играет</h5>
-          {playerState?.currentTrack ? (
-            <div className={styles.currentTrack}>
-              <div className={styles.trackInfo}>
-                <h6 className={styles.trackName}>
-                  {playerState.currentTrack.trackName}
-                </h6>
-                <p className={styles.trackAuthor}>
-                  {getAuthorsString(playerState.currentTrack.authors)}
-                </p>
-                {playerState.currentTrackRequestedByTwitchUser?.displayName && (
-                  <p className={styles.requestedBy}>
-                    Запросил:{" "}
-                    {getRequestedByString(
-                      playerState.currentTrackRequestedByTwitchUser.displayName
+    <div className={styles.root}>
+      <div className={styles.container1}>
+        {/* Верхний блок 9 частей высоты: 7:3 по ширине */}
+        <div className={styles.topSplit}>
+          <div className={styles.leftCol}>
+            {current && (
+              <div
+                className={`${styles.item} ${styles.sticky} ${styles.current}`}
+                data-track-id={current.id}
+                onMouseEnter={() => handleItemHover(current.id, true)}
+                onMouseLeave={() => handleItemHover(current.id, false)}
+              >
+                <div className={styles.thumb}>
+                  {current.artworkUrl ? (
+                    <img src={current.artworkUrl} alt="art" />
+                  ) : (
+                    <div className={styles.thumbPlaceholder} />
+                  )}
+                </div>
+                <div className={styles.itemBody}>
+                  <div className={styles.itemTitle}>{current.trackName}</div>
+                  <div className={styles.itemMeta}>
+                    <a
+                      href={current.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={styles.itemLink}
+                      title={current.url}
+                    >
+                      {current.url}
+                    </a>
+                    <span className={styles.itemDuration}>
+                      {formatDuration(
+                        playerState?.currentTrackDuration || "PT0S"
+                      )}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+            <div className={styles.scrollList}>
+              {queueWithoutCurrent.map(q => (
+                <div
+                  key={q.id}
+                  className={styles.item}
+                  data-track-id={q.id}
+                  onMouseEnter={() => handleItemHover(q.id, true)}
+                  onMouseLeave={() => handleItemHover(q.id, false)}
+                >
+                  <div className={styles.thumb}>
+                    {q.artworkUrl ? (
+                      <img src={q.artworkUrl} alt="art" />
+                    ) : (
+                      <div className={styles.thumbPlaceholder} />
                     )}
-                  </p>
-                )}
-              </div>
-              <div className={styles.duration}>
-                {formatDuration(playerState.currentTrackDuration || "PT0S")}
-              </div>
+                  </div>
+                  <div className={styles.itemBody}>
+                    <div className={styles.itemTitle}>{q.trackName}</div>
+                    <div className={styles.itemMeta}>
+                      <a
+                        href={q.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={styles.itemLink}
+                        title={q.url}
+                      >
+                        {q.url}
+                      </a>
+                      <span className={styles.itemDuration}>
+                        {formatDuration(q.duration)}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          ) : (
-            <p className={styles.noTrack}>Нет активного трека</p>
-          )}
+          </div>
 
-          {/* Элементы управления */}
-          <div className={styles.controls}>
-            <div className={styles.playbackControls}>
+          <div className={styles.rightCol}>
+            {current && (
+              <div
+                className={`${styles.userRow} ${styles.sticky} ${styles.current}`}
+                data-track-id={current.id}
+                onMouseEnter={() => handleItemHover(current.id, true)}
+                onMouseLeave={() => handleItemHover(current.id, false)}
+              >
+                <div className={styles.avatar}>
+                  {current.requestedByTwitchUser?.profileImageUrl ? (
+                    <img
+                      src={current.requestedByTwitchUser.profileImageUrl}
+                      alt="avatar"
+                    />
+                  ) : (
+                    <div className={styles.avatarPlaceholder} />
+                  )}
+                </div>
+                <div className={styles.userBody}>
+                  <div className={styles.userName}>
+                    {current.requestedByTwitchUser?.displayName || "Неизвестно"}
+                  </div>
+                  <div className={styles.userMeta}>
+                    {current.lastTimePlays
+                      ? new Date(current.lastTimePlays).toLocaleString()
+                      : ""}
+                  </div>
+                </div>
+              </div>
+            )}
+            <div className={styles.scrollList}>
+              {queueWithoutCurrent.map(q => (
+                <div
+                  key={q.id}
+                  className={styles.userRow}
+                  data-track-id={q.id}
+                  onMouseEnter={() => handleItemHover(q.id, true)}
+                  onMouseLeave={() => handleItemHover(q.id, false)}
+                >
+                  <div className={styles.avatar}>
+                    {q.requestedByTwitchUser?.profileImageUrl ? (
+                      <img
+                        src={q.requestedByTwitchUser.profileImageUrl}
+                        alt="avatar"
+                      />
+                    ) : (
+                      <div className={styles.avatarPlaceholder} />
+                    )}
+                  </div>
+                  <div className={styles.userBody}>
+                    <div className={styles.userName}>
+                      {q.requestedByTwitchUser?.displayName ??
+                        q.requestedByTwitchUser?.userLogin ??
+                        "Неизвестно"}
+                    </div>
+                    <div className={styles.userMeta}>
+                      {q.lastTimePlays
+                        ? new Date(q.lastTimePlays).toLocaleString()
+                        : ""}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Нижний блок 1 часть высоты — тулбар с прогресс-заливкой */}
+      <div className={styles.container3}>
+        <div className={styles.toolbar} style={progressStyle}>
+          <div className={styles.toolbarInner}>
+            <div className={styles.controlButtons}>
+              <Button
+                variant="dark"
+                className={styles.tbBtn}
+                onClick={handlePrev}
+                disabled={loading || !history?.length}
+                title="Предыдущий"
+              >
+                <SkipBack />
+              </Button>
+
               <Button
                 variant={isPlaying ? "warning" : "primary"}
-                size="lg"
+                className={styles.tbBtn}
                 onClick={handleTogglePlayPause}
                 disabled={loading}
-                className={styles.controlButton}
+                title={isPlaying ? "Пауза" : "Воспроизвести"}
               >
-                {isPlaying ? <Pause size={24} /> : <Play size={24} />}
+                {isPlaying ? <Pause /> : <Play />}
               </Button>
+
               <Button
                 variant="danger"
-                size="lg"
+                className={styles.tbBtn}
                 onClick={handleStop}
                 disabled={loading}
-                className={styles.controlButton}
+                title="Стоп"
               >
-                <Square size={24} />
+                <Square />
               </Button>
-              <Button
-                variant="info"
-                size="lg"
-                onClick={handleSkip}
-                disabled={loading}
-                className={styles.controlButton}
-              >
-                <SkipForward size={24} />
-              </Button>
+
               <Button
                 variant="secondary"
-                size="lg"
-                onClick={handlePlayNext}
+                className={styles.tbBtn}
+                onClick={handleSkip}
                 disabled={loading}
-                className={styles.controlButton}
+                title="Следующий"
               >
-                Следующий
+                <SkipForward />
               </Button>
-            </div>
 
-            {/* Громкость */}
-            <div className={styles.volumeControls}>
               <Button
                 variant={playerState?.isMuted ? "secondary" : "primary"}
+                className={styles.tbBtn}
                 onClick={handleMute}
                 disabled={loading}
-                className={styles.muteButton}
+                title={playerState?.isMuted ? "Звук выкл." : "Звук вкл."}
               >
-                {playerState?.isMuted ? (
-                  <VolumeX size={20} />
-                ) : (
-                  <Volume2 size={20} />
-                )}
+                {playerState?.isMuted ? <VolumeX /> : <Volume2 />}
               </Button>
-              <div className={styles.volumeSlider}>
-                <input
-                  type="range"
-                  min={0}
-                  max={100}
-                  value={volume}
-                  onChange={e => handleVolumeChange(Number(e.target.value))}
-                  disabled={loading}
-                  className={styles.volumeInput}
-                />
-                <span className={styles.volumeValue}>{volume}%</span>
-              </div>
-            </div>
-          </div>
-        </Card.Body>
-      </Card>
 
-      {/* Видео плеер и карусель отображаемых видео */}
-      <Card className={styles.currentTrackCard}>
-        <Card.Body>
-          <div className={styles.videoHeader}>
-            <h5 className={styles.title}>Видео</h5>
-            <div>
               <Button
-                variant="outline-primary"
-                size="sm"
-                onClick={() => setShowVideo(v => !v)}
+                variant="outline-secondary"
+                className={styles.tbBtn}
+                disabled
+                title="Видео в главном плеере (скоро)"
               >
-                {showVideo ? "Скрыть" : "Показать"} видео
+                <Video />
               </Button>
             </div>
-          </div>
 
-          {showVideo && displayedVideos.length > 0 ? (
-            <div className={styles.videoContainer}>
-              <Carousel
-                activeIndex={carouselIndex}
-                onSelect={i => setCarouselIndex(i ?? 0)}
-                interval={null}
-                indicators={displayedVideos.length > 1}
-              >
-                {displayedVideos.map(video => (
-                  <Carousel.Item key={video.id}>
-                    <div className={styles.videoSlide}>
-                      {playerState?.currentTrack?.id === video.id ? (
-                        <ReactPlayer
-                          key={video.url}
-                          src={video.url}
-                          playing={!!isPlaying}
-                          volume={playerState.volume / 100}
-                          muted={playerState.isMuted}
-                          width="100%"
-                          height="100%"
-                          controls={false}
-                        />
-                      ) : (
-                        <div className={styles.videoPreview}>
-                          <div className={styles.previewInfo}>
-                            <div className={styles.previewTitle}>
-                              {video.trackName || video.title}
-                            </div>
-                            <div className={styles.previewAuthor}>
-                              {(video.authors || []).join(", ")}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </Carousel.Item>
-                ))}
-              </Carousel>
-            </div>
-          ) : (
-            <p className={styles.noTrack}>Нет видео для отображения</p>
-          )}
-        </Card.Body>
-      </Card>
-
-      {/* Очередь */}
-      <Card className={styles.queueCard}>
-        <Card.Body>
-          <h5 className={styles.title}>Очередь ({queue.length})</h5>
-          {queue.length > 0 ? (
-            <div className={styles.queueList}>
-              {queue.map((item, index) => (
-                <div key={item.id} className={styles.queueItem}>
-                  <div className={styles.queueItemInfo}>
-                    <span className={styles.queueNumber}>{index + 1}</span>
-                    <div className={styles.queueTrackInfo}>
-                      <h6 className={styles.queueTrackName}>
-                        {item.trackName}
-                      </h6>
-                      <p className={styles.queueTrackAuthor}>
-                        {getAuthorsString(item.authors)}
-                      </p>
-                      <p className={styles.queueRequestedBy}>
-                        {getRequestedByString(
-                          item.requestedByTwitchUser?.displayName
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                  <div className={styles.queueItemActions}>
-                    <span className={styles.queueDuration}>
-                      {formatDuration(item.duration)}
-                    </span>
-                    <Button
-                      variant="success"
-                      size="sm"
-                      onClick={() => handlePlayTrackFromQueue(item.id)}
-                      disabled={loading}
-                    >
-                      Играть
-                    </Button>
-                    <Button
-                      variant="danger"
-                      size="sm"
-                      onClick={() => handleRemoveFromQueue(item.id)}
-                      disabled={loading}
-                    >
-                      Удалить
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className={styles.emptyQueue}>Очередь пуста</p>
-          )}
-        </Card.Body>
-      </Card>
-
-      {/* Ближайшие 5 заказов и статистика */}
-      <Card className={styles.queueCard}>
-        <Card.Body>
-          <h5 className={styles.title}>Ближайшие 5 заказов</h5>
-          {nextFiveOrders.length > 0 ? (
-            <div className={styles.queueList}>
-              {nextFiveOrders.map((item, idx) => (
-                <div key={item.id} className={styles.queueItem}>
-                  <div className={styles.queueItemInfo}>
-                    <span className={styles.queueNumber}>{idx + 1}</span>
-                    <div className={styles.queueTrackInfo}>
-                      <h6 className={styles.queueTrackName}>
-                        {item.trackName}
-                      </h6>
-                      <p className={styles.queueTrackAuthor}>
-                        {getAuthorsString(item.authors)}
-                      </p>
-                      <p className={styles.queueRequestedBy}>
-                        {getRequestedByString(
-                          item.requestedByTwitchUser?.displayName
-                        )}
-                      </p>
-                    </div>
-                  </div>
-                  <div className={styles.queueItemActions}>
-                    <span className={styles.queueDuration}>
-                      {formatDuration(item.duration)}
-                    </span>
-                    <Button
-                      variant="success"
-                      size="sm"
-                      onClick={() => handlePlayTrackFromQueue(item.id)}
-                      disabled={loading}
-                    >
-                      Играть
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className={styles.emptyQueue}>Нет ближайших заказов</p>
-          )}
-
-          <div className={styles.statsRow}>
-            <div className={styles.statItem}>
-              История: {history.length} треков
-            </div>
-            <div className={styles.statItem}>Громкость: {volume}%</div>
-            <div className={styles.statItem}>
-              Статус:{" "}
-              {isPlaying ? "Играет" : playerState?.isPaused ? "Пауза" : "Стоп"}
+            <div className={styles.volumeWrap}>
+              <ElasticSlider
+                value={volume}
+                onChange={handleVolumeChange}
+                min={0}
+                max={100}
+                step={1}
+                disabled={loading}
+              />
             </div>
           </div>
-        </Card.Body>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

@@ -170,7 +170,7 @@ export function SoundRequestPlayerMobile() {
                         src={video.url}
                         playing={!!isPlaying}
                         volume={playerState.volume / 100}
-                        muted={playerState.isMuted}
+                        muted
                         width="100%"
                         height="100%"
                       />

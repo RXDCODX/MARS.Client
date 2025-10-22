@@ -134,6 +134,15 @@
         "tags": [
           "SoundRequestHub"
         ],
+        "parameters": [
+          {
+            "name": "info",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/BaseTrackInfo"
+            }
+          }
+        ],
         "responses": { }
       }
     },
@@ -141,6 +150,15 @@
       "post": {
         "tags": [
           "SoundRequestHub"
+        ],
+        "parameters": [
+          {
+            "name": "info",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/BaseTrackInfo"
+            }
+          }
         ],
         "responses": { }
       }
@@ -162,6 +180,14 @@
         "responses": { }
       }
     },
+    "/hubs/soundrequest/OnConnectedAsync": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/soundrequest/OnDisconnectedAsync": {
       "post": {
         "tags": [
@@ -174,6 +200,15 @@
       "post": {
         "tags": [
           "SoundRequestHub"
+        ],
+        "parameters": [
+          {
+            "name": "info",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/BaseTrackInfo"
+            }
+          }
         ],
         "responses": { }
       }
@@ -1912,8 +1947,7 @@
         "required": [
           "id",
           "isMuted",
-          "isPaused",
-          "isStoped",
+          "state",
           "volume"
         ],
         "type": "object",
@@ -1937,13 +1971,17 @@
             "format": "date-span",
             "nullable": true
           },
-          "isPaused": {
-            "type": "boolean"
+          "state": {
+            "enum": [
+              "Stopped",
+              "Playing",
+              "Paused",
+              "SwitchingTrack",
+              "WaitingForTrack"
+            ],
+            "type": "string"
           },
           "isMuted": {
-            "type": "boolean"
-          },
-          "isStoped": {
             "type": "boolean"
           },
           "volume": {

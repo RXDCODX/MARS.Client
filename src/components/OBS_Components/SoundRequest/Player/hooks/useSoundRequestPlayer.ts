@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
 
-import { BaseTrackInfo, PlayerState, SoundRequest } from "@/shared/api";
+import {
+  BaseTrackInfo,
+  PlayerState,
+  PlayerStateStateEnum,
+  SoundRequest,
+} from "@/shared/api";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 /**
@@ -41,7 +46,9 @@ export const useSoundRequestPlayer = () => {
       try {
         const response =
           await soundRequestApi.soundRequestVolumeCreate(debouncedVolume);
-        showToast(response.data);
+        if (!response.data.success) {
+          showToast(response.data);
+        }
       } catch {
         showToast({
           success: false,
@@ -123,7 +130,9 @@ export const useSoundRequestPlayer = () => {
     try {
       setLoading(true);
       const response = await soundRequestApi.soundRequestPlayCreate();
-      showToast(response.data);
+      if (!response.data.success) {
+        showToast(response.data);
+      }
       await fetchPlayerState();
     } catch {
       showToast({
@@ -139,7 +148,9 @@ export const useSoundRequestPlayer = () => {
     try {
       setLoading(true);
       const response = await soundRequestApi.soundRequestPauseCreate();
-      showToast(response.data);
+      if (!response.data.success) {
+        showToast(response.data);
+      }
       await fetchPlayerState();
     } catch {
       showToast({
@@ -156,7 +167,9 @@ export const useSoundRequestPlayer = () => {
       setLoading(true);
       const response =
         await soundRequestApi.soundRequestTogglePlayPauseCreate();
-      showToast(response.data);
+      if (!response.data.success) {
+        showToast(response.data);
+      }
       await fetchPlayerState();
     } catch {
       showToast({
@@ -172,7 +185,9 @@ export const useSoundRequestPlayer = () => {
     try {
       setLoading(true);
       const response = await soundRequestApi.soundRequestStopCreate();
-      showToast(response.data);
+      if (!response.data.success) {
+        showToast(response.data);
+      }
       await fetchPlayerState();
     } catch {
       showToast({
@@ -188,7 +203,9 @@ export const useSoundRequestPlayer = () => {
     try {
       setLoading(true);
       const response = await soundRequestApi.soundRequestSkipCreate();
-      showToast(response.data);
+      if (!response.data.success) {
+        showToast(response.data);
+      }
       await fetchPlayerState();
       await fetchQueue();
     } catch {
@@ -206,7 +223,9 @@ export const useSoundRequestPlayer = () => {
     try {
       setLoading(true);
       const response = await soundRequestApi.soundRequestPlayNextCreate();
-      showToast(response.data);
+      if (!response.data.success) {
+        showToast(response.data);
+      }
       await fetchPlayerState();
       await fetchQueue();
     } catch {
@@ -229,7 +248,9 @@ export const useSoundRequestPlayer = () => {
   const handleMute = useCallback(async () => {
     try {
       const response = await soundRequestApi.soundRequestToggleMuteCreate();
-      showToast(response.data);
+      if (!response.data.success) {
+        showToast(response.data);
+      }
       await fetchPlayerState();
     } catch {
       showToast({
@@ -244,7 +265,9 @@ export const useSoundRequestPlayer = () => {
     async (trackId: string) => {
       try {
         const response = await soundRequestApi.soundRequestQueueDelete(trackId);
-        showToast(response.data);
+        if (!response.data.success) {
+          showToast(response.data);
+        }
         await fetchQueue();
       } catch {
         showToast({
@@ -263,7 +286,9 @@ export const useSoundRequestPlayer = () => {
         setLoading(true);
         const response =
           await soundRequestApi.soundRequestPlayTrackCreate(queueItemId);
-        showToast(response.data);
+        if (!response.data.success) {
+          showToast(response.data);
+        }
         await fetchPlayerState();
         await fetchQueue();
       } catch {
@@ -280,7 +305,7 @@ export const useSoundRequestPlayer = () => {
 
   // Вычисление состояния воспроизведения
   const isPlaying =
-    playerState && !playerState.isPaused && !playerState.isStoped;
+    playerState && playerState.state === PlayerStateStateEnum.Playing;
 
   // Ближайшие 5 заказов
   const nextFiveOrders = useMemo(() => queue.slice(0, 5), [queue]);

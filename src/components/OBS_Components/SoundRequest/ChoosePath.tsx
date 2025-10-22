@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-import { SoundRequestHubSignalRHubWrapper } from "@/shared/api";
-
 import styles from "./ChoosePath.module.scss";
 import CurrentTrackInfo from "./CurrentTrack/CurrentTrackManager";
 import { SoundRequestPlayer } from "./Player/SoundRequestPlayer";
@@ -48,29 +46,17 @@ const ChoosePath: React.FC = () => {
 
   // Если путь /sr/player - рендерим VideoScreen
   if (path === "/sr/player") {
-    return (
-      <SoundRequestHubSignalRHubWrapper>
-        <VideoScreen />
-      </SoundRequestHubSignalRHubWrapper>
-    );
+    return <VideoScreen />;
   }
 
   // Если путь /sr/tracklist - рендерим TrackList (Player)
   if (path === "/sr/tracklist") {
-    return (
-      <SoundRequestHubSignalRHubWrapper>
-        <SoundRequestPlayer />
-      </SoundRequestHubSignalRHubWrapper>
-    );
+    return <SoundRequestPlayer />;
   }
 
   // Если путь /sr/currenttrack - рендерим CurrentTrack
   if (path === "/sr/currenttrack") {
-    return (
-      <SoundRequestHubSignalRHubWrapper>
-        <CurrentTrackInfo />
-      </SoundRequestHubSignalRHubWrapper>
-    );
+    return <CurrentTrackInfo />;
   }
 
   // Если путь не соответствует ни одному из известных - показываем страницу выбора

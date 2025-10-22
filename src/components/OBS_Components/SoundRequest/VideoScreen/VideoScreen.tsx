@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useState } from "react";
+import type { HubConnection } from "@microsoft/signalr";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 
-import { PlayerState } from "@/shared/api";
-import { SoundRequestHubSignalRContext } from "@/shared/api/signalr-clients/SoundRequestHub/SignalRHubWrapper";
+import { PlayerState, PlayerStateStateEnum } from "@/shared/api";
+import { SoundRequestHubSignalRConnectionBuilder } from "@/shared/api";
 
 import styles from "./VideoScreen.module.scss";
 
@@ -11,68 +12,74 @@ interface Props {
   className?: string;
 }
 
-export function VideoScreen({ className, groupName }: Props) {
+export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
   const [playerState, setPlayerState] = useState<PlayerState | null>(null);
   const isMainPlayer = groupName === "mainplayer";
+  const connectionRef = useRef<HubConnection | null>(null);
 
-  // Подписываемся на события изменения состояния плеера
-  SoundRequestHubSignalRContext.useSignalREffect(
-    "PlayerStateChange",
-    (state: PlayerState) => {
+  // Управление подключением к SignalR
+  useEffect(() => {
+    const connection = SoundRequestHubSignalRConnectionBuilder.build();
+    connectionRef.current = connection;
+
+    // Обработчик изменения состояния плеера
+    const handlePlayerStateChange = (state: PlayerState) => {
       console.log("[VideoScreen] PlayerStateChange получено:", {
         hasCurrentTrack: !!state.currentTrack,
         trackName: state.currentTrack?.trackName,
-        isPaused: state.isPaused,
-        isStoped: state.isStoped,
+        state: state.state,
         url: state.currentTrack?.url,
       });
       setPlayerState(state);
-    },
-    []
-  );
-
-  // Получаем начальное состояние при монтировании
-  useEffect(() => {
-    const fetchInitialState = async () => {
-      try {
-        const state = (await SoundRequestHubSignalRContext.invoke(
-          "GetPlayerState"
-        )) as PlayerState;
-
-        console.log("[VideoScreen] Получено начальное состояние:", {
-          hasCurrentTrack: !!state?.currentTrack,
-          trackName: state?.currentTrack?.trackName,
-          isPaused: state?.isPaused,
-          isStoped: state?.isStoped,
-        });
-
-        if (state) {
-          setPlayerState(state);
-        }
-      } catch (error) {
-        console.error("[VideoScreen] ОШИБКА при получении состояния:", error);
-      }
     };
 
-    fetchInitialState();
-  }, []);
+    // Подписываемся на события
+    connection.on("PlayerStateChange", handlePlayerStateChange);
+
+    // Запускаем подключение
+    connection
+      .start()
+      .then(async () => {
+        console.log("[VideoScreen] Подключение установлено");
+
+        // Присоединяемся к группе
+        await connection.invoke("Join", groupName);
+        if (isMainPlayer) {
+          console.warn("ЭТО МЕЙН ПЛЕЕР");
+        }
+      })
+      .catch(error => {
+        console.error("[VideoScreen] Ошибка подключения к SignalR:", error);
+      });
+
+    // Очистка при размонтировании
+    return () => {
+      connection.off("PlayerStateChange", handlePlayerStateChange);
+      connection.stop().catch(() => undefined);
+      if (connectionRef.current === connection) {
+        connectionRef.current = null;
+      }
+    };
+  }, [groupName, isMainPlayer]);
 
   // Обработчики событий плеера
   const handleEnded = useCallback(() => {
-    SoundRequestHubSignalRContext.invoke("Ended");
+    connectionRef.current?.invoke("Ended").catch(error => {
+      console.error("[VideoScreen] Ошибка при вызове Ended:", error);
+    });
   }, []);
 
   const handleStart = useCallback(() => {
-    SoundRequestHubSignalRContext.invoke("Started");
+    connectionRef.current?.invoke("Started").catch(error => {
+      console.error("[VideoScreen] Ошибка при вызове Started:", error);
+    });
   }, []);
 
   const handleError = useCallback(() => {
-    SoundRequestHubSignalRContext.invoke("ErrorPlaying");
+    connectionRef.current?.invoke("ErrorPlaying").catch(error => {
+      console.error("[VideoScreen] Ошибка при вызове ErrorPlaying:", error);
+    });
   }, []);
-
-  useEffect(() => {
-    SoundRequestHubSignalRContext.invoke("Join", groupName);
-  }, [groupName]);
 
   // Если нет текущего трека, показываем пустой экран
   if (!playerState?.currentTrack) {
@@ -92,12 +99,11 @@ export function VideoScreen({ className, groupName }: Props) {
   const authors = currentTrack.authors?.join(", ") || "Неизвестный автор";
   const trackName = currentTrack.trackName;
 
-  const isPlaying = !playerState.isPaused && !playerState.isStoped;
+  const isPlaying = playerState.state === PlayerStateStateEnum.Playing;
   console.log("[VideoScreen] ReactPlayer props:", {
     src: currentTrack.url,
     playing: isPlaying,
-    isPaused: playerState.isPaused,
-    isStoped: playerState.isStoped,
+    state: playerState.state,
     volume: playerState.volume / 100,
     muted: playerState.isMuted,
   });

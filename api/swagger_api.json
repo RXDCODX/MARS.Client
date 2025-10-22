@@ -8672,8 +8672,7 @@
         "required": [
           "id",
           "isMuted",
-          "isPaused",
-          "isStoped",
+          "state",
           "volume"
         ],
         "type": "object",
@@ -8697,13 +8696,17 @@
             "format": "date-span",
             "nullable": true
           },
-          "isPaused": {
-            "type": "boolean"
+          "state": {
+            "enum": [
+              "Stopped",
+              "Playing",
+              "Paused",
+              "SwitchingTrack",
+              "WaitingForTrack"
+            ],
+            "type": "string"
           },
           "isMuted": {
-            "type": "boolean"
-          },
-          "isStoped": {
             "type": "boolean"
           },
           "volume": {
