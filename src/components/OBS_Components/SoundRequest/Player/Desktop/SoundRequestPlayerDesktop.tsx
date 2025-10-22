@@ -18,6 +18,7 @@ import {
 } from "react";
 import { Button } from "react-bootstrap";
 
+import { VideoScreen } from "../../VideoScreen/VideoScreen";
 import { useSoundRequestPlayer } from "../hooks";
 import { formatDuration } from "../utils";
 import { ElasticSlider } from "./ElasticSlider";
@@ -152,15 +153,33 @@ export function SoundRequestPlayerDesktop() {
                 onMouseEnter={() => handleItemHover(current.id, true)}
                 onMouseLeave={() => handleItemHover(current.id, false)}
               >
-                <div className={styles.thumb}>
-                  {current.artworkUrl ? (
-                    <img src={current.artworkUrl} alt="art" />
-                  ) : (
-                    <div className={styles.thumbPlaceholder} />
-                  )}
-                </div>
+                {isPlaying ? (
+                  <div className={styles.videoThumb}>
+                    <VideoScreen
+                      groupName="frameplayer"
+                      className={styles.videoScreenWrapper}
+                    />
+                  </div>
+                ) : (
+                  <div className={styles.thumb}>
+                    {current.artworkUrl ? (
+                      <img src={current.artworkUrl} alt="art" />
+                    ) : (
+                      <div className={styles.thumbPlaceholder} />
+                    )}
+                  </div>
+                )}
                 <div className={styles.itemBody}>
-                  <div className={styles.itemTitle}>{current.trackName}</div>
+                  <div className={styles.itemTitle}>
+                    <span className={styles.trackName}>
+                      {current.trackName}
+                    </span>
+                    {current.authors && current.authors.length > 0 && (
+                      <span className={styles.itemAuthors}>
+                        {current.authors.join(", ")}
+                      </span>
+                    )}
+                  </div>
                   <div className={styles.itemMeta}>
                     <a
                       href={current.url}
@@ -197,7 +216,14 @@ export function SoundRequestPlayerDesktop() {
                     )}
                   </div>
                   <div className={styles.itemBody}>
-                    <div className={styles.itemTitle}>{q.trackName}</div>
+                    <div className={styles.itemTitle}>
+                      <span className={styles.trackName}>{q.trackName}</span>
+                      {q.authors && q.authors.length > 0 && (
+                        <span className={styles.itemAuthors}>
+                          {q.authors.join(", ")}
+                        </span>
+                      )}
+                    </div>
                     <div className={styles.itemMeta}>
                       <a
                         href={q.url}

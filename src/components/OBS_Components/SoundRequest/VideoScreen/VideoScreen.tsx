@@ -129,7 +129,7 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
           src={currentTrack.url}
           playing={isPlaying}
           volume={playerState.volume / 100}
-          muted={playerState.isMuted}
+          muted={!isMainPlayer || playerState.isMuted}
           onEnded={() => isMainPlayer && handleEnded()}
           onStart={() => isMainPlayer && handleStart()}
           onError={() => isMainPlayer && handleError()}
