@@ -213,6 +213,24 @@
         "responses": { }
       }
     },
+    "/hubs/soundrequest/VolumeChange": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "parameters": [
+          {
+            "name": "volume",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "float"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/telegramus/ExplosionGo": {
       "post": {
         "tags": [
@@ -1228,138 +1246,6 @@
         },
         "additionalProperties": false
       },
-      "CinemaMediaItem": {
-        "required": [
-          "createdAt",
-          "id",
-          "isNext",
-          "mediaUrl",
-          "priority",
-          "status"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "mediaUrl": {
-            "maxLength": 1000,
-            "minLength": 1,
-            "type": "string"
-          },
-          "status": {
-            "enum": [
-              "Pending",
-              "InProgress",
-              "Completed",
-              "Cancelled",
-              "Postponed"
-            ],
-            "type": "string"
-          },
-          "priority": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "scheduledFor": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "twitchUserId": {
-            "maxLength": 50,
-            "type": "string",
-            "nullable": true
-          },
-          "twitchUser": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/TwitchUser"
-              }
-            ],
-            "nullable": true
-          },
-          "notes": {
-            "type": "string",
-            "nullable": true
-          },
-          "isNext": {
-            "type": "boolean"
-          },
-          "lastModified": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "DailyAutoMarkupUser": {
-        "required": [
-          "id",
-          "lastAutoMarkup",
-          "ltmidV2",
-          "lTokenV2",
-          "ltuidV2"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "twitchId": {
-            "maxLength": 50,
-            "type": "string",
-            "nullable": true
-          },
-          "twitchUser": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/TwitchUser"
-              }
-            ],
-            "nullable": true
-          },
-          "telegramId": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "ltmidV2": {
-            "type": "string"
-          },
-          "lTokenV2": {
-            "type": "string"
-          },
-          "ltuidV2": {
-            "type": "string"
-          },
-          "lastAutoMarkup": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
       "Emote": {
         "required": [
           "endIndex",
@@ -1412,32 +1298,6 @@
         },
         "additionalProperties": false
       },
-      "FumoUser": {
-        "required": [
-          "lastTime",
-          "twitchId"
-        ],
-        "type": "object",
-        "properties": {
-          "twitchId": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "twitchUser": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/TwitchUser"
-              }
-            ],
-            "nullable": true
-          },
-          "lastTime": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
       "GaoAlertDto": {
         "required": [
           "id",
@@ -1463,50 +1323,6 @@
           "justText": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "HelloVideosUsers": {
-        "required": [
-          "id",
-          "lastTimeNotif",
-          "mediaInfo",
-          "mediaInfoId",
-          "twitchId"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "twitchId": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "twitchUser": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/TwitchUser"
-              }
-            ],
-            "nullable": true
-          },
-          "lastTimeNotif": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "mediaInfoId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "mediaInfo": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/MediaInfo"
-              }
-            ]
           }
         },
         "additionalProperties": false
@@ -1943,83 +1759,6 @@
         },
         "additionalProperties": false
       },
-      "PlayerState": {
-        "required": [
-          "id",
-          "isMuted",
-          "state",
-          "volume"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "currentTrackId": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
-          },
-          "nextTrackId": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
-          },
-          "currentTrackDuration": {
-            "type": "string",
-            "format": "date-span",
-            "nullable": true
-          },
-          "state": {
-            "enum": [
-              "Stopped",
-              "Playing",
-              "Paused",
-              "SwitchingTrack",
-              "WaitingForTrack"
-            ],
-            "type": "string"
-          },
-          "isMuted": {
-            "type": "boolean"
-          },
-          "volume": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "currentTrackRequestedBy": {
-            "maxLength": 50,
-            "type": "string",
-            "nullable": true
-          },
-          "currentTrackRequestedByTwitchUser": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/TwitchUser"
-              }
-            ],
-            "nullable": true
-          },
-          "currentTrack": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BaseTrackInfo"
-              }
-            ],
-            "nullable": true
-          },
-          "nextTrack": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BaseTrackInfo"
-              }
-            ],
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
       "PrizeType": {
         "required": [
           "id",
@@ -2359,76 +2098,14 @@
         "type": "object",
         "additionalProperties": false
       },
-      "TwitchLeaderboardUser": {
-        "required": [
-          "russianRouletteWins",
-          "russianRouletteWinsWithWaifu",
-          "tekkenVictorinaWins",
-          "tekkenVictorinaWinsWithWaifu",
-          "totalWins",
-          "triviaWins",
-          "triviaWinsWithWaifus",
-          "twitchId"
-        ],
-        "type": "object",
-        "properties": {
-          "twitchId": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "twitchUser": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/TwitchUser"
-              }
-            ],
-            "nullable": true
-          },
-          "totalWins": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "tekkenVictorinaWins": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "tekkenVictorinaWinsWithWaifu": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "russianRouletteWins": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "russianRouletteWinsWithWaifu": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "triviaWins": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "triviaWinsWithWaifus": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "additionalProperties": false
-      },
       "TwitchUser": {
         "required": [
-          "cinemaQueueItems",
           "createdAt",
           "displayName",
-          "helloVideos",
-          "honkaiMarkups",
-          "isJustFollower",
           "isModerator",
+          "isSimpleUser",
           "isVip",
           "lastUpdated",
-          "playerStates",
-          "requestedTracks",
           "twitchId",
           "userLogin"
         ],
@@ -2478,61 +2155,7 @@
             "type": "string",
             "format": "date-time"
           },
-          "leaderboardStats": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/TwitchLeaderboardUser"
-              }
-            ],
-            "nullable": true
-          },
-          "fumoUser": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/FumoUser"
-              }
-            ],
-            "nullable": true
-          },
-          "helloVideos": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/HelloVideosUsers"
-            }
-          },
-          "waifuRollGuarantee": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/WaifuRollGuarantee"
-              }
-            ],
-            "nullable": true
-          },
-          "honkaiMarkups": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DailyAutoMarkupUser"
-            }
-          },
-          "cinemaQueueItems": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CinemaMediaItem"
-            }
-          },
-          "requestedTracks": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BaseTrackInfo"
-            }
-          },
-          "playerStates": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/PlayerState"
-            }
-          },
-          "isJustFollower": {
+          "isSimpleUser": {
             "type": "boolean",
             "readOnly": true
           }
@@ -2666,46 +2289,6 @@
           },
           "isAdded": {
             "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "WaifuRollGuarantee": {
-        "required": [
-          "createdAt",
-          "lastRoll",
-          "rollCount",
-          "twitchId",
-          "updatedAt"
-        ],
-        "type": "object",
-        "properties": {
-          "twitchId": {
-            "type": "string"
-          },
-          "twitchUser": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/TwitchUser"
-              }
-            ],
-            "nullable": true
-          },
-          "rollCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "lastRoll": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time"
           }
         },
         "additionalProperties": false

@@ -599,7 +599,7 @@ export interface PlayerState {
   currentTrackDuration?: string;
   state: PlayerStateStateEnum;
   isMuted: boolean;
-  /** @format int32 */
+  /** @format float */
   volume: number;
   /** @maxLength 50 */
   currentTrackRequestedBy?: string;

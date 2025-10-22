@@ -1,11 +1,12 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useDebounce } from "react-use";
+import type { HubConnection } from "@microsoft/signalr";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
   BaseTrackInfo,
   PlayerState,
   PlayerStateStateEnum,
   SoundRequest,
+  SoundRequestHubSignalRConnectionBuilder,
 } from "@/shared/api";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
@@ -17,48 +18,44 @@ export const useSoundRequestPlayer = () => {
   const [playerState, setPlayerState] = useState<PlayerState | null>(null);
   const [queue, setQueue] = useState<BaseTrackInfo[]>([]);
   const [loading, setLoading] = useState(false);
-  const [volume, setVolume] = useState(50);
-  const [debouncedVolume, setDebouncedVolume] = useState(50);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [volume, setVolume] = useState<number>(0);
   const [history, setHistory] = useState<BaseTrackInfo[]>([]);
 
   const { showToast } = useToastModal();
   const soundRequestApi = useMemo(() => new SoundRequest(), []);
+  const connectionRef = useRef<HubConnection | null>(null);
 
-  // Debounce для громкости с задержкой 500мс
-  useDebounce(
-    () => {
-      setDebouncedVolume(volume);
-    },
-    500,
-    [volume]
-  );
-
-  // Отправка громкости на сервер после debounce
+  // Инициализация SignalR подключения
   useEffect(() => {
-    // Пропускаем первую загрузку
-    if (isInitialLoad) {
-      setIsInitialLoad(false);
-      return;
-    }
+    const connection = SoundRequestHubSignalRConnectionBuilder.build();
+    connectionRef.current = connection;
 
-    const sendVolumeToServer = async () => {
-      try {
-        const response =
-          await soundRequestApi.soundRequestVolumeCreate(debouncedVolume);
-        if (!response.data.success) {
-          showToast(response.data);
-        }
-      } catch {
-        showToast({
-          success: false,
-          message: "Ошибка при изменении громкости",
-        });
+    connection
+      .start()
+      .then(() => {
+        console.log("[useSoundRequestPlayer] SignalR подключение установлено");
+      })
+      .catch(error => {
+        console.error(
+          "[useSoundRequestPlayer] Ошибка подключения к SignalR:",
+          error
+        );
+      });
+
+    return () => {
+      connection.stop().catch(() => undefined);
+      if (connectionRef.current === connection) {
+        connectionRef.current = null;
       }
     };
+  }, []);
 
-    sendVolumeToServer();
-  }, [debouncedVolume, soundRequestApi, showToast, isInitialLoad]);
+  // Синхронизация volume с playerState
+  useEffect(() => {
+    if (playerState?.volume !== undefined) {
+      setVolume(playerState.volume);
+    }
+  }, [playerState?.volume]);
 
   // Загрузка состояния плеера
   const fetchPlayerState = useCallback(async () => {
@@ -66,7 +63,6 @@ export const useSoundRequestPlayer = () => {
       const response = await soundRequestApi.soundRequestStateList();
       if (response.data.success && response.data.data) {
         setPlayerState(response.data.data);
-        setVolume(response.data.data.volume);
       }
     } catch {
       console.error("Ошибка загрузки состояния плеера");
@@ -239,11 +235,28 @@ export const useSoundRequestPlayer = () => {
   }, [soundRequestApi, showToast, fetchPlayerState, fetchQueue]);
 
   // Управление громкостью
-  const handleVolumeChange = useCallback((newVolume: number) => {
-    // Сразу обновляем локальное состояние для UI
-    setVolume(newVolume);
-    // Отправка на сервер произойдет автоматически через debounce в useEffect
-  }, []);
+  const handleVolumeChange = useCallback(
+    async (newVolume: number) => {
+      // Сразу обновляем локальное состояние для UI
+      setVolume(newVolume);
+
+      // Отправляем изменение громкости через SignalR
+      if (!connectionRef.current) {
+        return;
+      }
+
+      try {
+        await connectionRef.current.invoke("VolumeChange", newVolume);
+      } catch (error) {
+        console.error("Ошибка при изменении громкости через SignalR:", error);
+        showToast({
+          success: false,
+          message: "Ошибка при изменении громкости",
+        });
+      }
+    },
+    [showToast]
+  );
 
   const handleMute = useCallback(async () => {
     try {

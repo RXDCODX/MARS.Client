@@ -124,12 +124,11 @@
 }
 
 .thumb {
-  width: 64px;
-  height: 64px;
+  width: 98px;
+  height: 55px;
   border-radius: .5rem;
   background: var(--bs-dark);
   overflow: hidden;
-  border: 2px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 
   img {
@@ -319,6 +318,7 @@
   gap: .5rem;
   justify-content: center;
   grid-column: 2;
+  position: relative;
 }
 
 .tbBtn {
@@ -344,6 +344,11 @@
     transform: translateY(0);
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
   }
+}
+
+.extraButtons {
+  position: absolute;
+  right: -20%;
 }
 
 .volumeWrap {

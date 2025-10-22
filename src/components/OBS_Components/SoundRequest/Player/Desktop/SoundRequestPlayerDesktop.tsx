@@ -8,7 +8,14 @@ import {
   Volume2,
   VolumeX,
 } from "lucide-react";
-import { CSSProperties, useEffect, useMemo, useRef, useState } from "react";
+import {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Button } from "react-bootstrap";
 
 import { useSoundRequestPlayer } from "../hooks";
@@ -106,28 +113,31 @@ export function SoundRequestPlayerDesktop() {
     return queue.filter(x => x.id !== currentId);
   }, [queue, current?.id]);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     const prev = history?.[0];
     if (prev?.id) handlePlayTrackFromQueue(prev.id);
-  };
+  }, [handlePlayTrackFromQueue, history]);
 
   const progressStyle = {
     "--track-progress": `${Math.round(progress * 100)}%`,
   } as CSSProperties;
 
   // Обработчики для синхронизации hover между левой и правой колонками
-  const handleItemHover = (trackId: string | undefined, isEnter: boolean) => {
-    if (!trackId) return;
+  const handleItemHover = useCallback(
+    (trackId: string | undefined, isEnter: boolean) => {
+      if (!trackId) return;
 
-    const items = document.querySelectorAll(`[data-track-id="${trackId}"]`);
-    items.forEach(item => {
-      if (isEnter) {
-        item.classList.add(styles.pairHovered);
-      } else {
-        item.classList.remove(styles.pairHovered);
-      }
-    });
-  };
+      const items = document.querySelectorAll(`[data-track-id="${trackId}"]`);
+      items.forEach(item => {
+        if (isEnter) {
+          item.classList.add(styles.pairHovered);
+        } else {
+          item.classList.remove(styles.pairHovered);
+        }
+      });
+    },
+    []
+  );
 
   return (
     <div className={styles.root}>
@@ -331,14 +341,16 @@ export function SoundRequestPlayerDesktop() {
                 {playerState?.isMuted ? <VolumeX /> : <Volume2 />}
               </Button>
 
-              <Button
-                variant="outline-secondary"
-                className={styles.tbBtn}
-                disabled
-                title="Видео в главном плеере (скоро)"
-              >
-                <Video />
-              </Button>
+              <div className={styles.extraButtons}>
+                <Button
+                  variant="outline-secondary"
+                  className={styles.tbBtn}
+                  disabled
+                  title="Видео в главном плеере (скоро)"
+                >
+                  <Video />
+                </Button>
+              </div>
             </div>
 
             <div className={styles.volumeWrap}>
