@@ -68,7 +68,7 @@ export function SoundRequestPlayerMobile() {
                   </p>
                 )}
                 <div className={styles.duration}>
-                  {formatDuration(playerState.currentTrackDuration || "PT0S")}
+                  {formatDuration(playerState.currentTrack?.duration || "PT0S")}
                 </div>
               </div>
             </div>

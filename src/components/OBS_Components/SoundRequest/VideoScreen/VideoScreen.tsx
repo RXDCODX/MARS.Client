@@ -16,6 +16,7 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
   const [playerState, setPlayerState] = useState<PlayerState | null>(null);
   const isMainPlayer = groupName === "mainplayer";
   const connectionRef = useRef<HubConnection | null>(null);
+  const lastProgressSentRef = useRef<number>(0);
 
   // Управление подключением к SignalR
   useEffect(() => {
@@ -81,6 +82,44 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
     });
   }, []);
 
+  const handleProgress = useCallback(
+    (event: React.SyntheticEvent<HTMLVideoElement, Event>) => {
+      // Отправляем прогресс только каждые 3 секунды, чтобы не перегружать SignalR
+      const progress = event.currentTarget.currentTime;
+      const currentSeconds = Math.floor(progress || 0);
+      const lastSent = lastProgressSentRef.current;
+
+      if (currentSeconds - lastSent >= 3) {
+        lastProgressSentRef.current = currentSeconds;
+
+        // Конвертируем секунды в TimeSpan строку (формат ISO 8601 Duration: PT1H2M3S)
+        const hours = Math.floor(currentSeconds / 3600);
+        const minutes = Math.floor((currentSeconds % 3600) / 60);
+        const seconds = Math.floor(currentSeconds % 60);
+
+        let duration = "PT";
+        if (hours > 0) duration += `${hours}H`;
+        if (minutes > 0) duration += `${minutes}M`;
+        if (seconds > 0) duration += `${seconds}S`;
+        if (duration === "PT") duration = "PT0S";
+
+        connectionRef.current
+          ?.invoke("TrackProgress", duration)
+          .catch(error => {
+            console.error(
+              "[VideoScreen] Ошибка при вызове TrackProgress:",
+              error
+            );
+          });
+
+        console.log(
+          `[VideoScreen] Прогресс отправлен: ${currentSeconds}s (${duration})`
+        );
+      }
+    },
+    []
+  );
+
   // Если нет текущего трека, показываем пустой экран
   if (!playerState?.currentTrack) {
     console.log("[VideoScreen] Нет трека - показываем пустой экран");
@@ -94,7 +133,8 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
 
   const { currentTrack } = playerState;
   const userName =
-    playerState.currentTrackRequestedByTwitchUser?.displayName ||
+    playerState.currentTrack.requestedByTwitchUser?.displayName ??
+    playerState.currentTrack.requestedByTwitchUser?.userLogin ??
     "Неизвестный пользователь";
   const authors = currentTrack.authors?.join(", ") || "Неизвестный автор";
   const trackName = currentTrack.trackName;
@@ -115,7 +155,28 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
         <div className={styles.userSection}>
           <div className={styles.userInfo}>
             <span className={styles.label}>Заказал:</span>
-            <span className={styles.userName}>{userName}</span>
+            <div className={styles.userDisplay}>
+              {playerState.currentTrack.requestedByTwitchUser
+                ?.profileImageUrl && (
+                <img
+                  src={
+                    playerState.currentTrack.requestedByTwitchUser
+                      .profileImageUrl
+                  }
+                  alt={userName}
+                  className={styles.userAvatar}
+                />
+              )}
+              <span
+                className={styles.userName}
+                style={{
+                  color:
+                    playerState.currentTrack.requestedByTwitchUser?.chatColor,
+                }}
+              >
+                {userName}
+              </span>
+            </div>
           </div>
         </div>
       )}
@@ -133,6 +194,7 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
           onEnded={() => isMainPlayer && handleEnded()}
           onStart={() => isMainPlayer && handleStart()}
           onError={() => isMainPlayer && handleError()}
+          onProgress={progress => isMainPlayer && handleProgress(progress)}
           width="100%"
           height="100%"
           controls={false}

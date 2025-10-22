@@ -108,32 +108,6 @@ export interface ChannelRewardRecord {
   mediaInfoId?: string;
 }
 
-export interface CinemaMediaItem {
-  /** @format uuid */
-  id: string;
-  title?: string;
-  description?: string;
-  /**
-   * @minLength 1
-   * @maxLength 1000
-   */
-  mediaUrl: string;
-  status: CinemaMediaItemStatusEnum;
-  /** @format int32 */
-  priority: number;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  scheduledFor?: string;
-  /** @maxLength 50 */
-  twitchUserId?: string;
-  twitchUser?: TwitchUser;
-  notes?: string;
-  isNext: boolean;
-  /** @format date-time */
-  lastModified?: string;
-}
-
 export interface CinemaMediaItemDto {
   /** @format uuid */
   id: string;
@@ -306,14 +280,6 @@ export interface FollowerInfo {
   twitchUser?: TwitchUser;
 }
 
-export interface FumoUser {
-  /** @minLength 1 */
-  twitchId: string;
-  twitchUser?: TwitchUser;
-  /** @format date-time */
-  lastTime: string;
-}
-
 export interface GetCustomRewardRedemptionResponse {
   data?: RewardRedemption[];
   pagination?: Pagination;
@@ -327,19 +293,6 @@ export interface GlobalCooldownSetting {
   isEnabled: boolean;
   /** @format int32 */
   globalCooldownSeconds: number;
-}
-
-export interface HelloVideosUsers {
-  /** @format uuid */
-  id: string;
-  /** @minLength 1 */
-  twitchId: string;
-  twitchUser?: TwitchUser;
-  /** @format date-time */
-  lastTimeNotif: string;
-  /** @format uuid */
-  mediaInfoId: string;
-  mediaInfo: MediaInfo;
 }
 
 export interface Image {
@@ -403,16 +356,6 @@ export interface MediaFileInfo {
   isLocalFile: boolean;
   fileName: string;
   extension: string;
-}
-
-export interface MediaInfo {
-  /** @format uuid */
-  id: string;
-  textInfo: MediaTextInfo;
-  fileInfo: MediaFileInfo;
-  positionInfo: MediaPositionInfo;
-  metaInfo: MediaMetaInfo;
-  stylesInfo: MediaStylesInfo;
 }
 
 export interface MediaMetaInfo {
@@ -596,7 +539,7 @@ export interface PlayerState {
   /** @format uuid */
   nextTrackId?: string;
   /** @format date-span */
-  currentTrackDuration?: string;
+  currentTrackProgress?: string;
   state: PlayerStateStateEnum;
   isMuted: boolean;
   /** @format float */
@@ -755,26 +698,6 @@ export interface TekkenCharacterPendingDto {
   isNew: boolean;
 }
 
-export interface TwitchLeaderboardUser {
-  /** @minLength 1 */
-  twitchId: string;
-  twitchUser?: TwitchUser;
-  /** @format int32 */
-  totalWins: number;
-  /** @format int32 */
-  tekkenVictorinaWins: number;
-  /** @format int32 */
-  tekkenVictorinaWinsWithWaifu: number;
-  /** @format int32 */
-  russianRouletteWins: number;
-  /** @format int32 */
-  russianRouletteWinsWithWaifu: number;
-  /** @format int32 */
-  triviaWins: number;
-  /** @format int32 */
-  triviaWinsWithWaifus: number;
-}
-
 export interface TwitchUser {
   /**
    * @minLength 1
@@ -803,15 +726,7 @@ export interface TwitchUser {
   lastUpdated: string;
   /** @format date-time */
   createdAt: string;
-  leaderboardStats?: TwitchLeaderboardUser;
-  fumoUser?: FumoUser;
-  helloVideos: HelloVideosUsers[];
-  waifuRollGuarantee?: WaifuRollGuarantee;
-  honkaiMarkups: DailyAutoMarkupUser[];
-  cinemaQueueItems: CinemaMediaItem[];
-  requestedTracks: BaseTrackInfo[];
-  playerStates: PlayerState[];
-  isJustFollower: boolean;
+  isSimpleUser: boolean;
 }
 
 export interface UpdateAutoMessageRequest {
@@ -919,27 +834,6 @@ export interface ValidateFolderResponse {
   /** @format int32 */
   videoFilesCount: number;
   sampleFiles: string[];
-}
-
-export interface WaifuRollGuarantee {
-  twitchId: string;
-  twitchUser?: TwitchUser;
-  /** @format int32 */
-  rollCount: number;
-  /** @format date-time */
-  lastRoll: string;
-  /** @format date-time */
-  createdAt: string;
-  /** @format date-time */
-  updatedAt: string;
-}
-
-export enum CinemaMediaItemStatusEnum {
-  Pending = "Pending",
-  InProgress = "InProgress",
-  Completed = "Completed",
-  Cancelled = "Cancelled",
-  Postponed = "Postponed",
 }
 
 export enum CinemaMediaItemDtoStatusEnum {
@@ -1347,6 +1241,16 @@ export interface MediaDto {
   mediaInfo: MediaInfo;
   /** @format date-time */
   uploadStartTime: string;
+}
+
+export interface MediaInfo {
+  fileInfo: MediaFileInfo;
+  /** @format uuid */
+  id: string;
+  metaInfo: MediaMetaInfo;
+  positionInfo: MediaPositionInfo;
+  stylesInfo: MediaStylesInfo;
+  textInfo: MediaTextInfo;
 }
 
 export interface PrizeType {

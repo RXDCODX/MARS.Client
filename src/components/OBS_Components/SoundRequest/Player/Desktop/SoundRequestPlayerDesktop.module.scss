@@ -83,6 +83,22 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease;
 
+  &.current {
+    background: rgba(0, 150, 136, 1);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 16px rgba(0, 150, 136, 0.3),
+      0 0 0 1px rgba(0, 150, 136, 0.2) inset;
+  
+    &:hover,
+    &.pairHovered {
+      background: rgba(0, 150, 136, 1);
+      border-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 4px 16px rgba(0, 150, 136, 0.3),
+        0 0 0 1px rgba(0, 150, 136, 0.2) inset;
+      transform: translateY(-2px);
+    }
+  }
+
   &:hover,
   &.pairHovered {
     background: rgba(255, 255, 255, 0.08);
@@ -93,22 +109,6 @@
 
   &+& {
     margin-top: .5rem;
-  }
-}
-
-.current {
-  background: rgba(0, 123, 255, 0.2);
-  border-color: rgba(0, 123, 255, 0.5);
-  box-shadow: 0 4px 16px rgba(0, 123, 255, 0.3),
-    0 0 0 1px rgba(0, 123, 255, 0.2) inset;
-
-  &:hover,
-  &.pairHovered {
-    background: rgba(0, 123, 255, 0.25);
-    border-color: rgba(0, 123, 255, 0.6);
-    box-shadow: 0 4px 16px rgba(0, 123, 255, 0.4),
-      0 0 0 1px rgba(0, 123, 255, 0.3) inset;
-    transform: translateY(-2px);
   }
 }
 
@@ -267,6 +267,22 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   transition: all 0.2s ease;
+
+  &.current {
+    background: rgba(0, 150, 136, 1);
+    border-color: rgba(255, 255, 255, 0.5);
+    box-shadow: 0 4px 16px rgba(0, 150, 136, 0.3),
+      0 0 0 1px rgba(0, 150, 136, 0.2) inset;
+  
+    &:hover,
+    &.pairHovered {
+      background: rgba(0, 150, 136, 1);
+      border-color: rgba(255, 255, 255, 0.5);
+      box-shadow: 0 4px 16px rgba(0, 150, 136, 0.3),
+        0 0 0 1px rgba(0, 150, 136, 0.2) inset;
+      transform: translateY(-2px);
+    }
+  }
 
   &:hover,
   &.pairHovered {

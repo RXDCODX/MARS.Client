@@ -213,6 +213,24 @@
         "responses": { }
       }
     },
+    "/hubs/soundrequest/TrackProgress": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "parameters": [
+          {
+            "name": "span",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-span"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/soundrequest/VolumeChange": {
       "post": {
         "tags": [

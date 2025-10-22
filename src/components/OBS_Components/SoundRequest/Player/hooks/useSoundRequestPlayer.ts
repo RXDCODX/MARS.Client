@@ -50,6 +50,18 @@ export const useSoundRequestPlayer = () => {
     };
   }, []);
 
+  // Отслеживание изменений playerState
+  useEffect(() => {
+    console.log("[useSoundRequestPlayer] PlayerState изменился:", {
+      hasState: !!playerState,
+      currentTrack: playerState?.currentTrack?.trackName,
+      nextTrack: playerState?.nextTrack?.trackName,
+      state: playerState?.state,
+      volume: playerState?.volume,
+      isMuted: playerState?.isMuted,
+    });
+  }, [playerState]);
+
   // Синхронизация volume с playerState
   useEffect(() => {
     if (playerState?.volume !== undefined) {
@@ -60,24 +72,64 @@ export const useSoundRequestPlayer = () => {
   // Загрузка состояния плеера
   const fetchPlayerState = useCallback(async () => {
     try {
+      console.log("[useSoundRequestPlayer] Запрос состояния плеера...");
       const response = await soundRequestApi.soundRequestStateList();
-      if (response.data.success && response.data.data) {
-        setPlayerState(response.data.data);
+      console.log("[useSoundRequestPlayer] Ответ от API:", {
+        success: response.data.success,
+        hasData: !!response.data.data,
+        currentTrack: response.data.data?.currentTrack?.trackName,
+        nextTrack: response.data.data?.nextTrack?.trackName,
+        state: response.data.data?.state,
+      });
+
+      if (!response.data.success) {
+        console.error(
+          "[useSoundRequestPlayer] API вернул success=false:",
+          response.data
+        );
+        return;
       }
-    } catch {
-      console.error("Ошибка загрузки состояния плеера");
+
+      if (!response.data.data) {
+        console.warn(
+          "[useSoundRequestPlayer] API не вернул данные (data пусто)"
+        );
+        return;
+      }
+
+      setPlayerState(response.data.data);
+      console.log("[useSoundRequestPlayer] Состояние плеера обновлено");
+    } catch (error) {
+      console.error(
+        "[useSoundRequestPlayer] Ошибка загрузки состояния плеера:",
+        error
+      );
     }
   }, [soundRequestApi]);
 
   // Загрузка очереди
   const fetchQueue = useCallback(async () => {
     try {
+      console.log("[useSoundRequestPlayer] Запрос очереди...");
       const response = await soundRequestApi.soundRequestQueueList();
-      if (response.data.success && response.data.data) {
+      console.log("[useSoundRequestPlayer] Очередь получена:", {
+        success: response.data.success,
+        count: response.data.data?.length || 0,
+      });
+
+      if (!response.data.success) {
+        console.error(
+          "[useSoundRequestPlayer] API очереди вернул success=false:",
+          response.data
+        );
+        return;
+      }
+
+      if (response.data.data) {
         setQueue(response.data.data);
       }
-    } catch {
-      console.error("Ошибка загрузки очереди");
+    } catch (error) {
+      console.error("[useSoundRequestPlayer] Ошибка загрузки очереди:", error);
     }
   }, [soundRequestApi]);
 
@@ -85,14 +137,31 @@ export const useSoundRequestPlayer = () => {
   const fetchHistory = useCallback(
     async (count: number = 20) => {
       try {
+        console.log("[useSoundRequestPlayer] Запрос истории...");
         const response = await soundRequestApi.soundRequestHistoryList({
           count,
         });
-        if (response.data.success && response.data.data) {
+        console.log("[useSoundRequestPlayer] История получена:", {
+          success: response.data.success,
+          count: response.data.data?.length || 0,
+        });
+
+        if (!response.data.success) {
+          console.error(
+            "[useSoundRequestPlayer] API истории вернул success=false:",
+            response.data
+          );
+          return;
+        }
+
+        if (response.data.data) {
           setHistory(response.data.data);
         }
-      } catch {
-        console.error("Ошибка загрузки истории плеера");
+      } catch (error) {
+        console.error(
+          "[useSoundRequestPlayer] Ошибка загрузки истории плеера:",
+          error
+        );
       }
     },
     [soundRequestApi]
@@ -100,6 +169,9 @@ export const useSoundRequestPlayer = () => {
 
   // Инициализация
   useEffect(() => {
+    console.log(
+      "[useSoundRequestPlayer] Инициализация - загружаем начальные данные"
+    );
     fetchPlayerState();
     fetchQueue();
     fetchHistory(20);
@@ -116,6 +188,9 @@ export const useSoundRequestPlayer = () => {
     }, 10000);
 
     return () => {
+      console.log(
+        "[useSoundRequestPlayer] Размонтирование - очищаем интервалы"
+      );
       clearInterval(interval);
       clearInterval(historyInterval);
     };

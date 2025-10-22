@@ -52,9 +52,7 @@ export function SoundRequestPlayerDesktop() {
   } = useSoundRequestPlayer();
 
   const current = playerState?.currentTrack || null;
-  const durationSec = parseIsoDurationToSeconds(
-    playerState?.currentTrackDuration || "PT0S"
-  );
+  const durationSec = parseIsoDurationToSeconds(current?.duration || "PT0S");
 
   const [progress, setProgress] = useState(0); // 0..1
   const startTimeRef = useRef<number>(0);
@@ -191,9 +189,7 @@ export function SoundRequestPlayerDesktop() {
                       {current.url}
                     </a>
                     <span className={styles.itemDuration}>
-                      {formatDuration(
-                        playerState?.currentTrackDuration || "PT0S"
-                      )}
+                      {formatDuration(current?.duration || "PT0S")}
                     </span>
                   </div>
                 </div>

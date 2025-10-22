@@ -8489,7 +8489,7 @@
             "format": "uuid",
             "nullable": true
           },
-          "currentTrackDuration": {
+          "currentTrackProgress": {
             "type": "string",
             "format": "date-span",
             "nullable": true
