@@ -3,17 +3,31 @@ import { lazy, Suspense } from "react";
 import { PageLoader } from "@/components/shared/LazyLoader";
 import Layout from "@/Site/Pages/Layout/Layout";
 
+import { registerPrefetchComponents } from "../utils/prefetchRoutes";
 import { RouteConfig } from "./RouteConfig";
 
 // Тяжелые админ страницы - lazy loading
-const LogsPage = lazy(() =>
-  import("@/Site/Pages").then(m => ({ default: m.LogsPage }))
-);
-const ServerViewer = lazy(
-  () => import("@/Site/Pages/ServerViewer/ServerViewer")
-);
-const TwitchRewardsPage = lazy(() => import("@/Site/Pages/TwitchRewardsPage"));
-const ServiceDetailsPage = lazy(() => import("./ServiceDetailsPage"));
+const logsPageLoader = () =>
+  import("@/Site/Pages").then(m => ({ default: m.LogsPage }));
+const LogsPage = lazy(logsPageLoader);
+
+const serverViewerLoader = () =>
+  import("@/Site/Pages/ServerViewer/ServerViewer");
+const ServerViewer = lazy(serverViewerLoader);
+
+const twitchRewardsPageLoader = () => import("@/Site/Pages/TwitchRewardsPage");
+const TwitchRewardsPage = lazy(twitchRewardsPageLoader);
+
+const serviceDetailsPageLoader = () => import("./ServiceDetailsPage");
+const ServiceDetailsPage = lazy(serviceDetailsPageLoader);
+
+// Регистрируем админ компоненты для фоновой загрузки
+registerPrefetchComponents([
+  logsPageLoader,
+  serverViewerLoader,
+  twitchRewardsPageLoader,
+  serviceDetailsPageLoader,
+]);
 
 // Массив панелей управления (с Layout)
 export const adminRoutes: RouteConfig[] = [

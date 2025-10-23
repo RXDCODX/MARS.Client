@@ -3,58 +3,104 @@ import { lazy, Suspense } from "react";
 import { PageLoader } from "@/components/shared/LazyLoader";
 import Layout from "@/Site/Pages/Layout/Layout";
 
+import {
+  registerCriticalComponents,
+  registerPrefetchComponents,
+} from "../utils/prefetchRoutes";
 import { RouteConfig } from "./RouteConfig";
 
-// Все страницы - lazy loading для оптимизации производительности
-const WelcomePage = lazy(() => import("@/Site/Pages/WelcomePage"));
-const AboutPage = lazy(() => import("@/Site/Pages/AboutPage"));
-const DocsPage = lazy(() => import("@/Site/Pages/DocsPage"));
-const ContactsPage = lazy(() => import("@/Site/Pages/ContactsPage"));
-const RoutesPage = lazy(() => import("@/Site/Pages/RoutesPage/RoutesPage"));
+// КРИТИЧНЫЕ компоненты - загружаются сразу для главной страницы
+const welcomePageLoader = () => import("@/Site/Pages/WelcomePage");
+const WelcomePage = lazy(welcomePageLoader);
+
+// Регистрируем критичный компонент
+registerCriticalComponents([welcomePageLoader]);
+
+// Остальные страницы - lazy loading для оптимизации производительности
+const aboutPageLoader = () => import("@/Site/Pages/AboutPage");
+const AboutPage = lazy(aboutPageLoader);
+
+const docsPageLoader = () => import("@/Site/Pages/DocsPage");
+const DocsPage = lazy(docsPageLoader);
+
+const contactsPageLoader = () => import("@/Site/Pages/ContactsPage");
+const ContactsPage = lazy(contactsPageLoader);
+
+const routesPageLoader = () => import("@/Site/Pages/RoutesPage/RoutesPage");
+const RoutesPage = lazy(routesPageLoader);
 
 // Тяжелые страницы - lazy loading для оптимизации производительности
-const FramedataPage = lazy(
-  () => import("@/Site/Pages/FramedataPage/FramedataPage")
-);
-const PendingChangesPage = lazy(() =>
+const framedataPageLoader = () =>
+  import("@/Site/Pages/FramedataPage/FramedataPage");
+const FramedataPage = lazy(framedataPageLoader);
+
+const pendingChangesPageLoader = () =>
   import("@/Site/Pages/FramedataPage").then(m => ({
     default: m.PendingChangesPage,
-  }))
-);
-const ChangeDetailsPage = lazy(() =>
+  }));
+const PendingChangesPage = lazy(pendingChangesPageLoader);
+
+const changeDetailsPageLoader = () =>
   import("@/Site/Pages/FramedataPage").then(m => ({
     default: m.ChangeDetailsPage,
-  }))
-);
-const RandomMemePage = lazy(
-  () => import("@/Site/Pages/RandomMemePage/RandomMemePage")
-);
-const RandomMemeDetailsPage = lazy(() =>
+  }));
+const ChangeDetailsPage = lazy(changeDetailsPageLoader);
+
+const randomMemePageLoader = () =>
+  import("@/Site/Pages/RandomMemePage/RandomMemePage");
+const RandomMemePage = lazy(randomMemePageLoader);
+
+const randomMemeDetailsPageLoader = () =>
   import("@/Site/Pages/RandomMemePage/pages").then(m => ({
     default: m.RandomMemeDetailsPage,
-  }))
-);
-const RandomMemeEditPage = lazy(() =>
+  }));
+const RandomMemeDetailsPage = lazy(randomMemeDetailsPageLoader);
+
+const randomMemeEditPageLoader = () =>
   import("@/Site/Pages/RandomMemePage/pages").then(m => ({
     default: m.RandomMemeEditPage,
-  }))
-);
-const CinemaQueuePage = lazy(
-  () => import("@/Site/Pages/CinemaQueuePage/CinemaQueuePage")
-);
-const CommandsPage = lazy(
-  () => import("@/Site/Pages/CommandsPage/CommandsPage")
-);
-const MediaInfoListPage = lazy(() =>
+  }));
+const RandomMemeEditPage = lazy(randomMemeEditPageLoader);
+
+const cinemaQueuePageLoader = () =>
+  import("@/Site/Pages/CinemaQueuePage/CinemaQueuePage");
+const CinemaQueuePage = lazy(cinemaQueuePageLoader);
+
+const commandsPageLoader = () =>
+  import("@/Site/Pages/CommandsPage/CommandsPage");
+const CommandsPage = lazy(commandsPageLoader);
+
+const mediaInfoListPageLoader = () =>
   import("@/Site/Pages/MediaInfoPage/MediaInfoListPage").then(m => ({
     default: m.MediaInfoListPage,
-  }))
-);
-const MediaInfoEditPage = lazy(() =>
+  }));
+const MediaInfoListPage = lazy(mediaInfoListPageLoader);
+
+const mediaInfoEditPageLoader = () =>
   import("@/Site/Pages/MediaInfoPage/MediaInfoEditPage").then(m => ({
     default: m.MediaInfoEditPage,
-  }))
-);
+  }));
+const MediaInfoEditPage = lazy(mediaInfoEditPageLoader);
+
+// Регистрируем все некритичные компоненты для фоновой загрузки
+registerPrefetchComponents([
+  // Часто используемые страницы
+  aboutPageLoader,
+  docsPageLoader,
+  contactsPageLoader,
+  commandsPageLoader,
+  routesPageLoader,
+  // Тяжелые страницы
+  framedataPageLoader,
+  pendingChangesPageLoader,
+  changeDetailsPageLoader,
+  randomMemePageLoader,
+  randomMemeDetailsPageLoader,
+  randomMemeEditPageLoader,
+  cinemaQueuePageLoader,
+  mediaInfoListPageLoader,
+  mediaInfoEditPageLoader,
+]);
 
 // Массив основных страниц сайта с Layout
 export const mainSiteRoutes: RouteConfig[] = [

@@ -1,4 +1,5 @@
 import type { HubConnection } from "@microsoft/signalr";
+import { TimeSpan } from "@tempestive/timespan.js";
 import { useCallback, useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 
@@ -26,10 +27,10 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
     // Обработчик изменения состояния плеера
     const handlePlayerStateChange = (state: PlayerState) => {
       console.log("[VideoScreen] PlayerStateChange получено:", {
-        hasCurrentTrack: !!state.currentTrack,
-        trackName: state.currentTrack?.trackName,
+        hasCurrentTrack: !!state.currentQueueItem?.track,
+        trackName: state.currentQueueItem?.track?.trackName,
         state: state.state,
-        url: state.currentTrack?.url,
+        url: state.currentQueueItem?.track?.url,
       });
       setPlayerState(state);
     };
@@ -65,46 +66,42 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
 
   // Обработчики событий плеера
   const handleEnded = useCallback(() => {
-    connectionRef.current?.invoke("Ended").catch(error => {
-      console.error("[VideoScreen] Ошибка при вызове Ended:", error);
-    });
-  }, []);
+    connectionRef.current
+      ?.invoke("Ended", playerState?.currentQueueItem?.track)
+      .catch(error => {
+        console.error("[VideoScreen] Ошибка при вызове Ended:", error);
+      });
+  }, [playerState?.currentQueueItem?.track]);
 
   const handleStart = useCallback(() => {
-    connectionRef.current?.invoke("Started").catch(error => {
-      console.error("[VideoScreen] Ошибка при вызове Started:", error);
-    });
-  }, []);
+    connectionRef.current
+      ?.invoke("Started", playerState?.currentQueueItem?.track)
+      .catch(error => {
+        console.error("[VideoScreen] Ошибка при вызове Started:", error);
+      });
+  }, [playerState?.currentQueueItem?.track]);
 
   const handleError = useCallback(() => {
-    connectionRef.current?.invoke("ErrorPlaying").catch(error => {
-      console.error("[VideoScreen] Ошибка при вызове ErrorPlaying:", error);
-    });
-  }, []);
+    connectionRef.current
+      ?.invoke("ErrorPlaying", playerState?.currentQueueItem?.track)
+      .catch(error => {
+        console.error("[VideoScreen] Ошибка при вызове ErrorPlaying:", error);
+      });
+  }, [playerState?.currentQueueItem?.track]);
 
   const handleProgress = useCallback(
     (event: React.SyntheticEvent<HTMLVideoElement, Event>) => {
       // Отправляем прогресс только каждые 3 секунды, чтобы не перегружать SignalR
       const progress = event.currentTarget.currentTime;
-      const currentSeconds = Math.floor(progress || 0);
+      const timespan = new TimeSpan({ seconds: progress });
+      const currentSeconds = timespan.totalSeconds;
       const lastSent = lastProgressSentRef.current;
 
       if (currentSeconds - lastSent >= 3) {
         lastProgressSentRef.current = currentSeconds;
 
-        // Конвертируем секунды в TimeSpan строку (формат ISO 8601 Duration: PT1H2M3S)
-        const hours = Math.floor(currentSeconds / 3600);
-        const minutes = Math.floor((currentSeconds % 3600) / 60);
-        const seconds = Math.floor(currentSeconds % 60);
-
-        let duration = "PT";
-        if (hours > 0) duration += `${hours}H`;
-        if (minutes > 0) duration += `${minutes}M`;
-        if (seconds > 0) duration += `${seconds}S`;
-        if (duration === "PT") duration = "PT0S";
-
         connectionRef.current
-          ?.invoke("TrackProgress", duration)
+          ?.invoke("TrackProgress", timespan.totalSeconds)
           .catch(error => {
             console.error(
               "[VideoScreen] Ошибка при вызове TrackProgress:",
@@ -113,7 +110,7 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
           });
 
         console.log(
-          `[VideoScreen] Прогресс отправлен: ${currentSeconds}s (${duration})`
+          `[VideoScreen] Прогресс отправлен: ${timespan.totalSeconds}s (${timespan.minutes}:${timespan.seconds})`
         );
       }
     },
@@ -121,20 +118,21 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
   );
 
   // Если нет текущего трека, показываем пустой экран
-  if (!playerState?.currentTrack) {
+  if (!playerState?.currentQueueItem?.track) {
     console.log("[VideoScreen] Нет трека - показываем пустой экран");
     return null;
   }
 
   console.log(
     "[VideoScreen] Рендерим плеер с треком:",
-    playerState.currentTrack.trackName
+    playerState.currentQueueItem.track.trackName
   );
 
-  const { currentTrack } = playerState;
+  const { currentQueueItem } = playerState;
+  const currentTrack = currentQueueItem.track;
   const userName =
-    playerState.currentTrack.requestedByTwitchUser?.displayName ??
-    playerState.currentTrack.requestedByTwitchUser?.userLogin ??
+    currentQueueItem.requestedByTwitchUser?.displayName ??
+    currentQueueItem.requestedByTwitchUser?.userLogin ??
     "Неизвестный пользователь";
   const authors = currentTrack.authors?.join(", ") || "Неизвестный автор";
   const trackName = currentTrack.trackName;
@@ -156,13 +154,9 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
           <div className={styles.userInfo}>
             <span className={styles.label}>Заказал:</span>
             <div className={styles.userDisplay}>
-              {playerState.currentTrack.requestedByTwitchUser
-                ?.profileImageUrl && (
+              {currentQueueItem.requestedByTwitchUser?.profileImageUrl && (
                 <img
-                  src={
-                    playerState.currentTrack.requestedByTwitchUser
-                      .profileImageUrl
-                  }
+                  src={currentQueueItem.requestedByTwitchUser.profileImageUrl}
                   alt={userName}
                   className={styles.userAvatar}
                 />
@@ -170,8 +164,7 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
               <span
                 className={styles.userName}
                 style={{
-                  color:
-                    playerState.currentTrack.requestedByTwitchUser?.chatColor,
+                  color: currentQueueItem.requestedByTwitchUser?.chatColor,
                 }}
               >
                 {userName}

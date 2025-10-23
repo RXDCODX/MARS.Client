@@ -220,11 +220,11 @@
         ],
         "parameters": [
           {
-            "name": "span",
+            "name": "seconds",
             "in": "query",
             "schema": {
-              "type": "string",
-              "format": "date-span"
+              "type": "integer",
+              "format": "int64"
             }
           }
         ],
@@ -915,12 +915,15 @@
       },
       "BaseTrackInfo": {
         "required": [
+          "createdAt",
           "duration",
           "id",
           "isDeleted",
           "lastTimePlays",
+          "queueItems",
           "title",
           "trackName",
+          "updatedAt",
           "url"
         ],
         "type": "object",
@@ -930,6 +933,7 @@
             "format": "uuid"
           },
           "trackName": {
+            "maxLength": 300,
             "type": "string"
           },
           "authors": {
@@ -953,6 +957,7 @@
           },
           "artworkUrl": {
             "type": "string",
+            "format": "uri",
             "nullable": true
           },
           "videoId": {
@@ -962,15 +967,31 @@
           "isDeleted": {
             "type": "boolean"
           },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "queueItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueueItem"
+            }
+          },
           "queueOrder": {
             "type": "integer",
             "format": "int32",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "requestedByTwitchId": {
             "maxLength": 50,
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "requestedByTwitchUser": {
             "allOf": [
@@ -978,7 +999,8 @@
                 "$ref": "#/components/schemas/TwitchUser"
               }
             ],
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "title": {
             "type": "string",
@@ -1793,6 +1815,60 @@
           },
           "text": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "QueueItem": {
+        "required": [
+          "id",
+          "isDeleted",
+          "requestedAt",
+          "requestedByTwitchId",
+          "requestedByTwitchUser",
+          "track",
+          "trackId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "trackId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "track": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BaseTrackInfo"
+              }
+            ]
+          },
+          "queueOrder": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "requestedByTwitchId": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "requestedByTwitchUser": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TwitchUser"
+              }
+            ]
+          },
+          "requestedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

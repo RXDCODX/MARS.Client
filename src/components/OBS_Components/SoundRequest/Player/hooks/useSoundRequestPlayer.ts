@@ -5,6 +5,7 @@ import {
   BaseTrackInfo,
   PlayerState,
   PlayerStateStateEnum,
+  QueueItem,
   SoundRequest,
   SoundRequestHubSignalRConnectionBuilder,
 } from "@/shared/api";
@@ -30,10 +31,47 @@ export const useSoundRequestPlayer = () => {
     const connection = SoundRequestHubSignalRConnectionBuilder.build();
     connectionRef.current = connection;
 
+    // Подписка на события от сервера
+    connection.on("PlayerStateChange", (state: PlayerState) => {
+      console.log(
+        "[useSoundRequestPlayer] Получено обновление состояния через SignalR:",
+        {
+          currentTrack: state?.currentQueueItem?.track?.trackName,
+          nextTrack: state?.nextQueueItem?.track?.trackName,
+          state: state?.state,
+        }
+      );
+      setPlayerState(state);
+    });
+
+    connection.on("QueueChanged", (queueItems: QueueItem[]) => {
+      console.log(
+        "[useSoundRequestPlayer] Получено обновление очереди через SignalR:",
+        {
+          count: queueItems?.length || 0,
+        }
+      );
+      if (queueItems) {
+        setQueue(queueItems.map(item => item.track));
+      }
+    });
+
     connection
       .start()
-      .then(() => {
+      .then(async () => {
         console.log("[useSoundRequestPlayer] SignalR подключение установлено");
+        // Присоединяемся к группе для получения обновлений
+        try {
+          await connection.invoke("Join", "apiplayer");
+          console.log(
+            "[useSoundRequestPlayer] Присоединились к группе apiplayer"
+          );
+        } catch (error) {
+          console.error(
+            "[useSoundRequestPlayer] Ошибка присоединения к группе:",
+            error
+          );
+        }
       })
       .catch(error => {
         console.error(
@@ -43,6 +81,8 @@ export const useSoundRequestPlayer = () => {
       });
 
     return () => {
+      connection.off("PlayerStateChange");
+      connection.off("QueueChanged");
       connection.stop().catch(() => undefined);
       if (connectionRef.current === connection) {
         connectionRef.current = null;
@@ -54,8 +94,8 @@ export const useSoundRequestPlayer = () => {
   useEffect(() => {
     console.log("[useSoundRequestPlayer] PlayerState изменился:", {
       hasState: !!playerState,
-      currentTrack: playerState?.currentTrack?.trackName,
-      nextTrack: playerState?.nextTrack?.trackName,
+      currentTrack: playerState?.currentQueueItem?.track?.trackName,
+      nextTrack: playerState?.nextQueueItem?.track?.trackName,
       state: playerState?.state,
       volume: playerState?.volume,
       isMuted: playerState?.isMuted,
@@ -77,8 +117,8 @@ export const useSoundRequestPlayer = () => {
       console.log("[useSoundRequestPlayer] Ответ от API:", {
         success: response.data.success,
         hasData: !!response.data.data,
-        currentTrack: response.data.data?.currentTrack?.trackName,
-        nextTrack: response.data.data?.nextTrack?.trackName,
+        currentTrack: response.data.data?.currentQueueItem?.track?.trackName,
+        nextTrack: response.data.data?.nextQueueItem?.track?.trackName,
         state: response.data.data?.state,
       });
 
@@ -126,7 +166,7 @@ export const useSoundRequestPlayer = () => {
       }
 
       if (response.data.data) {
-        setQueue(response.data.data);
+        setQueue(response.data.data.map(item => item.track));
       }
     } catch (error) {
       console.error("[useSoundRequestPlayer] Ошибка загрузки очереди:", error);
@@ -172,17 +212,12 @@ export const useSoundRequestPlayer = () => {
     console.log(
       "[useSoundRequestPlayer] Инициализация - загружаем начальные данные"
     );
+    // Загружаем начальное состояние (если SignalR еще не отправил)
     fetchPlayerState();
     fetchQueue();
     fetchHistory(20);
 
-    // Обновление каждые 2 секунды
-    const interval = setInterval(() => {
-      fetchPlayerState();
-      fetchQueue();
-      // Историю можно обновлять реже
-    }, 2000);
-
+    // Обновляем только историю периодически (состояние и очередь приходят через SignalR)
     const historyInterval = setInterval(() => {
       fetchHistory(20);
     }, 10000);
@@ -191,7 +226,6 @@ export const useSoundRequestPlayer = () => {
       console.log(
         "[useSoundRequestPlayer] Размонтирование - очищаем интервалы"
       );
-      clearInterval(interval);
       clearInterval(historyInterval);
     };
   }, [fetchPlayerState, fetchQueue, fetchHistory]);
@@ -200,11 +234,12 @@ export const useSoundRequestPlayer = () => {
   const handlePlay = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await soundRequestApi.soundRequestPlayCreate();
+      const response =
+        await soundRequestApi.soundRequestTogglePlayPauseCreate();
       if (!response.data.success) {
         showToast(response.data);
       }
-      await fetchPlayerState();
+      // Состояние обновится автоматически через SignalR
     } catch {
       showToast({
         success: false,
@@ -213,16 +248,17 @@ export const useSoundRequestPlayer = () => {
     } finally {
       setLoading(false);
     }
-  }, [soundRequestApi, showToast, fetchPlayerState]);
+  }, [soundRequestApi, showToast]);
 
   const handlePause = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await soundRequestApi.soundRequestPauseCreate();
+      const response =
+        await soundRequestApi.soundRequestTogglePlayPauseCreate();
       if (!response.data.success) {
         showToast(response.data);
       }
-      await fetchPlayerState();
+      // Состояние обновится автоматически через SignalR
     } catch {
       showToast({
         success: false,
@@ -231,7 +267,7 @@ export const useSoundRequestPlayer = () => {
     } finally {
       setLoading(false);
     }
-  }, [soundRequestApi, showToast, fetchPlayerState]);
+  }, [soundRequestApi, showToast]);
 
   const handleTogglePlayPause = useCallback(async () => {
     try {
@@ -241,7 +277,7 @@ export const useSoundRequestPlayer = () => {
       if (!response.data.success) {
         showToast(response.data);
       }
-      await fetchPlayerState();
+      // Состояние обновится автоматически через SignalR
     } catch {
       showToast({
         success: false,
@@ -250,7 +286,7 @@ export const useSoundRequestPlayer = () => {
     } finally {
       setLoading(false);
     }
-  }, [soundRequestApi, showToast, fetchPlayerState]);
+  }, [soundRequestApi, showToast]);
 
   const handleStop = useCallback(async () => {
     try {
@@ -259,7 +295,7 @@ export const useSoundRequestPlayer = () => {
       if (!response.data.success) {
         showToast(response.data);
       }
-      await fetchPlayerState();
+      // Состояние обновится автоматически через SignalR
     } catch {
       showToast({
         success: false,
@@ -268,7 +304,7 @@ export const useSoundRequestPlayer = () => {
     } finally {
       setLoading(false);
     }
-  }, [soundRequestApi, showToast, fetchPlayerState]);
+  }, [soundRequestApi, showToast]);
 
   const handleSkip = useCallback(async () => {
     try {
@@ -277,8 +313,7 @@ export const useSoundRequestPlayer = () => {
       if (!response.data.success) {
         showToast(response.data);
       }
-      await fetchPlayerState();
-      await fetchQueue();
+      // Состояние и очередь обновятся автоматически через SignalR
     } catch {
       showToast({
         success: false,
@@ -287,7 +322,7 @@ export const useSoundRequestPlayer = () => {
     } finally {
       setLoading(false);
     }
-  }, [soundRequestApi, showToast, fetchPlayerState, fetchQueue]);
+  }, [soundRequestApi, showToast]);
 
   // Воспроизвести следующий трек из очереди
   const handlePlayNext = useCallback(async () => {
@@ -297,8 +332,7 @@ export const useSoundRequestPlayer = () => {
       if (!response.data.success) {
         showToast(response.data);
       }
-      await fetchPlayerState();
-      await fetchQueue();
+      // Состояние и очередь обновятся автоматически через SignalR
     } catch {
       showToast({
         success: false,
@@ -307,7 +341,7 @@ export const useSoundRequestPlayer = () => {
     } finally {
       setLoading(false);
     }
-  }, [soundRequestApi, showToast, fetchPlayerState, fetchQueue]);
+  }, [soundRequestApi, showToast]);
 
   // Управление громкостью
   const handleVolumeChange = useCallback(
@@ -335,18 +369,19 @@ export const useSoundRequestPlayer = () => {
 
   const handleMute = useCallback(async () => {
     try {
-      const response = await soundRequestApi.soundRequestToggleMuteCreate();
+      const isMuted = playerState?.isMuted ?? false;
+      const response = await soundRequestApi.soundRequestMuteCreate(!isMuted);
       if (!response.data.success) {
         showToast(response.data);
       }
-      await fetchPlayerState();
+      // Состояние обновится автоматически через SignalR
     } catch {
       showToast({
         success: false,
         message: "Ошибка при изменении режима звука",
       });
     }
-  }, [soundRequestApi, showToast, fetchPlayerState]);
+  }, [soundRequestApi, showToast, playerState]);
 
   // Удаление трека из очереди
   const handleRemoveFromQueue = useCallback(
@@ -356,7 +391,7 @@ export const useSoundRequestPlayer = () => {
         if (!response.data.success) {
           showToast(response.data);
         }
-        await fetchQueue();
+        // Очередь обновится автоматически через SignalR
       } catch {
         showToast({
           success: false,
@@ -364,7 +399,7 @@ export const useSoundRequestPlayer = () => {
         });
       }
     },
-    [soundRequestApi, showToast, fetchQueue]
+    [soundRequestApi, showToast]
   );
 
   // Воспроизвести конкретный трек из очереди
@@ -377,8 +412,7 @@ export const useSoundRequestPlayer = () => {
         if (!response.data.success) {
           showToast(response.data);
         }
-        await fetchPlayerState();
-        await fetchQueue();
+        // Состояние и очередь обновятся автоматически через SignalR
       } catch {
         showToast({
           success: false,
@@ -388,7 +422,7 @@ export const useSoundRequestPlayer = () => {
         setLoading(false);
       }
     },
-    [soundRequestApi, showToast, fetchPlayerState, fetchQueue]
+    [soundRequestApi, showToast]
   );
 
   // Вычисление состояния воспроизведения
@@ -401,8 +435,10 @@ export const useSoundRequestPlayer = () => {
   // Набор отображаемых видео для карусели: текущее, следующее, первые в очереди
   const displayedVideos: BaseTrackInfo[] = useMemo(() => {
     const list: BaseTrackInfo[] = [];
-    if (playerState?.currentTrack) list.push(playerState.currentTrack);
-    if (playerState?.nextTrack) list.push(playerState.nextTrack);
+    if (playerState?.currentQueueItem?.track)
+      list.push(playerState.currentQueueItem.track);
+    if (playerState?.nextQueueItem?.track)
+      list.push(playerState.nextQueueItem.track);
     for (const item of queue) {
       if (list.length >= 6) break;
       list.push(item);

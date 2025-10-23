@@ -15,6 +15,7 @@
   transition: all 0.3s ease;
   background: linear-gradient(135deg, var(--bs-primary), var(--bs-secondary));
   border-right: 2px solid var(--bs-border-color);
+  text-decoration: none;
 
   &:last-child {
     border-right: none;

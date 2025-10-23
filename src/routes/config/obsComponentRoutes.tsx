@@ -3,92 +3,139 @@ import { lazy, Suspense } from "react";
 import { OBSComponentWrapper } from "@/components/OBS_Components/wrapper";
 import { OBSLazyLoader } from "@/components/shared/LazyLoader";
 
+import { registerPrefetchComponents } from "../utils/prefetchRoutes";
 import { RouteConfig } from "./RouteConfig";
 
 // Все OBS компоненты - lazy loading для оптимизации производительности
-const AFKScreen = lazy(
-  () => import("@/components/OBS_Components/AFKScreen/AFKScreen")
-);
-const ChatHorizontal = lazy(
-  () => import("@/components/OBS_Components/ChatHorizontal/ChatHorizontal")
-);
-const ChatVertical = lazy(
-  () => import("@/components/OBS_Components/ChatVertical/ChatVertical")
-);
-const HighliteMessage = lazy(
-  () => import("@/components/OBS_Components/HighliteMessage/HighliteMessage")
-);
-const ChoosePath = lazy(() =>
+const afkScreenLoader = () =>
+  import("@/components/OBS_Components/AFKScreen/AFKScreen");
+const AFKScreen = lazy(afkScreenLoader);
+
+const chatHorizontalLoader = () =>
+  import("@/components/OBS_Components/ChatHorizontal/ChatHorizontal");
+const ChatHorizontal = lazy(chatHorizontalLoader);
+
+const chatVerticalLoader = () =>
+  import("@/components/OBS_Components/ChatVertical/ChatVertical");
+const ChatVertical = lazy(chatVerticalLoader);
+
+const highliteMessageLoader = () =>
+  import("@/components/OBS_Components/HighliteMessage/HighliteMessage");
+const HighliteMessage = lazy(highliteMessageLoader);
+
+const choosePathLoader = () =>
   import("@/components/OBS_Components/SoundRequest/ChoosePath").then(m => ({
     default: m.ChoosePath,
-  }))
-);
+  }));
+const ChoosePath = lazy(choosePathLoader);
 
 // Тяжелые компоненты - lazy loading
-const Credits = lazy(
-  () => import("@/components/OBS_Components/Credits/Credits")
-);
-const ADHDController = lazy(() =>
+const creditsLoader = () =>
+  import("@/components/OBS_Components/Credits/Credits");
+const Credits = lazy(creditsLoader);
+
+const adhdControllerLoader = () =>
   import("@/components/OBS_Components/ADHDLayout").then(m => ({
     default: m.ADHDController,
-  }))
-);
-const ExplosionVideo = lazy(() =>
+  }));
+const ADHDController = lazy(adhdControllerLoader);
+
+const explosionVideoLoader = () =>
   import("@/components/OBS_Components/ADHDLayout/ExplosionVideo").then(m => ({
     default: m.ExplosionVideo,
-  }))
-);
-const AutoMessageBillboard = lazy(
-  () =>
-    import(
-      "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboard"
-    )
-);
-const AutoMessageBillboardTest = lazy(
-  () =>
-    import(
-      "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboardTest"
-    )
-);
-const FumoFriday = lazy(() =>
+  }));
+const ExplosionVideo = lazy(explosionVideoLoader);
+
+const autoMessageBillboardLoader = () =>
+  import(
+    "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboard"
+  );
+const AutoMessageBillboard = lazy(autoMessageBillboardLoader);
+
+const autoMessageBillboardTestLoader = () =>
+  import(
+    "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboardTest"
+  );
+const AutoMessageBillboardTest = lazy(autoMessageBillboardTestLoader);
+
+const fumoFridayLoader = () =>
   import("@/components/OBS_Components/FumoFriday").then(m => ({
     default: m.FumoFriday,
-  }))
-);
-const GaoAlertController = lazy(
-  () => import("@/components/OBS_Components/GaoAlert/GaoAlertController")
-);
-const MichaelJackson = lazy(
-  () => import("@/components/OBS_Components/MichaelJackson")
-);
-const PNGTuber = lazy(() =>
+  }));
+const FumoFriday = lazy(fumoFridayLoader);
+
+const gaoAlertControllerLoader = () =>
+  import("@/components/OBS_Components/GaoAlert/GaoAlertController");
+const GaoAlertController = lazy(gaoAlertControllerLoader);
+
+const michaelJacksonLoader = () =>
+  import("@/components/OBS_Components/MichaelJackson");
+const MichaelJackson = lazy(michaelJacksonLoader);
+
+const pngTuberLoader = () =>
   import("@/components/OBS_Components/PNGTuber").then(m => ({
     default: m.PNGTuber,
-  }))
-);
-const AvatarWithFire = lazy(() =>
+  }));
+const PNGTuber = lazy(pngTuberLoader);
+
+const avatarWithFireLoader = () =>
   import("@/components/OBS_Components/PNGTuber").then(m => ({
     default: m.AvatarWithFire,
-  }))
-);
-const AvatarWithFireSvg = lazy(() =>
+  }));
+const AvatarWithFire = lazy(avatarWithFireLoader);
+
+const avatarWithFireSvgLoader = () =>
   import("@/components/OBS_Components/PNGTuber").then(m => ({
     default: m.AvatarWithFireSvg,
-  }))
-);
-const PyroAlerts = lazy(
-  () => import("@/components/OBS_Components/PyroAlerts/PyroAlerts")
-);
-const RandomMem = lazy(
-  () => import("@/components/OBS_Components/RandomMem/RandomMem")
-);
-const Scoreboard = lazy(() => import("@/components/OBS_Components/Scoreboard"));
-const Manager = lazy(
-  () => import("@/components/OBS_Components/ScreenParticles/Manager")
-);
-const WaifuAlerts = lazy(
-  () => import("@/components/OBS_Components/WaifuAlerts/WaifuAlerts")
-);
+  }));
+const AvatarWithFireSvg = lazy(avatarWithFireSvgLoader);
+
+const pyroAlertsLoader = () =>
+  import("@/components/OBS_Components/PyroAlerts/PyroAlerts");
+const PyroAlerts = lazy(pyroAlertsLoader);
+
+const randomMemLoader = () =>
+  import("@/components/OBS_Components/RandomMem/RandomMem");
+const RandomMem = lazy(randomMemLoader);
+
+const scoreboardLoader = () => import("@/components/OBS_Components/Scoreboard");
+const Scoreboard = lazy(scoreboardLoader);
+
+const managerLoader = () =>
+  import("@/components/OBS_Components/ScreenParticles/Manager");
+const Manager = lazy(managerLoader);
+
+const waifuAlertsLoader = () =>
+  import("@/components/OBS_Components/WaifuAlerts/WaifuAlerts");
+const WaifuAlerts = lazy(waifuAlertsLoader);
+
+// Регистрируем OBS компоненты для фоновой загрузки
+// Эти компоненты загружаются редко, поэтому у них низкий приоритет
+registerPrefetchComponents([
+  // Легкие компоненты
+  afkScreenLoader,
+  chatHorizontalLoader,
+  chatVerticalLoader,
+  highliteMessageLoader,
+  // Тяжелые компоненты
+  choosePathLoader,
+  creditsLoader,
+  adhdControllerLoader,
+  explosionVideoLoader,
+  autoMessageBillboardLoader,
+  autoMessageBillboardTestLoader,
+  fumoFridayLoader,
+  gaoAlertControllerLoader,
+  michaelJacksonLoader,
+  pngTuberLoader,
+  avatarWithFireLoader,
+  avatarWithFireSvgLoader,
+  pyroAlertsLoader,
+  randomMemLoader,
+  scoreboardLoader,
+  managerLoader,
+  waifuAlertsLoader,
+]);
 
 // Массив OBS компонентов (без Layout для интеграции в OBS)
 export const obsComponentRoutes: RouteConfig[] = [
@@ -96,13 +143,7 @@ export const obsComponentRoutes: RouteConfig[] = [
     path: "/sr/*",
     name: "SR: SoundRequest",
     type: "obs",
-    element: (
-      <OBSComponentWrapper>
-        <Suspense fallback={<OBSLazyLoader />}>
-          <ChoosePath />
-        </Suspense>
-      </OBSComponentWrapper>
-    ),
+    element: <ChoosePath />,
   },
   {
     path: "/MichaelJackson",

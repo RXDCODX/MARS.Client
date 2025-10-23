@@ -39,6 +39,7 @@
     "@microsoft/signalr": "^8.0.7",
     "@mkody/twitch-emoticons": "^2.9.0",
     "@redux-devtools/extension": "^3.3.0",
+    "@tempestive/timespan.js": "^0.1.6",
     "@twurple/api": "^7.2.1",
     "@twurple/auth": "^7.2.1",
     "@twurple/chat": "^7.2.1",

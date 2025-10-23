@@ -42,6 +42,7 @@ export interface AutoMessageDto {
 export interface BaseTrackInfo {
   /** @format uuid */
   id: string;
+  /** @maxLength 300 */
   trackName: string;
   authors?: string[];
   /** @format date-span */
@@ -50,13 +51,26 @@ export interface BaseTrackInfo {
   url: string;
   /** @format date-time */
   lastTimePlays: string;
+  /** @format uri */
   artworkUrl?: string;
   videoId?: string;
   isDeleted: boolean;
-  /** @format int32 */
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+  queueItems: QueueItem[];
+  /**
+   * @deprecated
+   * @format int32
+   */
   queueOrder?: number;
-  /** @maxLength 50 */
+  /**
+   * @deprecated
+   * @maxLength 50
+   */
   requestedByTwitchId?: string;
+  /** @deprecated */
   requestedByTwitchUser?: TwitchUser;
   title: string;
 }
@@ -535,20 +549,17 @@ export interface PlayerState {
   /** @format uuid */
   id: string;
   /** @format uuid */
-  currentTrackId?: string;
+  currentQueueItemId?: string;
   /** @format uuid */
-  nextTrackId?: string;
+  nextQueueItemId?: string;
   /** @format date-span */
   currentTrackProgress?: string;
   state: PlayerStateStateEnum;
   isMuted: boolean;
   /** @format float */
   volume: number;
-  /** @maxLength 50 */
-  currentTrackRequestedBy?: string;
-  currentTrackRequestedByTwitchUser?: TwitchUser;
-  currentTrack?: BaseTrackInfo;
-  nextTrack?: BaseTrackInfo;
+  currentQueueItem?: QueueItem;
+  nextQueueItem?: QueueItem;
 }
 
 export interface ProblemDetails {
@@ -559,6 +570,25 @@ export interface ProblemDetails {
   detail?: string;
   instance?: string;
   [key: string]: any;
+}
+
+export interface QueueItem {
+  /** @format uuid */
+  id: string;
+  /** @format uuid */
+  trackId: string;
+  track: BaseTrackInfo;
+  /** @format int32 */
+  queueOrder?: number;
+  /**
+   * @minLength 1
+   * @maxLength 50
+   */
+  requestedByTwitchId: string;
+  requestedByTwitchUser: TwitchUser;
+  /** @format date-time */
+  requestedAt: string;
+  isDeleted: boolean;
 }
 
 export interface RateLimiterInfo {

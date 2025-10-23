@@ -63,6 +63,7 @@ import type {
   ParseResult,
   PlayerState,
   ProblemDetails,
+  QueueItem,
   RateLimiterInfo,
   Reward,
   RewardRedemption,
@@ -139,10 +140,10 @@ export class SoundRequest<
    * @tags SoundRequest
    * @name SoundRequestQueueList
    * @request GET:/api/SoundRequest/queue
-   * @response `200` `OperationResult<BaseTrackInfo[]>` OK
+   * @response `200` `OperationResult<QueueItem[]>` OK
    */
   soundRequestQueueList = (params: RequestParams = {}) =>
-    this.request<OperationResult<BaseTrackInfo[]>, any>({
+    this.request<OperationResult<QueueItem[]>, any>({
       path: `/api/SoundRequest/queue`,
       method: "GET",
       format: "json",
@@ -170,36 +171,6 @@ export class SoundRequest<
       path: `/api/SoundRequest/history`,
       method: "GET",
       query: query,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestPlayCreate
-   * @request POST:/api/SoundRequest/play
-   * @response `200` `OperationResult` OK
-   */
-  soundRequestPlayCreate = (params: RequestParams = {}) =>
-    this.request<OperationResult, any>({
-      path: `/api/SoundRequest/play`,
-      method: "POST",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestPauseCreate
-   * @request POST:/api/SoundRequest/pause
-   * @response `200` `OperationResult` OK
-   */
-  soundRequestPauseCreate = (params: RequestParams = {}) =>
-    this.request<OperationResult, any>({
-      path: `/api/SoundRequest/pause`,
-      method: "POST",
       format: "json",
       ...params,
     });
@@ -268,27 +239,15 @@ export class SoundRequest<
    *
    * @tags SoundRequest
    * @name SoundRequestPlayTrackCreate
-   * @request POST:/api/SoundRequest/play-track/{trackId}
+   * @request POST:/api/SoundRequest/play-track/{queueItemId}
    * @response `200` `OperationResult` OK
    */
-  soundRequestPlayTrackCreate = (trackId: string, params: RequestParams = {}) =>
+  soundRequestPlayTrackCreate = (
+    queueItemId: string,
+    params: RequestParams = {}
+  ) =>
     this.request<OperationResult, any>({
-      path: `/api/SoundRequest/play-track/${trackId}`,
-      method: "POST",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestVolumeCreate
-   * @request POST:/api/SoundRequest/volume/{volume}
-   * @response `200` `OperationResult` OK
-   */
-  soundRequestVolumeCreate = (volume: number, params: RequestParams = {}) =>
-    this.request<OperationResult, any>({
-      path: `/api/SoundRequest/volume/${volume}`,
+      path: `/api/SoundRequest/play-track/${queueItemId}`,
       method: "POST",
       format: "json",
       ...params,
@@ -304,21 +263,6 @@ export class SoundRequest<
   soundRequestMuteCreate = (muted: boolean, params: RequestParams = {}) =>
     this.request<OperationResult, any>({
       path: `/api/SoundRequest/mute/${muted}`,
-      method: "POST",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestToggleMuteCreate
-   * @request POST:/api/SoundRequest/toggle-mute
-   * @response `200` `OperationResult` OK
-   */
-  soundRequestToggleMuteCreate = (params: RequestParams = {}) =>
-    this.request<OperationResult, any>({
-      path: `/api/SoundRequest/toggle-mute`,
       method: "POST",
       format: "json",
       ...params,
@@ -370,12 +314,12 @@ export class SoundRequest<
    *
    * @tags SoundRequest
    * @name SoundRequestQueueDelete
-   * @request DELETE:/api/SoundRequest/queue/{trackId}
+   * @request DELETE:/api/SoundRequest/queue/{queueItemId}
    * @response `200` `OperationResult` OK
    */
-  soundRequestQueueDelete = (trackId: string, params: RequestParams = {}) =>
+  soundRequestQueueDelete = (queueItemId: string, params: RequestParams = {}) =>
     this.request<OperationResult, any>({
-      path: `/api/SoundRequest/queue/${trackId}`,
+      path: `/api/SoundRequest/queue/${queueItemId}`,
       method: "DELETE",
       format: "json",
       ...params,
@@ -391,24 +335,6 @@ export class SoundRequest<
   soundRequestCurrentSongList = (params: RequestParams = {}) =>
     this.request<OperationResult<String>, any>({
       path: `/api/SoundRequest/current-song`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestUserPositionDetail
-   * @request GET:/api/SoundRequest/user-position/{userId}
-   * @response `200` `OperationResult<String>` OK
-   */
-  soundRequestUserPositionDetail = (
-    userId: string,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<String>, any>({
-      path: `/api/SoundRequest/user-position/${userId}`,
       method: "GET",
       format: "json",
       ...params,

@@ -4989,17 +4989,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseTrackInfoListOperationResult"
+                  "$ref": "#/components/schemas/QueueItemListOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseTrackInfoListOperationResult"
+                  "$ref": "#/components/schemas/QueueItemListOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/BaseTrackInfoListOperationResult"
+                  "$ref": "#/components/schemas/QueueItemListOperationResult"
                 }
               }
             }
@@ -5040,64 +5040,6 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BaseTrackInfoListOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SoundRequest/play": {
-      "post": {
-        "tags": [
-          "SoundRequest"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SoundRequest/pause": {
-      "post": {
-        "tags": [
-          "SoundRequest"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
                 }
               }
             }
@@ -5221,59 +5163,19 @@
         }
       }
     },
-    "/api/SoundRequest/play-track/{trackId}": {
+    "/api/SoundRequest/play-track/{queueItemId}": {
       "post": {
         "tags": [
           "SoundRequest"
         ],
         "parameters": [
           {
-            "name": "trackId",
+            "name": "queueItemId",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
               "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SoundRequest/volume/{volume}": {
-      "post": {
-        "tags": [
-          "SoundRequest"
-        ],
-        "parameters": [
-          {
-            "name": "volume",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "number",
-              "format": "float"
             }
           }
         ],
@@ -5315,35 +5217,6 @@
               "type": "boolean"
             }
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SoundRequest/toggle-mute": {
-      "post": {
-        "tags": [
-          "SoundRequest"
         ],
         "responses": {
           "200": {
@@ -5445,14 +5318,14 @@
         }
       }
     },
-    "/api/SoundRequest/queue/{trackId}": {
+    "/api/SoundRequest/queue/{queueItemId}": {
       "delete": {
         "tags": [
           "SoundRequest"
         ],
         "parameters": [
           {
-            "name": "trackId",
+            "name": "queueItemId",
             "in": "path",
             "required": true,
             "schema": {
@@ -5489,45 +5362,6 @@
       "get": {
         "tags": [
           "SoundRequest"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SoundRequest/user-position/{userId}": {
-      "get": {
-        "tags": [
-          "SoundRequest"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
         ],
         "responses": {
           "200": {
@@ -6497,12 +6331,15 @@
       },
       "BaseTrackInfo": {
         "required": [
+          "createdAt",
           "duration",
           "id",
           "isDeleted",
           "lastTimePlays",
+          "queueItems",
           "title",
           "trackName",
+          "updatedAt",
           "url"
         ],
         "type": "object",
@@ -6512,6 +6349,7 @@
             "format": "uuid"
           },
           "trackName": {
+            "maxLength": 300,
             "type": "string"
           },
           "authors": {
@@ -6535,6 +6373,7 @@
           },
           "artworkUrl": {
             "type": "string",
+            "format": "uri",
             "nullable": true
           },
           "videoId": {
@@ -6544,15 +6383,31 @@
           "isDeleted": {
             "type": "boolean"
           },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "queueItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QueueItem"
+            }
+          },
           "queueOrder": {
             "type": "integer",
             "format": "int32",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "requestedByTwitchId": {
             "maxLength": 50,
             "type": "string",
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "requestedByTwitchUser": {
             "allOf": [
@@ -6560,7 +6415,8 @@
                 "$ref": "#/components/schemas/TwitchUser"
               }
             ],
-            "nullable": true
+            "nullable": true,
+            "deprecated": true
           },
           "title": {
             "type": "string",
@@ -8479,12 +8335,12 @@
             "type": "string",
             "format": "uuid"
           },
-          "currentTrackId": {
+          "currentQueueItemId": {
             "type": "string",
             "format": "uuid",
             "nullable": true
           },
-          "nextTrackId": {
+          "nextQueueItemId": {
             "type": "string",
             "format": "uuid",
             "nullable": true
@@ -8511,31 +8367,18 @@
             "type": "number",
             "format": "float"
           },
-          "currentTrackRequestedBy": {
-            "maxLength": 50,
-            "type": "string",
-            "nullable": true
-          },
-          "currentTrackRequestedByTwitchUser": {
+          "currentQueueItem": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/TwitchUser"
+                "$ref": "#/components/schemas/QueueItem"
               }
             ],
             "nullable": true
           },
-          "currentTrack": {
+          "nextQueueItem": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/BaseTrackInfo"
-              }
-            ],
-            "nullable": true
-          },
-          "nextTrack": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BaseTrackInfo"
+                "$ref": "#/components/schemas/QueueItem"
               }
             ],
             "nullable": true
@@ -8578,6 +8421,69 @@
           }
         },
         "additionalProperties": { }
+      },
+      "QueueItem": {
+        "required": [
+          "id",
+          "isDeleted",
+          "requestedAt",
+          "requestedByTwitchId",
+          "requestedByTwitchUser",
+          "track",
+          "trackId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "trackId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "track": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BaseTrackInfo"
+              }
+            ]
+          },
+          "queueOrder": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "requestedByTwitchId": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "requestedByTwitchUser": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TwitchUser"
+              }
+            ]
+          },
+          "requestedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "isDeleted": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "QueueItemListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа QueueItem[]",
+        "x-generic-type-argument": "QueueItem[]"
       },
       "RateLimiterInfo": {
         "required": [

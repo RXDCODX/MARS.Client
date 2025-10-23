@@ -2904,6 +2904,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tempestive/timespan.js@npm:^0.1.6":
+  version: 0.1.6
+  resolution: "@tempestive/timespan.js@npm:0.1.6"
+  checksum: 10c0/4a7bdbe2e97af0493e5e2f6696811f2104115a87bc589519999fb8474765bd24c9eeee2d57904773a19616fc79d0820ba926b22f4a2bea937b4cd809f37de485
+  languageName: node
+  linkType: hard
+
 "@testing-library/dom@npm:^10.4.0":
   version: 10.4.0
   resolution: "@testing-library/dom@npm:10.4.0"
@@ -10038,6 +10045,7 @@ __metadata:
     "@storybook/react": "npm:^9.1.1"
     "@storybook/react-vite": "npm:^9.1.1"
     "@storybook/testing-library": "npm:^0.2.2"
+    "@tempestive/timespan.js": "npm:^0.1.6"
     "@testing-library/jest-dom": "npm:^6.8.0"
     "@testing-library/react": "npm:^16.3.0"
     "@testing-library/user-event": "npm:^14.6.1"

@@ -50,25 +50,25 @@ export function SoundRequestPlayerMobile() {
       <Card className={styles.currentTrackCard}>
         <Card.Body>
           <h5 className={styles.title}>Сейчас играет</h5>
-          {playerState?.currentTrack ? (
+          {playerState?.currentQueueItem?.track ? (
             <div className={styles.currentTrack}>
               <div className={styles.trackInfo}>
                 <h6 className={styles.trackName}>
-                  {playerState.currentTrack.trackName}
+                  {playerState.currentQueueItem.track.trackName}
                 </h6>
                 <p className={styles.trackAuthor}>
-                  {getAuthorsString(playerState.currentTrack.authors)}
+                  {getAuthorsString(playerState.currentQueueItem.track.authors)}
                 </p>
-                {playerState.currentTrackRequestedByTwitchUser?.displayName && (
+                {playerState.currentQueueItem.requestedByTwitchUser?.displayName && (
                   <p className={styles.requestedBy}>
                     Запросил:{" "}
                     {getRequestedByString(
-                      playerState.currentTrackRequestedByTwitchUser.displayName
+                      playerState.currentQueueItem.requestedByTwitchUser.displayName
                     )}
                   </p>
                 )}
                 <div className={styles.duration}>
-                  {formatDuration(playerState.currentTrack?.duration || "PT0S")}
+                  {formatDuration(playerState.currentQueueItem.track?.duration || "PT0S")}
                 </div>
               </div>
             </div>
@@ -164,7 +164,7 @@ export function SoundRequestPlayerMobile() {
               {displayedVideos.map(video => (
                 <Carousel.Item key={video.id}>
                   <div style={{ width: "100%", height: 220 }}>
-                    {playerState?.currentTrack?.id === video.id ? (
+                    {playerState?.currentQueueItem?.track?.id === video.id ? (
                       <ReactPlayer
                         key={video.url}
                         src={video.url}

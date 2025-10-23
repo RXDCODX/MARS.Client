@@ -63,6 +63,7 @@ import type {
   ParseResult,
   PlayerState,
   ProblemDetails,
+  QueueItem,
   RateLimiterInfo,
   Reward,
   RewardRedemption,
