@@ -72,6 +72,12 @@ const michaelJacksonLoader = () =>
   import("@/components/OBS_Components/MichaelJackson");
 const MichaelJackson = lazy(michaelJacksonLoader);
 
+const mikuMikuBeamLoader = () =>
+  import("@/components/OBS_Components/MikuMikuBeam").then(m => ({
+    default: m.MikuMikuBeamComponent,
+  }));
+const MikuMikuBeam = lazy(mikuMikuBeamLoader);
+
 const pngTuberLoader = () =>
   import("@/components/OBS_Components/PNGTuber").then(m => ({
     default: m.PNGTuber,
@@ -127,6 +133,7 @@ registerPrefetchComponents([
   fumoFridayLoader,
   gaoAlertControllerLoader,
   michaelJacksonLoader,
+  mikuMikuBeamLoader,
   pngTuberLoader,
   avatarWithFireLoader,
   avatarWithFireSvgLoader,
@@ -139,6 +146,18 @@ registerPrefetchComponents([
 
 // Массив OBS компонентов (без Layout для интеграции в OBS)
 export const obsComponentRoutes: RouteConfig[] = [
+  {
+    path: "/mikumikubeam",
+    name: "Miku Miku Beam",
+    type: "obs",
+    element: (
+      <OBSComponentWrapper>
+        <Suspense fallback={<OBSLazyLoader />}>
+          <MikuMikuBeam />
+        </Suspense>
+      </OBSComponentWrapper>
+    ),
+  },
   {
     path: "/sr/*",
     name: "SR: SoundRequest",

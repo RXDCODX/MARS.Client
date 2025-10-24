@@ -1,0 +1,161 @@
+// Контейнер для всего компонента
+.container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  z-index: -1;
+
+  &.active {
+    opacity: 1;
+    z-index: 9999;
+    pointer-events: all;
+  }
+}
+
+// Видео на весь экран
+.video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background-color: #000000;
+}
+
+// Общий стиль для бегущих строк
+.ticker {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 150px;
+  overflow: hidden;
+  background: linear-gradient(180deg,
+      rgba(0, 0, 0, 0.95) 0%,
+      rgba(0, 0, 0, 0.85) 50%,
+      rgba(0, 0, 0, 0.95) 100%);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+}
+
+// Верхняя бегущая строка (0-150px)
+.tickerTop {
+  top: 0;
+  border-bottom: 3px solid rgba(57, 255, 255, 0.6);
+  box-shadow: 0 4px 20px rgba(57, 255, 255, 0.3);
+}
+
+// Нижняя бегущая строка (920-1080px)
+.tickerBottom {
+  bottom: 0;
+  border-top: 3px solid rgba(255, 57, 255, 0.6);
+  box-shadow: 0 -4px 20px rgba(255, 57, 255, 0.3);
+}
+
+// Контент бегущей строки
+.tickerContent {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  padding: 0 2rem;
+  white-space: nowrap;
+
+  // Анимация для верхней строки (движется налево)
+  .tickerTop & {
+    animation: scrollLeft 8s linear infinite;
+  }
+
+  // Анимация для нижней строки (движется направо)
+  .tickerBottom & {
+    animation: scrollRight 8s linear infinite;
+  }
+}
+
+// Элемент пользователя
+.userItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+// Аватарка пользователя
+.avatar {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+// Имя пользователя
+.username {
+  font-size: 2rem;
+  font-weight: 700;
+  text-shadow:
+    0 0 10px currentColor,
+    0 0 20px currentColor,
+    2px 2px 4px rgba(0, 0, 0, 0.8);
+  letter-spacing: 1px;
+  color: #ffffff;
+}
+
+// Анимация движения налево
+@keyframes scrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-33.333%);
+  }
+}
+
+// Анимация движения направо
+@keyframes scrollRight {
+  0% {
+    transform: translateX(-33.333%);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
+
+// Адаптивность для меньших экранов
+@media (max-width: 1920px) {
+  .ticker {
+    height: 120px;
+  }
+
+  .avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .username {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 1280px) {
+  .ticker {
+    height: 100px;
+  }
+
+  .avatar {
+    width: 50px;
+    height: 50px;
+  }
+
+  .username {
+    font-size: 1.5rem;
+  }
+}
