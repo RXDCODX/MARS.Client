@@ -33,31 +33,42 @@ const MikuMikuBeamComponent = () => {
     []
   );
 
-  const preloadImages = useCallback(async (users: TwitchUser[]) => {
+  const preloadImages = useCallback((users: TwitchUser[]) => {
+    // Запускаем предзагрузку в фоне без блокировки
     const imagePromises = users
       .filter(user => user.profileImageUrl)
-      .map(
-        user =>
+      .map(user =>
+        Promise.race([
+          // Загрузка изображения
           new Promise<void>(resolve => {
             const img = new Image();
             img.onload = () => resolve();
-            img.onerror = () => resolve(); // Resolve даже при ошибке, чтобы не блокировать
+            img.onerror = () => resolve();
             img.src = user.profileImageUrl!;
-          })
+          }),
+          // Таймаут 2 секунды на каждое изображение
+          new Promise<void>(resolve => setTimeout(resolve, 2000)),
+        ])
       );
 
-    await Promise.all(imagePromises);
-    console.log("[MikuMikuBeam] Все аватарки предзагружены");
+    // Загружаем в фоне, не блокируя запуск видео
+    Promise.all(imagePromises)
+      .then(() => {
+        console.log("[MikuMikuBeam] Аватарки предзагружены");
+      })
+      .catch(() => {
+        console.log("[MikuMikuBeam] Ошибка предзагрузки аватарок");
+      });
   }, []);
 
   const handleMikuBeamActivation = useCallback(
-    async (users: TwitchUser[]) => {
+    (users: TwitchUser[]) => {
       // Предзагружаем аватарки
-      await preloadImages(users);
+      preloadImages(users);
 
       // Вызываем MuteAll с пустым массивом
       try {
-        await TelegramusHubSignalRContext.invoke("MuteAll", []);
+        TelegramusHubSignalRContext.invoke("MuteAll", []);
         console.log("[MikuMikuBeam] MuteAll вызван");
       } catch (error) {
         console.error("[MikuMikuBeam] Ошибка вызова MuteAll:", error);
