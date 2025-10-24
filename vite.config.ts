@@ -32,108 +32,20 @@ export default defineConfig({
     },
   },
   build: {
-    rollupOptions: {
-      output: {
-        // Разделение на chunks для оптимизации загрузки
-        manualChunks: id => {
-          // Основные библиотеки React
-          if (
-            id.includes("node_modules/react") ||
-            id.includes("node_modules/react-dom") ||
-            id.includes("node_modules/react-router-dom")
-          ) {
-            return "react-vendor";
-          }
-          // Bootstrap и UI компоненты
-          if (
-            id.includes("node_modules/react-bootstrap") ||
-            id.includes("node_modules/bootstrap")
-          ) {
-            return "ui-vendor";
-          }
-          // Иконки
-          if (id.includes("node_modules/lucide-react")) {
-            return "icons-lucide";
-          }
-          if (id.includes("node_modules/bootstrap-icons")) {
-            return "icons-bootstrap";
-          }
-          if (id.includes("node_modules/react-icons")) {
-            return "icons-fa";
-          }
-          // SignalR
-          if (
-            id.includes("node_modules/@microsoft/signalr") ||
-            id.includes("node_modules/react-signalr")
-          ) {
-            return "signalr";
-          }
-          // Twitch API
-          if (id.includes("node_modules/@twurple")) {
-            return "twitch-vendor";
-          }
-          // Анимации
-          if (
-            id.includes("node_modules/framer-motion") ||
-            id.includes("node_modules/react-simple-animate") ||
-            id.includes("node_modules/react-canvas-confetti")
-          ) {
-            return "animations";
-          }
-          // Chart и визуализация
-          if (id.includes("node_modules/recharts")) {
-            return "charts";
-          }
-          // Остальные vendor библиотеки
-          if (id.includes("node_modules")) {
-            return "vendor";
-          }
-        },
-        assetFileNames: assetInfo => {
-          if (!assetInfo.name) {
-            return `assets/[name]-[hash][extname]`;
-          }
-          const info = assetInfo.name.split(".");
-          const ext = info[info.length - 1];
-          if (/webm|mp4/.test(ext)) {
-            return `assets/videos/[name]-[hash][extname]`;
-          }
-          if (/svg/.test(ext)) {
-            return `assets/icons/[name]-[hash][extname]`;
-          }
-          return `assets/[name]-[hash][extname]`;
-        },
-      },
-    },
-    // Увеличиваем chunk size warning limit для больших компонентов
-    chunkSizeWarningLimit: 1000,
-    // Включить minification
-    minify: "terser",
-    terserOptions: {
-      compress: {
-        drop_console: true, // Удалить console.log в production
-        drop_debugger: true,
-      },
-    } as any,
-    // Включить source maps только для development
     sourcemap: false,
   },
   server: {
     port: 44478,
   },
-  // Оптимизация для dev режима
   optimizeDeps: {
     include: [
-      "react",
-      "react-dom",
-      "react-router-dom",
-      "@microsoft/signalr",
-      "react-bootstrap",
-    ],
-    exclude: [
-      // Исключаем из pre-bundling тяжелые библиотеки иконок
-      "@fortawesome/free-solid-svg-icons",
-      "react-icons",
+      // Twitch библиотеки - для решения проблемы с cacheSymbol в dev режиме
+      "@twurple/api",
+      "@twurple/auth",
+      "@twurple/chat",
+      "@mkody/twitch-emoticons",
+      // HTML парсер - для предотвращения конфликтов инициализации
+      "html-react-parser",
     ],
   },
 });
