@@ -108,11 +108,8 @@ const MikuMikuBeamComponent = () => {
   }, []);
 
   // Создаем массив пользователей для бегущих строк (дублируем для непрерывности)
-  const tickerUsers = [
-    ...videoState.users,
-    ...videoState.users,
-    ...videoState.users,
-  ];
+  // Дублируем достаточное количество раз, чтобы заполнить экран даже с малым количеством пользователей
+  const tickerUsers = Array(12).fill(videoState.users).flat();
 
   return (
     <>
@@ -143,12 +140,17 @@ const MikuMikuBeamComponent = () => {
                   <div className={styles.tickerContent}>
                     {tickerUsers.map((user, index) => (
                       <div key={`top-${index}`} className={styles.userItem}>
-                        {user.profileImageUrl && (
+                        <div className={styles.crossIcon}></div>
+                        {user.profileImageUrl ? (
                           <img
                             src={user.profileImageUrl}
                             alt={user.displayName}
                             className={styles.avatar}
                           />
+                        ) : (
+                          <div className={styles.avatarPlaceholder}>
+                            {user.displayName.charAt(0).toUpperCase()}
+                          </div>
                         )}
                         <span
                           className={styles.username}
@@ -166,12 +168,17 @@ const MikuMikuBeamComponent = () => {
                   <div className={styles.tickerContent}>
                     {tickerUsers.map((user, index) => (
                       <div key={`bottom-${index}`} className={styles.userItem}>
-                        {user.profileImageUrl && (
+                        <div className={styles.crossIcon}></div>
+                        {user.profileImageUrl ? (
                           <img
                             src={user.profileImageUrl}
                             alt={user.displayName}
                             className={styles.avatar}
                           />
+                        ) : (
+                          <div className={styles.avatarPlaceholder}>
+                            {user.displayName.charAt(0).toUpperCase()}
+                          </div>
                         )}
                         <span
                           className={styles.username}

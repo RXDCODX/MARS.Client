@@ -82,6 +82,44 @@
   display: inline-flex;
   align-items: center;
   gap: 1rem;
+  position: relative;
+}
+
+// Красный крест поверх пользователя (как кнопка закрытия)
+.crossIcon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+
+  // Первая линия креста (из левого верхнего угла в правый нижний)
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 4px;
+    background-color: #ff0000;
+    transform: translate(-50%, -50%) rotate(45deg);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.9);
+  }
+
+  // Вторая линия креста (из правого верхнего угла в левый нижний)
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 4px;
+    background-color: #ff0000;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.9);
+  }
 }
 
 // Аватарка пользователя
@@ -93,6 +131,24 @@
   border: 3px solid rgba(255, 255, 255, 0.3);
   box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
   flex-shrink: 0;
+}
+
+// Placeholder для аватарки (если нет изображения)
+.avatarPlaceholder {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 // Имя пользователя
