@@ -93,6 +93,7 @@ import type {
   MediaMetaInfoPriorityEnum,
   ParseRequestSourceEnum,
   PlayerStateStateEnum,
+  PlayerStateVideoStateEnum,
   RewardRedemptionStatusEnum,
   ServiceInfoStatusEnum,
   StreamArchiveConfigFileConvertTypeEnum,
@@ -114,6 +115,8 @@ import type {
   LogsByLevelDetailParamsEnum,
   LogsByLevelDetailParamsLogLevelEnum,
   LogsListParamsLogLevelEnum,
+  SoundRequestVideoDisplayCreateParamsDisplayModeEnum,
+  SoundRequestVideoDisplayCreateParamsEnum,
 } from "../types/data-contracts";
 
 export class SoundRequest<
@@ -263,6 +266,24 @@ export class SoundRequest<
   soundRequestMuteCreate = (muted: boolean, params: RequestParams = {}) =>
     this.request<OperationResult, any>({
       path: `/api/SoundRequest/mute/${muted}`,
+      method: "POST",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags SoundRequest
+   * @name SoundRequestVideoDisplayCreate
+   * @request POST:/api/SoundRequest/video-display/{displayMode}
+   * @response `200` `OperationResult` OK
+   */
+  soundRequestVideoDisplayCreate = (
+    displayMode: SoundRequestVideoDisplayCreateParamsEnum,
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult, any>({
+      path: `/api/SoundRequest/video-display/${displayMode}`,
       method: "POST",
       format: "json",
       ...params,

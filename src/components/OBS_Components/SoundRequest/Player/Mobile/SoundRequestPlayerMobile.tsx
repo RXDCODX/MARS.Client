@@ -59,16 +59,20 @@ export function SoundRequestPlayerMobile() {
                 <p className={styles.trackAuthor}>
                   {getAuthorsString(playerState.currentQueueItem.track.authors)}
                 </p>
-                {playerState.currentQueueItem.requestedByTwitchUser?.displayName && (
+                {playerState.currentQueueItem.requestedByTwitchUser
+                  ?.displayName && (
                   <p className={styles.requestedBy}>
                     Запросил:{" "}
                     {getRequestedByString(
-                      playerState.currentQueueItem.requestedByTwitchUser.displayName
+                      playerState.currentQueueItem.requestedByTwitchUser
+                        .displayName
                     )}
                   </p>
                 )}
                 <div className={styles.duration}>
-                  {formatDuration(playerState.currentQueueItem.track?.duration || "PT0S")}
+                  {formatDuration(
+                    playerState.currentQueueItem.track?.duration || "PT0S"
+                  )}
                 </div>
               </div>
             </div>
@@ -212,47 +216,53 @@ export function SoundRequestPlayerMobile() {
           {showQueue && (
             <div className={styles.queueList}>
               {queue.length > 0 ? (
-                queue.map((item, index) => (
-                  <div key={item.id} className={styles.queueItem}>
-                    <div className={styles.queueItemInfo}>
-                      <span className={styles.queueNumber}>{index + 1}</span>
-                      <div className={styles.queueTrackInfo}>
-                        <h6 className={styles.queueTrackName}>
-                          {item.trackName}
-                        </h6>
-                        <p className={styles.queueTrackAuthor}>
-                          {getAuthorsString(item.authors)}
-                        </p>
-                        <p className={styles.queueRequestedBy}>
-                          {getRequestedByString(
-                            item.requestedByTwitchUser?.displayName
-                          )}
-                        </p>
+                queue.map((item, index) =>
+                  item.track ? (
+                    <div key={item.id} className={styles.queueItem}>
+                      <div className={styles.queueItemInfo}>
+                        <span className={styles.queueNumber}>{index + 1}</span>
+                        <div className={styles.queueTrackInfo}>
+                          <h6 className={styles.queueTrackName}>
+                            {item.track.trackName}
+                          </h6>
+                          <p className={styles.queueTrackAuthor}>
+                            {getAuthorsString(item.track.authors)}
+                          </p>
+                          <p className={styles.queueRequestedBy}>
+                            {getRequestedByString(
+                              item.requestedByTwitchUser?.displayName
+                            )}
+                          </p>
+                        </div>
+                      </div>
+                      <div className={styles.queueItemActions}>
+                        <span className={styles.queueDuration}>
+                          {formatDuration(item.track.duration)}
+                        </span>
+                        <Button
+                          variant="success"
+                          size="sm"
+                          onClick={() =>
+                            handlePlayTrackFromQueue(item.track?.id ?? item.id)
+                          }
+                          disabled={loading}
+                        >
+                          Играть
+                        </Button>
+                        <Button
+                          variant="danger"
+                          size="sm"
+                          onClick={() =>
+                            handleRemoveFromQueue(item.track?.id ?? item.id)
+                          }
+                          disabled={loading}
+                        >
+                          Удалить
+                        </Button>
                       </div>
                     </div>
-                    <div className={styles.queueItemActions}>
-                      <span className={styles.queueDuration}>
-                        {formatDuration(item.duration)}
-                      </span>
-                      <Button
-                        variant="success"
-                        size="sm"
-                        onClick={() => handlePlayTrackFromQueue(item.id)}
-                        disabled={loading}
-                      >
-                        Играть
-                      </Button>
-                      <Button
-                        variant="danger"
-                        size="sm"
-                        onClick={() => handleRemoveFromQueue(item.id)}
-                        disabled={loading}
-                      >
-                        Удалить
-                      </Button>
-                    </div>
-                  </div>
-                ))
+                  ) : null
+                )
               ) : (
                 <p className={styles.emptyQueue}>Очередь пуста</p>
               )}
@@ -269,39 +279,43 @@ export function SoundRequestPlayerMobile() {
           </div>
           {nextFiveOrders.length > 0 ? (
             <div className={styles.queueList}>
-              {nextFiveOrders.map((item, index) => (
-                <div key={item.id} className={styles.queueItem}>
-                  <div className={styles.queueItemInfo}>
-                    <span className={styles.queueNumber}>{index + 1}</span>
-                    <div className={styles.queueTrackInfo}>
-                      <h6 className={styles.queueTrackName}>
-                        {item.trackName}
-                      </h6>
-                      <p className={styles.queueTrackAuthor}>
-                        {getAuthorsString(item.authors)}
-                      </p>
-                      <p className={styles.queueRequestedBy}>
-                        {getRequestedByString(
-                          item.requestedByTwitchUser?.displayName
-                        )}
-                      </p>
+              {nextFiveOrders.map((item, index) =>
+                item.track ? (
+                  <div key={item.id} className={styles.queueItem}>
+                    <div className={styles.queueItemInfo}>
+                      <span className={styles.queueNumber}>{index + 1}</span>
+                      <div className={styles.queueTrackInfo}>
+                        <h6 className={styles.queueTrackName}>
+                          {item.track.trackName}
+                        </h6>
+                        <p className={styles.queueTrackAuthor}>
+                          {getAuthorsString(item.track.authors)}
+                        </p>
+                        <p className={styles.queueRequestedBy}>
+                          {getRequestedByString(
+                            item.requestedByTwitchUser?.displayName
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                    <div className={styles.queueItemActions}>
+                      <span className={styles.queueDuration}>
+                        {formatDuration(item.track.duration)}
+                      </span>
+                      <Button
+                        variant="success"
+                        size="sm"
+                        onClick={() =>
+                          handlePlayTrackFromQueue(item.track?.id ?? item.id)
+                        }
+                        disabled={loading}
+                      >
+                        Играть
+                      </Button>
                     </div>
                   </div>
-                  <div className={styles.queueItemActions}>
-                    <span className={styles.queueDuration}>
-                      {formatDuration(item.duration)}
-                    </span>
-                    <Button
-                      variant="success"
-                      size="sm"
-                      onClick={() => handlePlayTrackFromQueue(item.id)}
-                      disabled={loading}
-                    >
-                      Играть
-                    </Button>
-                  </div>
-                </div>
-              ))}
+                ) : null
+              )}
             </div>
           ) : (
             <p className={styles.emptyQueue}>Нет ближайших заказов</p>

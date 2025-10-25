@@ -257,6 +257,14 @@
         "responses": { }
       }
     },
+    "/hubs/telegramus/MikuMikuDeleteTwitchMessages": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/telegramus/MuteAll": {
       "post": {
         "tags": [
@@ -698,6 +706,26 @@
         "responses": { }
       }
     },
+    "/hubs/telegramus/MikuMikuBeam": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "users",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/TwitchUser"
+              }
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/telegramus/NewMessage": {
       "post": {
         "tags": [
@@ -920,7 +948,6 @@
           "id",
           "isDeleted",
           "lastTimePlays",
-          "queueItems",
           "title",
           "trackName",
           "updatedAt",
@@ -974,33 +1001,6 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
-          },
-          "queueItems": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/QueueItem"
-            }
-          },
-          "queueOrder": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true,
-            "deprecated": true
-          },
-          "requestedByTwitchId": {
-            "maxLength": 50,
-            "type": "string",
-            "nullable": true,
-            "deprecated": true
-          },
-          "requestedByTwitchUser": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/TwitchUser"
-              }
-            ],
-            "nullable": true,
-            "deprecated": true
           },
           "title": {
             "type": "string",
@@ -1815,60 +1815,6 @@
           },
           "text": {
             "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "QueueItem": {
-        "required": [
-          "id",
-          "isDeleted",
-          "requestedAt",
-          "requestedByTwitchId",
-          "requestedByTwitchUser",
-          "track",
-          "trackId"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "trackId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "track": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/BaseTrackInfo"
-              }
-            ]
-          },
-          "queueOrder": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "requestedByTwitchId": {
-            "maxLength": 50,
-            "minLength": 1,
-            "type": "string"
-          },
-          "requestedByTwitchUser": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/TwitchUser"
-              }
-            ]
-          },
-          "requestedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "isDeleted": {
-            "type": "boolean"
           }
         },
         "additionalProperties": false

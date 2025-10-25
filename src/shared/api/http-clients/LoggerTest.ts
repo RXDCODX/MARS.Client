@@ -93,6 +93,7 @@ import type {
   MediaMetaInfoPriorityEnum,
   ParseRequestSourceEnum,
   PlayerStateStateEnum,
+  PlayerStateVideoStateEnum,
   RewardRedemptionStatusEnum,
   ServiceInfoStatusEnum,
   StreamArchiveConfigFileConvertTypeEnum,
@@ -114,6 +115,8 @@ import type {
   LogsByLevelDetailParamsEnum,
   LogsByLevelDetailParamsLogLevelEnum,
   LogsListParamsLogLevelEnum,
+  SoundRequestVideoDisplayCreateParamsDisplayModeEnum,
+  SoundRequestVideoDisplayCreateParamsEnum,
 } from "../types/data-contracts";
 
 export class LoggerTest<

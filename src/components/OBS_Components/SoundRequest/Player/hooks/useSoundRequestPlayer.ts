@@ -17,7 +17,7 @@ import { useToastModal } from "@/shared/Utils/ToastModal";
  */
 export const useSoundRequestPlayer = () => {
   const [playerState, setPlayerState] = useState<PlayerState | null>(null);
-  const [queue, setQueue] = useState<BaseTrackInfo[]>([]);
+  const [queue, setQueue] = useState<QueueItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [volume, setVolume] = useState<number>(0);
   const [history, setHistory] = useState<BaseTrackInfo[]>([]);
@@ -52,7 +52,7 @@ export const useSoundRequestPlayer = () => {
         }
       );
       if (queueItems) {
-        setQueue(queueItems.map(item => item.track));
+        setQueue(queueItems);
       }
     });
 
@@ -166,7 +166,7 @@ export const useSoundRequestPlayer = () => {
       }
 
       if (response.data.data) {
-        setQueue(response.data.data.map(item => item.track));
+        setQueue(response.data.data);
       }
     } catch (error) {
       console.error("[useSoundRequestPlayer] Ошибка загрузки очереди:", error);
@@ -441,7 +441,9 @@ export const useSoundRequestPlayer = () => {
       list.push(playerState.nextQueueItem.track);
     for (const item of queue) {
       if (list.length >= 6) break;
-      list.push(item);
+      if (item.track) {
+        list.push(item.track);
+      }
     }
     return list;
   }, [playerState, queue]);

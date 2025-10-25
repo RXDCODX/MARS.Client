@@ -59,19 +59,6 @@ export interface BaseTrackInfo {
   createdAt: string;
   /** @format date-time */
   updatedAt: string;
-  queueItems: QueueItem[];
-  /**
-   * @deprecated
-   * @format int32
-   */
-  queueOrder?: number;
-  /**
-   * @deprecated
-   * @maxLength 50
-   */
-  requestedByTwitchId?: string;
-  /** @deprecated */
-  requestedByTwitchUser?: TwitchUser;
   title: string;
 }
 
@@ -555,6 +542,7 @@ export interface PlayerState {
   /** @format date-span */
   currentTrackProgress?: string;
   state: PlayerStateStateEnum;
+  videoState: PlayerStateVideoStateEnum;
   isMuted: boolean;
   /** @format float */
   volume: number;
@@ -577,7 +565,7 @@ export interface QueueItem {
   id: string;
   /** @format uuid */
   trackId: string;
-  track: BaseTrackInfo;
+  track?: BaseTrackInfo;
   /** @format int32 */
   queueOrder?: number;
   /**
@@ -585,7 +573,7 @@ export interface QueueItem {
    * @maxLength 50
    */
   requestedByTwitchId: string;
-  requestedByTwitchUser: TwitchUser;
+  requestedByTwitchUser?: TwitchUser;
   /** @format date-time */
   requestedAt: string;
   isDeleted: boolean;
@@ -931,6 +919,12 @@ export enum PlayerStateStateEnum {
   WaitingForTrack = "WaitingForTrack",
 }
 
+export enum PlayerStateVideoStateEnum {
+  Video = "Video",
+  NoVideo = "NoVideo",
+  AudioOnly = "AudioOnly",
+}
+
 export enum RewardRedemptionStatusEnum {
   UNFULFILLED = "UNFULFILLED",
   FULFILLED = "FULFILLED",
@@ -1111,6 +1105,18 @@ export enum LogsByLevelDetailParamsEnum {
   Error = "Error",
   Critical = "Critical",
   None = "None",
+}
+
+export enum SoundRequestVideoDisplayCreateParamsDisplayModeEnum {
+  Video = "Video",
+  NoVideo = "NoVideo",
+  AudioOnly = "AudioOnly",
+}
+
+export enum SoundRequestVideoDisplayCreateParamsEnum {
+  Video = "Video",
+  NoVideo = "NoVideo",
+  AudioOnly = "AudioOnly",
 }
 // ========================================
 // SignalR-специфичные типы

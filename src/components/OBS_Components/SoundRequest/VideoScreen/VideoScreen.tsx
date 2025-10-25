@@ -1,11 +1,11 @@
 import type { HubConnection } from "@microsoft/signalr";
 import { TimeSpan } from "@tempestive/timespan.js";
 import { useCallback, useEffect, useRef, useState } from "react";
-import ReactPlayer from "react-player";
 
-import { PlayerState, PlayerStateStateEnum } from "@/shared/api";
+import { PlayerState } from "@/shared/api";
 import { SoundRequestHubSignalRConnectionBuilder } from "@/shared/api";
 
+import { useVideoStateRenderer } from "./hooks";
 import styles from "./VideoScreen.module.scss";
 
 interface Props {
@@ -117,39 +117,47 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
     []
   );
 
-  // Если нет текущего трека, показываем пустой экран
-  if (!playerState?.currentQueueItem?.track) {
+  // Проверяем наличие трека
+  const currentQueueItem = playerState?.currentQueueItem;
+  const currentTrack = currentQueueItem?.track;
+  const hasTrack = !!currentTrack;
+
+  // Подготовка данных для хука (нужно делать до условных return'ов)
+  const userName =
+    currentQueueItem?.requestedByTwitchUser?.displayName ??
+    currentQueueItem?.requestedByTwitchUser?.userLogin ??
+    "Неизвестный пользователь";
+  const authors = currentTrack?.authors?.join(", ") || "Неизвестный автор";
+  const trackName = currentTrack?.trackName || "";
+
+  // Используем хук для управления рендерингом компонентов
+  // Хук ВСЕГДА должен вызываться, независимо от условий
+  const { component, videoState, showSections } = useVideoStateRenderer({
+    playerState,
+    currentTrack,
+    isMainPlayer,
+    userName,
+    userAvatar: currentQueueItem?.requestedByTwitchUser?.profileImageUrl,
+    userColor: currentQueueItem?.requestedByTwitchUser?.chatColor,
+    onEnded: handleEnded,
+    onStart: handleStart,
+    onError: handleError,
+    onProgress: handleProgress,
+  });
+
+  // Если нет трека, показываем пустой экран
+  if (!hasTrack) {
     console.log("[VideoScreen] Нет трека - показываем пустой экран");
     return null;
   }
 
-  console.log(
-    "[VideoScreen] Рендерим плеер с треком:",
-    playerState.currentQueueItem.track.trackName
-  );
-
-  const { currentQueueItem } = playerState;
-  const currentTrack = currentQueueItem.track;
-  const userName =
-    currentQueueItem.requestedByTwitchUser?.displayName ??
-    currentQueueItem.requestedByTwitchUser?.userLogin ??
-    "Неизвестный пользователь";
-  const authors = currentTrack.authors?.join(", ") || "Неизвестный автор";
-  const trackName = currentTrack.trackName;
-
-  const isPlaying = playerState.state === PlayerStateStateEnum.Playing;
-  console.log("[VideoScreen] ReactPlayer props:", {
-    src: currentTrack.url,
-    playing: isPlaying,
-    state: playerState.state,
-    volume: playerState.volume / 100,
-    muted: playerState.isMuted,
-  });
+  console.log("[VideoScreen] Рендеринг с videoState:", videoState);
+  console.log("[VideoScreen] Рендерим плеер с треком:", currentTrack.trackName);
 
   return (
     <div className={styles.container}>
-      {/* Верхняя секция - никнейм пользователя (20%) - только для mainPlayer */}
-      {isMainPlayer && (
+      {/* Верхняя секция - никнейм пользователя (20%) - только для Video */}
+      {showSections && (
         <div className={styles.userSection}>
           <div className={styles.userInfo}>
             <span className={styles.label}>Заказал:</span>
@@ -174,28 +182,15 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
         </div>
       )}
 
-      {/* Средняя секция - видео плеер (70% или 100% если не mainPlayer) */}
+      {/* Средняя секция - плеер с разными видами отображения */}
       <div
-        className={`${styles.videoSection} ${!isMainPlayer ? styles.fullScreen + " " + className : ""}`}
+        className={`${styles.videoSection} ${!isMainPlayer || !showSections ? styles.fullScreen + " " + className : ""}`}
       >
-        <ReactPlayer
-          key={currentTrack.url} // Перемонтировать плеер при смене трека
-          src={currentTrack.url}
-          playing={isPlaying}
-          volume={playerState.volume / 100}
-          muted={!isMainPlayer || playerState.isMuted}
-          onEnded={() => isMainPlayer && handleEnded()}
-          onStart={() => isMainPlayer && handleStart()}
-          onError={() => isMainPlayer && handleError()}
-          onProgress={progress => isMainPlayer && handleProgress(progress)}
-          width="100%"
-          height="100%"
-          controls={false}
-        />
+        {component}
       </div>
 
-      {/* Нижняя секция - информация о треке (10%) - только для mainPlayer */}
-      {isMainPlayer && (
+      {/* Нижняя секция - информация о треке (10%) - только для Video */}
+      {showSections && (
         <div className={styles.trackSection}>
           <div className={styles.trackInfo}>
             <div className={styles.trackTitle}>{trackName}</div>

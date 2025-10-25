@@ -46,7 +46,7 @@ export function SoundRequestPlayerDesktop() {
   // Build lists: sticky current + rest of queue
   const queueWithoutCurrent = useMemo(() => {
     const currentId = current?.id;
-    return queue.filter(x => x.id !== currentId);
+    return queue.filter(x => x.track?.id !== currentId);
   }, [queue, current?.id]);
 
   const handlePrev = useCallback(() => {
@@ -87,14 +87,16 @@ export function SoundRequestPlayerDesktop() {
               />
             )}
             <div className={styles.scrollList}>
-              {queueWithoutCurrent.map(q => (
-                <TrackItem
-                  key={q.id}
-                  track={q}
-                  onMouseEnter={() => handleItemHover(q.id, true)}
-                  onMouseLeave={() => handleItemHover(q.id, false)}
-                />
-              ))}
+              {queueWithoutCurrent.map(q =>
+                q.track ? (
+                  <TrackItem
+                    key={q.id}
+                    track={q.track}
+                    onMouseEnter={() => handleItemHover(q.track?.id, true)}
+                    onMouseLeave={() => handleItemHover(q.track?.id, false)}
+                  />
+                ) : null
+              )}
             </div>
           </div>
 
@@ -118,16 +120,18 @@ export function SoundRequestPlayerDesktop() {
               />
             )}
             <div className={styles.scrollList}>
-              {queueWithoutCurrent.map(q => (
-                <UserItem
-                  key={q.id}
-                  user={q.requestedByTwitchUser}
-                  lastTimePlays={q.lastTimePlays}
-                  trackId={q.id}
-                  onMouseEnter={() => handleItemHover(q.id, true)}
-                  onMouseLeave={() => handleItemHover(q.id, false)}
-                />
-              ))}
+              {queueWithoutCurrent.map(q =>
+                q.track ? (
+                  <UserItem
+                    key={q.id}
+                    user={q.requestedByTwitchUser ?? undefined}
+                    lastTimePlays={q.track.lastTimePlays}
+                    trackId={q.track.id}
+                    onMouseEnter={() => handleItemHover(q.track?.id, true)}
+                    onMouseLeave={() => handleItemHover(q.track?.id, false)}
+                  />
+                ) : null
+              )}
             </div>
           </div>
         </div>
