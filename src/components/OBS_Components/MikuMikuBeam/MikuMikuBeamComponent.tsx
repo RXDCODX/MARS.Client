@@ -99,16 +99,8 @@ const MikuMikuBeamComponent = () => {
   }, []);
 
   // Обработчик завершения видео
-  const handleVideoEnded = useCallback(async () => {
+  const handleVideoEnded = useCallback(() => {
     console.log("[MikuMikuBeam] Видео завершено");
-
-    // Вызываем UnmuteSessions
-    try {
-      await TelegramusHubSignalRContext.invoke("UnmuteSessions");
-      console.log("[MikuMikuBeam] UnmuteSessions вызван");
-    } catch (error) {
-      console.error("[MikuMikuBeam] Ошибка вызова UnmuteSessions:", error);
-    }
 
     // Деактивируем видео
     setVideoState({
@@ -116,6 +108,14 @@ const MikuMikuBeamComponent = () => {
       users: [],
     });
     setShowTickers(false);
+
+    // Вызываем UnmuteSessions
+    try {
+      TelegramusHubSignalRContext.invoke("UnmuteSessions");
+      console.log("[MikuMikuBeam] UnmuteSessions вызван");
+    } catch (error) {
+      console.error("[MikuMikuBeam] Ошибка вызова UnmuteSessions:", error);
+    }
   }, []);
 
   // Создаем массив пользователей для бегущих строк (дублируем для непрерывности)
