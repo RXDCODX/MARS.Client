@@ -1,16 +1,21 @@
 import {
   ChevronDown,
   ChevronUp,
+  Music,
   Pause,
   Play,
   SkipForward,
   Square,
+  Video,
+  VideoOff,
   Volume2,
   VolumeX,
 } from "lucide-react";
 import { useState } from "react";
 import { Button, Card, Carousel, Form } from "react-bootstrap";
 import ReactPlayer from "react-player";
+
+import { PlayerStateVideoStateEnum } from "@/shared/api";
 
 import { useSoundRequestPlayer } from "../hooks";
 import {
@@ -40,9 +45,26 @@ export function SoundRequestPlayerMobile() {
     handlePlayNext,
     handleVolumeChange,
     handleMute,
+    handleToggleVideoState,
     handleRemoveFromQueue,
     handlePlayTrackFromQueue,
   } = useSoundRequestPlayer();
+
+  // Определяем иконку видео в зависимости от videoState
+  const getVideoIcon = () => {
+    const videoState =
+      playerState?.videoState ?? PlayerStateVideoStateEnum.Video;
+    switch (videoState) {
+      case PlayerStateVideoStateEnum.Video:
+        return <Video size={18} />;
+      case PlayerStateVideoStateEnum.NoVideo:
+        return <VideoOff size={18} />;
+      case PlayerStateVideoStateEnum.AudioOnly:
+        return <Music size={18} />;
+      default:
+        return <Video size={18} />;
+    }
+  };
 
   return (
     <div className={styles.container}>
@@ -135,6 +157,22 @@ export function SoundRequestPlayerMobile() {
                   <Volume2 size={18} />
                 )}
               </Button>
+              <Button
+                variant={
+                  playerState?.videoState === PlayerStateVideoStateEnum.Video
+                    ? "primary"
+                    : playerState?.videoState ===
+                        PlayerStateVideoStateEnum.NoVideo
+                      ? "warning"
+                      : "info"
+                }
+                onClick={handleToggleVideoState}
+                disabled={loading}
+                className={styles.muteButton}
+                title="Переключить режим отображения"
+              >
+                {getVideoIcon()}
+              </Button>
               <div className={styles.volumeSlider}>
                 <Form.Range
                   min={0}
@@ -165,36 +203,42 @@ export function SoundRequestPlayerMobile() {
 
           {showQueue && (
             <Carousel interval={null} indicators={displayedVideos.length > 1}>
-              {displayedVideos.map(video => (
-                <Carousel.Item key={video.id}>
-                  <div style={{ width: "100%", height: 220 }}>
-                    {playerState?.currentQueueItem?.track?.id === video.id ? (
-                      <ReactPlayer
-                        key={video.url}
-                        src={video.url}
-                        playing={!!isPlaying}
-                        volume={playerState.volume / 100}
-                        muted
-                        width="100%"
-                        height="100%"
-                      />
-                    ) : (
-                      <div className={styles.queueItem}>
-                        <div className={styles.queueItemInfo}>
-                          <div className={styles.queueTrackInfo}>
-                            <h6 className={styles.queueTrackName}>
-                              {video.trackName || video.title}
-                            </h6>
-                            <p className={styles.queueTrackAuthor}>
-                              {(video.authors || []).join(", ")}
-                            </p>
+              {displayedVideos.map(video => {
+                // Используем queueItemId для корректного пересоздания плеера
+                const queueItemId = playerState?.currentQueueItem?.id;
+                const playerKey = queueItemId || video.id;
+
+                return (
+                  <Carousel.Item key={video.id}>
+                    <div style={{ width: "100%", height: 220 }}>
+                      {playerState?.currentQueueItem?.track?.id === video.id ? (
+                        <ReactPlayer
+                          key={playerKey}
+                          src={video.url}
+                          playing={!!isPlaying}
+                          volume={playerState.volume / 100}
+                          muted
+                          width="100%"
+                          height="100%"
+                        />
+                      ) : (
+                        <div className={styles.queueItem}>
+                          <div className={styles.queueItemInfo}>
+                            <div className={styles.queueTrackInfo}>
+                              <h6 className={styles.queueTrackName}>
+                                {video.trackName || video.title}
+                              </h6>
+                              <p className={styles.queueTrackAuthor}>
+                                {(video.authors || []).join(", ")}
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    )}
-                  </div>
-                </Carousel.Item>
-              ))}
+                      )}
+                    </div>
+                  </Carousel.Item>
+                );
+              })}
             </Carousel>
           )}
         </Card.Body>

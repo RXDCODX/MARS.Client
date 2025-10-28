@@ -28,7 +28,7 @@ const ChoosePath: React.FC = () => {
           <span className={styles.label}>VideoScreen</span>
         </Link>
         <Link to="/sr/tracklist" className={styles.column}>
-          <span className={styles.label}>Player</span>
+          <span className={styles.label}>TRACKLIST</span>
         </Link>
         <Link to="/sr/currenttrack" className={styles.column}>
           <span className={styles.label}>CurrentTrack</span>
@@ -59,7 +59,7 @@ const ChoosePath: React.FC = () => {
         <span className={styles.label}>VideoScreen</span>
       </Link>
       <Link to="/sr/tracklist" className={styles.column}>
-        <span className={styles.label}>Player</span>
+        <span className={styles.label}>TRACK LIST</span>
       </Link>
       <Link to="/sr/currenttrack" className={styles.column}>
         <span className={styles.label}>CurrentTrack</span>

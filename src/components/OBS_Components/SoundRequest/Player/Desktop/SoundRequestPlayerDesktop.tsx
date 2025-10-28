@@ -25,13 +25,13 @@ export function SoundRequestPlayerDesktop() {
     volume,
     isPlaying,
     history,
-    // handlePlayNext, // пока не используется в десктоп-версии
+    handlePlayPrevious,
     handleTogglePlayPause,
     handleStop,
     handleSkip,
     handleVolumeChange,
     handleMute,
-    handlePlayTrackFromQueue,
+    handleToggleVideoState,
   } = useSoundRequestPlayer();
 
   const current = playerState?.currentQueueItem?.track || null;
@@ -41,18 +41,14 @@ export function SoundRequestPlayerDesktop() {
     durationSec,
     isPlaying: isPlaying ?? false,
     trackId: current?.id,
+    initialProgress: playerState?.currentTrackProgress,
   });
 
   // Build lists: sticky current + rest of queue
   const queueWithoutCurrent = useMemo(() => {
-    const currentId = current?.id;
-    return queue.filter(x => x.track?.id !== currentId);
-  }, [queue, current?.id]);
-
-  const handlePrev = useCallback(() => {
-    const prev = history?.[0];
-    if (prev?.id) handlePlayTrackFromQueue(prev.id);
-  }, [handlePlayTrackFromQueue, history]);
+    const currentQueueItemId = playerState?.currentQueueItem?.id;
+    return queue.filter(x => x.id !== currentQueueItemId);
+  }, [queue, playerState?.currentQueueItem?.id]);
 
   // Обработчики для синхронизации hover между левой и правой колонками
   const handleItemHover = useCallback(
@@ -125,7 +121,7 @@ export function SoundRequestPlayerDesktop() {
                   <UserItem
                     key={q.id}
                     user={q.requestedByTwitchUser ?? undefined}
-                    lastTimePlays={q.track.lastTimePlays}
+                    lastTimePlays={q.requestedAt}
                     trackId={q.track.id}
                     onMouseEnter={() => handleItemHover(q.track?.id, true)}
                     onMouseLeave={() => handleItemHover(q.track?.id, false)}
@@ -146,12 +142,14 @@ export function SoundRequestPlayerDesktop() {
           loading={loading}
           hasPrevious={!!history?.length}
           progress={progress}
-          onPrev={handlePrev}
+          videoState={playerState?.videoState}
+          onPrev={handlePlayPrevious}
           onTogglePlayPause={handleTogglePlayPause}
           onStop={handleStop}
           onSkip={handleSkip}
           onMute={handleMute}
           onVolumeChange={handleVolumeChange}
+          onToggleVideoState={handleToggleVideoState}
         />
       </div>
     </div>

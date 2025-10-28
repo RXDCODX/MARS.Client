@@ -5163,6 +5163,35 @@
         }
       }
     },
+    "/api/SoundRequest/play-previous": {
+      "post": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/SoundRequest/play-track/{queueItemId}": {
       "post": {
         "tags": [

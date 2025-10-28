@@ -1,15 +1,19 @@
 import {
+  Music,
   Pause,
   Play,
   SkipBack,
   SkipForward,
   Square,
   Video,
+  VideoOff,
   Volume2,
   VolumeX,
 } from "lucide-react";
 import { CSSProperties } from "react";
 import { Button } from "react-bootstrap";
+
+import { PlayerStateVideoStateEnum } from "@/shared/api";
 
 import { ElasticSlider } from "../ElasticSlider";
 import styles from "../SoundRequestPlayerDesktop.module.scss";
@@ -21,12 +25,14 @@ interface PlayerToolbarProps {
   loading: boolean;
   hasPrevious: boolean;
   progress: number;
+  videoState?: PlayerStateVideoStateEnum;
   onPrev: () => void;
   onTogglePlayPause: () => void;
   onStop: () => void;
   onSkip: () => void;
   onMute: () => void;
   onVolumeChange: (value: number) => void;
+  onToggleVideoState: () => void;
 }
 
 export function PlayerToolbar({
@@ -36,16 +42,45 @@ export function PlayerToolbar({
   loading,
   hasPrevious,
   progress,
+  videoState = PlayerStateVideoStateEnum.Video,
   onPrev,
   onTogglePlayPause,
   onStop,
   onSkip,
   onMute,
   onVolumeChange,
+  onToggleVideoState,
 }: PlayerToolbarProps) {
   const progressStyle = {
     "--track-progress": `${Math.round(progress * 100)}%`,
   } as CSSProperties;
+
+  // Определяем иконку и подсказку в зависимости от videoState
+  const getVideoIcon = () => {
+    switch (videoState) {
+      case PlayerStateVideoStateEnum.Video:
+        return <Video />;
+      case PlayerStateVideoStateEnum.NoVideo:
+        return <VideoOff />;
+      case PlayerStateVideoStateEnum.AudioOnly:
+        return <Music />;
+      default:
+        return <Video />;
+    }
+  };
+
+  const getVideoTitle = () => {
+    switch (videoState) {
+      case PlayerStateVideoStateEnum.Video:
+        return "Режим: Видео (переключить на Без видео)";
+      case PlayerStateVideoStateEnum.NoVideo:
+        return "Режим: Без видео (переключить на Только аудио)";
+      case PlayerStateVideoStateEnum.AudioOnly:
+        return "Режим: Только аудио (переключить на Видео)";
+      default:
+        return "Переключить режим отображения";
+    }
+  };
 
   return (
     <div className={styles.toolbar} style={progressStyle}>
@@ -103,12 +138,19 @@ export function PlayerToolbar({
 
           <div className={styles.extraButtons}>
             <Button
-              variant="outline-secondary"
+              variant={
+                videoState === PlayerStateVideoStateEnum.Video
+                  ? "primary"
+                  : videoState === PlayerStateVideoStateEnum.NoVideo
+                    ? "warning"
+                    : "info"
+              }
               className={styles.tbBtn}
-              disabled
-              title="Видео в главном плеере (скоро)"
+              onClick={onToggleVideoState}
+              disabled={loading}
+              title={getVideoTitle()}
             >
-              <Video />
+              {getVideoIcon()}
             </Button>
           </div>
         </div>

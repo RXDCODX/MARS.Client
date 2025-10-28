@@ -13,15 +13,15 @@ interface UserItemProps {
 
 export function UserItem({
   user,
-  lastTimePlays,
+  lastTimePlays: requestedAt,
   trackId,
   isCurrent = false,
   onMouseEnter,
   onMouseLeave,
 }: UserItemProps) {
   const displayName = user?.displayName ?? user?.userLogin ?? "Неизвестно";
-  const formattedDate = lastTimePlays
-    ? new Date(lastTimePlays).toLocaleString()
+  const formattedDate = requestedAt
+    ? new Date(requestedAt).toLocaleString()
     : "";
 
   return (

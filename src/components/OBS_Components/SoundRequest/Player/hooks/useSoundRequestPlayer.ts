@@ -5,9 +5,11 @@ import {
   BaseTrackInfo,
   PlayerState,
   PlayerStateStateEnum,
+  PlayerStateVideoStateEnum,
   QueueItem,
   SoundRequest,
   SoundRequestHubSignalRConnectionBuilder,
+  SoundRequestVideoDisplayCreateParamsEnum,
 } from "@/shared/api";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
@@ -207,6 +209,27 @@ export const useSoundRequestPlayer = () => {
     [soundRequestApi]
   );
 
+  // Обновление очереди при переключении треков
+  useEffect(() => {
+    const currentQueueItemId = playerState?.currentQueueItem?.id;
+    const currentTrackName = playerState?.currentQueueItem?.track?.trackName;
+
+    if (currentQueueItemId) {
+      console.log(
+        "[useSoundRequestPlayer] Трек изменился, обновляем очередь:",
+        {
+          queueItemId: currentQueueItemId,
+          trackName: currentTrackName,
+        }
+      );
+      fetchQueue();
+    }
+  }, [
+    fetchQueue,
+    playerState?.currentQueueItem?.id,
+    playerState?.currentQueueItem?.track?.trackName,
+  ]);
+
   // Инициализация
   useEffect(() => {
     console.log(
@@ -343,6 +366,25 @@ export const useSoundRequestPlayer = () => {
     }
   }, [soundRequestApi, showToast]);
 
+  // Воспроизвести предыдущий трек из истории
+  const handlePlayPrevious = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await soundRequestApi.soundRequestPlayPreviousCreate();
+      if (!response.data.success) {
+        showToast(response.data);
+      }
+      // Состояние и очередь обновятся автоматически через SignalR
+    } catch {
+      showToast({
+        success: false,
+        message: "Ошибка при запуске предыдущего трека",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [soundRequestApi, showToast]);
+
   // Управление громкостью
   const handleVolumeChange = useCallback(
     async (newVolume: number) => {
@@ -379,6 +421,34 @@ export const useSoundRequestPlayer = () => {
       showToast({
         success: false,
         message: "Ошибка при изменении режима звука",
+      });
+    }
+  }, [soundRequestApi, showToast, playerState]);
+
+  // Переключение режима отображения видео
+  const handleToggleVideoState = useCallback(async () => {
+    try {
+      const currentVideoState =
+        playerState?.videoState ?? PlayerStateVideoStateEnum.Video;
+
+      // Циклическое переключение: Video -> NoVideo -> AudioOnly -> Video
+      const nextVideoState =
+        currentVideoState === PlayerStateVideoStateEnum.Video
+          ? SoundRequestVideoDisplayCreateParamsEnum.NoVideo
+          : currentVideoState === PlayerStateVideoStateEnum.NoVideo
+            ? SoundRequestVideoDisplayCreateParamsEnum.AudioOnly
+            : SoundRequestVideoDisplayCreateParamsEnum.Video;
+
+      const response =
+        await soundRequestApi.soundRequestVideoDisplayCreate(nextVideoState);
+      if (!response.data.success) {
+        showToast(response.data);
+      }
+      // Состояние обновится автоматически через SignalR
+    } catch {
+      showToast({
+        success: false,
+        message: "Ошибка при переключении режима отображения видео",
       });
     }
   }, [soundRequestApi, showToast, playerState]);
@@ -466,6 +536,7 @@ export const useSoundRequestPlayer = () => {
     handleStop,
     handleSkip,
     handlePlayNext,
+    handlePlayPrevious,
 
     // Обработчики управления громкостью
     handleVolumeChange,
@@ -474,5 +545,8 @@ export const useSoundRequestPlayer = () => {
     // Обработчики управления очередью
     handleRemoveFromQueue,
     handlePlayTrackFromQueue,
+
+    // Обработчики управления отображением
+    handleToggleVideoState,
   };
 };

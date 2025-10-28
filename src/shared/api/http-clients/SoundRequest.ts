@@ -241,6 +241,21 @@ export class SoundRequest<
    * No description
    *
    * @tags SoundRequest
+   * @name SoundRequestPlayPreviousCreate
+   * @request POST:/api/SoundRequest/play-previous
+   * @response `200` `OperationResult` OK
+   */
+  soundRequestPlayPreviousCreate = (params: RequestParams = {}) =>
+    this.request<OperationResult, any>({
+      path: `/api/SoundRequest/play-previous`,
+      method: "POST",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags SoundRequest
    * @name SoundRequestPlayTrackCreate
    * @request POST:/api/SoundRequest/play-track/{queueItemId}
    * @response `200` `OperationResult` OK

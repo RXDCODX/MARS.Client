@@ -15,9 +15,43 @@ interface Props {
 
 export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
   const [playerState, setPlayerState] = useState<PlayerState | null>(null);
+  // В production режиме считаем что интеракция уже была (не мьютим)
+  const [hasUserInteracted, setHasUserInteracted] = useState<boolean>(
+    import.meta.env.PROD
+  );
   const isMainPlayer = groupName === "mainplayer";
   const connectionRef = useRef<HubConnection | null>(null);
   const lastProgressSentRef = useRef<number>(0);
+  const currentProgressRef = useRef<number>(0); // Храним текущий прогресс
+  const previousVideoStateRef = useRef<string | undefined>(undefined); // Храним предыдущий videoState
+
+  // Отслеживание взаимодействия пользователя со страницей
+  // В production режиме пропускаем эту логику
+  const handleUserInteraction = useCallback(() => {
+    if (!hasUserInteracted) {
+      console.log("[VideoScreen] Пользователь взаимодействовал со страницей");
+      setHasUserInteracted(true);
+    }
+  }, [hasUserInteracted]);
+
+  useEffect(() => {
+    // В production режиме не нужно ждать интеракции
+    if (import.meta.env.PROD) {
+      return;
+    }
+
+    // Подписываемся на события взаимодействия пользователя
+    document.addEventListener("click", handleUserInteraction, { once: true });
+    document.addEventListener("touchstart", handleUserInteraction, {
+      once: true,
+    });
+
+    // Очистка при размонтировании
+    return () => {
+      document.removeEventListener("click", handleUserInteraction);
+      document.removeEventListener("touchstart", handleUserInteraction);
+    };
+  }, [handleUserInteraction, hasUserInteracted]);
 
   // Управление подключением к SignalR
   useEffect(() => {
@@ -26,12 +60,7 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
 
     // Обработчик изменения состояния плеера
     const handlePlayerStateChange = (state: PlayerState) => {
-      console.log("[VideoScreen] PlayerStateChange получено:", {
-        hasCurrentTrack: !!state.currentQueueItem?.track,
-        trackName: state.currentQueueItem?.track?.trackName,
-        state: state.state,
-        url: state.currentQueueItem?.track?.url,
-      });
+      console.log("[VideoScreen] PlayerStateChange получено:", state);
       setPlayerState(state);
     };
 
@@ -44,8 +73,6 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
       .then(async () => {
         console.log("[VideoScreen] Подключение установлено");
 
-        // Присоединяемся к группе
-        await connection.invoke("Join", groupName);
         if (isMainPlayer) {
           console.warn("ЭТО МЕЙН ПЛЕЕР");
         }
@@ -66,56 +93,106 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
 
   // Обработчики событий плеера
   const handleEnded = useCallback(() => {
-    connectionRef.current
-      ?.invoke("Ended", playerState?.currentQueueItem?.track)
-      .catch(error => {
-        console.error("[VideoScreen] Ошибка при вызове Ended:", error);
-      });
-  }, [playerState?.currentQueueItem?.track]);
+    if (isMainPlayer) {
+      connectionRef.current
+        ?.invoke("Ended", playerState?.currentQueueItem?.track)
+        .catch(error => {
+          console.error("[VideoScreen] Ошибка при вызове Ended:", error);
+        });
+    }
+  }, [isMainPlayer, playerState?.currentQueueItem?.track]);
 
   const handleStart = useCallback(() => {
-    connectionRef.current
-      ?.invoke("Started", playerState?.currentQueueItem?.track)
-      .catch(error => {
-        console.error("[VideoScreen] Ошибка при вызове Started:", error);
-      });
-  }, [playerState?.currentQueueItem?.track]);
+    if (isMainPlayer) {
+      connectionRef.current
+        ?.invoke("Started", playerState?.currentQueueItem?.track)
+        .catch(error => {
+          console.error("[VideoScreen] Ошибка при вызове Started:", error);
+        });
+    }
+  }, [isMainPlayer, playerState?.currentQueueItem?.track]);
 
   const handleError = useCallback(() => {
-    connectionRef.current
-      ?.invoke("ErrorPlaying", playerState?.currentQueueItem?.track)
-      .catch(error => {
-        console.error("[VideoScreen] Ошибка при вызове ErrorPlaying:", error);
-      });
-  }, [playerState?.currentQueueItem?.track]);
+    if (isMainPlayer) {
+      connectionRef.current
+        ?.invoke("ErrorPlaying", playerState?.currentQueueItem?.track)
+        .catch(error => {
+          console.error("[VideoScreen] Ошибка при вызове ErrorPlaying:", error);
+        });
+    }
+  }, [isMainPlayer, playerState?.currentQueueItem?.track]);
 
   const handleProgress = useCallback(
-    (event: React.SyntheticEvent<HTMLVideoElement, Event>) => {
-      // Отправляем прогресс только каждые 3 секунды, чтобы не перегружать SignalR
-      const progress = event.currentTarget.currentTime;
-      const timespan = new TimeSpan({ seconds: progress });
-      const currentSeconds = timespan.totalSeconds;
-      const lastSent = lastProgressSentRef.current;
+    (state: {
+      played: number;
+      playedSeconds: number;
+      loaded: number;
+      loadedSeconds: number;
+    }) => {
+      if (isMainPlayer) {
+        // Отправляем прогресс только каждые 3 секунды, чтобы не перегружать SignalR
+        const progress = state.playedSeconds;
+        const timespan = new TimeSpan({ seconds: progress });
+        const currentSeconds = timespan.totalSeconds;
+        const lastSent = lastProgressSentRef.current;
 
-      if (currentSeconds - lastSent >= 3) {
-        lastProgressSentRef.current = currentSeconds;
+        // Сохраняем текущий прогресс в ref для использования при переключении videoState
+        currentProgressRef.current = currentSeconds;
 
+        if (currentSeconds - lastSent >= 3) {
+          lastProgressSentRef.current = currentSeconds;
+
+          connectionRef.current
+            ?.invoke("TrackProgress", timespan.totalSeconds)
+            .catch(error => {
+              console.error(
+                "[VideoScreen] Ошибка при вызове TrackProgress:",
+                error
+              );
+            });
+
+          console.log(
+            `[VideoScreen] Прогресс отправлен: ${timespan.totalSeconds}s (${timespan.minutes}:${timespan.seconds})`
+          );
+        }
+      }
+    },
+    [isMainPlayer]
+  );
+
+  // Отслеживаем изменение videoState и отправляем прогресс перед переключением
+  useEffect(() => {
+    const currentVideoState = playerState?.videoState;
+
+    // Если videoState изменился (и это не первая загрузка)
+    if (
+      previousVideoStateRef.current !== undefined &&
+      previousVideoStateRef.current !== currentVideoState &&
+      isMainPlayer
+    ) {
+      // Отправляем текущий прогресс на сервер перед переключением
+      const currentProgress = currentProgressRef.current;
+      if (currentProgress > 0 && connectionRef.current) {
         connectionRef.current
-          ?.invoke("TrackProgress", timespan.totalSeconds)
+          .invoke("TrackProgress", currentProgress)
+          .then(() => {
+            console.log(
+              `[VideoScreen] Прогресс сохранен перед переключением videoState: ${currentProgress}s (${previousVideoStateRef.current} -> ${currentVideoState})`
+            );
+            lastProgressSentRef.current = currentProgress;
+          })
           .catch(error => {
             console.error(
-              "[VideoScreen] Ошибка при вызове TrackProgress:",
+              "[VideoScreen] Ошибка при отправке прогресса перед переключением:",
               error
             );
           });
-
-        console.log(
-          `[VideoScreen] Прогресс отправлен: ${timespan.totalSeconds}s (${timespan.minutes}:${timespan.seconds})`
-        );
       }
-    },
-    []
-  );
+    }
+
+    // Обновляем предыдущее значение
+    previousVideoStateRef.current = currentVideoState;
+  }, [playerState?.videoState, isMainPlayer]);
 
   // Проверяем наличие трека
   const currentQueueItem = playerState?.currentQueueItem;
@@ -135,6 +212,7 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
   const { component, videoState, showSections } = useVideoStateRenderer({
     playerState,
     currentTrack,
+    queueItemId: currentQueueItem?.id,
     isMainPlayer,
     userName,
     userAvatar: currentQueueItem?.requestedByTwitchUser?.profileImageUrl,
@@ -143,6 +221,7 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
     onStart: handleStart,
     onError: handleError,
     onProgress: handleProgress,
+    hasUserInteracted,
   });
 
   // Если нет трека, показываем пустой экран
@@ -155,7 +234,7 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
   console.log("[VideoScreen] Рендерим плеер с треком:", currentTrack.trackName);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{ padding: 0 }}>
       {/* Верхняя секция - никнейм пользователя (20%) - только для Video */}
       {showSections && (
         <div className={styles.userSection}>

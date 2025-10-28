@@ -19,16 +19,26 @@
 }
 
 .infoBar {
-  width: 90%;
+  position: absolute;
+  bottom: 1px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
   max-width: 1200px;
   display: flex;
   align-items: center;
   gap: 40px;
   padding: 20px 40px;
-  background: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(to right,
+      rgba(110, 110, 110, 0.45) 0%,
+      rgba(110, 110, 110, 0.45) var(--track-progress, 0%),
+      rgba(255, 255, 255, 0.1) var(--track-progress, 0%),
+      rgba(255, 255, 255, 0.1) 100%);
   backdrop-filter: blur(10px);
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: background 0.3s linear;
+  will-change: background;
 }
 
 .userInfo {

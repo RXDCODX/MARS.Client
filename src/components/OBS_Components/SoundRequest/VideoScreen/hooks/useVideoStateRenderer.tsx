@@ -8,14 +8,21 @@ import { AudioOnlyView, NoVideoView, VideoPlayerView } from "../components";
 interface UseVideoStateRendererProps {
   playerState: PlayerState | null;
   currentTrack: QueueItem["track"];
+  queueItemId?: string;
   isMainPlayer: boolean;
+  hasUserInteracted: boolean;
   userName: string;
   userAvatar?: string;
   userColor?: string;
   onEnded: () => void;
   onStart: () => void;
   onError: () => void;
-  onProgress: (event: React.SyntheticEvent<HTMLVideoElement, Event>) => void;
+  onProgress: (state: {
+    played: number;
+    playedSeconds: number;
+    loaded: number;
+    loadedSeconds: number;
+  }) => void;
 }
 
 interface VideoStateRendererResult {
@@ -31,6 +38,7 @@ interface VideoStateRendererResult {
 export function useVideoStateRenderer({
   playerState,
   currentTrack,
+  queueItemId,
   isMainPlayer,
   userName,
   userAvatar,
@@ -39,6 +47,7 @@ export function useVideoStateRenderer({
   onStart,
   onError,
   onProgress,
+  hasUserInteracted,
 }: UseVideoStateRendererProps): VideoStateRendererResult {
   const videoState = playerState?.videoState ?? PlayerStateVideoStateEnum.Video;
 
@@ -65,8 +74,10 @@ export function useVideoStateRenderer({
 
     return {
       currentTrack,
+      queueItemId,
       playerState: state,
       isMainPlayer,
+      hasUserInteracted,
       onEnded,
       onStart,
       onError,
@@ -74,8 +85,10 @@ export function useVideoStateRenderer({
     };
   }, [
     currentTrack,
+    queueItemId,
     playerState,
     isMainPlayer,
+    hasUserInteracted,
     onEnded,
     onStart,
     onError,
