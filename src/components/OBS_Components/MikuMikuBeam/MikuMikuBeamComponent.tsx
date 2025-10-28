@@ -92,6 +92,7 @@ const MikuMikuBeamComponent = () => {
     // Показываем бегущие строки в нужный временной интервал
     if (currentTime >= TICKER_START_TIME && currentTime <= TICKER_END_TIME) {
       setShowTickers(true);
+      debugger;
       TelegramusHubSignalRContext.invoke("MikuMikuDeleteTwitchMessages");
     } else {
       setShowTickers(false);

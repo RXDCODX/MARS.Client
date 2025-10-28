@@ -82,6 +82,8 @@ const ScoreboardContent: React.FC = () => {
   const [isVisible, setIsVisible] = useState<boolean>(true);
   const [animationDuration, setAnimationDuration] = useState<number>(800);
   const [layout, setLayout] = useState<LayoutSettings>(defaultLayout);
+  const [hasReceivedInitialState, setHasReceivedInitialState] =
+    useState<boolean>(false);
   const connection = useScoreboardStore(state => state._connection);
 
   const handleReceiveState = useCallback((state: ScoreboardState) => {
@@ -89,6 +91,7 @@ const ScoreboardContent: React.FC = () => {
     setPlayer2(state.player2);
     setMeta(state.meta);
     setIsVisible(state.isVisible);
+    setHasReceivedInitialState(true);
 
     if (state.colors) {
       setColors(state.colors);
@@ -108,6 +111,11 @@ const ScoreboardContent: React.FC = () => {
   connection.on("VisibilityChanged", (isVisible: boolean) => {
     setIsVisible(isVisible);
   });
+
+  // В Production окружении не показываем скорборд до первого получения данных
+  if (import.meta.env.PROD && !hasReceivedInitialState) {
+    return null;
+  }
 
   if (!isVisible) {
     return null;
