@@ -22,6 +22,7 @@ export default function ChatVertical({
 }: ChatVerticalProps) {
   const [internalMessages, setInternalMessages] = useState<ChatMessage[]>([]);
   const [announced, setAnnounced] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
   // Используем внешние сообщения или внутренние
   const messages =
@@ -35,14 +36,26 @@ export default function ChatVertical({
   // ScrollToBottom после появления нового сообщения (и анимации)
   const scrollRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    setIsAnimating(true);
     // Ждём завершения всех анимаций (время берется из animationTimings.ts)
     const timeout = setTimeout(() => {
       if (scrollRef.current) {
         scrollRef.current.scrollIntoView(SCROLL_CONFIG);
       }
+      setIsAnimating(false);
     }, SCROLL_TIMEOUT);
     return () => clearTimeout(timeout);
   }, [messages.length]);
+
+  // Автоматический скролл каждые 500мс (только когда нет анимаций)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!isAnimating && scrollRef.current) {
+        scrollRef.current.scrollIntoView(SCROLL_CONFIG);
+      }
+    }, 500);
+    return () => clearInterval(interval);
+  }, [isAnimating]);
 
   SignalRContext.useSignalREffect(
     "NewMessage",

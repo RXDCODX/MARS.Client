@@ -99,6 +99,13 @@ function reducer(
         (a, b) => a.id === b.id
       );
 
+      console.log("🔄 Adding prizes to state:", {
+        existingCount: state.prizes.length,
+        newCount: action.prizes?.length || 0,
+        toAddCount: excepts.length,
+        totalAfter: state.prizes.length + excepts.length,
+      });
+
       excepts.forEach(prize => {
         if (prize.image) {
           const img = new Image();
@@ -106,10 +113,17 @@ function reducer(
         }
       });
 
-      return {
+      const newState = {
         ...state,
         prizes: [...state.prizes, ...excepts],
       };
+
+      console.log(
+        "✅ Prizes state updated. Total prizes:",
+        newState.prizes.length
+      );
+
+      return newState;
     }
     case StateStatus.shuffle: {
       return {
@@ -137,12 +151,22 @@ export default function WaifuAlerts() {
   SignalRContext.useSignalREffect(
     "WaifuRoll",
     (message: Waifu, displayName: string, host: Host, color?: string) => {
-      console.log("WaifuRoll event received:", {
-        message,
+      console.log("🎰 WaifuRoll event received:", {
+        waifuId: message?.shikiId,
+        waifuName: message?.name,
         displayName,
-        host,
+        hostId: host?.twitchId,
+        hasTwitchUser: !!host?.twitchUser,
+        twitchUserId: host?.twitchUser?.twitchId,
+        twitchUserName: host?.twitchUser?.displayName,
+        hasAvatar: !!host?.twitchUser?.profileImageUrl,
         color,
       });
+
+      if (!host?.twitchUser) {
+        console.error("❌ Host.TwitchUser is missing in WaifuRoll event!");
+      }
+
       const parsedMessage: WaifuAlertProps = {
         waifu: message,
         displayName,
@@ -170,14 +194,13 @@ export default function WaifuAlerts() {
 
   SignalRContext.useSignalREffect(
     "Mergewaifu",
-    (message: Waifu, host: Host, avatar?: string, color?: string) => {
+    (message: Waifu, host: Host, _avatar?: string, color?: string) => {
       message.isMerged = true;
       const parsedMessage: WaifuAlertProps = {
         waifu: message,
         displayName: host.twitchUser!.displayName!,
         waifuHusband: host,
         color,
-        avatarUrl: avatar,
       };
       handleAddEvent(parsedMessage);
     },
@@ -187,7 +210,19 @@ export default function WaifuAlerts() {
   SignalRContext.useSignalREffect(
     "UpdateWaifuPrizes",
     async (prizes: PrizeType[]) => {
-      console.log("UpdateWaifuPrizes event received:", prizes);
+      console.log("📦 UpdateWaifuPrizes event received:", {
+        count: prizes?.length || 0,
+        isArray: Array.isArray(prizes),
+        isNull: prizes === null,
+        isUndefined: prizes === undefined,
+        firstPrize: prizes?.[0],
+        lastPrize: prizes?.[prizes.length - 1],
+      });
+
+      if (!prizes || prizes.length === 0) {
+        console.error("❌ Received empty or null prizes array!");
+      }
+
       dispatch({ type: StateStatus.addPrizes, prizes });
     },
     []
@@ -208,22 +243,49 @@ export default function WaifuAlerts() {
 
   useEffect(() => {
     if (currentMessage) {
-      console.log("Current message changed:", currentMessage);
+      console.log("Current message changed:", {
+        waifuId: currentMessage.waifu.shikiId,
+        waifuName: currentMessage.waifu.name,
+        hasTwitchUser: !!currentMessage.waifuHusband?.twitchUser,
+        twitchUserId: currentMessage.waifuHusband?.twitchUser?.twitchId,
+      });
       console.log("Prizes available:", prizes.length);
+
       if (prizes && prizes.length > 0) {
         const index = prizes.findIndex(
           prize => prize.id === currentMessage.waifu.shikiId
         );
-        console.log("Found prize index:", index);
-        setRouletteIndex(index);
-      } else {
-        console.log("No prizes available, skipping roulette");
-        setRouletteIndex(-1);
-        // Если призы не загружены, ждем 3 секунды и показываем алерт
-        const timeout = setTimeout(() => {
-          console.log("Prizes timeout, showing alert directly");
+        console.log(
+          "Found prize index:",
+          index,
+          "for waifu:",
+          currentMessage.waifu.shikiId
+        );
+
+        if (index === -1) {
+          console.warn("⚠️ Waifu not found in prizes list! Skipping roulette.");
+          // Если вайфу нет в списке призов, сразу показываем алерт
+          setRouletteIndex(-1);
           setIsRouletted(true);
-        }, 3000);
+        } else if (!currentMessage.waifuHusband?.twitchUser) {
+          console.warn("⚠️ TwitchUser not loaded! Skipping roulette.");
+          // Если TwitchUser не загружен, показываем алерт без рулетки
+          setRouletteIndex(-1);
+          setIsRouletted(true);
+        } else {
+          setRouletteIndex(index);
+        }
+      } else {
+        console.log("No prizes available, waiting for UpdateWaifuPrizes...");
+        setRouletteIndex(-1);
+
+        // Если призы не загружены, ждем 5 секунд и показываем алерт
+        const timeout = setTimeout(() => {
+          console.warn(
+            "⚠️ Prizes timeout after 5 seconds! Showing alert directly."
+          );
+          setIsRouletted(true);
+        }, 5000);
 
         return () => clearTimeout(timeout);
       }
@@ -285,8 +347,10 @@ export default function WaifuAlerts() {
       )}
       {currentMessage &&
         !isRouletted &&
+        !currentMessage.waifu.isMerged &&
         rouletteIndex !== -1 &&
-        prizes.length > 0 && (
+        prizes.length > 0 &&
+        currentMessage.waifuHusband?.twitchUser && (
           <WaifuRoulette
             key={currentMessage.waifu.shikiId}
             callback={() => {
@@ -295,12 +359,12 @@ export default function WaifuAlerts() {
             }}
             rouletteIndex={rouletteIndex}
             prizes={prizes || []}
-            name={currentMessage.displayName!}
-            color={currentMessage.color}
+            twitchUser={currentMessage.waifuHusband.twitchUser}
           />
         )}
       {currentMessage &&
         !isRouletted &&
+        !currentMessage.waifu.isMerged &&
         rouletteIndex === -1 &&
         prizes.length === 0 && (
           <div className={styles["roulette-name-text"]}>
@@ -308,7 +372,7 @@ export default function WaifuAlerts() {
           </div>
         )}
       {currentMessage &&
-        (isRouletted || prizes.length === 0) &&
+        (isRouletted || currentMessage.waifu.isAdded) &&
         !currentMessage.waifu.isMerged && (
           <div
             id={currentMessage.waifu.shikiId}
@@ -380,110 +444,114 @@ export default function WaifuAlerts() {
             </div>
           </div>
         )}
-      {currentMessage && isRouletted && currentMessage.waifu.isMerged && (
-        <>
-          {/** Confetty */}
-          <SchoolPride
-            width="100%"
-            height="100%"
-            autorun={{ speed: 30, duration: 20 * 1000 }}
-            decorateOptions={(): confetti.Options => ({
-              particleCount: 2,
-              angle: 60,
-              spread: 55,
-              origin: { x: 0 },
-              colors: ["#000000", "#FF0000", "#FFFFFF"],
-            })}
-          />
-          <SchoolPride
-            width="100%"
-            height="100%"
-            autorun={{ speed: 30, duration: 20 * 1000 }}
-            decorateOptions={(): confetti.Options => ({
-              particleCount: 2,
-              angle: 120,
-              spread: 55,
-              origin: { x: 1 },
-              colors: ["#000000", "#FF0000", "#FFFFFF"],
-            })}
-          />
-          {/** Images With text */}
-          <div className={styles["merge-container"]}>
-            <div className={styles["merge-image"]}>
-              <img src={currentMessage.avatarUrl}></img>
-            </div>
-            <div className={styles["merge-text"]}>
-              <Textfit
-                className={common.textStrokeShadow}
-                style={{
-                  color: "white",
-                }}
-                mode="multi"
-                min={1}
-                max={2000}
-              >
-                Поздравляем{" "}
-                <span
-                  className={common.textStrokeShadow}
-                  style={{
-                    color: currentMessage.color,
-                  }}
-                >
-                  {currentMessage.waifuHusband!.twitchUser?.displayName}
-                </span>{" "}
-                и{" "}
-                <span
-                  className={common.textStrokeShadow}
-                  style={{
-                    color: getRandomColor(),
-                  }}
-                >
-                  {currentMessage.waifu.name}{" "}
-                </span>{" "}
-                из{" "}
-                <span
-                  className={common.textStrokeShadow}
-                  style={{
-                    color: currentMessage.waifu.anime ? "blue" : "gold",
-                  }}
-                >
-                  {getTitle(currentMessage)}
-                </span>{" "}
-                с свадьбой!
-              </Textfit>
-            </div>
-            <div className={styles["merge-image"]}>
-              <img src={currentMessage.waifu.imageUrl}></img>
-            </div>
-          </div>
-          {/** Audio */}
-          <audio
-            key={currentMessage.waifu.shikiId}
-            controls={false}
-            autoPlay
-            onError={() => error(currentMessage)}
-            onEnded={() => {
-              setIsRouletted(true);
-              setRouletteIndex(-1);
-              unmuteAll();
-              handleRemoveEvent(currentMessage);
-            }}
-            onCanPlay={event => {
-              try {
-                event.currentTarget?.play();
-              } catch {
-                event.currentTarget.muted = true;
-                event.currentTarget?.play();
-              }
-            }}
-            onCanPlayThrough={() => muteAll()}
-          >
-            <source
-              src={import.meta.env.VITE_BASE_PATH + "Alerts/svadba.mp3"}
+      {currentMessage &&
+        (isRouletted || currentMessage.waifu.isMerged) &&
+        currentMessage.waifu.isMerged && (
+          <>
+            {/** Confetty */}
+            <SchoolPride
+              width="100%"
+              height="100%"
+              autorun={{ speed: 30, duration: 20 * 1000 }}
+              decorateOptions={(): confetti.Options => ({
+                particleCount: 2,
+                angle: 60,
+                spread: 55,
+                origin: { x: 0 },
+                colors: ["#000000", "#FF0000", "#FFFFFF"],
+              })}
             />
-          </audio>
-        </>
-      )}
+            <SchoolPride
+              width="100%"
+              height="100%"
+              autorun={{ speed: 30, duration: 20 * 1000 }}
+              decorateOptions={(): confetti.Options => ({
+                particleCount: 2,
+                angle: 120,
+                spread: 55,
+                origin: { x: 1 },
+                colors: ["#000000", "#FF0000", "#FFFFFF"],
+              })}
+            />
+            {/** Images With text */}
+            <div className={styles["merge-container"]}>
+              <div className={styles["merge-image"]}>
+                <img
+                  src={currentMessage.waifuHusband?.twitchUser?.profileImageUrl}
+                ></img>
+              </div>
+              <div className={styles["merge-text"]}>
+                <Textfit
+                  className={common.textStrokeShadow}
+                  style={{
+                    color: "white",
+                  }}
+                  mode="multi"
+                  min={1}
+                  max={2000}
+                >
+                  Поздравляем{" "}
+                  <span
+                    className={common.textStrokeShadow}
+                    style={{
+                      color: currentMessage.color,
+                    }}
+                  >
+                    {currentMessage.waifuHusband!.twitchUser?.displayName}
+                  </span>{" "}
+                  и{" "}
+                  <span
+                    className={common.textStrokeShadow}
+                    style={{
+                      color: getRandomColor(),
+                    }}
+                  >
+                    {currentMessage.waifu.name}{" "}
+                  </span>{" "}
+                  из{" "}
+                  <span
+                    className={common.textStrokeShadow}
+                    style={{
+                      color: currentMessage.waifu.anime ? "blue" : "gold",
+                    }}
+                  >
+                    {getTitle(currentMessage)}
+                  </span>{" "}
+                  с свадьбой!
+                </Textfit>
+              </div>
+              <div className={styles["merge-image"]}>
+                <img src={currentMessage.waifu.imageUrl}></img>
+              </div>
+            </div>
+            {/** Audio */}
+            <audio
+              key={currentMessage.waifu.shikiId}
+              controls={false}
+              autoPlay
+              onError={() => error(currentMessage)}
+              onEnded={() => {
+                setIsRouletted(true);
+                setRouletteIndex(-1);
+                unmuteAll();
+                handleRemoveEvent(currentMessage);
+              }}
+              onCanPlay={event => {
+                try {
+                  event.currentTarget?.play();
+                } catch {
+                  event.currentTarget.muted = true;
+                  event.currentTarget?.play();
+                }
+              }}
+              onCanPlayThrough={() => muteAll()}
+            >
+              <source
+                src={import.meta.env.VITE_BASE_PATH + "Alerts/svadba.mp3"}
+              />
+            </audio>
+          </>
+        )}
     </div>
   );
 }

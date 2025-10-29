@@ -133,7 +133,6 @@ export interface WaifuAlertProps {
   displayName: string;
   waifuHusband?: Host;
   color?: string;
-  avatarUrl?: string;
 }
 
 interface TimeSpan {

@@ -3,6 +3,7 @@ import "react-roulette-pro/dist/index.css";
 import { CSSProperties, useRef, useState } from "react";
 import RoulettePro, { PrizeType } from "react-roulette-pro";
 
+import { TwitchUser } from "@/shared/api";
 import animate from "@/shared/styles/animate.module.scss";
 import { getRandomColor } from "@/shared/Utils";
 
@@ -13,16 +14,14 @@ interface Props {
   rouletteIndex: number;
   prizes: PrizeType[];
   callback: () => void;
-  name: string;
-  color?: string;
+  twitchUser: TwitchUser;
 }
 
 export default function WaifuRoulette({
   rouletteIndex,
   prizes,
   callback,
-  name,
-  color,
+  twitchUser,
 }: Props) {
   if (prizes.length === 0) {
     throw new Error("Prizes is empty");
@@ -32,7 +31,9 @@ export default function WaifuRoulette({
   const rouletteDiv = useRef<HTMLDivElement>(null);
   const heightDiv = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-  const [trueColor] = useState<string>(color ? color : getRandomColor());
+  const [trueColor] = useState<string>(
+    twitchUser.chatColor || getRandomColor()
+  );
   const [baseStyle, setBaseStyle] = useState<CSSProperties>({
     width: "100%",
     height: "100%",
@@ -111,9 +112,33 @@ export default function WaifuRoulette({
           styles["roulette-name-text"] + " " + styles2.textStrokeShadow
         }
       >
-        <span>рулетка</span>
-        <span>для</span>
-        <span style={{ color: trueColor }}>{name}</span>
+        <span>рулетка для</span>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "20px",
+            marginTop: "10px",
+          }}
+        >
+          {twitchUser.profileImageUrl && (
+            <img
+              src={twitchUser.profileImageUrl}
+              alt={twitchUser.displayName}
+              style={{
+                width: "80px",
+                height: "80px",
+                borderRadius: "50%",
+                border: `4px solid ${trueColor}`,
+                boxShadow: `0 0 20px ${trueColor}`,
+              }}
+            />
+          )}
+          <span style={{ color: trueColor, fontSize: "1.2em" }}>
+            {twitchUser.displayName}
+          </span>
+        </div>
       </div>
     </div>
   );
