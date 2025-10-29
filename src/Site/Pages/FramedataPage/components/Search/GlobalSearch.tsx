@@ -159,7 +159,8 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ characters }) => {
         setSearchResults([]);
         showToast({
           success: false,
-          message: "Неверный формат поискового запроса. Используйте формат: 'имя_персонажа команда'",
+          message:
+            "Неверный формат поискового запроса. Используйте формат: 'имя_персонажа команда'",
         });
         return;
       }

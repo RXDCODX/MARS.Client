@@ -34,4 +34,3 @@ export const Default: Story = {
     expect(canvasElement).toBeInTheDocument();
   },
 };
-

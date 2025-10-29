@@ -1,5 +1,5 @@
-import { Button, Stack } from "react-bootstrap";
 import { ArrowLeftRight, RotateCw as ArrowRepeat } from "lucide-react";
+import { Button, Stack } from "react-bootstrap";
 
 type ActionButtonsProps = {
   onSwapNames: () => void;

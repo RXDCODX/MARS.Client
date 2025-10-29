@@ -1,28 +1,14 @@
 import { useMemo } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 import type { PlayerState, QueueItem } from "@/shared/api";
 import { PlayerStateVideoStateEnum } from "@/shared/api";
 
 import { AudioOnlyView, NoVideoView, VideoPlayerView } from "../components";
+import { useVideoScreenStore } from "../store/useVideoScreenStore";
 
 interface UseVideoStateRendererProps {
-  playerState: PlayerState | null;
-  currentTrack: QueueItem["track"];
-  queueItemId?: string;
   isMainPlayer: boolean;
-  hasUserInteracted: boolean;
-  userName: string;
-  userAvatar?: string;
-  userColor?: string;
-  onEnded: () => void;
-  onStart: () => void;
-  onError: () => void;
-  onProgress: (state: {
-    played: number;
-    playedSeconds: number;
-    loaded: number;
-    loadedSeconds: number;
-  }) => void;
 }
 
 interface VideoStateRendererResult {
@@ -36,19 +22,42 @@ interface VideoStateRendererResult {
  * @returns объект с компонентом для рендеринга, текущим videoState и флагом отображения секций
  */
 export function useVideoStateRenderer({
-  playerState,
-  currentTrack,
-  queueItemId,
   isMainPlayer,
-  userName,
-  userAvatar,
-  userColor,
-  onEnded,
-  onStart,
-  onError,
-  onProgress,
-  hasUserInteracted,
 }: UseVideoStateRendererProps): VideoStateRendererResult {
+  const playerState = useVideoScreenStore(
+    useShallow(state => state.playerState)
+  );
+  const hasUserInteracted = useVideoScreenStore(
+    useShallow(state => state.hasUserInteracted)
+  );
+
+  const reportProgress = useVideoScreenStore(state => state.reportProgress);
+  const notifyEnded = useVideoScreenStore(state => state.notifyEnded);
+  const notifyStarted = useVideoScreenStore(state => state.notifyStarted);
+  const notifyError = useVideoScreenStore(state => state.notifyError);
+
+  const queueItemId = playerState?.currentQueueItem?.id;
+  const currentTrack = playerState?.currentQueueItem?.track ?? null;
+
+  const userName = useMemo(() => {
+    if (playerState?.currentQueueItem?.requestedByTwitchUser) {
+      const user = playerState.currentQueueItem.requestedByTwitchUser;
+      if (user.displayName) {
+        return user.displayName;
+      }
+      if (user.userLogin) {
+        return user.userLogin;
+      }
+    }
+
+    return "Неизвестный пользователь";
+  }, [playerState?.currentQueueItem?.requestedByTwitchUser]);
+
+  const userAvatar =
+    playerState?.currentQueueItem?.requestedByTwitchUser?.profileImageUrl;
+  const userColor =
+    playerState?.currentQueueItem?.requestedByTwitchUser?.chatColor;
+
   const videoState = playerState?.videoState ?? PlayerStateVideoStateEnum.Video;
 
   // Определяем нужно ли показывать секции (только для Video и mainPlayer)
@@ -72,27 +81,51 @@ export function useVideoStateRenderer({
         videoState: PlayerStateVideoStateEnum.Video,
       } as PlayerState);
 
+    const track = currentTrack
+      ? (currentTrack as NonNullable<QueueItem["track"]>)
+      : null;
+
     return {
-      currentTrack,
       queueItemId,
       playerState: state,
       isMainPlayer,
       hasUserInteracted,
-      onEnded,
-      onStart,
-      onError,
-      onProgress,
+      onEnded: () => {
+        if (isMainPlayer && track) {
+          void notifyEnded(track);
+        }
+      },
+      onStart: () => {
+        if (isMainPlayer && track) {
+          void notifyStarted(track);
+        }
+      },
+      onError: () => {
+        if (isMainPlayer && track) {
+          void notifyError(track);
+        }
+      },
+      onProgress: (progress: {
+        played: number;
+        playedSeconds: number;
+        loaded: number;
+        loadedSeconds: number;
+      }) => {
+        if (isMainPlayer) {
+          void reportProgress(progress.playedSeconds);
+        }
+      },
     };
   }, [
     currentTrack,
-    queueItemId,
-    playerState,
-    isMainPlayer,
     hasUserInteracted,
-    onEnded,
-    onStart,
-    onError,
-    onProgress,
+    isMainPlayer,
+    notifyEnded,
+    notifyError,
+    notifyStarted,
+    playerState,
+    queueItemId,
+    reportProgress,
   ]);
 
   // Мемоизируем компонент в зависимости от videoState
@@ -102,7 +135,6 @@ export function useVideoStateRenderer({
       return null;
     }
 
-    // currentTrack точно существует, приводим тип
     const track = currentTrack as NonNullable<QueueItem["track"]>;
     const propsWithTrack = {
       ...commonProps,

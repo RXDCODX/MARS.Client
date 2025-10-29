@@ -536,6 +536,8 @@ export interface PlayerState {
   /** @format uuid */
   id: string;
   /** @format uuid */
+  stateVersion: string;
+  /** @format uuid */
   currentQueueItemId?: string;
   /** @format uuid */
   nextQueueItemId?: string;
@@ -567,7 +569,7 @@ export interface QueueItem {
   trackId: string;
   track?: BaseTrackInfo;
   /** @format int32 */
-  queueOrder?: number;
+  queueOrder: number;
   /**
    * @minLength 1
    * @maxLength 50
@@ -576,7 +578,6 @@ export interface QueueItem {
   requestedByTwitchUser?: TwitchUser;
   /** @format date-time */
   requestedAt: string;
-  isDeleted: boolean;
 }
 
 export interface RateLimiterInfo {
@@ -1105,18 +1106,6 @@ export enum LogsByLevelDetailParamsEnum {
   Error = "Error",
   Critical = "Critical",
   None = "None",
-}
-
-export enum SoundRequestVideoDisplayCreateParamsDisplayModeEnum {
-  Video = "Video",
-  NoVideo = "NoVideo",
-  AudioOnly = "AudioOnly",
-}
-
-export enum SoundRequestVideoDisplayCreateParamsEnum {
-  Video = "Video",
-  NoVideo = "NoVideo",
-  AudioOnly = "AudioOnly",
 }
 // ========================================
 // SignalR-специфичные типы

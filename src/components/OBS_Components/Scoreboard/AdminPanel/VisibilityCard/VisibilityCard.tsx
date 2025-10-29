@@ -1,6 +1,6 @@
+import { Clock, Eye, EyeOff as EyeSlash } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button, Card, Form } from "react-bootstrap";
-import { Clock, Eye, EyeOff as EyeSlash } from "lucide-react";
 
 import { useSiteColors } from "../../../../../shared/Utils/useSiteColors";
 import {

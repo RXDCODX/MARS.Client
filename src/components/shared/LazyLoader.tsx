@@ -31,4 +31,3 @@ export const PageLoader = () => (
     <div style={{ fontSize: "20px" }}>Загрузка страницы...</div>
   </div>
 );
-

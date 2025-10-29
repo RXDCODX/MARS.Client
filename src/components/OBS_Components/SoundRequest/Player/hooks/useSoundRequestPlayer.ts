@@ -9,7 +9,6 @@ import {
   QueueItem,
   SoundRequest,
   SoundRequestHubSignalRConnectionBuilder,
-  SoundRequestVideoDisplayCreateParamsEnum,
 } from "@/shared/api";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
@@ -63,17 +62,9 @@ export const useSoundRequestPlayer = () => {
       .then(async () => {
         console.log("[useSoundRequestPlayer] SignalR подключение установлено");
         // Присоединяемся к группе для получения обновлений
-        try {
-          await connection.invoke("Join", "apiplayer");
-          console.log(
-            "[useSoundRequestPlayer] Присоединились к группе apiplayer"
-          );
-        } catch (error) {
-          console.error(
-            "[useSoundRequestPlayer] Ошибка присоединения к группе:",
-            error
-          );
-        }
+        console.log(
+          "[useSoundRequestPlayer] Присоединились к группе apiplayer"
+        );
       })
       .catch(error => {
         console.error(
@@ -253,247 +244,131 @@ export const useSoundRequestPlayer = () => {
     };
   }, [fetchPlayerState, fetchQueue, fetchHistory]);
 
+  // Вспомогательная функция для отправки изменений состояния через SignalR
+  const updatePlayerState = useCallback(
+    async (updates: Partial<PlayerState>) => {
+      if (!connectionRef.current || !playerState) {
+        console.warn("[useSoundRequestPlayer] Нет подключения или состояния");
+        return;
+      }
+
+      try {
+        const newState: PlayerState = {
+          ...playerState,
+          ...updates,
+        };
+
+        console.log(
+          "[useSoundRequestPlayer] Отправка FrontStateChange:",
+          newState
+        );
+        await connectionRef.current.invoke("FrontStateChange", newState);
+      } catch (error) {
+        console.error(
+          "[useSoundRequestPlayer] Ошибка при отправке FrontStateChange:",
+          error
+        );
+        showToast({
+          success: false,
+          message: "Ошибка при обновлении состояния плеера",
+        });
+      }
+    },
+    [playerState, showToast]
+  );
+
   // Управление воспроизведением
   const handlePlay = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response =
-        await soundRequestApi.soundRequestTogglePlayPauseCreate();
-      if (!response.data.success) {
-        showToast(response.data);
-      }
-      // Состояние обновится автоматически через SignalR
-    } catch {
-      showToast({
-        success: false,
-        message: "Ошибка при воспроизведении",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [soundRequestApi, showToast]);
+    setLoading(true);
+    await updatePlayerState({ state: PlayerStateStateEnum.Playing });
+    setLoading(false);
+  }, [updatePlayerState]);
 
   const handlePause = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response =
-        await soundRequestApi.soundRequestTogglePlayPauseCreate();
-      if (!response.data.success) {
-        showToast(response.data);
-      }
-      // Состояние обновится автоматически через SignalR
-    } catch {
-      showToast({
-        success: false,
-        message: "Ошибка при паузе",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [soundRequestApi, showToast]);
+    setLoading(true);
+    await updatePlayerState({ state: PlayerStateStateEnum.Paused });
+    setLoading(false);
+  }, [updatePlayerState]);
 
   const handleTogglePlayPause = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response =
-        await soundRequestApi.soundRequestTogglePlayPauseCreate();
-      if (!response.data.success) {
-        showToast(response.data);
-      }
-      // Состояние обновится автоматически через SignalR
-    } catch {
-      showToast({
-        success: false,
-        message: "Ошибка при переключении воспроизведения",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [soundRequestApi, showToast]);
+    setLoading(true);
+    const newState =
+      playerState?.state === PlayerStateStateEnum.Playing
+        ? PlayerStateStateEnum.Paused
+        : PlayerStateStateEnum.Playing;
+    await updatePlayerState({ state: newState });
+    setLoading(false);
+  }, [updatePlayerState, playerState]);
 
   const handleStop = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await soundRequestApi.soundRequestStopCreate();
-      if (!response.data.success) {
-        showToast(response.data);
-      }
-      // Состояние обновится автоматически через SignalR
-    } catch {
-      showToast({
-        success: false,
-        message: "Ошибка при остановке",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [soundRequestApi, showToast]);
+    setLoading(true);
+    await updatePlayerState({ state: PlayerStateStateEnum.Stopped });
+    setLoading(false);
+  }, [updatePlayerState]);
 
+  // Эти методы управления треками удалены, так как управление треками происходит на бэкенде
   const handleSkip = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await soundRequestApi.soundRequestSkipCreate();
-      if (!response.data.success) {
-        showToast(response.data);
-      }
-      // Состояние и очередь обновятся автоматически через SignalR
-    } catch {
-      showToast({
-        success: false,
-        message: "Ошибка при пропуске трека",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [soundRequestApi, showToast]);
+    console.warn(
+      "[useSoundRequestPlayer] handleSkip: управление треками перенесено на бэкенд"
+    );
+  }, []);
 
-  // Воспроизвести следующий трек из очереди
   const handlePlayNext = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await soundRequestApi.soundRequestPlayNextCreate();
-      if (!response.data.success) {
-        showToast(response.data);
-      }
-      // Состояние и очередь обновятся автоматически через SignalR
-    } catch {
-      showToast({
-        success: false,
-        message: "Ошибка при запуске следующего трека",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [soundRequestApi, showToast]);
+    console.warn(
+      "[useSoundRequestPlayer] handlePlayNext: управление треками перенесено на бэкенд"
+    );
+  }, []);
 
-  // Воспроизвести предыдущий трек из истории
   const handlePlayPrevious = useCallback(async () => {
-    try {
-      setLoading(true);
-      const response = await soundRequestApi.soundRequestPlayPreviousCreate();
-      if (!response.data.success) {
-        showToast(response.data);
-      }
-      // Состояние и очередь обновятся автоматически через SignalR
-    } catch {
-      showToast({
-        success: false,
-        message: "Ошибка при запуске предыдущего трека",
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [soundRequestApi, showToast]);
+    console.warn(
+      "[useSoundRequestPlayer] handlePlayPrevious: управление треками перенесено на бэкенд"
+    );
+  }, []);
 
   // Управление громкостью
   const handleVolumeChange = useCallback(
     async (newVolume: number) => {
       // Сразу обновляем локальное состояние для UI
       setVolume(newVolume);
-
-      // Отправляем изменение громкости через SignalR
-      if (!connectionRef.current) {
-        return;
-      }
-
-      try {
-        await connectionRef.current.invoke("VolumeChange", newVolume);
-      } catch (error) {
-        console.error("Ошибка при изменении громкости через SignalR:", error);
-        showToast({
-          success: false,
-          message: "Ошибка при изменении громкости",
-        });
-      }
+      // Отправляем изменение через FrontStateChange
+      await updatePlayerState({ volume: newVolume });
     },
-    [showToast]
+    [updatePlayerState]
   );
 
   const handleMute = useCallback(async () => {
-    try {
-      const isMuted = playerState?.isMuted ?? false;
-      const response = await soundRequestApi.soundRequestMuteCreate(!isMuted);
-      if (!response.data.success) {
-        showToast(response.data);
-      }
-      // Состояние обновится автоматически через SignalR
-    } catch {
-      showToast({
-        success: false,
-        message: "Ошибка при изменении режима звука",
-      });
-    }
-  }, [soundRequestApi, showToast, playerState]);
+    const isMuted = playerState?.isMuted ?? false;
+    await updatePlayerState({ isMuted: !isMuted });
+  }, [updatePlayerState, playerState]);
 
   // Переключение режима отображения видео
   const handleToggleVideoState = useCallback(async () => {
-    try {
-      const currentVideoState =
-        playerState?.videoState ?? PlayerStateVideoStateEnum.Video;
+    const currentVideoState =
+      playerState?.videoState ?? PlayerStateVideoStateEnum.Video;
 
-      // Циклическое переключение: Video -> NoVideo -> AudioOnly -> Video
-      const nextVideoState =
-        currentVideoState === PlayerStateVideoStateEnum.Video
-          ? SoundRequestVideoDisplayCreateParamsEnum.NoVideo
-          : currentVideoState === PlayerStateVideoStateEnum.NoVideo
-            ? SoundRequestVideoDisplayCreateParamsEnum.AudioOnly
-            : SoundRequestVideoDisplayCreateParamsEnum.Video;
+    // Циклическое переключение: Video -> NoVideo -> AudioOnly -> Video
+    const nextVideoState =
+      currentVideoState === PlayerStateVideoStateEnum.Video
+        ? PlayerStateVideoStateEnum.NoVideo
+        : currentVideoState === PlayerStateVideoStateEnum.NoVideo
+          ? PlayerStateVideoStateEnum.AudioOnly
+          : PlayerStateVideoStateEnum.Video;
 
-      const response =
-        await soundRequestApi.soundRequestVideoDisplayCreate(nextVideoState);
-      if (!response.data.success) {
-        showToast(response.data);
-      }
-      // Состояние обновится автоматически через SignalR
-    } catch {
-      showToast({
-        success: false,
-        message: "Ошибка при переключении режима отображения видео",
-      });
-    }
-  }, [soundRequestApi, showToast, playerState]);
+    await updatePlayerState({ videoState: nextVideoState });
+  }, [updatePlayerState, playerState]);
 
-  // Удаление трека из очереди
-  const handleRemoveFromQueue = useCallback(
-    async (trackId: string) => {
-      try {
-        const response = await soundRequestApi.soundRequestQueueDelete(trackId);
-        if (!response.data.success) {
-          showToast(response.data);
-        }
-        // Очередь обновится автоматически через SignalR
-      } catch {
-        showToast({
-          success: false,
-          message: "Ошибка при удалении трека из очереди",
-        });
-      }
-    },
-    [soundRequestApi, showToast]
-  );
+  // Удаление трека из очереди и управление треками удалены
+  const handleRemoveFromQueue = useCallback(async () => {
+    console.warn(
+      "[useSoundRequestPlayer] handleRemoveFromQueue: функция удалена из API"
+    );
+  }, []);
 
-  // Воспроизвести конкретный трек из очереди
-  const handlePlayTrackFromQueue = useCallback(
-    async (queueItemId: string) => {
-      try {
-        setLoading(true);
-        const response =
-          await soundRequestApi.soundRequestPlayTrackCreate(queueItemId);
-        if (!response.data.success) {
-          showToast(response.data);
-        }
-        // Состояние и очередь обновятся автоматически через SignalR
-      } catch {
-        showToast({
-          success: false,
-          message: "Ошибка при запуске выбранного трека",
-        });
-      } finally {
-        setLoading(false);
-      }
-    },
-    [soundRequestApi, showToast]
-  );
+  const handlePlayTrackFromQueue = useCallback(async () => {
+    console.warn(
+      "[useSoundRequestPlayer] handlePlayTrackFromQueue: функция удалена из API"
+    );
+  }, []);
 
   // Вычисление состояния воспроизведения
   const isPlaying =

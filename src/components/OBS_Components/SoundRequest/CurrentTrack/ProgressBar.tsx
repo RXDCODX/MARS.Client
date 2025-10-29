@@ -229,7 +229,6 @@ export const ProgressBar = ({ track }: Props) => {
         trackKey,
         lastTrackKey: lastTrackKeyRef.current,
       });
-      debugger;
     }
   }, [
     progressPercentage,

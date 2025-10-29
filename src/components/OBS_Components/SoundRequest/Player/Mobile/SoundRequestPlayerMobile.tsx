@@ -286,9 +286,7 @@ export function SoundRequestPlayerMobile() {
                         <Button
                           variant="success"
                           size="sm"
-                          onClick={() =>
-                            handlePlayTrackFromQueue(item.track?.id ?? item.id)
-                          }
+                          onClick={handlePlayTrackFromQueue}
                           disabled={loading}
                         >
                           Играть
@@ -296,9 +294,7 @@ export function SoundRequestPlayerMobile() {
                         <Button
                           variant="danger"
                           size="sm"
-                          onClick={() =>
-                            handleRemoveFromQueue(item.track?.id ?? item.id)
-                          }
+                          onClick={handleRemoveFromQueue}
                           disabled={loading}
                         >
                           Удалить
@@ -349,9 +345,7 @@ export function SoundRequestPlayerMobile() {
                       <Button
                         variant="success"
                         size="sm"
-                        onClick={() =>
-                          handlePlayTrackFromQueue(item.track?.id ?? item.id)
-                        }
+                        onClick={handlePlayTrackFromQueue}
                         disabled={loading}
                       >
                         Играть

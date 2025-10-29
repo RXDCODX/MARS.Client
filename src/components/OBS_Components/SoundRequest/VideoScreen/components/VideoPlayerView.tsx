@@ -3,6 +3,7 @@ import ReactPlayer from "react-player";
 
 import type { PlayerState, QueueItem } from "@/shared/api";
 
+import { parseDurationToSeconds } from "../utils/parseDuration";
 import styles from "./VideoPlayerView.module.scss";
 
 interface Props {
@@ -20,31 +21,6 @@ interface Props {
     loaded: number;
     loadedSeconds: number;
   }) => void;
-}
-
-/**
- * Парсит строку времени "HH:MM:SS" или "MM:SS" в секунды
- */
-function parseDurationToSeconds(duration?: string): number {
-  if (!duration) return 0;
-  try {
-    // Парсим формат времени: "HH:MM:SS" или "MM:SS"
-    const parts = duration.split(":").map(part => parseFloat(part));
-
-    if (parts.length === 3) {
-      // Формат HH:MM:SS
-      const [hours, minutes, seconds] = parts;
-      return hours * 3600 + minutes * 60 + seconds;
-    } else if (parts.length === 2) {
-      // Формат MM:SS
-      const [minutes, seconds] = parts;
-      return minutes * 60 + seconds;
-    }
-
-    return 0;
-  } catch {
-    return 0;
-  }
 }
 
 /**

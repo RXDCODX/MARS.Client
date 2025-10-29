@@ -115,8 +115,6 @@ import type {
   LogsByLevelDetailParamsEnum,
   LogsByLevelDetailParamsLogLevelEnum,
   LogsListParamsLogLevelEnum,
-  SoundRequestVideoDisplayCreateParamsDisplayModeEnum,
-  SoundRequestVideoDisplayCreateParamsEnum,
 } from "../types/data-contracts";
 
 export class Twitch<

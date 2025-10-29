@@ -163,17 +163,17 @@
         "responses": { }
       }
     },
-    "/hubs/soundrequest/Join": {
+    "/hubs/soundrequest/FrontStateChange": {
       "post": {
         "tags": [
           "SoundRequestHub"
         ],
         "parameters": [
           {
-            "name": "groupName",
+            "name": "newState",
             "in": "query",
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/PlayerState"
             }
           }
         ],
@@ -181,14 +181,6 @@
       }
     },
     "/hubs/soundrequest/OnConnectedAsync": {
-      "post": {
-        "tags": [
-          "SoundRequestHub"
-        ],
-        "responses": { }
-      }
-    },
-    "/hubs/soundrequest/OnDisconnectedAsync": {
       "post": {
         "tags": [
           "SoundRequestHub"
@@ -225,24 +217,6 @@
             "schema": {
               "type": "integer",
               "format": "int64"
-            }
-          }
-        ],
-        "responses": { }
-      }
-    },
-    "/hubs/soundrequest/VolumeChange": {
-      "post": {
-        "tags": [
-          "SoundRequestHub"
-        ],
-        "parameters": [
-          {
-            "name": "volume",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "format": "float"
             }
           }
         ],
@@ -1799,6 +1773,84 @@
         },
         "additionalProperties": false
       },
+      "PlayerState": {
+        "required": [
+          "id",
+          "isMuted",
+          "state",
+          "stateVersion",
+          "videoState",
+          "volume"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "stateVersion": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "currentQueueItemId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "nextQueueItemId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "currentTrackProgress": {
+            "type": "string",
+            "format": "date-span",
+            "nullable": true
+          },
+          "state": {
+            "enum": [
+              "Stopped",
+              "Playing",
+              "Paused",
+              "SwitchingTrack",
+              "WaitingForTrack"
+            ],
+            "type": "string"
+          },
+          "videoState": {
+            "enum": [
+              "Video",
+              "NoVideo",
+              "AudioOnly"
+            ],
+            "type": "string"
+          },
+          "isMuted": {
+            "type": "boolean"
+          },
+          "volume": {
+            "type": "number",
+            "format": "float"
+          },
+          "currentQueueItem": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QueueItem"
+              }
+            ],
+            "nullable": true
+          },
+          "nextQueueItem": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/QueueItem"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "PrizeType": {
         "required": [
           "id",
@@ -1815,6 +1867,56 @@
           },
           "text": {
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "QueueItem": {
+        "required": [
+          "id",
+          "queueOrder",
+          "requestedAt",
+          "requestedByTwitchId",
+          "trackId"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "trackId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "track": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/BaseTrackInfo"
+              }
+            ],
+            "nullable": true
+          },
+          "queueOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "requestedByTwitchId": {
+            "maxLength": 50,
+            "minLength": 1,
+            "type": "string"
+          },
+          "requestedByTwitchUser": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TwitchUser"
+              }
+            ],
+            "nullable": true
+          },
+          "requestedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false

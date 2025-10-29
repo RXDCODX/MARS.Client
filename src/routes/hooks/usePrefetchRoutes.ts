@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
-import { prefetchNonCriticalComponents } from "../utils/prefetchRoutes";
 import type { PrefetchStatus } from "../types/prefetch.types";
+import { prefetchNonCriticalComponents } from "../utils/prefetchRoutes";
 
 /**
  * Хук для предзагрузки некритичных компонентов в фоне

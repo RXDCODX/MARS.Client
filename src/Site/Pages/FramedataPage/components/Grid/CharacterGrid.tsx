@@ -148,7 +148,8 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
       showToast(result.data);
       loadPending();
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Не удалось применить все изменения";
+      const msg =
+        e instanceof Error ? e.message : "Не удалось применить все изменения";
       setPendingError(msg);
       showToast({ success: false, message: msg });
     } finally {
@@ -165,7 +166,8 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
       showToast(result.data);
       loadPending();
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Не удалось отменить все изменения";
+      const msg =
+        e instanceof Error ? e.message : "Не удалось отменить все изменения";
       setPendingError(msg);
       showToast({ success: false, message: msg });
     } finally {

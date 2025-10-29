@@ -5047,390 +5047,6 @@
         }
       }
     },
-    "/api/SoundRequest/toggle-play-pause": {
-      "post": {
-        "tags": [
-          "SoundRequest"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SoundRequest/stop": {
-      "post": {
-        "tags": [
-          "SoundRequest"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SoundRequest/skip": {
-      "post": {
-        "tags": [
-          "SoundRequest"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SoundRequest/play-next": {
-      "post": {
-        "tags": [
-          "SoundRequest"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SoundRequest/play-previous": {
-      "post": {
-        "tags": [
-          "SoundRequest"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SoundRequest/play-track/{queueItemId}": {
-      "post": {
-        "tags": [
-          "SoundRequest"
-        ],
-        "parameters": [
-          {
-            "name": "queueItemId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SoundRequest/mute/{muted}": {
-      "post": {
-        "tags": [
-          "SoundRequest"
-        ],
-        "parameters": [
-          {
-            "name": "muted",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "boolean"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SoundRequest/video-display/{displayMode}": {
-      "post": {
-        "tags": [
-          "SoundRequest"
-        ],
-        "parameters": [
-          {
-            "name": "displayMode",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "enum": [
-                "Video",
-                "NoVideo",
-                "AudioOnly"
-              ],
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SoundRequest/add-track": {
-      "post": {
-        "tags": [
-          "SoundRequest"
-        ],
-        "parameters": [
-          {
-            "name": "request",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SoundRequest/add-playlist": {
-      "post": {
-        "tags": [
-          "SoundRequest"
-        ],
-        "parameters": [
-          {
-            "name": "request",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/StringOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/SoundRequest/queue/{queueItemId}": {
-      "delete": {
-        "tags": [
-          "SoundRequest"
-        ],
-        "parameters": [
-          {
-            "name": "queueItemId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/SoundRequest/current-song": {
       "get": {
         "tags": [
@@ -8372,12 +7988,17 @@
           "id",
           "isMuted",
           "state",
+          "stateVersion",
           "videoState",
           "volume"
         ],
         "type": "object",
         "properties": {
           "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "stateVersion": {
             "type": "string",
             "format": "uuid"
           },
@@ -8479,7 +8100,7 @@
       "QueueItem": {
         "required": [
           "id",
-          "isDeleted",
+          "queueOrder",
           "requestedAt",
           "requestedByTwitchId",
           "trackId"
@@ -8504,8 +8125,7 @@
           },
           "queueOrder": {
             "type": "integer",
-            "format": "int32",
-            "nullable": true
+            "format": "int32"
           },
           "requestedByTwitchId": {
             "maxLength": 50,
@@ -8523,9 +8143,6 @@
           "requestedAt": {
             "type": "string",
             "format": "date-time"
-          },
-          "isDeleted": {
-            "type": "boolean"
           }
         },
         "additionalProperties": false

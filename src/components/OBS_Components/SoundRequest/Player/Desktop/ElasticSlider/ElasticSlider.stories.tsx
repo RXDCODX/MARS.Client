@@ -55,11 +55,7 @@ function ElasticSliderWithState(args: {
 
   return (
     <div style={{ width: "400px", padding: "2rem" }}>
-      <ElasticSlider
-        {...args}
-        value={value}
-        onChange={setValue}
-      />
+      <ElasticSlider {...args} value={value} onChange={setValue} />
     </div>
   );
 }
@@ -118,4 +114,3 @@ export const CustomRange: Story = {
   },
   render: args => <ElasticSliderWithState {...args} />,
 };
-

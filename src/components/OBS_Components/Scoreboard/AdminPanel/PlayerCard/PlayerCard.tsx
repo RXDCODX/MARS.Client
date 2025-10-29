@@ -1,4 +1,3 @@
-import { Button, Card, Form } from "react-bootstrap";
 import {
   ArrowDown,
   ArrowUp,
@@ -7,6 +6,7 @@ import {
   User as PersonFill,
   XCircle as XCircleFill,
 } from "lucide-react";
+import { Button, Card, Form } from "react-bootstrap";
 
 import { useSiteColors } from "../../../../../shared/Utils";
 import FlagSelector from "../FlagCard/FlagSelector";

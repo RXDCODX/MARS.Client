@@ -1,6 +1,6 @@
+import { Info as InfoCircle } from "lucide-react";
 import { useState } from "react";
 import { Button, ButtonGroup, Card, Form } from "react-bootstrap";
-import { Info as InfoCircle } from "lucide-react";
 
 import { useSiteColors } from "../../../../../shared/Utils/useSiteColors";
 import { useColor, useMeta, useMetaActions } from "../store/scoreboardStore";

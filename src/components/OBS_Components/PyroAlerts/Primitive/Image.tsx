@@ -3,8 +3,8 @@ import { CSSProperties, useEffect, useRef, useState } from "react";
 import { MediaDto } from "@/shared/api";
 import { getCoordinates, getRandomRotation } from "@/shared/Utils";
 
-import styles from "./Media.module.scss";
 import common from "../../OBSCommon.module.scss";
+import styles from "./Media.module.scss";
 
 interface Props {
   callBack: () => void;
@@ -83,7 +83,9 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
           }}
         />
       )}
-      {textInfo.text !== "" && <div className={common.textStrokeShadow}>{textInfo.text}</div>}
+      {textInfo.text !== "" && (
+        <div className={common.textStrokeShadow}>{textInfo.text}</div>
+      )}
     </div>
   );
 }

@@ -1,8 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import ReactPlayer from "react-player";
 
 import type { PlayerState, QueueItem } from "@/shared/api";
 
+import { useTrackProgress } from "../../Player/Desktop/useTrackProgress";
+import { parseDurationToSeconds } from "../utils/parseDuration";
 import styles from "./NoVideoView.module.scss";
 
 interface Props {
@@ -23,31 +25,6 @@ interface Props {
     loaded: number;
     loadedSeconds: number;
   }) => void;
-}
-
-/**
- * Парсит строку времени "HH:MM:SS" или "MM:SS" в секунды
- */
-function parseDurationToSeconds(duration?: string): number {
-  if (!duration) return 0;
-  try {
-    // Парсим формат времени: "HH:MM:SS" или "MM:SS"
-    const parts = duration.split(":").map(part => parseFloat(part));
-
-    if (parts.length === 3) {
-      // Формат HH:MM:SS
-      const [hours, minutes, seconds] = parts;
-      return hours * 3600 + minutes * 60 + seconds;
-    } else if (parts.length === 2) {
-      // Формат MM:SS
-      const [minutes, seconds] = parts;
-      return minutes * 60 + seconds;
-    }
-
-    return 0;
-  } catch {
-    return 0;
-  }
 }
 
 /**
@@ -74,7 +51,6 @@ export function NoVideoView({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const playerRef = useRef<any>(null);
   const progressAppliedRef = useRef<boolean>(false);
-  const [progressPercent, setProgressPercent] = useState<number>(0);
 
   // Используем queueItemId если доступен, иначе fallback на URL
   // queueItemId гарантирует пересоздание плеера при новом заказе
@@ -83,27 +59,22 @@ export function NoVideoView({
   // Определяем нужно ли мьютить: мьютим если не было взаимодействия ИЛИ если в стейте указан мьют
   const shouldMute = !hasUserInteracted || playerState.isMuted;
 
-  // Сбрасываем флаг и прогресс при смене трека
+  // Сбрасываем флаг восстановления при смене трека
   useEffect(() => {
     progressAppliedRef.current = false;
-    setProgressPercent(0);
   }, [queueItemId]);
 
   // Обработка прогресса плеера - просто обновляем процент
   const handleTimeUpdate = useCallback(
     (event: React.SyntheticEvent<HTMLVideoElement, Event>) => {
       const durationSeconds = parseDurationToSeconds(currentTrack.duration);
-      const currentTime = event.currentTarget?.currentTime || 0;
+      const currentTime = event.currentTarget?.currentTime ?? 0;
 
-      if (durationSeconds > 0) {
-        // Просто вычисляем и обновляем процент - CSS сделает плавность
-        const currentProgress = (currentTime / durationSeconds) * 100;
-        setProgressPercent(Math.min(currentProgress, 100));
-      }
+      const playedRatio =
+        durationSeconds > 0 ? currentTime / durationSeconds : 0;
 
-      // Передаем событие родительскому компоненту
       onProgress({
-        played: durationSeconds > 0 ? currentTime / durationSeconds : 0,
+        played: playedRatio,
         playedSeconds: currentTime,
         loaded: 0,
         loadedSeconds: 0,
@@ -111,6 +82,36 @@ export function NoVideoView({
     },
     [currentTrack.duration, onProgress]
   );
+
+  const durationSeconds = useMemo(
+    () => parseDurationToSeconds(currentTrack.duration),
+    [currentTrack.duration]
+  );
+
+  const trackKey = useMemo(() => {
+    if (queueItemId) {
+      return queueItemId;
+    }
+    if (currentTrack.id) {
+      return currentTrack.id;
+    }
+    return currentTrack.url;
+  }, [currentTrack.id, currentTrack.url, queueItemId]);
+
+  const animatedProgress = useTrackProgress({
+    durationSec: durationSeconds,
+    isPlaying,
+    trackId: trackKey,
+    initialProgress: playerState.currentTrackProgress,
+  });
+
+  const progressPercent = useMemo(() => {
+    if (!Number.isFinite(animatedProgress)) {
+      return 0;
+    }
+
+    return Math.min(animatedProgress * 100, 100);
+  }, [animatedProgress]);
 
   return (
     <div

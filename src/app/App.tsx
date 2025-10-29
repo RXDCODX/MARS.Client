@@ -1,9 +1,8 @@
 import "./global.scss";
 
 import { ThemeProvider } from "@/contexts/ThemeContext";
-import Routes from "@/routes/Routes";
-import { ToastModalProvider } from "@/shared/Utils/ToastModal";
 import { usePrefetchRoutes } from "@/routes/hooks/usePrefetchRoutes";
+import Routes from "@/routes/Routes";
 
 function App() {
   // Запускаем фоновую загрузку некритичных компонентов
@@ -11,9 +10,7 @@ function App() {
 
   return (
     <ThemeProvider>
-      <ToastModalProvider>
-        <Routes />
-      </ToastModalProvider>
+      <Routes />
     </ThemeProvider>
   );
 }
