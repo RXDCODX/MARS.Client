@@ -1,9 +1,9 @@
 import "react-roulette-pro/dist/index.css";
 
 import { CSSProperties, useRef, useState } from "react";
-import RoulettePro, { PrizeType } from "react-roulette-pro";
+import RoulettePro from "react-roulette-pro";
 
-import { TwitchUser } from "@/shared/api";
+import { PrizeType, TwitchUser } from "@/shared/api";
 import animate from "@/shared/styles/animate.module.scss";
 import { getRandomColor } from "@/shared/Utils";
 
@@ -120,6 +120,7 @@ export default function WaifuRoulette({
             justifyContent: "center",
             gap: "20px",
             marginTop: "10px",
+            padding: "20px",
           }}
         >
           {twitchUser.profileImageUrl && (

@@ -4,7 +4,9 @@
   display: flex;
   flex-direction: column-reverse; // Убрали reverse
   min-height: 100vh;
+  max-height: 100vh;
   width: 100vw;
+  min-width: 100vw;
   max-width: 100vw; // добавляем ограничение ширины
   overflow-x: hidden;
   overflow-y: hidden;
@@ -17,4 +19,8 @@
 
 .chatContainer::-webkit-scrollbar {
   display: none;
+}
+
+body {
+  overflow: hidden;
 }

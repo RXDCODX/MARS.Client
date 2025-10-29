@@ -1,245 +1,45 @@
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+/* eslint-disable simple-import-sort/imports */
+import { useCallback, useEffect, useRef, useState } from "react";
 import SchoolPride from "react-canvas-confetti/dist/presets/pride";
-import { PrizeType } from "react-roulette-pro";
 import { Textfit } from "react-textfit";
-
-import { Host, Waifu } from "@/shared/api";
-import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api/signalr-clients/TelegramusHub/SignalRHubWrapper";
+import { useShallow } from "zustand/react/shallow";
+import useTelegramusHubStore from "@/shared/stores/telegramusHubStore";
+import useWaifuPrizesStore from "@/shared/stores/waifuPrizesStore";
 import animate from "@/shared/styles/animate.module.scss";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
-import { arrayExcept, getRandomColor } from "@/shared/Utils";
+import { getRandomColor } from "@/shared/Utils";
 import Announce from "@/shared/Utils/Announce/Announce";
 
 import common from "../OBSCommon.module.scss";
-import {
-  getHusbandText,
-  getText,
-  getTitle,
-  shuffleArray,
-  WaifuAlertProps,
-} from "./helper";
+import { getHusbandText, getText, getTitle } from "./helper";
 import styles from "./WaifuAlerts.module.scss";
 import WaifuRoulette from "./WaifuRoulette";
 
-enum StateStatus {
-  add,
-  remove,
-  addPrizes,
-  shuffle,
-}
-
-interface State {
-  messages: WaifuAlertProps[];
-  prizes: PrizeType[];
-  currentMessage?: WaifuAlertProps;
-  isWaifuShowing: boolean;
-}
-
-function reducer(
-  state: State,
-  action: { type: StateStatus; waifu?: WaifuAlertProps; prizes?: PrizeType[] }
-): State {
-  switch (action.type) {
-    case StateStatus.add:
-      if (!action.waifu) {
-        return state;
-      }
-
-      if (!state.isWaifuShowing) {
-        return {
-          ...state,
-          messages: [...state.messages],
-          currentMessage: action.waifu,
-          isWaifuShowing: true,
-        };
-      }
-
-      return { ...state, messages: [...state.messages, action.waifu] };
-
-    case StateStatus.remove:
-      if (action.waifu === undefined) {
-        return { ...state };
-      }
-
-      if (state.messages.length > 0) {
-        const newArray = state.messages.filter(
-          message => message.waifu.shikiId !== action.waifu!.waifu.shikiId
-        );
-
-        if (newArray.length > 0) {
-          const newWaifu = newArray[0];
-
-          return {
-            ...state,
-            messages: newArray,
-            currentMessage: newWaifu,
-            isWaifuShowing: true,
-          };
-        }
-
-        return {
-          ...state,
-          isWaifuShowing: false,
-          messages: newArray,
-          currentMessage: undefined,
-        };
-      }
-
-      return {
-        ...state,
-        messages: [],
-        currentMessage: undefined,
-        isWaifuShowing: false,
-      };
-
-    case StateStatus.addPrizes: {
-      const excepts = arrayExcept(
-        state.prizes ?? [],
-        action.prizes ?? [],
-        (a, b) => a.id === b.id
-      );
-
-      console.log("🔄 Adding prizes to state:", {
-        existingCount: state.prizes.length,
-        newCount: action.prizes?.length || 0,
-        toAddCount: excepts.length,
-        totalAfter: state.prizes.length + excepts.length,
-      });
-
-      excepts.forEach(prize => {
-        if (prize.image) {
-          const img = new Image();
-          img.src = prize.image;
-        }
-      });
-
-      const newState = {
-        ...state,
-        prizes: [...state.prizes, ...excepts],
-      };
-
-      console.log(
-        "✅ Prizes state updated. Total prizes:",
-        newState.prizes.length
-      );
-
-      return newState;
-    }
-    case StateStatus.shuffle: {
-      return {
-        ...state,
-        prizes: shuffleArray(state.prizes ?? []),
-      };
-    }
-  }
-}
+// Очередь сообщений теперь живёт в SignalR-сторе
 
 export default function WaifuAlerts() {
-  const initState: State = {
-    messages: [],
-    isWaifuShowing: false,
-    prizes: [],
-  };
-
-  const [{ currentMessage, prizes }, dispatch] = useReducer(reducer, initState);
+  const currentMessage = useTelegramusHubStore(state => state.currentMessage);
+  const dequeueCurrent = useTelegramusHubStore(state => state.dequeueCurrent);
+  const startHub = useTelegramusHubStore(state => state.start);
   const [announced, setAnnounced] = useState(false);
   const divHard = useRef<HTMLDivElement>(null);
   const [isRouletted, setIsRouletted] = useState(false);
   const [rouletteIndex, setRouletteIndex] = useState(-1);
   const sendMessage = useTwitchStore(state => state.sendMsgToPyrokxnezxz);
 
-  SignalRContext.useSignalREffect(
-    "WaifuRoll",
-    (message: Waifu, displayName: string, host: Host, color?: string) => {
-      console.log("🎰 WaifuRoll event received:", {
-        waifuId: message?.shikiId,
-        waifuName: message?.name,
-        displayName,
-        hostId: host?.twitchId,
-        hasTwitchUser: !!host?.twitchUser,
-        twitchUserId: host?.twitchUser?.twitchId,
-        twitchUserName: host?.twitchUser?.displayName,
-        hasAvatar: !!host?.twitchUser?.profileImageUrl,
-        color,
-      });
+  // Используем отдельный store для призов
+  const prizes = useWaifuPrizesStore(useShallow(state => state.prizes));
+  const shufflePrizes = useWaifuPrizesStore(state => state.shuffle);
 
-      if (!host?.twitchUser) {
-        console.error("❌ Host.TwitchUser is missing in WaifuRoll event!");
-      }
+  // Инициализируем подключение к хабу при монтировании
+  useEffect(() => {
+    startHub();
+  }, [startHub]);
 
-      const parsedMessage: WaifuAlertProps = {
-        waifu: message,
-        displayName,
-        waifuHusband: host,
-        color,
-      };
-      handleAddEvent(parsedMessage);
-    },
-    []
-  );
-
-  SignalRContext.useSignalREffect(
-    "addnewwaifu",
-    (message: Waifu, displayName: string, color?: string) => {
-      message.isAdded = true;
-      const parsedMessage: WaifuAlertProps = {
-        waifu: message,
-        displayName,
-        color,
-      };
-      handleAddEvent(parsedMessage);
-    },
-    []
-  );
-
-  SignalRContext.useSignalREffect(
-    "Mergewaifu",
-    (message: Waifu, host: Host, _avatar?: string, color?: string) => {
-      message.isMerged = true;
-      const parsedMessage: WaifuAlertProps = {
-        waifu: message,
-        displayName: host.twitchUser!.displayName!,
-        waifuHusband: host,
-        color,
-      };
-      handleAddEvent(parsedMessage);
-    },
-    []
-  );
-
-  SignalRContext.useSignalREffect(
-    "UpdateWaifuPrizes",
-    async (prizes: PrizeType[]) => {
-      console.log("📦 UpdateWaifuPrizes event received:", {
-        count: prizes?.length || 0,
-        isArray: Array.isArray(prizes),
-        isNull: prizes === null,
-        isUndefined: prizes === undefined,
-        firstPrize: prizes?.[0],
-        lastPrize: prizes?.[prizes.length - 1],
-      });
-
-      if (!prizes || prizes.length === 0) {
-        console.error("❌ Received empty or null prizes array!");
-      }
-
-      dispatch({ type: StateStatus.addPrizes, prizes });
-    },
-    []
-  );
-
-  function handleAddEvent(waifu: WaifuAlertProps) {
-    console.log("Adding waifu event:", waifu);
-    dispatch({ type: StateStatus.add, waifu });
-  }
-
-  function handleRemoveEvent(waifu: WaifuAlertProps) {
-    dispatch({ type: StateStatus.remove, waifu });
-  }
-
-  function shufflePrizesEvent() {
-    dispatch({ type: StateStatus.shuffle });
-  }
+  // Призы приходят и обрабатываются в сторе TelegramusHubStore
+  const handleRemoveEvent = useCallback(() => {
+    dequeueCurrent();
+  }, [dequeueCurrent]);
 
   useEffect(() => {
     if (currentMessage) {
@@ -300,45 +100,68 @@ export default function WaifuAlerts() {
     }
   }, [currentMessage]);
 
+  const invokeHub = useTelegramusHubStore(state => state.invoke);
   const muteAll = useCallback(() => {
-    SignalRContext.invoke("MuteAll", []);
-  }, []);
+    invokeHub("MuteAll", []);
+  }, [invokeHub]);
 
   const unmuteAll = useCallback(() => {
-    SignalRContext.invoke("UnmuteSessions");
-  }, []);
+    invokeHub("UnmuteSessions");
+  }, [invokeHub]);
 
-  const error = useCallback(
-    (currentMessage: WaifuAlertProps) => {
-      unmuteAll();
-      handleRemoveEvent(currentMessage);
-      throw Error("Failed to play audio");
-    },
-    [unmuteAll]
-  );
+  const error = useCallback(() => {
+    unmuteAll();
+    handleRemoveEvent();
+    throw Error("Failed to play audio");
+  }, [unmuteAll, handleRemoveEvent]);
 
-  // Отладочная информация
-  console.log("WaifuAlerts render state:", {
-    currentMessage: !!currentMessage,
-    isRouletted,
-    rouletteIndex,
-    prizesLength: prizes.length,
-    announced,
-    shouldShowRoulette:
-      currentMessage &&
-      !isRouletted &&
-      rouletteIndex !== -1 &&
-      prizes.length > 0,
-    shouldShowLoading:
-      currentMessage &&
-      !isRouletted &&
-      rouletteIndex === -1 &&
-      prizes.length === 0,
-    shouldShowAlert:
-      currentMessage &&
-      (isRouletted || prizes.length === 0) &&
-      !currentMessage.waifu.isMerged,
-  });
+  // Отслеживание изменений prizes
+  const prevPrizesLengthRef = useRef(prizes.length);
+
+  useEffect(() => {
+    const prevLength = prevPrizesLengthRef.current;
+    const currentLength = prizes.length;
+
+    if (prevLength !== currentLength) {
+      debugger; // eslint-disable-line no-debugger
+      console.log("🔍 PRIZES ИЗМЕНИЛИСЬ:", {
+        было: prevLength,
+        стало: currentLength,
+        разница: currentLength - prevLength,
+        стекТрейс: new Error().stack,
+      });
+
+      if (currentLength === 0 && prevLength > 0) {
+        debugger; // eslint-disable-line no-debugger
+        console.error("❌❌❌ ПРИЗЫ ОБНУЛИЛИСЬ! Было:", prevLength);
+        console.trace("Stack trace при обнулении");
+      }
+
+      prevPrizesLengthRef.current = currentLength;
+    }
+
+    console.log("WaifuAlerts render state:", {
+      currentMessage: !!currentMessage,
+      isRouletted,
+      rouletteIndex,
+      prizesLength: prizes.length,
+      announced,
+      shouldShowRoulette:
+        currentMessage &&
+        !isRouletted &&
+        rouletteIndex !== -1 &&
+        prizes.length > 0,
+      shouldShowLoading:
+        currentMessage &&
+        !isRouletted &&
+        rouletteIndex === -1 &&
+        prizes.length === 0,
+      shouldShowAlert:
+        currentMessage &&
+        (isRouletted || prizes.length === 0) &&
+        !currentMessage.waifu.isMerged,
+    });
+  }, [announced, currentMessage, isRouletted, prizes, rouletteIndex]);
 
   return (
     <div className={common.textStrokeShadow}>
@@ -389,10 +212,10 @@ export default function WaifuAlerts() {
                 onLoad={() => {
                   setTimeout(() => {
                     divHard.current!.onanimationend = () => {
-                      handleRemoveEvent(currentMessage);
+                      handleRemoveEvent();
                       setRouletteIndex(-1);
                       setIsRouletted(false);
-                      shufflePrizesEvent();
+                      shufflePrizes();
                     };
 
                     divHard.current!.className =
@@ -529,12 +352,12 @@ export default function WaifuAlerts() {
               key={currentMessage.waifu.shikiId}
               controls={false}
               autoPlay
-              onError={() => error(currentMessage)}
+              onError={() => error()}
               onEnded={() => {
                 setIsRouletted(true);
                 setRouletteIndex(-1);
                 unmuteAll();
-                handleRemoveEvent(currentMessage);
+                handleRemoveEvent();
               }}
               onCanPlay={event => {
                 try {
