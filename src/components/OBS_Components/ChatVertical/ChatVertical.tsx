@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
 import { ChatMessage } from "@/shared/api";
+import InjectStyles from "@/shared/components/InjectStyles";
 import Announce from "@/shared/Utils/Announce/Announce";
 
 import { MOTION, SCROLL_CONFIG, SCROLL_TIMEOUT } from "./animationTimings";
@@ -78,6 +79,14 @@ export default function ChatVertical({
 
   return (
     <>
+      <InjectStyles
+        styles={`
+          body {
+            overflow: hidden;
+          }
+        `}
+        id="chat-vertical-styles"
+      />
       {!announced && (
         <Announce title={"Chat Vertical"} callback={() => setAnnounced(true)} />
       )}

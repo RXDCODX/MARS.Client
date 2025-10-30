@@ -33,6 +33,49 @@ export default defineConfig({
   },
   build: {
     sourcemap: false,
+    // Включаем code splitting для CSS - каждый lazy компонент получит свой CSS файл
+    cssCodeSplit: true,
+    rollupOptions: {
+      output: {
+        // Настройка имен для JS чанков
+        chunkFileNames: "assets/js/[name]-[hash].js",
+        // Настройка имен для entry файлов
+        entryFileNames: "assets/js/[name]-[hash].js",
+        // Настройка имен для статических ассетов по типам
+        assetFileNames: assetInfo => {
+          // Используем names (массив) вместо устаревшего name
+          const name = assetInfo.names?.[0] || "";
+
+          // CSS файлы
+          if (name.endsWith(".css")) {
+            return "assets/css/[name]-[hash].css";
+          }
+
+          // Изображения
+          if (/\.(png|jpe?g|gif|svg|webp|avif|ico)$/i.test(name)) {
+            return "assets/images/[name]-[hash][extname]";
+          }
+
+          // Видео
+          if (/\.(mp4|webm|ogg|mov|avi)$/i.test(name)) {
+            return "assets/videos/[name]-[hash][extname]";
+          }
+
+          // Аудио
+          if (/\.(mp3|wav|ogg|flac|aac|m4a)$/i.test(name)) {
+            return "assets/audio/[name]-[hash][extname]";
+          }
+
+          // Шрифты
+          if (/\.(woff2?|eot|ttf|otf)$/i.test(name)) {
+            return "assets/fonts/[name]-[hash][extname]";
+          }
+
+          // Все остальные файлы
+          return "assets/other/[name]-[hash][extname]";
+        },
+      },
+    },
   },
   server: {
     port: 44478,

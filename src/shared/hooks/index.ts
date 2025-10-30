@@ -4,3 +4,5 @@ export {
   useIsTablet,
   useIsDesktop,
 } from "./useMediaQuery";
+
+export { useInjectStyles } from "./useInjectStyles";

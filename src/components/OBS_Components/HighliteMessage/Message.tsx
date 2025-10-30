@@ -4,6 +4,7 @@ import { useShallow } from "zustand/react/shallow";
 
 import { ChatMessage } from "@/shared/api";
 import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
+import InjectStyles from "@/shared/components/InjectStyles";
 import animate from "@/shared/styles/animate.module.scss";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import {
@@ -108,6 +109,16 @@ export default function Message() {
 
   return (
     <>
+      <InjectStyles
+        styles={`
+          :root {
+            --color: #ff0000 #ff0000 transparent transparent;
+            --calculated-height: calc(100vh / 29);
+            --span-width: 100ch;
+          }
+        `}
+        id="highlite-message-styles"
+      />
       {currentMessage && (
         <div
           key={currentMessage.message.id}

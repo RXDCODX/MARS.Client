@@ -124,7 +124,7 @@ registerPrefetchComponents([
   chatVerticalLoader,
   highliteMessageLoader,
   // Тяжелые компоненты
-  choosePathLoader,
+  // choosePathLoader, - убрано из предзагрузки, чтобы CSS загружался только при рендере компонента
   creditsLoader,
   adhdControllerLoader,
   explosionVideoLoader,
@@ -162,7 +162,11 @@ export const obsComponentRoutes: RouteConfig[] = [
     path: "/sr/*",
     name: "SR: SoundRequest",
     type: "obs",
-    element: <ChoosePath />,
+    element: (
+      <Suspense fallback={<OBSLazyLoader />}>
+        <ChoosePath />
+      </Suspense>
+    ),
   },
   {
     path: "/MichaelJackson",
@@ -290,7 +294,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <HighliteMessage />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <HighliteMessage />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -324,7 +330,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <ChatHorizontal />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <ChatHorizontal />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -334,7 +342,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <ChatVertical />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <ChatVertical />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },
@@ -344,7 +354,9 @@ export const obsComponentRoutes: RouteConfig[] = [
     type: "obs",
     element: (
       <OBSComponentWrapper>
-        <AFKScreen />
+        <Suspense fallback={<OBSLazyLoader />}>
+          <AFKScreen />
+        </Suspense>
       </OBSComponentWrapper>
     ),
   },

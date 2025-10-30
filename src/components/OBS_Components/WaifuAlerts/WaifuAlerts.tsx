@@ -9,6 +9,7 @@ import animate from "@/shared/styles/animate.module.scss";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import { getRandomColor } from "@/shared/Utils";
 import Announce from "@/shared/Utils/Announce/Announce";
+import InjectStyles from "@/shared/components/InjectStyles";
 
 import common from "../OBSCommon.module.scss";
 import { getHusbandText, getText, getTitle } from "./helper";
@@ -165,6 +166,20 @@ export default function WaifuAlerts() {
 
   return (
     <div className={common.textStrokeShadow}>
+      <InjectStyles
+        styles={`
+          html, body {
+            height: 100%;
+            margin: 0;
+          }
+          
+          div#root {
+            min-height: 100%;
+            flex-direction: column;
+          }
+        `}
+        id="waifu-alerts-styles"
+      />
       {!announced && (
         <Announce title={"WaifuRoll"} callback={() => setAnnounced(true)} />
       )}

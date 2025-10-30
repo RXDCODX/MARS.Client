@@ -1,6 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { type CSSProperties, useCallback, useState } from "react";
 
+import InjectStyles from "@/shared/components/InjectStyles";
+
 import commonStyles from "../OBSCommon.module.scss";
 import { useScoreboardStore } from "./AdminPanel";
 import {
@@ -191,6 +193,14 @@ const ScoreboardContent: React.FC = () => {
 
   return (
     <AnimatePresence>
+      <InjectStyles
+        styles={`
+          :root {
+            --banner-skew: 10px;
+          }
+        `}
+        id="scoreboard-styles"
+      />
       {isVisible && (
         <motion.div
           className={styles.scoreboardContainer}
