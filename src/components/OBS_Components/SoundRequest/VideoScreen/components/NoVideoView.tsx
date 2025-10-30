@@ -180,24 +180,26 @@ export function NoVideoView({
           } as React.CSSProperties
         }
       >
-        {/* Левая часть - пользователь */}
-        <div className={styles.userInfo}>
-          <span className={styles.label}>Заказал:</span>
-          {userAvatar && (
-            <img src={userAvatar} alt={userName} className={styles.avatar} />
-          )}
-          <span className={styles.userName} style={{ color: userColor }}>
-            {userName}
-          </span>
-        </div>
+        <div className={styles.infoBarContent}>
+          {/* Левая часть - пользователь */}
+          <div className={styles.userInfo}>
+            <span className={styles.label}>Заказал:</span>
+            {userAvatar && (
+              <img src={userAvatar} alt={userName} className={styles.avatar} />
+            )}
+            <span className={styles.userName} style={{ color: userColor }}>
+              {userName}
+            </span>
+          </div>
 
-        {/* Разделитель */}
-        <div className={styles.divider}></div>
+          {/* Разделитель */}
+          <div className={styles.divider}></div>
 
-        {/* Правая часть - трек */}
-        <div className={styles.trackInfo}>
-          <div className={styles.trackName}>{currentTrack.trackName}</div>
-          <div className={styles.artist}>{authors}</div>
+          {/* Правая часть - трек */}
+          <div className={styles.trackInfo}>
+            <div className={styles.trackName}>{currentTrack.trackName}</div>
+            <div className={styles.artist}>{authors}</div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,3 +1,5 @@
+import { X } from "lucide-react";
+
 import { BaseTrackInfo } from "@/shared/api";
 
 import { formatDuration } from "../../utils";
@@ -5,29 +7,52 @@ import styles from "../SoundRequestPlayerDesktop.module.scss";
 
 interface TrackItemProps {
   track: BaseTrackInfo;
+  queueItemId?: string;
   isCurrent?: boolean;
   isPlaying?: boolean;
+  isHistory?: boolean;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
+  onDelete?: (queueItemId: string) => void;
 }
 
 export function TrackItem({
   track,
+  queueItemId,
   isCurrent = false,
   isPlaying = false,
+  isHistory = false,
   onMouseEnter,
   onMouseLeave,
+  onDelete,
 }: TrackItemProps) {
   const showPlayingIndicator = isCurrent && isPlaying;
 
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (queueItemId && onDelete) {
+      onDelete(queueItemId);
+    }
+  };
+
   return (
     <div
-      className={`${styles.item} ${isCurrent ? `${styles.sticky} ${styles.current}` : ""}`}
+      className={`${styles.item} ${isCurrent ? `${styles.sticky} ${styles.current}` : ""} ${isHistory ? styles.historyItem : ""}`}
       data-track-id={track.id}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       key={track.id}
     >
+      {!isCurrent && queueItemId && onDelete && (
+        <button
+          className={styles.deleteButton}
+          onClick={handleDelete}
+          title="Удалить из очереди"
+          type="button"
+        >
+          <X size={18} />
+        </button>
+      )}
       <div
         className={`${styles.thumb} ${showPlayingIndicator ? styles.thumbPlaying : ""}`}
       >

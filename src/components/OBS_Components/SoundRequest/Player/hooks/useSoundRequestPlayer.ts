@@ -374,6 +374,10 @@ export const useSoundRequestPlayer = () => {
   const isPlaying =
     playerState && playerState.state === PlayerStateStateEnum.Playing;
 
+  // Вычисление состояния остановки
+  const isStopped =
+    playerState && playerState.state === PlayerStateStateEnum.Stopped;
+
   // Ближайшие 5 заказов
   const nextFiveOrders = useMemo(() => queue.slice(0, 5), [queue]);
 
@@ -400,6 +404,7 @@ export const useSoundRequestPlayer = () => {
     loading,
     volume,
     isPlaying,
+    isStopped,
     history,
     nextFiveOrders,
     displayedVideos,
@@ -420,6 +425,7 @@ export const useSoundRequestPlayer = () => {
     // Обработчики управления очередью
     handleRemoveFromQueue,
     handlePlayTrackFromQueue,
+    fetchQueue,
 
     // Обработчики управления отображением
     handleToggleVideoState,

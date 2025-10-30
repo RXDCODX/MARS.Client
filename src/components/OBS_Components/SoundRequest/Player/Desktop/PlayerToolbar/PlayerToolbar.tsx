@@ -15,17 +15,21 @@ import { Button } from "react-bootstrap";
 
 import { PlayerStateVideoStateEnum } from "@/shared/api";
 
+import { TrackListViewMode } from "../../stores/usePlayerStore";
 import { ElasticSlider } from "../ElasticSlider";
 import styles from "../SoundRequestPlayerDesktop.module.scss";
+import { ViewModeToggle } from "./ViewModeToggle";
 
 interface PlayerToolbarProps {
   isPlaying: boolean;
+  isStopped: boolean;
   isMuted: boolean;
   volume: number;
   loading: boolean;
   hasPrevious: boolean;
   progress: number;
   videoState?: PlayerStateVideoStateEnum;
+  viewMode: TrackListViewMode;
   onPrev: () => void;
   onTogglePlayPause: () => void;
   onStop: () => void;
@@ -33,16 +37,19 @@ interface PlayerToolbarProps {
   onMute: () => void;
   onVolumeChange: (value: number) => void;
   onToggleVideoState: () => void;
+  onToggleViewMode: () => void;
 }
 
 export function PlayerToolbar({
   isPlaying,
+  isStopped,
   isMuted,
   volume,
   loading,
   hasPrevious,
   progress,
   videoState = PlayerStateVideoStateEnum.Video,
+  viewMode,
   onPrev,
   onTogglePlayPause,
   onStop,
@@ -50,6 +57,7 @@ export function PlayerToolbar({
   onMute,
   onVolumeChange,
   onToggleVideoState,
+  onToggleViewMode,
 }: PlayerToolbarProps) {
   const progressStyle = {
     "--track-progress": `${Math.round(progress * 100)}%`,
@@ -85,6 +93,10 @@ export function PlayerToolbar({
   return (
     <div className={styles.toolbar} style={progressStyle}>
       <div className={styles.toolbarInner}>
+        <div className={styles.leftSection}>
+          <ViewModeToggle viewMode={viewMode} onToggle={onToggleViewMode} />
+        </div>
+
         <div className={styles.controlButtons}>
           <Button
             variant="dark"
@@ -107,8 +119,8 @@ export function PlayerToolbar({
           </Button>
 
           <Button
-            variant="danger"
-            className={styles.tbBtn}
+            variant="secondary"
+            className={`${styles.tbBtn} ${isStopped ? styles.stopped : ""}`}
             onClick={onStop}
             disabled={loading}
             title="Стоп"
@@ -138,14 +150,14 @@ export function PlayerToolbar({
 
           <div className={styles.extraButtons}>
             <Button
-              variant={
+              variant="secondary"
+              className={`${styles.tbBtn} ${
                 videoState === PlayerStateVideoStateEnum.Video
-                  ? "primary"
+                  ? styles.videoMode
                   : videoState === PlayerStateVideoStateEnum.NoVideo
-                    ? "warning"
-                    : "info"
-              }
-              className={styles.tbBtn}
+                    ? styles.noVideoMode
+                    : styles.audioOnlyMode
+              }`}
               onClick={onToggleVideoState}
               disabled={loading}
               title={getVideoTitle()}

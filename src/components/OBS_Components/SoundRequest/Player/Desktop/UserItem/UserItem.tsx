@@ -40,7 +40,12 @@ export function UserItem({
         )}
       </div>
       <div className={styles.userBody}>
-        <div className={styles.userName}>{displayName}</div>
+        <div
+          className={styles.userName}
+          style={{ color: user?.chatColor ?? "" }}
+        >
+          {displayName}
+        </div>
         <div className={styles.userMeta}>{formattedDate}</div>
       </div>
     </div>

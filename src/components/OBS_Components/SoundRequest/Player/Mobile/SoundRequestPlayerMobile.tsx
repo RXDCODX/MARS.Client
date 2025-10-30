@@ -11,11 +11,12 @@ import {
   Volume2,
   VolumeX,
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button, Card, Carousel, Form } from "react-bootstrap";
 import ReactPlayer from "react-player";
 
-import { PlayerStateVideoStateEnum } from "@/shared/api";
+import { PlayerStateVideoStateEnum, SoundRequest } from "@/shared/api";
+import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import { useSoundRequestPlayer } from "../hooks";
 import {
@@ -30,6 +31,10 @@ import styles from "./SoundRequestPlayerMobile.module.scss";
  */
 export function SoundRequestPlayerMobile() {
   const [showQueue, setShowQueue] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+
+  const { showToast } = useToastModal();
+  const soundRequestApi = useMemo(() => new SoundRequest(), []);
 
   const {
     playerState,
@@ -37,6 +42,7 @@ export function SoundRequestPlayerMobile() {
     loading,
     volume,
     isPlaying,
+    isStopped,
     nextFiveOrders,
     displayedVideos,
     handleTogglePlayPause,
@@ -46,8 +52,8 @@ export function SoundRequestPlayerMobile() {
     handleVolumeChange,
     handleMute,
     handleToggleVideoState,
-    handleRemoveFromQueue,
     handlePlayTrackFromQueue,
+    fetchQueue,
   } = useSoundRequestPlayer();
 
   // Определяем иконку видео в зависимости от videoState
@@ -63,6 +69,35 @@ export function SoundRequestPlayerMobile() {
         return <Music size={18} />;
       default:
         return <Video size={18} />;
+    }
+  };
+
+  // Обработчик удаления трека из очереди
+  const handleDeleteFromQueue = async (queueItemId: string) => {
+    if (deletingId) return; // Предотвращаем множественные удаления
+
+    setDeletingId(queueItemId);
+    try {
+      const response =
+        await soundRequestApi.soundRequestQueueDelete(queueItemId);
+
+      if (response.data.success) {
+        // Обновляем очередь после успешного удаления
+        await fetchQueue();
+      } else {
+        showToast({
+          success: false,
+          message: response.data.message || "Не удалось удалить трек",
+        });
+      }
+    } catch (error) {
+      console.error("Ошибка при удалении трека:", error);
+      showToast({
+        success: false,
+        message: "Произошла ошибка при удалении трека",
+      });
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -115,11 +150,11 @@ export function SoundRequestPlayerMobile() {
                 {isPlaying ? <Pause size={20} /> : <Play size={20} />}
               </Button>
               <Button
-                variant="danger"
+                variant="secondary"
                 size="lg"
                 onClick={handleStop}
                 disabled={loading}
-                className={styles.controlButton}
+                className={`${styles.controlButton} ${isStopped ? styles.stopped : ""}`}
               >
                 <Square size={20} />
               </Button>
@@ -294,10 +329,10 @@ export function SoundRequestPlayerMobile() {
                         <Button
                           variant="danger"
                           size="sm"
-                          onClick={handleRemoveFromQueue}
-                          disabled={loading}
+                          onClick={() => handleDeleteFromQueue(item.id)}
+                          disabled={loading || deletingId === item.id}
                         >
-                          Удалить
+                          {deletingId === item.id ? "..." : "Удалить"}
                         </Button>
                       </div>
                     </div>

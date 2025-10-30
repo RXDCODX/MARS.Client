@@ -190,4 +190,19 @@ export class SoundRequest<
       format: "json",
       ...params,
     });
+  /**
+   * No description
+   *
+   * @tags SoundRequest
+   * @name SoundRequestQueueDelete
+   * @request DELETE:/api/SoundRequest/queue/{queueItemId}
+   * @response `200` `OperationResult` OK
+   */
+  soundRequestQueueDelete = (queueItemId: string, params: RequestParams = {}) =>
+    this.request<OperationResult, any>({
+      path: `/api/SoundRequest/queue/${queueItemId}`,
+      method: "DELETE",
+      format: "json",
+      ...params,
+    });
 }
