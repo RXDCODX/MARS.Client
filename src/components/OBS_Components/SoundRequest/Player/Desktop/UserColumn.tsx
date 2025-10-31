@@ -28,7 +28,7 @@ export function UserColumn({
 
     switch (viewMode) {
       case TrackListViewMode.Default:
-        // Обычный режим: текущий пользователь -> пользователи очереди
+        // Обычный режим: текущий пользователь -> пользователи очереди (до 8)
         if (current) {
           userItems.push(
             <UserItem
@@ -44,7 +44,7 @@ export function UserColumn({
             />
           );
         }
-        queueWithoutCurrent.forEach(q => {
+        queueWithoutCurrent.slice(0, 8).forEach(q => {
           if (q.track) {
             userItems.push(
               <UserItem
@@ -61,8 +61,7 @@ export function UserColumn({
         break;
 
       case TrackListViewMode.WithHistory: {
-        // С историей: заглушки для истории -> текущий -> очередь
-        // Показываем до 3 треков истории
+        // С историей: заглушки для истории -> текущий -> очередь (до 4 треков очереди)
         const userHistoryCount = Math.min(history.length, 4);
         [...history]
           .slice(0, userHistoryCount)
@@ -99,7 +98,7 @@ export function UserColumn({
             />
           );
         }
-        queueWithoutCurrent.forEach(q => {
+        queueWithoutCurrent.slice(0, 4).forEach(q => {
           if (q.track) {
             userItems.push(
               <UserItem
@@ -119,7 +118,7 @@ export function UserColumn({
       case TrackListViewMode.Reversed:
         // Обратный режим: пустые UserItem для истории -> текущий пользователь
         // Не разворачиваем, так как column-reverse сделает за нас
-        history.slice(0, 5).forEach((track, index) => {
+        history.slice(0, 8).forEach((track, index) => {
           userItems.push(
             <div
               key={`history-user-${track.id}-${index}`}

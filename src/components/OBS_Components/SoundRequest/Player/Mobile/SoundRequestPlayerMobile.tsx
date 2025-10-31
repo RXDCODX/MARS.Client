@@ -18,6 +18,7 @@ import ReactPlayer from "react-player";
 import { PlayerStateVideoStateEnum, SoundRequest } from "@/shared/api";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
+import { LiquidChrome } from "../Background";
 import { useSoundRequestPlayer } from "../hooks";
 import {
   formatDuration,
@@ -102,9 +103,18 @@ export function SoundRequestPlayerMobile() {
   };
 
   return (
-    <div className={styles.container}>
-      {/* Текущий трек */}
-      <Card className={styles.currentTrackCard}>
+    <>
+      <LiquidChrome
+        baseColor={[0.05, 0.05, 0.15]}
+        speed={0.15}
+        amplitude={0.25}
+        frequencyX={2.5}
+        frequencyY={2.5}
+        interactive={false}
+      />
+      <div className={styles.container}>
+        {/* Текущий трек */}
+        <Card className={styles.currentTrackCard}>
         <Card.Body>
           <h5 className={styles.title}>Сейчас играет</h5>
           {playerState?.currentQueueItem?.track ? (
@@ -395,6 +405,7 @@ export function SoundRequestPlayerMobile() {
           )}
         </Card.Body>
       </Card>
-    </div>
+      </div>
+    </>
   );
 }

@@ -3,9 +3,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { SoundRequest } from "@/shared/api";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
+import { LiquidChrome } from "../Background";
 import { useSoundRequestPlayer } from "../hooks";
 import { usePlayerStore } from "../stores/usePlayerStore";
-import { PlayerToolbar } from "./PlayerToolbar";
+import { AddTrackModal, PlayerToolbar } from "./PlayerToolbar";
 import styles from "./SoundRequestPlayerDesktop.module.scss";
 import { TrackColumn } from "./TrackColumn";
 import { UserColumn } from "./UserColumn";
@@ -51,6 +52,7 @@ export function SoundRequestPlayerDesktop() {
   const cycleViewMode = usePlayerStore(state => state.cycleViewMode);
 
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [showAddTrackModal, setShowAddTrackModal] = useState(false);
   const { showToast } = useToastModal();
   const soundRequestApi = useMemo(() => new SoundRequest(), []);
 
@@ -157,54 +159,96 @@ export function SoundRequestPlayerDesktop() {
     ]
   );
 
-  return (
-    <div className={styles.root}>
-      <div className={styles.container1}>
-        {/* Верхний блок 9 частей высоты: 7:3 по ширине */}
-        <div className={styles.topSplit}>
-          <TrackColumn
-            viewMode={viewMode}
-            current={current}
-            isPlaying={isPlaying ?? false}
-            queueWithoutCurrent={queueWithoutCurrent}
-            history={history}
-            onItemHover={handleItemHover}
-            onDelete={handleDeleteFromQueue}
-          />
+  // Обработчик добавления трека
+  const handleAddTrack = useCallback(
+    async (query: string) => {
+      try {
+        const response = await soundRequestApi.soundRequestAddTrackCreate({
+          query,
+        });
 
-          <UserColumn
+        showToast(response.data);
+
+        if (response.data.success) {
+          // Обновляем очередь после успешного добавления
+          await fetchQueue();
+        }
+      } catch (error) {
+        console.error("Ошибка при добавлении трека:", error);
+        showToast({
+          success: false,
+          message: "Произошла ошибка при добавлении трека",
+        });
+      }
+    },
+    [soundRequestApi, showToast, fetchQueue]
+  );
+
+  return (
+    <>
+      <LiquidChrome
+        baseColor={[0.1, 0.05, 0.2]}
+        speed={0.15}
+        amplitude={0.25}
+        frequencyX={2.5}
+        frequencyY={2.5}
+        interactive={false}
+      />
+      <div className={styles.root}>
+        <div className={styles.container1}>
+          {/* Верхний блок 9 частей высоты: 7:3 по ширине */}
+          <div className={styles.topSplit}>
+            <TrackColumn
+              viewMode={viewMode}
+              current={current}
+              isPlaying={isPlaying ?? false}
+              queueWithoutCurrent={queueWithoutCurrent}
+              history={history}
+              onItemHover={handleItemHover}
+              onDelete={handleDeleteFromQueue}
+            />
+
+            <UserColumn
+              viewMode={viewMode}
+              current={current}
+              currentQueueItem={playerState?.currentQueueItem}
+              queueWithoutCurrent={queueWithoutCurrent}
+              history={history}
+              onItemHover={handleItemHover}
+            />
+          </div>
+        </div>
+
+        {/* Нижний блок 1 часть высоты — тулбар с прогресс-заливкой */}
+        <div className={styles.container3}>
+          <PlayerToolbar
+            isPlaying={isPlaying ?? false}
+            isStopped={isStopped ?? false}
+            isMuted={playerState?.isMuted ?? false}
+            volume={volume}
+            loading={loading}
+            hasPrevious={!!history?.length}
+            progress={progress}
+            videoState={playerState?.videoState}
             viewMode={viewMode}
-            current={current}
-            currentQueueItem={playerState?.currentQueueItem}
-            queueWithoutCurrent={queueWithoutCurrent}
-            history={history}
-            onItemHover={handleItemHover}
+            onPrev={handlePlayPrevious}
+            onTogglePlayPause={handleTogglePlayPause}
+            onStop={handleStop}
+            onSkip={handleSkip}
+            onMute={handleMute}
+            onVolumeChange={handleVolumeChange}
+            onToggleVideoState={handleToggleVideoState}
+            onToggleViewMode={cycleViewMode}
+            onAddTrack={() => setShowAddTrackModal(true)}
           />
         </div>
-      </div>
 
-      {/* Нижний блок 1 часть высоты — тулбар с прогресс-заливкой */}
-      <div className={styles.container3}>
-        <PlayerToolbar
-          isPlaying={isPlaying ?? false}
-          isStopped={isStopped ?? false}
-          isMuted={playerState?.isMuted ?? false}
-          volume={volume}
-          loading={loading}
-          hasPrevious={!!history?.length}
-          progress={progress}
-          videoState={playerState?.videoState}
-          viewMode={viewMode}
-          onPrev={handlePlayPrevious}
-          onTogglePlayPause={handleTogglePlayPause}
-          onStop={handleStop}
-          onSkip={handleSkip}
-          onMute={handleMute}
-          onVolumeChange={handleVolumeChange}
-          onToggleVideoState={handleToggleVideoState}
-          onToggleViewMode={cycleViewMode}
+        <AddTrackModal
+          show={showAddTrackModal}
+          onClose={() => setShowAddTrackModal(false)}
+          onSubmit={handleAddTrack}
         />
       </div>
-    </div>
+    </>
   );
 }

@@ -21,6 +21,8 @@
   flex: 9 1 0;
   display: flex;
   margin-bottom: 1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .topSplit {
@@ -446,6 +448,8 @@
   display: flex;
   align-items: stretch;
   gap: 1rem;
+  position: relative;
+  z-index: 1;
 }
 
 .toolbar {

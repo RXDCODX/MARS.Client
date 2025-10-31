@@ -205,4 +205,25 @@ export class SoundRequest<
       format: "json",
       ...params,
     });
+  /**
+   * No description
+   *
+   * @tags SoundRequest
+   * @name SoundRequestAddTrackCreate
+   * @request POST:/api/SoundRequest/add-track
+   * @response `200` `OperationResult<String>` OK
+   */
+  soundRequestAddTrackCreate = (
+    query?: {
+      query: string;
+    },
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<String>, any>({
+      path: `/api/SoundRequest/add-track`,
+      method: "POST",
+      query: query,
+      format: "json",
+      ...params,
+    });
 }

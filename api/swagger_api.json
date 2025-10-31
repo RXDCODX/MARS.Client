@@ -5116,6 +5116,44 @@
         }
       }
     },
+    "/api/SoundRequest/add-track": {
+      "post": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/StreamArchive": {
       "get": {
         "tags": [

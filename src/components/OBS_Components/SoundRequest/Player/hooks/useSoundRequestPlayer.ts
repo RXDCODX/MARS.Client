@@ -83,8 +83,10 @@ export const useSoundRequestPlayer = () => {
     };
   }, []);
 
-  // Отслеживание изменений playerState
+  // Отслеживание изменений playerState и обновление очереди/истории
   useEffect(() => {
+    if (!playerState) return;
+
     console.log("[useSoundRequestPlayer] PlayerState изменился:", {
       hasState: !!playerState,
       currentTrack: playerState?.currentQueueItem?.track?.trackName,
@@ -93,7 +95,35 @@ export const useSoundRequestPlayer = () => {
       volume: playerState?.volume,
       isMuted: playerState?.isMuted,
     });
-  }, [playerState]);
+
+    // Обновляем очередь и последние 5 треков истории при каждом изменении состояния
+    const updateData = async () => {
+      try {
+        console.log(
+          "[useSoundRequestPlayer] Обновление очереди и истории (последние 5 треков)"
+        );
+        const queueResponse = await soundRequestApi.soundRequestQueueList();
+        const historyResponse = await soundRequestApi.soundRequestHistoryList({
+          count: 5,
+        });
+
+        if (queueResponse.data.success && queueResponse.data.data) {
+          setQueue(queueResponse.data.data);
+        }
+
+        if (historyResponse.data.success && historyResponse.data.data) {
+          setHistory(historyResponse.data.data);
+        }
+      } catch (error) {
+        console.error(
+          "[useSoundRequestPlayer] Ошибка при обновлении данных:",
+          error
+        );
+      }
+    };
+
+    updateData();
+  }, [playerState, soundRequestApi]);
 
   // Синхронизация volume с playerState
   useEffect(() => {
@@ -200,26 +230,8 @@ export const useSoundRequestPlayer = () => {
     [soundRequestApi]
   );
 
-  // Обновление очереди при переключении треков
-  useEffect(() => {
-    const currentQueueItemId = playerState?.currentQueueItem?.id;
-    const currentTrackName = playerState?.currentQueueItem?.track?.trackName;
-
-    if (currentQueueItemId) {
-      console.log(
-        "[useSoundRequestPlayer] Трек изменился, обновляем очередь:",
-        {
-          queueItemId: currentQueueItemId,
-          trackName: currentTrackName,
-        }
-      );
-      fetchQueue();
-    }
-  }, [
-    fetchQueue,
-    playerState?.currentQueueItem?.id,
-    playerState?.currentQueueItem?.track?.trackName,
-  ]);
+  // Обновление очереди при переключении треков теперь происходит автоматически
+  // через useEffect отслеживания изменений playerState (см. выше)
 
   // Инициализация
   useEffect(() => {
@@ -227,22 +239,10 @@ export const useSoundRequestPlayer = () => {
       "[useSoundRequestPlayer] Инициализация - загружаем начальные данные"
     );
     // Загружаем начальное состояние (если SignalR еще не отправил)
+    // Очередь и история (последние 5 треков) будут автоматически загружены
+    // при получении playerState через SignalR
     fetchPlayerState();
-    fetchQueue();
-    fetchHistory(20);
-
-    // Обновляем только историю периодически (состояние и очередь приходят через SignalR)
-    const historyInterval = setInterval(() => {
-      fetchHistory(20);
-    }, 10000);
-
-    return () => {
-      console.log(
-        "[useSoundRequestPlayer] Размонтирование - очищаем интервалы"
-      );
-      clearInterval(historyInterval);
-    };
-  }, [fetchPlayerState, fetchQueue, fetchHistory]);
+  }, [fetchPlayerState]);
 
   // Вспомогательная функция для отправки изменений состояния через SignalR
   const updatePlayerState = useCallback(
@@ -306,24 +306,75 @@ export const useSoundRequestPlayer = () => {
     setLoading(false);
   }, [updatePlayerState]);
 
-  // Эти методы управления треками удалены, так как управление треками происходит на бэкенде
+  // Управление переключением треков через SignalR
   const handleSkip = useCallback(async () => {
-    console.warn(
-      "[useSoundRequestPlayer] handleSkip: управление треками перенесено на бэкенд"
-    );
-  }, []);
+    if (!connectionRef.current) {
+      console.warn("[useSoundRequestPlayer] Нет подключения к SignalR");
+      showToast({
+        success: false,
+        message: "Нет подключения к серверу",
+      });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      console.log("[useSoundRequestPlayer] Отправка SkipTrack");
+      await connectionRef.current.invoke("SkipTrack");
+
+      // Обновляем очередь и историю после переключения
+      console.log(
+        "[useSoundRequestPlayer] Обновление очереди и истории после Skip"
+      );
+      await Promise.all([fetchQueue(), fetchHistory(5)]);
+    } catch (error) {
+      console.error(
+        "[useSoundRequestPlayer] Ошибка при пропуске трека:",
+        error
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [showToast, fetchQueue, fetchHistory]);
 
   const handlePlayNext = useCallback(async () => {
-    console.warn(
-      "[useSoundRequestPlayer] handlePlayNext: управление треками перенесено на бэкенд"
-    );
-  }, []);
+    // Псевдоним для handleSkip
+    await handleSkip();
+  }, [handleSkip]);
 
   const handlePlayPrevious = useCallback(async () => {
-    console.warn(
-      "[useSoundRequestPlayer] handlePlayPrevious: управление треками перенесено на бэкенд"
-    );
-  }, []);
+    if (!connectionRef.current) {
+      console.warn("[useSoundRequestPlayer] Нет подключения к SignalR");
+      showToast({
+        success: false,
+        message: "Нет подключения к серверу",
+      });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      console.log("[useSoundRequestPlayer] Отправка PlayPrevious");
+      await connectionRef.current.invoke("PlayPrevious");
+
+      // Обновляем очередь и историю после переключения
+      console.log(
+        "[useSoundRequestPlayer] Обновление очереди и истории после PlayPrevious"
+      );
+      await Promise.all([fetchQueue(), fetchHistory(5)]);
+    } catch (error) {
+      console.error(
+        "[useSoundRequestPlayer] Ошибка при переключении на предыдущий трек:",
+        error
+      );
+      showToast({
+        success: false,
+        message: "Ошибка при переключении на предыдущий трек",
+      });
+    } finally {
+      setLoading(false);
+    }
+  }, [showToast, fetchQueue, fetchHistory]);
 
   // Управление громкостью
   const handleVolumeChange = useCallback(

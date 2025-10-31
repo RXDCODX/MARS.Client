@@ -14,6 +14,10 @@
 ```
 Player/
 ├── SoundRequestPlayer.tsx              # Адаптивный компонент-обертка
+├── Background/
+│   ├── LiquidChrome.tsx               # WebGL анимированный фон
+│   ├── LiquidChrome.css
+│   └── index.ts
 ├── Desktop/
 │   ├── SoundRequestPlayerDesktop.tsx  # Десктопная версия (только UI)
 │   ├── SoundRequestPlayerDesktop.module.scss
@@ -127,6 +131,16 @@ import { SoundRequestPlayerMobile } from "@/components/OBS_Components/SoundReque
 - Оптимизация для сенсорного управления
 
 ## Стилизация
+
+### Анимированный фон
+
+Плеер использует компонент `LiquidChrome` для создания динамического WebGL-фона:
+
+- Красивые волны и переливы с эффектом жидкого хрома
+- Заполняет весь экран (position: fixed)
+- Настраиваемые параметры (цвет, скорость, амплитуда)
+
+### CSS переменные
 
 Плеер использует CSS переменные из `global.scss`:
 

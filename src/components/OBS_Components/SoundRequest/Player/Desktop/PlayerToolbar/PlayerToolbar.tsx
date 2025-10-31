@@ -2,6 +2,7 @@ import {
   Music,
   Pause,
   Play,
+  Plus,
   SkipBack,
   SkipForward,
   Square,
@@ -38,6 +39,7 @@ interface PlayerToolbarProps {
   onVolumeChange: (value: number) => void;
   onToggleVideoState: () => void;
   onToggleViewMode: () => void;
+  onAddTrack: () => void;
 }
 
 export function PlayerToolbar({
@@ -58,6 +60,7 @@ export function PlayerToolbar({
   onVolumeChange,
   onToggleVideoState,
   onToggleViewMode,
+  onAddTrack,
 }: PlayerToolbarProps) {
   const progressStyle = {
     "--track-progress": `${Math.round(progress * 100)}%`,
@@ -95,6 +98,16 @@ export function PlayerToolbar({
       <div className={styles.toolbarInner}>
         <div className={styles.leftSection}>
           <ViewModeToggle viewMode={viewMode} onToggle={onToggleViewMode} />
+          <Button
+            variant="success"
+            className={styles.tbBtn}
+            onClick={onAddTrack}
+            disabled={loading}
+            title="Добавить трек"
+            style={{ marginLeft: "2rem" }}
+          >
+            <Plus />
+          </Button>
         </div>
 
         <div className={styles.controlButtons}>

@@ -1,0 +1,52 @@
+@import "@/app/global.scss";
+
+.modalButton {
+  min-width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  padding: 0.5rem 1.5rem;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.secondary {
+    background: rgba(108, 117, 125, 0.2);
+    border-color: rgba(108, 117, 125, 0.3);
+
+    &:hover:not(:disabled) {
+      background: rgba(108, 117, 125, 0.35);
+      border-color: rgba(108, 117, 125, 0.5);
+    }
+  }
+
+  &.primary {
+    background: rgba(13, 110, 253, 0.3);
+    border-color: rgba(13, 110, 253, 0.5);
+
+    &:hover:not(:disabled) {
+      background: rgba(13, 110, 253, 0.5);
+      border-color: rgba(13, 110, 253, 0.7);
+    }
+  }
+}
+
