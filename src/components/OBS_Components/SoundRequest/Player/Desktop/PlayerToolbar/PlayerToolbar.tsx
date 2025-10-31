@@ -1,196 +1,80 @@
-import {
-  Music,
-  Pause,
-  Play,
-  Plus,
-  SkipBack,
-  SkipForward,
-  Square,
-  Video,
-  VideoOff,
-  Volume2,
-  VolumeX,
-} from "lucide-react";
-import { CSSProperties } from "react";
-import { Button } from "react-bootstrap";
+import { CSSProperties, memo } from "react";
+import { useShallow } from "zustand/react/shallow";
 
-import { PlayerStateVideoStateEnum } from "@/shared/api";
+import { PlayerStateStateEnum } from "@/shared/api";
 
-import { TrackListViewMode } from "../../stores/usePlayerStore";
-import { ElasticSlider } from "../ElasticSlider";
+import { usePlayerStore } from "../../stores/usePlayerStore";
+import { parseDurationToSeconds } from "../../utils";
 import styles from "../SoundRequestPlayerDesktop.module.scss";
+import { useTrackProgress } from "../useTrackProgress";
+import { VolumeSlider } from "../VolumeSlider";
+import {
+  AddTrackButton,
+  MuteButton,
+  PlayPauseButton,
+  PreviousButton,
+  SkipButton,
+  StopButton,
+  VideoStateButton,
+} from "./Buttons";
 import { ViewModeToggle } from "./ViewModeToggle";
 
-interface PlayerToolbarProps {
-  isPlaying: boolean;
-  isStopped: boolean;
-  isMuted: boolean;
-  volume: number;
-  loading: boolean;
-  hasPrevious: boolean;
-  progress: number;
-  videoState?: PlayerStateVideoStateEnum;
-  viewMode: TrackListViewMode;
-  onPrev: () => void;
-  onTogglePlayPause: () => void;
-  onStop: () => void;
-  onSkip: () => void;
-  onMute: () => void;
-  onVolumeChange: (value: number) => void;
-  onToggleVideoState: () => void;
-  onToggleViewMode: () => void;
-  onAddTrack: () => void;
-}
+function PlayerToolbarComponent() {
+  // Берём только необходимые данные из стора для прогресс-бара и режима отображения
+  const { playerState, viewMode } = usePlayerStore(
+    useShallow(state => ({
+      playerState: state.playerState,
+      viewMode: state.viewMode,
+    }))
+  );
 
-export function PlayerToolbar({
-  isPlaying,
-  isStopped,
-  isMuted,
-  volume,
-  loading,
-  hasPrevious,
-  progress,
-  videoState = PlayerStateVideoStateEnum.Video,
-  viewMode,
-  onPrev,
-  onTogglePlayPause,
-  onStop,
-  onSkip,
-  onMute,
-  onVolumeChange,
-  onToggleVideoState,
-  onToggleViewMode,
-  onAddTrack,
-}: PlayerToolbarProps) {
+  // Вычисляем прогресс трека для визуального отображения
+  const isPlaying = playerState?.state === PlayerStateStateEnum.Playing;
+  const currentTrack = playerState?.currentQueueItem?.track;
+  const durationSec = parseDurationToSeconds(currentTrack?.duration || "PT0S");
+  const progress = useTrackProgress({
+    durationSec,
+    isPlaying,
+    trackId: currentTrack?.id,
+    initialProgress: playerState?.currentTrackProgress,
+  });
+
   const progressStyle = {
     "--track-progress": `${Math.round(progress * 100)}%`,
   } as CSSProperties;
 
-  // Определяем иконку и подсказку в зависимости от videoState
-  const getVideoIcon = () => {
-    switch (videoState) {
-      case PlayerStateVideoStateEnum.Video:
-        return <Video />;
-      case PlayerStateVideoStateEnum.NoVideo:
-        return <VideoOff />;
-      case PlayerStateVideoStateEnum.AudioOnly:
-        return <Music />;
-      default:
-        return <Video />;
-    }
-  };
-
-  const getVideoTitle = () => {
-    switch (videoState) {
-      case PlayerStateVideoStateEnum.Video:
-        return "Режим: Видео (переключить на Без видео)";
-      case PlayerStateVideoStateEnum.NoVideo:
-        return "Режим: Без видео (переключить на Только аудио)";
-      case PlayerStateVideoStateEnum.AudioOnly:
-        return "Режим: Только аудио (переключить на Видео)";
-      default:
-        return "Переключить режим отображения";
-    }
+  // Обработчик переключения режима отображения
+  const handleToggleViewMode = () => {
+    usePlayerStore.getState().cycleViewMode();
   };
 
   return (
     <div className={styles.toolbar} style={progressStyle}>
       <div className={styles.toolbarInner}>
         <div className={styles.leftSection}>
-          <ViewModeToggle viewMode={viewMode} onToggle={onToggleViewMode} />
-          <Button
-            variant="success"
-            className={styles.tbBtn}
-            onClick={onAddTrack}
-            disabled={loading}
-            title="Добавить трек"
-            style={{ marginLeft: "2rem" }}
-          >
-            <Plus />
-          </Button>
+          <ViewModeToggle viewMode={viewMode} onToggle={handleToggleViewMode} />
+          <AddTrackButton />
         </div>
 
         <div className={styles.controlButtons}>
-          <Button
-            variant="dark"
-            className={styles.tbBtn}
-            onClick={onPrev}
-            disabled={loading || !hasPrevious}
-            title="Предыдущий"
-          >
-            <SkipBack />
-          </Button>
-
-          <Button
-            variant={isPlaying ? "warning" : "primary"}
-            className={styles.tbBtn}
-            onClick={onTogglePlayPause}
-            disabled={loading}
-            title={isPlaying ? "Пауза" : "Воспроизвести"}
-          >
-            {isPlaying ? <Pause /> : <Play />}
-          </Button>
-
-          <Button
-            variant="secondary"
-            className={`${styles.tbBtn} ${isStopped ? styles.stopped : ""}`}
-            onClick={onStop}
-            disabled={loading}
-            title="Стоп"
-          >
-            <Square />
-          </Button>
-
-          <Button
-            variant="secondary"
-            className={styles.tbBtn}
-            onClick={onSkip}
-            disabled={loading}
-            title="Следующий"
-          >
-            <SkipForward />
-          </Button>
-
-          <Button
-            variant={isMuted ? "secondary" : "primary"}
-            className={styles.tbBtn}
-            onClick={onMute}
-            disabled={loading}
-            title={isMuted ? "Звук выкл." : "Звук вкл."}
-          >
-            {isMuted ? <VolumeX /> : <Volume2 />}
-          </Button>
+          <PreviousButton />
+          <PlayPauseButton />
+          <StopButton />
+          <SkipButton />
+          <MuteButton />
 
           <div className={styles.extraButtons}>
-            <Button
-              variant="secondary"
-              className={`${styles.tbBtn} ${
-                videoState === PlayerStateVideoStateEnum.Video
-                  ? styles.videoMode
-                  : videoState === PlayerStateVideoStateEnum.NoVideo
-                    ? styles.noVideoMode
-                    : styles.audioOnlyMode
-              }`}
-              onClick={onToggleVideoState}
-              disabled={loading}
-              title={getVideoTitle()}
-            >
-              {getVideoIcon()}
-            </Button>
+            <VideoStateButton />
           </div>
         </div>
 
         <div className={styles.volumeWrap}>
-          <ElasticSlider
-            value={volume}
-            onChange={onVolumeChange}
-            min={0}
-            max={100}
-            step={1}
-            disabled={loading}
-          />
+          <VolumeSlider />
         </div>
       </div>
     </div>
   );
 }
+
+// Экспортируем мемоизированную версию для оптимизации
+export const PlayerToolbar = memo(PlayerToolbarComponent);

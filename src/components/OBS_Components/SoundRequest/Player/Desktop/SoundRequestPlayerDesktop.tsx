@@ -1,35 +1,25 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 import { SoundRequest } from "@/shared/api";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import { LiquidChrome } from "../Background";
+import { PlayerActionsProvider } from "../contexts/PlayerActionsContext";
 import { useSoundRequestPlayer } from "../hooks";
 import { usePlayerStore } from "../stores/usePlayerStore";
+import { parseDurationToSeconds } from "../utils";
 import { AddTrackModal, PlayerToolbar } from "./PlayerToolbar";
 import styles from "./SoundRequestPlayerDesktop.module.scss";
 import { TrackColumn } from "./TrackColumn";
 import { UserColumn } from "./UserColumn";
 import { useTrackProgress } from "./useTrackProgress";
 
-function parseIsoDurationToSeconds(duration?: string): number {
-  if (!duration) return 0;
-  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
-  if (!match) return 0;
-  const h = parseInt(match[1] || "0");
-  const m = parseInt(match[2] || "0");
-  const s = parseInt(match[3] || "0");
-  return h * 3600 + m * 60 + s;
-}
-
-export function SoundRequestPlayerDesktop() {
+function SoundRequestPlayerDesktopComponent() {
   const {
     playerState,
     queue: hookQueue,
-    loading,
-    volume,
     isPlaying,
-    isStopped,
     history: hookHistory,
     handlePlayPrevious,
     handleTogglePlayPause,
@@ -41,15 +31,14 @@ export function SoundRequestPlayerDesktop() {
     fetchQueue,
   } = useSoundRequestPlayer();
 
-  // Zustand store
-  const queue = usePlayerStore(state => state.queue);
-  const history = usePlayerStore(state => state.history);
-  const viewMode = usePlayerStore(state => state.viewMode);
-  const setQueue = usePlayerStore(state => state.setQueue);
-  const setHistory = usePlayerStore(state => state.setHistory);
-  const removeFromQueue = usePlayerStore(state => state.removeFromQueue);
-  const rollbackQueue = usePlayerStore(state => state.rollbackQueue);
-  const cycleViewMode = usePlayerStore(state => state.cycleViewMode);
+  // Zustand store - только данные для чтения (с useShallow для оптимизации)
+  const { queue, history, viewMode } = usePlayerStore(
+    useShallow(state => ({
+      queue: state.queue,
+      history: state.history,
+      viewMode: state.viewMode,
+    }))
+  );
 
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [showAddTrackModal, setShowAddTrackModal] = useState(false);
@@ -57,11 +46,12 @@ export function SoundRequestPlayerDesktop() {
   const soundRequestApi = useMemo(() => new SoundRequest(), []);
 
   // Синхронизация очереди и истории из хука с Zustand
+  // Используем прямое обращение к стору через getState, чтобы избежать зависимостей
   useEffect(() => {
     if (hookQueue) {
-      setQueue(hookQueue);
+      usePlayerStore.getState().setQueue(hookQueue);
     }
-  }, [hookQueue, setQueue]);
+  }, [hookQueue]);
 
   useEffect(() => {
     if (hookHistory) {
@@ -71,25 +61,30 @@ export function SoundRequestPlayerDesktop() {
         const dateB = new Date(b.lastTimePlays).getTime();
         return dateB - dateA; // Убывание - самые свежие первыми
       });
-      setHistory(sortedHistory);
+      usePlayerStore.getState().setHistory(sortedHistory);
     }
-  }, [hookHistory, setHistory]);
+  }, [hookHistory]);
 
+  // Извлекаем конкретные значения из playerState
   const current = playerState?.currentQueueItem?.track || null;
-  const durationSec = parseIsoDurationToSeconds(current?.duration || "PT0S");
+  const currentQueueItem = playerState?.currentQueueItem;
+  const currentQueueItemId = playerState?.currentQueueItem?.id;
+  const currentTrackProgress = playerState?.currentTrackProgress;
+
+  const durationSec = parseDurationToSeconds(current?.duration || "PT0S");
 
   const progress = useTrackProgress({
     durationSec,
     isPlaying: isPlaying ?? false,
     trackId: current?.id,
-    initialProgress: playerState?.currentTrackProgress,
+    initialProgress: currentTrackProgress,
   });
 
   // Build lists: sticky current + rest of queue
-  const queueWithoutCurrent = useMemo(() => {
-    const currentQueueItemId = playerState?.currentQueueItem?.id;
-    return queue.filter(x => x.id !== currentQueueItemId);
-  }, [queue, playerState?.currentQueueItem?.id]);
+  const queueWithoutCurrent = useMemo(
+    () => queue.filter(x => x.id !== currentQueueItemId),
+    [queue, currentQueueItemId]
+  );
 
   // Обработчики для синхронизации hover между левой и правой колонками
   const handleItemHover = useCallback(
@@ -116,10 +111,10 @@ export function SoundRequestPlayerDesktop() {
       setDeletingId(queueItemId);
 
       // Сохраняем текущую очередь для отката
-      const previousQueue = [...queue];
+      const previousQueue = [...usePlayerStore.getState().queue];
 
       // Оптимистичное обновление - удаляем сразу из UI
-      removeFromQueue(queueItemId);
+      usePlayerStore.getState().removeFromQueue(queueItemId);
 
       try {
         const response =
@@ -130,7 +125,7 @@ export function SoundRequestPlayerDesktop() {
           await fetchQueue();
         } else {
           // Откатываем изменения при ошибке
-          rollbackQueue(previousQueue);
+          usePlayerStore.getState().rollbackQueue(previousQueue);
           showToast({
             success: false,
             message: response.data.message || "Не удалось удалить трек",
@@ -138,7 +133,7 @@ export function SoundRequestPlayerDesktop() {
         }
       } catch (error) {
         // Откатываем изменения при ошибке
-        rollbackQueue(previousQueue);
+        usePlayerStore.getState().rollbackQueue(previousQueue);
         console.error("Ошибка при удалении трека:", error);
         showToast({
           success: false,
@@ -148,15 +143,7 @@ export function SoundRequestPlayerDesktop() {
         setDeletingId(null);
       }
     },
-    [
-      deletingId,
-      queue,
-      removeFromQueue,
-      rollbackQueue,
-      soundRequestApi,
-      showToast,
-      fetchQueue,
-    ]
+    [deletingId, soundRequestApi, showToast, fetchQueue]
   );
 
   // Обработчик добавления трека
@@ -184,16 +171,42 @@ export function SoundRequestPlayerDesktop() {
     [soundRequestApi, showToast, fetchQueue]
   );
 
+  // Мемоизированные обработчики для модального окна
+  const handleOpenAddTrackModal = useCallback(() => {
+    setShowAddTrackModal(true);
+  }, []);
+
+  const handleCloseAddTrackModal = useCallback(() => {
+    setShowAddTrackModal(false);
+  }, []);
+
+  // Собираем все обработчики в один объект для контекста
+  const playerActions = useMemo(
+    () => ({
+      handlePlayPrevious,
+      handleTogglePlayPause,
+      handleStop,
+      handleSkip,
+      handleMute,
+      handleVolumeChange,
+      handleToggleVideoState,
+      handleOpenAddTrackModal,
+    }),
+    [
+      handlePlayPrevious,
+      handleTogglePlayPause,
+      handleStop,
+      handleSkip,
+      handleMute,
+      handleVolumeChange,
+      handleToggleVideoState,
+      handleOpenAddTrackModal,
+    ]
+  );
+
   return (
-    <>
-      <LiquidChrome
-        baseColor={[0.1, 0.05, 0.2]}
-        speed={0.15}
-        amplitude={0.25}
-        frequencyX={2.5}
-        frequencyY={2.5}
-        interactive={false}
-      />
+    <PlayerActionsProvider actions={playerActions}>
+      <LiquidChrome key={1} />
       <div className={styles.root}>
         <div className={styles.container1}>
           {/* Верхний блок 9 частей высоты: 7:3 по ширине */}
@@ -211,7 +224,7 @@ export function SoundRequestPlayerDesktop() {
             <UserColumn
               viewMode={viewMode}
               current={current}
-              currentQueueItem={playerState?.currentQueueItem}
+              currentQueueItem={currentQueueItem}
               queueWithoutCurrent={queueWithoutCurrent}
               history={history}
               onItemHover={handleItemHover}
@@ -221,34 +234,20 @@ export function SoundRequestPlayerDesktop() {
 
         {/* Нижний блок 1 часть высоты — тулбар с прогресс-заливкой */}
         <div className={styles.container3}>
-          <PlayerToolbar
-            isPlaying={isPlaying ?? false}
-            isStopped={isStopped ?? false}
-            isMuted={playerState?.isMuted ?? false}
-            volume={volume}
-            loading={loading}
-            hasPrevious={!!history?.length}
-            progress={progress}
-            videoState={playerState?.videoState}
-            viewMode={viewMode}
-            onPrev={handlePlayPrevious}
-            onTogglePlayPause={handleTogglePlayPause}
-            onStop={handleStop}
-            onSkip={handleSkip}
-            onMute={handleMute}
-            onVolumeChange={handleVolumeChange}
-            onToggleVideoState={handleToggleVideoState}
-            onToggleViewMode={cycleViewMode}
-            onAddTrack={() => setShowAddTrackModal(true)}
-          />
+          <PlayerToolbar />
         </div>
 
         <AddTrackModal
           show={showAddTrackModal}
-          onClose={() => setShowAddTrackModal(false)}
+          onClose={handleCloseAddTrackModal}
           onSubmit={handleAddTrack}
         />
       </div>
-    </>
+    </PlayerActionsProvider>
   );
 }
+
+// Экспортируем мемоизированную версию для оптимизации производительности
+export const SoundRequestPlayerDesktop = memo(
+  SoundRequestPlayerDesktopComponent
+);

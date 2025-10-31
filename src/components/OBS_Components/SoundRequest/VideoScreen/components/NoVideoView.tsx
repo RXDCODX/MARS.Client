@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef } from "react";
 import ReactPlayer from "react-player";
 
 import type { PlayerState, QueueItem } from "@/shared/api";
@@ -32,7 +32,7 @@ interface Props {
  * Используется когда videoState === PlayerStateVideoStateEnum.NoVideo
  * Показывает одну полоску с информацией о пользователе и треке
  */
-export function NoVideoView({
+function NoVideoViewComponent({
   currentTrack,
   queueItemId,
   playerState,
@@ -205,3 +205,6 @@ export function NoVideoView({
     </div>
   );
 }
+
+// Экспортируем мемоизированную версию для оптимизации
+export const NoVideoView = memo(NoVideoViewComponent);

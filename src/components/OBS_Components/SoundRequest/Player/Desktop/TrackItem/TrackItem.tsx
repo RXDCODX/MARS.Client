@@ -1,4 +1,5 @@
 import { X } from "lucide-react";
+import { memo, useCallback } from "react";
 
 import { BaseTrackInfo } from "@/shared/api";
 
@@ -16,7 +17,7 @@ interface TrackItemProps {
   onDelete?: (queueItemId: string) => void;
 }
 
-export function TrackItem({
+function TrackItemComponent({
   track,
   queueItemId,
   isCurrent = false,
@@ -28,12 +29,15 @@ export function TrackItem({
 }: TrackItemProps) {
   const showPlayingIndicator = isCurrent && isPlaying;
 
-  const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (queueItemId && onDelete) {
-      onDelete(queueItemId);
-    }
-  };
+  const handleDelete = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (queueItemId && onDelete) {
+        onDelete(queueItemId);
+      }
+    },
+    [queueItemId, onDelete]
+  );
 
   return (
     <div
@@ -100,3 +104,6 @@ export function TrackItem({
     </div>
   );
 }
+
+// Экспортируем мемоизированную версию для оптимизации
+export const TrackItem = memo(TrackItemComponent);

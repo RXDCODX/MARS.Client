@@ -1,4 +1,4 @@
-import { JSX, useMemo } from "react";
+import { JSX, memo, useMemo } from "react";
 
 import { BaseTrackInfo, QueueItem } from "@/shared/api";
 
@@ -15,7 +15,7 @@ interface UserColumnProps {
   onItemHover: (trackId: string | undefined, isEnter: boolean) => void;
 }
 
-export function UserColumn({
+function UserColumnComponent({
   viewMode,
   current,
   currentQueueItem,
@@ -171,3 +171,6 @@ export function UserColumn({
     </div>
   );
 }
+
+// Экспортируем мемоизированную версию для оптимизации
+export const UserColumn = memo(UserColumnComponent);

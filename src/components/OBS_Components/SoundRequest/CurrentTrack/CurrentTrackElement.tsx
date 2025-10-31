@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Textfit } from "react-textfit";
 
 import { TunaMusicData } from "@/shared/api";
@@ -8,7 +9,7 @@ interface Props {
   track: TunaMusicData;
 }
 
-export const CurrentTrackElement = ({ track }: Props) => (
+const CurrentTrackElementComponent = ({ track }: Props) => (
   <div className={styles.wrapper}>
     <div className={styles.cover}>
       {track.cover && <img src={track.cover} alt="Album cover" />}
@@ -45,3 +46,6 @@ export const CurrentTrackElement = ({ track }: Props) => (
     </div>
   </div>
 );
+
+// Экспортируем мемоизированную версию для оптимизации
+export const CurrentTrackElement = memo(CurrentTrackElementComponent);

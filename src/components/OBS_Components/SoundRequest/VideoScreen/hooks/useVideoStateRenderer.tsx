@@ -31,10 +31,7 @@ export function useVideoStateRenderer({
     useShallow(state => state.hasUserInteracted)
   );
 
-  const reportProgress = useVideoScreenStore(state => state.reportProgress);
-  const notifyEnded = useVideoScreenStore(state => state.notifyEnded);
-  const notifyStarted = useVideoScreenStore(state => state.notifyStarted);
-  const notifyError = useVideoScreenStore(state => state.notifyError);
+  // НЕ берём методы через селекторы - будем использовать getState() для вызовов
 
   const queueItemId = playerState?.currentQueueItem?.id;
   const currentTrack = playerState?.currentQueueItem?.track ?? null;
@@ -92,17 +89,17 @@ export function useVideoStateRenderer({
       hasUserInteracted,
       onEnded: () => {
         if (isMainPlayer && track) {
-          void notifyEnded(track);
+          void useVideoScreenStore.getState().notifyEnded(track);
         }
       },
       onStart: () => {
         if (isMainPlayer && track) {
-          void notifyStarted(track);
+          void useVideoScreenStore.getState().notifyStarted(track);
         }
       },
       onError: () => {
         if (isMainPlayer && track) {
-          void notifyError(track);
+          void useVideoScreenStore.getState().notifyError(track);
         }
       },
       onProgress: (progress: {
@@ -112,21 +109,11 @@ export function useVideoStateRenderer({
         loadedSeconds: number;
       }) => {
         if (isMainPlayer) {
-          void reportProgress(progress.playedSeconds);
+          void useVideoScreenStore.getState().reportProgress(progress.playedSeconds);
         }
       },
     };
-  }, [
-    currentTrack,
-    hasUserInteracted,
-    isMainPlayer,
-    notifyEnded,
-    notifyError,
-    notifyStarted,
-    playerState,
-    queueItemId,
-    reportProgress,
-  ]);
+  }, [currentTrack, hasUserInteracted, isMainPlayer, playerState, queueItemId]);
 
   // Мемоизируем компонент в зависимости от videoState
   const component = useMemo(() => {

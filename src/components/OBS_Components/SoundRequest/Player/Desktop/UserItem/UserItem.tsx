@@ -1,3 +1,5 @@
+import { memo, useMemo } from "react";
+
 import { TwitchUser } from "@/shared/api";
 
 import styles from "../SoundRequestPlayerDesktop.module.scss";
@@ -11,7 +13,7 @@ interface UserItemProps {
   onMouseLeave?: () => void;
 }
 
-export function UserItem({
+function UserItemComponent({
   user,
   lastTimePlays: requestedAt,
   trackId,
@@ -20,9 +22,11 @@ export function UserItem({
   onMouseLeave,
 }: UserItemProps) {
   const displayName = user?.displayName ?? user?.userLogin ?? "Неизвестно";
-  const formattedDate = requestedAt
-    ? new Date(requestedAt).toLocaleString()
-    : "";
+
+  const formattedDate = useMemo(
+    () => (requestedAt ? new Date(requestedAt).toLocaleString() : ""),
+    [requestedAt]
+  );
 
   return (
     <div
@@ -51,3 +55,6 @@ export function UserItem({
     </div>
   );
 }
+
+// Экспортируем мемоизированную версию для оптимизации
+export const UserItem = memo(UserItemComponent);

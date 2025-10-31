@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import ReactPlayer from "react-player";
 
 import type { PlayerState, QueueItem } from "@/shared/api";
@@ -27,7 +27,7 @@ interface Props {
  * Компонент для отображения видео плеера
  * Используется когда videoState === PlayerStateVideoStateEnum.Video
  */
-export function VideoPlayerView({
+function VideoPlayerViewComponent({
   currentTrack,
   queueItemId,
   playerState,
@@ -135,3 +135,6 @@ export function VideoPlayerView({
     </div>
   );
 }
+
+// Экспортируем мемоизированную версию для оптимизации
+export const VideoPlayerView = memo(VideoPlayerViewComponent);

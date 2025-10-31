@@ -1,4 +1,5 @@
 export {
+  parseDurationToSeconds,
   formatDuration,
   getAuthorsString,
   getRequestedByString,

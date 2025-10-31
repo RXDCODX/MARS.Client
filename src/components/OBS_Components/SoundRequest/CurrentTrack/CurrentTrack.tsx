@@ -1,6 +1,6 @@
 import "./animation.scss";
 
-import { CSSProperties, useEffect } from "react";
+import { CSSProperties, memo, useEffect } from "react";
 
 import { TunaMusicData } from "@/shared/api";
 
@@ -27,7 +27,7 @@ const baseStyles: CSSProperties = {
   transform: "translateY(-50%)",
 };
 
-export default function CurrentTrack({
+function CurrentTrackComponent({
   oldTrack,
   track,
   swap,
@@ -59,3 +59,7 @@ export default function CurrentTrack({
     </>
   );
 }
+
+// Экспортируем мемоизированную версию для оптимизации
+const CurrentTrack = memo(CurrentTrackComponent);
+export default CurrentTrack;

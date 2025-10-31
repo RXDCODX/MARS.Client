@@ -3,6 +3,21 @@
  */
 
 /**
+ * Конвертирует длительность из формата ISO 8601 в секунды
+ * @param duration - длительность в формате ISO 8601 (например, "PT1M23S")
+ * @returns количество секунд
+ */
+export const parseDurationToSeconds = (duration?: string): number => {
+  if (!duration) return 0;
+  const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
+  if (!match) return 0;
+  const h = parseInt(match[1] || "0");
+  const m = parseInt(match[2] || "0");
+  const s = parseInt(match[3] || "0");
+  return h * 3600 + m * 60 + s;
+};
+
+/**
  * Форматирует длительность трека из формата ISO 8601 (PT1M23S) в читаемый формат (MM:SS или HH:MM:SS)
  * @param duration - длительность в формате ISO 8601 (например, "PT1M23S" или "PT2H3M45S")
  * @returns отформатированная строка времени

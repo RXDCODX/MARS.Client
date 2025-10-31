@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { BaseTrackInfo, QueueItem } from "@/shared/api";
+import { BaseTrackInfo, PlayerState, QueueItem } from "@/shared/api";
 
 export enum TrackListViewMode {
   Default = "default", // Текущий трек сверху + очередь
@@ -10,9 +10,15 @@ export enum TrackListViewMode {
 
 interface PlayerStore {
   // Состояние
+  playerState: PlayerState | null;
   queue: QueueItem[];
   history: BaseTrackInfo[];
   viewMode: TrackListViewMode;
+  volume: number;
+  loading: boolean;
+
+  // Методы управления состоянием плеера
+  setPlayerState: (state: PlayerState | null) => void;
 
   // Методы управления очередью
   setQueue: (queue: QueueItem[]) => void;
@@ -23,6 +29,12 @@ interface PlayerStore {
   setHistory: (history: BaseTrackInfo[]) => void;
   addToHistory: (track: BaseTrackInfo) => void;
 
+  // Методы управления громкостью
+  setVolume: (volume: number) => void;
+
+  // Методы управления состоянием загрузки
+  setLoading: (loading: boolean) => void;
+
   // Методы управления режимом отображения
   setViewMode: (mode: TrackListViewMode) => void;
   cycleViewMode: () => void;
@@ -30,35 +42,47 @@ interface PlayerStore {
 
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
   // Начальное состояние
+  playerState: null,
   queue: [],
   history: [],
   viewMode: TrackListViewMode.Default,
+  volume: 0,
+  loading: false,
+
+  // Установить состояние плеера
+  setPlayerState: playerState => set({ playerState }),
 
   // Установить очередь
-  setQueue: (queue) => set({ queue }),
+  setQueue: queue => set({ queue }),
 
   // Удалить трек из очереди (оптимистичное обновление)
-  removeFromQueue: (queueItemId) => {
+  removeFromQueue: queueItemId => {
     const currentQueue = get().queue;
-    const updatedQueue = currentQueue.filter((item) => item.id !== queueItemId);
+    const updatedQueue = currentQueue.filter(item => item.id !== queueItemId);
     set({ queue: updatedQueue });
   },
 
   // Откатить очередь (в случае ошибки)
-  rollbackQueue: (queue) => set({ queue }),
+  rollbackQueue: queue => set({ queue }),
 
   // Установить историю
-  setHistory: (history) => set({ history }),
+  setHistory: history => set({ history }),
 
   // Добавить трек в историю
-  addToHistory: (track) => {
+  addToHistory: track => {
     const currentHistory = get().history;
     const updatedHistory = [track, ...currentHistory].slice(0, 5); // Последние 5 треков
     set({ history: updatedHistory });
   },
 
+  // Установить громкость
+  setVolume: volume => set({ volume }),
+
+  // Установить состояние загрузки
+  setLoading: loading => set({ loading }),
+
   // Установить режим отображения
-  setViewMode: (mode) => set({ viewMode: mode }),
+  setViewMode: mode => set({ viewMode: mode }),
 
   // Переключить режим отображения по кругу
   cycleViewMode: () => {
@@ -82,4 +106,3 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     set({ viewMode: nextMode });
   },
 }));
-

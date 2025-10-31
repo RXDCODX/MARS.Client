@@ -14,12 +14,14 @@ import {
 import { useMemo, useState } from "react";
 import { Button, Card, Carousel, Form } from "react-bootstrap";
 import ReactPlayer from "react-player";
+import { useShallow } from "zustand/react/shallow";
 
 import { PlayerStateVideoStateEnum, SoundRequest } from "@/shared/api";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import { LiquidChrome } from "../Background";
 import { useSoundRequestPlayer } from "../hooks";
+import { usePlayerStore } from "../stores/usePlayerStore";
 import {
   formatDuration,
   getAuthorsString,
@@ -40,8 +42,6 @@ export function SoundRequestPlayerMobile() {
   const {
     playerState,
     queue,
-    loading,
-    volume,
     isPlaying,
     isStopped,
     nextFiveOrders,
@@ -56,6 +56,14 @@ export function SoundRequestPlayerMobile() {
     handlePlayTrackFromQueue,
     fetchQueue,
   } = useSoundRequestPlayer();
+
+  // Volume и loading из стора с useShallow (чтобы избежать ререндеров всего компонента)
+  const { volume, loading } = usePlayerStore(
+    useShallow(state => ({
+      volume: state.volume,
+      loading: state.loading,
+    }))
+  );
 
   // Определяем иконку видео в зависимости от videoState
   const getVideoIcon = () => {

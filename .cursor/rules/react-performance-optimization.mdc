@@ -1,0 +1,346 @@
+# Правила оптимизации производительности React
+
+## 1. Оптимизация ререндеров
+
+### 1.1 React.memo для компонентов
+- ✅ Всегда оборачивай компоненты в `React.memo()`, если они:
+  - Получают props, которые не меняются часто
+  - Имеют сложную логику рендеринга
+  - Являются дочерними компонентами в больших списках
+  - Рендерят много вложенных элементов
+
+```typescript
+// ❌ Плохо
+export function MyComponent(props) {
+  return <div>...</div>;
+}
+
+// ✅ Хорошо
+function MyComponentInner(props) {
+  return <div>...</div>;
+}
+export const MyComponent = memo(MyComponentInner);
+```
+
+### 1.2 Мемоизация колбэков
+- ✅ Всегда используй `useCallback` для функций, передаваемых как props
+- ✅ Особенно важно для обработчиков событий
+
+```typescript
+// ❌ Плохо
+<Button onClick={() => doSomething()} />
+
+// ✅ Хорошо
+const handleClick = useCallback(() => {
+  doSomething();
+}, []);
+<Button onClick={handleClick} />
+```
+
+### 1.3 Мемоизация вычислений
+- ✅ Используй `useMemo` для дорогостоящих вычислений
+- ✅ Используй для преобразований массивов/объектов
+
+```typescript
+// ❌ Плохо
+const filtered = items.filter(item => item.active);
+
+// ✅ Хорошо
+const filtered = useMemo(
+  () => items.filter(item => item.active),
+  [items]
+);
+```
+
+## 2. Zustand стор - оптимизация подписок
+
+### 2.1 Использование useShallow
+- ✅ ВСЕГДА используй `useShallow` при получении нескольких значений из стора
+- ✅ Используй `useShallow` даже для одного примитивного значения
+
+```typescript
+import { useShallow } from "zustand/react/shallow";
+
+// ❌ Плохо
+const queue = useStore(state => state.queue);
+const history = useStore(state => state.history);
+
+// ✅ Хорошо
+const { queue, history } = useStore(
+  useShallow(state => ({
+    queue: state.queue,
+    history: state.history,
+  }))
+);
+
+// ✅ Хорошо для одного значения
+const volume = useStore(useShallow(state => state.volume));
+```
+
+### 2.2 Избегание зависимостей от методов стора
+- ✅ НЕ используй методы стора как зависимости в useEffect/useCallback
+- ✅ Используй `useStore.getState()` для прямого вызова
+
+```typescript
+// ❌ Плохо
+const setQueue = useStore(state => state.setQueue);
+useEffect(() => {
+  setQueue(newData);
+}, [data, setQueue]); // setQueue может меняться!
+
+// ✅ Хорошо
+useEffect(() => {
+  useStore.getState().setQueue(newData);
+}, [data]); // Стабильная зависимость
+```
+
+## 3. Изоляция часто меняющихся значений
+
+### 3.1 Часто меняющиеся значения в стор
+- ✅ Перемещай в Zustand стор значения, которые:
+  - Меняются часто (volume, progress, scroll position)
+  - Нужны в глубоко вложенных компонентах
+  - Вызывают каскадные ререндеры через props drilling
+
+```typescript
+// ❌ Плохо - volume в useState хука
+const [volume, setVolume] = useState(0);
+// → Передаётся через props → ререндер всего дерева
+
+// ✅ Хорошо - volume в Zustand
+interface Store {
+  volume: number;
+  setVolume: (v: number) => void;
+}
+// → Только компоненты, подписанные на volume, ререндерятся
+```
+
+### 3.2 Создание изолированных wrapper компонентов
+- ✅ Создавай wrapper компоненты для изоляции подписок на часто меняющиеся значения
+
+```typescript
+// ✅ Изолированный компонент
+function VolumeSlider({ onChange, disabled }) {
+  const volume = useStore(state => state.volume); // Подписка ТОЛЬКО здесь
+  return <ElasticSlider value={volume} onChange={onChange} />;
+}
+export default memo(VolumeSlider);
+
+// Родитель НЕ ререндерится
+<VolumeSlider onChange={handleChange} />
+```
+
+## 4. Debounce и throttle
+
+### 4.1 Debounce для частых обновлений
+- ✅ Используй debounce для:
+  - Изменения громкости/слайдеров
+  - Поиска при вводе текста
+  - Изменения размеров окна
+
+```typescript
+const handleChange = useCallback((newValue: number) => {
+  // Сразу обновляем UI
+  setLocalValue(newValue);
+  
+  // Debounce для сети
+  if (debounceTimer.current) clearTimeout(debounceTimer.current);
+  debounceTimer.current = setTimeout(() => {
+    sendToBackend(newValue);
+  }, 150);
+}, []);
+```
+
+### 4.2 Игнорирование обновлений от бэкенда
+- ✅ Во время локальных изменений игнорируй обновления от бэкенда
+- ✅ Используй ref флаги для контроля
+
+```typescript
+const isChangingRef = useRef(false);
+
+// В SignalR обработчике
+connection.on("StateChange", (state) => {
+  if (isChangingRef.current) return; // Игнорируем
+  setState(state);
+});
+
+// В обработчике изменений
+const handleChange = (value) => {
+  isChangingRef.current = true;
+  updateUI(value);
+  
+  setTimeout(() => {
+    isChangingRef.current = false;
+  }, 300);
+};
+```
+
+## 5. Оптимистичные обновления
+
+### 5.1 Паттерн оптимистичного обновления
+- ✅ Сначала обновляй UI
+- ✅ Сохраняй снапшот для отката
+- ✅ Блокируй автоматические обновления
+- ✅ Синхронизируйся с сервером
+- ✅ Откатывай при ошибке
+
+```typescript
+const handleAction = useCallback(async () => {
+  // 1. Блокируем автоматические обновления
+  setOptimisticInProgress(true);
+  
+  // 2. Снапшот для отката
+  const snapshot = createSnapshot();
+  
+  // 3. Оптимистичное обновление UI
+  optimisticUpdate(data);
+  
+  try {
+    // 4. Запрос на бэкенд
+    await api.update(data);
+    
+    // 5. Синхронизация с сервером
+    await fetchActualData();
+  } catch (error) {
+    // 6. Откат при ошибке
+    rollback(snapshot);
+  } finally {
+    // 7. Разблокируем обновления
+    setOptimisticInProgress(false);
+  }
+}, []);
+```
+
+## 6. Управление состоянием
+
+### 6.1 Используй Ref для значений без UI
+- ✅ Используй `useRef` для флагов и служебных значений
+- ✅ НЕ используй useState для значений, которые не влияют на UI
+
+```typescript
+// ❌ Плохо - вызывает ререндер
+const [isProcessing, setIsProcessing] = useState(false);
+
+// ✅ Хорошо - не вызывает ререндер
+const isProcessingRef = useRef(false);
+```
+
+### 6.2 Используй Ref для актуального состояния в колбэках
+- ✅ Сохраняй актуальное состояние в ref, чтобы избежать зависимостей
+
+```typescript
+const playerStateRef = useRef(playerState);
+
+// Обновляй ref при изменении
+useEffect(() => {
+  playerStateRef.current = playerState;
+}, [playerState]);
+
+// Используй в колбэках без зависимости
+const handleAction = useCallback(() => {
+  const state = playerStateRef.current; // Актуальное состояние
+  doSomething(state);
+}, []); // Стабильная функция!
+```
+
+## 7. Проверка перед обновлением
+
+### 7.1 Сравнивай данные перед setState
+- ✅ Не обновляй state если данные не изменились
+- ✅ Используй ID для сравнения массивов/объектов
+
+```typescript
+// ✅ Проверка перед обновлением
+useEffect(() => {
+  const currentIds = items.map(i => i.id).join(',');
+  const newIds = newItems.map(i => i.id).join(',');
+  
+  if (currentIds !== newIds) {
+    setItems(newItems);
+  }
+}, [newItems]);
+```
+
+### 7.2 Отслеживание конкретных изменений
+- ✅ Используй ref для отслеживания предыдущих значений
+- ✅ Обновляй только при реальных изменениях
+
+```typescript
+const prevIdRef = useRef<string>();
+
+useEffect(() => {
+  const currentId = data?.id;
+  
+  // Обновляем только если ID изменился
+  if (prevIdRef.current !== currentId) {
+    prevIdRef.current = currentId;
+    fetchData(currentId);
+  }
+}, [data]);
+```
+
+## 8. SignalR и WebSocket оптимизация
+
+### 8.1 Фильтрация событий
+- ✅ Игнорируй события во время локальных операций
+- ✅ Проверяй флаги перед обновлением состояния
+
+```typescript
+connection.on("DataChanged", (data) => {
+  // Проверяем флаг операции
+  if (store.getState().isOptimisticInProgress) {
+    console.log("Игнорируем - идёт оптимистичная операция");
+    return;
+  }
+  
+  updateData(data);
+});
+```
+
+### 8.2 Минимизация размера передаваемых данных
+- ✅ Отправляй только изменённые поля
+- ✅ Используй debounce для частых обновлений
+
+## 9. Профилирование
+
+### 9.1 Регулярная проверка
+- ✅ Используй React DevTools Profiler
+- ✅ Проверяй производительность после добавления новых компонентов
+- ✅ Обращай внимание на:
+  - `duration` > 10ms
+  - `didHooksChange: true` без необходимости
+  - Массовые изменения props
+
+### 9.2 Метрики для мониторинга
+- ⚠️ Duration > 10ms - требует оптимизации
+- ⚠️ Более 10 компонентов ререндерятся одновременно - проверь memo
+- ⚠️ Hook changed N times (N > 5) - проверь зависимости
+
+## 10. Чек-лист перед коммитом
+
+### Проверь:
+- [ ] Все компоненты с props обёрнуты в `memo`
+- [ ] Все колбэки в props обёрнуты в `useCallback`
+- [ ] Часто меняющиеся значения изолированы (стор или wrapper)
+- [ ] Используется `useShallow` для Zustand
+- [ ] Методы стора вызываются через `getState()` в зависимостях
+- [ ] Есть debounce для частых обновлений (слайдеры, поиск)
+- [ ] Есть флаги игнорирования для оптимистичных операций
+- [ ] Нет props drilling для часто меняющихся значений
+- [ ] Используются ref для служебных значений
+
+## Примеры из проекта
+
+### ✅ Правильно:
+- `VolumeSlider` - изолированная подписка на volume
+- `PlayerToolbar` - обёрнут в memo
+- `handleVolumeChange` - debounce 150ms
+- `useShallow` - для множественных значений из стора
+- `getState()` - для вызова методов стора без зависимостей
+
+### ❌ Было неправильно:
+- volume через props drilling - вызывал ререндер 50+ компонентов
+- Методы стора в зависимостях - пересоздавались при каждом обновлении
+- Нет мемоизации колбэков - создавались новые функции
+- Отсутствие memo - каскадные ререндеры
+- Нет debounce - сотни запросов при движении слайдера

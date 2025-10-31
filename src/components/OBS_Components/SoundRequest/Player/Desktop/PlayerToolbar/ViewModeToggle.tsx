@@ -5,6 +5,7 @@ import {
   Clock,
   List,
 } from "lucide-react";
+import { memo, useMemo } from "react";
 
 import { TrackListViewMode } from "../../stores/usePlayerStore";
 import styles from "./ViewModeToggle.module.scss";
@@ -14,8 +15,12 @@ interface ViewModeToggleProps {
   onToggle: () => void;
 }
 
-export function ViewModeToggle({ viewMode, onToggle }: ViewModeToggleProps) {
-  const getIcon = () => {
+function ViewModeToggleComponent({
+  viewMode,
+  onToggle,
+}: ViewModeToggleProps) {
+  // Мемоизируем иконку
+  const icon = useMemo(() => {
     switch (viewMode) {
       case TrackListViewMode.Default:
         return <List size={24} />;
@@ -26,9 +31,10 @@ export function ViewModeToggle({ viewMode, onToggle }: ViewModeToggleProps) {
       default:
         return <List size={24} />;
     }
-  };
+  }, [viewMode]);
 
-  const getLabel = () => {
+  // Мемоизируем лейбл
+  const label = useMemo(() => {
     switch (viewMode) {
       case TrackListViewMode.Default:
         return "Обычный";
@@ -39,9 +45,10 @@ export function ViewModeToggle({ viewMode, onToggle }: ViewModeToggleProps) {
       default:
         return "Режим";
     }
-  };
+  }, [viewMode]);
 
-  const getTitle = () => {
+  // Мемоизируем title
+  const title = useMemo(() => {
     switch (viewMode) {
       case TrackListViewMode.Default:
         return "Обычный режим: текущий трек + очередь";
@@ -52,17 +59,17 @@ export function ViewModeToggle({ viewMode, onToggle }: ViewModeToggleProps) {
       default:
         return "Переключить режим отображения";
     }
-  };
+  }, [viewMode]);
 
   return (
     <button
       className={`${styles.viewModeToggle} ${styles[viewMode]}`}
       onClick={onToggle}
-      title={getTitle()}
+      title={title}
       type="button"
     >
       <div className={styles.iconWrapper}>
-        {getIcon()}
+        {icon}
         {viewMode === TrackListViewMode.Default && (
           <ChevronsDown className={styles.indicator} size={10} />
         )}
@@ -77,7 +84,7 @@ export function ViewModeToggle({ viewMode, onToggle }: ViewModeToggleProps) {
           <ChevronsUp className={styles.indicator} size={10} />
         )}
       </div>
-      <span className={styles.label}>{getLabel()}</span>
+      <span className={styles.label}>{label}</span>
       <div className={styles.modeIndicators}>
         <span
           className={`${styles.dot} ${viewMode === TrackListViewMode.Default ? styles.active : ""}`}
@@ -92,4 +99,7 @@ export function ViewModeToggle({ viewMode, onToggle }: ViewModeToggleProps) {
     </button>
   );
 }
+
+// Экспортируем мемоизированную версию
+export const ViewModeToggle = memo(ViewModeToggleComponent);
 

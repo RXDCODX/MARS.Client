@@ -13,12 +13,6 @@ interface Props {
 export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
   const isMainPlayer = groupName === "mainplayer";
 
-  const init = useVideoScreenStore(state => state.init);
-  const dispose = useVideoScreenStore(state => state.dispose);
-  const markUserInteraction = useVideoScreenStore(
-    state => state.markUserInteraction
-  );
-
   const playerState = useVideoScreenStore(
     useShallow(state => state.playerState)
   );
@@ -26,17 +20,19 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
     useShallow(state => state.hasUserInteracted)
   );
 
+  // Инициализация и очистка с использованием getState()
   useEffect(() => {
-    void init(import.meta.env.PROD);
+    void useVideoScreenStore.getState().init(import.meta.env.PROD);
 
     return () => {
-      void dispose();
+      void useVideoScreenStore.getState().dispose();
     };
-  }, [dispose, init]);
+  }, []);
 
+  // Обработчик взаимодействия с использованием getState()
   const handleUserInteraction = useCallback(() => {
-    markUserInteraction();
-  }, [markUserInteraction]);
+    useVideoScreenStore.getState().markUserInteraction();
+  }, []);
 
   useEffect(() => {
     if (import.meta.env.PROD) {

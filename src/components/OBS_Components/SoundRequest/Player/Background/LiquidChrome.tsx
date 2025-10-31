@@ -3,23 +3,15 @@ import "./LiquidChrome.css";
 import { Mesh, Program, Renderer, Triangle } from "ogl";
 import { useEffect, useRef } from "react";
 
-interface LiquidChromeProps {
-  baseColor?: [number, number, number];
-  speed?: number;
-  amplitude?: number;
-  frequencyX?: number;
-  frequencyY?: number;
-  interactive?: boolean;
-}
-
-export const LiquidChrome = ({
-  baseColor = [0.1, 0.1, 0.1],
-  speed = 0.2,
-  amplitude = 0.3,
-  frequencyX = 3,
-  frequencyY = 3,
-  interactive = true,
-}: LiquidChromeProps) => {
+export const LiquidChrome = () => {
+  const { baseColor, speed, amplitude, frequencyX, frequencyY, interactive } = {
+    baseColor: [0.1, 0.05, 0.2],
+    speed: 0.2,
+    amplitude: 0.3,
+    frequencyX: 3,
+    frequencyY: 3,
+    interactive: false,
+  };
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

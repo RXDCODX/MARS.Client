@@ -1,0 +1,529 @@
+# Правила работы с Zustand стором
+
+## 1. Подписка на стор
+
+### 1.1 ВСЕГДА используй useShallow
+
+```typescript
+import { useShallow } from "zustand/react/shallow";
+
+// ❌ ПЛОХО - каждое изменение любого поля вызовет ререндер
+const state = useStore(state => state);
+
+// ❌ ПЛОХО - несколько подписок
+const queue = useStore(state => state.queue);
+const history = useStore(state => state.history);
+
+// ✅ ХОРОШО - одна подписка с shallow comparison
+const { queue, history } = useStore(
+  useShallow(state => ({
+    queue: state.queue,
+    history: state.history,
+  }))
+);
+
+// ✅ ХОРОШО - даже для одного значения
+const volume = useStore(useShallow(state => state.volume));
+```
+
+## 2. Методы стора в useEffect и useCallback
+
+### 2.1 НЕ используй методы стора как зависимости
+
+```typescript
+// ❌ ПЛОХО - метод может пересоздаваться
+const setQueue = useStore(state => state.setQueue);
+useEffect(() => {
+  setQueue(data);
+}, [data, setQueue]); // setQueue в зависимостях!
+
+// ✅ ХОРОШО - прямой вызов через getState()
+useEffect(() => {
+  useStore.getState().setQueue(data);
+}, [data]); // Только data в зависимостях
+```
+
+### 2.2 В колбэках используй getState()
+
+```typescript
+// ❌ ПЛОХО
+const removeItem = useStore(state => state.removeItem);
+const handleDelete = useCallback((id) => {
+  removeItem(id);
+}, [removeItem]); // Зависимость от метода
+
+// ✅ ХОРОШО
+const handleDelete = useCallback((id) => {
+  useStore.getState().removeItem(id);
+}, []); // Стабильная функция
+```
+
+## 3. Изоляция часто меняющихся значений
+
+### 3.1 Создавай wrapper компоненты
+
+```typescript
+// ✅ Wrapper для изоляции подписки
+function VolumeControl({ onChange }) {
+  const volume = useStore(state => state.volume);
+  return <Slider value={volume} onChange={onChange} />;
+}
+
+// Родитель НЕ ререндерится при изменении volume
+function Parent() {
+  return <VolumeControl onChange={handleChange} />;
+}
+```
+
+### 3.2 Храни часто меняющиеся значения в сторе
+
+```typescript
+// ✅ В сторе
+interface PlayerStore {
+  volume: number;          // Меняется часто
+  progress: number;        // Меняется часто
+  queue: Track[];          // Меняется редко
+  setVolume: (v: number) => void;
+}
+
+// Компоненты подписываются только на нужные значения
+const volume = usePlayerStore(state => state.volume);
+```
+
+## 4. Мемоизация - строгие правила
+
+### 4.1 Когда НЕ нужна мемоизация
+
+```typescript
+// ✅ Примитивные вычисления - НЕ мемоизируй
+const isActive = status === 'active';
+const userName = user.firstName + ' ' + user.lastName;
+const count = items.length;
+
+// ✅ Простые условия - НЕ мемоизируй
+const canEdit = isOwner && !isLocked;
+
+// ✅ Обращение к полям объекта - НЕ мемоизируй
+const title = data.title;
+const items = response.data.items;
+
+// ✅ Простые map/filter на маленьких массивах (<10 элементов) - НЕ мемоизируй
+const activeUsers = users.filter(u => u.isActive); // если users обычно 3-5 элементов
+```
+
+### 4.2 Когда ОБЯЗАТЕЛЬНО использовать useMemo
+
+#### ✅ ОБЯЗАТЕЛЬНО: Вычисления с итерацией по массивам
+
+```typescript
+// ✅ ОБЯЗАТЕЛЬНО - перебор массива для вычислений
+const totalPrice = useMemo(() => 
+  items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+  [items]
+);
+
+// ✅ ОБЯЗАТЕЛЬНО - сложная фильтрация
+const filteredItems = useMemo(() => 
+  items.filter(item => 
+    item.name.toLowerCase().includes(search.toLowerCase()) &&
+    item.category === selectedCategory &&
+    item.price >= minPrice
+  ),
+  [items, search, selectedCategory, minPrice]
+);
+
+// ✅ ОБЯЗАТЕЛЬНО - сортировка
+const sortedItems = useMemo(() => 
+  [...items].sort((a, b) => a.name.localeCompare(b.name)),
+  [items]
+);
+```
+
+#### ✅ ОБЯЗАТЕЛЬНО: Создание объектов для props компонентов с memo
+
+```typescript
+// ✅ ОБЯЗАТЕЛЬНО - объект передается в дочерний компонент с memo
+const config = useMemo(() => ({
+  theme: theme,
+  layout: layout,
+  size: size,
+}), [theme, layout, size]);
+
+<MemoizedComponent config={config} />
+
+// ❌ БЕЗ мемоизации - новый объект на каждый рендер, memo бесполезен
+<MemoizedComponent config={{ theme, layout, size }} />
+```
+
+#### ✅ ОБЯЗАТЕЛЬНО: Создание массивов для props
+
+```typescript
+// ✅ ОБЯЗАТЕЛЬНО - массив передается в дочерний компонент
+const selectedIds = useMemo(() => 
+  items.filter(item => item.selected).map(item => item.id),
+  [items]
+);
+
+<SelectionPanel selectedIds={selectedIds} />
+```
+
+#### ✅ ОБЯЗАТЕЛЬНО: Зависимость для других hooks
+
+```typescript
+// ✅ ОБЯЗАТЕЛЬНО - результат используется в зависимостях других hooks
+const filters = useMemo(() => ({
+  category: selectedCategory,
+  priceRange: { min: minPrice, max: maxPrice },
+  search: searchTerm,
+}), [selectedCategory, minPrice, maxPrice, searchTerm]);
+
+useEffect(() => {
+  fetchItems(filters);
+}, [filters]); // filters стабилен благодаря useMemo
+```
+
+### 4.3 Когда ОБЯЗАТЕЛЬНО использовать useCallback
+
+#### ✅ ОБЯЗАТЕЛЬНО: Колбэки для компонентов с memo
+
+```typescript
+// ✅ ОБЯЗАТЕЛЬНО - функция передается в компонент с memo
+const handleItemClick = useCallback((id: string) => {
+  useStore.getState().selectItem(id);
+}, []);
+
+<MemoizedItem onClick={handleItemClick} />
+```
+
+#### ✅ ОБЯЗАТЕЛЬНО: Колбэки в зависимостях useEffect
+
+```typescript
+// ✅ ОБЯЗАТЕЛЬНО - функция используется в useEffect
+const fetchData = useCallback(async () => {
+  const response = await api.getData(filters);
+  setData(response);
+}, [filters]);
+
+useEffect(() => {
+  fetchData();
+}, [fetchData]);
+```
+
+#### ✅ ОБЯЗАТЕЛЬНО: Обработчики событий с методами стора
+
+```typescript
+// ✅ ОБЯЗАТЕЛЬНО - стабильная функция для избежания лишних ререндеров
+const handleDelete = useCallback((id: string) => {
+  useStore.getState().removeItem(id);
+}, []);
+
+const handleUpdate = useCallback((id: string, data: Data) => {
+  useStore.getState().updateItem(id, data);
+}, []);
+```
+
+#### ❌ НЕ нужен useCallback для inline обработчиков в JSX
+
+```typescript
+// ❌ Избыточно - простой обработчик без пробрасывания в props
+const handleClick = useCallback(() => {
+  console.log('clicked');
+}, []);
+<button onClick={handleClick}>Click</button>
+
+// ✅ Достаточно inline функции
+<button onClick={() => console.log('clicked')}>Click</button>
+
+// ✅ НО! Если передаешь в мемоизированный компонент - нужен useCallback
+const handleClick = useCallback(() => {
+  console.log('clicked');
+}, []);
+<MemoButton onClick={handleClick} />
+```
+
+### 4.4 Когда использовать React.memo
+
+#### ✅ Используй memo ТОЛЬКО если
+
+1. **Компонент рендерится часто из-за родителя**
+
+```typescript
+// ✅ Родитель рендерится часто (volume меняется), но Item должен быть стабилен
+function Player() {
+  const volume = usePlayerStore(state => state.volume); // Меняется часто
+  const items = usePlayerStore(state => state.items);   // Меняется редко
+  
+  return (
+    <>
+      <VolumeSlider value={volume} />
+      {items.map(item => <MemoizedItem key={item.id} item={item} />)}
+    </>
+  );
+}
+
+const MemoizedItem = memo(({ item }) => {
+  return <div>{item.name}</div>;
+});
+```
+
+2. **Компонент выполняет тяжелые вычисления при рендере**
+
+```typescript
+// ✅ Тяжелый рендер (canvas, большие списки)
+const HeavyChart = memo(({ data }) => {
+  // Рендер canvas с 1000+ точек
+  return <canvas ref={canvasRef} />;
+});
+```
+
+#### ❌ НЕ используй memo если
+
+1. **Компонент рендерится редко**
+
+```typescript
+// ❌ Избыточно - родитель стабилен
+function App() {
+  return <Header />; // Header рендерится только при монтировании App
+}
+
+// ❌ НЕ нужен memo
+const Header = memo(() => <header>Title</header>);
+
+// ✅ Достаточно обычного компонента
+const Header = () => <header>Title</header>;
+```
+
+2. **Props всегда разные**
+
+```typescript
+// ❌ Бесполезно - props всегда новые
+const Item = memo(({ data, onClick, style }) => {
+  return <div style={style} onClick={onClick}>{data.name}</div>;
+});
+
+// Использование - всегда новый style, onClick не мемоизирован
+<Item 
+  data={item} 
+  style={{ color: 'red' }}  // ❌ новый объект
+  onClick={() => handle()}   // ❌ новая функция
+/>
+```
+
+3. **Компонент простой и быстрый**
+
+```typescript
+// ❌ Избыточно - простейший компонент
+const Label = memo(({ text }) => <span>{text}</span>);
+
+// ✅ Не оборачивай в memo простые компоненты
+const Label = ({ text }) => <span>{text}</span>;
+```
+
+### 4.5 Антипаттерны мемоизации
+
+```typescript
+// ❌ ПЛОХО - бессмысленная мемоизация примитивов
+const id = useMemo(() => user.id, [user.id]);
+
+// ❌ ПЛОХО - мемоизация с пересозданием зависимостей
+const value = useMemo(() => 
+  calculate(config), 
+  [{ theme, size }] // ❌ каждый раз новый объект
+);
+
+// ✅ ХОРОШО - зависимости примитивны
+const value = useMemo(() => 
+  calculate({ theme, size }), 
+  [theme, size]
+);
+
+// ❌ ПЛОХО - все компоненты обернуты в memo "на всякий случай"
+const A = memo(() => <div>A</div>);
+const B = memo(() => <div>B</div>);
+const C = memo(() => <div>C</div>);
+
+// ✅ ХОРОШО - только те, что действительно нужны
+const A = () => <div>A</div>;
+const B = () => <div>B</div>;
+const ExpensiveC = memo(() => {
+  // сложная логика
+  return <div>C</div>;
+});
+```
+
+### 4.6 Чеклист принятия решения
+
+Перед добавлением мемоизации ответь на вопросы:
+
+**useMemo:**
+
+- [ ] Есть ли итерация по массиву? → Да = useMemo
+- [ ] Создается объект/массив для props memo компонента? → Да = useMemo
+- [ ] Используется в зависимостях других hooks? → Да = useMemo
+- [ ] Это просто переменная или примитивное вычисление? → Да = НЕ нужен
+
+**useCallback:**
+
+- [ ] Функция передается в memo компонент? → Да = useCallback
+- [ ] Функция в зависимостях useEffect? → Да = useCallback
+- [ ] Функция вызывает методы стора? → Да = useCallback + getState()
+- [ ] Это inline обработчик в JSX без пробрасывания? → Да = НЕ нужен
+
+**memo:**
+
+- [ ] Родитель рендерится часто? → Да = возможно нужен
+- [ ] Компонент тяжелый в рендере? → Да = возможно нужен
+- [ ] Props всегда мемоизированы? → Нет = memo бесполезен
+- [ ] Компонент простой? → Да = НЕ нужен
+
+## 5. Оптимистичные обновления
+
+### 5.1 Паттерн с флагом блокировки
+
+```typescript
+interface Store {
+  data: Data[];
+  isOptimisticInProgress: boolean;
+  setOptimisticInProgress: (flag: boolean) => void;
+  optimisticUpdate: (data: Data) => void;
+  createSnapshot: () => Snapshot;
+  rollback: (snapshot: Snapshot) => void;
+}
+
+const handleAction = useCallback(async () => {
+  const store = useStore.getState();
+  
+  // Блокируем обновления
+  store.setOptimisticInProgress(true);
+  
+  const snapshot = store.createSnapshot();
+  store.optimisticUpdate(newData);
+  
+  try {
+    await api.update(newData);
+    await fetchActualData();
+  } catch (error) {
+    store.rollback(snapshot);
+  } finally {
+    store.setOptimisticInProgress(false);
+  }
+}, []);
+```
+
+### 5.2 Проверка флага в обработчиках
+
+```typescript
+// В SignalR или других обработчиках
+connection.on("DataChanged", (data) => {
+  if (useStore.getState().isOptimisticInProgress) {
+    console.log("Игнорируем - идёт оптимистичная операция");
+    return;
+  }
+  
+  useStore.getState().setData(data);
+});
+```
+
+## 6. Структура стора
+
+### 6.1 Разделение данных и флагов
+
+```typescript
+interface Store {
+  // Данные
+  items: Item[];
+  selectedId: string | null;
+  
+  // Флаги операций
+  isOptimisticInProgress: boolean;
+  isLoading: boolean;
+  
+  // Методы данных
+  setItems: (items: Item[]) => void;
+  selectItem: (id: string) => void;
+  
+  // Методы оптимистичных обновлений
+  optimisticAdd: (item: Item) => void;
+  optimisticRemove: (id: string) => void;
+  
+  // Методы управления флагами
+  setOptimisticInProgress: (flag: boolean) => void;
+  
+  // Утилиты
+  createSnapshot: () => Snapshot;
+  rollback: (snapshot: Snapshot) => void;
+}
+```
+
+## 7. Частые ошибки
+
+### ❌ НЕ ДЕЛАЙ ТАК
+
+```typescript
+// 1. Методы стора в зависимостях
+const setData = useStore(state => state.setData);
+useEffect(() => {
+  setData(newData);
+}, [newData, setData]); // ❌
+
+// 2. Множественные отдельные подписки без useShallow
+const queue = useStore(state => state.queue);
+const history = useStore(state => state.history);
+const viewMode = useStore(state => state.viewMode); // ❌
+
+// 3. Часто меняющиеся значения через props
+<Parent volume={volume} /> // ❌ ререндер всего дерева
+
+// 4. Отсутствие мемоизации
+<Button onClick={() => doSomething()} /> // ❌ новая функция каждый раз
+```
+
+### ✅ ДЕЛАЙ ТАК
+
+```typescript
+// 1. Прямые вызовы через getState()
+useEffect(() => {
+  useStore.getState().setData(newData);
+}, [newData]); // ✅
+
+// 2. useShallow для множественных значений
+const { queue, history, viewMode } = useStore(
+  useShallow(state => ({
+    queue: state.queue,
+    history: state.history,
+    viewMode: state.viewMode,
+  }))
+); // ✅
+
+// 3. Wrapper компоненты для изоляции
+function VolumeWrapper() {
+  const volume = useStore(state => state.volume);
+  return <Slider value={volume} />;
+} // ✅
+
+// 4. Мемоизация всех колбэков
+const handleClick = useCallback(() => {
+  doSomething();
+}, []); // ✅
+```
+
+## 8. Debugging производительности
+
+### Команды для проверки
+
+```typescript
+// Логирование подписок
+console.log('[Component] Subscribed to:', Object.keys(selectedState));
+
+// Проверка изменений
+console.log('[Component] Props changed:', changedProps);
+
+// Мониторинг ререндеров
+console.log('[Component] Rerender reason:', reason);
+```
+
+### React DevTools Profiler
+
+- ⚠️ Если `didHooksChange: true` - проверь зависимости hooks
+- ⚠️ Если `props` изменились - проверь мемоизацию
+- ⚠️ Если много компонентов ререндерятся - проверь memo и изоляцию

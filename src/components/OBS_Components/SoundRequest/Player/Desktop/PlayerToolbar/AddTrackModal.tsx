@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useCallback, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 
 import styles from "./AddTrackModal.module.scss";
@@ -9,35 +9,42 @@ interface AddTrackModalProps {
   onSubmit: (query: string) => Promise<void>;
 }
 
-export function AddTrackModal({ show, onClose, onSubmit }: AddTrackModalProps) {
+function AddTrackModalComponent({
+  show,
+  onClose,
+  onSubmit,
+}: AddTrackModalProps) {
   const [query, setQuery] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!query.trim()) {
-      return;
-    }
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
 
-    setIsSubmitting(true);
-    try {
-      await onSubmit(query.trim());
-      setQuery("");
-      onClose();
-    } catch (error) {
-      console.error("Ошибка при добавлении трека:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+      if (!query.trim()) {
+        return;
+      }
 
-  const handleClose = () => {
+      setIsSubmitting(true);
+      try {
+        await onSubmit(query.trim());
+        setQuery("");
+        onClose();
+      } catch (error) {
+        console.error("Ошибка при добавлении трека:", error);
+      } finally {
+        setIsSubmitting(false);
+      }
+    },
+    [query, onSubmit, onClose]
+  );
+
+  const handleClose = useCallback(() => {
     if (!isSubmitting) {
       setQuery("");
       onClose();
     }
-  };
+  }, [isSubmitting, onClose]);
 
   return (
     <Modal show={show} onHide={handleClose} centered>
@@ -78,4 +85,7 @@ export function AddTrackModal({ show, onClose, onSubmit }: AddTrackModalProps) {
     </Modal>
   );
 }
+
+// Экспортируем мемоизированную версию для оптимизации
+export const AddTrackModal = memo(AddTrackModalComponent);
 

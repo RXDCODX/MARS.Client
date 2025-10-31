@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import ReactPlayer from "react-player";
 
 import type { PlayerState, QueueItem } from "@/shared/api";
@@ -28,7 +28,7 @@ interface Props {
  * Используется когда videoState === PlayerStateVideoStateEnum.AudioOnly
  * Ничего не показывает на экране, только воспроизводит звук
  */
-export function AudioOnlyView({
+function AudioOnlyViewComponent({
   currentTrack,
   queueItemId,
   playerState,
@@ -111,3 +111,6 @@ export function AudioOnlyView({
     </div>
   );
 }
+
+// Экспортируем мемоизированную версию для оптимизации
+export const AudioOnlyView = memo(AudioOnlyViewComponent);

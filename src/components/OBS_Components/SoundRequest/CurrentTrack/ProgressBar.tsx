@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 
 import { TunaMusicData } from "@/shared/api";
 
@@ -8,7 +8,7 @@ interface Props {
   track: TunaMusicData;
 }
 
-export const ProgressBar = ({ track }: Props) => {
+const ProgressBarComponent = ({ track }: Props) => {
   const [progress, setProgress] = useState(0);
   const animationRef = useRef<number | null>(null);
   const startTimeRef = useRef<number>(0);
@@ -250,3 +250,6 @@ export const ProgressBar = ({ track }: Props) => {
     />
   );
 };
+
+// Экспортируем мемоизированную версию для оптимизации
+export const ProgressBar = memo(ProgressBarComponent);

@@ -1,4 +1,4 @@
-import { JSX, useMemo } from "react";
+import { JSX, memo, useMemo } from "react";
 
 import { BaseTrackInfo, QueueItem } from "@/shared/api";
 
@@ -16,7 +16,7 @@ interface TrackColumnProps {
   onDelete: (queueItemId: string) => void;
 }
 
-export function TrackColumn({
+function TrackColumnComponent({
   viewMode,
   current,
   isPlaying,
@@ -157,3 +157,6 @@ export function TrackColumn({
     </div>
   );
 }
+
+// Экспортируем мемоизированную версию для оптимизации
+export const TrackColumn = memo(TrackColumnComponent);
