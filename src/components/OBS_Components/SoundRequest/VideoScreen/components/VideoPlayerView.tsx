@@ -106,7 +106,7 @@ export function VideoPlayerView({
         }}
         width="100%"
         height="100%"
-        controls={false}
+        controls={import.meta.env.DEV}
         onReady={() => {
           // Применяем прогресс при готовности плеера
           const savedProgressSeconds = parseDurationToSeconds(
