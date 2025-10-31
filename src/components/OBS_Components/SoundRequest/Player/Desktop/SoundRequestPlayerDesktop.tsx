@@ -1,14 +1,14 @@
-import { JSX, useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { SoundRequest } from "@/shared/api";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import { useSoundRequestPlayer } from "../hooks";
-import { TrackListViewMode, usePlayerStore } from "../stores/usePlayerStore";
+import { usePlayerStore } from "../stores/usePlayerStore";
 import { PlayerToolbar } from "./PlayerToolbar";
 import styles from "./SoundRequestPlayerDesktop.module.scss";
-import { TrackItem } from "./TrackItem";
-import { UserItem } from "./UserItem";
+import { TrackColumn } from "./TrackColumn";
+import { UserColumn } from "./UserColumn";
 import { useTrackProgress } from "./useTrackProgress";
 
 function parseIsoDurationToSeconds(duration?: string): number {
@@ -157,300 +157,29 @@ export function SoundRequestPlayerDesktop() {
     ]
   );
 
-  // Рендеринг треков в зависимости от режима
-  const renderTracksList = useMemo(() => {
-    const trackItems: JSX.Element[] = [];
-
-    switch (viewMode) {
-      case TrackListViewMode.Default:
-        // Обычный режим: текущий трек -> очередь
-        if (current) {
-          trackItems.push(
-            <TrackItem
-              key={`current-${current.id}`}
-              track={current}
-              isCurrent
-              isPlaying={isPlaying ?? false}
-              onMouseEnter={() => handleItemHover(current.id, true)}
-              onMouseLeave={() => handleItemHover(current.id, false)}
-            />
-          );
-        }
-        queueWithoutCurrent.forEach(q => {
-          if (q.track) {
-            trackItems.push(
-              <TrackItem
-                key={`queue-${q.id}`}
-                track={q.track}
-                queueItemId={q.id}
-                onMouseEnter={() => handleItemHover(q.track?.id, true)}
-                onMouseLeave={() => handleItemHover(q.track?.id, false)}
-                onDelete={handleDeleteFromQueue}
-              />
-            );
-          }
-        });
-        break;
-
-      case TrackListViewMode.WithHistory:
-        // С историей: история -> текущий трек -> очередь
-        // История отсортирована (свежие первыми), разворачиваем чтобы свежий был ближе к текущему
-        [...history]
-          .slice(0, 5)
-          .reverse()
-          .forEach((track, index) => {
-            trackItems.push(
-              <TrackItem
-                key={`history-${track.id}-${index}`}
-                track={track}
-                isHistory
-                onMouseEnter={() => handleItemHover(track.id, true)}
-                onMouseLeave={() => handleItemHover(track.id, false)}
-              />
-            );
-          });
-        if (current) {
-          trackItems.push(
-            <TrackItem
-              key={`current-${current.id}`}
-              track={current}
-              isCurrent
-              isPlaying={isPlaying ?? false}
-              onMouseEnter={() => handleItemHover(current.id, true)}
-              onMouseLeave={() => handleItemHover(current.id, false)}
-            />
-          );
-        }
-        queueWithoutCurrent.forEach(q => {
-          if (q.track) {
-            trackItems.push(
-              <TrackItem
-                key={`queue-${q.id}`}
-                track={q.track}
-                queueItemId={q.id}
-                onMouseEnter={() => handleItemHover(q.track?.id, true)}
-                onMouseLeave={() => handleItemHover(q.track?.id, false)}
-                onDelete={handleDeleteFromQueue}
-              />
-            );
-          }
-        });
-        break;
-
-      case TrackListViewMode.Reversed:
-        // Обратный режим: история -> текущий трек (снизу)
-        // Не разворачиваем, так как column-reverse сделает за нас
-        history
-          .slice(0, 5)
-          .toReversed()
-          .forEach((track, index) => {
-            trackItems.push(
-              <TrackItem
-                key={`history-${track.id}-${index}`}
-                track={track}
-                isHistory
-                onMouseEnter={() => handleItemHover(track.id, true)}
-                onMouseLeave={() => handleItemHover(track.id, false)}
-              />
-            );
-          });
-        if (current) {
-          trackItems.push(
-            <TrackItem
-              key={`current-${current.id}`}
-              track={current}
-              isCurrent
-              isPlaying={isPlaying ?? false}
-              onMouseEnter={() => handleItemHover(current.id, true)}
-              onMouseLeave={() => handleItemHover(current.id, false)}
-            />
-          );
-        }
-        break;
-    }
-
-    return trackItems;
-  }, [
-    viewMode,
-    current,
-    isPlaying,
-    queueWithoutCurrent,
-    history,
-    handleItemHover,
-    handleDeleteFromQueue,
-  ]);
-
-  // Рендеринг пользователей в зависимости от режима
-  const renderUsersList = useMemo(() => {
-    const userItems: JSX.Element[] = [];
-
-    switch (viewMode) {
-      case TrackListViewMode.Default:
-        // Обычный режим: текущий пользователь -> пользователи очереди
-        if (current) {
-          userItems.push(
-            <UserItem
-              key={`current-user-${
-                playerState?.currentQueueItem?.requestedByTwitchId +
-                "_" +
-                current.id
-              }`}
-              user={
-                playerState?.currentQueueItem?.requestedByTwitchUser ??
-                undefined
-              }
-              lastTimePlays={current.lastTimePlays}
-              trackId={current.id}
-              isCurrent
-              onMouseEnter={() => handleItemHover(current.id, true)}
-              onMouseLeave={() => handleItemHover(current.id, false)}
-            />
-          );
-        }
-        queueWithoutCurrent.forEach(q => {
-          if (q.track) {
-            userItems.push(
-              <UserItem
-                key={`queue-user-${q.id}`}
-                user={q.requestedByTwitchUser ?? undefined}
-                lastTimePlays={q.requestedAt}
-                trackId={q.track.id}
-                onMouseEnter={() => handleItemHover(q.track?.id, true)}
-                onMouseLeave={() => handleItemHover(q.track?.id, false)}
-              />
-            );
-          }
-        });
-        break;
-
-      case TrackListViewMode.WithHistory:
-        // С историей: заглушки для истории -> текущий -> очередь
-        // Разворачиваем историю, чтобы соответствовать порядку треков
-        [...history]
-          .slice(0, 5)
-          .reverse()
-          .forEach((track, index) => {
-            userItems.push(
-              <div
-                key={`history-user-${track.id}-${index}`}
-                className={styles.userRow}
-                style={{ opacity: 0, pointerEvents: "none" }}
-              >
-                <div className={styles.avatar}>
-                  <div className={styles.avatarPlaceholder} />
-                </div>
-                <div className={styles.userBody}>
-                  <div className={styles.userName}>-</div>
-                  <div className={styles.userMeta}>-</div>
-                </div>
-              </div>
-            );
-          });
-        if (current) {
-          userItems.push(
-            <UserItem
-              key={`current-user-${
-                playerState?.currentQueueItem?.requestedByTwitchId +
-                "_" +
-                current.id
-              }`}
-              user={
-                playerState?.currentQueueItem?.requestedByTwitchUser ??
-                undefined
-              }
-              lastTimePlays={current.lastTimePlays}
-              trackId={current.id}
-              isCurrent
-              onMouseEnter={() => handleItemHover(current.id, true)}
-              onMouseLeave={() => handleItemHover(current.id, false)}
-            />
-          );
-        }
-        queueWithoutCurrent.forEach(q => {
-          if (q.track) {
-            userItems.push(
-              <UserItem
-                key={`queue-user-${q.id}`}
-                user={q.requestedByTwitchUser ?? undefined}
-                lastTimePlays={q.requestedAt}
-                trackId={q.track.id}
-                onMouseEnter={() => handleItemHover(q.track?.id, true)}
-                onMouseLeave={() => handleItemHover(q.track?.id, false)}
-              />
-            );
-          }
-        });
-        break;
-
-      case TrackListViewMode.Reversed:
-        // Обратный режим: пустые UserItem для истории -> текущий пользователь
-        // Не разворачиваем, так как column-reverse сделает за нас
-        history.slice(0, 5).forEach((track, index) => {
-          userItems.push(
-            <div
-              key={`history-user-${track.id}-${index}`}
-              className={styles.userRow}
-              style={{ opacity: 0, pointerEvents: "none" }}
-            >
-              <div className={styles.avatar}>
-                <div className={styles.avatarPlaceholder} />
-              </div>
-              <div className={styles.userBody}>
-                <div className={styles.userName}>-</div>
-                <div className={styles.userMeta}>-</div>
-              </div>
-            </div>
-          );
-        });
-        if (current) {
-          userItems.push(
-            <UserItem
-              key={`current-user-${
-                playerState?.currentQueueItem?.requestedByTwitchId +
-                "_" +
-                current.id
-              }`}
-              user={
-                playerState?.currentQueueItem?.requestedByTwitchUser ??
-                undefined
-              }
-              lastTimePlays={current.lastTimePlays}
-              trackId={current.id}
-              isCurrent
-              onMouseEnter={() => handleItemHover(current.id, true)}
-              onMouseLeave={() => handleItemHover(current.id, false)}
-            />
-          );
-        }
-        break;
-    }
-
-    return userItems;
-  }, [
-    viewMode,
-    current,
-    playerState?.currentQueueItem,
-    queueWithoutCurrent,
-    history,
-    handleItemHover,
-  ]);
-
   return (
     <div className={styles.root}>
       <div className={styles.container1}>
         {/* Верхний блок 9 частей высоты: 7:3 по ширине */}
         <div className={styles.topSplit}>
-          <div
-            className={`${styles.leftCol} ${viewMode === TrackListViewMode.Reversed ? styles.reversedMode : ""}`}
-          >
-            <div className={styles.scrollList}>{renderTracksList}</div>
-          </div>
+          <TrackColumn
+            viewMode={viewMode}
+            current={current}
+            isPlaying={isPlaying ?? false}
+            queueWithoutCurrent={queueWithoutCurrent}
+            history={history}
+            onItemHover={handleItemHover}
+            onDelete={handleDeleteFromQueue}
+          />
 
-          <div
-            className={`${styles.rightCol} ${viewMode === TrackListViewMode.Reversed ? styles.reversedMode : ""}`}
-          >
-            <div className={styles.scrollList}>{renderUsersList}</div>
-          </div>
+          <UserColumn
+            viewMode={viewMode}
+            current={current}
+            currentQueueItem={playerState?.currentQueueItem}
+            queueWithoutCurrent={queueWithoutCurrent}
+            history={history}
+            onItemHover={handleItemHover}
+          />
         </div>
       </div>
 

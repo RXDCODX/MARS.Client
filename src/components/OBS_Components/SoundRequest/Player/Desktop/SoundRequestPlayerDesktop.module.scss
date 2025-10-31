@@ -48,6 +48,15 @@
   flex-direction: column-reverse;
 }
 
+.leftCol.withHistory {
+  .scrollList {
+    overflow-y: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}
+
 .scrollList {
   overflow-y: auto;
   padding-right: .5rem;
@@ -328,6 +337,10 @@
   white-space: nowrap;
   flex-shrink: 0;
   margin-left: auto;
+
+  .current & {
+    color: springgreen;
+  }
 }
 
 .dot {
@@ -422,6 +435,10 @@
 .userMeta {
   color: var(--bs-secondary);
   font-size: 1rem;
+
+  .current & {
+    color: springgreen;
+  }
 }
 
 .container3 {
