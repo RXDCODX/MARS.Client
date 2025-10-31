@@ -63,7 +63,13 @@ export function SoundRequestPlayerDesktop() {
 
   useEffect(() => {
     if (hookHistory) {
-      setHistory(hookHistory);
+      // Сортируем историю по дате воспроизведения (свежие первыми)
+      const sortedHistory = [...hookHistory].sort((a, b) => {
+        const dateA = new Date(a.lastTimePlays).getTime();
+        const dateB = new Date(b.lastTimePlays).getTime();
+        return dateB - dateA; // Убывание - самые свежие первыми
+      });
+      setHistory(sortedHistory);
     }
   }, [hookHistory, setHistory]);
 
@@ -188,17 +194,21 @@ export function SoundRequestPlayerDesktop() {
 
       case TrackListViewMode.WithHistory:
         // С историей: история -> текущий трек -> очередь
-        history.slice(0, 5).forEach((track, index) => {
-          trackItems.push(
-            <TrackItem
-              key={`history-${track.id}-${index}`}
-              track={track}
-              isHistory
-              onMouseEnter={() => handleItemHover(track.id, true)}
-              onMouseLeave={() => handleItemHover(track.id, false)}
-            />
-          );
-        });
+        // История отсортирована (свежие первыми), разворачиваем чтобы свежий был ближе к текущему
+        [...history]
+          .slice(0, 5)
+          .reverse()
+          .forEach((track, index) => {
+            trackItems.push(
+              <TrackItem
+                key={`history-${track.id}-${index}`}
+                track={track}
+                isHistory
+                onMouseEnter={() => handleItemHover(track.id, true)}
+                onMouseLeave={() => handleItemHover(track.id, false)}
+              />
+            );
+          });
         if (current) {
           trackItems.push(
             <TrackItem
@@ -229,17 +239,21 @@ export function SoundRequestPlayerDesktop() {
 
       case TrackListViewMode.Reversed:
         // Обратный режим: история -> текущий трек (снизу)
-        history.slice(0, 5).forEach((track, index) => {
-          trackItems.push(
-            <TrackItem
-              key={`history-${track.id}-${index}`}
-              track={track}
-              isHistory
-              onMouseEnter={() => handleItemHover(track.id, true)}
-              onMouseLeave={() => handleItemHover(track.id, false)}
-            />
-          );
-        });
+        // Не разворачиваем, так как column-reverse сделает за нас
+        history
+          .slice(0, 5)
+          .toReversed()
+          .forEach((track, index) => {
+            trackItems.push(
+              <TrackItem
+                key={`history-${track.id}-${index}`}
+                track={track}
+                isHistory
+                onMouseEnter={() => handleItemHover(track.id, true)}
+                onMouseLeave={() => handleItemHover(track.id, false)}
+              />
+            );
+          });
         if (current) {
           trackItems.push(
             <TrackItem
@@ -311,23 +325,27 @@ export function SoundRequestPlayerDesktop() {
 
       case TrackListViewMode.WithHistory:
         // С историей: заглушки для истории -> текущий -> очередь
-        history.slice(0, 5).forEach((track, index) => {
-          userItems.push(
-            <div
-              key={`history-user-${track.id}-${index}`}
-              className={styles.userRow}
-              style={{ opacity: 0, pointerEvents: "none" }}
-            >
-              <div className={styles.avatar}>
-                <div className={styles.avatarPlaceholder} />
+        // Разворачиваем историю, чтобы соответствовать порядку треков
+        [...history]
+          .slice(0, 5)
+          .reverse()
+          .forEach((track, index) => {
+            userItems.push(
+              <div
+                key={`history-user-${track.id}-${index}`}
+                className={styles.userRow}
+                style={{ opacity: 0, pointerEvents: "none" }}
+              >
+                <div className={styles.avatar}>
+                  <div className={styles.avatarPlaceholder} />
+                </div>
+                <div className={styles.userBody}>
+                  <div className={styles.userName}>-</div>
+                  <div className={styles.userMeta}>-</div>
+                </div>
               </div>
-              <div className={styles.userBody}>
-                <div className={styles.userName}>-</div>
-                <div className={styles.userMeta}>-</div>
-              </div>
-            </div>
-          );
-        });
+            );
+          });
         if (current) {
           userItems.push(
             <UserItem
@@ -366,6 +384,7 @@ export function SoundRequestPlayerDesktop() {
 
       case TrackListViewMode.Reversed:
         // Обратный режим: пустые UserItem для истории -> текущий пользователь
+        // Не разворачиваем, так как column-reverse сделает за нас
         history.slice(0, 5).forEach((track, index) => {
           userItems.push(
             <div
