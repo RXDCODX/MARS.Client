@@ -1,0 +1,647 @@
+# Правило: Избегание Props Drilling
+
+## Принцип
+Компоненты должны получать данные напрямую из источника (хуки, Zustand store, Context), а не через цепочку пропсов от родительских компонентов.
+
+## 1. Когда применять
+
+### ✅ Используй хуки/store напрямую, если:
+- Данные передаются через 2+ уровня компонентов
+- Промежуточные компоненты не используют эти данные
+- Функции передаются как пропсы через несколько уровней
+- Компонент может быть переиспользован в разных местах
+- Данные доступны в глобальном store или контексте
+
+### ❌ НЕ используй напрямую, если:
+- Компонент должен быть чистым и тестируемым в изоляции
+- Данные локальны для конкретного места использования
+- Компонент - это UI-библиотека (Button, Input и т.д.)
+
+## 2. Паттерны избегания Props Drilling
+
+### 2.1 Zustand Store вместо пропсов
+
+```typescript
+// ❌ ПЛОХО - Props Drilling
+interface ParentProps {
+  data: Data;
+  onUpdate: (data: Data) => void;
+}
+
+function Parent({ data, onUpdate }: ParentProps) {
+  return <Child data={data} onUpdate={onUpdate} />;
+}
+
+function Child({ data, onUpdate }: ParentProps) {
+  return <GrandChild data={data} onUpdate={onUpdate} />;
+}
+
+function GrandChild({ data, onUpdate }: ParentProps) {
+  return <button onClick={() => onUpdate(data)}>Update</button>;
+}
+
+// ✅ ХОРОШО - Zustand Store
+function Parent() {
+  return <Child />;
+}
+
+function Child() {
+  return <GrandChild />;
+}
+
+function GrandChild() {
+  const { data, updateData } = useStore(
+    useShallow(state => ({
+      data: state.data,
+      updateData: state.updateData,
+    }))
+  );
+  
+  return <button onClick={() => updateData(data)}>Update</button>;
+}
+```
+
+### 2.2 Custom Hook вместо множества пропсов
+
+```typescript
+// ❌ ПЛОХО - Передача множества функций через пропсы
+interface PlayerToolbarProps {
+  onPlay: () => void;
+  onPause: () => void;
+  onStop: () => void;
+  onNext: () => void;
+  onPrevious: () => void;
+  onVolumeChange: (volume: number) => void;
+  onMute: () => void;
+  isPlaying: boolean;
+  volume: number;
+  isMuted: boolean;
+}
+
+function PlayerToolbar(props: PlayerToolbarProps) {
+  return (
+    <div>
+      <button onClick={props.onPlay}>Play</button>
+      <button onClick={props.onPause}>Pause</button>
+      {/* ... */}
+    </div>
+  );
+}
+
+// ✅ ХОРОШО - Custom Hook с логикой
+function PlayerToolbar() {
+  const {
+    handlePlay,
+    handlePause,
+    handleStop,
+    handleNext,
+    handlePrevious,
+    handleVolumeChange,
+    handleMute,
+  } = usePlayerActions();
+  
+  const { isPlaying, volume, isMuted } = usePlayerStore(
+    useShallow(state => ({
+      isPlaying: state.isPlaying,
+      volume: state.volume,
+      isMuted: state.isMuted,
+    }))
+  );
+  
+  return (
+    <div>
+      <button onClick={handlePlay}>Play</button>
+      <button onClick={handlePause}>Pause</button>
+      {/* ... */}
+    </div>
+  );
+}
+```
+
+### 2.3 Context для функций, Store для данных
+
+```typescript
+// ✅ ХОРОШО - Разделение ответственности
+// Context для стабильных функций-обработчиков
+const PlayerActionsContext = createContext<PlayerActions | null>(null);
+
+function usePlayerActions() {
+  const context = useContext(PlayerActionsContext);
+  if (!context) {
+    throw new Error("usePlayerActions must be used within PlayerActionsProvider");
+  }
+  return context;
+}
+
+// Store для изменяемых данных
+const usePlayerStore = create<PlayerStore>((set) => ({
+  isPlaying: false,
+  volume: 50,
+  setVolume: (volume) => set({ volume }),
+}));
+
+// Компонент использует оба источника
+function PlayButton() {
+  const { handleTogglePlay } = usePlayerActions();
+  const isPlaying = usePlayerStore(useShallow(state => state.isPlaying));
+  
+  return (
+    <button onClick={handleTogglePlay}>
+      {isPlaying ? "Pause" : "Play"}
+    </button>
+  );
+}
+```
+
+### 2.4 Вынос логики в отдельные хуки
+
+```typescript
+// ❌ ПЛОХО - Логика в родителе, данные через пропсы
+function Parent() {
+  const [items, setItems] = useState([]);
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  
+  const handleHover = useCallback((id: string, isEnter: boolean) => {
+    setHoveredId(isEnter ? id : null);
+    // Сложная логика синхронизации
+    const elements = document.querySelectorAll(`[data-id="${id}"]`);
+    elements.forEach(el => {
+      el.classList.toggle('hovered', isEnter);
+    });
+  }, []);
+  
+  return (
+    <div>
+      <LeftColumn items={items} onHover={handleHover} hoveredId={hoveredId} />
+      <RightColumn items={items} onHover={handleHover} hoveredId={hoveredId} />
+    </div>
+  );
+}
+
+// ✅ ХОРОШО - Логика в хуке, компоненты без пропсов
+function useItemHover() {
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  
+  const handleHover = useCallback((id: string, isEnter: boolean) => {
+    setHoveredId(isEnter ? id : null);
+    const elements = document.querySelectorAll(`[data-id="${id}"]`);
+    elements.forEach(el => {
+      el.classList.toggle('hovered', isEnter);
+    });
+  }, []);
+  
+  return { hoveredId, handleHover };
+}
+
+function Parent() {
+  return (
+    <div>
+      <LeftColumn />
+      <RightColumn />
+    </div>
+  );
+}
+
+function LeftColumn() {
+  const items = useStore(useShallow(state => state.items));
+  const { handleHover, hoveredId } = useItemHover();
+  
+  return items.map(item => (
+    <Item
+      key={item.id}
+      item={item}
+      onHover={handleHover}
+      isHovered={hoveredId === item.id}
+    />
+  ));
+}
+```
+
+## 3. Компоненты-кнопки и UI элементы
+
+### 3.1 Кнопки получают данные из store
+
+```typescript
+// ❌ ПЛОХО - Кнопки через пропсы
+function Toolbar() {
+  const { isPlaying, handlePlay } = usePlayer();
+  
+  return (
+    <div>
+      <PlayButton isPlaying={isPlaying} onClick={handlePlay} />
+      <StopButton onClick={handleStop} />
+    </div>
+  );
+}
+
+// ✅ ХОРОШО - Кнопки самодостаточны
+function Toolbar() {
+  return (
+    <div>
+      <PlayButton />
+      <StopButton />
+    </div>
+  );
+}
+
+function PlayButton() {
+  const { handlePlay } = usePlayerActions();
+  const isPlaying = usePlayerStore(useShallow(state => state.isPlaying));
+  
+  return (
+    <button onClick={handlePlay}>
+      {isPlaying ? <PauseIcon /> : <PlayIcon />}
+    </button>
+  );
+}
+
+function StopButton() {
+  const { handleStop } = usePlayerActions();
+  const loading = usePlayerStore(useShallow(state => state.loading));
+  
+  return (
+    <button onClick={handleStop} disabled={loading}>
+      <StopIcon />
+    </button>
+  );
+}
+```
+
+### 3.2 Создание папки Buttons для группировки
+
+```typescript
+// ✅ ХОРОШО - Структура проекта
+PlayerToolbar/
+├── Buttons/
+│   ├── PlayPauseButton.tsx    // Каждая кнопка - отдельный файл
+│   ├── StopButton.tsx
+│   ├── NextButton.tsx
+│   ├── PreviousButton.tsx
+│   └── index.ts               // Экспорты
+├── PlayerToolbar.tsx
+└── index.ts
+
+// PlayerToolbar.tsx
+import { PlayPauseButton, StopButton, NextButton, PreviousButton } from "./Buttons";
+
+function PlayerToolbar() {
+  return (
+    <div className={styles.toolbar}>
+      <PreviousButton />
+      <PlayPauseButton />
+      <StopButton />
+      <NextButton />
+    </div>
+  );
+}
+```
+
+## 4. Работа со списками и колонками
+
+### 4.1 Списки без пропсов
+
+```typescript
+// ❌ ПЛОХО - Данные через пропсы
+function Parent() {
+  const items = useStore(state => state.items);
+  const current = useStore(state => state.current);
+  const onDelete = useCallback((id) => { /* ... */ }, []);
+  
+  return <ItemList items={items} current={current} onDelete={onDelete} />;
+}
+
+function ItemList({ items, current, onDelete }: Props) {
+  return items.map(item => (
+    <Item 
+      key={item.id} 
+      item={item} 
+      isCurrent={item.id === current?.id}
+      onDelete={onDelete}
+    />
+  ));
+}
+
+// ✅ ХОРОШО - Список самодостаточен
+function Parent() {
+  return <ItemList />;
+}
+
+function ItemList() {
+  const { items, current } = useStore(
+    useShallow(state => ({
+      items: state.items,
+      current: state.current,
+    }))
+  );
+  
+  const { handleDelete } = useItemActions();
+  
+  return items.map(item => (
+    <Item 
+      key={item.id} 
+      item={item} 
+      isCurrent={item.id === current?.id}
+      onDelete={handleDelete}
+    />
+  ));
+}
+```
+
+## 5. Производные данные
+
+### 5.1 Вычисляй в компоненте, не передавай
+
+```typescript
+// ❌ ПЛОХО - Производные данные через пропсы
+function Parent() {
+  const playerState = useStore(state => state.playerState);
+  const isPlaying = playerState?.state === PlayerStateEnum.Playing;
+  const current = playerState?.currentQueueItem?.track;
+  const queue = useStore(state => state.queue);
+  const queueWithoutCurrent = queue.filter(x => x.id !== current?.id);
+  
+  return (
+    <TrackColumn 
+      isPlaying={isPlaying}
+      current={current}
+      queueWithoutCurrent={queueWithoutCurrent}
+    />
+  );
+}
+
+// ✅ ХОРОШО - Вычисления внутри компонента
+function Parent() {
+  return <TrackColumn />;
+}
+
+function TrackColumn() {
+  const { playerState, queue } = usePlayerStore(
+    useShallow(state => ({
+      playerState: state.playerState,
+      queue: state.queue,
+    }))
+  );
+  
+  // Вычисляем производные значения здесь
+  const isPlaying = playerState?.state === PlayerStateEnum.Playing;
+  const current = playerState?.currentQueueItem?.track;
+  const currentId = playerState?.currentQueueItem?.id;
+  
+  const queueWithoutCurrent = useMemo(
+    () => queue.filter(x => x.id !== currentId),
+    [queue, currentId]
+  );
+  
+  return (
+    <div>
+      {current && <CurrentTrack track={current} isPlaying={isPlaying} />}
+      {queueWithoutCurrent.map(item => <QueueItem key={item.id} item={item} />)}
+    </div>
+  );
+}
+```
+
+## 6. Чеклист рефакторинга
+
+При рефакторинге компонента для избежания props drilling:
+
+### Шаг 1: Определи источник данных
+- [ ] Данные из Zustand store? → Используй `useStore` с `useShallow`
+- [ ] Функции-обработчики? → Вынеси в custom hook или Context
+- [ ] Локальное состояние? → Используй хук рядом с использованием
+
+### Шаг 2: Создай хуки при необходимости
+- [ ] Создай `useXXXActions()` для функций-обработчиков
+- [ ] Создай `useXXXData()` для получения и обработки данных
+- [ ] Используй Context только для стабильных функций
+
+### Шаг 3: Рефактори компоненты снизу вверх
+- [ ] Начни с самых глубоких компонентов
+- [ ] Добавь прямое получение данных из store/hooks
+- [ ] Убери пропсы из интерфейса компонента
+- [ ] Проверь линтер
+- [ ] Поднимайся выше по дереву компонентов
+
+### Шаг 4: Упрости родительский компонент
+- [ ] Убери вычисления производных данных
+- [ ] Убери функции-обработчики
+- [ ] Убери передачу пропсов дочерним компонентам
+- [ ] Оставь только локальную логику компонента
+
+### Шаг 5: Группируй связанные компоненты
+- [ ] Создай подпапки (например, `Buttons/`)
+- [ ] Каждый UI-элемент в отдельный файл
+- [ ] Создай `index.ts` для удобных экспортов
+
+## 7. Примеры из реального проекта
+
+### До рефакторинга (242 строки)
+```typescript
+function SoundRequestPlayerDesktop() {
+  const {
+    playerState,
+    queue: hookQueue,
+    isPlaying,
+    history: hookHistory,
+    handlePlayPrevious,
+    handleTogglePlayPause,
+    handleStop,
+    handleSkip,
+    handleVolumeChange,
+    handleMute,
+    handleToggleVideoState,
+    fetchQueue,
+  } = useSoundRequestPlayer();
+
+  const { queue, history, viewMode } = usePlayerStore(/*...*/);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  
+  const current = playerState?.currentQueueItem?.track || null;
+  const queueWithoutCurrent = useMemo(/*...*/);
+  
+  const handleItemHover = useCallback((trackId, isEnter) => {
+    // Сложная логика
+  }, []);
+  
+  const handleDeleteFromQueue = useCallback(async (queueItemId) => {
+    // Много кода
+  }, [deletingId, soundRequestApi, showToast, fetchQueue]);
+
+  return (
+    <div>
+      <TrackColumn
+        viewMode={viewMode}
+        current={current}
+        isPlaying={isPlaying ?? false}
+        queueWithoutCurrent={queueWithoutCurrent}
+        history={history}
+        onItemHover={handleItemHover}
+        onDelete={handleDeleteFromQueue}
+      />
+      <UserColumn
+        viewMode={viewMode}
+        current={current}
+        currentQueueItem={currentQueueItem}
+        queueWithoutCurrent={queueWithoutCurrent}
+        history={history}
+        onItemHover={handleItemHover}
+      />
+      <PlayerToolbar />
+    </div>
+  );
+}
+```
+
+### После рефакторинга (137 строк, -43%)
+```typescript
+function SoundRequestPlayerDesktop() {
+  const {
+    queue: hookQueue,
+    history: hookHistory,
+    handlePlayPrevious,
+    handleTogglePlayPause,
+    handleStop,
+    handleSkip,
+    handleVolumeChange,
+    handleMute,
+    handleToggleVideoState,
+  } = useSoundRequestPlayer();
+
+  const [showAddTrackModal, setShowAddTrackModal] = useState(false);
+  const { showToast } = useToastModal();
+  const soundRequestApi = useMemo(() => new SoundRequest(), []);
+
+  // Синхронизация данных
+  useEffect(() => {
+    if (hookQueue) {
+      usePlayerStore.getState().setQueue(hookQueue);
+    }
+  }, [hookQueue]);
+
+  // Обработчики только для модального окна
+  const handleAddTrack = useCallback(async (query: string) => {
+    // ...
+  }, [soundRequestApi, showToast]);
+
+  const playerActions = useMemo(() => ({
+    handlePlayPrevious,
+    handleTogglePlayPause,
+    handleStop,
+    handleSkip,
+    handleMute,
+    handleVolumeChange,
+    handleToggleVideoState,
+    handleOpenAddTrackModal,
+  }), [/* ... */]);
+
+  return (
+    <PlayerActionsProvider actions={playerActions}>
+      <div>
+        <TrackColumn />
+        <UserColumn />
+        <PlayerToolbar />
+        <AddTrackModal
+          show={showAddTrackModal}
+          onClose={handleCloseAddTrackModal}
+          onSubmit={handleAddTrack}
+        />
+      </div>
+    </PlayerActionsProvider>
+  );
+}
+
+// TrackColumn теперь самодостаточен
+function TrackColumn() {
+  const { playerState, queue, history, viewMode } = usePlayerStore(
+    useShallow(state => ({
+      playerState: state.playerState,
+      queue: state.queue,
+      history: state.history,
+      viewMode: state.viewMode,
+    }))
+  );
+
+  const { handleItemHover, handleDeleteFromQueue } = useQueueActions();
+
+  const current = playerState?.currentQueueItem?.track || null;
+  const currentQueueItemId = playerState?.currentQueueItem?.id;
+  const isPlaying = playerState?.state === PlayerStateEnum.Playing;
+
+  const queueWithoutCurrent = useMemo(
+    () => queue.filter(x => x.id !== currentQueueItemId),
+    [queue, currentQueueItemId]
+  );
+
+  // Рендер списка
+  // ...
+}
+```
+
+## 8. Ключевые преимущества
+
+### Производительность
+- ✅ Меньше пропсов = меньше проверок на изменения
+- ✅ Подписка только на нужные данные через `useShallow`
+- ✅ Изолированные ререндеры компонентов
+
+### Читаемость
+- ✅ Понятно, откуда берутся данные
+- ✅ Меньше строк кода
+- ✅ Нет сложных prop types
+
+### Поддерживаемость
+- ✅ Легко добавлять новые поля в store
+- ✅ Не нужно прокидывать пропсы через всю иерархию
+- ✅ Компоненты независимы и переиспользуемы
+
+### Тестируемость
+- ✅ Можно мокировать store/hooks
+- ✅ Меньше настройки моков для тестов
+- ✅ Изолированное тестирование логики в хуках
+
+## 9. Когда НЕ применять
+
+### ❌ Не используй для:
+1. **Чистых UI-компонентов библиотеки**
+   ```typescript
+   // ПРАВИЛЬНО оставить пропсы для переиспользуемых UI
+   function Button({ onClick, children, variant }: ButtonProps) {
+     return <button onClick={onClick} className={variant}>{children}</button>;
+   }
+   ```
+
+2. **Локального состояния формы**
+   ```typescript
+   // ПРАВИЛЬНО передавать через пропсы
+   function Form() {
+     const [value, setValue] = useState("");
+     return <Input value={value} onChange={setValue} />;
+   }
+   ```
+
+3. **Изолированных компонентов для Storybook**
+   ```typescript
+   // ПРАВИЛЬНО для stories - нужен контроль извне
+   export const ButtonStory = {
+     args: {
+       onClick: () => console.log("clicked"),
+       label: "Click me",
+     },
+   };
+   ```
+
+## 10. Миграция существующего кода
+
+### Последовательность действий:
+1. **Аудит** - найди компоненты с 3+ пропсами для передачи вниз
+2. **Приоритизация** - начни с самых "глубоких" цепочек
+3. **Создай хуки** - вынеси логику в переиспользуемые хуки
+4. **Рефактори снизу вверх** - начни с листьев дерева компонентов
+5. **Удали старые пропсы** - убери неиспользуемые интерфейсы
+6. **Проверка** - убедись что всё работает, линтер чист
+
+## Резюме
+
+**Главное правило:** Если данные есть в глобальном store или доступны через хук - получай их напрямую в компоненте, где они используются. Не передавай через пропсы.
+
+**Исключения:** UI-библиотеки, локальное состояние, изолированные компоненты для тестирования.

@@ -19,40 +19,39 @@ import {
 } from "./Buttons";
 import { ViewModeToggle } from "./ViewModeToggle";
 
+/**
+ * Тулбар плеера
+ * Подписывается ТОЛЬКО на данные для прогресс-бара (не на volume, isMuted и т.д.)
+ */
 function PlayerToolbarComponent() {
-  // Берём только необходимые данные из стора для прогресс-бара и режима отображения
-  const { playerState, viewMode } = usePlayerStore(
-    useShallow(state => ({
-      playerState: state.playerState,
-      viewMode: state.viewMode,
+  // Селективная подписка - ТОЛЬКО поля для прогресс-бара
+  const { state, currentTrack, currentTrackProgress } = usePlayerStore(
+    useShallow(storeState => ({
+      state: storeState.playerState?.state,
+      currentTrack: storeState.playerState?.currentQueueItem?.track,
+      currentTrackProgress: storeState.playerState?.currentTrackProgress,
     }))
   );
 
-  // Вычисляем прогресс трека для визуального отображения
-  const isPlaying = playerState?.state === PlayerStateStateEnum.Playing;
-  const currentTrack = playerState?.currentQueueItem?.track;
+  // Вычисляем прогресс трека
+  const isPlaying = state === PlayerStateStateEnum.Playing;
   const durationSec = parseDurationToSeconds(currentTrack?.duration || "PT0S");
   const progress = useTrackProgress({
     durationSec,
     isPlaying,
     trackId: currentTrack?.id,
-    initialProgress: playerState?.currentTrackProgress,
+    initialProgress: currentTrackProgress,
   });
 
   const progressStyle = {
     "--track-progress": `${Math.round(progress * 100)}%`,
   } as CSSProperties;
 
-  // Обработчик переключения режима отображения
-  const handleToggleViewMode = () => {
-    usePlayerStore.getState().cycleViewMode();
-  };
-
   return (
     <div className={styles.toolbar} style={progressStyle}>
       <div className={styles.toolbarInner}>
         <div className={styles.leftSection}>
-          <ViewModeToggle viewMode={viewMode} onToggle={handleToggleViewMode} />
+          <ViewModeToggle />
           <AddTrackButton />
         </div>
 

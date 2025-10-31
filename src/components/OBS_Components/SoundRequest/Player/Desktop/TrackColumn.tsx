@@ -1,36 +1,43 @@
 import { JSX, memo, useMemo } from "react";
+import { useShallow } from "zustand/react/shallow";
 
-import { BaseTrackInfo, QueueItem } from "@/shared/api";
+import { PlayerStateStateEnum } from "@/shared/api";
 
-import { TrackListViewMode } from "../stores/usePlayerStore";
+import { useQueueActions } from "../hooks";
+import { TrackListViewMode, usePlayerStore } from "../stores/usePlayerStore";
 import styles from "./SoundRequestPlayerDesktop.module.scss";
 import { TrackItem } from "./TrackItem";
 
-interface TrackColumnProps {
-  viewMode: TrackListViewMode;
-  current: BaseTrackInfo | null;
-  isPlaying: boolean;
-  queueWithoutCurrent: QueueItem[];
-  history: BaseTrackInfo[];
-  onItemHover: (trackId: string | undefined, isEnter: boolean) => void;
-  onDelete: (queueItemId: string) => void;
-}
+function TrackColumnComponent() {
+  // Получаем данные напрямую из стора
+  const { playerState, queue, history, viewMode } = usePlayerStore(
+    useShallow(state => ({
+      playerState: state.playerState,
+      queue: state.queue,
+      history: state.history,
+      viewMode: state.viewMode,
+    }))
+  );
 
-function TrackColumnComponent({
-  viewMode,
-  current,
-  isPlaying,
-  queueWithoutCurrent,
-  history,
-  onItemHover,
-  onDelete,
-}: TrackColumnProps) {
+  // Получаем обработчики из хука
+  const { handleItemHover, handleDeleteFromQueue } = useQueueActions();
+
+  // Вычисляем производные значения
+  const current = playerState?.currentQueueItem?.track || null;
+  const currentQueueItemId = playerState?.currentQueueItem?.id;
+  const isPlaying = playerState?.state === PlayerStateStateEnum.Playing;
+
+  // Очередь без текущего трека
+  const queueWithoutCurrent = useMemo(
+    () => queue.filter(x => x.id !== currentQueueItemId),
+    [queue, currentQueueItemId]
+  );
   const renderTracksList = useMemo(() => {
     const trackItems: JSX.Element[] = [];
 
     switch (viewMode) {
       case TrackListViewMode.Default:
-        // Обычный режим: текущий трек -> очередь (до 5 треков)
+        // Обычный режим: текущий трек -> вся очередь (overflow hidden скроет лишнее)
         if (current) {
           trackItems.push(
             <TrackItem
@@ -38,21 +45,21 @@ function TrackColumnComponent({
               track={current}
               isCurrent
               isPlaying={isPlaying}
-              onMouseEnter={() => onItemHover(current.id, true)}
-              onMouseLeave={() => onItemHover(current.id, false)}
+              onMouseEnter={() => handleItemHover(current.id, true)}
+              onMouseLeave={() => handleItemHover(current.id, false)}
             />
           );
         }
-        queueWithoutCurrent.slice(0, 8).forEach(q => {
+        queueWithoutCurrent.forEach(q => {
           if (q.track) {
             trackItems.push(
               <TrackItem
                 key={`queue-${q.id}`}
                 track={q.track}
                 queueItemId={q.id}
-                onMouseEnter={() => onItemHover(q.track?.id, true)}
-                onMouseLeave={() => onItemHover(q.track?.id, false)}
-                onDelete={onDelete}
+                onMouseEnter={() => handleItemHover(q.track?.id, true)}
+                onMouseLeave={() => handleItemHover(q.track?.id, false)}
+                onDelete={handleDeleteFromQueue}
               />
             );
           }
@@ -61,22 +68,17 @@ function TrackColumnComponent({
 
       case TrackListViewMode.WithHistory: {
         // С историей: история -> текущий трек -> очередь
-        // Показываем до 3 треков истории и до 3 треков очереди
-        const historyCount = Math.min(history.length, 4);
-        [...history]
-          .slice(0, historyCount)
-          .reverse()
-          .forEach((track, index) => {
-            trackItems.push(
-              <TrackItem
-                key={`history-${track.id}-${index}`}
-                track={track}
-                isHistory
-                onMouseEnter={() => onItemHover(track.id, true)}
-                onMouseLeave={() => onItemHover(track.id, false)}
-              />
-            );
-          });
+        [...history].reverse().forEach((track, index) => {
+          trackItems.push(
+            <TrackItem
+              key={`history-${track.id}-${index}`}
+              track={track}
+              isHistory
+              onMouseEnter={() => handleItemHover(track.id, true)}
+              onMouseLeave={() => handleItemHover(track.id, false)}
+            />
+          );
+        });
         if (current) {
           trackItems.push(
             <TrackItem
@@ -84,21 +86,21 @@ function TrackColumnComponent({
               track={current}
               isCurrent
               isPlaying={isPlaying}
-              onMouseEnter={() => onItemHover(current.id, true)}
-              onMouseLeave={() => onItemHover(current.id, false)}
+              onMouseEnter={() => handleItemHover(current.id, true)}
+              onMouseLeave={() => handleItemHover(current.id, false)}
             />
           );
         }
-        queueWithoutCurrent.slice(0, 4).forEach(q => {
+        queueWithoutCurrent.forEach(q => {
           if (q.track) {
             trackItems.push(
               <TrackItem
                 key={`queue-${q.id}`}
                 track={q.track}
                 queueItemId={q.id}
-                onMouseEnter={() => onItemHover(q.track?.id, true)}
-                onMouseLeave={() => onItemHover(q.track?.id, false)}
-                onDelete={onDelete}
+                onMouseEnter={() => handleItemHover(q.track?.id, true)}
+                onMouseLeave={() => handleItemHover(q.track?.id, false)}
+                onDelete={handleDeleteFromQueue}
               />
             );
           }
@@ -109,20 +111,17 @@ function TrackColumnComponent({
       case TrackListViewMode.Reversed:
         // Обратный режим: история -> текущий трек (снизу)
         // Не разворачиваем, так как column-reverse сделает за нас
-        history
-          .slice(0, 8)
-          .toReversed()
-          .forEach((track, index) => {
-            trackItems.push(
-              <TrackItem
-                key={`history-${track.id}-${index}`}
-                track={track}
-                isHistory
-                onMouseEnter={() => onItemHover(track.id, true)}
-                onMouseLeave={() => onItemHover(track.id, false)}
-              />
-            );
-          });
+        history.toReversed().forEach((track, index) => {
+          trackItems.push(
+            <TrackItem
+              key={`history-${track.id}-${index}`}
+              track={track}
+              isHistory
+              onMouseEnter={() => handleItemHover(track.id, true)}
+              onMouseLeave={() => handleItemHover(track.id, false)}
+            />
+          );
+        });
         if (current) {
           trackItems.push(
             <TrackItem
@@ -130,8 +129,8 @@ function TrackColumnComponent({
               track={current}
               isCurrent
               isPlaying={isPlaying}
-              onMouseEnter={() => onItemHover(current.id, true)}
-              onMouseLeave={() => onItemHover(current.id, false)}
+              onMouseEnter={() => handleItemHover(current.id, true)}
+              onMouseLeave={() => handleItemHover(current.id, false)}
             />
           );
         }
@@ -145,8 +144,8 @@ function TrackColumnComponent({
     isPlaying,
     queueWithoutCurrent,
     history,
-    onItemHover,
-    onDelete,
+    handleItemHover,
+    handleDeleteFromQueue,
   ]);
 
   return (

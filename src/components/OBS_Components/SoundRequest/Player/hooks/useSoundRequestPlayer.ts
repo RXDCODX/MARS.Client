@@ -475,16 +475,9 @@ export const useSoundRequestPlayer = () => {
     );
   }, []);
 
-  // Вычисление состояния воспроизведения
-  const isPlaying =
-    playerState && playerState.state === PlayerStateStateEnum.Playing;
-
-  // Вычисление состояния остановки
-  const isStopped =
-    playerState && playerState.state === PlayerStateStateEnum.Stopped;
-
-  // Ближайшие 5 заказов
-  const nextFiveOrders = useMemo(() => queue.slice(0, 5), [queue]);
+  // Ближайшие 5 заказов (только для Mobile версии - не создаем для Desktop)
+  // Убрано из возвращаемых значений, чтобы не вызывать ререндеры Desktop компонентов
+  // Mobile компонент рендерит напрямую: queue.map((item, index) => index < 5 ? ... : null)
 
   // Набор отображаемых видео для карусели: текущее, следующее, первые в очереди
   const displayedVideos: BaseTrackInfo[] = useMemo(() => {
@@ -503,16 +496,15 @@ export const useSoundRequestPlayer = () => {
   }, [playerState, queue]);
 
   return {
-    // Состояние
-    playerState,
-    queue,
-    isPlaying,
-    isStopped,
-    history,
-    nextFiveOrders,
-    displayedVideos,
+    // Состояние (только то, что используется напрямую)
+    // playerState - НЕ возвращаем, т.к. он доступен через store
+    // isPlaying, isStopped - НЕ возвращаем, т.к. вычисляются в компонентах
+    // nextFiveOrders - НЕ возвращаем, т.к. вызывает ререндеры (Mobile может создать локально)
+    queue, // Для синхронизации с store
+    history, // Для синхронизации с store
+    displayedVideos, // Используется для карусели
 
-    // Обработчики управления воспроизведением
+    // Обработчики управления воспроизведением (стабильные через useCallback)
     handlePlay,
     handlePause,
     handleTogglePlayPause,
@@ -521,16 +513,16 @@ export const useSoundRequestPlayer = () => {
     handlePlayNext,
     handlePlayPrevious,
 
-    // Обработчики управления громкостью
+    // Обработчики управления громкостью (стабильные через useCallback)
     handleVolumeChange,
     handleMute,
 
-    // Обработчики управления очередью
+    // Обработчики управления очередью (стабильные через useCallback)
     handleRemoveFromQueue,
     handlePlayTrackFromQueue,
     fetchQueue,
 
-    // Обработчики управления отображением
+    // Обработчики управления отображением (стабильные через useCallback)
     handleToggleVideoState,
   };
 };

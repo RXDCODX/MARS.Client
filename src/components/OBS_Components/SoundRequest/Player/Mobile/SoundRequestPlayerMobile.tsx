@@ -40,11 +40,7 @@ export function SoundRequestPlayerMobile() {
   const soundRequestApi = useMemo(() => new SoundRequest(), []);
 
   const {
-    playerState,
     queue,
-    isPlaying,
-    isStopped,
-    nextFiveOrders,
     displayedVideos,
     handleTogglePlayPause,
     handleStop,
@@ -56,6 +52,17 @@ export function SoundRequestPlayerMobile() {
     handlePlayTrackFromQueue,
     fetchQueue,
   } = useSoundRequestPlayer();
+
+  // Получаем данные из store
+  const { playerState } = usePlayerStore(
+    useShallow(state => ({
+      playerState: state.playerState,
+    }))
+  );
+
+  // Вычисляем состояния без создания новых массивов
+  const isPlaying = playerState?.state === "Playing";
+  const isStopped = playerState?.state === "Stopped";
 
   // Volume и loading из стора с useShallow (чтобы избежать ререндеров всего компонента)
   const { volume, loading } = usePlayerStore(
@@ -370,10 +377,10 @@ export function SoundRequestPlayerMobile() {
           <div className={styles.queueHeader}>
             <h5 className={styles.title}>Ближайшие 5 заказов</h5>
           </div>
-          {nextFiveOrders.length > 0 ? (
+          {queue.length > 0 ? (
             <div className={styles.queueList}>
-              {nextFiveOrders.map((item, index) =>
-                item.track ? (
+              {queue.map((item, index) =>
+                item.track && index < 5 ? (
                   <div key={item.id} className={styles.queueItem}>
                     <div className={styles.queueItemInfo}>
                       <span className={styles.queueNumber}>{index + 1}</span>

@@ -71,7 +71,28 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   // Добавить трек в историю
   addToHistory: track => {
     const currentHistory = get().history;
-    const updatedHistory = [track, ...currentHistory].slice(0, 5); // Последние 5 треков
+
+    // Проверяем, нужно ли вообще обновлять историю
+    // Если трек уже первый в истории - не делаем ничего
+    if (currentHistory.length > 0 && currentHistory[0].id === track.id) {
+      return;
+    }
+
+    // Создаем новый массив вручную без slice - max 5 элементов
+    const MAX_HISTORY = 5;
+    const updatedHistory: BaseTrackInfo[] = [track];
+
+    // Добавляем элементы из текущей истории, пропуская дубликаты
+    for (
+      let i = 0;
+      i < currentHistory.length && updatedHistory.length < MAX_HISTORY;
+      i++
+    ) {
+      if (currentHistory[i].id !== track.id) {
+        updatedHistory.push(currentHistory[i]);
+      }
+    }
+
     set({ history: updatedHistory });
   },
 

@@ -6,19 +6,19 @@ import {
   List,
 } from "lucide-react";
 import { memo, useMemo } from "react";
+import { useShallow } from "zustand/react/shallow";
 
-import { TrackListViewMode } from "../../stores/usePlayerStore";
+import { TrackListViewMode, usePlayerStore } from "../../stores/usePlayerStore";
 import styles from "./ViewModeToggle.module.scss";
 
-interface ViewModeToggleProps {
-  viewMode: TrackListViewMode;
-  onToggle: () => void;
-}
+function ViewModeToggleComponent() {
+  // Получаем viewMode напрямую из стора
+  const viewMode = usePlayerStore(useShallow(state => state.viewMode));
 
-function ViewModeToggleComponent({
-  viewMode,
-  onToggle,
-}: ViewModeToggleProps) {
+  // Обработчик переключения режима отображения
+  const handleToggle = () => {
+    usePlayerStore.getState().cycleViewMode();
+  };
   // Мемоизируем иконку
   const icon = useMemo(() => {
     switch (viewMode) {
@@ -64,7 +64,7 @@ function ViewModeToggleComponent({
   return (
     <button
       className={`${styles.viewModeToggle} ${styles[viewMode]}`}
-      onClick={onToggle}
+      onClick={handleToggle}
       title={title}
       type="button"
     >
@@ -102,4 +102,3 @@ function ViewModeToggleComponent({
 
 // Экспортируем мемоизированную версию
 export const ViewModeToggle = memo(ViewModeToggleComponent);
-

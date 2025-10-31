@@ -1,28 +1,35 @@
 import { JSX, memo, useMemo } from "react";
+import { useShallow } from "zustand/react/shallow";
 
-import { BaseTrackInfo, QueueItem } from "@/shared/api";
-
-import { TrackListViewMode } from "../stores/usePlayerStore";
+import { useQueueActions } from "../hooks";
+import { TrackListViewMode, usePlayerStore } from "../stores/usePlayerStore";
 import styles from "./SoundRequestPlayerDesktop.module.scss";
 import { UserItem } from "./UserItem";
 
-interface UserColumnProps {
-  viewMode: TrackListViewMode;
-  current: BaseTrackInfo | null;
-  currentQueueItem: QueueItem | undefined;
-  queueWithoutCurrent: QueueItem[];
-  history: BaseTrackInfo[];
-  onItemHover: (trackId: string | undefined, isEnter: boolean) => void;
-}
+function UserColumnComponent() {
+  // Получаем данные напрямую из стора
+  const { playerState, queue, history, viewMode } = usePlayerStore(
+    useShallow(state => ({
+      playerState: state.playerState,
+      queue: state.queue,
+      history: state.history,
+      viewMode: state.viewMode,
+    }))
+  );
 
-function UserColumnComponent({
-  viewMode,
-  current,
-  currentQueueItem,
-  queueWithoutCurrent,
-  history,
-  onItemHover,
-}: UserColumnProps) {
+  // Получаем обработчики из хука
+  const { handleItemHover } = useQueueActions();
+
+  // Вычисляем производные значения
+  const current = playerState?.currentQueueItem?.track || null;
+  const currentQueueItem = playerState?.currentQueueItem;
+  const currentQueueItemId = playerState?.currentQueueItem?.id;
+
+  // Очередь без текущего трека
+  const queueWithoutCurrent = useMemo(
+    () => queue.filter(x => x.id !== currentQueueItemId),
+    [queue, currentQueueItemId]
+  );
   const renderUsersList = useMemo(() => {
     const userItems: JSX.Element[] = [];
 
@@ -39,12 +46,12 @@ function UserColumnComponent({
               lastTimePlays={current.lastTimePlays}
               trackId={current.id}
               isCurrent
-              onMouseEnter={() => onItemHover(current.id, true)}
-              onMouseLeave={() => onItemHover(current.id, false)}
+              onMouseEnter={() => handleItemHover(current.id, true)}
+              onMouseLeave={() => handleItemHover(current.id, false)}
             />
           );
         }
-        queueWithoutCurrent.slice(0, 8).forEach(q => {
+        queueWithoutCurrent.forEach(q => {
           if (q.track) {
             userItems.push(
               <UserItem
@@ -52,8 +59,8 @@ function UserColumnComponent({
                 user={q.requestedByTwitchUser ?? undefined}
                 lastTimePlays={q.requestedAt}
                 trackId={q.track.id}
-                onMouseEnter={() => onItemHover(q.track?.id, true)}
-                onMouseLeave={() => onItemHover(q.track?.id, false)}
+                onMouseEnter={() => handleItemHover(q.track?.id, true)}
+                onMouseLeave={() => handleItemHover(q.track?.id, false)}
               />
             );
           }
@@ -61,64 +68,8 @@ function UserColumnComponent({
         break;
 
       case TrackListViewMode.WithHistory: {
-        // С историей: заглушки для истории -> текущий -> очередь (до 4 треков очереди)
-        const userHistoryCount = Math.min(history.length, 4);
-        [...history]
-          .slice(0, userHistoryCount)
-          .reverse()
-          .forEach((track, index) => {
-            userItems.push(
-              <div
-                key={`history-user-${track.id}-${index}`}
-                className={styles.userRow}
-                style={{ opacity: 0, pointerEvents: "none" }}
-              >
-                <div className={styles.avatar}>
-                  <div className={styles.avatarPlaceholder} />
-                </div>
-                <div className={styles.userBody}>
-                  <div className={styles.userName}>-</div>
-                  <div className={styles.userMeta}>-</div>
-                </div>
-              </div>
-            );
-          });
-        if (current) {
-          userItems.push(
-            <UserItem
-              key={`current-user-${
-                currentQueueItem?.requestedByTwitchId + "_" + current.id
-              }`}
-              user={currentQueueItem?.requestedByTwitchUser ?? undefined}
-              lastTimePlays={current.lastTimePlays}
-              trackId={current.id}
-              isCurrent
-              onMouseEnter={() => onItemHover(current.id, true)}
-              onMouseLeave={() => onItemHover(current.id, false)}
-            />
-          );
-        }
-        queueWithoutCurrent.slice(0, 4).forEach(q => {
-          if (q.track) {
-            userItems.push(
-              <UserItem
-                key={`queue-user-${q.id}`}
-                user={q.requestedByTwitchUser ?? undefined}
-                lastTimePlays={q.requestedAt}
-                trackId={q.track.id}
-                onMouseEnter={() => onItemHover(q.track?.id, true)}
-                onMouseLeave={() => onItemHover(q.track?.id, false)}
-              />
-            );
-          }
-        });
-        break;
-      }
-
-      case TrackListViewMode.Reversed:
-        // Обратный режим: пустые UserItem для истории -> текущий пользователь
-        // Не разворачиваем, так как column-reverse сделает за нас
-        history.slice(0, 8).forEach((track, index) => {
+        // С историей: заглушки для истории -> текущий -> очередь
+        [...history].reverse().forEach((track, index) => {
           userItems.push(
             <div
               key={`history-user-${track.id}-${index}`}
@@ -145,8 +96,60 @@ function UserColumnComponent({
               lastTimePlays={current.lastTimePlays}
               trackId={current.id}
               isCurrent
-              onMouseEnter={() => onItemHover(current.id, true)}
-              onMouseLeave={() => onItemHover(current.id, false)}
+              onMouseEnter={() => handleItemHover(current.id, true)}
+              onMouseLeave={() => handleItemHover(current.id, false)}
+            />
+          );
+        }
+        queueWithoutCurrent.forEach(q => {
+          if (q.track) {
+            userItems.push(
+              <UserItem
+                key={`queue-user-${q.id}`}
+                user={q.requestedByTwitchUser ?? undefined}
+                lastTimePlays={q.requestedAt}
+                trackId={q.track.id}
+                onMouseEnter={() => handleItemHover(q.track?.id, true)}
+                onMouseLeave={() => handleItemHover(q.track?.id, false)}
+              />
+            );
+          }
+        });
+        break;
+      }
+
+      case TrackListViewMode.Reversed:
+        // Обратный режим: пустые UserItem для истории -> текущий пользователь
+        // Не разворачиваем, так как column-reverse сделает за нас
+        history.forEach((track, index) => {
+          userItems.push(
+            <div
+              key={`history-user-${track.id}-${index}`}
+              className={styles.userRow}
+              style={{ opacity: 0, pointerEvents: "none" }}
+            >
+              <div className={styles.avatar}>
+                <div className={styles.avatarPlaceholder} />
+              </div>
+              <div className={styles.userBody}>
+                <div className={styles.userName}>-</div>
+                <div className={styles.userMeta}>-</div>
+              </div>
+            </div>
+          );
+        });
+        if (current) {
+          userItems.push(
+            <UserItem
+              key={`current-user-${
+                currentQueueItem?.requestedByTwitchId + "_" + current.id
+              }`}
+              user={currentQueueItem?.requestedByTwitchUser ?? undefined}
+              lastTimePlays={current.lastTimePlays}
+              trackId={current.id}
+              isCurrent
+              onMouseEnter={() => handleItemHover(current.id, true)}
+              onMouseLeave={() => handleItemHover(current.id, false)}
             />
           );
         }
@@ -160,7 +163,7 @@ function UserColumnComponent({
     currentQueueItem,
     queueWithoutCurrent,
     history,
-    onItemHover,
+    handleItemHover,
   ]);
 
   return (

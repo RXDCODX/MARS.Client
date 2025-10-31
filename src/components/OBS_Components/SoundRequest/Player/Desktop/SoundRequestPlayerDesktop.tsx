@@ -1,5 +1,4 @@
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
 
 import { SoundRequest } from "@/shared/api";
 import { useToastModal } from "@/shared/Utils/ToastModal";
@@ -8,18 +7,14 @@ import { LiquidChrome } from "../Background";
 import { PlayerActionsProvider } from "../contexts/PlayerActionsContext";
 import { useSoundRequestPlayer } from "../hooks";
 import { usePlayerStore } from "../stores/usePlayerStore";
-import { parseDurationToSeconds } from "../utils";
 import { AddTrackModal, PlayerToolbar } from "./PlayerToolbar";
 import styles from "./SoundRequestPlayerDesktop.module.scss";
 import { TrackColumn } from "./TrackColumn";
 import { UserColumn } from "./UserColumn";
-import { useTrackProgress } from "./useTrackProgress";
 
 function SoundRequestPlayerDesktopComponent() {
   const {
-    playerState,
     queue: hookQueue,
-    isPlaying,
     history: hookHistory,
     handlePlayPrevious,
     handleTogglePlayPause,
@@ -28,19 +23,8 @@ function SoundRequestPlayerDesktopComponent() {
     handleVolumeChange,
     handleMute,
     handleToggleVideoState,
-    fetchQueue,
   } = useSoundRequestPlayer();
 
-  // Zustand store - только данные для чтения (с useShallow для оптимизации)
-  const { queue, history, viewMode } = usePlayerStore(
-    useShallow(state => ({
-      queue: state.queue,
-      history: state.history,
-      viewMode: state.viewMode,
-    }))
-  );
-
-  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [showAddTrackModal, setShowAddTrackModal] = useState(false);
   const { showToast } = useToastModal();
   const soundRequestApi = useMemo(() => new SoundRequest(), []);
@@ -65,87 +49,6 @@ function SoundRequestPlayerDesktopComponent() {
     }
   }, [hookHistory]);
 
-  // Извлекаем конкретные значения из playerState
-  const current = playerState?.currentQueueItem?.track || null;
-  const currentQueueItem = playerState?.currentQueueItem;
-  const currentQueueItemId = playerState?.currentQueueItem?.id;
-  const currentTrackProgress = playerState?.currentTrackProgress;
-
-  const durationSec = parseDurationToSeconds(current?.duration || "PT0S");
-
-  const progress = useTrackProgress({
-    durationSec,
-    isPlaying: isPlaying ?? false,
-    trackId: current?.id,
-    initialProgress: currentTrackProgress,
-  });
-
-  // Build lists: sticky current + rest of queue
-  const queueWithoutCurrent = useMemo(
-    () => queue.filter(x => x.id !== currentQueueItemId),
-    [queue, currentQueueItemId]
-  );
-
-  // Обработчики для синхронизации hover между левой и правой колонками
-  const handleItemHover = useCallback(
-    (trackId: string | undefined, isEnter: boolean) => {
-      if (!trackId) return;
-
-      const items = document.querySelectorAll(`[data-track-id="${trackId}"]`);
-      items.forEach(item => {
-        if (isEnter) {
-          item.classList.add(styles.pairHovered);
-        } else {
-          item.classList.remove(styles.pairHovered);
-        }
-      });
-    },
-    []
-  );
-
-  // Обработчик удаления трека из очереди с оптимистичным обновлением
-  const handleDeleteFromQueue = useCallback(
-    async (queueItemId: string) => {
-      if (deletingId) return; // Предотвращаем множественные удаления
-
-      setDeletingId(queueItemId);
-
-      // Сохраняем текущую очередь для отката
-      const previousQueue = [...usePlayerStore.getState().queue];
-
-      // Оптимистичное обновление - удаляем сразу из UI
-      usePlayerStore.getState().removeFromQueue(queueItemId);
-
-      try {
-        const response =
-          await soundRequestApi.soundRequestQueueDelete(queueItemId);
-
-        if (response.data.success) {
-          // Подтверждаем обновление очереди от сервера
-          await fetchQueue();
-        } else {
-          // Откатываем изменения при ошибке
-          usePlayerStore.getState().rollbackQueue(previousQueue);
-          showToast({
-            success: false,
-            message: response.data.message || "Не удалось удалить трек",
-          });
-        }
-      } catch (error) {
-        // Откатываем изменения при ошибке
-        usePlayerStore.getState().rollbackQueue(previousQueue);
-        console.error("Ошибка при удалении трека:", error);
-        showToast({
-          success: false,
-          message: "Произошла ошибка при удалении трека",
-        });
-      } finally {
-        setDeletingId(null);
-      }
-    },
-    [deletingId, soundRequestApi, showToast, fetchQueue]
-  );
-
   // Обработчик добавления трека
   const handleAddTrack = useCallback(
     async (query: string) => {
@@ -155,11 +58,7 @@ function SoundRequestPlayerDesktopComponent() {
         });
 
         showToast(response.data);
-
-        if (response.data.success) {
-          // Обновляем очередь после успешного добавления
-          await fetchQueue();
-        }
+        // Очередь обновится автоматически через SignalR
       } catch (error) {
         console.error("Ошибка при добавлении трека:", error);
         showToast({
@@ -168,7 +67,7 @@ function SoundRequestPlayerDesktopComponent() {
         });
       }
     },
-    [soundRequestApi, showToast, fetchQueue]
+    [soundRequestApi, showToast]
   );
 
   // Мемоизированные обработчики для модального окна
@@ -211,24 +110,8 @@ function SoundRequestPlayerDesktopComponent() {
         <div className={styles.container1}>
           {/* Верхний блок 9 частей высоты: 7:3 по ширине */}
           <div className={styles.topSplit}>
-            <TrackColumn
-              viewMode={viewMode}
-              current={current}
-              isPlaying={isPlaying ?? false}
-              queueWithoutCurrent={queueWithoutCurrent}
-              history={history}
-              onItemHover={handleItemHover}
-              onDelete={handleDeleteFromQueue}
-            />
-
-            <UserColumn
-              viewMode={viewMode}
-              current={current}
-              currentQueueItem={currentQueueItem}
-              queueWithoutCurrent={queueWithoutCurrent}
-              history={history}
-              onItemHover={handleItemHover}
-            />
+            <TrackColumn />
+            <UserColumn />
           </div>
         </div>
 
