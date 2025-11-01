@@ -196,7 +196,11 @@ export default function WaifuAlerts() {
               setRouletteIndex(-1);
             }}
             rouletteIndex={rouletteIndex}
-            prizes={prizes || []}
+            prizes={(prizes || []).map(p => ({
+              ...p,
+              id: String(p.id),
+              text: p.text || "",
+            }))}
             twitchUser={currentMessage.waifuHusband.twitchUser}
           />
         )}

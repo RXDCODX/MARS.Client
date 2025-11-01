@@ -5,7 +5,7 @@
 import "react-toastify/dist/ReactToastify.css";
 
 import { useCallback } from "react";
-import { Button, Modal } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import { toast, ToastContainer, ToastOptions } from "react-toastify";
 
 import { OperationResult } from "@/shared/types/OperationResult";
@@ -101,9 +101,13 @@ const ToastModal: React.FC<ToastModalProps> = ({
       </Modal.Body>
 
       <Modal.Footer className={styles.modalFooter}>
-        <Button variant="secondary" onClick={handleClose}>
+        <button
+          type="button"
+          className="btn btn-secondary"
+          onClick={handleClose}
+        >
           Закрыть
-        </Button>
+        </button>
       </Modal.Footer>
     </Modal>
   );

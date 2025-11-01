@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Col, Row } from "react-bootstrap";
+import { Badge, Card, Col, Row } from "react-bootstrap";
 
 import { TekkenCharacter } from "@/shared/api/types/data-contracts";
 
@@ -24,9 +24,13 @@ const CharacterDetails: React.FC<CharacterDetailsProps> = ({
   return (
     <div className={styles.characterDetails}>
       <div className="d-flex align-items-center mb-4">
-        <Button variant="outline-secondary" onClick={onBack} className="me-3">
+        <button
+          type="button"
+          className="btn btn-outline-secondary me-3"
+          onClick={onBack}
+        >
           ← Назад к персонажам
-        </Button>
+        </button>
         <h2 className="mb-0">{charName}</h2>
       </div>
 
@@ -44,21 +48,20 @@ const CharacterDetails: React.FC<CharacterDetailsProps> = ({
             </div>
             <Card.Body>
               <div className="d-flex gap-2">
-                <Button
-                  variant="primary"
-                  size="lg"
-                  className="flex-fill"
+                <button
+                  type="button"
+                  className="btn btn-primary btn-lg flex-fill"
                   onClick={() => onViewMoves(character)}
                 >
                   Просмотреть удары
-                </Button>
-                <Button
-                  variant="outline-warning"
-                  size="lg"
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-outline-warning btn-lg"
                   onClick={() => onEditCharacter(character)}
                 >
                   Изменить
-                </Button>
+                </button>
               </div>
             </Card.Body>
           </Card>

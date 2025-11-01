@@ -16,8 +16,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Alert,
   Badge,
-  Button,
-  ButtonGroup,
   Card,
   Col,
   Container,
@@ -121,14 +119,13 @@ const ListView: React.FC<{
             </div>
           </div>
           <div className="ms-3">
-            <Button
-              variant="outline-primary"
-              size="sm"
-              className="d-flex align-items-center gap-1"
+            <button
+              type="button"
+              className="btn btn-outline-primary btn-sm d-flex align-items-center gap-1"
             >
               <Play size={16} />
               Выполнить
-            </Button>
+            </button>
           </div>
         </div>
       </Card.Body>
@@ -312,15 +309,14 @@ const CommandParameters: React.FC<{
             {command.description}
           </small>
         </div>
-        <Button
-          variant="outline-secondary"
-          size="sm"
+        <button
+          type="button"
+          className="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1"
           onClick={onCancel}
-          className="d-flex align-items-center gap-1"
         >
           <ArrowLeft size={16} />
           Назад
-        </Button>
+        </button>
       </Card.Header>
       <Card.Body className="p-4">
         {parameters.length > 0 ? (
@@ -359,12 +355,11 @@ const CommandParameters: React.FC<{
             ))}
 
             <div className="d-flex gap-3 mt-4">
-              <Button
-                variant="primary"
-                size="sm"
+              <button
+                type="button"
+                className={`btn btn-primary btn-sm ${styles.executeButton} d-flex align-items-center gap-2`}
                 onClick={onExecute}
                 disabled={isExecuting}
-                className={`${styles.executeButton} d-flex align-items-center gap-2`}
               >
                 {isExecuting ? (
                   <>
@@ -377,16 +372,15 @@ const CommandParameters: React.FC<{
                     Выполнить команду
                   </>
                 )}
-              </Button>
+              </button>
 
-              <Button
-                variant="outline-secondary"
-                size="lg"
+              <button
+                type="button"
+                className={`btn btn-outline-secondary btn-lg ${styles.cancelButton}`}
                 onClick={onCancel}
-                className={styles.cancelButton}
               >
                 Отменить
-              </Button>
+              </button>
             </div>
           </Form>
         ) : (
@@ -398,12 +392,11 @@ const CommandParameters: React.FC<{
             <p className="text-muted mb-4">
               Команда готова к выполнению без дополнительных настроек
             </p>
-            <Button
-              variant="primary"
-              size="sm"
+            <button
+              type="button"
+              className="btn btn-primary btn-sm d-flex align-items-center gap-2 mx-auto"
               onClick={onExecute}
               disabled={isExecuting}
-              className="d-flex align-items-center gap-2 mx-auto"
             >
               {isExecuting ? (
                 <>
@@ -416,7 +409,7 @@ const CommandParameters: React.FC<{
                   Выполнить команду
                 </>
               )}
-            </Button>
+            </button>
           </div>
         )}
       </Card.Body>
@@ -466,16 +459,15 @@ const CommandSearch: React.FC<{
           </InputGroup>
         </div>
         {searchQuery && (
-          <Button
-            variant="outline-secondary"
-            size="sm"
+          <button
+            type="button"
+            className="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1"
             onClick={onClear}
             title="Очистить поиск"
-            className="d-flex align-items-center gap-1"
           >
             <XCircle size={16} />
             Очистить
-          </Button>
+          </button>
         )}
       </div>
       {searchQuery && (
@@ -498,24 +490,27 @@ const DisplayModeToggle: React.FC<{
   displayMode: "list" | "grid";
   onModeChange: (mode: "list" | "grid") => void;
 }> = ({ displayMode, onModeChange }) => (
-  <ButtonGroup size="sm" className={styles.displayModeToggle}>
-    <Button
-      variant={displayMode === "list" ? "primary" : "outline-primary"}
+  <div
+    className={`btn-group btn-group-sm ${styles.displayModeToggle}`}
+    role="group"
+  >
+    <button
+      type="button"
+      className={`btn ${displayMode === "list" ? "btn-primary" : "btn-outline-primary"} d-flex align-items-center gap-2`}
       onClick={() => onModeChange("list")}
-      className="d-flex align-items-center gap-2"
     >
       <List size={16} />
       Список
-    </Button>
-    <Button
-      variant={displayMode === "grid" ? "primary" : "outline-primary"}
+    </button>
+    <button
+      type="button"
+      className={`btn ${displayMode === "grid" ? "btn-primary" : "btn-outline-primary"} d-flex align-items-center gap-2`}
       onClick={() => onModeChange("grid")}
-      className="d-flex align-items-center gap-2"
     >
       <Grid3x3 size={16} />
       Сетка
-    </Button>
-  </ButtonGroup>
+    </button>
+  </div>
 );
 
 const CommandsPage: React.FC = () => {

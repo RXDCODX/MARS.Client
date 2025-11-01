@@ -32,4 +32,3 @@ function MuteButtonComponent() {
 }
 
 export const MuteButton = memo(MuteButtonComponent);
-

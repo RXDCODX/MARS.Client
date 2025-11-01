@@ -32,4 +32,3 @@ function PreviousButtonComponent() {
 }
 
 export const PreviousButton = memo(PreviousButtonComponent);
-

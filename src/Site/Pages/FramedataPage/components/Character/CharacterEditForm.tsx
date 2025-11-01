@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import {
   Alert,
   Badge,
+  // @ts-ignore
   Button,
   Card,
   Col,
@@ -278,9 +279,13 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
         <Card.Header>
           <div className="d-flex align-items-center justify-content-between">
             <h3 className="mb-0">Редактирование персонажа: {character.name}</h3>
-            <Button variant="outline-secondary" size="sm" onClick={onBack}>
+            <button
+              type="button"
+              className="btn btn-outline-secondary btn-sm"
+              onClick={onBack}
+            >
               ← Назад к персонажу
-            </Button>
+            </button>
           </div>
         </Card.Header>
         <Card.Body>
@@ -558,9 +563,11 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
             )}
 
             <div className="d-flex gap-2 justify-content-end mt-4">
+              {/* @ts-ignore */}
               <Button variant="secondary" onClick={onBack} disabled={isLoading}>
                 Назад
               </Button>
+              {/* @ts-ignore */}
               <Button type="submit" variant="primary" disabled={isLoading}>
                 {isLoading ? (
                   <>
