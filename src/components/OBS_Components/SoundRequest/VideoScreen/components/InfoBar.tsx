@@ -2,7 +2,6 @@ import { memo, useMemo } from "react";
 
 import styles from "./InfoBar.module.scss";
 import { ScrollingText } from "./ScrollingText";
-import Silk from "./Silk";
 
 interface Props {
   userName: string;
@@ -41,16 +40,8 @@ function InfoBarComponent({
         } as React.CSSProperties
       }
     >
-      {/* Анимированный фон Silk */}
-      <div className={styles.silkBackground}>
-        <Silk
-          speed={2}
-          scale={1.5}
-          color="#000000"
-          noiseIntensity={0.8}
-          rotation={0}
-        />
-      </div>
+      {/* Анимированный фон */}
+      <div className={styles.silkBackground} />
 
       {/* Оверлей с прогрессом */}
       <div className={styles.progressOverlay} />

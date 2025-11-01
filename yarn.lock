@@ -2279,7 +2279,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@popperjs/core@npm:^2.11.8, @popperjs/core@npm:^2.9.2":
+"@popperjs/core@npm:^2.11.8":
   version: 2.11.8
   resolution: "@popperjs/core@npm:2.11.8"
   checksum: 10c0/4681e682abc006d25eb380d0cf3efc7557043f53b6aea7a5057d0d1e7df849a00e281cd8ea79c902a35a414d7919621fc2ba293ecec05f413598e0b23d5a1e63
@@ -2464,7 +2464,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-three/fiber@npm:^9.3.0, @react-three/fiber@npm:^9.4.0":
+"@react-three/fiber@npm:^9.3.0":
   version: 9.4.0
   resolution: "@react-three/fiber@npm:9.4.0"
   dependencies:
@@ -3606,15 +3606,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/bootstrap@npm:^5.2.10":
-  version: 5.2.10
-  resolution: "@types/bootstrap@npm:5.2.10"
-  dependencies:
-    "@popperjs/core": "npm:^2.9.2"
-  checksum: 10c0/3e978855eb780df3907e8fe991371dc661c7a8c5b9852a10e33bcf6a909bc1481857aa8786d18b3aa828fb28660145fda0c8648265719e8a97a448b9f0158eae
-  languageName: node
-  linkType: hard
-
 "@types/canvas-confetti@npm:^1.6.4":
   version: 1.9.0
   resolution: "@types/canvas-confetti@npm:1.9.0"
@@ -3934,7 +3925,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/three@npm:*, @types/three@npm:^0":
+"@types/three@npm:*":
   version: 0.181.0
   resolution: "@types/three@npm:0.181.0"
   dependencies:
@@ -5889,15 +5880,6 @@ __metadata:
   version: 1.13.1
   resolution: "bootstrap-icons@npm:1.13.1"
   checksum: 10c0/2c1adeb1796502e67b476ce049c86bc3a7ff7984c61777e056820389a8db5ec6535c12a33f76f3ed52674bca4c01472065a7fbcde6cc384ebb86c2eae51390bd
-  languageName: node
-  linkType: hard
-
-"bootstrap@npm:^5.3.8":
-  version: 5.3.8
-  resolution: "bootstrap@npm:5.3.8"
-  peerDependencies:
-    "@popperjs/core": ^2.11.8
-  checksum: 10c0/0039a9df2c3e7bfa04f1abca199c299ff3b75869d578c0cb1721c6f1f203c91531788a5631ecbee01513481979314d0e4ba0d90c2011e6ce18fc2e0bc93e18d9
   languageName: node
   linkType: hard
 
@@ -10917,7 +10899,6 @@ __metadata:
     "@lottiefiles/lottie-player": "npm:^2.0.12"
     "@microsoft/signalr": "npm:^9.0.6"
     "@mkody/twitch-emoticons": "npm:^2.9.4"
-    "@react-three/fiber": "npm:^9.4.0"
     "@redux-devtools/extension": "npm:^3.3.0"
     "@storybook/addon-a11y": "npm:^10.0.2"
     "@storybook/addon-docs": "npm:^10.0.2"
@@ -10934,14 +10915,12 @@ __metadata:
     "@twurple/api": "npm:^7.4.0"
     "@twurple/auth": "npm:^7.4.0"
     "@twurple/chat": "npm:^7.4.0"
-    "@types/bootstrap": "npm:^5.2.10"
     "@types/node": "npm:^24.9.2"
     "@types/react": "npm:^19.2.2"
     "@types/react-dom": "npm:^19.2.2"
     "@types/react-is": "npm:^19.2.0"
     "@types/react-textfit": "npm:^1.1.4"
     "@types/screenfull": "npm:^4.1.0"
-    "@types/three": "npm:^0"
     "@types/youtube-player": "npm:^5.5.11"
     "@typescript-eslint/eslint-plugin": "npm:^8.46.2"
     "@typescript-eslint/parser": "npm:^8.46.2"
@@ -10951,7 +10930,6 @@ __metadata:
     "@vitest/coverage-v8": "npm:^4.0.6"
     "@vkid/sdk": "npm:^2.6.2"
     animate.css: "npm:^4.1.1"
-    bootstrap: "npm:^5.3.8"
     bootstrap-icons: "npm:^1.13.1"
     eslint: "npm:^9.39.0"
     eslint-config-prettier: "npm:^10.1.8"
@@ -11001,7 +10979,6 @@ __metadata:
     swagger-axios-codegen: "npm:^0.17.4"
     swagger-typescript-api: "npm:^13.2.16"
     terser: "npm:^5.44.0"
-    three: "npm:^0.181.0"
     typescript: "npm:~5.9.3"
     typescript-eslint: "npm:^8.46.2"
     uuid: "npm:^13.0.0"
@@ -15088,13 +15065,6 @@ __metadata:
   version: 0.170.0
   resolution: "three@npm:0.170.0"
   checksum: 10c0/eeaa1eccb31467654a044fb90634b3b6bb8d0768a4f029c082fb6aa22aec0d6362d0e3af74938caa1db512b7823a031b54a76e88fba6cfd535054165ea9667c9
-  languageName: node
-  linkType: hard
-
-"three@npm:^0.181.0":
-  version: 0.181.0
-  resolution: "three@npm:0.181.0"
-  checksum: 10c0/676dff297e54dc8bb55ce059d5bfe2332c817e207025d07d1a24fd48376db276d9bc6aa4c47ab7b1ba551752f1e42aacf7248eac94354ebbfa0d43042c6a50f1
   languageName: node
   linkType: hard
 

@@ -2,7 +2,6 @@ import { useRef, useState } from "react";
 import {
   Alert,
   Badge,
-  // @ts-ignore
   Button,
   Card,
   Col,
@@ -563,11 +562,9 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
             )}
 
             <div className="d-flex gap-2 justify-content-end mt-4">
-              {/* @ts-ignore */}
               <Button variant="secondary" onClick={onBack} disabled={isLoading}>
                 Назад
               </Button>
-              {/* @ts-ignore */}
               <Button type="submit" variant="primary" disabled={isLoading}>
                 {isLoading ? (
                   <>
