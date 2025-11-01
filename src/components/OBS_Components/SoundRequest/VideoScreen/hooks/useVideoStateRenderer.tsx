@@ -14,12 +14,11 @@ interface UseVideoStateRendererProps {
 interface VideoStateRendererResult {
   component: React.ReactElement | null;
   videoState: PlayerStateVideoStateEnum;
-  showSections: boolean;
 }
 
 /**
  * Хук для управления рендерингом компонентов в зависимости от videoState
- * @returns объект с компонентом для рендеринга, текущим videoState и флагом отображения секций
+ * @returns объект с компонентом для рендеринга и текущим videoState
  */
 export function useVideoStateRenderer({
   isMainPlayer,
@@ -56,15 +55,6 @@ export function useVideoStateRenderer({
     playerState?.currentQueueItem?.requestedByTwitchUser?.chatColor;
 
   const videoState = playerState?.videoState ?? PlayerStateVideoStateEnum.Video;
-
-  // Определяем нужно ли показывать секции (только для Video и mainPlayer)
-  const showSections = useMemo(
-    () =>
-      !!playerState &&
-      isMainPlayer &&
-      videoState === PlayerStateVideoStateEnum.Video,
-    [isMainPlayer, videoState, playerState]
-  );
 
   // Мемоизируем общие props для всех компонентов
   const commonProps = useMemo(() => {
@@ -130,7 +120,14 @@ export function useVideoStateRenderer({
 
     switch (videoState) {
       case PlayerStateVideoStateEnum.Video:
-        return <VideoPlayerView {...propsWithTrack} />;
+        return (
+          <VideoPlayerView
+            {...propsWithTrack}
+            userName={userName}
+            userAvatar={userAvatar}
+            userColor={userColor}
+          />
+        );
 
       case PlayerStateVideoStateEnum.NoVideo:
         return (
@@ -150,7 +147,14 @@ export function useVideoStateRenderer({
         console.warn(
           `[useVideoStateRenderer] Неизвестный videoState: ${videoState}, используем Video`
         );
-        return <VideoPlayerView {...propsWithTrack} />;
+        return (
+          <VideoPlayerView
+            {...propsWithTrack}
+            userName={userName}
+            userAvatar={userAvatar}
+            userColor={userColor}
+          />
+        );
     }
   }, [
     videoState,
@@ -165,6 +169,5 @@ export function useVideoStateRenderer({
   return {
     component,
     videoState,
-    showSections,
   };
 }

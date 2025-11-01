@@ -57,7 +57,7 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
   const currentQueueItem = playerState?.currentQueueItem;
   const currentTrack = currentQueueItem?.track;
 
-  const { component, videoState, showSections } = useVideoStateRenderer({
+  const { component, videoState } = useVideoStateRenderer({
     isMainPlayer,
   });
 
@@ -66,22 +66,10 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
     return null;
   }
 
-  const userName =
-    currentQueueItem?.requestedByTwitchUser?.displayName ??
-    currentQueueItem?.requestedByTwitchUser?.userLogin ??
-    "Неизвестный пользователь";
-  const authors = currentTrack.authors?.join(", ") ?? "Неизвестный автор";
-  const trackName = currentTrack.trackName ?? "";
-  const userAvatar = currentQueueItem?.requestedByTwitchUser?.profileImageUrl;
-  const userColor = currentQueueItem?.requestedByTwitchUser?.chatColor;
-
   console.log("[VideoScreen] Рендеринг с videoState:", videoState);
   console.log("[VideoScreen] Рендерим плеер с треком:", currentTrack.trackName);
 
-  const classList = [styles.videoSection];
-  if (!isMainPlayer || !showSections) {
-    classList.push(styles.fullScreen);
-  }
+  const classList = [styles.videoSection, styles.fullScreen];
   if (className) {
     classList.push(className);
   }
@@ -90,41 +78,7 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
 
   return (
     <div className={styles.container} style={{ padding: 0 }}>
-      {showSections && (
-        <div className={styles.userSection}>
-          <div className={styles.userInfo}>
-            <span className={styles.label}>Заказал:</span>
-            <div className={styles.userDisplay}>
-              {userAvatar && (
-                <img
-                  src={userAvatar}
-                  alt={userName}
-                  className={styles.userAvatar}
-                />
-              )}
-              <span
-                className={styles.userName}
-                style={{
-                  color: userColor,
-                }}
-              >
-                {userName}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className={videoSectionClassName}>{component}</div>
-
-      {showSections && (
-        <div className={styles.trackSection}>
-          <div className={styles.trackInfo}>
-            <div className={styles.trackTitle}>{trackName}</div>
-            <div className={styles.trackArtist}>{authors}</div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

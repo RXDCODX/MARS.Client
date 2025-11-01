@@ -1,0 +1,36 @@
+@import "@/app/global.scss";
+
+.container {
+  position: relative;
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+.text {
+  display: inline-block;
+  white-space: nowrap;
+
+  &.scrolling {
+    animation: scroll-left 15s linear infinite;
+    padding-right: 50px; // Отступ между повторениями текста
+  }
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+// Пауза при наведении (опционально)
+.container:hover .scrolling {
+  animation-play-state: paused;
+}
+
