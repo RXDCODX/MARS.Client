@@ -12,7 +12,6 @@ interface PlayerActions {
   handleMute: () => void;
   handleVolumeChange: (volume: number) => void;
   handleToggleVideoState: () => void;
-  handleOpenAddTrackModal?: () => void;
 }
 
 const PlayerActionsContext = createContext<PlayerActions | null>(null);

@@ -13,6 +13,8 @@ interface VideoScreenStoreState {
   lastReportedSeconds: number;
   connection: HubConnection | null;
   isInitialized: boolean;
+  localVolume: number;
+  isVolumeManuallyChanged: boolean;
 
   init: (defaultHasUserInteracted: boolean) => Promise<void>;
   dispose: () => Promise<void>;
@@ -21,6 +23,7 @@ interface VideoScreenStoreState {
   notifyEnded: (track: QueueItem["track"]) => Promise<void>;
   notifyStarted: (track: QueueItem["track"]) => Promise<void>;
   notifyError: (track: QueueItem["track"]) => Promise<void>;
+  setLocalVolume: (volume: number) => void;
 }
 
 function extractQueueItemId(state: PlayerState | null): string | undefined {
@@ -35,6 +38,8 @@ export const useVideoScreenStore = create<VideoScreenStoreState>(
     lastReportedSeconds: 0,
     connection: null,
     isInitialized: false,
+    localVolume: 100,
+    isVolumeManuallyChanged: false,
 
     init: async defaultHasUserInteracted => {
       const currentState = get();
@@ -47,9 +52,14 @@ export const useVideoScreenStore = create<VideoScreenStoreState>(
         return;
       }
 
+      // Инициализируем localVolume из первого playerState если он уже есть
+      const initialPlayerState = get().playerState;
+      const initialVolume = initialPlayerState?.volume ?? 100;
+
       set({
         hasUserInteracted: defaultHasUserInteracted,
         isInitialized: true,
+        localVolume: initialVolume,
       });
 
       // Закрываем существующее подключение если есть
@@ -97,6 +107,11 @@ export const useVideoScreenStore = create<VideoScreenStoreState>(
 
         const shouldResetProgress = isNewTrack || !previousPlayerState;
 
+        // Синхронизируем локальную громкость с playerState только если она не была изменена вручную
+        const newLocalVolume = state.isVolumeManuallyChanged
+          ? state.localVolume
+          : playerState.volume;
+
         set({
           playerState,
           currentProgressSeconds:
@@ -109,6 +124,7 @@ export const useVideoScreenStore = create<VideoScreenStoreState>(
             shouldResetProgress && newProgressSeconds >= 0
               ? newProgressSeconds
               : state.lastReportedSeconds,
+          localVolume: newLocalVolume,
         });
       };
 
@@ -139,6 +155,8 @@ export const useVideoScreenStore = create<VideoScreenStoreState>(
         lastReportedSeconds: 0,
         connection: null,
         isInitialized: false,
+        localVolume: 100,
+        isVolumeManuallyChanged: false,
       });
     },
 
@@ -225,6 +243,17 @@ export const useVideoScreenStore = create<VideoScreenStoreState>(
           error
         );
       }
+    },
+
+    setLocalVolume: volume => {
+      if (volume < 0 || volume > 100) {
+        return;
+      }
+
+      set({
+        localVolume: volume,
+        isVolumeManuallyChanged: true,
+      });
     },
   })
 );

@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useRef } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef } from "react";
 import ReactPlayer from "react-player";
 
 import type { PlayerState, QueueItem } from "@/shared/api";
@@ -17,6 +17,7 @@ interface Props {
   userName: string;
   userAvatar?: string;
   userColor?: string;
+  localVolume: number;
   onEnded: () => void;
   onStart: () => void;
   onError: () => void;
@@ -26,6 +27,7 @@ interface Props {
     loaded: number;
     loadedSeconds: number;
   }) => void;
+  onVolumeChange?: (volume: number) => void;
 }
 
 /**
@@ -41,10 +43,12 @@ function VideoPlayerViewComponent({
   userName,
   userAvatar,
   userColor,
+  localVolume,
   onEnded,
   onStart,
   onError,
   onProgress,
+  onVolumeChange,
 }: Props) {
   const isPlaying = playerState.state === "Playing";
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -123,6 +127,76 @@ function VideoPlayerViewComponent({
     progressAppliedRef.current = false;
   }, [queueItemId]);
 
+  // Отслеживание изменений громкости через внутренний плеер
+  // Используем ref для хранения функции cleanup
+  const volumeTrackingCleanupRef = useRef<(() => void) | null>(null);
+
+  // Очистка обработчика при размонтировании или смене трека
+  useEffect(
+    () => () => {
+      if (volumeTrackingCleanupRef.current) {
+        volumeTrackingCleanupRef.current();
+        volumeTrackingCleanupRef.current = null;
+      }
+    },
+    [playerKey]
+  );
+
+  // Функция для установки обработчика на готовый плеер
+  const setupVolumeTracking = useCallback(() => {
+    if (!playerRef.current || !onVolumeChange) {
+      return;
+    }
+
+    // Очищаем предыдущий обработчик
+    if (volumeTrackingCleanupRef.current) {
+      volumeTrackingCleanupRef.current();
+      volumeTrackingCleanupRef.current = null;
+    }
+
+    // Проверяем, что getInternalPlayer существует
+    if (typeof playerRef.current.getInternalPlayer !== "function") {
+      console.warn(
+        "[VideoPlayerView] getInternalPlayer не доступен на playerRef"
+      );
+      return;
+    }
+
+    const internalPlayer = playerRef.current.getInternalPlayer();
+    if (
+      !internalPlayer ||
+      !("volume" in internalPlayer) ||
+      !("addEventListener" in internalPlayer)
+    ) {
+      console.warn(
+        "[VideoPlayerView] Внутренний плеер не поддерживает отслеживание громкости"
+      );
+      return;
+    }
+
+    const handleVolumeChange = () => {
+      const mediaElement = internalPlayer as HTMLMediaElement;
+      const newVolume = mediaElement.volume;
+      if (typeof newVolume === "number" && newVolume >= 0 && newVolume <= 1) {
+        onVolumeChange(newVolume);
+      }
+    };
+
+    (internalPlayer as HTMLMediaElement).addEventListener(
+      "volumechange",
+      handleVolumeChange
+    );
+
+    volumeTrackingCleanupRef.current = () => {
+      (internalPlayer as HTMLMediaElement).removeEventListener(
+        "volumechange",
+        handleVolumeChange
+      );
+    };
+
+    console.log("[VideoPlayerView] Отслеживание громкости установлено");
+  }, [onVolumeChange]);
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.videoContainer}>
@@ -131,7 +205,7 @@ function VideoPlayerViewComponent({
           key={playerKey}
           src={currentTrack.url}
           playing={isPlaying}
-          volume={playerState.volume / 100}
+          volume={localVolume / 100}
           muted={!isMainPlayer || shouldMute}
           onEnded={() => {
             if (isMainPlayer) onEnded();
@@ -148,7 +222,7 @@ function VideoPlayerViewComponent({
           }}
           width="100%"
           height="100%"
-          controls={import.meta.env.DEV}
+          controls={true}
           onReady={() => {
             // Применяем прогресс при готовности плеера
             const savedProgressSeconds = parseDurationToSeconds(
@@ -172,6 +246,9 @@ function VideoPlayerViewComponent({
                 );
               }
             }
+
+            // Устанавливаем отслеживание изменения громкости
+            setupVolumeTracking();
           }}
         />
       </div>

@@ -1,7 +1,7 @@
-import { memo, useMemo } from "react";
+import { memo, useEffect, useMemo } from "react";
+import Marquee from "react-fast-marquee";
 
 import styles from "./InfoBar.module.scss";
-import { ScrollingText } from "./ScrollingText";
 
 interface Props {
   userName: string;
@@ -31,6 +31,10 @@ function InfoBarComponent({
     return Math.min(Math.max(progressPercent, 0), 100);
   }, [progressPercent]);
 
+  useEffect(() => {
+    console.log(trackName, artistName);
+  }, [trackName, artistName]);
+
   return (
     <div
       className={styles.infoBar}
@@ -53,11 +57,16 @@ function InfoBarComponent({
             {userAvatar && (
               <img src={userAvatar} alt={userName} className={styles.avatar} />
             )}
-            <ScrollingText
-              text={userName}
-              className={styles.userName + " " + styles.container}
-              style={{ color: userColor }}
-            />
+            <Marquee
+              className={styles.userNameContainer}
+              play={true}
+              pauseOnHover={false}
+              gradient={false}
+            >
+              <div className={styles.userName} style={{ color: userColor }}>
+                {userName}
+              </div>
+            </Marquee>
           </div>
         </div>
 
@@ -66,8 +75,27 @@ function InfoBarComponent({
 
         {/* Правая часть - трек */}
         <div className={styles.trackInfo}>
-          <ScrollingText text={trackName} className={styles.trackName} />
-          <ScrollingText text={artistName} className={styles.artist} />
+          <div className={styles.trackNameContainer}>
+            <Marquee
+              className={styles.trackName}
+              speed={30}
+              play={true}
+              direction="right"
+              pauseOnHover={false}
+              gradient={false}
+            >
+              {trackName}
+            </Marquee>
+          </div>
+          <Marquee
+            className={styles.artistContainer}
+            play={true}
+            direction="right"
+            pauseOnHover={false}
+            gradient={false}
+          >
+            <div className={styles.artist}>{artistName}</div>
+          </Marquee>
         </div>
       </div>
     </div>

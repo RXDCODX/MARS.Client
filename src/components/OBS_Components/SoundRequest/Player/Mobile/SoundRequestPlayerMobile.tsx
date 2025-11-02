@@ -19,8 +19,6 @@ import { useShallow } from "zustand/react/shallow";
 import { PlayerStateVideoStateEnum, SoundRequest } from "@/shared/api";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
-import { LiquidChrome } from "../Background";
-import { useSoundRequestPlayer } from "../hooks";
 import { usePlayerStore } from "../stores/usePlayerStore";
 import {
   formatDuration,
@@ -39,26 +37,19 @@ export function SoundRequestPlayerMobile() {
   const { showToast } = useToastModal();
   const soundRequestApi = useMemo(() => new SoundRequest(), []);
 
-  const {
-    queue,
-    displayedVideos,
-    handleTogglePlayPause,
-    handleStop,
-    handleSkip,
-    handlePlayNext,
-    handleVolumeChange,
-    handleMute,
-    handleToggleVideoState,
-    handlePlayTrackFromQueue,
-    fetchQueue,
-  } = useSoundRequestPlayer();
-
-  // Получаем данные из store
-  const { playerState } = usePlayerStore(
+  // Получаем данные и actions из store
+  const { playerState, queue, actions } = usePlayerStore(
     useShallow(state => ({
       playerState: state.playerState,
+      queue: state.queue,
+      actions: state.actions,
     }))
   );
+
+  // Временные заглушки для функций, которые нужно будет переделать
+  const displayedVideos = useMemo(() => [], []);
+  const handlePlayTrackFromQueue = () => console.warn("Not implemented");
+  const fetchQueue = async () => console.warn("Not implemented");
 
   // Вычисляем состояния без создания новых массивов
   const isPlaying = playerState?.state === "Playing";
@@ -118,9 +109,7 @@ export function SoundRequestPlayerMobile() {
   };
 
   return (
-    <>
-      <LiquidChrome />
-      <div className={styles.container}>
+    <div className={styles.container}>
         {/* Текущий трек */}
         <Card className={styles.currentTrackCard}>
           <Card.Body>
@@ -415,6 +404,5 @@ export function SoundRequestPlayerMobile() {
           </Card.Body>
         </Card>
       </div>
-    </>
   );
 }

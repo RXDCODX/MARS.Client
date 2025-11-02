@@ -7,10 +7,19 @@ import styles from "./SoundRequestPlayerDesktop.module.scss";
 import { UserItem } from "./UserItem";
 
 function UserColumnComponent() {
-  // Получаем данные напрямую из стора
-  const { playerState, queue, history, viewMode } = usePlayerStore(
+  // Получаем данные напрямую из стора - ТОЛЬКО нужные поля
+  const {
+    currentTrack,
+    currentQueueItem,
+    currentQueueItemId,
+    queue,
+    history,
+    viewMode,
+  } = usePlayerStore(
     useShallow(state => ({
-      playerState: state.playerState,
+      currentTrack: state.playerState?.currentQueueItem?.track || null,
+      currentQueueItem: state.playerState?.currentQueueItem,
+      currentQueueItemId: state.playerState?.currentQueueItem?.id,
       queue: state.queue,
       history: state.history,
       viewMode: state.viewMode,
@@ -20,10 +29,8 @@ function UserColumnComponent() {
   // Получаем обработчики из хука
   const { handleItemHover } = useQueueActions();
 
-  // Вычисляем производные значения
-  const current = playerState?.currentQueueItem?.track || null;
-  const currentQueueItem = playerState?.currentQueueItem;
-  const currentQueueItemId = playerState?.currentQueueItem?.id;
+  // Используем переименованные переменные
+  const current = currentTrack;
 
   // Очередь без текущего трека
   const queueWithoutCurrent = useMemo(
@@ -68,24 +75,30 @@ function UserColumnComponent() {
         break;
 
       case TrackListViewMode.WithHistory: {
+        // С историей: история -> текущий трек -> очередь (ограниченная)
+        // Ограничиваем общее количество треков, чтобы не выталкивать тулбар
+        const MAX_QUEUE_IN_HISTORY_MODE = 4;
         // С историей: заглушки для истории -> текущий -> очередь
-        [...history].reverse().forEach((track, index) => {
-          userItems.push(
-            <div
-              key={`history-user-${track.id}-${index}`}
-              className={styles.userRow}
-              style={{ opacity: 0, pointerEvents: "none" }}
-            >
-              <div className={styles.avatar}>
-                <div className={styles.avatarPlaceholder} />
+        [...history]
+          .reverse()
+          .slice(0, MAX_QUEUE_IN_HISTORY_MODE)
+          .forEach((track, index) => {
+            userItems.push(
+              <div
+                key={`history-user-${track.id}-${index}`}
+                className={styles.userRow}
+                style={{ opacity: 0, pointerEvents: "none" }}
+              >
+                <div className={styles.avatar}>
+                  <div className={styles.avatarPlaceholder} />
+                </div>
+                <div className={styles.userBody}>
+                  <div className={styles.userName}>-</div>
+                  <div className={styles.userMeta}>-</div>
+                </div>
               </div>
-              <div className={styles.userBody}>
-                <div className={styles.userName}>-</div>
-                <div className={styles.userMeta}>-</div>
-              </div>
-            </div>
-          );
-        });
+            );
+          });
         if (current) {
           userItems.push(
             <UserItem
@@ -101,7 +114,7 @@ function UserColumnComponent() {
             />
           );
         }
-        queueWithoutCurrent.forEach(q => {
+        queueWithoutCurrent.slice(0, MAX_QUEUE_IN_HISTORY_MODE).forEach(q => {
           if (q.track) {
             userItems.push(
               <UserItem

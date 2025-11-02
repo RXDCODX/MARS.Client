@@ -2,9 +2,11 @@ import { memo, useCallback, useEffect, useMemo, useRef } from "react";
 import ReactPlayer from "react-player";
 
 import type { PlayerState, QueueItem } from "@/shared/api";
+import { useInjectStyles } from "@/shared/hooks/useInjectStyles";
 
 import { useTrackProgress } from "../../Player/Desktop/useTrackProgress";
 import { parseDurationToSeconds } from "../utils/parseDuration";
+import { InfoBar } from "./InfoBar";
 import styles from "./NoVideoView.module.scss";
 
 interface Props {
@@ -16,6 +18,7 @@ interface Props {
   userName: string;
   userAvatar?: string;
   userColor?: string;
+  localVolume: number;
   onEnded: () => void;
   onStart: () => void;
   onError: () => void;
@@ -25,6 +28,7 @@ interface Props {
     loaded: number;
     loadedSeconds: number;
   }) => void;
+  onVolumeChange?: (volume: number) => void;
 }
 
 /**
@@ -41,10 +45,12 @@ function NoVideoViewComponent({
   userName,
   userAvatar,
   userColor,
+  localVolume,
   onEnded,
   onStart,
   onError,
   onProgress,
+  onVolumeChange,
 }: Props) {
   const isPlaying = playerState.state === "Playing";
   const authors = currentTrack.authors?.join(", ") || "Неизвестный автор";
@@ -113,6 +119,29 @@ function NoVideoViewComponent({
     return Math.min(animatedProgress * 100, 100);
   }, [animatedProgress]);
 
+  const trackName = currentTrack.trackName ?? "";
+
+  // Инжектим стили для прозрачного фона
+  useInjectStyles(
+    `
+      body {
+        background-color: transparent !important;
+        background: transparent !important;
+      }
+      
+      #root {
+        background-color: transparent !important;
+        background: transparent !important;
+      }
+      
+      html {
+        background-color: transparent !important;
+        background: transparent !important;
+      }
+    `,
+    "no-video-view-transparent-bg"
+  );
+
   return (
     <div
       className={styles.container}
@@ -125,8 +154,14 @@ function NoVideoViewComponent({
           key={playerKey}
           src={currentTrack.url}
           playing={isPlaying}
-          volume={playerState.volume / 100}
+          volume={localVolume / 100}
           muted={!isMainPlayer || shouldMute}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          onVolumeChange={(volume: any) => {
+            if (onVolumeChange && typeof volume === "number") {
+              onVolumeChange(volume);
+            }
+          }}
           onEnded={() => {
             if (isMainPlayer) onEnded();
           }}
@@ -171,37 +206,17 @@ function NoVideoViewComponent({
         />
       </div>
 
-      {/* Одна полоска с информацией */}
-      <div
-        className={styles.infoBar}
-        style={
-          {
-            "--track-progress": `${isNaN(progressPercent) ? 0 : progressPercent}%`,
-          } as React.CSSProperties
-        }
-      >
-        <div className={styles.infoBarContent}>
-          {/* Левая часть - пользователь */}
-          <div className={styles.userInfo}>
-            <span className={styles.label}>Заказал:</span>
-            {userAvatar && (
-              <img src={userAvatar} alt={userName} className={styles.avatar} />
-            )}
-            <span className={styles.userName} style={{ color: userColor }}>
-              {userName}
-            </span>
-          </div>
-
-          {/* Разделитель */}
-          <div className={styles.divider}></div>
-
-          {/* Правая часть - трек */}
-          <div className={styles.trackInfo}>
-            <div className={styles.trackName}>{currentTrack.trackName}</div>
-            <div className={styles.artist}>{authors}</div>
-          </div>
-        </div>
-      </div>
+      {/* Информационная полоска с прогрессом */}
+      {isMainPlayer && (
+        <InfoBar
+          userName={userName}
+          userAvatar={userAvatar}
+          userColor={userColor}
+          trackName={trackName}
+          artistName={authors}
+          progressPercent={progressPercent}
+        />
+      )}
     </div>
   );
 }

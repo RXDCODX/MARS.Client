@@ -1,19 +1,23 @@
 import { memo, useCallback, useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
+import { useShallow } from "zustand/react/shallow";
 
 import styles from "./AddTrackModal.module.scss";
+import { useAddTrackModal } from "./hooks";
+import { useAddTrackModalStore } from "./stores/useAddTrackModalStore";
 
-interface AddTrackModalProps {
-  show: boolean;
-  onClose: () => void;
-  onSubmit: (query: string) => Promise<void>;
-}
-
-function AddTrackModalComponent({
-  show,
-  onClose,
-  onSubmit,
-}: AddTrackModalProps) {
+/**
+ * Модальное окно для добавления трека в очередь
+ * Управляет своим состоянием через Zustand store
+ */
+function AddTrackModalComponent() {
+  const { isOpen, close } = useAddTrackModalStore(
+    useShallow(state => ({
+      isOpen: state.isOpen,
+      close: state.close,
+    }))
+  );
+  const { addTrack } = useAddTrackModal();
   const [query, setQuery] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -27,27 +31,27 @@ function AddTrackModalComponent({
 
       setIsSubmitting(true);
       try {
-        await onSubmit(query.trim());
-        setQuery("");
-        onClose();
-      } catch (error) {
-        console.error("Ошибка при добавлении трека:", error);
+        const success = await addTrack(query);
+        if (success) {
+          setQuery("");
+          close();
+        }
       } finally {
         setIsSubmitting(false);
       }
     },
-    [query, onSubmit, onClose]
+    [query, addTrack, close]
   );
 
   const handleClose = useCallback(() => {
     if (!isSubmitting) {
       setQuery("");
-      onClose();
+      close();
     }
-  }, [isSubmitting, onClose]);
+  }, [isSubmitting, close]);
 
   return (
-    <Modal show={show} onHide={handleClose} centered>
+    <Modal show={isOpen} onHide={handleClose} centered>
       <Modal.Header closeButton>
         <Modal.Title>Добавить трек</Modal.Title>
       </Modal.Header>
@@ -59,21 +63,21 @@ function AddTrackModalComponent({
               type="text"
               placeholder="Например: Rick Astley - Never Gonna Give You Up"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={e => setQuery(e.target.value)}
               autoFocus
               disabled={isSubmitting}
             />
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button 
+          <Button
             className={`${styles.modalButton} ${styles.secondary}`}
             onClick={handleClose}
             disabled={isSubmitting}
           >
             Отмена
           </Button>
-          <Button 
+          <Button
             className={`${styles.modalButton} ${styles.primary}`}
             type="submit"
             disabled={!query.trim() || isSubmitting}
@@ -88,4 +92,3 @@ function AddTrackModalComponent({
 
 // Экспортируем мемоизированную версию для оптимизации
 export const AddTrackModal = memo(AddTrackModalComponent);
-

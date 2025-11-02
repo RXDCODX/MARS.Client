@@ -17,6 +17,9 @@ interface PlayerStore {
   volume: number;
   loading: boolean;
 
+  // Player actions (регистрируются из useSoundRequestPlayer)
+  actions: PlayerActions | null;
+
   // Методы управления состоянием плеера
   setPlayerState: (state: PlayerState | null) => void;
 
@@ -38,6 +41,22 @@ interface PlayerStore {
   // Методы управления режимом отображения
   setViewMode: (mode: TrackListViewMode) => void;
   cycleViewMode: () => void;
+
+  // Регистрация player actions
+  registerActions: (actions: PlayerActions) => void;
+}
+
+/**
+ * Actions для управления плеером
+ */
+export interface PlayerActions {
+  handlePlayPrevious: () => void;
+  handleTogglePlayPause: () => void;
+  handleStop: () => void;
+  handleSkip: () => void;
+  handleMute: () => void;
+  handleVolumeChange: (volume: number) => void;
+  handleToggleVideoState: () => void;
 }
 
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
@@ -48,6 +67,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   viewMode: TrackListViewMode.Default,
   volume: 0,
   loading: false,
+  actions: null,
 
   // Установить состояние плеера
   setPlayerState: playerState => set({ playerState }),
@@ -126,4 +146,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 
     set({ viewMode: nextMode });
   },
+
+  // Зарегистрировать player actions из хука
+  registerActions: actions => set({ actions }),
 }));

@@ -1,10 +1,10 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import type { PlayerState, QueueItem } from "@/shared/api";
 import { PlayerStateVideoStateEnum } from "@/shared/api";
 
-import { AudioOnlyView, NoVideoView, VideoPlayerView } from "../components";
+import { UnifiedPlayerView } from "../components";
 import { useVideoScreenStore } from "../store/useVideoScreenStore";
 
 interface UseVideoStateRendererProps {
@@ -28,6 +28,9 @@ export function useVideoStateRenderer({
   );
   const hasUserInteracted = useVideoScreenStore(
     useShallow(state => state.hasUserInteracted)
+  );
+  const localVolume = useVideoScreenStore(
+    useShallow(state => state.localVolume)
   );
 
   // НЕ берём методы через селекторы - будем использовать getState() для вызовов
@@ -56,56 +59,58 @@ export function useVideoStateRenderer({
 
   const videoState = playerState?.videoState ?? PlayerStateVideoStateEnum.Video;
 
-  // Мемоизируем общие props для всех компонентов
-  const commonProps = useMemo(() => {
-    // Если playerState null, создаем заглушку
-    const state =
+  // Мемоизируем callback функции для предотвращения ререндера
+  const onEnded = useCallback(() => {
+    if (isMainPlayer && currentTrack) {
+      void useVideoScreenStore.getState().notifyEnded(currentTrack);
+    }
+  }, [isMainPlayer, currentTrack]);
+
+  const onStart = useCallback(() => {
+    if (isMainPlayer && currentTrack) {
+      void useVideoScreenStore.getState().notifyStarted(currentTrack);
+    }
+  }, [isMainPlayer, currentTrack]);
+
+  const onError = useCallback(() => {
+    if (isMainPlayer && currentTrack) {
+      void useVideoScreenStore.getState().notifyError(currentTrack);
+    }
+  }, [isMainPlayer, currentTrack]);
+
+  const onProgress = useCallback(
+    (progress: {
+      played: number;
+      playedSeconds: number;
+      loaded: number;
+      loadedSeconds: number;
+    }) => {
+      if (isMainPlayer) {
+        void useVideoScreenStore.getState().reportProgress(progress.playedSeconds);
+      }
+    },
+    [isMainPlayer]
+  );
+
+  const onVolumeChange = useCallback((volume: number) => {
+    useVideoScreenStore.getState().setLocalVolume(volume * 100);
+  }, []);
+
+  // Создаем стабильный playerState объект
+  const stablePlayerState = useMemo(
+    () =>
       playerState ??
       ({
         state: "Paused",
         volume: 100,
         isMuted: false,
         videoState: PlayerStateVideoStateEnum.Video,
-      } as PlayerState);
+      } as PlayerState),
+    [playerState]
+  );
 
-    const track = currentTrack
-      ? (currentTrack as NonNullable<QueueItem["track"]>)
-      : null;
-
-    return {
-      queueItemId,
-      playerState: state,
-      isMainPlayer,
-      hasUserInteracted,
-      onEnded: () => {
-        if (isMainPlayer && track) {
-          void useVideoScreenStore.getState().notifyEnded(track);
-        }
-      },
-      onStart: () => {
-        if (isMainPlayer && track) {
-          void useVideoScreenStore.getState().notifyStarted(track);
-        }
-      },
-      onError: () => {
-        if (isMainPlayer && track) {
-          void useVideoScreenStore.getState().notifyError(track);
-        }
-      },
-      onProgress: (progress: {
-        played: number;
-        playedSeconds: number;
-        loaded: number;
-        loadedSeconds: number;
-      }) => {
-        if (isMainPlayer) {
-          void useVideoScreenStore.getState().reportProgress(progress.playedSeconds);
-        }
-      },
-    };
-  }, [currentTrack, hasUserInteracted, isMainPlayer, playerState, queueItemId]);
-
-  // Мемоизируем компонент в зависимости от videoState
+  // Мемоизируем компонент - теперь используем единый UnifiedPlayerView
+  // Используем стабильные callback'и чтобы избежать ререндера при смене videoState
   const component = useMemo(() => {
     // Если нет playerState или трека, не рендерим компонент
     if (!playerState || !currentTrack) {
@@ -113,57 +118,43 @@ export function useVideoStateRenderer({
     }
 
     const track = currentTrack as NonNullable<QueueItem["track"]>;
-    const propsWithTrack = {
-      ...commonProps,
-      currentTrack: track,
-    };
 
-    switch (videoState) {
-      case PlayerStateVideoStateEnum.Video:
-        return (
-          <VideoPlayerView
-            {...propsWithTrack}
-            userName={userName}
-            userAvatar={userAvatar}
-            userColor={userColor}
-          />
-        );
-
-      case PlayerStateVideoStateEnum.NoVideo:
-        return (
-          <NoVideoView
-            {...propsWithTrack}
-            userName={userName}
-            userAvatar={userAvatar}
-            userColor={userColor}
-          />
-        );
-
-      case PlayerStateVideoStateEnum.AudioOnly:
-        return <AudioOnlyView {...propsWithTrack} />;
-
-      default:
-        // Fallback на обычный плеер
-        console.warn(
-          `[useVideoStateRenderer] Неизвестный videoState: ${videoState}, используем Video`
-        );
-        return (
-          <VideoPlayerView
-            {...propsWithTrack}
-            userName={userName}
-            userAvatar={userAvatar}
-            userColor={userColor}
-          />
-        );
-    }
+    return (
+      <UnifiedPlayerView
+        currentTrack={track}
+        queueItemId={queueItemId}
+        playerState={stablePlayerState}
+        isMainPlayer={isMainPlayer}
+        hasUserInteracted={hasUserInteracted}
+        userName={userName}
+        userAvatar={userAvatar}
+        userColor={userColor}
+        localVolume={localVolume}
+        videoState={videoState}
+        onEnded={onEnded}
+        onStart={onStart}
+        onError={onError}
+        onProgress={onProgress}
+        onVolumeChange={onVolumeChange}
+      />
+    );
   }, [
-    videoState,
-    commonProps,
+    playerState,
+    currentTrack,
+    queueItemId,
+    stablePlayerState,
+    isMainPlayer,
+    hasUserInteracted,
     userName,
     userAvatar,
     userColor,
-    currentTrack,
-    playerState,
+    localVolume,
+    videoState,
+    onEnded,
+    onStart,
+    onError,
+    onProgress,
+    onVolumeChange,
   ]);
 
   return {

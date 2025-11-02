@@ -1,31 +1,34 @@
 import { Pause, Play } from "lucide-react";
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { Button } from "react-bootstrap";
 import { useShallow } from "zustand/react/shallow";
 
 import { PlayerStateStateEnum } from "@/shared/api";
 
-import { usePlayerActions } from "../../../contexts/PlayerActionsContext";
 import { usePlayerStore } from "../../../stores/usePlayerStore";
 import styles from "../../SoundRequestPlayerDesktop.module.scss";
 
 function PlayPauseButtonComponent() {
-  const { handleTogglePlayPause } = usePlayerActions();
-  const { playerState, loading } = usePlayerStore(
+  const { isPlaying, loading, actions } = usePlayerStore(
     useShallow(state => ({
-      playerState: state.playerState,
+      isPlaying: state.playerState?.state === PlayerStateStateEnum.Playing,
       loading: state.loading,
+      actions: state.actions,
     }))
   );
 
-  const isPlaying = playerState?.state === PlayerStateStateEnum.Playing;
+  const handleClick = useCallback(() => {
+    if (actions?.handleTogglePlayPause) {
+      actions.handleTogglePlayPause();
+    }
+  }, [actions]);
 
   return (
     <Button
       variant={isPlaying ? "warning" : "primary"}
       className={styles.tbBtn}
-      onClick={handleTogglePlayPause}
-      disabled={loading}
+      onClick={handleClick}
+      disabled={loading || !actions}
       title={isPlaying ? "Пауза" : "Воспроизвести"}
     >
       {isPlaying ? <Pause /> : <Play />}
@@ -34,4 +37,3 @@ function PlayPauseButtonComponent() {
 }
 
 export const PlayPauseButton = memo(PlayPauseButtonComponent);
-

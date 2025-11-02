@@ -1,30 +1,32 @@
 import { SkipBack } from "lucide-react";
-import { memo } from "react";
+import { memo, useCallback } from "react";
 import { Button } from "react-bootstrap";
 import { useShallow } from "zustand/react/shallow";
 
-import { usePlayerActions } from "../../../contexts/PlayerActionsContext";
 import { usePlayerStore } from "../../../stores/usePlayerStore";
 import styles from "../../SoundRequestPlayerDesktop.module.scss";
 
 function PreviousButtonComponent() {
-  const { handlePlayPrevious } = usePlayerActions();
-  const { loading, history } = usePlayerStore(
+  const { loading, actions } = usePlayerStore(
     useShallow(state => ({
       loading: state.loading,
-      history: state.history,
+      actions: state.actions,
     }))
   );
 
-  const hasPrevious = (history?.length ?? 0) > 0;
+  const handleClick = useCallback(() => {
+    if (actions?.handlePlayPrevious) {
+      actions.handlePlayPrevious();
+    }
+  }, [actions]);
 
   return (
     <Button
       variant="dark"
       className={styles.tbBtn}
-      onClick={handlePlayPrevious}
-      disabled={loading || !hasPrevious}
-      title="Предыдущий"
+      onClick={handleClick}
+      disabled={loading || !actions}
+      title="Предыдущий трек"
     >
       <SkipBack />
     </Button>

@@ -77,6 +77,8 @@ export const useSoundRequestPlayer = () => {
       );
       if (queueItems) {
         setQueue(queueItems);
+        // Синхронизируем с store
+        usePlayerStore.getState().setQueue(queueItems);
       }
     });
 
@@ -139,10 +141,14 @@ export const useSoundRequestPlayer = () => {
 
         if (queueResponse.data.success && queueResponse.data.data) {
           setQueue(queueResponse.data.data);
+          // Синхронизируем с store
+          usePlayerStore.getState().setQueue(queueResponse.data.data);
         }
 
         if (historyResponse.data.success && historyResponse.data.data) {
           setHistory(historyResponse.data.data);
+          // Синхронизируем с store
+          usePlayerStore.getState().setHistory(historyResponse.data.data);
         }
       } catch (error) {
         console.error(
@@ -222,6 +228,8 @@ export const useSoundRequestPlayer = () => {
 
       if (response.data.data) {
         setQueue(response.data.data);
+        // Синхронизируем с store
+        usePlayerStore.getState().setQueue(response.data.data);
       }
     } catch (error) {
       console.error("[useSoundRequestPlayer] Ошибка загрузки очереди:", error);
@@ -251,6 +259,8 @@ export const useSoundRequestPlayer = () => {
 
         if (response.data.data) {
           setHistory(response.data.data);
+          // Синхронизируем с store
+          usePlayerStore.getState().setHistory(response.data.data);
         }
       } catch (error) {
         console.error(
@@ -494,6 +504,45 @@ export const useSoundRequestPlayer = () => {
     }
     return list;
   }, [playerState, queue]);
+
+  // Регистрируем actions в store - используем ref для актуальных функций
+  const actionsRef = useRef({
+    handlePlayPrevious,
+    handleTogglePlayPause,
+    handleStop,
+    handleSkip,
+    handleMute,
+    handleVolumeChange,
+    handleToggleVideoState,
+  });
+
+  // Обновляем ref при изменении функций
+  actionsRef.current = {
+    handlePlayPrevious,
+    handleTogglePlayPause,
+    handleStop,
+    handleSkip,
+    handleMute,
+    handleVolumeChange,
+    handleToggleVideoState,
+  };
+
+  // Регистрируем actions только один раз при монтировании
+  useEffect(() => {
+    // Создаем proxy объект, который всегда вызывает актуальные функции из ref
+    const actionsProxy = {
+      handlePlayPrevious: () => actionsRef.current.handlePlayPrevious(),
+      handleTogglePlayPause: () => actionsRef.current.handleTogglePlayPause(),
+      handleStop: () => actionsRef.current.handleStop(),
+      handleSkip: () => actionsRef.current.handleSkip(),
+      handleMute: () => actionsRef.current.handleMute(),
+      handleVolumeChange: (volume: number) =>
+        actionsRef.current.handleVolumeChange(volume),
+      handleToggleVideoState: () => actionsRef.current.handleToggleVideoState(),
+    };
+
+    usePlayerStore.getState().registerActions(actionsProxy);
+  }, []); // Регистрируем только один раз!
 
   return {
     // Состояние (только то, что используется напрямую)

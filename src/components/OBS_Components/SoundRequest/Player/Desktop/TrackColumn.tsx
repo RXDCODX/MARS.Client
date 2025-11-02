@@ -9,10 +9,19 @@ import styles from "./SoundRequestPlayerDesktop.module.scss";
 import { TrackItem } from "./TrackItem";
 
 function TrackColumnComponent() {
-  // Получаем данные напрямую из стора
-  const { playerState, queue, history, viewMode } = usePlayerStore(
+  // Получаем данные напрямую из стора - ТОЛЬКО нужные поля
+  const {
+    currentTrack,
+    currentQueueItemId,
+    isPlaying,
+    queue,
+    history,
+    viewMode,
+  } = usePlayerStore(
     useShallow(state => ({
-      playerState: state.playerState,
+      currentTrack: state.playerState?.currentQueueItem?.track || null,
+      currentQueueItemId: state.playerState?.currentQueueItem?.id,
+      isPlaying: state.playerState?.state === PlayerStateStateEnum.Playing,
       queue: state.queue,
       history: state.history,
       viewMode: state.viewMode,
@@ -22,10 +31,8 @@ function TrackColumnComponent() {
   // Получаем обработчики из хука
   const { handleItemHover, handleDeleteFromQueue } = useQueueActions();
 
-  // Вычисляем производные значения
-  const current = playerState?.currentQueueItem?.track || null;
-  const currentQueueItemId = playerState?.currentQueueItem?.id;
-  const isPlaying = playerState?.state === PlayerStateStateEnum.Playing;
+  // Используем переименованные переменные
+  const current = currentTrack;
 
   // Очередь без текущего трека
   const queueWithoutCurrent = useMemo(
@@ -67,18 +74,24 @@ function TrackColumnComponent() {
         break;
 
       case TrackListViewMode.WithHistory: {
-        // С историей: история -> текущий трек -> очередь
-        [...history].reverse().forEach((track, index) => {
-          trackItems.push(
-            <TrackItem
-              key={`history-${track.id}-${index}`}
-              track={track}
-              isHistory
-              onMouseEnter={() => handleItemHover(track.id, true)}
-              onMouseLeave={() => handleItemHover(track.id, false)}
-            />
-          );
-        });
+        // С историей: история -> текущий трек -> очередь (ограниченная)
+        // Ограничиваем общее количество треков, чтобы не выталкивать тулбар
+        const MAX_QUEUE_IN_HISTORY_MODE = 4;
+
+        [...history]
+          .reverse()
+          .slice(0, MAX_QUEUE_IN_HISTORY_MODE)
+          .forEach((track, index) => {
+            trackItems.push(
+              <TrackItem
+                key={`history-${track.id}-${index}`}
+                track={track}
+                isHistory
+                onMouseEnter={() => handleItemHover(track.id, true)}
+                onMouseLeave={() => handleItemHover(track.id, false)}
+              />
+            );
+          });
         if (current) {
           trackItems.push(
             <TrackItem
@@ -91,7 +104,8 @@ function TrackColumnComponent() {
             />
           );
         }
-        queueWithoutCurrent.forEach(q => {
+        // Показываем только первые N треков из очереди
+        queueWithoutCurrent.slice(0, MAX_QUEUE_IN_HISTORY_MODE).forEach(q => {
           if (q.track) {
             trackItems.push(
               <TrackItem

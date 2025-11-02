@@ -1,24 +1,28 @@
 import { Music, Video, VideoOff } from "lucide-react";
-import { memo, useMemo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import { Button } from "react-bootstrap";
 import { useShallow } from "zustand/react/shallow";
 
 import { PlayerStateVideoStateEnum } from "@/shared/api";
 
-import { usePlayerActions } from "../../../contexts/PlayerActionsContext";
 import { usePlayerStore } from "../../../stores/usePlayerStore";
 import styles from "../../SoundRequestPlayerDesktop.module.scss";
 
 function VideoStateButtonComponent() {
-  const { handleToggleVideoState } = usePlayerActions();
-  const { playerState, loading } = usePlayerStore(
+  const { videoState, loading, actions } = usePlayerStore(
     useShallow(state => ({
-      playerState: state.playerState,
+      videoState:
+        state.playerState?.videoState ?? PlayerStateVideoStateEnum.Video,
       loading: state.loading,
+      actions: state.actions,
     }))
   );
 
-  const videoState = playerState?.videoState ?? PlayerStateVideoStateEnum.Video;
+  const handleClick = useCallback(() => {
+    if (actions?.handleToggleVideoState) {
+      actions.handleToggleVideoState();
+    }
+  }, [actions]);
 
   // Мемоизируем иконку в зависимости от videoState
   const videoIcon = useMemo(() => {
@@ -58,8 +62,8 @@ function VideoStateButtonComponent() {
             ? styles.noVideoMode
             : styles.audioOnlyMode
       }`}
-      onClick={handleToggleVideoState}
-      disabled={loading}
+      onClick={handleClick}
+      disabled={loading || !actions}
       title={videoTitle}
     >
       {videoIcon}
@@ -68,4 +72,3 @@ function VideoStateButtonComponent() {
 }
 
 export const VideoStateButton = memo(VideoStateButtonComponent);
-
