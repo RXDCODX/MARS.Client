@@ -80,6 +80,18 @@ export default defineConfig({
   server: {
     port: 44478,
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        silenceDeprecations: [
+          "mixed-decls",
+          "color-functions",
+          "global-builtin",
+          "import",
+        ],
+      },
+    },
+  },
   optimizeDeps: {
     include: [
       // Twitch библиотеки - для решения проблемы с cacheSymbol в dev режиме
