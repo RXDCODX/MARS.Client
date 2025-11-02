@@ -59,6 +59,8 @@ function UnifiedPlayerViewComponent({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const playerRef = useRef<any>(null);
   const progressAppliedRef = useRef<boolean>(false);
+  const lastProgressUpdateRef = useRef<number>(Date.now());
+  const playbackStallCheckIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   // Используем queueItemId если доступен, иначе fallback на URL
   // queueItemId гарантирует пересоздание плеера при новом заказе
@@ -235,6 +237,50 @@ function UnifiedPlayerViewComponent({
     setupVolumeTracking,
   ]);
 
+  // Защита от зависания воспроизведения
+  // Если плеер в состоянии Playing, но прогресс не обновляется более 5 секунд - вызываем onError
+  useEffect(() => {
+    // Сбрасываем таймер при смене трека
+    lastProgressUpdateRef.current = Date.now();
+
+    // Очищаем предыдущий интервал если есть
+    if (playbackStallCheckIntervalRef.current) {
+      clearInterval(playbackStallCheckIntervalRef.current);
+      playbackStallCheckIntervalRef.current = null;
+    }
+
+    if (!isPlaying || !isMainPlayer) {
+      return;
+    }
+
+    // Запускаем проверку каждую секунду
+    playbackStallCheckIntervalRef.current = setInterval(() => {
+      const timeSinceLastUpdate = Date.now() - lastProgressUpdateRef.current;
+      const STALL_THRESHOLD_MS = 5000; // 5 секунд
+
+      if (timeSinceLastUpdate > STALL_THRESHOLD_MS) {
+        console.warn(
+          `[UnifiedPlayerView] Воспроизведение зависло (${Math.round(timeSinceLastUpdate / 1000)}s без обновления прогресса). Вызываем onError`
+        );
+
+        // Очищаем интервал перед вызовом onError
+        if (playbackStallCheckIntervalRef.current) {
+          clearInterval(playbackStallCheckIntervalRef.current);
+          playbackStallCheckIntervalRef.current = null;
+        }
+
+        onError();
+      }
+    }, 1000);
+
+    return () => {
+      if (playbackStallCheckIntervalRef.current) {
+        clearInterval(playbackStallCheckIntervalRef.current);
+        playbackStallCheckIntervalRef.current = null;
+      }
+    };
+  }, [isPlaying, isMainPlayer, onError, playerKey]);
+
   // Определяем класс плеера и контейнера для видимости
   const isVideoVisible = videoState === PlayerStateVideoStateEnum.Video;
   const playerClassName = useMemo(
@@ -264,7 +310,7 @@ function UnifiedPlayerViewComponent({
     isMainPlayer &&
     (videoState === PlayerStateVideoStateEnum.Video ||
       videoState === PlayerStateVideoStateEnum.NoVideo);
-  
+
   const isNoVideoMode = videoState === PlayerStateVideoStateEnum.NoVideo;
 
   // Мемоизируем обработчики для ReactPlayer чтобы избежать ререндера
@@ -283,7 +329,11 @@ function UnifiedPlayerViewComponent({
   const handleProgress = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (state: any) => {
-      if (isMainPlayer) onProgress(state);
+      if (isMainPlayer) {
+        onProgress(state);
+        // Обновляем время последнего обновления прогресса
+        lastProgressUpdateRef.current = Date.now();
+      }
     },
     [isMainPlayer, onProgress]
   );
@@ -329,4 +379,3 @@ function UnifiedPlayerViewComponent({
 
 // Экспортируем мемоизированную версию для оптимизации
 export const UnifiedPlayerView = memo(UnifiedPlayerViewComponent);
-
