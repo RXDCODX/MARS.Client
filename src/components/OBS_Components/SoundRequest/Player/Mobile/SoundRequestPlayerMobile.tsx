@@ -47,18 +47,9 @@ export function SoundRequestPlayerMobile() {
   );
 
   // Временные заглушки для функций, которые нужно будет переделать
-  const displayedVideos = useMemo<Array<{ id: string; url: string; trackName?: string; title?: string; authors?: string[] }>>(() => [], []);
+  const displayedVideos = useMemo(() => [], []);
   const handlePlayTrackFromQueue = () => console.warn("Not implemented");
   const fetchQueue = async () => console.warn("Not implemented");
-
-  // Обработчики из actions
-  const handleTogglePlayPause = () => actions?.handleTogglePlayPause();
-  const handleStop = () => actions?.handleStop();
-  const handleSkip = () => actions?.handleSkip();
-  const handlePlayNext = () => actions?.handleSkip(); // Используем skip как play next
-  const handleMute = () => actions?.handleMute();
-  const handleToggleVideoState = () => actions?.handleToggleVideoState();
-  const handleVolumeChange = (volume: number) => actions?.handleVolumeChange(volume);
 
   // Вычисляем состояния без создания новых массивов
   const isPlaying = playerState?.state === "Playing";
