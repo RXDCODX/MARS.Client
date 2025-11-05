@@ -264,7 +264,7 @@ function UnifiedPlayerViewComponent({
     isMainPlayer &&
     (videoState === PlayerStateVideoStateEnum.Video ||
       videoState === PlayerStateVideoStateEnum.NoVideo);
-  
+
   const isNoVideoMode = videoState === PlayerStateVideoStateEnum.NoVideo;
 
   // Мемоизируем обработчики для ReactPlayer чтобы избежать ререндера
@@ -329,4 +329,3 @@ function UnifiedPlayerViewComponent({
 
 // Экспортируем мемоизированную версию для оптимизации
 export const UnifiedPlayerView = memo(UnifiedPlayerViewComponent);
-

@@ -14,7 +14,9 @@ const meta: Meta<typeof SoundRequestPlayerMobile> = {
     docs: {
       description: {
         component:
-          "Мобильная версия плеера для управления SoundRequest. Оптимизирована для сенсорного управления с компактным интерфейсом и скрываемой очередью треков.",
+          "Мобильная версия Sound Request плеера. Переделана с использованием компонентной архитектуры по аналогии с десктопной версией. " +
+          "Включает отдельные компоненты: CurrentTrack, PlayerControls, VolumeControls, QueueList и QueueItem. " +
+          "Оптимизирована для мобильных устройств с большими кнопками и адаптивной типографикой.",
       },
     },
   },
@@ -24,6 +26,9 @@ const meta: Meta<typeof SoundRequestPlayerMobile> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+/**
+ * Базовый вид мобильного плеера со всеми компонентами
+ */
 export const Default: Story = {
   args: {},
   play: async ({ canvasElement }) => {
@@ -32,5 +37,13 @@ export const Default: Story = {
 
     // Проверяем, что компонент отрендерился
     expect(canvasElement).toBeInTheDocument();
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Базовое отображение мобильного плеера со всеми компонентами: текущий трек, управление, очередь и ближайшие 5 заказов.",
+      },
+    },
   },
 };
