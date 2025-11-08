@@ -6,7 +6,7 @@
 
 ### 📁 Структура файлов
 
-```
+```text
 MikuMonday/
 ├── context/
 │   ├── MikuMondayContext.tsx   # Context Provider с SignalR логикой
@@ -15,7 +15,7 @@ MikuMonday/
 │   ├── mikuMondayStore.ts      # [DEPRECATED] Старый Zustand стор
 │   └── index.ts
 ├── MikuMonday.tsx              # Основной компонент отображения
-├── MikuMondayWrapper.tsx       # Wrapper с Provider
+├── MikuMondayController.tsx    # Контроллер с инициализацией SignalR
 ├── MikuMonday.module.scss      # Стили
 ├── MikuMonday.stories.tsx      # Storybook stories
 └── index.ts                    # Главный экспорт
@@ -23,13 +23,13 @@ MikuMonday/
 
 ## Использование
 
-### Вариант 1: С Wrapper (рекомендуется)
+### Вариант 1: С контроллером (рекомендуется)
 
 ```tsx
-import MikuMondayWrapper from "@/components/OBS_Components/MikuMonday";
+import MikuMondayController from "@/components/OBS_Components/MikuMonday";
 
 function App() {
-  return <MikuMondayWrapper />;
+  return <MikuMondayController />;
 }
 ```
 

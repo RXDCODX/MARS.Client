@@ -2,11 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 
 import { TelegramusHubSignalRHubWrapper } from "@/shared/api";
 
-import MikuMondayWrapper from "./MikuMondayWrapper";
+import MikuMondayController from "./MikuMondayController";
 
 const meta = {
   title: "OBS Components/MikuMonday",
-  component: MikuMondayWrapper,
+  component: MikuMondayController,
   parameters: {
     layout: "fullscreen",
   },
@@ -29,7 +29,7 @@ const meta = {
     ),
   ],
   tags: ["autodocs"],
-} satisfies Meta<typeof MikuMondayWrapper>;
+} satisfies Meta<typeof MikuMondayController>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

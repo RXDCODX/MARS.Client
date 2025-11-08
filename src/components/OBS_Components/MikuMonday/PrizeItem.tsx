@@ -1,8 +1,8 @@
 import { memo } from "react";
 import { Textfit } from "react-textfit";
 
-import type { RoulettePrize } from "./MikuMonday";
 import styles from "./MikuMonday.module.scss";
+import type { RoulettePrize } from "./types";
 
 interface PrizeItemProps {
   prize: RoulettePrize;

@@ -32,6 +32,7 @@ interface MikuMondayActions {
   fetchAvailableTracks: () => Promise<void>;
   decrementAvailableTrack: () => Promise<void>;
 
+  handleIncomingAlert: (dto: MikuMondayDto) => void;
   dequeueCurrent: () => void;
   clearQueue: () => void;
   reset: () => void;
@@ -63,16 +64,7 @@ export const useMikuMondayStore = create<MikuMondayState & MikuMondayActions>()(
 
         // Очередь: приход нового алерта
         newConnection.on("MikuMonday", (dto: MikuMondayDto) => {
-          const { alerts, isAlertShowing } = get();
-          if (!isAlertShowing) {
-            set({
-              currentAlert: dto,
-              isAlertShowing: true,
-              alerts: [...alerts],
-            });
-            return;
-          }
-          set({ alerts: [...alerts, dto] });
+          get().handleIncomingAlert(dto);
         });
 
         // Обработка закрытия соединения
@@ -159,14 +151,52 @@ export const useMikuMondayStore = create<MikuMondayState & MikuMondayActions>()(
         }
       },
 
+      handleIncomingAlert: (dto: MikuMondayDto) => {
+        set(state => {
+          if (!state.isAlertShowing) {
+            console.debug("[MikuMonday] Новый алерт, очередь пуста", {
+              displayName: dto.displayName,
+              selectedTrack: dto.selectedTrack.number,
+            });
+            return {
+              currentAlert: dto,
+              isAlertShowing: true,
+              alerts: [...state.alerts],
+            };
+          }
+
+          const updatedAlerts = [...state.alerts, dto];
+          console.debug("[MikuMonday] Алерт добавлен в очередь", {
+            queueLength: updatedAlerts.length,
+            displayName: dto.displayName,
+            selectedTrack: dto.selectedTrack.number,
+          });
+          return { alerts: updatedAlerts };
+        });
+      },
+
       dequeueCurrent: () => {
-        const { alerts } = get();
-        if (alerts.length > 0) {
-          const [nextAlert, ...rest] = alerts;
-          set({ alerts: rest, currentAlert: nextAlert, isAlertShowing: true });
-          return;
-        }
-        set({ alerts: [], currentAlert: undefined, isAlertShowing: false });
+        set(state => {
+          if (state.alerts.length > 0) {
+            const [nextAlert, ...rest] = state.alerts;
+            console.debug("[MikuMonday] Показ следующего алерта", {
+              queueLength: rest.length,
+              displayName: nextAlert.displayName,
+              selectedTrack: nextAlert.selectedTrack.number,
+            });
+            return {
+              alerts: rest,
+              currentAlert: nextAlert,
+              isAlertShowing: true,
+            };
+          }
+          console.debug("[MikuMonday] Очередь опустела");
+          return {
+            alerts: [],
+            currentAlert: undefined,
+            isAlertShowing: false,
+          };
+        });
       },
 
       clearQueue: () => {

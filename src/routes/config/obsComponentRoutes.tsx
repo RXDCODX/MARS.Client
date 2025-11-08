@@ -73,7 +73,7 @@ const michaelJacksonLoader = () =>
 const MichaelJackson = lazy(michaelJacksonLoader);
 
 const mikuMondayLoader = () =>
-  import("@/components/OBS_Components/MikuMonday/MikuMondayWrapper");
+  import("@/components/OBS_Components/MikuMonday/MikuMondayController");
 const MikuMonday = lazy(mikuMondayLoader);
 
 const mikuMikuBeamLoader = () =>

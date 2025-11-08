@@ -8,25 +8,23 @@ import { useToastModal } from "@/shared/Utils/ToastModal";
 import MikuMonday from "./MikuMonday";
 import useMikuMondayStore from "./store/mikuMondayStore";
 
-/**
- * Wrapper компонент для MikuMonday
- * Управляет SignalR соединением, очередью алертов и анонсом перед показом рулетки
- */
-export default function MikuMondayWrapper() {
+export default function MikuMondayController() {
   const [isAnnounced, setAnnounced] = useState(false);
   const startHub = useMikuMondayStore(state => state.start);
   const stopHub = useMikuMondayStore(state => state.stop);
   const status = useMikuMondayStore(state => state.status);
   const error = useMikuMondayStore(state => state.error);
+  const currentAlert = useMikuMondayStore(state => state.currentAlert);
+  const isAlertShowing = useMikuMondayStore(state => state.isAlertShowing);
   const { showToast } = useToastModal();
 
-  // Инициализируем подключение к хабу при монтировании
   useEffect(() => {
     startHub().catch(err => {
       showToast(
         createErrorResult(err?.message || "Не удалось подключиться к хабу")
       );
     });
+
     return () => {
       stopHub().catch(() => void 0);
     };
@@ -50,7 +48,7 @@ export default function MikuMondayWrapper() {
             height: 100%;
             margin: 0;
           }
-          
+
           div#root {
             min-height: 100%;
             flex-direction: column;
@@ -59,7 +57,9 @@ export default function MikuMondayWrapper() {
           id="miku-monday-styles"
         />
 
-        <MikuMonday />
+        {isAlertShowing && currentAlert ? (
+          <MikuMonday key={currentAlert.selectedTrack.number} />
+        ) : null}
       </div>
     </>
   );
