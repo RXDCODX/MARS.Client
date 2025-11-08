@@ -98,7 +98,3 @@ export const WithMockData: Story = {
     }, 1000);
   },
 };
-
-
-
-

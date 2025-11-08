@@ -60,10 +60,17 @@ function MikuMondayContent() {
   return (
     <div
       ref={containerRef}
-      className={" " + animate.animated + " " + animate.fadeIn}
+      className={`${styles.layout} ${animate.animated} ${animate.fadeIn}`}
       onAnimationEnd={handleContainerAnimationEnd}
       style={baseStyle}
     >
+      {availableTracksCount > 0 && (
+        <div className={styles["available-tracks"]}>
+          <span className={styles["available-tracks-text"]}>
+            Осталось свободных треков: {availableTracksCount}
+          </span>
+        </div>
+      )}
       <RouletteGroupList
         ref={groupsRef}
         groups={rouletteGroups}
@@ -75,26 +82,6 @@ function MikuMondayContent() {
           <RoulettePointer visible={visible} pointerHeight={pointerHeight} />
         }
       />
-      <div className={styles["user-info"]}>
-        <div className={styles["user-name-container"]}>
-          <span className={styles["label"]}>Мику заметила:</span>
-          <span className={styles["user-name"]}>
-            {currentAlert.displayName}
-          </span>
-        </div>
-        <div className={styles["track-info"]}>
-          <span className={styles["track-title"]}>
-            И дарит трек #{currentAlert.selectedTrack.number}
-          </span>
-        </div>
-        {availableTracksCount > 0 && (
-          <div className={styles["available-tracks"]}>
-            <span className={styles["available-tracks-text"]}>
-              Осталось свободных треков: {availableTracksCount}
-            </span>
-          </div>
-        )}
-      </div>
     </div>
   );
 }

@@ -26,26 +26,14 @@ const RouletteGroupList = forwardRef<HTMLDivElement, RouletteGroupListProps>(
     },
     ref
   ) => (
-    <div
-      ref={ref}
-      className={styles["roulette-container"]}
-      style={{
-        width: "100%",
-        margin: "0 auto",
-        height: "80vh",
-        alignSelf: "center",
-        position: "relative",
-        display: "flex",
-        flexDirection: "column",
-        gap: "20px",
-        justifyContent: "center",
-      }}
-    >
+    <div ref={ref} className={styles["roulette-container"]}>
       {pointer}
       {groups.map((group, index) => (
         <div
           key={index}
-          className={`${styles["single-roulette"]} ${group.isReversed ? styles["reversed"] : ""}`}
+          className={`${styles["single-roulette"]} ${
+            group.isReversed ? styles["single-roulette-reversed"] : ""
+          }`}
           style={{
             opacity: rouletteOpacities[index] ?? 1,
             transition: "opacity 2s ease-out",
@@ -60,7 +48,7 @@ const RouletteGroupList = forwardRef<HTMLDivElement, RouletteGroupListProps>(
             prizeItemRenderFunction={renderPrizeItem}
             spinningTime={20}
             type="horizontal"
-            options={{ withoutAnimation: false, stopInCenter: true }}
+            options={{ withoutAnimation: false, stopInCenter: false }}
             defaultDesignOptions={{
               prizesWithText: true,
               hideCenterDelimiter: true,

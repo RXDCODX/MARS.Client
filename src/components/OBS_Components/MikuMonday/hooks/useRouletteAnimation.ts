@@ -11,6 +11,7 @@ import animate from "@/shared/styles/animate.module.scss";
 import type { OperationResult } from "@/shared/types/OperationResult";
 import { createErrorResult } from "@/shared/types/OperationResult";
 
+import styles from "../MikuMonday.module.scss";
 import type { RouletteGroup } from "../types";
 
 type ShowToast = (result: OperationResult<unknown>) => void;
@@ -39,7 +40,7 @@ export function useRouletteAnimation({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-end",
     animationDuration: "2.2s",
   });
   const [rouletteStart, setRouletteStart] = useState(false);
@@ -111,7 +112,7 @@ export function useRouletteAnimation({
               ...prevStyle,
               animationDuration: "1.5s",
             }));
-            div.className = " " + animate.animated + " " + animate.fadeOut;
+            div.className = `${styles.layout} ${animate.animated} ${animate.fadeOut}`;
           }
         }, 100);
       }
