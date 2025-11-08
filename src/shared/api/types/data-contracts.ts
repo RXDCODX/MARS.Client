@@ -460,6 +460,20 @@ export interface Move {
   notes?: string[];
 }
 
+export interface MovePagedResult {
+  items: Move[];
+  /** @format int32 */
+  page: number;
+  /** @format int32 */
+  pageSize: number;
+  /** @format int32 */
+  totalCount: number;
+  /** @format int32 */
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
 export interface MovePending {
   characterName: string;
   command: string;
@@ -687,6 +701,20 @@ export interface TekkenCharacter {
   description?: string;
   strengths?: string[];
   weaknesess?: string[];
+}
+
+export interface TekkenCharacterPagedResult {
+  items: TekkenCharacter[];
+  /** @format int32 */
+  page: number;
+  /** @format int32 */
+  pageSize: number;
+  /** @format int32 */
+  totalCount: number;
+  /** @format int32 */
+  totalPages: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
 }
 
 export interface TekkenCharacterPendingDto {
@@ -1276,6 +1304,22 @@ export interface MediaInfo {
   positionInfo: MediaPositionInfo;
   stylesInfo: MediaStylesInfo;
   textInfo: MediaTextInfo;
+}
+
+export interface MikuMondayDto {
+  availableTracks: MikuTrackDto[];
+  displayName: string;
+  selectedTrack: MikuTrackDto;
+  skipAvailableTracksUpdate?: boolean;
+}
+
+export interface MikuTrackDto {
+  artist: string;
+  /** @format int32 */
+  number: number;
+  thumbnailUrl?: string;
+  title: string;
+  url: string;
 }
 
 export interface PrizeType {

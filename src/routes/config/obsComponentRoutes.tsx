@@ -72,6 +72,10 @@ const michaelJacksonLoader = () =>
   import("@/components/OBS_Components/MichaelJackson");
 const MichaelJackson = lazy(michaelJacksonLoader);
 
+const mikuMondayLoader = () =>
+  import("@/components/OBS_Components/MikuMonday/MikuMondayWrapper");
+const MikuMonday = lazy(mikuMondayLoader);
+
 const mikuMikuBeamLoader = () =>
   import("@/components/OBS_Components/MikuMikuBeam").then(m => ({
     default: m.MikuMikuBeamComponent,
@@ -133,6 +137,7 @@ registerPrefetchComponents([
   fumoFridayLoader,
   gaoAlertControllerLoader,
   michaelJacksonLoader,
+  mikuMondayLoader,
   mikuMikuBeamLoader,
   pngTuberLoader,
   avatarWithFireLoader,
@@ -146,6 +151,18 @@ registerPrefetchComponents([
 
 // Массив OBS компонентов (без Layout для интеграции в OBS)
 export const obsComponentRoutes: RouteConfig[] = [
+  {
+    path: "/MikuMonday",
+    name: "Miku Monday",
+    type: "obs",
+    element: (
+      <OBSComponentWrapper>
+        <Suspense fallback={<OBSLazyLoader />}>
+          <MikuMonday />
+        </Suspense>
+      </OBSComponentWrapper>
+    ),
+  },
   {
     path: "/mikumikubeam",
     name: "Miku Miku Beam",

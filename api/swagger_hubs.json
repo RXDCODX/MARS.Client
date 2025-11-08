@@ -188,6 +188,22 @@
         "responses": { }
       }
     },
+    "/hubs/soundrequest/PlayPrevious": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/soundrequest/SkipTrack": {
+      "post": {
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/soundrequest/Started": {
       "post": {
         "tags": [
@@ -694,6 +710,23 @@
               "items": {
                 "$ref": "#/components/schemas/TwitchUser"
               }
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/MikuMonday": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "mikuMondayData",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/MikuMondayDto"
             }
           }
         ],
@@ -1767,6 +1800,62 @@
             "nullable": true
           },
           "keyWordSybmolDelimiter": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MikuMondayDto": {
+        "required": [
+          "availableTracks",
+          "displayName",
+          "selectedTrack"
+        ],
+        "type": "object",
+        "properties": {
+          "displayName": {
+            "type": "string"
+          },
+          "selectedTrack": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MikuTrackDto"
+              }
+            ]
+          },
+          "availableTracks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MikuTrackDto"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "MikuTrackDto": {
+        "required": [
+          "artist",
+          "number",
+          "title",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "artist": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "thumbnailUrl": {
             "type": "string",
             "nullable": true
           }

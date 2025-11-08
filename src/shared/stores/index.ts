@@ -1,2 +1,4 @@
-export { useWaifuPrizesStore, default as useWaifuPrizesStoreDefault } from "./waifuPrizesStore";
-
+export {
+  useWaifuPrizesStore,
+  default as useWaifuPrizesStoreDefault,
+} from "./waifuPrizesStore";

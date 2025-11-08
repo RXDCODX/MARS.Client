@@ -55,6 +55,7 @@ import type {
   MemeOrderDto,
   MemeTypeDto,
   Move,
+  MovePagedResult,
   MovePending,
   MovePendingDto,
   OperationResult,
@@ -73,6 +74,7 @@ import type {
   StringServiceStatusDictionary,
   SupplementRequest,
   TekkenCharacter,
+  TekkenCharacterPagedResult,
   TekkenCharacterPendingDto,
   TwitchUser,
   UpdateAutoMessageRequest,
@@ -126,12 +128,27 @@ export class Framedata<
    * @tags Framedata
    * @name FramedataCharactersList
    * @request GET:/api/Framedata/characters
-   * @response `200` `OperationResult<TekkenCharacter[]>` OK
+   * @response `200` `OperationResult<TekkenCharacterPagedResult>` OK
    */
-  framedataCharactersList = (params: RequestParams = {}) =>
-    this.request<OperationResult<TekkenCharacter[]>, any>({
+  framedataCharactersList = (
+    query?: {
+      /**
+       * @format int32
+       * @default 1
+       */
+      page: number;
+      /**
+       * @format int32
+       * @default 20
+       */
+      pageSize: number;
+    },
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<TekkenCharacterPagedResult>, any>({
       path: `/api/Framedata/characters`,
       method: "GET",
+      query: query,
       format: "json",
       ...params,
     });
@@ -212,15 +229,28 @@ export class Framedata<
    * @tags Framedata
    * @name FramedataCharactersMovesList
    * @request GET:/api/Framedata/characters/{characterName}/moves
-   * @response `200` `OperationResult<Move[]>` OK
+   * @response `200` `OperationResult<MovePagedResult>` OK
    */
   framedataCharactersMovesList = (
     characterName: string,
+    query?: {
+      /**
+       * @format int32
+       * @default 1
+       */
+      page: number;
+      /**
+       * @format int32
+       * @default 50
+       */
+      pageSize: number;
+    },
     params: RequestParams = {}
   ) =>
-    this.request<OperationResult<Move[]>, any>({
+    this.request<OperationResult<MovePagedResult>, any>({
       path: `/api/Framedata/characters/${characterName}/moves`,
       method: "GET",
+      query: query,
       format: "json",
       ...params,
     });
@@ -311,7 +341,7 @@ export class Framedata<
    * @tags Framedata
    * @name FramedataMovesSearchList
    * @request GET:/api/Framedata/moves/search
-   * @response `200` `OperationResult<Move[]>` OK
+   * @response `200` `OperationResult<MovePagedResult>` OK
    */
   framedataMovesSearchList = (
     query?: {
@@ -321,10 +351,20 @@ export class Framedata<
       powerCrush: boolean;
       isThrow: boolean;
       homing: boolean;
+      /**
+       * @format int32
+       * @default 1
+       */
+      page: number;
+      /**
+       * @format int32
+       * @default 50
+       */
+      pageSize: number;
     },
     params: RequestParams = {}
   ) =>
-    this.request<OperationResult<Move[]>, any>({
+    this.request<OperationResult<MovePagedResult>, any>({
       path: `/api/Framedata/moves/search`,
       method: "GET",
       query: query,

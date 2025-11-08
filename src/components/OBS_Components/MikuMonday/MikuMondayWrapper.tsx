@@ -1,0 +1,66 @@
+import { useEffect, useState } from "react";
+
+import InjectStyles from "@/shared/components/InjectStyles";
+import { createErrorResult } from "@/shared/types/OperationResult";
+import Announce from "@/shared/Utils/Announce/Announce";
+import { useToastModal } from "@/shared/Utils/ToastModal";
+
+import MikuMonday from "./MikuMonday";
+import useMikuMondayStore from "./store/mikuMondayStore";
+
+/**
+ * Wrapper компонент для MikuMonday
+ * Управляет SignalR соединением, очередью алертов и анонсом перед показом рулетки
+ */
+export default function MikuMondayWrapper() {
+  const [isAnnounced, setAnnounced] = useState(false);
+  const startHub = useMikuMondayStore(state => state.start);
+  const stopHub = useMikuMondayStore(state => state.stop);
+  const status = useMikuMondayStore(state => state.status);
+  const error = useMikuMondayStore(state => state.error);
+  const { showToast } = useToastModal();
+
+  // Инициализируем подключение к хабу при монтировании
+  useEffect(() => {
+    startHub().catch(err => {
+      showToast(
+        createErrorResult(err?.message || "Не удалось подключиться к хабу")
+      );
+    });
+    return () => {
+      stopHub().catch(() => void 0);
+    };
+  }, [startHub, stopHub, showToast]);
+
+  useEffect(() => {
+    if (status === "error" && error) {
+      showToast(createErrorResult(error));
+    }
+  }, [status, error, showToast]);
+
+  return (
+    <>
+      {!isAnnounced && (
+        <Announce title={"Miku Monday"} callback={() => setAnnounced(true)} />
+      )}
+      <div>
+        <InjectStyles
+          styles={`
+          html, body {
+            height: 100%;
+            margin: 0;
+          }
+          
+          div#root {
+            min-height: 100%;
+            flex-direction: column;
+          }
+        `}
+          id="miku-monday-styles"
+        />
+
+        <MikuMonday />
+      </div>
+    </>
+  );
+}

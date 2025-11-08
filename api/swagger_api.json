@@ -1508,23 +1508,43 @@
         "tags": [
           "Framedata"
         ],
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterListOperationResult"
+                  "$ref": "#/components/schemas/TekkenCharacterPagedResultOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterListOperationResult"
+                  "$ref": "#/components/schemas/TekkenCharacterPagedResultOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterListOperationResult"
+                  "$ref": "#/components/schemas/TekkenCharacterPagedResultOperationResult"
                 }
               }
             }
@@ -1747,6 +1767,24 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
           }
         ],
         "responses": {
@@ -1755,17 +1793,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/MoveListOperationResult"
+                  "$ref": "#/components/schemas/MovePagedResultOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MoveListOperationResult"
+                  "$ref": "#/components/schemas/MovePagedResultOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MoveListOperationResult"
+                  "$ref": "#/components/schemas/MovePagedResultOperationResult"
                 }
               }
             }
@@ -2056,6 +2094,24 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 50
+            }
           }
         ],
         "responses": {
@@ -2064,17 +2120,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/MoveListOperationResult"
+                  "$ref": "#/components/schemas/MovePagedResultOperationResult"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MoveListOperationResult"
+                  "$ref": "#/components/schemas/MovePagedResultOperationResult"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MoveListOperationResult"
+                  "$ref": "#/components/schemas/MovePagedResultOperationResult"
                 }
               }
             }
@@ -7714,15 +7770,6 @@
         },
         "additionalProperties": false
       },
-      "MoveListOperationResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/OperationResult"
-          }
-        ],
-        "description": "Результат операции с данными типа Move[]",
-        "x-generic-type-argument": "Move[]"
-      },
       "MoveOperationResult": {
         "allOf": [
           {
@@ -7731,6 +7778,60 @@
         ],
         "description": "Результат операции с данными типа Move",
         "x-generic-type-argument": "Move"
+      },
+      "MovePagedResult": {
+        "required": [
+          "hasNextPage",
+          "hasPreviousPage",
+          "items",
+          "page",
+          "pageSize",
+          "totalCount",
+          "totalPages"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Move"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasNextPage": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "hasPreviousPage": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "MovePagedResultOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа MovePagedResult",
+        "x-generic-type-argument": "MovePagedResult"
       },
       "MovePending": {
         "required": [
@@ -8696,15 +8797,6 @@
         },
         "additionalProperties": false
       },
-      "TekkenCharacterListOperationResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/OperationResult"
-          }
-        ],
-        "description": "Результат операции с данными типа TekkenCharacter[]",
-        "x-generic-type-argument": "TekkenCharacter[]"
-      },
       "TekkenCharacterOperationResult": {
         "allOf": [
           {
@@ -8713,6 +8805,60 @@
         ],
         "description": "Результат операции с данными типа TekkenCharacter",
         "x-generic-type-argument": "TekkenCharacter"
+      },
+      "TekkenCharacterPagedResult": {
+        "required": [
+          "hasNextPage",
+          "hasPreviousPage",
+          "items",
+          "page",
+          "pageSize",
+          "totalCount",
+          "totalPages"
+        ],
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TekkenCharacter"
+            }
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasNextPage": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "hasPreviousPage": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TekkenCharacterPagedResultOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа TekkenCharacterPagedResult",
+        "x-generic-type-argument": "TekkenCharacterPagedResult"
       },
       "TekkenCharacterPendingDto": {
         "required": [
