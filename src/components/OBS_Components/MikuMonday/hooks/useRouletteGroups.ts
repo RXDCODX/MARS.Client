@@ -1,12 +1,11 @@
 import { useMemo } from "react";
 
-import type { MikuMondayDto } from "@/shared/api";
-
 import type { RouletteGroup } from "../types";
+import type { QueuedMikuMondayAlert } from "../types";
 import { divideTracksIntoGroups } from "../utils/rouletteGroups";
 
 export function useRouletteGroups(
-  currentAlert: MikuMondayDto | undefined
+  currentAlert: QueuedMikuMondayAlert | undefined
 ): RouletteGroup[] {
   return useMemo(
     () =>

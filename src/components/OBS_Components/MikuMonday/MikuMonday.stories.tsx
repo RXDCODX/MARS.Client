@@ -43,6 +43,7 @@ export const WithMockData: Story = {
   play: async () => {
     // Эмуляция получения данных через SignalR
     const mockData = {
+      id: "11111111-1111-1111-1111-111111111111",
       displayName: "rxdcodx",
       selectedTrack: {
         number: 8,

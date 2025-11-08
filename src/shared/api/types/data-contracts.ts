@@ -1309,6 +1309,7 @@ export interface MediaInfo {
 export interface MikuMondayDto {
   availableTracks: MikuTrackDto[];
   displayName: string;
+  id: string;
   selectedTrack: MikuTrackDto;
   skipAvailableTracksUpdate?: boolean;
 }

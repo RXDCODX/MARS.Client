@@ -1810,10 +1810,15 @@
         "required": [
           "availableTracks",
           "displayName",
+          "id",
           "selectedTrack"
         ],
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
           "displayName": {
             "type": "string"
           },
@@ -1829,6 +1834,9 @@
             "items": {
               "$ref": "#/components/schemas/MikuTrackDto"
             }
+          },
+          "skipAvailableTracksUpdate": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

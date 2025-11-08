@@ -6,6 +6,8 @@ import { devtools } from "zustand/middleware";
 import { MikuMondayDto, MikuTrackDto } from "@/shared/api";
 import { TelegramusHubSignalRConnectionBuilder } from "@/shared/api/signalr-clients/TelegramusHub/SignalRContext";
 
+import type { QueuedMikuMondayAlert } from "../types";
+
 type ConnectionStatus = "idle" | "connecting" | "connected" | "error";
 
 interface MikuMondayState {
@@ -19,8 +21,8 @@ interface MikuMondayState {
   availableTracksCount: number;
 
   // Очередь алертов
-  alerts: MikuMondayDto[];
-  currentAlert?: MikuMondayDto;
+  alerts: QueuedMikuMondayAlert[];
+  currentAlert?: QueuedMikuMondayAlert;
   isAlertShowing: boolean;
 }
 
@@ -152,24 +154,35 @@ export const useMikuMondayStore = create<MikuMondayState & MikuMondayActions>()(
       },
 
       handleIncomingAlert: (dto: MikuMondayDto) => {
+        const alert: QueuedMikuMondayAlert = {
+          ...dto,
+          queueId:
+            dto.id ||
+            (typeof crypto !== "undefined" && "randomUUID" in crypto
+              ? crypto.randomUUID()
+              : `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`),
+        };
+
         set(state => {
           if (!state.isAlertShowing) {
             console.debug("[MikuMonday] Новый алерт, очередь пуста", {
-              displayName: dto.displayName,
-              selectedTrack: dto.selectedTrack.number,
+              alertId: alert.id,
+              displayName: alert.displayName,
+              selectedTrack: alert.selectedTrack.number,
             });
             return {
-              currentAlert: dto,
+              currentAlert: alert,
               isAlertShowing: true,
               alerts: [...state.alerts],
             };
           }
 
-          const updatedAlerts = [...state.alerts, dto];
+          const updatedAlerts = [...state.alerts, alert];
           console.debug("[MikuMonday] Алерт добавлен в очередь", {
+            alertId: alert.id,
             queueLength: updatedAlerts.length,
-            displayName: dto.displayName,
-            selectedTrack: dto.selectedTrack.number,
+            displayName: alert.displayName,
+            selectedTrack: alert.selectedTrack.number,
           });
           return { alerts: updatedAlerts };
         });
@@ -180,6 +193,7 @@ export const useMikuMondayStore = create<MikuMondayState & MikuMondayActions>()(
           if (state.alerts.length > 0) {
             const [nextAlert, ...rest] = state.alerts;
             console.debug("[MikuMonday] Показ следующего алерта", {
+              alertId: nextAlert.id,
               queueLength: rest.length,
               displayName: nextAlert.displayName,
               selectedTrack: nextAlert.selectedTrack.number,

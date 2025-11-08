@@ -58,7 +58,7 @@ export default function MikuMondayController() {
         />
 
         {isAlertShowing && currentAlert ? (
-          <MikuMonday key={currentAlert.selectedTrack.number} />
+          <MikuMonday key={currentAlert.id ?? currentAlert.queueId} />
         ) : null}
       </div>
     </>
