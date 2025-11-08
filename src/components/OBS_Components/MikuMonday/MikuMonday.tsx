@@ -1,19 +1,15 @@
 import "react-roulette-pro/dist/index.css";
 
-import { useCallback } from "react";
-import type PrizeType from "react-roulette-pro/dist/types/PrizeType";
+import { useCallback, useState } from "react";
 
-import animate from "@/shared/styles/animate.module.scss";
-import { useToastModal } from "@/shared/Utils/ToastModal";
-
-import RouletteGroupList from "./components/RouletteGroupList";
-import RoulettePointer from "./components/RoulettePointer";
-import { useRouletteAnimation } from "./hooks/useRouletteAnimation";
+import IntroStage from "./components/stages/IntroStage";
+import ResultStage from "./components/stages/ResultStage";
+import RouletteStage from "./components/stages/RouletteStage";
 import { useRouletteGroups } from "./hooks/useRouletteGroups";
 import styles from "./MikuMonday.module.scss";
-import PrizeItem from "./PrizeItem";
 import useMikuMondayStore from "./store/mikuMondayStore";
-import type { RoulettePrize } from "./types";
+
+type StageKey = "intro" | "roulette" | "result";
 
 function MikuMondayContent() {
   const currentAlert = useMikuMondayStore(state => state.currentAlert);
@@ -24,63 +20,64 @@ function MikuMondayContent() {
     state => state.decrementAvailableTrack
   );
   const dequeueCurrent = useMikuMondayStore(state => state.dequeueCurrent);
-  const { showToast } = useToastModal();
+
+  const rouletteGroups = useRouletteGroups(currentAlert);
+
+  const [stage, setStage] = useState<StageKey>("intro");
+
   const shouldSkipAvailableTracksUpdate =
     currentAlert?.skipAvailableTracksUpdate === true;
 
-  const rouletteGroups = useRouletteGroups(currentAlert);
-  const {
-    containerRef,
-    groupsRef,
-    baseStyle,
-    rouletteStart,
-    visible,
-    pointerHeight,
-    rouletteOpacities,
-    handleContainerAnimationEnd,
-    handleSingleRouletteComplete,
-  } = useRouletteAnimation({
-    rouletteGroups,
-    shouldSkipAvailableTracksUpdate,
-    decrementAvailableTrack,
-    dequeueCurrent,
-    showToast,
-  });
+  const handleIntroComplete = useCallback(() => {
+    if (rouletteGroups.length > 0) {
+      setStage("roulette");
+      return;
+    }
+    setStage("result");
+  }, [rouletteGroups.length]);
 
-  const renderPrizeItem = useCallback(
-    (prize: PrizeType) => <PrizeItem prize={prize as RoulettePrize} />,
-    []
-  );
+  const handleRouletteComplete = useCallback(() => {
+    setStage("result");
+  }, []);
 
-  // Если нет групп рулеток - не показываем (защита от edge cases)
-  if (!currentAlert || rouletteGroups.length === 0) {
+  const handleResultComplete = useCallback(() => {
+    dequeueCurrent();
+  }, [dequeueCurrent]);
+
+  if (!currentAlert) {
     return null;
   }
 
+  if (stage === "intro") {
+    return (
+      <div className={styles.layout}>
+        <IntroStage
+          twitchUser={currentAlert.twitchUser}
+          fallbackAvatar={currentAlert.selectedTrack.thumbnailUrl ?? undefined}
+          onComplete={handleIntroComplete}
+        />
+      </div>
+    );
+  }
+
+  if (stage === "roulette") {
+    return (
+      <RouletteStage
+        rouletteGroups={rouletteGroups}
+        shouldSkipAvailableTracksUpdate={shouldSkipAvailableTracksUpdate}
+        decrementAvailableTrack={decrementAvailableTrack}
+        availableTracksCount={availableTracksCount}
+        onComplete={handleRouletteComplete}
+      />
+    );
+  }
+
   return (
-    <div
-      ref={containerRef}
-      className={`${styles.layout} ${animate.animated} ${animate.fadeIn}`}
-      onAnimationEnd={handleContainerAnimationEnd}
-      style={baseStyle}
-    >
-      {availableTracksCount > 0 && (
-        <div className={styles["available-tracks"]}>
-          <span className={styles["available-tracks-text"]}>
-            Осталось свободных треков: {availableTracksCount}
-          </span>
-        </div>
-      )}
-      <RouletteGroupList
-        ref={groupsRef}
-        groups={rouletteGroups}
-        rouletteStart={rouletteStart}
-        rouletteOpacities={rouletteOpacities}
-        renderPrizeItem={renderPrizeItem}
-        onPrizeDefined={handleSingleRouletteComplete}
-        pointer={
-          <RoulettePointer visible={visible} pointerHeight={pointerHeight} />
-        }
+    <div className={styles.layout}>
+      <ResultStage
+        track={currentAlert.selectedTrack}
+        twitchUser={currentAlert.twitchUser}
+        onComplete={handleResultComplete}
       />
     </div>
   );

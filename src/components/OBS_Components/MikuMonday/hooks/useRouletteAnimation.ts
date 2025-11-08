@@ -7,11 +7,9 @@ import {
   useState,
 } from "react";
 
-import animate from "@/shared/styles/animate.module.scss";
 import type { OperationResult } from "@/shared/types/OperationResult";
 import { createErrorResult } from "@/shared/types/OperationResult";
 
-import styles from "../MikuMonday.module.scss";
 import type { RouletteGroup } from "../types";
 
 type ShowToast = (result: OperationResult<unknown>) => void;
@@ -20,19 +18,20 @@ interface UseRouletteAnimationParams {
   rouletteGroups: RouletteGroup[];
   shouldSkipAvailableTracksUpdate: boolean;
   decrementAvailableTrack: () => Promise<void>;
-  dequeueCurrent: () => void;
   showToast: ShowToast;
+  onComplete: () => void;
 }
 
 export function useRouletteAnimation({
   rouletteGroups,
   shouldSkipAvailableTracksUpdate,
   decrementAvailableTrack,
-  dequeueCurrent,
   showToast,
+  onComplete,
 }: UseRouletteAnimationParams) {
   const containerRef = useRef<HTMLDivElement>(null);
   const groupsRef = useRef<HTMLDivElement>(null);
+  const completionNotifiedRef = useRef(false);
 
   const [baseStyle, setBaseStyle] = useState<CSSProperties>({
     width: "100%",
@@ -91,30 +90,31 @@ export function useRouletteAnimation({
         `✅ Рулетка завершена. Всего: ${newCount}/${rouletteGroups.length}`
       );
 
-      if (newCount === rouletteGroups.length) {
+      if (
+        newCount === rouletteGroups.length &&
+        !completionNotifiedRef.current
+      ) {
+        completionNotifiedRef.current = true;
         setTimeout(() => {
           setVisible(false);
-          const div = containerRef.current;
-          if (div) {
-            div.onanimationend = async () => {
-              if (!shouldSkipAvailableTracksUpdate) {
-                try {
-                  await decrementAvailableTrack();
-                } catch {
-                  showToast(
-                    createErrorResult("Ошибка обновления свободных треков")
-                  );
-                }
+          setBaseStyle(prevStyle => ({
+            ...prevStyle,
+            animationDuration: "1.5s",
+          }));
+          const finalize = async () => {
+            if (!shouldSkipAvailableTracksUpdate) {
+              try {
+                await decrementAvailableTrack();
+              } catch {
+                showToast(
+                  createErrorResult("Ошибка обновления свободных треков")
+                );
               }
-              dequeueCurrent();
-            };
-            setBaseStyle(prevStyle => ({
-              ...prevStyle,
-              animationDuration: "1.5s",
-            }));
-            div.className = `${styles.layout} ${animate.animated} ${animate.fadeOut}`;
-          }
-        }, 100);
+            }
+            onComplete();
+          };
+          void finalize();
+        }, 800);
       }
 
       return newCount;
@@ -124,7 +124,7 @@ export function useRouletteAnimation({
     shouldSkipAvailableTracksUpdate,
     decrementAvailableTrack,
     showToast,
-    dequeueCurrent,
+    onComplete,
   ]);
 
   return {

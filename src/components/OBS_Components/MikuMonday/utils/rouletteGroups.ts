@@ -92,4 +92,3 @@ export function divideTracksIntoGroups(
 
   return groups;
 }
-

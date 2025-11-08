@@ -169,9 +169,9 @@ export interface CreateAutoMessageRequest {
 
 export interface CreateCustomRewardsRequest {
   title?: string;
-  prompt?: string;
   /** @format int32 */
   cost: number;
+  prompt?: string;
   isEnabled: boolean;
   backgroundColor?: string;
   isUserInputRequired: boolean;
@@ -618,8 +618,8 @@ export interface RewardRedemption {
   broadcasterLogin?: string;
   broadcasterName?: string;
   id?: string;
-  userId?: string;
   userLogin?: string;
+  userId?: string;
   userName?: string;
   userInput?: string;
   status: RewardRedemptionStatusEnum;
@@ -805,13 +805,12 @@ export interface UpdateCustomRewardRedemptionStatusRequest {
 }
 
 export interface UpdateCustomRewardRequest {
-  broadcasterId?: string;
   title?: string;
   prompt?: string;
   /** @format int32 */
   cost?: number;
-  isEnabled?: boolean;
   backgroundColor?: string;
+  isEnabled?: boolean;
   isUserInputRequired?: boolean;
   isMaxPerStreamEnabled?: boolean;
   /** @format int32 */
@@ -1308,14 +1307,17 @@ export interface MediaInfo {
 
 export interface MikuMondayDto {
   availableTracks: MikuTrackDto[];
-  displayName: string;
+  /** @format uuid */
   id: string;
   selectedTrack: MikuTrackDto;
-  skipAvailableTracksUpdate?: boolean;
+  skipAvailableTracksUpdate: boolean;
+  twitchUser: TwitchUser;
 }
 
 export interface MikuTrackDto {
   artist: string;
+  /** @format uuid */
+  id: string;
   /** @format int32 */
   number: number;
   thumbnailUrl?: string;
@@ -1435,7 +1437,10 @@ export interface User {
   offlineImageUrl?: string;
   profileImageUrl?: string;
   type?: string;
-  /** @format int64 */
+  /**
+   * @deprecated
+   * @format int64
+   */
   viewCount: number;
 }
 

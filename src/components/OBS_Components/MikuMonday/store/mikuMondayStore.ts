@@ -167,7 +167,7 @@ export const useMikuMondayStore = create<MikuMondayState & MikuMondayActions>()(
           if (!state.isAlertShowing) {
             console.debug("[MikuMonday] Новый алерт, очередь пуста", {
               alertId: alert.id,
-              displayName: alert.displayName,
+              displayName: alert.twitchUser.displayName,
               selectedTrack: alert.selectedTrack.number,
             });
             return {
@@ -181,7 +181,7 @@ export const useMikuMondayStore = create<MikuMondayState & MikuMondayActions>()(
           console.debug("[MikuMonday] Алерт добавлен в очередь", {
             alertId: alert.id,
             queueLength: updatedAlerts.length,
-            displayName: alert.displayName,
+            displayName: alert.twitchUser.displayName,
             selectedTrack: alert.selectedTrack.number,
           });
           return { alerts: updatedAlerts };
@@ -195,7 +195,7 @@ export const useMikuMondayStore = create<MikuMondayState & MikuMondayActions>()(
             console.debug("[MikuMonday] Показ следующего алерта", {
               alertId: nextAlert.id,
               queueLength: rest.length,
-              displayName: nextAlert.displayName,
+              displayName: nextAlert.twitchUser.displayName,
               selectedTrack: nextAlert.selectedTrack.number,
             });
             return {

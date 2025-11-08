@@ -6662,13 +6662,13 @@
             "type": "string",
             "nullable": true
           },
-          "prompt": {
-            "type": "string",
-            "nullable": true
-          },
           "cost": {
             "type": "integer",
             "format": "int32"
+          },
+          "prompt": {
+            "type": "string",
+            "nullable": true
           },
           "isEnabled": {
             "type": "boolean"
@@ -8428,12 +8428,12 @@
             "nullable": true,
             "readOnly": true
           },
-          "userId": {
+          "userLogin": {
             "type": "string",
             "nullable": true,
             "readOnly": true
           },
-          "userLogin": {
+          "userId": {
             "type": "string",
             "nullable": true,
             "readOnly": true
@@ -9112,10 +9112,6 @@
       "UpdateCustomRewardRequest": {
         "type": "object",
         "properties": {
-          "broadcasterId": {
-            "type": "string",
-            "nullable": true
-          },
           "title": {
             "type": "string",
             "nullable": true
@@ -9129,12 +9125,12 @@
             "format": "int32",
             "nullable": true
           },
-          "isEnabled": {
-            "type": "boolean",
-            "nullable": true
-          },
           "backgroundColor": {
             "type": "string",
+            "nullable": true
+          },
+          "isEnabled": {
+            "type": "boolean",
             "nullable": true
           },
           "isUserInputRequired": {
