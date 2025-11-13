@@ -1,14 +1,14 @@
 import { create } from "zustand";
 
+import { EnvironmentVariable as EnvironmentVariablesClient } from "@/shared/api";
 import type {
   EnvironmentVariable as EnvironmentVariableDto,
   SetEnvironmentVariableRequest,
-} from "@/shared/api";
-import { EnvironmentVariable as EnvironmentVariablesClient } from "@/shared/api";
-import type { OperationResult } from "@/shared/types/OperationResult";
+} from "@/shared/api/types/data-contracts";
 import {
   createErrorResult,
   createSuccessResult,
+  type OperationResult,
 } from "@/shared/types/OperationResult";
 
 import {
@@ -99,7 +99,7 @@ const mapVariables = (data?: EnvironmentVariableDto[]) => {
   if (!Array.isArray(data) || data.length === 0) {
     return [];
   }
-  return data.map(createEnvironmentVariableViewModel);
+  return data.map(e => createEnvironmentVariableViewModel(e));
 };
 
 export const useEnvironmentVariablesStore =
@@ -131,7 +131,9 @@ export const useEnvironmentVariablesStore =
       try {
         const response =
           await environmentVariablesClient.environmentVariableList();
-        const operation = response.data;
+        const operation = response.data as OperationResult<
+          EnvironmentVariableDto[] | undefined
+        >;
 
         if (!operation.success) {
           const message =

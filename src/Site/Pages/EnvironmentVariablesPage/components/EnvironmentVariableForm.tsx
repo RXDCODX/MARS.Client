@@ -1,15 +1,20 @@
 import { Save, Trash2 } from "lucide-react";
-import { Badge, Button, CloseButton, Form, Modal, Spinner } from "react-bootstrap";
+import {
+  Badge,
+  Button,
+  CloseButton,
+  Form,
+  Modal,
+  Spinner,
+} from "react-bootstrap";
 
 import { useToastModal } from "@/shared/Utils/ToastModal";
-import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
 import styles from "../EnvironmentVariablesPage.module.scss";
 import { useEnvironmentVariablesStore } from "../store/useEnvironmentVariablesStore";
 import { formatDateTime } from "../utils/formatDateTime";
 
 const EnvironmentVariableForm: React.FC = () => {
-  const colors = useSiteColors();
   const { showToast } = useToastModal();
 
   const showForm = useEnvironmentVariablesStore(state => state.showForm);
@@ -67,10 +72,7 @@ const EnvironmentVariableForm: React.FC = () => {
             </Badge>
           )}
         </div>
-        <CloseButton
-          onClick={cancelForm}
-          className={styles.formModalClose}
-        />
+        <CloseButton onClick={cancelForm} className={styles.formModalClose} />
       </Modal.Header>
 
       <Modal.Body className={styles.formModalBody}>

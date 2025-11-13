@@ -79,9 +79,9 @@ const ChangeDetailsPage: React.FC<ChangeDetailsPageProps> = ({
   const [change] = useState<FramedataChange | undefined>(
     propChange || location.state?.change
   );
-  const [originalData, setOriginalData] = useState<Move | Move[] | unknown>(
-    null
-  );
+  const [originalData, setOriginalData] = useState<
+    Move | Move[] | CharacterData | null
+  >(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>("");
 
@@ -116,20 +116,22 @@ const ChangeDetailsPage: React.FC<ChangeDetailsPageProps> = ({
         const response = await framedataApi.framedataCharactersDetail(
           change.characterName
         );
-        setOriginalData(response.data);
+        setOriginalData(response.data.data ?? null);
       } else if (change.changeType === "NewMove") {
         // Для нового удара загружаем существующие удары персонажа
         const response = await framedataApi.framedataCharactersMovesList(
           change.characterName
         );
-        const existingMoves = response.data.data || [];
+        const payload = response.data.data;
+        const existingMoves = payload?.items ?? [];
         setOriginalData(existingMoves);
       } else if (change.changeType === "MoveUpdate") {
         // Для обновления удара загружаем оригинальный удар
         const response = await framedataApi.framedataCharactersMovesList(
           change.characterName
         );
-        const existingMoves = response.data.data || [];
+        const payload = response.data.data;
+        const existingMoves = payload?.items ?? [];
         const originalMove = existingMoves.find(
           (m: Move) => m.command === change.newData?.command
         );
@@ -139,7 +141,8 @@ const ChangeDetailsPage: React.FC<ChangeDetailsPageProps> = ({
         const response = await framedataApi.framedataCharactersMovesList(
           change.characterName
         );
-        const existingMoves = response.data.data || [];
+        const payload = response.data.data;
+        const existingMoves = payload?.items ?? [];
         const originalMove = existingMoves.find(
           (m: Move) => m.command === change.newData?.command
         );

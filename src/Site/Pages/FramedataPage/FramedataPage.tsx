@@ -35,10 +35,13 @@ const FramedataPage: React.FC = () => {
 
   // Загрузка персонажей
   const loadCharacters = useCallback(async () => {
+    await Promise.resolve();
     try {
       updateNavigationState({ isLoadingCharacters: true, error: "" });
       const response = await api.framedataCharactersList();
-      setCharacters(response.data.data ?? []);
+      const payload = response.data.data;
+      const items = payload?.items ?? [];
+      setCharacters(items);
       updateNavigationState({ isLoadingCharacters: false });
     } catch (error) {
       console.error("Ошибка загрузки персонажей:", error);
@@ -55,8 +58,12 @@ const FramedataPage: React.FC = () => {
       try {
         updateNavigationState({ isLoadingMoves: true, error: "" });
         const response = await api.framedataCharactersMovesList(character.name);
-        const moves = response.data.data ?? [];
-        const updatedCharacter = { ...character, movelist: moves };
+        const payload = response.data.data;
+        const moves = payload?.items ?? [];
+        const updatedCharacter: TekkenCharacter = {
+          ...character,
+          movelist: moves,
+        };
 
         // Обновляем персонажа в списке
         setCharacters(prev =>
@@ -149,7 +156,13 @@ const FramedataPage: React.FC = () => {
 
   // Загрузка данных при монтировании компонента
   useEffect(() => {
-    loadCharacters();
+    const timeoutId = setTimeout(() => {
+      void loadCharacters();
+    }, 0);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [loadCharacters]);
 
   // Обработка ошибок

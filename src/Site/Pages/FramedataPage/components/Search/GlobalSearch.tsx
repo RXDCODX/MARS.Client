@@ -92,7 +92,8 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ characters }) => {
 
         // Иначе загружаем удары с сервера
         const response = await api.framedataCharactersMovesList(character.name);
-        return response.data.data || [];
+        const payload = response.data.data;
+        return payload?.items ?? [];
       } catch (error) {
         console.error(`Ошибка загрузки ударов для ${character.name}:`, error);
         showToast({
