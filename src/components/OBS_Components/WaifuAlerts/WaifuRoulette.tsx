@@ -8,6 +8,7 @@ import animate from "@/shared/styles/animate.module.scss";
 import { getRandomColor } from "@/shared/Utils";
 
 import styles2 from "../OBSCommon.module.scss";
+import WaifuRoulettePrizeItem from "./components/WaifuRoulettePrizeItem";
 import styles from "./WaifuAlerts.module.scss";
 
 interface Props {
@@ -73,7 +74,7 @@ export default function WaifuRoulette({
               top: "50%",
               left: "50%",
               width: "4px",
-              height: `${heightDiv.current!.offsetHeight}px`,
+              height: `100%`,
               background: "orange",
               zIndex: 10,
               transform: "translate(-50%, -50%)",
@@ -93,6 +94,9 @@ export default function WaifuRoulette({
             prizesWithText: true,
             hideCenterDelimiter: true,
           }}
+          prizeItemRenderFunction={prize => (
+            <WaifuRoulettePrizeItem image={prize.image} text={prize.text} />
+          )}
           onPrizeDefined={() => {
             setVisible(false);
             const div = rouletteDiv.current!;
