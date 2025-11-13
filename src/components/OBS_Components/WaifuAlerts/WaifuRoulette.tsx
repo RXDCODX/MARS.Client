@@ -1,6 +1,6 @@
 import "react-roulette-pro/dist/index.css";
 
-import { CSSProperties, useRef, useState } from "react";
+import { CSSProperties, useEffect, useRef, useState } from "react";
 import RoulettePro from "react-roulette-pro";
 
 import { PrizeType, TwitchUser } from "@/shared/api";
@@ -15,6 +15,7 @@ interface Props {
   rouletteIndex: number;
   prizes: PrizeType[];
   callback: () => void;
+  shuffle: () => void;
   twitchUser: TwitchUser;
 }
 
@@ -23,6 +24,7 @@ export default function WaifuRoulette({
   prizes,
   callback,
   twitchUser,
+  shuffle,
 }: Props) {
   if (prizes.length === 0) {
     throw new Error("Prizes is empty");
@@ -45,6 +47,10 @@ export default function WaifuRoulette({
     alignSelf: "center",
     animationDuration: "2.2s",
   });
+
+  useEffect(() => {
+    shuffle();
+  }, [shuffle]);
 
   return (
     <div
@@ -83,20 +89,20 @@ export default function WaifuRoulette({
           ></div>
         )}
         <RoulettePro
+          key={rouletteIndex}
           start={rouletteStart}
           prizes={prizes}
           prizeIndex={rouletteIndex}
           spinningTime={20}
           type="horizontal"
-          classes={{}}
-          options={{ withoutAnimation: true }}
+          options={{ withoutAnimation: true, stopInCenter: true }}
           defaultDesignOptions={{
             prizesWithText: true,
             hideCenterDelimiter: true,
           }}
-          prizeItemRenderFunction={prize => (
-            <WaifuRoulettePrizeItem image={prize.image} text={prize.text} />
-          )}
+          // prizeItemRenderFunction={prize => (
+          //   <WaifuRoulettePrizeItem image={prize.image} text={prize.text} />
+          // )}
           onPrizeDefined={() => {
             setVisible(false);
             const div = rouletteDiv.current!;

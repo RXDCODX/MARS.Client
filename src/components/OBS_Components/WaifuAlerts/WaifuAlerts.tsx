@@ -19,7 +19,9 @@ import WaifuRoulette from "./WaifuRoulette";
 // Очередь сообщений теперь живёт в SignalR-сторе
 
 export default function WaifuAlerts() {
-  const currentMessage = useTelegramusHubStore(state => state.currentMessage);
+  const currentMessage = useTelegramusHubStore(
+    useShallow(state => state.currentMessage)
+  );
   const dequeueCurrent = useTelegramusHubStore(state => state.dequeueCurrent);
   const startHub = useTelegramusHubStore(state => state.start);
   const [announced, setAnnounced] = useState(false);
@@ -53,6 +55,7 @@ export default function WaifuAlerts() {
       console.log("Prizes available:", prizes.length);
 
       if (prizes && prizes.length > 0) {
+        debugger;
         const index = prizes.findIndex(
           prize => prize.id === currentMessage.waifu.shikiId
         );
@@ -191,6 +194,7 @@ export default function WaifuAlerts() {
         currentMessage.waifuHusband?.twitchUser && (
           <WaifuRoulette
             key={currentMessage.waifu.shikiId}
+            shuffle={shufflePrizes}
             callback={() => {
               setIsRouletted(true);
               setRouletteIndex(-1);
