@@ -1503,6 +1503,198 @@
         }
       }
     },
+    "/api/EnvironmentVariable": {
+      "get": {
+        "tags": [
+          "EnvironmentVariable"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvironmentVariableListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvironmentVariableListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvironmentVariableListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "EnvironmentVariable"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SetEnvironmentVariableRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SetEnvironmentVariableRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SetEnvironmentVariableRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/EnvironmentVariable/{key}": {
+      "get": {
+        "tags": [
+          "EnvironmentVariable"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvironmentVariableOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvironmentVariableOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvironmentVariableOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "EnvironmentVariable"
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/EnvironmentVariable/reload": {
+      "post": {
+        "tags": [
+          "EnvironmentVariable"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Framedata/characters": {
       "get": {
         "tags": [
@@ -7053,6 +7245,54 @@
         },
         "additionalProperties": false
       },
+      "EnvironmentVariable": {
+        "required": [
+          "createdAt",
+          "key",
+          "updatedAt"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "EnvironmentVariableListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа EnvironmentVariable[]",
+        "x-generic-type-argument": "EnvironmentVariable[]"
+      },
+      "EnvironmentVariableOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа EnvironmentVariable",
+        "x-generic-type-argument": "EnvironmentVariable"
+      },
       "FollowerInfo": {
         "required": [
           "userId"
@@ -8571,6 +8811,26 @@
         ],
         "description": "Результат операции с данными типа ServiceLog[]",
         "x-generic-type-argument": "ServiceLog[]"
+      },
+      "SetEnvironmentVariableRequest": {
+        "required": [
+          "key"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
       },
       "StreamArchiveConfig": {
         "required": [

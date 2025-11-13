@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { InjectStyles } from "./InjectStyles";
 import { useState } from "react";
+
+import { InjectStyles } from "./InjectStyles";
 
 const meta: Meta<typeof InjectStyles> = {
   title: "Shared/InjectStyles",
@@ -60,18 +61,18 @@ export const DynamicStyles: Story = {
       return (
         <>
           <InjectStyles styles={dynamicStyles} id="dynamic-demo-styles" />
-          
+
           <div style={{ marginBottom: "20px" }}>
             <label style={{ marginRight: "10px" }}>
               Цвет:
               <input
                 type="color"
                 value={color}
-                onChange={(e) => setColor(e.target.value)}
+                onChange={e => setColor(e.target.value)}
                 style={{ marginLeft: "5px" }}
               />
             </label>
-            
+
             <label>
               Размер шрифта: {size}px
               <input
@@ -79,12 +80,12 @@ export const DynamicStyles: Story = {
                 min="12"
                 max="32"
                 value={size}
-                onChange={(e) => setSize(Number(e.target.value))}
+                onChange={e => setSize(Number(e.target.value))}
                 style={{ marginLeft: "5px" }}
               />
             </label>
           </div>
-          
+
           <div className="dynamic-demo">
             Динамические стили, изменяющиеся в реальном времени
           </div>
@@ -114,7 +115,7 @@ export const MultipleStyleSets: Story = {
         `}
         id="card-primary-styles"
       />
-      
+
       <InjectStyles
         styles={`
           .card-secondary {
@@ -127,7 +128,7 @@ export const MultipleStyleSets: Story = {
         `}
         id="card-secondary-styles"
       />
-      
+
       <InjectStyles
         styles={`
           .card-success {
@@ -140,7 +141,7 @@ export const MultipleStyleSets: Story = {
         `}
         id="card-success-styles"
       />
-      
+
       <div className="card-primary">Карточка с основным цветом</div>
       <div className="card-secondary">Карточка со вторичным цветом</div>
       <div className="card-success">Карточка с цветом успеха</div>
@@ -187,7 +188,7 @@ export const WithAnimations: Story = {
         `}
         id="animation-demo-styles"
       />
-      
+
       <div className="animated-box">
         Анимированный блок с использованием внедренных стилей
       </div>
@@ -243,11 +244,10 @@ export const WithMediaQueries: Story = {
         `}
         id="responsive-demo-styles"
       />
-      
+
       <div className="responsive-box">
         Адаптивный блок (измените размер окна)
       </div>
     </>
   ),
 };
-

@@ -25,14 +25,16 @@ import { ViewModeToggle } from "./ViewModeToggle";
  */
 function PlayerToolbarComponent() {
   // Селективная подписка - ТОЛЬКО поля для прогресс-бара
-  const { state, trackId, trackDuration, currentTrackProgress } = usePlayerStore(
-    useShallow(storeState => ({
-      state: storeState.playerState?.state,
-      trackId: storeState.playerState?.currentQueueItem?.track?.id,
-      trackDuration: storeState.playerState?.currentQueueItem?.track?.duration || "PT0S",
-      currentTrackProgress: storeState.playerState?.currentTrackProgress,
-    }))
-  );
+  const { state, trackId, trackDuration, currentTrackProgress } =
+    usePlayerStore(
+      useShallow(storeState => ({
+        state: storeState.playerState?.state,
+        trackId: storeState.playerState?.currentQueueItem?.track?.id,
+        trackDuration:
+          storeState.playerState?.currentQueueItem?.track?.duration || "PT0S",
+        currentTrackProgress: storeState.playerState?.currentTrackProgress,
+      }))
+    );
 
   // Вычисляем прогресс трека
   const isPlaying = state === PlayerStateStateEnum.Playing;

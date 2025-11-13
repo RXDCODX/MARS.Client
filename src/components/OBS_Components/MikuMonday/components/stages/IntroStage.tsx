@@ -30,7 +30,6 @@ export default function IntroStage({
 
   const displayName = twitchUser.displayName ?? twitchUser.userLogin;
   const loginTag = `@${twitchUser.userLogin}`;
-  const accentColor = twitchUser.chatColor ?? "var(--bs-primary)";
   const avatarUrl = twitchUser.profileImageUrl ?? fallbackAvatar ?? "";
 
   const fallbackSymbol = useMemo(() => {
@@ -45,12 +44,8 @@ export default function IntroStage({
   return (
     <article
       className={`${styles["intro-stage"]} ${animate.animated} ${animate.fadeIn}`}
-      style={{ borderColor: accentColor }}
     >
-      <div
-        className={styles["intro-avatar-wrapper"]}
-        style={{ borderColor: accentColor }}
-      >
+      <div className={styles["intro-avatar-wrapper"]}>
         {hasAvatar ? (
           <img
             src={avatarUrl}

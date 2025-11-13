@@ -39,6 +39,11 @@ const RouletteGroupList = forwardRef<HTMLDivElement, RouletteGroupListProps>(
             transition: "opacity 2s ease-out",
             flex: 1,
             minHeight: 0,
+            pointerEvents: "none",
+            maskImage:
+              "linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 25%, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0) 100%)",
+            WebkitMaskImage:
+              "linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 25%, rgba(0, 0, 0, 1) 75%, rgba(0, 0, 0, 0) 100%)",
           }}
         >
           <RoulettePro
@@ -46,7 +51,7 @@ const RouletteGroupList = forwardRef<HTMLDivElement, RouletteGroupListProps>(
             prizes={group.prizes}
             prizeIndex={group.prizeIndex}
             prizeItemRenderFunction={renderPrizeItem}
-            spinningTime={20}
+            spinningTime={group.hasWinner ? 23 : 20}
             type="horizontal"
             options={{ withoutAnimation: false, stopInCenter: false }}
             defaultDesignOptions={{

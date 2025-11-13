@@ -15,7 +15,6 @@ interface RouletteStageProps {
   rouletteGroups: RouletteGroup[];
   shouldSkipAvailableTracksUpdate: boolean;
   decrementAvailableTrack: () => Promise<void>;
-  availableTracksCount: number;
   onComplete: () => void;
 }
 
@@ -23,7 +22,6 @@ export default function RouletteStage({
   rouletteGroups,
   shouldSkipAvailableTracksUpdate,
   decrementAvailableTrack,
-  availableTracksCount,
   onComplete,
 }: RouletteStageProps) {
   const { showToast } = useToastModal();
@@ -69,13 +67,6 @@ export default function RouletteStage({
           <RoulettePointer visible={visible} pointerHeight={pointerHeight} />
         }
       />
-      {availableTracksCount > 0 ? (
-        <div className={styles["available-tracks"]}>
-          <span className={styles["available-tracks-text"]}>
-            Осталось свободных треков: {availableTracksCount}
-          </span>
-        </div>
-      ) : null}
     </div>
   );
 }

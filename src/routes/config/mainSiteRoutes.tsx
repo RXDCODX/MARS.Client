@@ -82,6 +82,13 @@ const mediaInfoEditPageLoader = () =>
   }));
 const MediaInfoEditPage = lazy(mediaInfoEditPageLoader);
 
+const environmentVariablesPageLoader = () =>
+  import("@/Site/Pages/EnvironmentVariablesPage/EnvironmentVariablesPage").then(
+    m => ({ default: m.default })
+  );
+
+const EnvironmentVariablesPage = lazy(environmentVariablesPageLoader);
+
 // Регистрируем все некритичные компоненты для фоновой загрузки
 registerPrefetchComponents([
   // Часто используемые страницы
@@ -100,10 +107,23 @@ registerPrefetchComponents([
   cinemaQueuePageLoader,
   mediaInfoListPageLoader,
   mediaInfoEditPageLoader,
+  environmentVariablesPageLoader,
 ]);
 
 // Массив основных страниц сайта с Layout
 export const mainSiteRoutes: RouteConfig[] = [
+  {
+    path: "/environment-variables",
+    name: "Переменные окружения",
+    type: "control panel",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <EnvironmentVariablesPage />
+        </Suspense>
+      </Layout>
+    ),
+  },
   {
     path: "/",
     name: "Главная страница",

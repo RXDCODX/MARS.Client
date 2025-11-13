@@ -39,13 +39,10 @@ function QueueListComponent({
     }))
   );
 
-  const handlePlayTrackFromQueue = useCallback(
-    (item: QueueItemType) => {
-      // TODO: Реализовать проигрывание трека из очереди
-      console.warn("handlePlayTrackFromQueue not implemented", item);
-    },
-    []
-  );
+  const handlePlayTrackFromQueue = useCallback((item: QueueItemType) => {
+    // TODO: Реализовать проигрывание трека из очереди
+    console.warn("handlePlayTrackFromQueue not implemented", item);
+  }, []);
 
   const toggleExpanded = useCallback(() => {
     if (collapsible) {
@@ -97,20 +94,4 @@ function QueueListComponent({
 }
 
 export const QueueList = memo(QueueListComponent);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

@@ -11,7 +11,7 @@ import { ElasticSlider } from "../ElasticSlider";
  */
 function VolumeSliderComponent() {
   const { volume, actions } = usePlayerStore(
-    useShallow((state) => ({
+    useShallow(state => ({
       volume: state.volume,
       actions: state.actions,
     }))

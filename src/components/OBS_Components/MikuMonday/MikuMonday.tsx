@@ -1,21 +1,20 @@
 import "react-roulette-pro/dist/index.css";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import IntroStage from "./components/stages/IntroStage";
 import ResultStage from "./components/stages/ResultStage";
 import RouletteStage from "./components/stages/RouletteStage";
+import WaitingStage from "./components/stages/WaitingStage";
 import { useRouletteGroups } from "./hooks/useRouletteGroups";
 import styles from "./MikuMonday.module.scss";
 import useMikuMondayStore from "./store/mikuMondayStore";
 
-type StageKey = "intro" | "roulette" | "result";
+type StageKey = "waiting" | "intro" | "roulette" | "result";
+const QUEUE_PAUSE_MS = 2000;
 
 function MikuMondayContent() {
   const currentAlert = useMikuMondayStore(state => state.currentAlert);
-  const availableTracksCount = useMikuMondayStore(
-    state => state.availableTracksCount
-  );
   const decrementAvailableTrack = useMikuMondayStore(
     state => state.decrementAvailableTrack
   );
@@ -23,7 +22,51 @@ function MikuMondayContent() {
 
   const rouletteGroups = useRouletteGroups(currentAlert);
 
-  const [stage, setStage] = useState<StageKey>("intro");
+  const [stage, setStage] = useState<StageKey>("waiting");
+  const waitingTimeoutRef = useRef<number | null>(null);
+  const stageSyncTimeoutRef = useRef<number | null>(null);
+
+  useEffect(
+    () => () => {
+      if (waitingTimeoutRef.current !== null) {
+        window.clearTimeout(waitingTimeoutRef.current);
+        waitingTimeoutRef.current = null;
+      }
+      if (stageSyncTimeoutRef.current !== null) {
+        window.clearTimeout(stageSyncTimeoutRef.current);
+        stageSyncTimeoutRef.current = null;
+      }
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (stageSyncTimeoutRef.current !== null) {
+      window.clearTimeout(stageSyncTimeoutRef.current);
+      stageSyncTimeoutRef.current = null;
+    }
+
+    if (currentAlert) {
+      if (waitingTimeoutRef.current !== null) {
+        window.clearTimeout(waitingTimeoutRef.current);
+        waitingTimeoutRef.current = null;
+      }
+      stageSyncTimeoutRef.current = window.setTimeout(() => {
+        setStage(previousStage =>
+          previousStage === "waiting" ? "intro" : previousStage
+        );
+        stageSyncTimeoutRef.current = null;
+      }, 0);
+      return;
+    }
+
+    stageSyncTimeoutRef.current = window.setTimeout(() => {
+      setStage(previousStage =>
+        previousStage !== "waiting" ? "waiting" : previousStage
+      );
+      stageSyncTimeoutRef.current = null;
+    }, 0);
+  }, [currentAlert?.queueId, currentAlert]);
 
   const shouldSkipAvailableTracksUpdate =
     currentAlert?.skipAvailableTracksUpdate === true;
@@ -41,11 +84,25 @@ function MikuMondayContent() {
   }, []);
 
   const handleResultComplete = useCallback(() => {
-    dequeueCurrent();
+    setStage("waiting");
+    if (waitingTimeoutRef.current !== null) {
+      window.clearTimeout(waitingTimeoutRef.current);
+    }
+
+    waitingTimeoutRef.current = window.setTimeout(() => {
+      waitingTimeoutRef.current = null;
+      dequeueCurrent();
+      const nextAlert = useMikuMondayStore.getState().currentAlert;
+      setStage(nextAlert ? "intro" : "waiting");
+    }, QUEUE_PAUSE_MS);
   }, [dequeueCurrent]);
 
-  if (!currentAlert) {
-    return null;
+  if (!currentAlert || stage === "waiting") {
+    return (
+      <div className={styles.layout}>
+        <WaitingStage />
+      </div>
+    );
   }
 
   if (stage === "intro") {
@@ -66,7 +123,6 @@ function MikuMondayContent() {
         rouletteGroups={rouletteGroups}
         shouldSkipAvailableTracksUpdate={shouldSkipAvailableTracksUpdate}
         decrementAvailableTrack={decrementAvailableTrack}
-        availableTracksCount={availableTracksCount}
         onComplete={handleRouletteComplete}
       />
     );

@@ -275,6 +275,16 @@ export interface DefaultImage {
   url4x?: string;
 }
 
+export interface EnvironmentVariable {
+  key: string;
+  value?: string;
+  description?: string;
+  /** @format date-time */
+  createdAt: string;
+  /** @format date-time */
+  updatedAt: string;
+}
+
 export interface FollowerInfo {
   /** @minLength 1 */
   userId: string;
@@ -646,6 +656,12 @@ export interface ServiceLog {
   level: string;
   message: string;
   exception?: string;
+}
+
+export interface SetEnvironmentVariableRequest {
+  key: string;
+  value?: string;
+  description?: string;
 }
 
 export interface StreamArchiveConfig {

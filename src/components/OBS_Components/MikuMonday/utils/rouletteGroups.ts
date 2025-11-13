@@ -2,16 +2,6 @@ import { MikuTrackDto } from "@/shared/api";
 
 import type { RouletteGroup, RoulettePrize } from "../types";
 
-function createPlaceholderPrize(index: number, groupId: number): RoulettePrize {
-  const idSuffix = index >= 0 ? `${groupId}-${index}` : `${groupId}-fallback`;
-  return {
-    id: `placeholder-${idSuffix}`,
-    image: "",
-    text: "Свободный слот",
-    isPlaceholder: true,
-  };
-}
-
 function fillPrizesToTwenty(
   prizes: RoulettePrize[],
   groupId: number
@@ -21,8 +11,27 @@ function fillPrizesToTwenty(
   }
 
   const extendedPrizes = [...prizes];
+  if (extendedPrizes.length === 0) {
+    return extendedPrizes;
+  }
+
+  const nonPlaceholderPrizes = extendedPrizes.filter(
+    prize => prize.isPlaceholder !== true
+  );
+
+  const sourcePrizes =
+    nonPlaceholderPrizes.length > 0 ? nonPlaceholderPrizes : extendedPrizes;
+
   while (extendedPrizes.length < 20) {
-    extendedPrizes.push(createPlaceholderPrize(extendedPrizes.length, groupId));
+    const randomIndex = Math.floor(Math.random() * sourcePrizes.length);
+    const prize = sourcePrizes[randomIndex];
+    if (prize) {
+      extendedPrizes.push({
+        ...prize,
+        id: `${prize.id}-duplicate-${groupId}-${extendedPrizes.length}`,
+        isPlaceholder: false,
+      });
+    }
   }
 
   return extendedPrizes;
@@ -33,11 +42,25 @@ export function divideTracksIntoGroups(
   selectedTrack: MikuTrackDto
 ): RouletteGroup[] {
   const tracksCount = availableTracks.length;
-  const allTracks = [...availableTracks, selectedTrack];
-  const selectedTrackId = selectedTrack.number.toString();
+  const allTracks = [...availableTracks];
 
-  const allPrizes: RoulettePrize[] = allTracks.map(track => ({
-    id: track.number.toString(),
+  const selectedTrackIndex = allTracks.findIndex(
+    track => track.id === selectedTrack.id
+  );
+  if (selectedTrackIndex >= 0) {
+    allTracks[selectedTrackIndex] = selectedTrack;
+  } else {
+    allTracks.push(selectedTrack);
+  }
+
+  const sortedTracks = [...allTracks].sort(
+    (first, second) => first.number - second.number
+  );
+
+  const selectedTrackId = selectedTrack.id;
+
+  const allPrizes: RoulettePrize[] = sortedTracks.map(track => ({
+    id: track.id,
     image: track.thumbnailUrl || "",
     text: `#${track.number}: ${track.artist} - ${track.title}`,
     isPlaceholder: false,
@@ -64,7 +87,9 @@ export function divideTracksIntoGroups(
   const groups: RouletteGroup[] = [];
   const prizesPerGroup = Math.ceil(allPrizes.length / roulettesCount);
 
-  const selectedIndex = allPrizes.findIndex(p => p.id === selectedTrackId);
+  const selectedIndex = allPrizes.findIndex(
+    prize => prize.id === selectedTrackId
+  );
   const winnerGroupIndex = Math.floor(selectedIndex / prizesPerGroup);
 
   for (let i = 0; i < roulettesCount; i++) {

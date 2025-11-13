@@ -21,12 +21,19 @@ const TwitchRewardsPage = lazy(twitchRewardsPageLoader);
 const serviceDetailsPageLoader = () => import("./ServiceDetailsPage");
 const ServiceDetailsPage = lazy(serviceDetailsPageLoader);
 
+const environmentVariablesPageLoader = () =>
+  import("@/Site/Pages").then(m => ({
+    default: m.EnvironmentVariablesPage,
+  }));
+const EnvironmentVariablesPage = lazy(environmentVariablesPageLoader);
+
 // Регистрируем админ компоненты для фоновой загрузки
 registerPrefetchComponents([
   logsPageLoader,
   serverViewerLoader,
   twitchRewardsPageLoader,
   serviceDetailsPageLoader,
+  environmentVariablesPageLoader,
 ]);
 
 // Массив панелей управления (с Layout)
@@ -99,6 +106,18 @@ export const adminRoutes: RouteConfig[] = [
       <Layout>
         <Suspense fallback={<PageLoader />}>
           <ServiceDetailsPage />
+        </Suspense>
+      </Layout>
+    ),
+  },
+  {
+    path: "/environment-variables",
+    name: "Переменные окружения",
+    type: "control panel",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <EnvironmentVariablesPage />
         </Suspense>
       </Layout>
     ),

@@ -13,7 +13,7 @@ interface ResultStageProps {
   onComplete: () => void;
 }
 
-const DEFAULT_RESULT_DURATION = 5200;
+const DEFAULT_RESULT_DURATION = 5000;
 
 export default function ResultStage({
   track,
@@ -34,12 +34,8 @@ export default function ResultStage({
   return (
     <article
       className={`${styles["result-stage"]} ${animate.animated} ${animate.fadeIn}`}
-      style={{ borderColor: accentColor }}
     >
-      <div
-        className={styles["result-visual"]}
-        style={{ borderColor: accentColor }}
-      >
+      <div className={styles["result-visual"]}>
         {hasCover ? (
           <img
             src={track.thumbnailUrl}

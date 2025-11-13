@@ -86,7 +86,9 @@ export function useVideoStateRenderer({
       loadedSeconds: number;
     }) => {
       if (isMainPlayer) {
-        void useVideoScreenStore.getState().reportProgress(progress.playedSeconds);
+        void useVideoScreenStore
+          .getState()
+          .reportProgress(progress.playedSeconds);
       }
     },
     [isMainPlayer]
