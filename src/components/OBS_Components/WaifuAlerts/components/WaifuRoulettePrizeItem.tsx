@@ -5,24 +5,32 @@ interface WaifuRoulettePrizeItemProps {
   text?: string;
 }
 
+const PRIZE_ITEM_WIDTH = 205;
+const PRIZE_ITEM_HEIGHT = 234;
+
 export default function WaifuRoulettePrizeItem({
   image,
   text,
 }: WaifuRoulettePrizeItemProps) {
   if (image) {
+    const normalizedText = text?.trim();
+
     return (
-      <figure className={styles.figure}>
+      <figure
+        className={styles.figure}
+        style={{ width: `${PRIZE_ITEM_WIDTH}px`, height: `${PRIZE_ITEM_HEIGHT}px` }}
+      >
         <div className={styles.inner}>
           <img
             src={image}
-            alt={text || ""}
+            alt={normalizedText || ""}
             className={styles.image}
             loading="lazy"
           />
         </div>
-        {text && text.trim().length > 0 ? (
+        {normalizedText ? (
           <figcaption className={styles.caption}>
-            <span>{text}</span>
+            <span>{normalizedText}</span>
           </figcaption>
         ) : null}
       </figure>

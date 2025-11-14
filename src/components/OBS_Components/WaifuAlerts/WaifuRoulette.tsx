@@ -100,9 +100,9 @@ export default function WaifuRoulette({
             prizesWithText: true,
             hideCenterDelimiter: true,
           }}
-          // prizeItemRenderFunction={prize => (
-          //   <WaifuRoulettePrizeItem image={prize.image} text={prize.text} />
-          // )}
+          prizeItemRenderFunction={prize => (
+            <WaifuRoulettePrizeItem image={prize.image} text={prize.text} />
+          )}
           onPrizeDefined={() => {
             setVisible(false);
             const div = rouletteDiv.current!;
