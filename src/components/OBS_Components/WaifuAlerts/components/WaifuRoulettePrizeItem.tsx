@@ -18,7 +18,10 @@ export default function WaifuRoulettePrizeItem({
     return (
       <figure
         className={styles.figure}
-        style={{ width: `${PRIZE_ITEM_WIDTH}px`, height: `${PRIZE_ITEM_HEIGHT}px` }}
+        style={{
+          width: `${PRIZE_ITEM_WIDTH}px`,
+          height: `${PRIZE_ITEM_HEIGHT}px`,
+        }}
       >
         <div className={styles.inner}>
           <img
