@@ -23,16 +23,6 @@ const MikuMikuBeamComponent = () => {
   const [announced, setAnnounced] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Обработчик события MikuMikuBeam из SignalR
-  TelegramusHubSignalRContext.useSignalREffect(
-    "MikuMikuBeam",
-    (users: TwitchUser[]) => {
-      console.log("[MikuMikuBeam] Получены пользователи:", users);
-      handleMikuBeamActivation(users);
-    },
-    []
-  );
-
   const preloadImages = useCallback((users: TwitchUser[]) => {
     // Запускаем предзагрузку в фоне без блокировки
     const imagePromises = users
@@ -119,6 +109,16 @@ const MikuMikuBeamComponent = () => {
       console.error("[MikuMikuBeam] Ошибка вызова UnmuteSessions:", error);
     }
   }, []);
+
+  // Обработчик события MikuMikuBeam из SignalR
+  TelegramusHubSignalRContext.useSignalREffect(
+    "MikuMikuBeam",
+    (users: TwitchUser[]) => {
+      console.log("[MikuMikuBeam] Получены пользователи:", users);
+      handleMikuBeamActivation(users);
+    },
+    []
+  );
 
   // Создаем массив пользователей для бегущих строк (дублируем для непрерывности)
   // Дублируем достаточное количество раз, чтобы заполнить экран даже с малым количеством пользователей
