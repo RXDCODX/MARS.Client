@@ -60,7 +60,7 @@ export default function PhonkLayoutManager() {
   const [isAnnounced, setIsAnnounced] = useState(false);
 
   TelegramusHubSignalRContext.useSignalREffect(
-    "TiktokEdit",
+    "PhonkEdit",
     () => {
       dispatch({
         type: "ENQUEUE",
