@@ -8,13 +8,16 @@ import { replaceEmotes } from "..";
 import styles from "./BigTextStyles.module.scss";
 
 interface Props {
-  mediaInfo: MediaDto;
+  content: MediaDto | string;
 }
 
-export function BigTextBlockForAudio({ mediaInfo }: Props) {
+export function BigTextBlockForAudio({ content: mediaInfo }: Props) {
   const parser = useTwitchStore(state => state.parser);
   const parserToLink = useTwitchStore(state => state.parseToLink);
-  const text = mediaInfo.mediaInfo.textInfo.text;
+  const text =
+    typeof mediaInfo === "string"
+      ? mediaInfo
+      : mediaInfo.mediaInfo.textInfo.text;
 
   if (text === null && text === "") {
     return undefined;

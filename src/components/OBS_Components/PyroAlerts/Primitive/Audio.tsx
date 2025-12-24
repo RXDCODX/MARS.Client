@@ -1,7 +1,9 @@
 import { useCallback, useEffect, useRef } from "react";
 
-import { MediaDto } from "@/shared/api";
-import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
+import {
+  MediaDto,
+  TelegramusHubSignalRContext as SignalRContext,
+} from "@/shared/api";
 import { BigTextBlockForAudio } from "@/shared/Utils/BigTexts/BigTextBlockForAudio";
 
 declare global {
@@ -93,7 +95,7 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
 
   return (
     <div ref={divRef} style={{ width: "100%" }}>
-      <BigTextBlockForAudio mediaInfo={mediaInfo} />
+      <BigTextBlockForAudio content={mediaInfo} />
       <audio
         id={Id}
         key={Id}

@@ -119,6 +119,14 @@ const waifuAlertsLoader = () =>
   import("@/components/OBS_Components/WaifuAlerts/WaifuAlerts");
 const WaifuAlerts = lazy(waifuAlertsLoader);
 
+const phonkEditLoader = () =>
+  import("@/components/OBS_Components/PhonkLayout/PhonkLayoutManager");
+const PhonkLayoutManager = lazy(phonkEditLoader);
+
+const tikTokEditLoader = () =>
+  import("@/components/OBS_Components/TikTokBigEdit/TikTokLayoutManager");
+const TikTokLayoutManager = lazy(tikTokEditLoader);
+
 // Регистрируем OBS компоненты для фоновой загрузки
 // Эти компоненты загружаются редко, поэтому у них низкий приоритет
 registerPrefetchComponents([
@@ -151,6 +159,31 @@ registerPrefetchComponents([
 
 // Массив OBS компонентов (без Layout для интеграции в OBS)
 export const obsComponentRoutes: RouteConfig[] = [
+  {
+    path: "/tik-tok-manager",
+    name: "TikTok Manager",
+    type: "obs",
+    element: (
+      <OBSComponentWrapper>
+        <Suspense fallback={<OBSLazyLoader />}>
+          <TikTokLayoutManager />
+        </Suspense>
+      </OBSComponentWrapper>
+    ),
+  },
+  {
+    path: "/phonk-manager",
+    name: "Phonk Manager",
+    type: "obs",
+    element: (
+      <OBSComponentWrapper>
+        <Suspense fallback={<OBSLazyLoader />}>
+          <PhonkLayoutManager />
+        </Suspense>
+      </OBSComponentWrapper>
+    ),
+  },
+
   {
     path: "/MikuMonday",
     name: "Miku Monday",
