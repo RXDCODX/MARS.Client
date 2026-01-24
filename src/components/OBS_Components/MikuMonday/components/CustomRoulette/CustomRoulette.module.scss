@@ -22,15 +22,39 @@
   align-items: flex-end;
   justify-content: center;
   position: relative;
-  border: 2px solid rgba(57, 197, 187, 0.3);
+  border: 2px solid rgba(57, 197, 187, 0.8);
   border-radius: 8px;
   overflow: hidden;
   transition: all 0.3s;
   height: 210px;
+  box-shadow:
+    0 0 30px rgba(57, 197, 187, 0.5),
+    inset 0 0 40px rgba(57, 197, 187, 0.1);
+  transform: scale(1.02);
 
-  &:hover {
-    border-color: rgba(57, 197, 187, 0.8);
+  // Разделитель справа от каждого приза
+  &::after {
+    content: '';
+    position: absolute;
+    right: -6px;
+    top: 10%;
+    bottom: 10%;
+    width: 2px;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(57, 197, 187, 0.8) 20%,
+      rgba(255, 107, 237, 0.8) 50%,
+      rgba(57, 197, 187, 0.8) 80%,
+      transparent 100%
+    );
+    box-shadow: 
+      0 0 10px rgba(57, 197, 187, 0.6),
+      0 0 20px rgba(255, 107, 237, 0.4);
+    z-index: 10;
   }
+
+  
 }
 
 .prizeImage {

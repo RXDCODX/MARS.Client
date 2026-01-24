@@ -13,7 +13,7 @@ interface CustomRouletteProps {
 }
 
 const PRIZE_WIDTH = 200; // ширина одного приза
-const PRIZE_GAP = 10; // отступ между призами
+const PRIZE_GAP = 20; // отступ между призами (чуть больше для визуального разделения)
 const SPIN_DURATION = 20; // секунды
 
 export default function CustomRoulette({
