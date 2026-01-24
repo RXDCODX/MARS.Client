@@ -73,28 +73,44 @@ const CustomRouletteGroupList = forwardRef<
     return (
       <div ref={ref} className={styles.container}>
         {pointer}
-        {groups.map((group, index) => (
-          <div
-            key={index}
-            className={`${styles.rouletteWrapper} ${
-              group.isReversed ? styles.reversed : ""
-            }`}
-            style={{
-              opacity: rouletteOpacities[index] ?? 1,
-              transition: "opacity 2s ease-out",
-            }}
-            onTransitionEnd={() => handleTransitionEnd(index)}
-          >
-            <CustomRoulette
-              prizes={group.prizes}
-              prizeIndex={group.prizeIndex}
-              isReversed={group.isReversed}
-              start={rouletteStart}
-              spinningTime={group.hasWinner ? 23 : 20}
-              onComplete={() => handleRouletteComplete(index)}
-            />
-          </div>
-        ))}
+        {groups.map((group, index) => {
+          // Для невыигрышных рулеток добавляем случайную вариативность
+          const getSpinningTime = () => {
+            if (group.hasWinner) return 23;
+            // Разное время для каждой невыигрышной рулетки (18-22 сек)
+            return 18 + ((index * 1.7) % 4);
+          };
+
+          // Случайное направление для невыигрышных рулеток
+          const getDirection = () => {
+            if (group.hasWinner) return group.isReversed;
+            // Чередуем направления + добавляем вариативность по индексу
+            return index % 2 === 0 ? !group.isReversed : group.isReversed;
+          };
+
+          return (
+            <div
+              key={index}
+              className={`${styles.rouletteWrapper} ${
+                getDirection() ? styles.reversed : ""
+              }`}
+              style={{
+                opacity: rouletteOpacities[index] ?? 1,
+                transition: "opacity 2s ease-out",
+              }}
+              onTransitionEnd={() => handleTransitionEnd(index)}
+            >
+              <CustomRoulette
+                prizes={group.prizes}
+                prizeIndex={group.prizeIndex}
+                isReversed={getDirection()}
+                start={rouletteStart}
+                spinningTime={getSpinningTime()}
+                onComplete={() => handleRouletteComplete(index)}
+              />
+            </div>
+          );
+        })}
       </div>
     );
   }
