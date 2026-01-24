@@ -11,6 +11,45 @@
   background: transparent;
   border: none;
   box-shadow: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.videoBackground {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+  transition: opacity 600ms ease-in-out;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+  }
+
+  iframe {
+    min-width: 100%;
+    min-height: 100%;
+    width: auto;
+    height: auto;
+  }
+}
+
+.videoVisible {
+  opacity: 1;
+}
+
+.videoHidden {
+  opacity: 0;
 }
 
 .stage {
@@ -25,8 +64,9 @@
   align-items: center;
   gap: 32px;
   padding: 36px 44px;
+    margin-bottom: 24px;
   border-radius: 32px;
-  border: none;
+  border: 2px solid rgba(255, 255, 255, 0.15);
   background: linear-gradient(135deg,
       rgba(var(--bs-primary-rgb), 0.35) 0%,
       rgba(var(--bs-secondary-rgb), 0.28) 45%,
@@ -260,19 +300,20 @@
 }
 
 .result-stage {
-  width: min(56vw, 720px);
+  width: min(68vw, 880px);
   max-width: 90vw;
-  min-height: 360px;
+  min-height: 420px;
   position: relative;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding: 28px 32px;
+  gap: 12px;
+    margin-bottom: 24px;
+  padding: 36px 44px;
   border-radius: 28px;
-  border: none;
+  border: 2px solid rgba(255, 255, 255, 0.15);
   background: linear-gradient(140deg,
       rgba(var(--bs-secondary-rgb), 0.22) 0%,
       rgba(18, 22, 40, 0.68) 45%,

@@ -13,7 +13,7 @@ interface IntroStageProps {
   onComplete: () => void;
 }
 
-const DEFAULT_INTRO_DURATION = 3200;
+const DEFAULT_INTRO_DURATION = 7000;
 const FADE_OUT_DURATION = 600;
 
 export default function IntroStage({

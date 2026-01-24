@@ -66,8 +66,33 @@ function MikuMondayContent() {
   }, [currentAlert, rouletteGroups]);
 
   const [stage, setStage] = useState<StageKey>("waiting");
+  const [isVideoVisible, setIsVideoVisible] = useState(false);
   const waitingTimeoutRef = useRef<number | null>(null);
   const stageSyncTimeoutRef = useRef<number | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  // Предзагружаем видео при монтировании компонента
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video) {
+      video.load(); // Начинаем загрузку видео
+    }
+  }, []);
+
+  // Управление воспроизведением видео
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isVideoVisible) {
+      video.currentTime = 0; // Сбрасываем на начало
+      video.play().catch(err => {
+        console.warn("[MikuMonday] Не удалось воспроизвести видео:", err);
+      });
+    } else {
+      video.pause();
+    }
+  }, [isVideoVisible]);
 
   useEffect(
     () => () => {
@@ -98,6 +123,7 @@ function MikuMondayContent() {
         setStage(previousStage =>
           previousStage === "waiting" ? "intro" : previousStage
         );
+        setIsVideoVisible(true);
         stageSyncTimeoutRef.current = null;
       }, 0);
       return;
@@ -140,6 +166,7 @@ function MikuMondayContent() {
       displayName: currentAlert?.twitchUser.displayName,
       trackNumber: currentAlert?.selectedTrack.number,
     });
+    setIsVideoVisible(false);
     setStage("waiting");
     if (waitingTimeoutRef.current !== null) {
       window.clearTimeout(waitingTimeoutRef.current);
@@ -161,16 +188,45 @@ function MikuMondayContent() {
     }, QUEUE_PAUSE_MS);
   }, [dequeueCurrent, currentAlert]);
 
+  // Видео-фон существует постоянно, чтобы не перемонтироваться между стейджами
+  const videoBackground = (
+    <div
+      className={`${styles.videoBackground} ${isVideoVisible ? styles.videoVisible : styles.videoHidden}`}
+    >
+      <video
+        ref={videoRef}
+        src="/static/miku.mp4"
+        preload="auto"
+        muted
+        playsInline
+        loop
+        style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          minWidth: "100%",
+          minHeight: "100%",
+          width: "auto",
+          height: "auto",
+          transform: "translate(-50%, -50%)",
+          objectFit: "cover",
+          pointerEvents: "none",
+        }}
+      />
+    </div>
+  );
+
+  // Рендерим контент в зависимости от стейджа
+  let stageContent;
+
   if (!currentAlert || stage === "waiting") {
-    return (
+    stageContent = (
       <div className={styles.layout}>
         <WaitingStage onComplete={() => {}} />
       </div>
     );
-  }
-
-  if (stage === "intro") {
-    return (
+  } else if (stage === "intro") {
+    stageContent = (
       <div className={styles.layout}>
         <IntroStage
           twitchUser={currentAlert.twitchUser}
@@ -179,10 +235,8 @@ function MikuMondayContent() {
         />
       </div>
     );
-  }
-
-  if (stage === "roulette") {
-    return (
+  } else if (stage === "roulette") {
+    stageContent = (
       <RouletteStage
         rouletteGroups={rouletteGroups}
         shouldSkipAvailableTracksUpdate={shouldSkipAvailableTracksUpdate}
@@ -190,29 +244,32 @@ function MikuMondayContent() {
         onComplete={handleRouletteComplete}
       />
     );
+  } else {
+    const trackToDisplay = winnerTrack ?? currentAlert.selectedTrack;
+    console.log("[MikuMonday] 📺 Отправляем трек в ResultStage", {
+      trackId: trackToDisplay.id,
+      trackNumber: trackToDisplay.number,
+      trackTitle: trackToDisplay.title,
+      trackArtist: trackToDisplay.artist,
+      isWinnerTrack: winnerTrack !== undefined,
+      winnerGroupExists: rouletteGroups.some(g => g.hasWinner),
+    });
+    stageContent = (
+      <div className={styles.layout}>
+        <ResultStage
+          track={trackToDisplay}
+          twitchUser={currentAlert.twitchUser}
+          onComplete={handleResultComplete}
+        />
+      </div>
+    );
   }
 
   return (
-    <div className={styles.layout}>
-      {(() => {
-        const trackToDisplay = winnerTrack ?? currentAlert.selectedTrack;
-        console.log("[MikuMonday] 📺 Отправляем трек в ResultStage", {
-          trackId: trackToDisplay.id,
-          trackNumber: trackToDisplay.number,
-          trackTitle: trackToDisplay.title,
-          trackArtist: trackToDisplay.artist,
-          isWinnerTrack: winnerTrack !== undefined,
-          winnerGroupExists: rouletteGroups.some(g => g.hasWinner),
-        });
-        return (
-          <ResultStage
-            track={trackToDisplay}
-            twitchUser={currentAlert.twitchUser}
-            onComplete={handleResultComplete}
-          />
-        );
-      })()}
-    </div>
+    <>
+      {videoBackground}
+      {stageContent}
+    </>
   );
 }
 
