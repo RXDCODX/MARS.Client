@@ -29,7 +29,6 @@ export default function IntroStage({
   }, [durationMs, onComplete]);
 
   const displayName = twitchUser.displayName ?? twitchUser.userLogin;
-  const loginTag = `@${twitchUser.userLogin}`;
   const avatarUrl = twitchUser.profileImageUrl ?? fallbackAvatar ?? "";
 
   const fallbackSymbol = useMemo(() => {
@@ -45,33 +44,31 @@ export default function IntroStage({
     <article
       className={`${styles["intro-stage"]} ${animate.animated} ${animate.fadeIn}`}
     >
-      <div className={styles["intro-avatar-wrapper"]}>
-        {hasAvatar ? (
-          <img
-            src={avatarUrl}
-            alt={displayName}
-            className={styles["intro-avatar"]}
-          />
-        ) : (
-          <div className={styles["intro-avatar-placeholder"]}>
-            {fallbackSymbol}
-          </div>
-        )}
-      </div>
       <div className={styles["intro-text-block"]}>
         <span
           className={`${styles["intro-heading"]} ${commonStyles.textStrokeShadow}`}
         >
           Мику обратила свой взор на
         </span>
-        <span
-          className={`${styles["intro-name"]} ${commonStyles.textStrokeShadow}`}
-        >
-          {displayName}
-        </span>
-        <span className={styles["intro-login"]}>{loginTag}</span>
+        <div className={styles["intro-name-with-avatar"]}>
+          <div className={styles["intro-small-avatar"]}>
+            {hasAvatar ? (
+              <img src={avatarUrl} alt={displayName} />
+            ) : (
+              <div className={styles["intro-small-avatar-placeholder"]}>
+                {fallbackSymbol}
+              </div>
+            )}
+          </div>
+          <span
+            className={`${styles["intro-name"]} ${commonStyles.textStrokeShadow}`}
+            style={{ color: twitchUser.chatColor ?? "#fff" }}
+          >
+            {displayName}
+          </span>
+        </div>
         <span className={styles["intro-subtitle"]}>
-          Приготовься к волшебству — твой трек уже на подходе!
+          Всем приготовься к волшебству — новый трек уже на подходе!
         </span>
       </div>
     </article>
