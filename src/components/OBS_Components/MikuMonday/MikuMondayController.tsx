@@ -19,6 +19,22 @@ export default function MikuMondayController() {
   const { showToast } = useToastModal();
 
   useEffect(() => {
+    console.log("[MikuMondayController] currentAlert изменился", {
+      alertId: currentAlert?.id,
+      queueId: currentAlert?.queueId,
+      displayName: currentAlert?.twitchUser.displayName,
+      trackNumber: currentAlert?.selectedTrack.number,
+      isAlertShowing,
+    });
+  }, [
+    currentAlert?.id,
+    currentAlert?.queueId,
+    currentAlert?.selectedTrack.number,
+    currentAlert?.twitchUser.displayName,
+    isAlertShowing,
+  ]);
+
+  useEffect(() => {
     startHub().catch(err => {
       showToast(
         createErrorResult(err?.message || "Не удалось подключиться к хабу")

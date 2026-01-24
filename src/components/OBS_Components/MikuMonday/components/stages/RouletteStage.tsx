@@ -1,14 +1,10 @@
-import { useCallback } from "react";
-import type PrizeType from "react-roulette-pro/dist/types/PrizeType";
-
 import animate from "@/shared/styles/animate.module.scss";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import { useRouletteAnimation } from "../../hooks/useRouletteAnimation";
 import styles from "../../MikuMonday.module.scss";
-import PrizeItem from "../../PrizeItem";
-import type { RouletteGroup, RoulettePrize } from "../../types";
-import RouletteGroupList from "../RouletteGroupList";
+import type { RouletteGroup } from "../../types";
+import CustomRouletteGroupList from "../CustomRouletteGroupList/CustomRouletteGroupList";
 import RoulettePointer from "../RoulettePointer";
 
 interface RouletteStageProps {
@@ -36,6 +32,8 @@ export default function RouletteStage({
     rouletteOpacities,
     handleContainerAnimationEnd,
     handleSingleRouletteComplete,
+    handleOthersFaded,
+    handleWinnerFaded,
   } = useRouletteAnimation({
     rouletteGroups,
     shouldSkipAvailableTracksUpdate,
@@ -44,11 +42,6 @@ export default function RouletteStage({
     onComplete,
   });
 
-  const renderPrizeItem = useCallback(
-    (prize: PrizeType) => <PrizeItem prize={prize as RoulettePrize} />,
-    []
-  );
-
   return (
     <div
       ref={containerRef}
@@ -56,13 +49,14 @@ export default function RouletteStage({
       onAnimationEnd={handleContainerAnimationEnd}
       style={baseStyle}
     >
-      <RouletteGroupList
+      <CustomRouletteGroupList
         ref={groupsRef}
         groups={rouletteGroups}
         rouletteStart={rouletteStart}
         rouletteOpacities={rouletteOpacities}
-        renderPrizeItem={renderPrizeItem}
         onPrizeDefined={handleSingleRouletteComplete}
+        onOthersFaded={handleOthersFaded}
+        onWinnerFaded={handleWinnerFaded}
         pointer={
           <RoulettePointer visible={visible} pointerHeight={pointerHeight} />
         }

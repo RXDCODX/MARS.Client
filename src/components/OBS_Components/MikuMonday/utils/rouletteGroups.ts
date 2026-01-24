@@ -41,6 +41,13 @@ export function divideTracksIntoGroups(
   availableTracks: MikuTrackDto[],
   selectedTrack: MikuTrackDto
 ): RouletteGroup[] {
+  console.log("[divideTracksIntoGroups] Начало создания групп рулеток", {
+    selectedTrackId: selectedTrack.id,
+    selectedTrackNumber: selectedTrack.number,
+    selectedTrackTitle: selectedTrack.title,
+    availableTracksCount: availableTracks.length,
+  });
+
   const tracksCount = availableTracks.length;
   const allTracks = [...availableTracks];
 
@@ -114,6 +121,26 @@ export function divideTracksIntoGroups(
       isReversed,
     });
   }
+
+  // Перемешиваем группы, чтобы выигрышная не всегда была внизу
+  if (groups.length > 1) {
+    for (let i = groups.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [groups[i], groups[j]] = [groups[j], groups[i]];
+    }
+  }
+
+  console.log(
+    "[divideTracksIntoGroups] Готовые группы:",
+    groups.map((g, idx) => ({
+      groupIndex: idx,
+      hasWinner: g.hasWinner,
+      prizeIndex: g.prizeIndex,
+      winningPrizeId: g.prizes[g.prizeIndex]?.id,
+      winningPrizeText: g.prizes[g.prizeIndex]?.text,
+      totalPrizes: g.prizes.length,
+    }))
+  );
 
   return groups;
 }

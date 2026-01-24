@@ -164,8 +164,42 @@ export const useMikuMondayStore = create<MikuMondayState & MikuMondayActions>()(
         };
 
         set(state => {
+          // Проверяем дублирование
+          const allAlerts = [
+            ...(state.currentAlert ? [state.currentAlert] : []),
+            ...state.alerts,
+          ];
+          const isDuplicate = allAlerts.some(
+            existingAlert =>
+              existingAlert.id === alert.id ||
+              (existingAlert.selectedTrack.id === alert.selectedTrack.id &&
+                existingAlert.twitchUser.twitchId === alert.twitchUser.twitchId)
+          );
+
+          if (isDuplicate) {
+            console.warn("[MikuMonday] ВНИМАНИЕ: Обнаружен дубликат алерта!", {
+              incomingAlert: {
+                id: alert.id,
+                trackId: alert.selectedTrack.id,
+                trackNumber: alert.selectedTrack.number,
+                twitchId: alert.twitchUser.twitchId,
+                displayName: alert.twitchUser.displayName,
+              },
+              currentAlert: state.currentAlert
+                ? {
+                    id: state.currentAlert.id,
+                    trackId: state.currentAlert.selectedTrack.id,
+                    trackNumber: state.currentAlert.selectedTrack.number,
+                    twitchId: state.currentAlert.twitchUser.twitchId,
+                  }
+                : null,
+              queueLength: state.alerts.length,
+            });
+            return state; // Не добавляем дубликат
+          }
+
           if (!state.isAlertShowing) {
-            console.debug("[MikuMonday] Новый алерт, очередь пуста", {
+            console.log("[MikuMonday] Новый алерт, очередь пуста", {
               alertId: alert.id,
               displayName: alert.twitchUser.displayName,
               selectedTrack: alert.selectedTrack.number,

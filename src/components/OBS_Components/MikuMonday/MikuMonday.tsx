@@ -1,6 +1,6 @@
 import "react-roulette-pro/dist/index.css";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import IntroStage from "./components/stages/IntroStage";
 import ResultStage from "./components/stages/ResultStage";
@@ -21,6 +21,49 @@ function MikuMondayContent() {
   const dequeueCurrent = useMikuMondayStore(state => state.dequeueCurrent);
 
   const rouletteGroups = useRouletteGroups(currentAlert);
+
+  // Получаем выигрышный трек из рулетки
+  const winnerTrack = useMemo(() => {
+    if (!currentAlert) return undefined;
+
+    const winnerGroup = rouletteGroups.find(group => group.hasWinner);
+    if (!winnerGroup) {
+      console.log(
+        "[MikuMonday] Нет группы с победителем, используем исходный трек"
+      );
+      return currentAlert.selectedTrack;
+    }
+
+    const winnerPrize = winnerGroup.prizes[winnerGroup.prizeIndex];
+    if (!winnerPrize) {
+      console.warn("[MikuMonday] Не найден приз для победителя");
+      return currentAlert.selectedTrack;
+    }
+
+    // Ищем полный объект трека в availableTracks
+    const fullTrack = currentAlert.availableTracks.find(
+      track => track.id === winnerPrize.id
+    );
+
+    if (!fullTrack) {
+      console.warn("[MikuMonday] Не найден полный объект трека", {
+        prizeId: winnerPrize.id,
+        prizeText: winnerPrize.text,
+      });
+      return currentAlert.selectedTrack;
+    }
+
+    console.log("[MikuMonday] Выигрышный трек определен", {
+      originalTrackId: currentAlert.selectedTrack.id,
+      originalTrackNumber: currentAlert.selectedTrack.number,
+      winnerTrackId: fullTrack.id,
+      winnerTrackNumber: fullTrack.number,
+      winnerArtist: fullTrack.artist,
+      winnerTitle: fullTrack.title,
+    });
+
+    return fullTrack;
+  }, [currentAlert, rouletteGroups]);
 
   const [stage, setStage] = useState<StageKey>("waiting");
   const waitingTimeoutRef = useRef<number | null>(null);
@@ -72,30 +115,51 @@ function MikuMondayContent() {
     currentAlert?.skipAvailableTracksUpdate === true;
 
   const handleIntroComplete = useCallback(() => {
+    console.log("[MikuMonday] handleIntroComplete вызван", {
+      rouletteGroupsLength: rouletteGroups.length,
+      currentAlertId: currentAlert?.id,
+      trackNumber: currentAlert?.selectedTrack.number,
+    });
     if (rouletteGroups.length > 0) {
+      console.log("[MikuMonday] Переходим на рулетку");
       setStage("roulette");
       return;
     }
+    console.log("[MikuMonday] Нет рулеток, переходим на результат");
     setStage("result");
-  }, [rouletteGroups.length]);
+  }, [rouletteGroups.length, currentAlert]);
 
   const handleRouletteComplete = useCallback(() => {
     setStage("result");
   }, []);
 
   const handleResultComplete = useCallback(() => {
+    console.log("[MikuMonday] handleResultComplete вызван", {
+      currentAlertId: currentAlert?.id,
+      queueId: currentAlert?.queueId,
+      displayName: currentAlert?.twitchUser.displayName,
+      trackNumber: currentAlert?.selectedTrack.number,
+    });
     setStage("waiting");
     if (waitingTimeoutRef.current !== null) {
       window.clearTimeout(waitingTimeoutRef.current);
     }
 
     waitingTimeoutRef.current = window.setTimeout(() => {
+      console.log("[MikuMonday] Вызываем dequeueCurrent после паузы", {
+        pauseMs: QUEUE_PAUSE_MS,
+      });
       waitingTimeoutRef.current = null;
       dequeueCurrent();
       const nextAlert = useMikuMondayStore.getState().currentAlert;
+      console.log("[MikuMonday] Текущий статус после деквеу", {
+        nextAlertId: nextAlert?.id,
+        nextAlertDisplayName: nextAlert?.twitchUser.displayName,
+        nextAlertTrackNumber: nextAlert?.selectedTrack.number,
+      });
       setStage(nextAlert ? "intro" : "waiting");
     }, QUEUE_PAUSE_MS);
-  }, [dequeueCurrent]);
+  }, [dequeueCurrent, currentAlert]);
 
   if (!currentAlert || stage === "waiting") {
     return (
@@ -130,11 +194,24 @@ function MikuMondayContent() {
 
   return (
     <div className={styles.layout}>
-      <ResultStage
-        track={currentAlert.selectedTrack}
-        twitchUser={currentAlert.twitchUser}
-        onComplete={handleResultComplete}
-      />
+      {(() => {
+        const trackToDisplay = winnerTrack ?? currentAlert.selectedTrack;
+        console.log("[MikuMonday] 📺 Отправляем трек в ResultStage", {
+          trackId: trackToDisplay.id,
+          trackNumber: trackToDisplay.number,
+          trackTitle: trackToDisplay.title,
+          trackArtist: trackToDisplay.artist,
+          isWinnerTrack: winnerTrack !== undefined,
+          winnerGroupExists: rouletteGroups.some(g => g.hasWinner),
+        });
+        return (
+          <ResultStage
+            track={trackToDisplay}
+            twitchUser={currentAlert.twitchUser}
+            onComplete={handleResultComplete}
+          />
+        );
+      })()}
     </div>
   );
 }

@@ -13,7 +13,7 @@ interface ResultStageProps {
   onComplete: () => void;
 }
 
-const DEFAULT_RESULT_DURATION = 5000;
+const DEFAULT_RESULT_DURATION = 7000;
 
 export default function ResultStage({
   track,

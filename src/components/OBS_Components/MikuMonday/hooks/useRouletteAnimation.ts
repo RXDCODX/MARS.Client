@@ -36,12 +36,13 @@ export function useRouletteAnimation({
   const containerRef = useRef<HTMLDivElement>(null);
   const groupsRef = useRef<HTMLDivElement>(null);
   const completionNotifiedRef = useRef(false);
-  const fadeTimersRef = useRef<{ fadeOthers?: number; fadeWinner?: number }>(
-    {}
-  );
+  const othersFadedRef = useRef(false);
+  const fadeTimersRef = useRef<{
+    fadeOthers?: number;
+  }>({});
   const startTimerRef = useRef<number | undefined>(undefined);
 
-  const [baseStyle, setBaseStyle] = useState<CSSProperties>({
+  const [baseStyle] = useState<CSSProperties>({
     width: "100%",
     height: "100%",
     display: "flex",
@@ -75,21 +76,14 @@ export function useRouletteAnimation({
         group.hasWinner ? 1 : 0
       );
       setFadedOpacities(nextOpacities);
-
-      fadeTimersRef.current.fadeWinner = window.setTimeout(() => {
-        setFadedOpacities(nextOpacities.map(() => 0));
-      }, WINNER_FADE_DELAY);
     }, ROULETTE_FADE_TIMEOUT);
 
     fadeTimersRef.current.fadeOthers = fadeOthersTimer;
 
     return () => {
-      const { fadeOthers, fadeWinner } = fadeTimersRef.current;
+      const { fadeOthers } = fadeTimersRef.current;
       if (fadeOthers) {
         window.clearTimeout(fadeOthers);
-      }
-      if (fadeWinner) {
-        window.clearTimeout(fadeWinner);
       }
       fadeTimersRef.current = {};
       setFadedOpacities([]);
@@ -146,16 +140,66 @@ export function useRouletteAnimation({
 
   useEffect(
     () => () => {
-      const { fadeOthers, fadeWinner } = fadeTimersRef.current;
+      const { fadeOthers } = fadeTimersRef.current;
       if (fadeOthers) {
         window.clearTimeout(fadeOthers);
-      }
-      if (fadeWinner) {
-        window.clearTimeout(fadeWinner);
       }
     },
     []
   );
+
+  const handleOthersFaded = useCallback(() => {
+    if (othersFadedRef.current) return;
+    othersFadedRef.current = true;
+
+    console.log(
+      "[useRouletteAnimation] Другие рулетки исчезли, определяем победителя",
+      {
+        rouletteGroups: rouletteGroups.map((g, idx) => ({
+          index: idx,
+          hasWinner: g.hasWinner,
+          prizeIndex: g.prizeIndex,
+          winningPrizeId: g.prizes[g.prizeIndex]?.id,
+          winningPrizeText: g.prizes[g.prizeIndex]?.text,
+        })),
+      }
+    );
+
+    // Теперь затухаем выигрышную рулетку
+    setTimeout(() => {
+      setFadedOpacities(rouletteGroups.map(() => 0));
+      setPointerVisible(false);
+    }, WINNER_FADE_DELAY);
+  }, [rouletteGroups]);
+
+  const handleWinnerFaded = useCallback(async () => {
+    if (completionNotifiedRef.current) return;
+    completionNotifiedRef.current = true;
+
+    console.log(
+      "[useRouletteAnimation] Рулетка завершена, уведомляем родителя",
+      {
+        winner: rouletteGroups.find(g => g.hasWinner)?.prizes[
+          rouletteGroups.find(g => g.hasWinner)?.prizeIndex || 0
+        ],
+      }
+    );
+
+    if (!shouldSkipAvailableTracksUpdate) {
+      try {
+        await decrementAvailableTrack();
+      } catch {
+        showToast(createErrorResult("Ошибка обновления свободных треков"));
+      }
+    }
+    onComplete();
+  }, [
+    rouletteGroups,
+    shouldSkipAvailableTracksUpdate,
+    onComplete,
+    decrementAvailableTrack,
+    showToast,
+  ]);
 
   const handleSingleRouletteComplete = useCallback(() => {
     setCompletedRoulettes(prev => {
@@ -164,42 +208,10 @@ export function useRouletteAnimation({
         `✅ Рулетка завершена. Всего: ${newCount}/${rouletteGroups.length}`
       );
 
-      if (
-        newCount === rouletteGroups.length &&
-        !completionNotifiedRef.current
-      ) {
-        completionNotifiedRef.current = true;
-        setTimeout(() => {
-          setPointerVisible(false);
-          setBaseStyle(prevStyle => ({
-            ...prevStyle,
-            animationDuration: "1.5s",
-          }));
-          const finalize = async () => {
-            if (!shouldSkipAvailableTracksUpdate) {
-              try {
-                await decrementAvailableTrack();
-              } catch {
-                showToast(
-                  createErrorResult("Ошибка обновления свободных треков")
-                );
-              }
-            }
-            onComplete();
-          };
-          void finalize();
-        }, 800);
-      }
-
+      // Логика перехода теперь в fadePointer таймере
       return newCount;
     });
-  }, [
-    rouletteGroups.length,
-    shouldSkipAvailableTracksUpdate,
-    decrementAvailableTrack,
-    showToast,
-    onComplete,
-  ]);
+  }, [rouletteGroups.length]);
 
   return {
     containerRef,
@@ -211,5 +223,7 @@ export function useRouletteAnimation({
     rouletteOpacities,
     handleContainerAnimationEnd,
     handleSingleRouletteComplete,
+    handleOthersFaded,
+    handleWinnerFaded,
   };
 }
