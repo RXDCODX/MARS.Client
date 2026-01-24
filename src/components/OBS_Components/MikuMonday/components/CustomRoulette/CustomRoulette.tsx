@@ -38,7 +38,8 @@ export default function CustomRoulette({
       spinningTime,
     });
 
-    setIsSpinning(true);
+    // Запускаем флаг анимации асинхронно, чтобы избежать каскадных рендеров
+    const frameId = requestAnimationFrame(() => setIsSpinning(true));
 
     // Создаем зацикленный массив призов (повторяем 5 раз для плавной прокрутки)
     const containerWidth = containerRef.current?.offsetWidth || 1000;
@@ -67,8 +68,10 @@ export default function CustomRoulette({
       centerOffset,
     });
 
-    // Запускаем анимацию
-    setTranslateX(endPosition);
+    // Запускаем анимацию асинхронно, чтобы избежать синхронного setState в эффекте
+    const translateFrameId = requestAnimationFrame(() => {
+      setTranslateX(endPosition);
+    });
 
     // Уведомляем о завершении
     const timer = setTimeout(() => {
@@ -80,8 +83,20 @@ export default function CustomRoulette({
       onComplete?.();
     }, spinningTime * 1000);
 
-    return () => clearTimeout(timer);
-  }, [start, prizes, prizeIndex, isReversed, spinningTime, onComplete]);
+    return () => {
+      cancelAnimationFrame(frameId);
+      cancelAnimationFrame(translateFrameId);
+      clearTimeout(timer);
+    };
+  }, [
+    start,
+    prizes,
+    prizeIndex,
+    isReversed,
+    spinningTime,
+    onComplete,
+    isSpinning,
+  ]);
 
   // Создаем повторяющийся массив призов
   const repeatedPrizes = Array(5).fill(prizes).flat();

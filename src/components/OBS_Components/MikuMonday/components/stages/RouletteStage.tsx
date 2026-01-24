@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import animate from "@/shared/styles/animate.module.scss";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
@@ -14,6 +16,8 @@ interface RouletteStageProps {
   onComplete: () => void;
 }
 
+const FADE_OUT_DURATION = 600;
+
 export default function RouletteStage({
   rouletteGroups,
   shouldSkipAvailableTracksUpdate,
@@ -21,6 +25,12 @@ export default function RouletteStage({
   onComplete,
 }: RouletteStageProps) {
   const { showToast } = useToastModal();
+  const [isFadingOut, setIsFadingOut] = useState(false);
+
+  const handleComplete = () => {
+    setIsFadingOut(true);
+    setTimeout(onComplete, FADE_OUT_DURATION);
+  };
 
   const {
     containerRef,
@@ -39,13 +49,15 @@ export default function RouletteStage({
     shouldSkipAvailableTracksUpdate,
     decrementAvailableTrack,
     showToast,
-    onComplete,
+    onComplete: handleComplete,
   });
 
   return (
     <div
       ref={containerRef}
-      className={`${styles.layout} ${styles["stage"]} ${styles["roulette-stage"]} ${animate.animated} ${animate.fadeIn}`}
+      className={`${styles.layout} ${styles["stage"]} ${styles["roulette-stage"]} ${animate.animated} ${
+        isFadingOut ? animate.fadeOut : animate.fadeIn
+      }`}
       onAnimationEnd={handleContainerAnimationEnd}
       style={baseStyle}
     >

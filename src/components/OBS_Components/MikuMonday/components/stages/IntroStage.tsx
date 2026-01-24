@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import type { TwitchUser } from "@/shared/api";
 import animate from "@/shared/styles/animate.module.scss";
@@ -14,6 +14,7 @@ interface IntroStageProps {
 }
 
 const DEFAULT_INTRO_DURATION = 3200;
+const FADE_OUT_DURATION = 600;
 
 export default function IntroStage({
   twitchUser,
@@ -21,10 +22,18 @@ export default function IntroStage({
   durationMs = DEFAULT_INTRO_DURATION,
   onComplete,
 }: IntroStageProps) {
+  const [isFadingOut, setIsFadingOut] = useState(false);
+
   useEffect(() => {
-    const timerId = window.setTimeout(onComplete, durationMs);
+    const fadeOutTimerId = window.setTimeout(() => {
+      setIsFadingOut(true);
+    }, durationMs - FADE_OUT_DURATION);
+
+    const completeTimerId = window.setTimeout(onComplete, durationMs);
+
     return () => {
-      window.clearTimeout(timerId);
+      window.clearTimeout(fadeOutTimerId);
+      window.clearTimeout(completeTimerId);
     };
   }, [durationMs, onComplete]);
 
@@ -42,7 +51,9 @@ export default function IntroStage({
 
   return (
     <article
-      className={`${styles["intro-stage"]} ${animate.animated} ${animate.fadeIn}`}
+      className={`${styles["intro-stage"]} ${animate.animated} ${
+        isFadingOut ? animate.fadeOut : animate.fadeIn
+      }`}
     >
       <div className={styles["intro-text-block"]}>
         <span

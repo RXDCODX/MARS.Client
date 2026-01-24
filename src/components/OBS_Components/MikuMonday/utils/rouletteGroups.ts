@@ -2,6 +2,57 @@ import { MikuTrackDto } from "@/shared/api";
 
 import type { RouletteGroup, RoulettePrize } from "../types";
 
+function prizeImageKey(prize: RoulettePrize): string {
+  return prize.image || String(prize.id);
+}
+
+function ensureNoAdjacentImages(
+  prizes: RoulettePrize[],
+  winnerId: string
+): { prizes: RoulettePrize[]; winnerIndex: number } {
+  const attemptsLimit = 80;
+
+  for (let attempt = 0; attempt < attemptsLimit; attempt++) {
+    const pool = [...prizes];
+    const arranged: RoulettePrize[] = [];
+
+    while (pool.length > 0) {
+      const lastPrize = arranged[arranged.length - 1];
+      const candidates = pool.filter(
+        prize => !lastPrize || prizeImageKey(prize) !== prizeImageKey(lastPrize)
+      );
+
+      if (candidates.length === 0) {
+        // dead end, restart arrangement
+        arranged.length = 0;
+        break;
+      }
+
+      const picked = candidates[Math.floor(Math.random() * candidates.length)];
+      arranged.push(picked);
+      pool.splice(pool.indexOf(picked), 1);
+    }
+
+    if (
+      arranged.length === prizes.length &&
+      prizeImageKey(arranged[0]) !==
+        prizeImageKey(arranged[arranged.length - 1])
+    ) {
+      const winnerIndex = arranged.findIndex(prize => prize.id === winnerId);
+      return {
+        prizes: arranged,
+        winnerIndex: winnerIndex >= 0 ? winnerIndex : 0,
+      };
+    }
+  }
+
+  const fallbackIndex = prizes.findIndex(prize => prize.id === winnerId);
+  return {
+    prizes,
+    winnerIndex: fallbackIndex >= 0 ? fallbackIndex : 0,
+  };
+}
+
 function fillPrizesToTwenty(
   prizes: RoulettePrize[],
   groupId: number
@@ -81,10 +132,14 @@ export function divideTracksIntoGroups(
   }
 
   if (roulettesCount === 1) {
+    const { prizes: spacedPrizes, winnerIndex } = ensureNoAdjacentImages(
+      allPrizes,
+      selectedTrackId
+    );
     return [
       {
-        prizes: allPrizes,
-        prizeIndex: allPrizes.length - 1,
+        prizes: spacedPrizes,
+        prizeIndex: winnerIndex,
         hasWinner: true,
         isReversed: false,
       },
@@ -113,10 +168,14 @@ export function divideTracksIntoGroups(
 
     const isReversed = i % 2 !== 0;
     const filledPrizes = fillPrizesToTwenty(groupPrizes, i);
+    const { prizes: spacedPrizes, winnerIndex } = ensureNoAdjacentImages(
+      filledPrizes,
+      String(groupPrizes[localPrizeIndex]?.id ?? "")
+    );
 
     groups.push({
-      prizes: filledPrizes,
-      prizeIndex: localPrizeIndex,
+      prizes: spacedPrizes,
+      prizeIndex: hasWinner ? winnerIndex : localPrizeIndex,
       hasWinner,
       isReversed,
     });

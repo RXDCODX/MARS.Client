@@ -164,7 +164,7 @@ function MikuMondayContent() {
   if (!currentAlert || stage === "waiting") {
     return (
       <div className={styles.layout}>
-        <WaitingStage />
+        <WaitingStage onComplete={() => {}} />
       </div>
     );
   }

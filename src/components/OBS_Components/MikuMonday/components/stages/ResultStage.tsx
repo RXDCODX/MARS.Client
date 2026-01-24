@@ -1,10 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import type { MikuTrackDto, TwitchUser } from "@/shared/api";
 import animate from "@/shared/styles/animate.module.scss";
+import useTwitchStore from "@/shared/twitchStore/twitchStore";
 
 import commonStyles from "../../../OBSCommon.module.scss";
 import styles from "../../MikuMonday.module.scss";
+import MarqueeTrackTitle from "../MarqueeTrackTitle";
 
 interface ResultStageProps {
   track: MikuTrackDto;
@@ -14,6 +16,7 @@ interface ResultStageProps {
 }
 
 const DEFAULT_RESULT_DURATION = 7000;
+const FADE_OUT_DURATION = 600;
 
 export default function ResultStage({
   track,
@@ -21,56 +24,75 @@ export default function ResultStage({
   durationMs = DEFAULT_RESULT_DURATION,
   onComplete,
 }: ResultStageProps) {
+  const [isFadingOut, setIsFadingOut] = useState(false);
+  const messageSentRef = useRef(false);
+  const sendMessage = useTwitchStore(state => state.sendMsgToPyrokxnezxz);
+
   useEffect(() => {
-    const timerId = window.setTimeout(onComplete, durationMs);
+    // Отправляем сообщение о выпавшем треке только один раз
+    if (!messageSentRef.current) {
+      sendMessage(
+        `@${twitchUser.displayName}, выпал трек: ${track.artist} - ${track.title} (#${track.number}) ${track.url}`
+      );
+      messageSentRef.current = true;
+    }
+  }, [
+    track.id,
+    twitchUser.displayName,
+    sendMessage,
+    track.artist,
+    track.title,
+    track.number,
+    track.url,
+  ]);
+
+  useEffect(() => {
+    const fadeOutTimerId = window.setTimeout(() => {
+      setIsFadingOut(true);
+    }, durationMs - FADE_OUT_DURATION);
+
+    const completeTimerId = window.setTimeout(onComplete, durationMs);
+
     return () => {
-      window.clearTimeout(timerId);
+      window.clearTimeout(fadeOutTimerId);
+      window.clearTimeout(completeTimerId);
     };
   }, [durationMs, onComplete]);
 
   const hasCover = Boolean(track.thumbnailUrl);
-  const accentColor = twitchUser.chatColor ?? "var(--bs-primary)";
+  const highlightColor = "rgb(57, 197, 187)";
+  const userColor = twitchUser.chatColor ?? highlightColor;
+  const backgroundStyle = hasCover
+    ? {
+        backgroundImage: `url(${track.thumbnailUrl})`,
+      }
+    : undefined;
 
   return (
     <article
-      className={`${styles["result-stage"]} ${animate.animated} ${animate.fadeIn}`}
+      className={`${styles["result-stage"]} ${animate.animated} ${
+        isFadingOut ? animate.fadeOut : animate.fadeIn
+      }`}
+      style={backgroundStyle}
     >
-      <div className={styles["result-visual"]}>
-        {hasCover ? (
-          <img
-            src={track.thumbnailUrl}
-            alt={`${track.artist} - ${track.title}`}
-            className={styles["result-cover"]}
-          />
-        ) : (
-          <div className={styles["result-cover-placeholder"]}>
-            <span className={styles["result-cover-placeholder-text"]}>
-              Нет обложки
-            </span>
-          </div>
-        )}
-      </div>
       <div className={styles["result-content"]}>
         <span
           className={`${styles["result-heading"]} ${commonStyles.textStrokeShadow}`}
+          style={{ color: highlightColor }}
         >
           Мику решила сегодня благословить тебя
         </span>
         <span
           className={`${styles["result-user"]} ${commonStyles.textStrokeShadow}`}
-          style={{ color: accentColor }}
+          style={{ color: userColor }}
         >
           {twitchUser.displayName}
         </span>
-        <span className={styles["result-user-login"]}>
-          @{twitchUser.userLogin}
-        </span>
         <div className={styles["result-track-info"]}>
-          <span
+          <MarqueeTrackTitle
+            text={`${track.artist} - ${track.title}`}
             className={`${styles["result-track-title"]} ${commonStyles.textStrokeShadow}`}
-          >
-            {track.artist} - {track.title}
-          </span>
+          />
           <span className={styles["result-track-meta"]}>
             Трек #{track.number}
           </span>
