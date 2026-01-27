@@ -74,6 +74,21 @@ const Squares = lazy(
 const Threads = lazy(
   () => import("react-bits/src/ts-default/Backgrounds/Threads/Threads")
 );
+const LightPillar = lazy(
+  () => import("react-bits/src/ts-default/Backgrounds/LightPillar/LightPillar")
+);
+const FloatingLines = lazy(
+  () =>
+    import("react-bits/src/ts-default/Backgrounds/FloatingLines/FloatingLines")
+);
+const ColorBends = lazy(
+  () => import("react-bits/src/ts-default/Backgrounds/ColorBends/ColorBends")
+);
+const GridScan = lazy(() =>
+  import("react-bits/src/ts-default/Backgrounds/GridScan/GridScan").then(
+    module => ({ default: module.GridScan })
+  )
+);
 
 // ОПТИМИЗАЦИЯ: Загружаем музыку НЕ eager - только когда нужно
 const musicFiles = import.meta.glob("./music/*.{mp3,ogg,wav}", {
@@ -268,6 +283,84 @@ const backgroundConfigs = [
       </Suspense>
     ),
   },
+  {
+    name: "LightPillar",
+    element: (
+      <Suspense fallback={<div />}>
+        <LightPillar
+          topColor="#7cff67"
+          bottomColor="#5227FF"
+          intensity={1.1}
+          rotationSpeed={0.25}
+          glowAmount={0.0075}
+          pillarWidth={3.5}
+          pillarHeight={0.45}
+          noiseIntensity={0.35}
+          mixBlendMode="screen"
+        />
+      </Suspense>
+    ),
+  },
+  {
+    name: "FloatingLines",
+    element: (
+      <Suspense fallback={<div />}>
+        <FloatingLines
+          linesGradient={["#5227FF", "#FF9FFC", "#7cff67", "#B19EEF"]}
+          enabledWaves={["top", "middle", "bottom"]}
+          lineCount={[4, 6, 5]}
+          lineDistance={[12, 10, 14]}
+          animationSpeed={0.9}
+          interactive={false}
+          parallax={false}
+          mixBlendMode="screen"
+        />
+      </Suspense>
+    ),
+  },
+  {
+    name: "ColorBends",
+    element: (
+      <Suspense fallback={<div />}>
+        <ColorBends
+          colors={["#5227FF", "#FF9FFC", "#7cff67", "#B19EEF"]}
+          rotation={35}
+          speed={0.18}
+          warpStrength={1.2}
+          mouseInfluence={0}
+          parallax={0.25}
+          noise={0.05}
+        />
+      </Suspense>
+    ),
+  },
+  {
+    name: "GridScan",
+    element: (
+      <Suspense fallback={<div />}>
+        <GridScan
+          enableWebcam={false}
+          showPreview={false}
+          linesColor="#311b4f"
+          scanColor="#5227FF"
+          scanOpacity={0.25}
+          gridScale={0.08}
+          lineThickness={1.2}
+          lineStyle="solid"
+          lineJitter={0.05}
+          enablePost={true}
+          bloomIntensity={0.4}
+          bloomThreshold={0.6}
+          bloomSmoothing={0.8}
+          chromaticAberration={0.0015}
+          noiseIntensity={0.02}
+          scanGlow={0.6}
+          scanSoftness={1.6}
+          scanDirection="pingpong"
+        />
+      </Suspense>
+    ),
+  },
 ];
 
 // Импортируем иконки через import.meta.glob
@@ -448,8 +541,22 @@ const Credits: React.FC = () => {
 
   const selectRandomBackground = useCallback(() => {
     if (!backgroundConfigs.length) return;
-    const randomIndex = Math.floor(Math.random() * backgroundConfigs.length);
-    const selected = backgroundConfigs[randomIndex];
+
+    // В режиме разработки используем только 4 конкретных фона
+    const devBackgrounds = [
+      "LightPillar",
+      "FloatingLines",
+      "ColorBends",
+      "GridScan",
+    ];
+    const availableBackgrounds = import.meta.env.DEV
+      ? backgroundConfigs.filter(bg => devBackgrounds.includes(bg.name))
+      : backgroundConfigs;
+
+    if (!availableBackgrounds.length) return;
+
+    const randomIndex = Math.floor(Math.random() * availableBackgrounds.length);
+    const selected = availableBackgrounds[randomIndex];
     console.log("Выбран фон для титров:", selected.name);
     setSelectedBackground(selected);
   }, []);
