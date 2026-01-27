@@ -23,8 +23,7 @@ import styles from "./Credits.module.scss";
 
 // ОПТИМИЗАЦИЯ: Lazy loading для тяжелых анимаций - загружаем только когда нужно
 const ElectricBorder = lazy(
-  () =>
-    import("react-bits/src/content/Animations/ElectricBorder/ElectricBorder")
+  () => import("./ElectricBorderLegacy/ElectricBorder")
 );
 const Aurora = lazy(
   () => import("react-bits/src/ts-default/Backgrounds/Aurora/Aurora")
@@ -787,8 +786,14 @@ const Credits: React.FC = () => {
                         fallback={<div style={{ width: 400, height: 400 }} />}
                       >
                         <ElectricBorder
-                          style={{ borderRadius: "50%" }}
                           color="rgb(230,172,12)"
+                          speed={3}
+                          chaos={0.3}
+                          style={{
+                            width: "400px",
+                            height: "400px",
+                            borderRadius: 200,
+                          }}
                         >
                           <img
                             src={streamerInfo.profileImageUrl}

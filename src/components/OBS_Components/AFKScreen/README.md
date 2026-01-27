@@ -13,10 +13,10 @@
 ## Использование
 
 ```tsx
-import { AFKScreen } from '../components/OBS_Components';
+import { AFKScreen } from "../components/OBS_Components";
 
 // В вашем компоненте
-<AFKScreen />
+<AFKScreen />;
 ```
 
 ## Технические детали

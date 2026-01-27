@@ -26,11 +26,13 @@
   right: 0;
   height: 90%;
   transform: translateY(-50%);
-  background: linear-gradient(to right,
-      rgba(110, 110, 110, 0.45) 0%,
-      rgba(110, 110, 110, 0.45) var(--track-progress, 0%),
-      transparent var(--track-progress, 0%),
-      transparent 100%);
+  background: linear-gradient(
+    to right,
+    rgba(110, 110, 110, 0.45) 0%,
+    rgba(110, 110, 110, 0.45) var(--track-progress, 0%),
+    transparent var(--track-progress, 0%),
+    transparent 100%
+  );
   border-radius: 8% 0 0 8%;
   z-index: 0;
   pointer-events: none;
@@ -45,11 +47,13 @@
   display: flex;
   justify-content: center;
   padding: 30px 0;
-  background: linear-gradient(to right,
-      rgba(110, 110, 110, 0.45) 0%,
-      rgba(110, 110, 110, 0.45) var(--track-progress, 0%),
-      rgba(255, 255, 255, 0.1) var(--track-progress, 0%),
-      rgba(255, 255, 255, 0.1) 100%);
+  background: linear-gradient(
+    to right,
+    rgba(110, 110, 110, 0.45) 0%,
+    rgba(110, 110, 110, 0.45) var(--track-progress, 0%),
+    rgba(255, 255, 255, 0.1) var(--track-progress, 0%),
+    rgba(255, 255, 255, 0.1) 100%
+  );
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   /* Убран transition для мгновенной реакции, как в ProgressBar */
@@ -96,10 +100,12 @@
 .divider {
   width: 3px;
   height: 80px;
-  background: linear-gradient(180deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.3) 50%,
-      transparent 100%);
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%
+  );
   flex-shrink: 0;
 }
 

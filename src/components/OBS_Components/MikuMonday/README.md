@@ -36,7 +36,10 @@ function App() {
 ### Вариант 2: Ручное использование Provider
 
 ```tsx
-import { MikuMondayProvider, MikuMonday } from "@/components/OBS_Components/MikuMonday";
+import {
+  MikuMondayProvider,
+  MikuMonday,
+} from "@/components/OBS_Components/MikuMonday";
 
 function App() {
   return (
@@ -90,21 +93,22 @@ interface MikuMondayState {
 
 ### Actions (useDispatch)
 
-| Action Type | Payload | Описание |
-|------------|---------|----------|
-| `SET_CONNECTION` | `{ connection: HubConnection }` | Устанавливает SignalR соединение |
-| `SET_CONNECTED` | `boolean` | Устанавливает статус подключения |
-| `SET_AVAILABLE_TRACKS` | `MikuTrackDto[]` | Обновляет список свободных треков |
-| `DECREMENT_TRACK_COUNT` | - | Уменьшает счетчик треков на 1 |
-| `ADD_ALERT` | `MikuMondayDto` | Добавляет новый алерт в очередь |
-| `SHOW_NEXT_ALERT` | - | Показывает следующий алерт из очереди |
-| `CLEAR_CURRENT_ALERT` | - | Очищает текущий алерт |
-| `CLEAR_QUEUE` | - | Очищает всю очередь |
-| `RESET` | - | Сбрасывает state в начальное состояние |
+| Action Type             | Payload                         | Описание                               |
+| ----------------------- | ------------------------------- | -------------------------------------- |
+| `SET_CONNECTION`        | `{ connection: HubConnection }` | Устанавливает SignalR соединение       |
+| `SET_CONNECTED`         | `boolean`                       | Устанавливает статус подключения       |
+| `SET_AVAILABLE_TRACKS`  | `MikuTrackDto[]`                | Обновляет список свободных треков      |
+| `DECREMENT_TRACK_COUNT` | -                               | Уменьшает счетчик треков на 1          |
+| `ADD_ALERT`             | `MikuMondayDto`                 | Добавляет новый алерт в очередь        |
+| `SHOW_NEXT_ALERT`       | -                               | Показывает следующий алерт из очереди  |
+| `CLEAR_CURRENT_ALERT`   | -                               | Очищает текущий алерт                  |
+| `CLEAR_QUEUE`           | -                               | Очищает всю очередь                    |
+| `RESET`                 | -                               | Сбрасывает state в начальное состояние |
 
 ### Методы
 
 #### `fetchAvailableTracks()`
+
 Получает список свободных треков с сервера через SignalR.
 
 ```tsx
@@ -113,6 +117,7 @@ await fetchAvailableTracks();
 ```
 
 #### `decrementAvailableTrack()`
+
 Уменьшает количество свободных треков и обновляет список если треки закончились.
 
 ```tsx
@@ -202,7 +207,7 @@ const { dispatch } = useMikuMonday();
 
 <button onClick={() => dispatch({ type: "CLEAR_QUEUE" })}>
   Очистить очередь
-</button>
+</button>;
 ```
 
 ### Отображение количества алертов в очереди
@@ -210,7 +215,7 @@ const { dispatch } = useMikuMonday();
 ```tsx
 const { state } = useMikuMonday();
 
-<div>В очереди: {state.alerts.length} алертов</div>
+<div>В очереди: {state.alerts.length} алертов</div>;
 ```
 
 ### Пропуск текущего алерта
@@ -220,6 +225,5 @@ const { dispatch } = useMikuMonday();
 
 <button onClick={() => dispatch({ type: "SHOW_NEXT_ALERT" })}>
   Следующий алерт
-</button>
+</button>;
 ```
-

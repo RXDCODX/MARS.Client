@@ -29,7 +29,9 @@
       .card {
         border-radius: 8px;
         box-shadow: var(--site-shadow-medium);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease;
         background: var(--site-bg-card);
         border: 1px solid var(--site-border-primary);
 
@@ -326,7 +328,6 @@
     }
 
     .table {
-
       thead th,
       tbody td {
         padding: 8px 12px;

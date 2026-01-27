@@ -32,13 +32,13 @@ import RainbowText from "@/shared/components/RainbowText/RainbowText";
 
 ## Props
 
-| Prop | Type | Default | Описание |
-|------|------|---------|----------|
-| `children` | `ReactNode` | - | Текст для отображения (обязательный) |
-| `className` | `string` | `""` | Дополнительные CSS классы |
-| `colors` | `string[]` | `["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]` | Массив цветов для градиента |
-| `animationSpeed` | `number` | `8` | Скорость анимации в секундах |
-| `showBorder` | `boolean` | `false` | Показывать градиентную рамку вокруг текста |
+| Prop             | Type        | Default                                                   | Описание                                   |
+| ---------------- | ----------- | --------------------------------------------------------- | ------------------------------------------ |
+| `children`       | `ReactNode` | -                                                         | Текст для отображения (обязательный)       |
+| `className`      | `string`    | `""`                                                      | Дополнительные CSS классы                  |
+| `colors`         | `string[]`  | `["#40ffaa", "#4079ff", "#40ffaa", "#4079ff", "#40ffaa"]` | Массив цветов для градиента                |
+| `animationSpeed` | `number`    | `8`                                                       | Скорость анимации в секундах               |
+| `showBorder`     | `boolean`   | `false`                                                   | Показывать градиентную рамку вокруг текста |
 
 ## Примеры в Storybook
 

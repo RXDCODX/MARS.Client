@@ -5,7 +5,9 @@
 
 .characterCard {
   cursor: pointer;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
   border: 1px solid #dee2e6;
 
   &:hover {
@@ -46,7 +48,7 @@
 }
 
 .commandCode {
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   background-color: var(--bs-light);
   padding: 0.25rem 0.5rem;
   border-radius: 0.25rem;
@@ -250,7 +252,7 @@
 }
 
 .commandCell {
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-weight: 600;
   color: #495057;
   max-width: 100px;
@@ -383,7 +385,7 @@
 
 // Локальный оверрайд bootstrap для более плотной сетки на md
 @media (min-width: 768px) {
-  :global(.row-cols-md-6)>* {
+  :global(.row-cols-md-6) > * {
     flex: 0 0 auto;
     width: 7.666667%;
   }
@@ -396,7 +398,6 @@
 
   // Улучшаем читаемость на маленьких экранах
   @media (max-width: 576px) {
-
     th,
     td {
       padding: 0.25rem 0.125rem;
@@ -406,7 +407,6 @@
 
   // Улучшаем отображение на средних экранах
   @media (min-width: 577px) and (max-width: 768px) {
-
     th,
     td {
       padding: 0.375rem 0.25rem;
@@ -416,7 +416,6 @@
 
   // Оптимальное отображение на больших экранах
   @media (min-width: 769px) {
-
     th,
     td {
       padding: 0.5rem 0.375rem;
@@ -561,7 +560,9 @@
 // Стили для страницы ожидающих изменений
 .changeCard {
   cursor: pointer;
-  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
   border: 1px solid #dee2e6;
 
   &:hover {
@@ -612,19 +613,35 @@
 
 .newNoteItem {
   border-left: 4px solid;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.9),
+    rgba(255, 255, 255, 0.7)
+  );
 
   [data-bs-theme="dark"] & {
-    background: linear-gradient(135deg, rgba(33, 37, 41, 0.9), rgba(33, 37, 41, 0.7));
+    background: linear-gradient(
+      135deg,
+      rgba(33, 37, 41, 0.9),
+      rgba(33, 37, 41, 0.7)
+    );
   }
 }
 
 .oldNoteItem {
   border-left: 4px solid;
-  background: linear-gradient(135deg, rgba(248, 249, 250, 0.9), rgba(248, 249, 250, 0.7));
+  background: linear-gradient(
+    135deg,
+    rgba(248, 249, 250, 0.9),
+    rgba(248, 249, 250, 0.7)
+  );
 
   [data-bs-theme="dark"] & {
-    background: linear-gradient(135deg, rgba(73, 80, 87, 0.9), rgba(73, 80, 87, 0.7));
+    background: linear-gradient(
+      135deg,
+      rgba(73, 80, 87, 0.9),
+      rgba(73, 80, 87, 0.7)
+    );
   }
 }
 
@@ -942,12 +959,20 @@
 
   // Первый цвет (светлый)
   &:nth-child(odd) {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.9),
+      rgba(255, 255, 255, 0.7)
+    );
     border-color: rgba(0, 123, 255, 0.3);
     color: #495057;
 
     [data-bs-theme="dark"] & {
-      background: linear-gradient(135deg, rgba(52, 58, 64, 0.9), rgba(52, 58, 64, 0.7));
+      background: linear-gradient(
+        135deg,
+        rgba(52, 58, 64, 0.9),
+        rgba(52, 58, 64, 0.7)
+      );
       border-color: rgba(0, 123, 255, 0.5);
       color: #e9ecef;
     }
@@ -955,12 +980,20 @@
 
   // Второй цвет (темный)
   &:nth-child(even) {
-    background: linear-gradient(135deg, rgba(248, 249, 250, 0.9), rgba(248, 249, 250, 0.7));
+    background: linear-gradient(
+      135deg,
+      rgba(248, 249, 250, 0.9),
+      rgba(248, 249, 250, 0.7)
+    );
     border-color: rgba(108, 117, 125, 0.3);
     color: #495057;
 
     [data-bs-theme="dark"] & {
-      background: linear-gradient(135deg, rgba(73, 80, 87, 0.9), rgba(73, 80, 87, 0.7));
+      background: linear-gradient(
+        135deg,
+        rgba(73, 80, 87, 0.9),
+        rgba(73, 80, 87, 0.7)
+      );
       border-color: rgba(108, 117, 125, 0.5);
       color: #e9ecef;
     }

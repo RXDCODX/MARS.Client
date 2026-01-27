@@ -130,7 +130,7 @@ export const ToastModalProvider: React.FC<{ children: React.ReactNode }> = ({
    */
   const showToast = useCallback(
     // eslint-disable-next-line prettier/prettier
-    <TData = unknown>(result: OperationResult<TData>) => {
+    <TData = unknown,>(result: OperationResult<TData>) => {
       // Определяем тип тоста на основе result.success
       const type = result.success ? "success" : "error";
 

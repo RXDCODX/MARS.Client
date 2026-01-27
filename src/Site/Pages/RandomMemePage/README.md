@@ -89,54 +89,54 @@
 
 ```typescript
 // Получение списка типов
-GET /api/RandomMeme/types
+GET / api / RandomMeme / types;
 
 // Создание типа
-POST /api/RandomMeme/types
+POST / api / RandomMeme / types;
 
 // Получение типа по ID
-GET /api/RandomMeme/types/{id}
+GET / api / RandomMeme / types / { id };
 
 // Обновление типа
-PUT /api/RandomMeme/types/{id}
+PUT / api / RandomMeme / types / { id };
 
 // Удаление типа
-DELETE /api/RandomMeme/types/{id}
+DELETE / api / RandomMeme / types / { id };
 ```
 
 #### Заказы мемов (MemeOrderDto)
 
 ```typescript
 // Получение списка заказов
-GET /api/RandomMeme/orders
+GET / api / RandomMeme / orders;
 
 // Создание заказа
-POST /api/RandomMeme/orders
+POST / api / RandomMeme / orders;
 
 // Получение заказов по типу
-GET /api/RandomMeme/orders/type/{typeId}
+GET / api / RandomMeme / orders / type / { typeId };
 
 // Получение заказа по ID
-GET /api/RandomMeme/orders/{id}
+GET / api / RandomMeme / orders / { id };
 
 // Обновление заказа
-PUT /api/RandomMeme/orders/{id}
+PUT / api / RandomMeme / orders / { id };
 
 // Удаление заказа
-DELETE /api/RandomMeme/orders/{id}
+DELETE / api / RandomMeme / orders / { id };
 ```
 
 #### Дополнительные методы
 
 ```typescript
 // Случайный выбор
-GET /api/RandomMeme/random
+GET / api / RandomMeme / random;
 
 // Получение количества
-GET /api/RandomMeme/count
+GET / api / RandomMeme / count;
 
 // Переупорядочение
-POST /api/RandomMeme/orders/reorder/{typeId}
+POST / api / RandomMeme / orders / reorder / { typeId };
 ```
 
 ## 🎨 Дизайн и UX

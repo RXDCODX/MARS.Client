@@ -62,15 +62,15 @@
 
 ```typescript
 interface LogsPageState {
-  logs: Log[];                    // Список логов
+  logs: Log[]; // Список логов
   statistics: LogsStatistics | null; // Статистика
-  isLoading: boolean;             // Загрузка логов
-  isLoadingStats: boolean;        // Загрузка статистики
-  error: string;                  // Ошибки
-  currentPage: number;            // Текущая страница
-  pageSize: number;               // Размер страницы
-  totalPages: number;             // Общее количество страниц
-  totalCount: number;             // Общее количество логов
+  isLoading: boolean; // Загрузка логов
+  isLoadingStats: boolean; // Загрузка статистики
+  error: string; // Ошибки
+  currentPage: number; // Текущая страница
+  pageSize: number; // Размер страницы
+  totalPages: number; // Общее количество страниц
+  totalCount: number; // Общее количество логов
 }
 ```
 
@@ -78,12 +78,12 @@ interface LogsPageState {
 
 ```typescript
 interface LogsFilters {
-  logLevel: string;               // Уровень логирования
-  fromDate: string;               // Дата начала
-  toDate: string;                 // Дата окончания
-  searchText: string;             // Текст для поиска
-  sortBy: string;                 // Поле для сортировки
-  sortDescending: boolean;        // Направление сортировки
+  logLevel: string; // Уровень логирования
+  fromDate: string; // Дата начала
+  toDate: string; // Дата окончания
+  searchText: string; // Текст для поиска
+  sortBy: string; // Поле для сортировки
+  sortDescending: boolean; // Направление сортировки
 }
 ```
 

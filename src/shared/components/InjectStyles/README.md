@@ -12,7 +12,7 @@ import { InjectStyles } from "@/shared/components/InjectStyles";
 function MyComponent() {
   return (
     <>
-      <InjectStyles 
+      <InjectStyles
         styles={`
           .my-custom-class {
             background-color: #ff0000;
@@ -26,7 +26,7 @@ function MyComponent() {
         `}
         id="my-component-styles"
       />
-      
+
       <div className="my-custom-class">
         Этот элемент использует внедренные стили
       </div>
@@ -41,17 +41,16 @@ function MyComponent() {
 import { useInjectStyles } from "@/shared/hooks";
 
 function MyComponent() {
-  useInjectStyles(`
+  useInjectStyles(
+    `
     .dynamic-class {
       background: linear-gradient(90deg, #ff0000, #00ff00);
     }
-  `, 'dynamic-styles');
-  
-  return (
-    <div className="dynamic-class">
-      Контент с динамическими стилями
-    </div>
+  `,
+    "dynamic-styles"
   );
+
+  return <div className="dynamic-class">Контент с динамическими стилями</div>;
 }
 ```
 
@@ -72,17 +71,12 @@ function MyComponent({ primaryColor, fontSize }: MyComponentProps) {
       font-size: ${fontSize}px;
     }
   `;
-  
+
   return (
     <>
-      <InjectStyles 
-        styles={dynamicStyles}
-        id="themed-component-styles"
-      />
-      
-      <div className="themed-component">
-        Компонент с динамической темой
-      </div>
+      <InjectStyles styles={dynamicStyles} id="themed-component-styles" />
+
+      <div className="themed-component">Компонент с динамической темой</div>
     </>
   );
 }
@@ -92,17 +86,17 @@ function MyComponent({ primaryColor, fontSize }: MyComponentProps) {
 
 ### InjectStyles (Компонент)
 
-| Параметр | Тип | Обязательный | Описание |
-|----------|-----|--------------|----------|
-| `styles` | `string` | Да | CSS строка со стилями для внедрения |
-| `id` | `string` | Нет | Уникальный идентификатор для style элемента. Если элемент с таким id уже существует, он будет заменен |
+| Параметр | Тип      | Обязательный | Описание                                                                                              |
+| -------- | -------- | ------------ | ----------------------------------------------------------------------------------------------------- |
+| `styles` | `string` | Да           | CSS строка со стилями для внедрения                                                                   |
+| `id`     | `string` | Нет          | Уникальный идентификатор для style элемента. Если элемент с таким id уже существует, он будет заменен |
 
 ### useInjectStyles (Хук)
 
-| Параметр | Тип | Обязательный | Описание |
-|----------|-----|--------------|----------|
-| `styles` | `string` | Да | CSS строка со стилями для внедрения |
-| `id` | `string` | Нет | Уникальный идентификатор для style элемента |
+| Параметр | Тип      | Обязательный | Описание                                    |
+| -------- | -------- | ------------ | ------------------------------------------- |
+| `styles` | `string` | Да           | CSS строка со стилями для внедрения         |
+| `id`     | `string` | Нет          | Уникальный идентификатор для style элемента |
 
 ## Особенности
 
@@ -123,4 +117,3 @@ function MyComponent({ primaryColor, fontSize }: MyComponentProps) {
 - Стили применяются глобально, даже если компонент внедряет их локально
 - При использовании `id`, убедитесь, что он уникален в пределах приложения
 - Стили будут удалены при размонтировании компонента
-

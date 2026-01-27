@@ -32,7 +32,7 @@ HighliteMessage/
 ### Базовое использование
 
 ```tsx
-import { HighliteMessage } from '@/components/OBS_Components';
+import { HighliteMessage } from "@/components/OBS_Components";
 
 function App() {
   return <HighliteMessage />;
@@ -87,9 +87,9 @@ function App() {
 
 ```tsx
 interface HighliteMessageProps {
-  message: ChatMessage;      // Сообщение чата
-  color: string;             // Цвет пользователя
-  faceImage: FaceAsset;      // Лицо для отображения
+  message: ChatMessage; // Сообщение чата
+  color: string; // Цвет пользователя
+  faceImage: FaceAsset; // Лицо для отображения
 }
 ```
 
@@ -97,10 +97,10 @@ interface HighliteMessageProps {
 
 ```tsx
 interface FaceAsset {
-  name: string;              // Имя файла
-  url: string;               // Путь к файлу
-  type: 'image' | 'video';   // Тип медиа
-  extension: string;         // Расширение файла
+  name: string; // Имя файла
+  url: string; // Путь к файлу
+  type: "image" | "video"; // Тип медиа
+  extension: string; // Расширение файла
 }
 ```
 

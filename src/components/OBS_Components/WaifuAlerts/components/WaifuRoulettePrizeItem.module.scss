@@ -22,7 +22,9 @@
   box-shadow: var(--site-shadow-medium);
   background: var(--primary-gradient);
   transform-style: preserve-3d;
-  transition: transform 220ms ease, box-shadow 220ms ease;
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease;
 }
 
 .inner::before {
@@ -83,4 +85,3 @@
     box-shadow: var(--site-shadow-medium);
   }
 }
-

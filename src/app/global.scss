@@ -46,12 +46,16 @@ html:not([data-storybook]) {
   --text-shadow-heavy: 0 4px 8px rgba(0, 0, 0, 0.2);
 
   // Градиенты
-  --bs-gradient: linear-gradient(180deg,
-      rgba(255, 255, 255, 0.15),
-      rgba(255, 255, 255, 0));
-  --primary-gradient: linear-gradient(135deg,
-      var(--bs-primary) 0%,
-      var(--bs-secondary) 100%);
+  --bs-gradient: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0)
+  );
+  --primary-gradient: linear-gradient(
+    135deg,
+    var(--bs-primary) 0%,
+    var(--bs-secondary) 100%
+  );
 
   // Дополнительные цвета для тем
   --bs-white: #ffffff;
@@ -170,12 +174,16 @@ html:not([data-storybook]) {
   --text-shadow-heavy: 0 4px 8px rgba(0, 0, 0, 0.5);
 
   // Градиенты для темной темы
-  --bs-gradient: linear-gradient(180deg,
-      rgba(255, 255, 255, 0.15),
-      rgba(255, 255, 255, 0));
-  --primary-gradient: linear-gradient(135deg,
-      var(--bs-primary) 0%,
-      var(--bs-secondary) 100%);
+  --bs-gradient: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.15),
+    rgba(255, 255, 255, 0)
+  );
+  --primary-gradient: linear-gradient(
+    135deg,
+    var(--bs-primary) 0%,
+    var(--bs-secondary) 100%
+  );
 
   // Дополнительные цвета для темной темы
   --bs-white: #f8f9fa;

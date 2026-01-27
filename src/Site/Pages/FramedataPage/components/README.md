@@ -62,16 +62,16 @@ components/
 Все компоненты экспортируются через главный индексный файл:
 
 ```typescript
-import { 
-  CharacterDetails, 
-  CharacterEditForm, 
-  CharacterGrid, 
+import {
+  CharacterDetails,
+  CharacterEditForm,
+  CharacterGrid,
   MovesView,
   PendingChangesPage,
   ChangeDetailsPage,
   GlobalSearch,
   getCharacterAvatar,
-  handleImageError 
+  handleImageError,
 } from "./components";
 ```
 

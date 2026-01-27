@@ -285,7 +285,7 @@
 }
 
 .timestamp {
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: 0.85rem;
   color: var(--site-text-secondary);
   white-space: nowrap;
@@ -298,7 +298,7 @@
 }
 
 .stackTrace {
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: 0.8rem;
   background: var(--site-bg-tertiary);
   color: var(--site-text-primary);
@@ -417,7 +417,6 @@
 }
 
 @media (max-width: 576px) {
-
   .controlsCard,
   .statsCard,
   .logsTableCard {

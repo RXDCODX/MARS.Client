@@ -7,9 +7,11 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg,
-      var(--bs-primary) 0%,
-      var(--bs-secondary) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--bs-primary) 0%,
+    var(--bs-secondary) 100%
+  );
   overflow: hidden;
   position: relative;
 }
@@ -75,7 +77,7 @@
   overflow: hidden;
 
   // Обертка для плеера для правильного соотношения сторон
-  >div {
+  > div {
     width: 100% !important;
     height: 100% !important;
 
@@ -156,7 +158,6 @@
 }
 
 @keyframes pulse {
-
   0%,
   100% {
     opacity: 1;

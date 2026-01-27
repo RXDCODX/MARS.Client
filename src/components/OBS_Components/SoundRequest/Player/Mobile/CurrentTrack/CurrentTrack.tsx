@@ -75,4 +75,3 @@ function CurrentTrackComponent() {
 }
 
 export const CurrentTrack = memo(CurrentTrackComponent);
-

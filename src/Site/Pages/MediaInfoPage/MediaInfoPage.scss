@@ -169,7 +169,11 @@
           }
 
           .card-header {
-            background: linear-gradient(135deg, var(--bs-primary), var(--bs-secondary));
+            background: linear-gradient(
+              135deg,
+              var(--bs-primary),
+              var(--bs-secondary)
+            );
             color: white;
             padding: 20px 24px;
             display: flex;
@@ -295,12 +299,12 @@
                     }
                   }
 
-                  .form-checkbox:checked~.checkmark {
+                  .form-checkbox:checked ~ .checkmark {
                     background-color: var(--bs-primary);
                     border-color: var(--bs-primary);
                   }
 
-                  .form-checkbox:checked~.checkmark:after {
+                  .form-checkbox:checked ~ .checkmark:after {
                     display: block;
                   }
 
@@ -943,7 +947,11 @@
 
   .form-card {
     .card-header {
-      background: linear-gradient(135deg, var(--bs-primary), var(--bs-secondary));
+      background: linear-gradient(
+        135deg,
+        var(--bs-primary),
+        var(--bs-secondary)
+      );
       color: var(--site-text-light);
       padding: 20px 24px;
       display: flex;

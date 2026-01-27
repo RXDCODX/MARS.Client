@@ -13,7 +13,7 @@ import { useWaifuPrizesStore } from "@/shared/stores/waifuPrizesStore";
 
 function Component() {
   const { prizes, addPrizes, shuffle, clear } = useWaifuPrizesStore();
-  
+
   // Использование методов store
   addPrizes([...]); // Добавить призы
   shuffle();        // Перемешать призы
@@ -35,4 +35,3 @@ function Component() {
 - Предзагружает изображения для оптимизации производительности
 - Интегрируется с Redux DevTools для отладки
 - Все изменения логируются в консоль
-

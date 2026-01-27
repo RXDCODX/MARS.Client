@@ -21,7 +21,9 @@
 
 .typeCard {
   height: 100%;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 
   &:hover {
     transform: translateY(-5px);
@@ -101,7 +103,7 @@
 .routePath {
   font-size: 0.85rem;
   opacity: 0.7;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 .stats {
