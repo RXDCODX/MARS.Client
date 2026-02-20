@@ -18,6 +18,9 @@ const ServerViewer = lazy(serverViewerLoader);
 const twitchRewardsPageLoader = () => import("@/Site/Pages/TwitchRewardsPage");
 const TwitchRewardsPage = lazy(twitchRewardsPageLoader);
 
+const autoMessagesPageLoader = () => import("@/Site/Pages/AutoMessagesPage");
+const AutoMessagesPage = lazy(autoMessagesPageLoader);
+
 const serviceDetailsPageLoader = () => import("./ServiceDetailsPage");
 const ServiceDetailsPage = lazy(serviceDetailsPageLoader);
 
@@ -32,6 +35,7 @@ registerPrefetchComponents([
   logsPageLoader,
   serverViewerLoader,
   twitchRewardsPageLoader,
+  autoMessagesPageLoader,
   serviceDetailsPageLoader,
   environmentVariablesPageLoader,
 ]);
@@ -130,6 +134,18 @@ export const adminRoutes: RouteConfig[] = [
       <Layout>
         <Suspense fallback={<PageLoader />}>
           <TwitchRewardsPage />
+        </Suspense>
+      </Layout>
+    ),
+  },
+  {
+    path: "/auto-messages",
+    name: "Автосообщения",
+    type: "control panel",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <AutoMessagesPage />
         </Suspense>
       </Layout>
     ),

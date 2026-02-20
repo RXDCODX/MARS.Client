@@ -88,6 +88,7 @@ const Header: React.FC = () => {
     { label: "Просмотр серверов", path: "/main" },
     { label: "Сервисы", path: "/services" },
     { label: "Твич награды", path: "/twitch-rewards" },
+    { label: "Автосообщения", path: "/auto-messages" },
   ];
 
   const handleDropdownToggle = (dropdownName: string) => {
