@@ -2975,309 +2975,6 @@
         }
       }
     },
-    "/api/Honkai/users": {
-      "get": {
-        "tags": [
-          "Honkai"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUserListOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUserListOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUserListOperationResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Honkai"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateUserRequest"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateUserRequest"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/CreateUserRequest"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Honkai/users/{id}": {
-      "get": {
-        "tags": [
-          "Honkai"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Honkai"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/UpdateUserRequest"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/UpdateUserRequest"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/UpdateUserRequest"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DailyAutoMarkupUserOperationResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Honkai"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Honkai/users/{id}/redeem-now": {
-      "post": {
-        "tags": [
-          "Honkai"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Honkai/stats": {
-      "get": {
-        "tags": [
-          "Honkai"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ObjectOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ObjectOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ObjectOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/KeyboardHook/status": {
       "get": {
         "tags": [
@@ -4687,6 +4384,239 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/RootState": {
+      "get": {
+        "tags": [
+          "RootState"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RootStateListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RootStateListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RootStateListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "RootState"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RootState"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RootState"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/RootState"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RootStateOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RootStateOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RootStateOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/RootState/{name}": {
+      "get": {
+        "tags": [
+          "RootState"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RootStateOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RootStateOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RootStateOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "RootState"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/RootState/{name}/value": {
+      "patch": {
+        "tags": [
+          "RootState"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateValueRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateValueRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateValueRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RootStateOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RootStateOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RootStateOperationResult"
                 }
               }
             }
@@ -7321,35 +7251,6 @@
         },
         "additionalProperties": false
       },
-      "CreateUserRequest": {
-        "required": [
-          "ltmidV2",
-          "lTokenV2",
-          "ltuidV2"
-        ],
-        "type": "object",
-        "properties": {
-          "twitchId": {
-            "type": "string",
-            "nullable": true
-          },
-          "telegramId": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
-          },
-          "ltmidV2": {
-            "type": "string"
-          },
-          "lTokenV2": {
-            "type": "string"
-          },
-          "ltuidV2": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "CustomReward": {
         "required": [
           "cost",
@@ -7481,77 +7382,6 @@
         "additionalProperties": false
       },
       "CustomRewardOperationResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/OperationResult"
-          }
-        ],
-        "description": "Результат операции с данными типа null",
-        "x-generic-type-argument": "null"
-      },
-      "DailyAutoMarkupUser": {
-        "required": [
-          "id",
-          "lastAutoMarkup",
-          "ltmidV2",
-          "lTokenV2",
-          "ltuidV2"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "twitchId": {
-            "maxLength": 50,
-            "type": "string",
-            "nullable": true
-          },
-          "twitchUser": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/TwitchUser"
-              }
-            ],
-            "nullable": true
-          },
-          "telegramId": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "ltmidV2": {
-            "type": "string"
-          },
-          "lTokenV2": {
-            "type": "string"
-          },
-          "ltuidV2": {
-            "type": "string"
-          },
-          "lastAutoMarkup": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
-      "DailyAutoMarkupUserListOperationResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/OperationResult"
-          }
-        ],
-        "description": "Результат операции с данными типа any",
-        "x-generic-type-argument": "any"
-      },
-      "DailyAutoMarkupUserOperationResult": {
         "allOf": [
           {
             "$ref": "#/components/schemas/OperationResult"
@@ -9046,6 +8876,48 @@
         },
         "additionalProperties": false
       },
+      "RootState": {
+        "required": [
+          "description",
+          "name",
+          "typeDescription",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "typeDescription": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RootStateListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
+      },
+      "RootStateOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
+      },
       "ServiceInfo": {
         "required": [
           "description",
@@ -9892,29 +9764,14 @@
         },
         "additionalProperties": false
       },
-      "UpdateUserRequest": {
+      "UpdateValueRequest": {
+        "required": [
+          "value"
+        ],
         "type": "object",
         "properties": {
-          "twitchId": {
-            "type": "string",
-            "nullable": true
-          },
-          "telegramId": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
-          },
-          "ltmidV2": {
-            "type": "string",
-            "nullable": true
-          },
-          "lTokenV2": {
-            "type": "string",
-            "nullable": true
-          },
-          "ltuidV2": {
-            "type": "string",
-            "nullable": true
+          "value": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -10005,9 +9862,6 @@
       "name": "FramedataChanges"
     },
     {
-      "name": "Honkai"
-    },
-    {
       "name": "KeyboardHook"
     },
     {
@@ -10024,6 +9878,9 @@
     },
     {
       "name": "RandomMeme"
+    },
+    {
+      "name": "RootState"
     },
     {
       "name": "RxdcodxViewers"

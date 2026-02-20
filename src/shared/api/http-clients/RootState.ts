@@ -32,9 +32,7 @@ import type {
   CreateMediaItemRequest,
   CreateMemeOrderDto,
   CreateMemeTypeDto,
-  CreateUserRequest,
   CustomReward,
-  DailyAutoMarkupUser,
   DefaultImage,
   EnvironmentVariable,
   FollowerInfo,
@@ -69,6 +67,7 @@ import type {
   RateLimiterInfo,
   Reward,
   RewardRedemption,
+  RootState,
   ServiceInfo,
   ServiceLog,
   SetEnvironmentVariableRequest,
@@ -88,7 +87,7 @@ import type {
   UpdateMediaItemRequest,
   UpdateMemeOrderDto,
   UpdateMemeTypeDto,
-  UpdateUserRequest,
+  UpdateValueRequest,
   UpdateVoiceRequest,
   ValidateFolderRequest,
   ValidateFolderResponse,
@@ -124,20 +123,20 @@ import type {
   LogsListParamsLogLevelEnum,
 } from "../types/data-contracts";
 
-export class Honkai<
+export class RootState<
   SecurityDataType = unknown,
 > extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags Honkai
-   * @name HonkaiUsersList
-   * @request GET:/api/Honkai/users
-   * @response `200` `OperationResult<DailyAutoMarkupUser[]>` OK
+   * @tags RootState
+   * @name RootStateList
+   * @request GET:/api/RootState
+   * @response `200` `OperationResult<RootState[]>` OK
    */
-  honkaiUsersList = (params: RequestParams = {}) =>
-    this.request<OperationResult<DailyAutoMarkupUser[]>, any>({
-      path: `/api/Honkai/users`,
+  rootStateList = (params: RequestParams = {}) =>
+    this.request<OperationResult<RootState[]>, any>({
+      path: `/api/RootState`,
       method: "GET",
       format: "json",
       ...params,
@@ -145,14 +144,14 @@ export class Honkai<
   /**
    * No description
    *
-   * @tags Honkai
-   * @name HonkaiUsersCreate
-   * @request POST:/api/Honkai/users
-   * @response `200` `OperationResult<DailyAutoMarkupUser>` OK
+   * @tags RootState
+   * @name RootStateCreate
+   * @request POST:/api/RootState
+   * @response `200` `OperationResult<RootState>` OK
    */
-  honkaiUsersCreate = (data: CreateUserRequest, params: RequestParams = {}) =>
-    this.request<OperationResult<DailyAutoMarkupUser>, any>({
-      path: `/api/Honkai/users`,
+  rootStateCreate = (data: RootState, params: RequestParams = {}) =>
+    this.request<OperationResult<RootState>, any>({
+      path: `/api/RootState`,
       method: "POST",
       body: data,
       type: ContentType.Json,
@@ -162,14 +161,14 @@ export class Honkai<
   /**
    * No description
    *
-   * @tags Honkai
-   * @name HonkaiUsersDetail
-   * @request GET:/api/Honkai/users/{id}
-   * @response `200` `OperationResult<DailyAutoMarkupUser>` OK
+   * @tags RootState
+   * @name RootStateDetail
+   * @request GET:/api/RootState/{name}
+   * @response `200` `OperationResult<RootState>` OK
    */
-  honkaiUsersDetail = (id: string, params: RequestParams = {}) =>
-    this.request<OperationResult<DailyAutoMarkupUser>, any>({
-      path: `/api/Honkai/users/${id}`,
+  rootStateDetail = (name: string, params: RequestParams = {}) =>
+    this.request<OperationResult<RootState>, any>({
+      path: `/api/RootState/${name}`,
       method: "GET",
       format: "json",
       ...params,
@@ -177,35 +176,14 @@ export class Honkai<
   /**
    * No description
    *
-   * @tags Honkai
-   * @name HonkaiUsersUpdate
-   * @request PUT:/api/Honkai/users/{id}
-   * @response `200` `OperationResult<DailyAutoMarkupUser>` OK
-   */
-  honkaiUsersUpdate = (
-    id: string,
-    data: UpdateUserRequest,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<DailyAutoMarkupUser>, any>({
-      path: `/api/Honkai/users/${id}`,
-      method: "PUT",
-      body: data,
-      type: ContentType.Json,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Honkai
-   * @name HonkaiUsersDelete
-   * @request DELETE:/api/Honkai/users/{id}
+   * @tags RootState
+   * @name RootStateDelete
+   * @request DELETE:/api/RootState/{name}
    * @response `200` `OperationResult` OK
    */
-  honkaiUsersDelete = (id: string, params: RequestParams = {}) =>
+  rootStateDelete = (name: string, params: RequestParams = {}) =>
     this.request<OperationResult, any>({
-      path: `/api/Honkai/users/${id}`,
+      path: `/api/RootState/${name}`,
       method: "DELETE",
       format: "json",
       ...params,
@@ -213,30 +191,21 @@ export class Honkai<
   /**
    * No description
    *
-   * @tags Honkai
-   * @name HonkaiUsersRedeemNowCreate
-   * @request POST:/api/Honkai/users/{id}/redeem-now
-   * @response `200` `OperationResult` OK
+   * @tags RootState
+   * @name RootStateValuePartialUpdate
+   * @request PATCH:/api/RootState/{name}/value
+   * @response `200` `OperationResult<RootState>` OK
    */
-  honkaiUsersRedeemNowCreate = (id: string, params: RequestParams = {}) =>
-    this.request<OperationResult, any>({
-      path: `/api/Honkai/users/${id}/redeem-now`,
-      method: "POST",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Honkai
-   * @name HonkaiStatsList
-   * @request GET:/api/Honkai/stats
-   * @response `200` `OperationResult<Object>` OK
-   */
-  honkaiStatsList = (params: RequestParams = {}) =>
-    this.request<OperationResult<Object>, any>({
-      path: `/api/Honkai/stats`,
-      method: "GET",
+  rootStateValuePartialUpdate = (
+    name: string,
+    data: UpdateValueRequest,
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<RootState>, any>({
+      path: `/api/RootState/${name}/value`,
+      method: "PATCH",
+      body: data,
+      type: ContentType.Json,
       format: "json",
       ...params,
     });

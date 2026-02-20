@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Переменные для новой верстки
 $primary-color: #3f00ff;
 $secondary-color: #ffffff;
@@ -255,7 +257,11 @@ $font-size-small: 14px;
   box-shadow: 0 4px 20px rgba(#00ff00, 0.6);
 
   .score {
-    background: linear-gradient(135deg, #00ff00, darken(#00ff00, 15%));
+    background: linear-gradient(
+      135deg,
+      #00ff00,
+      color.adjust(#00ff00, $lightness: -15%)
+    );
     box-shadow: 0 4px 15px rgba(#00ff00, 0.6);
   }
 }

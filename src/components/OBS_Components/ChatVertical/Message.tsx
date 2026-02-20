@@ -17,9 +17,9 @@ interface Props {
 }
 
 function getRoleColor(message: ChatMessage) {
-  if (message.isVip) return "#e005b9"; // pink
+  if (message.userDetail?.isVip) return "#e005b9"; // pink
   if (message.isBroadcaster) return "#e10d00"; // red
-  if (message.isModerator) return "#00ad03"; // green
+  if (message.userDetail?.isModerator) return "#00ad03"; // green
   return "transparent";
 }
 
@@ -70,7 +70,7 @@ export function Message({ message, onRemove }: Props) {
                 <div
                   className={`${styles.nickname} ${commonStyles.textStrokeShadow}`}
                   style={{
-                    color: message.colorHex ?? "white",
+                    color: message.hexColor ?? "white",
                   }}
                 >
                   {message.displayName}

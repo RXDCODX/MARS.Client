@@ -40,48 +40,40 @@ const defaultMessage: ChatMessage = {
   id: "1",
   message: "Привет всем! 👋",
   displayName: "TestUser",
-  colorHex: "#ff0000",
-  isVip: false,
-  isModerator: false,
+  hexColor: "#ff0000",
   isBroadcaster: false,
-  badgeInfo: undefined,
-  badges: undefined,
+  badgeInfo: [],
+  badges: [],
   bits: 0,
   bitsInDollars: 0,
-  botUsername: undefined,
-  channel: undefined,
+  botUsername: "",
+  channel: "",
   chatReply: undefined,
   cheerBadge: undefined,
-  color: {
-    a: 255,
-    b: 0,
-    g: 0,
-    r: 255,
-    isEmpty: false,
-    isKnownColor: true,
-    isNamedColor: false,
-    isSystemColor: false,
-    name: "Red",
-  },
   customRewardId: undefined,
   emoteReplacedMessage: undefined,
-  emoteSet: undefined,
+  emoteSet: { emotes: [] },
   isFirstMessage: false,
   isHighlighted: false,
   isMe: false,
-  isPartner: false,
   isSkippingSubMode: false,
-  isStaff: false,
-  isSubscriber: false,
-  isTurbo: false,
   noisy: ChatMessageNoisyEnum.False,
-  rawIrcMessage: undefined,
-  roomId: undefined,
+  rawIrcMessage: "",
+  roomId: "",
   subscribedMonthCount: 0,
-  tmiSentTs: undefined,
-  userId: undefined,
+  tmiSent: new Date(0).toISOString(),
+  undocumentedTags: {},
+  userDetail: {
+    hasTurbo: false,
+    isModerator: false,
+    isPartner: false,
+    isStaff: false,
+    isSubscriber: false,
+    isVip: false,
+  },
+  userId: "",
   userType: ChatMessageUserTypeEnum.Viewer,
-  username: undefined,
+  username: "",
 };
 
 // Генератор случайных сообщений
@@ -152,7 +144,7 @@ function generateRandomMessages(count: number): ChatMessage[] {
     const isVip = Math.random() < 0.2;
     const isModerator = !isVip && Math.random() < 0.2;
     const isBroadcaster = !isVip && !isModerator && Math.random() < 0.1;
-    const colorHex = COLORS[getRandomInt(0, COLORS.length - 1)];
+    const hexColor = COLORS[getRandomInt(0, COLORS.length - 1)];
     const displayName =
       NICKNAMES[getRandomInt(0, NICKNAMES.length - 1)] + (i + 1);
     const message = MESSAGES[getRandomInt(0, MESSAGES.length - 1)];
@@ -161,10 +153,13 @@ function generateRandomMessages(count: number): ChatMessage[] {
       id: `${Date.now()}_${i}_${Math.random().toString(36).slice(2, 8)}`,
       message,
       displayName,
-      colorHex,
-      isVip,
-      isModerator,
+      hexColor,
       isBroadcaster,
+      userDetail: {
+        ...defaultMessage.userDetail,
+        isVip,
+        isModerator,
+      },
       userType: isBroadcaster
         ? ChatMessageUserTypeEnum.Broadcaster
         : isModerator
@@ -172,12 +167,6 @@ function generateRandomMessages(count: number): ChatMessage[] {
           : isVip
             ? ChatMessageUserTypeEnum.Viewer
             : ChatMessageUserTypeEnum.Viewer,
-      color: {
-        ...defaultMessage.color,
-        r: parseInt(colorHex.slice(1, 3), 16),
-        g: parseInt(colorHex.slice(3, 5), 16),
-        b: parseInt(colorHex.slice(5, 7), 16),
-      },
     };
   });
 }

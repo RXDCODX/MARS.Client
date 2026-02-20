@@ -14,6 +14,7 @@ export { default as Dashboard } from "./Dashboard/Dashboard";
 export { default as EnvironmentVariablesPage } from "./EnvironmentVariablesPage";
 export { default as HighliteMessageDemoPage } from "./HighliteMessageDemoPage";
 export { default as LogsPage } from "./LogsPage";
+export { default as RootStatePage } from "./RootStatePage";
 export { default as ServerViewer } from "./ServerViewer/ServerViewer";
 
 // MediaInfo страницы

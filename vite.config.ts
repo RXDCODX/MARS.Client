@@ -1,6 +1,6 @@
 import react from "@vitejs/plugin-react-swc";
-import { defineConfig } from "vite";
 import path from "path";
+import { defineConfig } from "vite";
 import viteCompression from "vite-plugin-compression";
 
 // https://vitejs.dev/config/
@@ -15,6 +15,13 @@ export default defineConfig({
     }),
   ],
   assetsInclude: ["**/*.webm", "**/*.mp4"],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        quietDeps: true,
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
@@ -36,6 +43,18 @@ export default defineConfig({
     // Включаем code splitting для CSS - каждый lazy компонент получит свой CSS файл
     cssCodeSplit: true,
     rollupOptions: {
+      onwarn(warning, warn) {
+        const isLottieEvalWarning =
+          warning.code === "EVAL" &&
+          warning.id?.includes("@lottiefiles/lottie-player/dist/tgs-player.js");
+        const isSignalRPureAnnotationWarning =
+          warning.id?.includes("@microsoft/signalr/dist/esm/Utils.js") &&
+          warning.message?.includes("annotation that Rollup cannot interpret");
+
+        if (!isLottieEvalWarning && !isSignalRPureAnnotationWarning) {
+          warn(warning);
+        }
+      },
       output: {
         // Настройка имен для JS чанков
         chunkFileNames: "assets/js/[name]-[hash].js",

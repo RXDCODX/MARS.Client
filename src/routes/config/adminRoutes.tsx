@@ -30,6 +30,12 @@ const environmentVariablesPageLoader = () =>
   }));
 const EnvironmentVariablesPage = lazy(environmentVariablesPageLoader);
 
+const rootStatePageLoader = () =>
+  import("@/Site/Pages").then(m => ({
+    default: m.RootStatePage,
+  }));
+const RootStatePage = lazy(rootStatePageLoader);
+
 // Регистрируем админ компоненты для фоновой загрузки
 registerPrefetchComponents([
   logsPageLoader,
@@ -38,6 +44,7 @@ registerPrefetchComponents([
   autoMessagesPageLoader,
   serviceDetailsPageLoader,
   environmentVariablesPageLoader,
+  rootStatePageLoader,
 ]);
 
 // Массив панелей управления (с Layout)
@@ -122,6 +129,18 @@ export const adminRoutes: RouteConfig[] = [
       <Layout>
         <Suspense fallback={<PageLoader />}>
           <EnvironmentVariablesPage />
+        </Suspense>
+      </Layout>
+    ),
+  },
+  {
+    path: "/root-state",
+    name: "RootState",
+    type: "control panel",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <RootStatePage />
         </Suspense>
       </Layout>
     ),

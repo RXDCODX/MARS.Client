@@ -1,4 +1,4 @@
-@import "@/app/global.scss";
+@use "@/app/global.scss" as *;
 
 .modalButton {
   min-width: 44px;

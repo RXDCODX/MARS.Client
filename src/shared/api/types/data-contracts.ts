@@ -218,15 +218,6 @@ export interface CreateMemeTypeDto {
   folderPath: string;
 }
 
-export interface CreateUserRequest {
-  twitchId?: string;
-  /** @format int64 */
-  telegramId?: number;
-  ltmidV2: string;
-  lTokenV2: string;
-  ltuidV2: string;
-}
-
 export interface CustomReward {
   broadcasterId?: string;
   broadcasterLogin?: string;
@@ -250,23 +241,6 @@ export interface CustomReward {
   /** @format int32 */
   redemptionsRedeemedCurrentStream?: number;
   cooldownExpiresAt?: string;
-}
-
-export interface DailyAutoMarkupUser {
-  /** @format uuid */
-  id: string;
-  /** @maxLength 50 */
-  twitchId?: string;
-  twitchUser?: TwitchUser;
-  /** @format int64 */
-  telegramId?: number;
-  /** @format date-time */
-  createdAt?: string;
-  ltmidV2: string;
-  lTokenV2: string;
-  ltuidV2: string;
-  /** @format date-time */
-  lastAutoMarkup: string;
 }
 
 export interface DefaultImage {
@@ -638,6 +612,13 @@ export interface RewardRedemption {
   reward?: Reward;
 }
 
+export interface RootState {
+  name: string;
+  value: string;
+  description: string;
+  typeDescription: string;
+}
+
 export interface ServiceInfo {
   name: string;
   displayName: string;
@@ -882,13 +863,8 @@ export interface UpdateMemeTypeDto {
   folderPath: string;
 }
 
-export interface UpdateUserRequest {
-  twitchId?: string;
-  /** @format int64 */
-  telegramId?: number;
-  ltmidV2?: string;
-  lTokenV2?: string;
-  ltuidV2?: string;
+export interface UpdateValueRequest {
+  value: string;
 }
 
 export interface UpdateVoiceRequest {
@@ -1188,52 +1164,51 @@ export interface AutoArtImage {
 }
 
 export interface ChatMessage {
-  badgeInfo?: StringStringKeyValuePair[];
-  badges?: StringStringKeyValuePair[];
+  badgeInfo: StringStringKeyValuePair[];
+  badges: StringStringKeyValuePair[];
   /** @format int32 */
   bits: number;
   /** @format double */
   bitsInDollars: number;
-  botUsername?: string;
-  channel?: string;
+  botUsername: string;
+  channel: string;
   chatReply?: ChatReply;
   cheerBadge?: CheerBadge;
-  color: any;
-  colorHex?: string;
   customRewardId?: string;
-  displayName?: string;
+  displayName: string;
   emoteReplacedMessage?: string;
-  emoteSet?: EmoteSet;
-  id?: string;
+  emoteSet: EmoteSet;
+  hexColor: string;
+  hypeChat?: HypeChat;
+  id: string;
   isBroadcaster: boolean;
   isFirstMessage: boolean;
   isHighlighted: boolean;
   isMe: boolean;
-  isModerator: boolean;
-  isPartner: boolean;
   isSkippingSubMode: boolean;
-  isStaff: boolean;
-  isSubscriber: boolean;
-  isTurbo: boolean;
-  isVip: boolean;
-  message?: string;
+  message: string;
   noisy: ChatMessageNoisyEnum;
-  rawIrcMessage?: string;
-  roomId?: string;
+  rawIrcMessage: string;
+  roomId: string;
   /** @format int32 */
   subscribedMonthCount: number;
-  tmiSentTs?: string;
-  userId?: string;
+  /** @format date-time */
+  tmiSent: string;
+  undocumentedTags: Record<string, string>;
+  userDetail: UserDetail;
+  userId: string;
   userType: ChatMessageUserTypeEnum;
-  username?: string;
+  username: string;
 }
 
 export interface ChatReply {
-  parentDisplayName?: string;
-  parentMsgBody?: string;
-  parentMsgId?: string;
-  parentUserId?: string;
-  parentUserLogin?: string;
+  parentDisplayName: string;
+  parentMsgBody: string;
+  parentMsgId: string;
+  parentUserId: string;
+  parentUserLogin: string;
+  threadParentMsgId: string;
+  threadParentUserLogin: string;
 }
 
 export interface CheerBadge {
@@ -1245,15 +1220,15 @@ export interface CheerBadge {
 export interface Emote {
   /** @format int32 */
   endIndex: number;
-  id?: string;
-  imageUrl?: string;
-  name?: string;
+  id: string;
+  imageUrl: string;
+  name: string;
   /** @format int32 */
   startIndex: number;
 }
 
 export interface EmoteSet {
-  emotes?: Emote[];
+  emotes: Emote[];
   rawEmoteSetString?: string;
 }
 
@@ -1297,6 +1272,18 @@ export interface HostCoolDown {
   hostId: string;
   /** @format date-time */
   time: string;
+}
+
+export interface HypeChat {
+  /** @format int32 */
+  amount: number;
+  /** @format double */
+  calculatedAmount: number;
+  currency: string;
+  /** @format int32 */
+  exponent: number;
+  isSystemMessage: boolean;
+  level: HypeChatLevelEnum;
 }
 
 export interface LogMessageDto {
@@ -1469,6 +1456,15 @@ export interface User {
   viewCount: number;
 }
 
+export interface UserDetail {
+  hasTurbo: boolean;
+  isModerator: boolean;
+  isPartner: boolean;
+  isStaff: boolean;
+  isSubscriber: boolean;
+  isVip: boolean;
+}
+
 export interface Waifu {
   /** @format int64 */
   age: number;
@@ -1523,6 +1519,19 @@ export enum CheerBadgeColorEnum {
   Green = "Green",
   Blue = "Blue",
   Red = "Red",
+}
+
+export enum HypeChatLevelEnum {
+  One = "One",
+  Two = "Two",
+  Three = "Three",
+  Four = "Four",
+  Five = "Five",
+  Six = "Six",
+  Seven = "Seven",
+  Eight = "Eight",
+  Nine = "Nine",
+  Ten = "Ten",
 }
 
 export enum TelegramusMakeScreenParticlesCreateParamsParticlesEnum {

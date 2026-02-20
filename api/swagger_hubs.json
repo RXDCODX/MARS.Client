@@ -1059,22 +1059,30 @@
       },
       "ChatMessage": {
         "required": [
+          "badgeInfo",
+          "badges",
           "bits",
           "bitsInDollars",
-          "color",
+          "botUsername",
+          "channel",
+          "displayName",
+          "emoteSet",
+          "hexColor",
+          "id",
           "isBroadcaster",
           "isFirstMessage",
           "isHighlighted",
           "isMe",
-          "isModerator",
-          "isPartner",
           "isSkippingSubMode",
-          "isStaff",
-          "isSubscriber",
-          "isTurbo",
-          "isVip",
+          "message",
           "noisy",
+          "rawIrcMessage",
+          "roomId",
           "subscribedMonthCount",
+          "tmiSent",
+          "userDetail",
+          "userId",
+          "username",
           "userType"
         ],
         "type": "object",
@@ -1084,30 +1092,18 @@
             "items": {
               "$ref": "#/components/schemas/StringStringKeyValuePair"
             },
-            "nullable": true,
             "readOnly": true
           },
           "botUsername": {
             "type": "string",
-            "nullable": true,
             "readOnly": true
           },
-          "color": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/Color"
-              }
-            ],
-            "readOnly": true
-          },
-          "colorHex": {
+          "hexColor": {
             "type": "string",
-            "nullable": true,
             "readOnly": true
           },
           "displayName": {
             "type": "string",
-            "nullable": true,
             "readOnly": true
           },
           "emoteSet": {
@@ -1116,21 +1112,22 @@
                 "$ref": "#/components/schemas/EmoteSet"
               }
             ],
-            "nullable": true,
-            "readOnly": true
-          },
-          "isTurbo": {
-            "type": "boolean",
             "readOnly": true
           },
           "userId": {
             "type": "string",
-            "nullable": true,
             "readOnly": true
           },
           "username": {
             "type": "string",
-            "nullable": true,
+            "readOnly": true
+          },
+          "userDetail": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/UserDetail"
+              }
+            ],
             "readOnly": true
           },
           "userType": {
@@ -1147,6 +1144,13 @@
           },
           "rawIrcMessage": {
             "type": "string",
+            "readOnly": true
+          },
+          "undocumentedTags": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
             "nullable": true,
             "readOnly": true
           },
@@ -1155,7 +1159,6 @@
             "items": {
               "$ref": "#/components/schemas/StringStringKeyValuePair"
             },
-            "nullable": true,
             "readOnly": true
           },
           "bits": {
@@ -1170,7 +1173,6 @@
           },
           "channel": {
             "type": "string",
-            "nullable": true,
             "readOnly": true
           },
           "cheerBadge": {
@@ -1194,7 +1196,6 @@
           },
           "id": {
             "type": "string",
-            "nullable": true,
             "readOnly": true
           },
           "isBroadcaster": {
@@ -1213,33 +1214,12 @@
             "type": "boolean",
             "readOnly": true
           },
-          "isModerator": {
-            "type": "boolean",
-            "readOnly": true
-          },
           "isSkippingSubMode": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "isSubscriber": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "isVip": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "isStaff": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "isPartner": {
             "type": "boolean",
             "readOnly": true
           },
           "message": {
             "type": "string",
-            "nullable": true,
             "readOnly": true
           },
           "noisy": {
@@ -1253,7 +1233,6 @@
           },
           "roomId": {
             "type": "string",
-            "nullable": true,
             "readOnly": true
           },
           "subscribedMonthCount": {
@@ -1261,9 +1240,9 @@
             "format": "int32",
             "readOnly": true
           },
-          "tmiSentTs": {
+          "tmiSent": {
             "type": "string",
-            "nullable": true,
+            "format": "date-time",
             "readOnly": true
           },
           "chatReply": {
@@ -1274,36 +1253,57 @@
             ],
             "nullable": true,
             "readOnly": true
+          },
+          "hypeChat": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/HypeChat"
+              }
+            ],
+            "nullable": true,
+            "readOnly": true
           }
         },
         "additionalProperties": false
       },
       "ChatReply": {
+        "required": [
+          "parentDisplayName",
+          "parentMsgBody",
+          "parentMsgId",
+          "parentUserId",
+          "parentUserLogin",
+          "threadParentMsgId",
+          "threadParentUserLogin"
+        ],
         "type": "object",
         "properties": {
           "parentDisplayName": {
             "type": "string",
-            "nullable": true,
             "readOnly": true
           },
           "parentMsgBody": {
             "type": "string",
-            "nullable": true,
             "readOnly": true
           },
           "parentMsgId": {
             "type": "string",
-            "nullable": true,
             "readOnly": true
           },
           "parentUserId": {
             "type": "string",
-            "nullable": true,
             "readOnly": true
           },
           "parentUserLogin": {
             "type": "string",
-            "nullable": true,
+            "readOnly": true
+          },
+          "threadParentMsgId": {
+            "type": "string",
+            "readOnly": true
+          },
+          "threadParentUserLogin": {
+            "type": "string",
             "readOnly": true
           }
         },
@@ -1337,18 +1337,19 @@
       "Emote": {
         "required": [
           "endIndex",
+          "id",
+          "imageUrl",
+          "name",
           "startIndex"
         ],
         "type": "object",
         "properties": {
           "id": {
             "type": "string",
-            "nullable": true,
             "readOnly": true
           },
           "name": {
-            "type": "string",
-            "nullable": true
+            "type": "string"
           },
           "startIndex": {
             "type": "integer",
@@ -1362,13 +1363,15 @@
           },
           "imageUrl": {
             "type": "string",
-            "nullable": true,
             "readOnly": true
           }
         },
         "additionalProperties": false
       },
       "EmoteSet": {
+        "required": [
+          "emotes"
+        ],
         "type": "object",
         "properties": {
           "emotes": {
@@ -1376,7 +1379,6 @@
             "items": {
               "$ref": "#/components/schemas/Emote"
             },
-            "nullable": true,
             "readOnly": true
           },
           "rawEmoteSetString": {
@@ -1534,6 +1536,59 @@
           "time": {
             "type": "string",
             "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "HypeChat": {
+        "required": [
+          "amount",
+          "calculatedAmount",
+          "currency",
+          "exponent",
+          "isSystemMessage",
+          "level"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "calculatedAmount": {
+            "type": "number",
+            "format": "double",
+            "readOnly": true
+          },
+          "currency": {
+            "type": "string",
+            "readOnly": true
+          },
+          "exponent": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "level": {
+            "enum": [
+              "One",
+              "Two",
+              "Three",
+              "Four",
+              "Five",
+              "Six",
+              "Seven",
+              "Eight",
+              "Nine",
+              "Ten"
+            ],
+            "type": "string",
+            "readOnly": true
+          },
+          "isSystemMessage": {
+            "type": "boolean",
+            "readOnly": true
           }
         },
         "additionalProperties": false
@@ -2513,6 +2568,44 @@
           "email": {
             "type": "string",
             "nullable": true,
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserDetail": {
+        "required": [
+          "hasTurbo",
+          "isModerator",
+          "isPartner",
+          "isStaff",
+          "isSubscriber",
+          "isVip"
+        ],
+        "type": "object",
+        "properties": {
+          "isModerator": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isSubscriber": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "hasTurbo": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isVip": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isPartner": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "isStaff": {
+            "type": "boolean",
             "readOnly": true
           }
         },

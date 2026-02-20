@@ -27,15 +27,17 @@ export const Message = ({ message, callback, slotTop }: Props) => {
   const divRef = useRef<HTMLDivElement>(null);
   const parser = useTwitchStore(state => state.parser);
   const parserToLink = useTwitchStore(state => state.parseToLink);
+  const isVip = message.userDetail?.isVip ?? false;
+  const isModerator = message.userDetail?.isModerator ?? false;
 
   const [text] = useState(parseContent(message.message));
   const [fontSize] = useState(getRandomInt(10, 40));
   const [duration] = useState(fontSize * 0.7);
   const [opacity] = useState(getRandomInt(0.4, 0.6));
   const [mainColor] = useState(
-    isWhiteColor(message.colorHex ?? "white")
+    isWhiteColor(message.hexColor ?? "white")
       ? getNotWhiteColor(opacity)
-      : (message.colorHex ?? "white")
+      : (message.hexColor ?? "white")
   );
   const [bg] = useState(
     `linear-gradient(125deg, ${mainColor} , transparent 75%) border-box`
@@ -44,10 +46,7 @@ export const Message = ({ message, callback, slotTop }: Props) => {
     visibility: "hidden",
     fontSize: fontSize + "px", // Случайный размер шрифта
     position: "absolute",
-    background:
-      message.isVip || message.isModerator || message.isBroadcaster
-        ? bg
-        : undefined,
+    background: isVip || isModerator || message.isBroadcaster ? bg : undefined,
     margin: fontSize / 10 + "px",
     top: slotTop !== undefined ? slotTop + "px" : undefined, // если slotTop передан — используем его
   });
@@ -111,7 +110,7 @@ export const Message = ({ message, callback, slotTop }: Props) => {
           <div
             id={`${message.id}_nickname`}
             className={`${styles.nickname} ${commonStyles.textStrokeShadow}`}
-            style={{ color: message.colorHex }}
+            style={{ color: message.hexColor }}
           >
             {message.displayName}:
           </div>
@@ -138,7 +137,7 @@ export const Message = ({ message, callback, slotTop }: Props) => {
         <div
           id={`${message.id}_nickname`}
           className={styles.nickname}
-          style={{ color: message.colorHex }}
+          style={{ color: message.hexColor }}
         >
           {message.displayName}:
         </div>
@@ -147,7 +146,7 @@ export const Message = ({ message, callback, slotTop }: Props) => {
           style={{ color: "white", marginLeft: "10px" }}
         >
           {text?.map((part, idx) => {
-            if (message.isBroadcaster || message.isVip || message.isModerator) {
+            if (message.isBroadcaster || isVip || isModerator) {
               return (
                 <span key={idx} className={commonStyles.textStrokeShadow}>
                   <GradientText
