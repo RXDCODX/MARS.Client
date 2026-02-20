@@ -18,18 +18,20 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+          cache: "yarn"
+          cache-dependency-path: yarn.lock
 
-      - name: Install Yarn
-        run: npm install -g yarn
+      - name: Enable Corepack
+        run: corepack enable
 
-      - name: Yarn 4.9.2
-        run: yarn set version 4.9.2
+      - name: Activate Yarn 4
+        run: corepack prepare yarn@4.10.3 --activate
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Type check
-        run: yarn tsc --noEmit
+        run: yarn type-check
 
       - name: Build check
         run: yarn build
