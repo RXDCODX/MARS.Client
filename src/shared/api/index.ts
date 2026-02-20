@@ -26,8 +26,10 @@ export { ShikimoriRateLimiter } from "./http-clients/ShikimoriRateLimiter";
 export { SoundRequest } from "./http-clients/SoundRequest";
 export { StreamArchive } from "./http-clients/StreamArchive";
 export { TestLogger } from "./http-clients/TestLogger";
+export { TtsVoice } from "./http-clients/TtsVoice";
 export { Twitch } from "./http-clients/Twitch";
 export { TwitchRewards } from "./http-clients/TwitchRewards";
+export { WTelegram } from "./http-clients/WTelegram";
 
 // Импорты SignalR клиентов
 export { ScoreboardHubSignalRConnectionBuilder } from "./signalr-clients/ScoreboardHub/SignalRContext";

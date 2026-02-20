@@ -664,6 +664,11 @@ export interface SetEnvironmentVariableRequest {
   description?: string;
 }
 
+export interface SpeakRequest {
+  name: string;
+  message: string;
+}
+
 export interface StreamArchiveConfig {
   /** @format uuid */
   id: string;
@@ -884,6 +889,10 @@ export interface UpdateUserRequest {
   ltmidV2?: string;
   lTokenV2?: string;
   ltuidV2?: string;
+}
+
+export interface UpdateVoiceRequest {
+  voiceName: string;
 }
 
 export interface ValidateFolderRequest {

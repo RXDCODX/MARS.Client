@@ -5852,6 +5852,318 @@
         }
       }
     },
+    "/api/tts/blocked": {
+      "get": {
+        "tags": [
+          "TtsVoice"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "TtsVoice"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateVoiceRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateVoiceRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateVoiceRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tts/blocked/{voiceName}": {
+      "delete": {
+        "tags": [
+          "TtsVoice"
+        ],
+        "parameters": [
+          {
+            "name": "voiceName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tts/installed": {
+      "get": {
+        "tags": [
+          "TtsVoice"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tts/linked": {
+      "get": {
+        "tags": [
+          "TtsVoice"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringStringDictionaryOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringStringDictionaryOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringStringDictionaryOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tts/reset/{userName}": {
+      "post": {
+        "tags": [
+          "TtsVoice"
+        ],
+        "parameters": [
+          {
+            "name": "userName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tts/reset-all": {
+      "post": {
+        "tags": [
+          "TtsVoice"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tts/speak": {
+      "post": {
+        "tags": [
+          "TtsVoice"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SpeakRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SpeakRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/SpeakRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/TwitchUserAuth": {
       "get": {
         "tags": [
@@ -6234,6 +6546,30 @@
           }
         }
       }
+    },
+    "/api/WTelegram/relogin": {
+      "post": {
+        "tags": [
+          "WTelegram"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/WTelegram/status": {
+      "get": {
+        "tags": [
+          "WTelegram"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -6297,8 +6633,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа ApiMediaInfo[]",
-        "x-generic-type-argument": "ApiMediaInfo[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "ApiMediaInfoOperationResult": {
         "allOf": [
@@ -6306,8 +6642,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа ApiMediaInfo",
-        "x-generic-type-argument": "ApiMediaInfo"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "AutoMessageDto": {
         "required": [
@@ -6332,8 +6668,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа AutoMessageDto[]",
-        "x-generic-type-argument": "AutoMessageDto[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "AutoMessageDtoOperationResult": {
         "allOf": [
@@ -6341,8 +6677,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа AutoMessageDto",
-        "x-generic-type-argument": "AutoMessageDto"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "BaseTrackInfo": {
         "required": [
@@ -6418,8 +6754,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа BaseTrackInfo[]",
-        "x-generic-type-argument": "BaseTrackInfo[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "ChannelRewardDefinition": {
         "required": [
@@ -6574,8 +6910,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа ChannelRewardRecord[]",
-        "x-generic-type-argument": "ChannelRewardRecord[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "ChannelRewardRecordOperationResult": {
         "allOf": [
@@ -6583,8 +6919,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа ChannelRewardRecord",
-        "x-generic-type-argument": "ChannelRewardRecord"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "CinemaMediaItemDto": {
         "required": [
@@ -6668,8 +7004,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа CinemaMediaItemDto[]",
-        "x-generic-type-argument": "CinemaMediaItemDto[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "CinemaMediaItemDtoOperationResult": {
         "allOf": [
@@ -6677,8 +7013,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа CinemaMediaItemDto",
-        "x-generic-type-argument": "CinemaMediaItemDto"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "CinemaQueueStatistics": {
         "required": [
@@ -6724,8 +7060,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа CinemaQueueStatistics",
-        "x-generic-type-argument": "CinemaQueueStatistics"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "CommandInfo": {
         "required": [
@@ -6786,8 +7122,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа CommandInfo[]",
-        "x-generic-type-argument": "CommandInfo[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "CommandParameterInfo": {
         "required": [
@@ -6823,8 +7159,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа CommandParameterInfo[]",
-        "x-generic-type-argument": "CommandParameterInfo[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "CreateAutoMessageRequest": {
         "required": [
@@ -7150,8 +7486,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа CustomReward",
-        "x-generic-type-argument": "CustomReward"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "DailyAutoMarkupUser": {
         "required": [
@@ -7212,8 +7548,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа DailyAutoMarkupUser[]",
-        "x-generic-type-argument": "DailyAutoMarkupUser[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "DailyAutoMarkupUserOperationResult": {
         "allOf": [
@@ -7221,8 +7557,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа DailyAutoMarkupUser",
-        "x-generic-type-argument": "DailyAutoMarkupUser"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "DefaultImage": {
         "type": "object",
@@ -7281,8 +7617,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа EnvironmentVariable[]",
-        "x-generic-type-argument": "EnvironmentVariable[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "EnvironmentVariableOperationResult": {
         "allOf": [
@@ -7290,8 +7626,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа EnvironmentVariable",
-        "x-generic-type-argument": "EnvironmentVariable"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "FollowerInfo": {
         "required": [
@@ -7320,8 +7656,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа FollowerInfo[]",
-        "x-generic-type-argument": "FollowerInfo[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "GetCustomRewardRedemptionResponse": {
         "type": "object",
@@ -7352,8 +7688,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа GetCustomRewardRedemptionResponse",
-        "x-generic-type-argument": "GetCustomRewardRedemptionResponse"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "GetCustomRewardsResponse": {
         "type": "object",
@@ -7375,8 +7711,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа GetCustomRewardsResponse",
-        "x-generic-type-argument": "GetCustomRewardsResponse"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "GlobalCooldownSetting": {
         "required": [
@@ -7472,8 +7808,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа Log[]",
-        "x-generic-type-argument": "Log[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "LogResponse": {
         "required": [
@@ -7516,8 +7852,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа LogResponse",
-        "x-generic-type-argument": "LogResponse"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "LogsStatistics": {
         "required": [
@@ -7563,8 +7899,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа LogsStatistics",
-        "x-generic-type-argument": "LogsStatistics"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "MaxPerStreamSetting": {
         "required": [
@@ -7720,8 +8056,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа MediaMetadata",
-        "x-generic-type-argument": "MediaMetadata"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "MediaPositionInfo": {
         "required": [
@@ -7864,8 +8200,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа MemeOrderDto[]",
-        "x-generic-type-argument": "MemeOrderDto[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "MemeOrderDtoOperationResult": {
         "allOf": [
@@ -7873,8 +8209,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа MemeOrderDto",
-        "x-generic-type-argument": "MemeOrderDto"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "MemeTypeDto": {
         "required": [
@@ -7906,8 +8242,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа MemeTypeDto[]",
-        "x-generic-type-argument": "MemeTypeDto[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "MemeTypeDtoOperationResult": {
         "allOf": [
@@ -7915,8 +8251,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа MemeTypeDto",
-        "x-generic-type-argument": "MemeTypeDto"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "Move": {
         "required": [
@@ -8016,8 +8352,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа Move",
-        "x-generic-type-argument": "Move"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "MovePagedResult": {
         "required": [
@@ -8070,8 +8406,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа MovePagedResult",
-        "x-generic-type-argument": "MovePagedResult"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "MovePending": {
         "required": [
@@ -8267,8 +8603,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа MovePendingDto[]",
-        "x-generic-type-argument": "MovePendingDto[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "ObjectOperationResult": {
         "allOf": [
@@ -8276,8 +8612,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа any",
-        "x-generic-type-argument": "any"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "OperationResult": {
         "required": [
@@ -8291,21 +8627,17 @@
           },
           "message": {
             "type": "string",
-            "description": "Сообщение о результате операции",
-            "nullable": true
+            "description": "Сообщение о результате операции"
           },
           "data": {
             "description": "Данные результата операции",
-            "nullable": true,
             "x-generic-type": "TData"
           }
         },
         "additionalProperties": false,
         "description": "Обобщенный результат операции",
         "x-is-generic": true,
-        "x-generic-parameters": [
-          "TData"
-        ]
+        "x-generic-parameters": ["TData"]
       },
       "Pagination": {
         "type": "object",
@@ -8399,8 +8731,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа ParseResult",
-        "x-generic-type-argument": "ParseResult"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "PlayerState": {
         "required": [
@@ -8486,8 +8818,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа PlayerState",
-        "x-generic-type-argument": "PlayerState"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "ProblemDetails": {
         "type": "object",
@@ -8572,8 +8904,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа QueueItem[]",
-        "x-generic-type-argument": "QueueItem[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "RateLimiterInfo": {
         "required": [
@@ -8609,8 +8941,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа RateLimiterInfo",
-        "x-generic-type-argument": "RateLimiterInfo"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "Reward": {
         "required": [
@@ -8766,8 +9098,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа ServiceInfo[]",
-        "x-generic-type-argument": "ServiceInfo[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "ServiceInfoOperationResult": {
         "allOf": [
@@ -8775,8 +9107,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа ServiceInfo",
-        "x-generic-type-argument": "ServiceInfo"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "ServiceLog": {
         "required": [
@@ -8809,8 +9141,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа ServiceLog[]",
-        "x-generic-type-argument": "ServiceLog[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "SetEnvironmentVariableRequest": {
         "required": [
@@ -8828,6 +9160,22 @@
           "description": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SpeakRequest": {
+        "required": [
+          "message",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
           }
         },
         "additionalProperties": false
@@ -8885,8 +9233,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа StreamArchiveConfig[]",
-        "x-generic-type-argument": "StreamArchiveConfig[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "StreamArchiveConfigOperationResult": {
         "allOf": [
@@ -8894,8 +9242,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа StreamArchiveConfig",
-        "x-generic-type-argument": "StreamArchiveConfig"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "StringArrayOperationResult": {
         "allOf": [
@@ -8903,8 +9251,17 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа string[]",
-        "x-generic-type-argument": "string[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
+      },
+      "StringListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "StringOperationResult": {
         "allOf": [
@@ -8912,8 +9269,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа string",
-        "x-generic-type-argument": "string"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "StringServiceStatusDictionaryOperationResult": {
         "allOf": [
@@ -8921,8 +9278,17 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа object",
-        "x-generic-type-argument": "object"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
+      },
+      "StringStringDictionaryOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "SupplementRequest": {
         "required": [
@@ -9063,8 +9429,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа TekkenCharacter",
-        "x-generic-type-argument": "TekkenCharacter"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "TekkenCharacterPagedResult": {
         "required": [
@@ -9117,8 +9483,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа TekkenCharacterPagedResult",
-        "x-generic-type-argument": "TekkenCharacterPagedResult"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "TekkenCharacterPendingDto": {
         "required": [
@@ -9213,8 +9579,8 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа TekkenCharacterPendingDto[]",
-        "x-generic-type-argument": "TekkenCharacterPendingDto[]"
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "TwitchUser": {
         "required": [
@@ -9553,6 +9919,18 @@
         },
         "additionalProperties": false
       },
+      "UpdateVoiceRequest": {
+        "required": [
+          "voiceName"
+        ],
+        "type": "object",
+        "properties": {
+          "voiceName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "ValidateFolderRequest": {
         "required": [
           "folderPath"
@@ -9599,9 +9977,83 @@
             "$ref": "#/components/schemas/OperationResult"
           }
         ],
-        "description": "Результат операции с данными типа ValidateFolderResponse",
-        "x-generic-type-argument": "ValidateFolderResponse"
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       }
     }
-  }
+  },
+  "tags": [
+    {
+      "name": "AutoMessages"
+    },
+    {
+      "name": "ChannelRewardsManager"
+    },
+    {
+      "name": "CinemaQueue"
+    },
+    {
+      "name": "Commands"
+    },
+    {
+      "name": "EnvironmentVariable"
+    },
+    {
+      "name": "Framedata"
+    },
+    {
+      "name": "FramedataChanges"
+    },
+    {
+      "name": "Honkai"
+    },
+    {
+      "name": "KeyboardHook"
+    },
+    {
+      "name": "LoggerTest"
+    },
+    {
+      "name": "Logs"
+    },
+    {
+      "name": "MediaInfoApi"
+    },
+    {
+      "name": "PyroAlerts"
+    },
+    {
+      "name": "RandomMeme"
+    },
+    {
+      "name": "RxdcodxViewers"
+    },
+    {
+      "name": "ServiceManager"
+    },
+    {
+      "name": "ShikimoriRateLimiter"
+    },
+    {
+      "name": "SoundRequest"
+    },
+    {
+      "name": "StreamArchive"
+    },
+    {
+      "name": "TestLogger"
+    },
+    {
+      "name": "TtsVoice"
+    },
+    {
+      "name": "Twitch"
+    },
+    {
+      "name": "TwitchRewards"
+    },
+    {
+      "name": "WTelegram"
+    }
+  ]
 }

@@ -765,6 +765,14 @@
         "responses": { }
       }
     },
+    "/hubs/telegramus/PhonkEdit": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/telegramus/PostTwitchInfo": {
       "post": {
         "tags": [
@@ -814,6 +822,31 @@
         "parameters": [
           {
             "name": "message",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/TikTokEdit": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "guid",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "text",
             "in": "query",
             "schema": {
               "type": "string"

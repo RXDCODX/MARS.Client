@@ -124,20 +124,20 @@ import type {
   LogsListParamsLogLevelEnum,
 } from "../types/data-contracts";
 
-export class FramedataChanges<
+export class TtsVoice<
   SecurityDataType = unknown,
 > extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags FramedataChanges
-   * @name FramedataChangesPendingCharactersList
-   * @request GET:/api/FramedataChanges/pending/characters
-   * @response `200` `OperationResult<TekkenCharacterPendingDto[]>` OK
+   * @tags TtsVoice
+   * @name TtsBlockedList
+   * @request GET:/api/tts/blocked
+   * @response `200` `OperationResult<String[]>` OK
    */
-  framedataChangesPendingCharactersList = (params: RequestParams = {}) =>
-    this.request<OperationResult<TekkenCharacterPendingDto[]>, any>({
-      path: `/api/FramedataChanges/pending/characters`,
+  ttsBlockedList = (params: RequestParams = {}) =>
+    this.request<OperationResult<String[]>, any>({
+      path: `/api/tts/blocked`,
       method: "GET",
       format: "json",
       ...params,
@@ -145,155 +145,109 @@ export class FramedataChanges<
   /**
    * No description
    *
-   * @tags FramedataChanges
-   * @name FramedataChangesPendingMovesList
-   * @request GET:/api/FramedataChanges/pending/moves
-   * @response `200` `OperationResult<MovePendingDto[]>` OK
+   * @tags TtsVoice
+   * @name TtsBlockedCreate
+   * @request POST:/api/tts/blocked
+   * @response `200` `OperationResult` OK
    */
-  framedataChangesPendingMovesList = (
-    query?: {
-      characterName: string;
-    },
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<MovePendingDto[]>, any>({
-      path: `/api/FramedataChanges/pending/moves`,
+  ttsBlockedCreate = (data: UpdateVoiceRequest, params: RequestParams = {}) =>
+    this.request<OperationResult, any>({
+      path: `/api/tts/blocked`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags TtsVoice
+   * @name TtsBlockedDelete
+   * @request DELETE:/api/tts/blocked/{voiceName}
+   * @response `200` `OperationResult` OK
+   */
+  ttsBlockedDelete = (voiceName: string, params: RequestParams = {}) =>
+    this.request<OperationResult, any>({
+      path: `/api/tts/blocked/${voiceName}`,
+      method: "DELETE",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags TtsVoice
+   * @name TtsInstalledList
+   * @request GET:/api/tts/installed
+   * @response `200` `OperationResult<String[]>` OK
+   */
+  ttsInstalledList = (params: RequestParams = {}) =>
+    this.request<OperationResult<String[]>, any>({
+      path: `/api/tts/installed`,
       method: "GET",
-      query: query,
       format: "json",
       ...params,
     });
   /**
    * No description
    *
-   * @tags FramedataChanges
-   * @name FramedataChangesApproveCharacterCreate
-   * @request POST:/api/FramedataChanges/approve/character/{name}
-   * @response `200` `OperationResult` OK
+   * @tags TtsVoice
+   * @name TtsLinkedList
+   * @request GET:/api/tts/linked
+   * @response `200` `OperationResult<StringStringDictionary>` OK
    */
-  framedataChangesApproveCharacterCreate = (
-    name: string,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult, any>({
-      path: `/api/FramedataChanges/approve/character/${name}`,
-      method: "POST",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags FramedataChanges
-   * @name FramedataChangesRejectCharacterCreate
-   * @request POST:/api/FramedataChanges/reject/character/{name}
-   * @response `200` `OperationResult` OK
-   */
-  framedataChangesRejectCharacterCreate = (
-    name: string,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult, any>({
-      path: `/api/FramedataChanges/reject/character/${name}`,
-      method: "POST",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags FramedataChanges
-   * @name FramedataChangesApproveMoveCreate
-   * @request POST:/api/FramedataChanges/approve/move/{characterName}/{command}
-   * @response `200` `OperationResult` OK
-   */
-  framedataChangesApproveMoveCreate = (
-    characterName: string,
-    command: string,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult, any>({
-      path: `/api/FramedataChanges/approve/move/${characterName}/${command}`,
-      method: "POST",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags FramedataChanges
-   * @name FramedataChangesRejectMoveCreate
-   * @request POST:/api/FramedataChanges/reject/move/{characterName}/{command}
-   * @response `200` `OperationResult` OK
-   */
-  framedataChangesRejectMoveCreate = (
-    characterName: string,
-    command: string,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult, any>({
-      path: `/api/FramedataChanges/reject/move/${characterName}/${command}`,
-      method: "POST",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags FramedataChanges
-   * @name FramedataChangesApproveAllCreate
-   * @request POST:/api/FramedataChanges/approve/all
-   * @response `200` `OperationResult` OK
-   */
-  framedataChangesApproveAllCreate = (params: RequestParams = {}) =>
-    this.request<OperationResult, any>({
-      path: `/api/FramedataChanges/approve/all`,
-      method: "POST",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags FramedataChanges
-   * @name FramedataChangesRejectAllCreate
-   * @request POST:/api/FramedataChanges/reject/all
-   * @response `200` `OperationResult` OK
-   */
-  framedataChangesRejectAllCreate = (params: RequestParams = {}) =>
-    this.request<OperationResult, any>({
-      path: `/api/FramedataChanges/reject/all`,
-      method: "POST",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags FramedataChanges
-   * @name FramedataChangesScrapeCreate
-   * @request POST:/api/FramedataChanges/scrape
-   * @response `200` `OperationResult` OK
-   */
-  framedataChangesScrapeCreate = (params: RequestParams = {}) =>
-    this.request<OperationResult, any>({
-      path: `/api/FramedataChanges/scrape`,
-      method: "POST",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags FramedataChanges
-   * @name FramedataChangesStatsList
-   * @request GET:/api/FramedataChanges/stats
-   * @response `200` `OperationResult<Object>` OK
-   */
-  framedataChangesStatsList = (params: RequestParams = {}) =>
-    this.request<OperationResult<Object>, any>({
-      path: `/api/FramedataChanges/stats`,
+  ttsLinkedList = (params: RequestParams = {}) =>
+    this.request<OperationResult<StringStringDictionary>, any>({
+      path: `/api/tts/linked`,
       method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags TtsVoice
+   * @name TtsResetCreate
+   * @request POST:/api/tts/reset/{userName}
+   * @response `200` `OperationResult` OK
+   */
+  ttsResetCreate = (userName: string, params: RequestParams = {}) =>
+    this.request<OperationResult, any>({
+      path: `/api/tts/reset/${userName}`,
+      method: "POST",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags TtsVoice
+   * @name TtsResetAllCreate
+   * @request POST:/api/tts/reset-all
+   * @response `200` `OperationResult` OK
+   */
+  ttsResetAllCreate = (params: RequestParams = {}) =>
+    this.request<OperationResult, any>({
+      path: `/api/tts/reset-all`,
+      method: "POST",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags TtsVoice
+   * @name TtsSpeakCreate
+   * @request POST:/api/tts/speak
+   * @response `200` `OperationResult` OK
+   */
+  ttsSpeakCreate = (data: SpeakRequest, params: RequestParams = {}) =>
+    this.request<OperationResult, any>({
+      path: `/api/tts/speak`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
       format: "json",
       ...params,
     });
