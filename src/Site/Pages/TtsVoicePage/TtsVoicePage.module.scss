@@ -1,0 +1,107 @@
+.page {
+  padding: 20px 0;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--bs-body-color);
+    }
+  }
+
+  .card {
+    border: 1px solid var(--bs-border-color);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+    h5 {
+      font-weight: 600;
+      color: var(--bs-body-color);
+    }
+  }
+
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+  }
+
+  .tableWrap {
+    overflow-x: auto;
+
+    table {
+      margin-bottom: 0;
+
+      thead {
+        background-color: var(--bs-light);
+        border-bottom: 2px solid var(--bs-border-color);
+
+        th {
+          font-weight: 600;
+          padding: 12px;
+          color: var(--bs-body-color);
+          border: none;
+        }
+      }
+
+      tbody {
+        tr {
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+          }
+
+          &.blocked {
+            opacity: 0.7;
+          }
+
+          td {
+            padding: 12px;
+            vertical-align: middle;
+            border-color: var(--bs-border-color);
+          }
+        }
+      }
+    }
+  }
+
+  .idCol {
+    font-family: "Courier New", monospace;
+    font-size: 12px;
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .actions {
+    display: flex;
+    gap: 8px;
+
+    button {
+      flex: 1;
+    }
+  }
+
+  .inlineForm {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+  }
+
+  .actionsRight {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+
+    button {
+      white-space: nowrap;
+      font-size: 12px;
+    }
+  }
+}

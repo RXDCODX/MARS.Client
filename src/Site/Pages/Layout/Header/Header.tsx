@@ -90,6 +90,7 @@ const Header: React.FC = () => {
     { label: "RootState", path: "/root-state" },
     { label: "Твич награды", path: "/twitch-rewards" },
     { label: "Автосообщения", path: "/auto-messages" },
+    { label: "Telegram ↔ Discord Bridge", path: "/telegram-discord-bridge" },
   ];
 
   const handleDropdownToggle = (dropdownName: string) => {

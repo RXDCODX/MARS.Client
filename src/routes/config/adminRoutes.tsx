@@ -21,6 +21,10 @@ const TwitchRewardsPage = lazy(twitchRewardsPageLoader);
 const autoMessagesPageLoader = () => import("@/Site/Pages/AutoMessagesPage");
 const AutoMessagesPage = lazy(autoMessagesPageLoader);
 
+const telegramDiscordBridgePageLoader = () =>
+  import("@/Site/Pages/TelegramDiscordBridgePage");
+const TelegramDiscordBridgePage = lazy(telegramDiscordBridgePageLoader);
+
 const serviceDetailsPageLoader = () => import("./ServiceDetailsPage");
 const ServiceDetailsPage = lazy(serviceDetailsPageLoader);
 
@@ -60,6 +64,7 @@ registerPrefetchComponents([
   serverViewerLoader,
   twitchRewardsPageLoader,
   autoMessagesPageLoader,
+  telegramDiscordBridgePageLoader,
   serviceDetailsPageLoader,
   environmentVariablesPageLoader,
   rootStatePageLoader,
@@ -186,6 +191,18 @@ export const adminRoutes: RouteConfig[] = [
       <Layout>
         <Suspense fallback={<PageLoader />}>
           <AutoMessagesPage />
+        </Suspense>
+      </Layout>
+    ),
+  },
+  {
+    path: "/telegram-discord-bridge",
+    name: "Telegram ↔ Discord Bridge",
+    type: "control panel",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <TelegramDiscordBridgePage />
         </Suspense>
       </Layout>
     ),
