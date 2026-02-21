@@ -57,7 +57,7 @@
     "html-react-parser": "^5.2.7",
     "lucide-react": "^0.552.0",
     "react": "^19.2.0",
-    "react-bits": "https://github.com/DavidHDev/react-bits.git",
+    "react-bits": "git+https://github.com/DavidHDev/react-bits",
     "react-bootstrap": "^2.10.10",
     "react-canvas-confetti": "^2.0.7",
     "react-dom": "^19.2.0",
