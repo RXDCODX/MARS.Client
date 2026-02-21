@@ -127,20 +127,20 @@ import type {
   LogsListParamsLogLevelEnum,
 } from "../types/data-contracts";
 
-export class EnvironmentVariable<
+export class TelegramDiscordBridge<
   SecurityDataType = unknown,
 > extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags EnvironmentVariable
-   * @name EnvironmentVariableList
-   * @request GET:/api/EnvironmentVariable
-   * @response `200` `OperationResult<EnvironmentVariable[]>` OK
+   * @tags TelegramDiscordBridge
+   * @name TelegramDiscordBridgeBindingsList
+   * @request GET:/api/TelegramDiscordBridge/bindings
+   * @response `200` `OperationResult<TelegramDiscordBindingDto[]>` OK
    */
-  environmentVariableList = (params: RequestParams = {}) =>
-    this.request<OperationResult<EnvironmentVariable[]>, any>({
-      path: `/api/EnvironmentVariable`,
+  telegramDiscordBridgeBindingsList = (params: RequestParams = {}) =>
+    this.request<OperationResult<TelegramDiscordBindingDto[]>, any>({
+      path: `/api/TelegramDiscordBridge/bindings`,
       method: "GET",
       format: "json",
       ...params,
@@ -148,17 +148,17 @@ export class EnvironmentVariable<
   /**
    * No description
    *
-   * @tags EnvironmentVariable
-   * @name EnvironmentVariableCreate
-   * @request POST:/api/EnvironmentVariable
-   * @response `200` `OperationResult` OK
+   * @tags TelegramDiscordBridge
+   * @name TelegramDiscordBridgeBindingsCreate
+   * @request POST:/api/TelegramDiscordBridge/bindings
+   * @response `200` `OperationResult<TelegramDiscordBindingDto>` OK
    */
-  environmentVariableCreate = (
-    data: SetEnvironmentVariableRequest,
+  telegramDiscordBridgeBindingsCreate = (
+    data: TelegramDiscordBindingCreateRequest,
     params: RequestParams = {}
   ) =>
-    this.request<OperationResult, any>({
-      path: `/api/EnvironmentVariable`,
+    this.request<OperationResult<TelegramDiscordBindingDto>, any>({
+      path: `/api/TelegramDiscordBridge/bindings`,
       method: "POST",
       body: data,
       type: ContentType.Json,
@@ -168,29 +168,17 @@ export class EnvironmentVariable<
   /**
    * No description
    *
-   * @tags EnvironmentVariable
-   * @name EnvironmentVariableDetail
-   * @request GET:/api/EnvironmentVariable/{key}
-   * @response `200` `OperationResult<EnvironmentVariable>` OK
-   */
-  environmentVariableDetail = (key: string, params: RequestParams = {}) =>
-    this.request<OperationResult<EnvironmentVariable>, any>({
-      path: `/api/EnvironmentVariable/${key}`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags EnvironmentVariable
-   * @name EnvironmentVariableDelete
-   * @request DELETE:/api/EnvironmentVariable/{key}
+   * @tags TelegramDiscordBridge
+   * @name TelegramDiscordBridgeBindingsDelete
+   * @request DELETE:/api/TelegramDiscordBridge/bindings/{id}
    * @response `200` `OperationResult` OK
    */
-  environmentVariableDelete = (key: string, params: RequestParams = {}) =>
+  telegramDiscordBridgeBindingsDelete = (
+    id: string,
+    params: RequestParams = {}
+  ) =>
     this.request<OperationResult, any>({
-      path: `/api/EnvironmentVariable/${key}`,
+      path: `/api/TelegramDiscordBridge/bindings/${id}`,
       method: "DELETE",
       format: "json",
       ...params,
@@ -198,15 +186,36 @@ export class EnvironmentVariable<
   /**
    * No description
    *
-   * @tags EnvironmentVariable
-   * @name EnvironmentVariableReloadCreate
-   * @request POST:/api/EnvironmentVariable/reload
-   * @response `200` `OperationResult` OK
+   * @tags TelegramDiscordBridge
+   * @name TelegramDiscordBridgeBindingsEnabledUpdate
+   * @request PUT:/api/TelegramDiscordBridge/bindings/{id}/enabled
+   * @response `200` `OperationResult<TelegramDiscordBindingDto>` OK
    */
-  environmentVariableReloadCreate = (params: RequestParams = {}) =>
-    this.request<OperationResult, any>({
-      path: `/api/EnvironmentVariable/reload`,
-      method: "POST",
+  telegramDiscordBridgeBindingsEnabledUpdate = (
+    id: string,
+    data: TelegramDiscordBindingSetEnabledRequest,
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<TelegramDiscordBindingDto>, any>({
+      path: `/api/TelegramDiscordBridge/bindings/${id}/enabled`,
+      method: "PUT",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags TelegramDiscordBridge
+   * @name TelegramDiscordBridgeStatesList
+   * @request GET:/api/TelegramDiscordBridge/states
+   * @response `200` `OperationResult<TelegramDiscordChannelStateDto[]>` OK
+   */
+  telegramDiscordBridgeStatesList = (params: RequestParams = {}) =>
+    this.request<OperationResult<TelegramDiscordChannelStateDto[]>, any>({
+      path: `/api/TelegramDiscordBridge/states`,
+      method: "GET",
       format: "json",
       ...params,
     });

@@ -441,6 +441,7 @@ export interface Move {
   blockFrame?: string;
   hitFrame?: string;
   counterHitFrame?: string;
+  videoUrl?: string;
   notes?: string[];
 }
 
@@ -478,6 +479,7 @@ export interface MovePending {
   blockFrame?: string;
   hitFrame?: string;
   counterHitFrame?: string;
+  videoUrl?: string;
   notes?: string[];
 }
 
@@ -501,6 +503,7 @@ export interface MovePendingDto {
   blockFrame?: string;
   hitFrame?: string;
   counterHitFrame?: string;
+  videoUrl?: string;
   notes?: string[];
   isNew: boolean;
 }
@@ -747,6 +750,40 @@ export interface TekkenCharacterPendingDto {
   isNew: boolean;
 }
 
+export interface TelegramDiscordBindingCreateRequest {
+  /** @format int64 */
+  telegramChannelId: number;
+  /** @format int64 */
+  discordChannelId: number;
+}
+
+export interface TelegramDiscordBindingDto {
+  /** @format uuid */
+  id: string;
+  /** @format int64 */
+  telegramChannelId: number;
+  /** @format int64 */
+  discordChannelId: number;
+  isEnabled: boolean;
+  /** @format date-time */
+  createdAtUtc: string;
+  /** @format date-time */
+  updatedAtUtc: string;
+}
+
+export interface TelegramDiscordBindingSetEnabledRequest {
+  isEnabled: boolean;
+}
+
+export interface TelegramDiscordChannelStateDto {
+  /** @format int64 */
+  telegramChannelId: number;
+  /** @format int32 */
+  lastProcessedMessageId: number;
+  /** @format date-time */
+  lastUpdatedUtc: string;
+}
+
 export interface TwitchUser {
   /**
    * @minLength 1
@@ -938,6 +975,7 @@ export enum ParseRequestSourceEnum {
   None = "None",
   Wavu = "Wavu",
   Tekkendocs = "Tekkendocs",
+  Okizeme = "Okizeme",
 }
 
 export enum PlayerStateStateEnum {
@@ -982,6 +1020,7 @@ export enum SupplementRequestSourceEnum {
   None = "None",
   Wavu = "Wavu",
   Tekkendocs = "Tekkendocs",
+  Okizeme = "Okizeme",
 }
 
 export enum UpdateCustomRewardRedemptionStatusRequestStatusEnum {
@@ -1098,12 +1137,14 @@ export enum FramedataSupplementCreate2ParamsSourceEnum {
   None = "None",
   Wavu = "Wavu",
   Tekkendocs = "Tekkendocs",
+  Okizeme = "Okizeme",
 }
 
 export enum FramedataSupplementCreate2ParamsEnum {
   None = "None",
   Wavu = "Wavu",
   Tekkendocs = "Tekkendocs",
+  Okizeme = "Okizeme",
 }
 
 export enum LogsListParamsLogLevelEnum {

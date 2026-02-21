@@ -2590,7 +2590,8 @@
               "enum": [
                 "None",
                 "Wavu",
-                "Tekkendocs"
+                "Tekkendocs",
+                "Okizeme"
               ],
               "type": "string"
             }
@@ -5695,6 +5696,233 @@
         }
       }
     },
+    "/api/TelegramDiscordBridge/bindings": {
+      "get": {
+        "tags": [
+          "TelegramDiscordBridge"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramDiscordBindingDtoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramDiscordBindingDtoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramDiscordBindingDtoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "TelegramDiscordBridge"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TelegramDiscordBindingCreateRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TelegramDiscordBindingCreateRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TelegramDiscordBindingCreateRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramDiscordBindingDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramDiscordBindingDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramDiscordBindingDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/TelegramDiscordBridge/bindings/{id}": {
+      "delete": {
+        "tags": [
+          "TelegramDiscordBridge"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/TelegramDiscordBridge/bindings/{id}/enabled": {
+      "put": {
+        "tags": [
+          "TelegramDiscordBridge"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TelegramDiscordBindingSetEnabledRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TelegramDiscordBindingSetEnabledRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TelegramDiscordBindingSetEnabledRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramDiscordBindingDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramDiscordBindingDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramDiscordBindingDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/TelegramDiscordBridge/states": {
+      "get": {
+        "tags": [
+          "TelegramDiscordBridge"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramDiscordChannelStateDtoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramDiscordChannelStateDtoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramDiscordChannelStateDtoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/TestLogger/test-warning": {
       "post": {
         "tags": [
@@ -8166,6 +8394,10 @@
             "type": "string",
             "nullable": true
           },
+          "videoUrl": {
+            "type": "string",
+            "nullable": true
+          },
           "notes": {
             "type": "array",
             "items": {
@@ -8321,6 +8553,10 @@
             "type": "string",
             "nullable": true
           },
+          "videoUrl": {
+            "type": "string",
+            "nullable": true
+          },
           "notes": {
             "type": "array",
             "items": {
@@ -8414,6 +8650,10 @@
             "type": "string",
             "nullable": true
           },
+          "videoUrl": {
+            "type": "string",
+            "nullable": true
+          },
           "notes": {
             "type": "array",
             "items": {
@@ -8490,7 +8730,8 @@
             "enum": [
               "None",
               "Wavu",
-              "Tekkendocs"
+              "Tekkendocs",
+              "Okizeme"
             ],
             "type": "string"
           },
@@ -9172,7 +9413,8 @@
             "enum": [
               "None",
               "Wavu",
-              "Tekkendocs"
+              "Tekkendocs",
+              "Okizeme"
             ],
             "type": "string"
           },
@@ -9446,6 +9688,123 @@
         "additionalProperties": false
       },
       "TekkenCharacterPendingDtoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
+      },
+      "TelegramDiscordBindingCreateRequest": {
+        "required": [
+          "discordChannelId",
+          "telegramChannelId"
+        ],
+        "type": "object",
+        "properties": {
+          "telegramChannelId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "discordChannelId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TelegramDiscordBindingDto": {
+        "required": [
+          "createdAtUtc",
+          "discordChannelId",
+          "id",
+          "isEnabled",
+          "telegramChannelId",
+          "updatedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "telegramChannelId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "discordChannelId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TelegramDiscordBindingDtoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
+      },
+      "TelegramDiscordBindingDtoOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
+      },
+      "TelegramDiscordBindingSetEnabledRequest": {
+        "required": [
+          "isEnabled"
+        ],
+        "type": "object",
+        "properties": {
+          "isEnabled": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TelegramDiscordChannelStateDto": {
+        "required": [
+          "lastProcessedMessageId",
+          "lastUpdatedUtc",
+          "telegramChannelId"
+        ],
+        "type": "object",
+        "properties": {
+          "telegramChannelId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lastProcessedMessageId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastUpdatedUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TelegramDiscordChannelStateDtoListOperationResult": {
         "allOf": [
           {
             "$ref": "#/components/schemas/OperationResult"
@@ -9896,6 +10255,9 @@
     },
     {
       "name": "StreamArchive"
+    },
+    {
+      "name": "TelegramDiscordBridge"
     },
     {
       "name": "TestLogger"

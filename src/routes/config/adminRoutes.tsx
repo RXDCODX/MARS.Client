@@ -36,6 +36,24 @@ const rootStatePageLoader = () =>
   }));
 const RootStatePage = lazy(rootStatePageLoader);
 
+const ttsVoicePageLoader = () =>
+  import("@/Site/Pages").then(m => ({
+    default: m.TtsVoicePage,
+  }));
+const TtsVoicePage = lazy(ttsVoicePageLoader);
+
+const commandsPageLoader = () =>
+  import("@/Site/Pages").then(m => ({
+    default: m.CommandsPage,
+  }));
+const CommandsPage = lazy(commandsPageLoader);
+
+const cinemaQueuePageLoader = () =>
+  import("@/Site/Pages").then(m => ({
+    default: m.CinemaQueuePage,
+  }));
+const CinemaQueuePage = lazy(cinemaQueuePageLoader);
+
 // Регистрируем админ компоненты для фоновой загрузки
 registerPrefetchComponents([
   logsPageLoader,
@@ -45,6 +63,9 @@ registerPrefetchComponents([
   serviceDetailsPageLoader,
   environmentVariablesPageLoader,
   rootStatePageLoader,
+  ttsVoicePageLoader,
+  commandsPageLoader,
+  cinemaQueuePageLoader,
 ]);
 
 // Массив панелей управления (с Layout)
@@ -165,6 +186,42 @@ export const adminRoutes: RouteConfig[] = [
       <Layout>
         <Suspense fallback={<PageLoader />}>
           <AutoMessagesPage />
+        </Suspense>
+      </Layout>
+    ),
+  },
+  {
+    path: "/tts-voice",
+    name: "Голоса TTS",
+    type: "control panel",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <TtsVoicePage />
+        </Suspense>
+      </Layout>
+    ),
+  },
+  {
+    path: "/commands",
+    name: "Команды",
+    type: "control panel",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <CommandsPage />
+        </Suspense>
+      </Layout>
+    ),
+  },
+  {
+    path: "/cinema-queue",
+    name: "Очередь кинотеатра",
+    type: "control panel",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <CinemaQueuePage />
         </Suspense>
       </Layout>
     ),
