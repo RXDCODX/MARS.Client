@@ -249,6 +249,15 @@ export interface DefaultImage {
   url4x?: string;
 }
 
+export interface DiscordChannelOptionDto {
+  /** @format int64 */
+  id: number;
+  name: string;
+  /** @format int64 */
+  guildId: number;
+  guildName: string;
+}
+
 export interface EnvironmentVariable {
   key: string;
   value?: string;
@@ -749,6 +758,12 @@ export interface TekkenCharacterPendingDto {
   strengths?: string[];
   weaknesess?: string[];
   isNew: boolean;
+}
+
+export interface TelegramChannelOptionDto {
+  /** @format int64 */
+  id: number;
+  title: string;
 }
 
 export interface TelegramDiscordBindingCreateRequest {

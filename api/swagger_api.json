@@ -5923,6 +5923,64 @@
         }
       }
     },
+    "/api/TelegramDiscordBridge/telegram-channels": {
+      "get": {
+        "tags": [
+          "TelegramDiscordBridge"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/TelegramDiscordBridge/discord-channels": {
+      "get": {
+        "tags": [
+          "TelegramDiscordBridge"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordChannelOptionDtoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordChannelOptionDtoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordChannelOptionDtoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/TestLogger/test-warning": {
       "post": {
         "tags": [
@@ -7638,6 +7696,41 @@
           }
         },
         "additionalProperties": false
+      },
+      "DiscordChannelOptionDto": {
+        "required": [
+          "guildId",
+          "guildName",
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "guildId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "guildName": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "DiscordChannelOptionDtoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
       },
       "EnvironmentVariable": {
         "required": [
@@ -9692,6 +9785,32 @@
         "additionalProperties": false
       },
       "TekkenCharacterPendingDtoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
+      },
+      "TelegramChannelOptionDto": {
+        "required": [
+          "id",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TelegramChannelOptionDtoListOperationResult": {
         "allOf": [
           {
             "$ref": "#/components/schemas/OperationResult"

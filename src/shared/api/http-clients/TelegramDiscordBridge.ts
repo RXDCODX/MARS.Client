@@ -34,6 +34,7 @@ import type {
   CreateMemeTypeDto,
   CustomReward,
   DefaultImage,
+  DiscordChannelOptionDto,
   EnvironmentVariable,
   FollowerInfo,
   GetCustomRewardRedemptionResponse,
@@ -79,6 +80,7 @@ import type {
   TekkenCharacter,
   TekkenCharacterPagedResult,
   TekkenCharacterPendingDto,
+  TelegramChannelOptionDto,
   TelegramDiscordBindingCreateRequest,
   TelegramDiscordBindingDto,
   TelegramDiscordBindingSetEnabledRequest,
@@ -215,6 +217,36 @@ export class TelegramDiscordBridge<
   telegramDiscordBridgeStatesList = (params: RequestParams = {}) =>
     this.request<OperationResult<TelegramDiscordChannelStateDto[]>, any>({
       path: `/api/TelegramDiscordBridge/states`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags TelegramDiscordBridge
+   * @name TelegramDiscordBridgeTelegramChannelsList
+   * @request GET:/api/TelegramDiscordBridge/telegram-channels
+   * @response `200` `OperationResult<TelegramChannelOptionDto[]>` OK
+   */
+  telegramDiscordBridgeTelegramChannelsList = (params: RequestParams = {}) =>
+    this.request<OperationResult<TelegramChannelOptionDto[]>, any>({
+      path: `/api/TelegramDiscordBridge/telegram-channels`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags TelegramDiscordBridge
+   * @name TelegramDiscordBridgeDiscordChannelsList
+   * @request GET:/api/TelegramDiscordBridge/discord-channels
+   * @response `200` `OperationResult<DiscordChannelOptionDto[]>` OK
+   */
+  telegramDiscordBridgeDiscordChannelsList = (params: RequestParams = {}) =>
+    this.request<OperationResult<DiscordChannelOptionDto[]>, any>({
+      path: `/api/TelegramDiscordBridge/discord-channels`,
       method: "GET",
       format: "json",
       ...params,
