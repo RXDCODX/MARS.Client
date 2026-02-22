@@ -135,8 +135,9 @@ const TtsVoicePage: React.FC = () => {
 
     try {
       const payload: SpeakRequest = {
-        name: selectedVoice,
+        name: "tts_test_voice",
         message: testMessage.trim(),
+        voiceName: selectedVoice,
       };
 
       const result = await api.ttsSpeakCreate(payload);

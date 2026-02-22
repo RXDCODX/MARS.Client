@@ -651,6 +651,7 @@ export interface SetEnvironmentVariableRequest {
 export interface SpeakRequest {
   name: string;
   message: string;
+  voiceName?: string;
 }
 
 export interface StreamArchiveConfig {
