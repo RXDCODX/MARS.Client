@@ -23,7 +23,7 @@ import styles from "./Credits.module.scss";
 
 // ОПТИМИЗАЦИЯ: Lazy loading для тяжелых анимаций - загружаем только когда нужно
 const ElectricBorder = lazy(
-  () => import("./ElectricBorderLegacy/ElectricBorder")
+  () => import("@/shared/components/ElectricBorderLegacy")
 );
 const Aurora = lazy(
   () => import("react-bits/src/ts-default/Backgrounds/Aurora/Aurora")

@@ -7,15 +7,19 @@
 }
 
 .container {
-  display: inline;
+  display: inline-flex;
   flex-direction: row; // меняем на row для горизонтального расположения
-  align-items: center; // выравниваем по центру
+  align-items: center;
   gap: 8px;
   min-height: 60px;
   border-radius: 12px;
   width: fit-content; // сообщение по ширине контента
   max-width: 100%; // ограничиваем ширину
   box-sizing: border-box;
+}
+
+.containerLargeMessage {
+  align-items: flex-start;
 }
 
 .userInfo {
@@ -27,6 +31,17 @@
   padding: 0 8px;
   border-radius: 12px;
   width: fit-content;
+  flex-shrink: 0;
+
+  .badges {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    gap: 4px;
+    flex-shrink: 0;
+  }
 
   // Бейджи теперь напрямую в userInfo
   img {
@@ -36,16 +51,21 @@
   }
 }
 
+.userInfoLargeMessage {
+  margin-top: 12px;
+}
+
 .nickname {
   font-weight: bold;
   color: white;
   font-size: 2em;
+  line-height: 1;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .message {
-  display: inline;
+  display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 4px;
@@ -56,11 +76,17 @@
   width: fit-content; // сообщение по ширине контента
   max-width: 100%; // ограничиваем ширину
   min-width: 0;
+  line-height: 1;
+  flex: 1 1 auto;
 
   & * {
     display: inline !important;
     backdrop-filter: none !important;
   }
+}
+
+.messageLargeMessage {
+  align-items: flex-start;
 }
 
 .linkStub {

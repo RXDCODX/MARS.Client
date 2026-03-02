@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import ElectricBorder from "react-bits/src/content/Animations/ElectricBorder/ElectricBorder";
 import GradientText from "react-bits/src/ts-default/TextAnimations/GradientText/GradientText";
 
 import catisaVideo from "@/assets/catisa.mp4";
 import { ChatMessage } from "@/shared/api";
+import ElectricBorder from "@/shared/components/ElectricBorderLegacy";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import { parseContent, replaceBadges, replaceEmotes } from "@/shared/Utils";
 
@@ -33,8 +33,10 @@ export function Message({ message, onRemove }: Props) {
   const parser = useTwitchStore(state => state.parser);
   const parserToLink = useTwitchStore(state => state.parseToLink);
   const [parts] = useState(() => parseContent(message.message));
+  const [isMultilineMessage, setIsMultilineMessage] = useState(false);
   const roleColor = getRoleColor(message);
   const msgRef = useRef<HTMLDivElement>(null);
+  const messageContentRef = useRef<HTMLDivElement>(null);
 
   // Появление/исчезновение управляется фреймером (в родителе)
 
@@ -49,6 +51,35 @@ export function Message({ message, onRemove }: Props) {
     return () => clearTimeout(timer);
   }, [onRemove, message]);
 
+  useEffect(() => {
+    const messageElement = messageContentRef.current;
+    if (!messageElement) {
+      return;
+    }
+
+    const updateMultilineState = () => {
+      const computedStyles = window.getComputedStyle(messageElement);
+      const parsedLineHeight = Number.parseFloat(computedStyles.lineHeight);
+      const parsedFontSize = Number.parseFloat(computedStyles.fontSize);
+      const lineHeight = Number.isFinite(parsedLineHeight)
+        ? parsedLineHeight
+        : (Number.isFinite(parsedFontSize) ? parsedFontSize : 16) * 1.2;
+      const messageHeight = messageElement.getBoundingClientRect().height;
+      const hasMultipleTextLines =
+        !isCatisa && messageHeight > lineHeight * 1.6;
+      setIsMultilineMessage(hasMultipleTextLines);
+    };
+
+    updateMultilineState();
+
+    const resizeObserver = new ResizeObserver(updateMultilineState);
+    resizeObserver.observe(messageElement);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [isCatisa, message.message]);
+
   return (
     <>
       <div className={styles.wrapper}>
@@ -59,9 +90,12 @@ export function Message({ message, onRemove }: Props) {
           speed={1.2}
         >
           <div style={{ display: "block", padding: "3px 15px" }}>
-            <div ref={msgRef} className={styles.container}>
+            <div
+              ref={msgRef}
+              className={`${styles.container} ${isMultilineMessage ? styles.containerLargeMessage : ""}`}
+            >
               <div
-                className={styles.userInfo}
+                className={`${styles.userInfo} ${isMultilineMessage ? styles.userInfoLargeMessage : ""}`}
                 style={{ backgroundColor: roleColor ?? "transparent" }}
               >
                 <div className={styles.badges}>
@@ -76,7 +110,10 @@ export function Message({ message, onRemove }: Props) {
                   {message.displayName}
                 </div>
               </div>
-              <div className={styles.message}>
+              <div
+                ref={messageContentRef}
+                className={`${styles.message} ${isMultilineMessage ? styles.messageLargeMessage : ""}`}
+              >
                 {isCatisa ? (
                   <video
                     src={catisaVideo}
