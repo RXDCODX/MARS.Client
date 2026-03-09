@@ -1,8 +1,8 @@
-import { HubConnectionState } from "@microsoft/signalr";
 import { useCallback, useEffect, useRef } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
+import { ScoreboardDto } from "@/shared/api";
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
 import ThemeToggle from "../../../ThemeToggle";
@@ -13,7 +13,6 @@ import LayoutCard from "./LayoutCard";
 import MetaPanel from "./MetaPanel/MetaPanel";
 import PlayerCard from "./PlayerCard/PlayerCard";
 import {
-  ScoreboardState,
   useGeneralActions,
   usePlayerActions,
   useScoreboardStore,
@@ -30,7 +29,7 @@ const AdminPanelContent = () => {
 
   // Функция для обработки получения состояния с сервера
   const handleReceiveStateCallback = useCallback(
-    (state: ScoreboardState) => {
+    (state: ScoreboardDto) => {
       const now = Date.now();
       // Дополнительная защита от слишком частых обновлений
       if (now - lastUpdateRef.current < 100) {
@@ -46,10 +45,13 @@ const AdminPanelContent = () => {
   const connection = useScoreboardStore(state => state._connection);
 
   useEffect(() => {
-    if (connection.state === HubConnectionState.Connected) {
-      connection.on("ReceiveState", handleReceiveStateCallback);
-      connection.on("StateUpdated", handleReceiveStateCallback);
-    }
+    connection.on("ReceiveState", handleReceiveStateCallback);
+    connection.on("StateUpdated", handleReceiveStateCallback);
+
+    return () => {
+      connection.off("ReceiveState", handleReceiveStateCallback);
+      connection.off("StateUpdated", handleReceiveStateCallback);
+    };
   }, [connection, handleReceiveStateCallback]);
 
   // Редирект на админку при открытии с телефона

@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { type CSSProperties, useCallback, useState } from "react";
+import { type CSSProperties, useCallback, useEffect, useState } from "react";
 
 import InjectStyles from "@/shared/components/InjectStyles";
 
@@ -99,7 +99,7 @@ const ScoreboardContent: React.FC = () => {
       setColors(state.colors);
     }
 
-    if (state.animationDuration) {
+    if (typeof state.animationDuration === "number") {
       setAnimationDuration(state.animationDuration);
     }
 
@@ -108,11 +108,22 @@ const ScoreboardContent: React.FC = () => {
     }
   }, []);
 
-  connection.on("ReceiveState", handleReceiveState);
-  connection.on("StateUpdated", handleReceiveState);
-  connection.on("VisibilityChanged", (isVisible: boolean) => {
-    setIsVisible(isVisible);
-  });
+  const handleVisibilityChanged = useCallback((nextVisibility: boolean) => {
+    setIsVisible(nextVisibility);
+    setHasReceivedInitialState(true);
+  }, []);
+
+  useEffect(() => {
+    connection.on("ReceiveState", handleReceiveState);
+    connection.on("StateUpdated", handleReceiveState);
+    connection.on("VisibilityChanged", handleVisibilityChanged);
+
+    return () => {
+      connection.off("ReceiveState", handleReceiveState);
+      connection.off("StateUpdated", handleReceiveState);
+      connection.off("VisibilityChanged", handleVisibilityChanged);
+    };
+  }, [connection, handleReceiveState, handleVisibilityChanged]);
 
   // В Production окружении не показываем скорборд до первого получения данных
   if (import.meta.env.PROD && !hasReceivedInitialState) {

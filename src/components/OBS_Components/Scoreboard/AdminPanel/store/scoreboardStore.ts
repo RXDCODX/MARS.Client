@@ -16,7 +16,21 @@ import {
   MetaInfo,
   MetaInfoWithTimestamp,
   PlayerWithTimestamp,
+  ScoreboardState as ScoreboardHubState,
 } from "../types";
+
+type ScoreboardIncomingState = Partial<Omit<ScoreboardHubState, "colors">> & {
+  colors?: ScoreboardColorsDto | Partial<ColorPreset>;
+  color?: ScoreboardColorsDto | Partial<ColorPreset>;
+};
+
+type PendingServerCommand = {
+  method: string;
+  data: ScoreboardDto | boolean;
+};
+
+const pendingServerCommands: PendingServerCommand[] = [];
+const MAX_PENDING_SERVER_COMMANDS = 40;
 
 // Интерфейс состояния
 export interface ScoreboardState {
@@ -62,14 +76,13 @@ export interface ScoreboardActions {
   reset: () => void;
 
   // Действия для получения состояния с сервера
-  handleReceiveState: (state: ScoreboardState) => void;
+  handleReceiveState: (state: ScoreboardIncomingState) => void;
 
   // Внутренние действия (не экспортируются)
   _sendToServer: (
     method: string,
-    data: ScoreboardDto | boolean,
-    updateId?: string
-  ) => boolean;
+    data: ScoreboardDto | boolean
+  ) => Promise<boolean>;
   _createServerState: (
     updatedPlayer1?: PlayerWithTimestamp,
     updatedPlayer2?: PlayerWithTimestamp,
@@ -124,17 +137,66 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
   // Инициализируем соединение
   const connection = initialState._connection;
 
-  const firstActiveFunction = (state: ScoreboardState) => {
+  const queueServerCommand = (
+    method: string,
+    data: ScoreboardDto | boolean
+  ) => {
+    const nextCommand: PendingServerCommand = { method, data };
+    const existingCommandIndex = pendingServerCommands.findIndex(
+      pendingCommand => pendingCommand.method === method
+    );
+
+    if (existingCommandIndex >= 0) {
+      pendingServerCommands[existingCommandIndex] = nextCommand;
+    } else {
+      pendingServerCommands.push(nextCommand);
+      if (pendingServerCommands.length > MAX_PENDING_SERVER_COMMANDS) {
+        pendingServerCommands.shift();
+      }
+    }
+  };
+
+  const flushPendingServerCommands = async () => {
+    if (connection.state !== HubConnectionState.Connected) {
+      return;
+    }
+
+    while (pendingServerCommands.length > 0) {
+      const pendingCommand = pendingServerCommands.shift();
+      if (pendingCommand) {
+        const sendResult = await get()._sendToServer(
+          pendingCommand.method,
+          pendingCommand.data
+        );
+
+        if (!sendResult) {
+          break;
+        }
+      }
+    }
+  };
+
+  const firstActiveFunction = (state: ScoreboardIncomingState) => {
     get().handleReceiveState(state);
     connection.off("ReceiveState", firstActiveFunction);
   };
 
   connection.on("ReceiveState", firstActiveFunction);
 
-  // Запускаем соединение
-  connection.start().catch(err => {
-    console.error("Error starting SignalR connection:", err);
+  connection.onreconnected(() => {
+    console.log("Scoreboard SignalR reconnected. Flushing queued updates...");
+    void flushPendingServerCommands();
   });
+
+  // Запускаем соединение
+  connection
+    .start()
+    .then(() => {
+      void flushPendingServerCommands();
+    })
+    .catch(err => {
+      console.error("Error starting SignalR connection:", err);
+    });
 
   return {
     ...initialState,
@@ -152,7 +214,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
 
       // Отправляем на сервер
       const serverState = get()._createServerState(updatedPlayer);
-      get()._sendToServer("UpdateState", serverState);
+      void get()._sendToServer("UpdateState", serverState);
     },
 
     setPlayer2: playerUpdate => {
@@ -167,7 +229,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
 
       // Отправляем на сервер
       const serverState = get()._createServerState(undefined, updatedPlayer);
-      get()._sendToServer("UpdateState", serverState);
+      void get()._sendToServer("UpdateState", serverState);
     },
 
     swapPlayers: () => {
@@ -184,7 +246,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
 
       // Отправляем на сервер
       const serverState = get()._createServerState(newPlayer1, newPlayer2);
-      get()._sendToServer("UpdateState", serverState);
+      void get()._sendToServer("UpdateState", serverState);
     },
 
     // Действия с мета информацией
@@ -204,7 +266,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
         undefined,
         updatedMeta
       );
-      get()._sendToServer("UpdateState", serverState);
+      void get()._sendToServer("UpdateState", serverState);
     },
 
     // Действия с цветами
@@ -225,7 +287,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
         undefined,
         updatedColor
       );
-      get()._sendToServer("UpdateState", serverState);
+      void get()._sendToServer("UpdateState", serverState);
     },
 
     handleColorChange: colorUpdate => {
@@ -250,7 +312,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
         undefined,
         updatedLayout
       );
-      get()._sendToServer("UpdateState", serverState);
+      void get()._sendToServer("UpdateState", serverState);
     },
 
     // Действия с видимостью
@@ -258,7 +320,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
       set({ isVisible });
 
       // Отправляем на сервер
-      get()._sendToServer("SetVisibility", isVisible);
+      void get()._sendToServer("SetVisibility", isVisible);
     },
 
     setAnimationDuration: duration => {
@@ -274,61 +336,84 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
         undefined,
         duration
       );
-      get()._sendToServer("UpdateState", serverState);
+      void get()._sendToServer("UpdateState", serverState);
     },
 
     // Действия сброса
     reset: () => {
-      set(initialState);
+      set({ ...initialState, _connection: connection });
 
       // Отправляем на сервер
       const serverState = get()._createServerState();
-      get()._sendToServer("UpdateState", serverState);
+      void get()._sendToServer("UpdateState", serverState);
     },
 
     // Действия для получения состояния с сервера
     handleReceiveState: state => {
+      const receiveTime = Date.now();
+
       if (state.player1) {
-        set({ player1: { ...state.player1, _receivedAt: Date.now() } });
+        set({ player1: { ...state.player1, _receivedAt: receiveTime } });
       }
       if (state.player2) {
-        set({ player2: { ...state.player2, _receivedAt: Date.now() } });
+        set({ player2: { ...state.player2, _receivedAt: receiveTime } });
       }
       if (state.meta) {
-        set({ meta: { ...state.meta, _receivedAt: Date.now() } });
+        set({ meta: { ...state.meta, _receivedAt: receiveTime } });
       }
-      if (state.color) {
-        set({ color: { ...state.color, _lastEdit: Date.now() } });
+
+      const incomingColor = state.colors ?? state.color;
+      if (incomingColor) {
+        const currentColor = get().color;
+        set({
+          color: {
+            ...currentColor,
+            ...incomingColor,
+            name: incomingColor.name ?? currentColor.name ?? "Custom",
+            _lastEdit: receiveTime,
+            _receivedAt: receiveTime,
+          },
+        });
       }
+
       if (state.layout) {
         set({ layout: state.layout });
       }
+
       if (typeof state.isVisible === "boolean") {
         set({ isVisible: state.isVisible });
       }
-      if (state.animationDuration) {
+
+      if (typeof state.animationDuration === "number") {
         set({ animationDuration: state.animationDuration });
       }
     },
 
     // Внутренние действия
-    _sendToServer: (method, data) => {
+    _sendToServer: async (method, data) => {
+      let result = false;
+
       try {
         if (!connection || connection.state !== HubConnectionState.Connected) {
+          queueServerCommand(method, data);
           console.log(
-            "SignalR connection not available, using local state only"
+            `SignalR connection state is '${connection.state}'. Queued ${method}.`
           );
-          return true;
+        } else {
+          console.log(`Sending ${method}:`, data);
+          await connection.invoke(method, data);
+          console.log(`Successfully sent ${method}`);
+          result = true;
         }
-
-        console.log(`Sending ${method}:`, data);
-        connection.invoke(method, data);
-        console.log(`Successfully sent ${method}`);
-        return true;
       } catch (error) {
-        console.error(`Error sending ${method}:`, error);
-        return false;
+        queueServerCommand(method, data);
+        console.error(
+          `Error sending ${method}. Command queued for retry.`,
+          error
+        );
       }
+
+      return result;
     },
 
     _createServerState: (
@@ -356,14 +441,14 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
       });
 
       return {
-        player1: updatedPlayer1 || state.player1,
-        player2: updatedPlayer2 || state.player2,
-        meta: updatedMeta || state.meta,
-        colors: convertColorPresetToDto(updatedColor || state.color),
-        layout: updatedLayout || state.layout,
+        player1: updatedPlayer1 ?? state.player1,
+        player2: updatedPlayer2 ?? state.player2,
+        meta: updatedMeta ?? state.meta,
+        colors: convertColorPresetToDto(updatedColor ?? state.color),
+        layout: updatedLayout ?? state.layout,
         isVisible:
           updatedVisibility !== undefined ? updatedVisibility : state.isVisible,
-        animationDuration: updatedAnimationDuration || state.animationDuration,
+        animationDuration: updatedAnimationDuration ?? state.animationDuration,
       };
     },
   };
