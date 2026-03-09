@@ -365,11 +365,16 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
       const incomingColor = state.colors ?? state.color;
       if (incomingColor) {
         const currentColor = get().color;
+        const incomingName =
+          "name" in incomingColor && typeof incomingColor.name === "string"
+            ? incomingColor.name
+            : undefined;
+
         set({
           color: {
             ...currentColor,
             ...incomingColor,
-            name: incomingColor.name ?? currentColor.name ?? "Custom",
+            name: incomingName ?? currentColor.name ?? "Custom",
             _lastEdit: receiveTime,
             _receivedAt: receiveTime,
           },
