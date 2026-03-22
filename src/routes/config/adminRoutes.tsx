@@ -58,6 +58,10 @@ const cinemaQueuePageLoader = () =>
   }));
 const CinemaQueuePage = lazy(cinemaQueuePageLoader);
 
+const spotifyAuthManagerLoader = () =>
+  import("@/Site/Pages/AdminPanel/sections/SpotifyAuthManager");
+const SpotifyAuthManager = lazy(spotifyAuthManagerLoader);
+
 // Регистрируем админ компоненты для фоновой загрузки
 registerPrefetchComponents([
   logsPageLoader,
@@ -71,6 +75,7 @@ registerPrefetchComponents([
   ttsVoicePageLoader,
   commandsPageLoader,
   cinemaQueuePageLoader,
+  spotifyAuthManagerLoader,
 ]);
 
 // Массив панелей управления (с Layout)
@@ -239,6 +244,18 @@ export const adminRoutes: RouteConfig[] = [
       <Layout>
         <Suspense fallback={<PageLoader />}>
           <CinemaQueuePage />
+        </Suspense>
+      </Layout>
+    ),
+  },
+  {
+    path: "/spotify",
+    name: "Spotify",
+    type: "control panel",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <SpotifyAuthManager />
         </Suspense>
       </Layout>
     ),
