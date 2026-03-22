@@ -1,5 +1,6 @@
-import type { StorybookConfig } from "@storybook/react-vite";
 import { fileURLToPath } from "node:url";
+
+import type { StorybookConfig } from "@storybook/react-vite";
 import path from "path";
 
 const dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -40,8 +41,8 @@ const config: StorybookConfig = {
     // Настройки для обработки ассетов
     config.define = {
       ...config.define,
-      'import.meta.env.PROD': false,
-      'import.meta.env.DEV': true,
+      "import.meta.env.PROD": false,
+      "import.meta.env.DEV": true,
     };
 
     // Добавляем алиасы для корректной работы с импортами
