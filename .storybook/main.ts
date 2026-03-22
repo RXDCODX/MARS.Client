@@ -1,8 +1,14 @@
 import type { StorybookConfig } from "@storybook/react-vite";
+import { fileURLToPath } from "node:url";
 import path from "path";
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const config: StorybookConfig = {
   stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
+  typescript: {
+    reactDocgen: false,
+  },
   addons: [
     "@chromatic-com/storybook",
     "@storybook/addon-docs",
@@ -42,18 +48,18 @@ const config: StorybookConfig = {
     if (config.resolve) {
       config.resolve.alias = {
         ...config.resolve.alias,
-        "@": path.resolve(__dirname, "../src"),
-        "@/components": path.resolve(__dirname, "../src/components"),
-        "@/Site": path.resolve(__dirname, "../src/Site"),
-        "@/shared": path.resolve(__dirname, "../src/shared"),
-        "@/contexts": path.resolve(__dirname, "../src/contexts"),
-        "@/routes": path.resolve(__dirname, "../src/routes"),
-        "@/app": path.resolve(__dirname, "../src/app"),
-        "@/assets": path.resolve(__dirname, "../src/assets"),
-        "@/styles": path.resolve(__dirname, "../src/styles"),
-        "@/utils": path.resolve(__dirname, "../src/shared/Utils"),
-        "@/api": path.resolve(__dirname, "../src/shared/api"),
-        "@/types": path.resolve(__dirname, "../src/shared/types"),
+        "@": path.resolve(dirname, "../src"),
+        "@/components": path.resolve(dirname, "../src/components"),
+        "@/Site": path.resolve(dirname, "../src/Site"),
+        "@/shared": path.resolve(dirname, "../src/shared"),
+        "@/contexts": path.resolve(dirname, "../src/contexts"),
+        "@/routes": path.resolve(dirname, "../src/routes"),
+        "@/app": path.resolve(dirname, "../src/app"),
+        "@/assets": path.resolve(dirname, "../src/assets"),
+        "@/styles": path.resolve(dirname, "../src/styles"),
+        "@/utils": path.resolve(dirname, "../src/shared/Utils"),
+        "@/api": path.resolve(dirname, "../src/shared/api"),
+        "@/types": path.resolve(dirname, "../src/shared/types"),
       };
     }
 
@@ -63,16 +69,6 @@ const config: StorybookConfig = {
         ...config.css.modules,
         localsConvention: "camelCase",
         generateScopedName: "[name]__[local]___[hash:base64:5]",
-      };
-    }
-
-    // Добавляем поддержку SCSS
-    if (config.css) {
-      config.css.preprocessorOptions = {
-        ...config.css.preprocessorOptions,
-        scss: {
-          additionalData: `@import "../src/styles/bootstrap.scss";`,
-        },
       };
     }
 
