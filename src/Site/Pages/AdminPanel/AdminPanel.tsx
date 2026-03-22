@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { Container, Nav, Navbar as BootstrapNavbar } from "react-bootstrap";
+import { Navbar as BootstrapNavbar, Container, Nav } from "react-bootstrap";
 
 import Dashboard from "../Dashboard/Dashboard";
 import styles from "./AdminPanel.module.scss";
 import { AdminPanelProps } from "./AdminPanel.types";
+import SpotifyAuthManager from "./sections/SpotifyAuthManager";
 
 const AdminPanel: React.FC<AdminPanelProps> = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -12,6 +13,8 @@ const AdminPanel: React.FC<AdminPanelProps> = () => {
     switch (activeTab) {
       case "dashboard":
         return <Dashboard />;
+      case "spotify":
+        return <SpotifyAuthManager />;
       case "servers":
         return (
           <div className={styles.placeholder}>
@@ -65,6 +68,7 @@ const AdminPanel: React.FC<AdminPanelProps> = () => {
               onSelect={k => setActiveTab(k || "dashboard")}
             >
               <Nav.Link eventKey="dashboard">Дашборд</Nav.Link>
+              <Nav.Link eventKey="spotify">🎵 Spotify</Nav.Link>
               <Nav.Link eventKey="servers">Серверы</Nav.Link>
               <Nav.Link eventKey="logs">Логи</Nav.Link>
               <Nav.Link eventKey="users">Пользователи</Nav.Link>

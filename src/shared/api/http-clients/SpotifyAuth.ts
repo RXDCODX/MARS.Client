@@ -133,21 +133,82 @@ import type {
   LogsListParamsLogLevelEnum,
 } from "../types/data-contracts";
 
-export class PyroAlerts<
+export class SpotifyAuth<
   SecurityDataType = unknown,
 > extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags PyroAlerts
-   * @name MemoryDetail
-   * @request GET:/memory/{escapedFileName}
-   * @response `200` `void` OK
+   * @tags SpotifyAuth
+   * @name SpotifyAuthStartCreate
+   * @request POST:/api/SpotifyAuth/start
+   * @response `200` `OperationResult<SpotifyAuthStartResult>` OK
    */
-  memoryDetail = (escapedFileName: string, params: RequestParams = {}) =>
-    this.request<void, any>({
-      path: `/memory/${escapedFileName}`,
+  spotifyAuthStartCreate = (
+    data: SpotifyAuthStartRequest,
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<SpotifyAuthStartResult>, any>({
+      path: `/api/SpotifyAuth/start`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags SpotifyAuth
+   * @name SpotifyAuthCallbackList
+   * @request GET:/api/SpotifyAuth/callback
+   * @response `200` `OperationResult<SpotifyAuthCompleteResult>` OK
+   */
+  spotifyAuthCallbackList = (
+    query?: {
+      code: string;
+      state: string;
+      error: string;
+      error_description: string;
+      redirectUri: string;
+    },
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<SpotifyAuthCompleteResult>, any>({
+      path: `/api/SpotifyAuth/callback`,
       method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags SpotifyAuth
+   * @name SpotifyAuthStatusList
+   * @request GET:/api/SpotifyAuth/status
+   * @response `200` `OperationResult<SpotifyAuthStatusResult>` OK
+   */
+  spotifyAuthStatusList = (params: RequestParams = {}) =>
+    this.request<OperationResult<SpotifyAuthStatusResult>, any>({
+      path: `/api/SpotifyAuth/status`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags SpotifyAuth
+   * @name SpotifyAuthDisconnectCreate
+   * @request POST:/api/SpotifyAuth/disconnect
+   * @response `200` `OperationResult` OK
+   */
+  spotifyAuthDisconnectCreate = (params: RequestParams = {}) =>
+    this.request<OperationResult, any>({
+      path: `/api/SpotifyAuth/disconnect`,
+      method: "POST",
+      format: "json",
       ...params,
     });
 }

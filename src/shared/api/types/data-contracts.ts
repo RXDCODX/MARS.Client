@@ -663,6 +663,38 @@ export interface SpeakRequest {
   voiceName?: string;
 }
 
+export interface SpotifyAuthCompleteResult {
+  success: boolean;
+  message: string;
+  displayName?: string;
+  product?: string;
+}
+
+export interface SpotifyAuthStartRequest {
+  clientId: string;
+  clientSecret: string;
+  redirectUri?: string;
+}
+
+export interface SpotifyAuthStartResult {
+  success: boolean;
+  message: string;
+  authUrl: string;
+  state: string;
+}
+
+export interface SpotifyAuthStatusResult {
+  isLinked: boolean;
+  hasClientCredentials: boolean;
+  displayName?: string;
+  userId?: string;
+  product?: string;
+  deviceId?: string;
+  /** @format date-time */
+  accessTokenExpiresAtUtc?: string;
+  message: string;
+}
+
 export interface StreamArchiveConfig {
   /** @format uuid */
   id: string;

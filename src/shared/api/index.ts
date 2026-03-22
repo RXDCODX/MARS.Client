@@ -24,6 +24,7 @@ export { RxdcodxViewers } from "./http-clients/RxdcodxViewers";
 export { ServiceManager } from "./http-clients/ServiceManager";
 export { ShikimoriRateLimiter } from "./http-clients/ShikimoriRateLimiter";
 export { SoundRequest } from "./http-clients/SoundRequest";
+export { SpotifyAuth } from "./http-clients/SpotifyAuth";
 export { StreamArchive } from "./http-clients/StreamArchive";
 export { TelegramDiscordBridge } from "./http-clients/TelegramDiscordBridge";
 export { TestLogger } from "./http-clients/TestLogger";
