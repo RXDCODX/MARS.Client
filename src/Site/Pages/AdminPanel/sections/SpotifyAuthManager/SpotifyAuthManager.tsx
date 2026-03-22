@@ -147,16 +147,36 @@ const SpotifyAuthManager: React.FC = () => {
         {status?.isLinked && (
           <Alert variant="success" className={styles.statusAlert}>
             <div className={styles.statusContent}>
-              <div>
-                <strong>Spotify подключен</strong>
-                <p className={styles.userInfo}>
-                  👤 {status.displayName} ({status.product})
-                </p>
-                {status.deviceId && (
-                  <p className={styles.deviceInfo}>
-                    🎧 Устройство: {status.deviceId}
-                  </p>
+              <div className={styles.profileBlock}>
+                {status.avatarUrl && (
+                  <img
+                    src={status.avatarUrl}
+                    alt={`Аватар ${status.displayName || status.userId || "Spotify"}`}
+                    className={styles.avatar}
+                  />
                 )}
+
+                <div>
+                  <strong>Spotify подключен</strong>
+                  <p className={styles.userInfo}>
+                    👤 {status.displayName || status.userId || "Без имени"}
+                  </p>
+                  {status.userId && (
+                    <p className={styles.nickInfo}>
+                      🏷️ Никнейм: @{status.userId}
+                    </p>
+                  )}
+                  {status.product && (
+                    <p className={styles.productInfo}>
+                      🎼 Тариф: {status.product}
+                    </p>
+                  )}
+                  {status.deviceId && (
+                    <p className={styles.deviceInfo}>
+                      🎧 Устройство: {status.deviceId}
+                    </p>
+                  )}
+                </div>
               </div>
               <Button
                 variant="danger"

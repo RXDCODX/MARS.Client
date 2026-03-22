@@ -688,6 +688,7 @@ export interface SpotifyAuthStatusResult {
   hasClientCredentials: boolean;
   displayName?: string;
   userId?: string;
+  avatarUrl?: string;
   product?: string;
   deviceId?: string;
   /** @format date-time */

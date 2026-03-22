@@ -20,10 +20,32 @@
       align-items: center;
       gap: 20px;
 
+      .profileBlock {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(29, 185, 84, 0.4);
+        background: var(--site-bg-primary);
+      }
+
       .userInfo {
         margin: 5px 0 0 0;
         font-size: 0.95rem;
         opacity: 0.95;
+      }
+
+      .nickInfo,
+      .productInfo {
+        margin: 5px 0 0 0;
+        font-size: 0.9rem;
+        opacity: 0.9;
       }
 
       .deviceInfo {
@@ -42,6 +64,10 @@
       .statusContent {
         flex-direction: column;
         align-items: flex-start;
+
+        .profileBlock {
+          width: 100%;
+        }
 
         .disconnectBtn {
           align-self: flex-start;

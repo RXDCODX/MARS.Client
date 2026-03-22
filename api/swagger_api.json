@@ -9682,6 +9682,10 @@
             "type": "string",
             "nullable": true
           },
+          "avatarUrl": {
+            "type": "string",
+            "nullable": true
+          },
           "product": {
             "type": "string",
             "nullable": true
