@@ -52,6 +52,20 @@ export default function MikuMondayController() {
     }
   }, [status, error, showToast]);
 
+  useEffect(() => {
+    const preloadVideo = document.createElement("video");
+    preloadVideo.src = "/static/miku.mp4";
+    preloadVideo.preload = "auto";
+    preloadVideo.muted = true;
+    preloadVideo.playsInline = true;
+    preloadVideo.load();
+
+    return () => {
+      preloadVideo.pause();
+      preloadVideo.src = "";
+    };
+  }, []);
+
   return (
     <>
       {!isAnnounced && (
