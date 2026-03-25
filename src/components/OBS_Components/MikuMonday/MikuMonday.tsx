@@ -81,7 +81,8 @@ function MikuMondayContent() {
   const backgroundAudioRef = useRef<HTMLAudioElement | null>(null);
   const backgroundAudioFadeIntervalRef = useRef<number | null>(null);
 
-  const shouldPlayBackgroundAudio = Boolean(currentAlert) && stage !== "waiting";
+  const shouldPlayBackgroundAudio =
+    Boolean(currentAlert) && stage !== "waiting";
 
   const excludedBackgroundTrackIds = useMemo(() => {
     const ids = new Set<string>();
@@ -187,7 +188,11 @@ function MikuMondayContent() {
       .catch(err => {
         console.warn("[MikuMonday] Не удалось запустить фоновый трек:", err);
       });
-  }, [backgroundTrack?.url, clearBackgroundAudioFadeInterval, fadeBackgroundAudioTo]);
+  }, [
+    backgroundTrack?.url,
+    clearBackgroundAudioFadeInterval,
+    fadeBackgroundAudioTo,
+  ]);
 
   const stopBackgroundAudio = useCallback(() => {
     const audio = backgroundAudioRef.current;
@@ -313,7 +318,12 @@ function MikuMondayContent() {
     if (!shouldPlayBackgroundAudio) {
       stopBackgroundAudio();
     }
-  }, [backgroundTrack?.id, backgroundTrack?.url, shouldPlayBackgroundAudio, stopBackgroundAudio]);
+  }, [
+    backgroundTrack?.id,
+    backgroundTrack?.url,
+    shouldPlayBackgroundAudio,
+    stopBackgroundAudio,
+  ]);
 
   useEffect(() => {
     if (!backgroundTrack?.url) {
