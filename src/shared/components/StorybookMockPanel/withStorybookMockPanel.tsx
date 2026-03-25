@@ -3,9 +3,11 @@
  * Упрощает использование mock-панели в stories
  */
 
-import React, { useState, useCallback, useEffect } from 'react';
-import { StorybookMockPanel } from '../StorybookMockPanel';
-import { useSignalRMockable } from '@/shared/utils/signalr';
+import React from "react";
+
+import { useSignalRMockable } from "@/shared/utils/signalr";
+
+import { StorybookMockPanel } from "../StorybookMockPanel";
 
 export interface WithMockPanelOptions {
   /** Название хаба SignalR */
@@ -33,9 +35,12 @@ export function withStorybookMockPanel<P extends object>(
 ) {
   return function WithMockPanelWrapper(props: P) {
     const { hubName, panelClassName, autoMock = true } = options;
-    const { emitScenario, mockMode, setMockMode } = useSignalRMockable(hubName, {
-      autoMockInStorybook: autoMock,
-    });
+    const { emitScenario, mockMode, setMockMode } = useSignalRMockable(
+      hubName,
+      {
+        autoMockInStorybook: autoMock,
+      }
+    );
 
     return (
       <>

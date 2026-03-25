@@ -3,10 +3,10 @@
  * Позволяет подменять реальные события на мокированные в режиме mock
  */
 
-import React, { useEffect, useCallback } from 'react';
-import { useCallback as useReactCallback } from 'react';
-import { signalRInterceptorRegistry } from '@/shared/utils/signalr/SignalRInterceptor';
-import { isInStorybook } from '@/shared/utils/signalr/useSignalRMockable';
+import React, { useEffect } from "react";
+
+import { signalRInterceptorRegistry } from "@/shared/utils/signalr/SignalRInterceptor";
+import { isInStorybook } from "@/shared/utils/signalr/useSignalRMockable";
 
 export interface SignalRMockWrapperProps {
   /** Название хаба */

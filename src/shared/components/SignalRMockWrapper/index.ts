@@ -1,1 +1,4 @@
-export { SignalRMockWrapper, type SignalRMockWrapperProps } from './SignalRMockWrapper';
+export {
+  SignalRMockWrapper,
+  type SignalRMockWrapperProps,
+} from "./SignalRMockWrapper";
