@@ -16,7 +16,9 @@ interface ClipboardImageItem {
 const TelegramClipboardCopyPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [items, setItems] = useState<ClipboardImageItem[]>([]);
-  const [statusText, setStatusText] = useState("Загружаю список изображений...");
+  const [statusText, setStatusText] = useState(
+    "Загружаю список изображений..."
+  );
   const [isLoading, setIsLoading] = useState(false);
   const { showToast } = useToastModal();
 
@@ -34,7 +36,9 @@ const TelegramClipboardCopyPage: React.FC = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`/api/TelegramClipboardCopy/${encodeURIComponent(requestId)}`);
+      const response = await fetch(
+        `/api/TelegramClipboardCopy/${encodeURIComponent(requestId)}`
+      );
       const operation = (await response.json()) as OperationResult<string[]>;
 
       if (response.ok && operation.success && Array.isArray(operation.data)) {
@@ -68,7 +72,8 @@ const TelegramClipboardCopyPage: React.FC = () => {
         previousItems.forEach(item => URL.revokeObjectURL(item.previewUrl));
         return [];
       });
-      status = error instanceof Error ? error.message : "Ошибка загрузки файлов";
+      status =
+        error instanceof Error ? error.message : "Ошибка загрузки файлов";
     }
 
     setStatusText(status);
@@ -91,7 +96,8 @@ const TelegramClipboardCopyPage: React.FC = () => {
       }
 
       const clipboardItems = items.map(
-        item => new ClipboardItem({ [item.blob.type || "image/png"]: item.blob })
+        item =>
+          new ClipboardItem({ [item.blob.type || "image/png"]: item.blob })
       );
       await navigator.clipboard.write(clipboardItems);
 
@@ -124,8 +130,8 @@ const TelegramClipboardCopyPage: React.FC = () => {
     }
 
     try {
-      const absoluteUrls = items.map(item =>
-        new URL(item.sourceUrl, window.location.href).href
+      const absoluteUrls = items.map(
+        item => new URL(item.sourceUrl, window.location.href).href
       );
       await navigator.clipboard.writeText(absoluteUrls.join("\n"));
 
@@ -145,11 +151,12 @@ const TelegramClipboardCopyPage: React.FC = () => {
     loadFiles();
   }, [loadFiles]);
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       items.forEach(item => URL.revokeObjectURL(item.previewUrl));
-    };
-  }, [items]);
+    },
+    [items]
+  );
 
   return (
     <div className={styles.page}>
@@ -163,7 +170,10 @@ const TelegramClipboardCopyPage: React.FC = () => {
           </header>
 
           <div className={styles.actions}>
-            <Button onClick={copyAllImages} disabled={isLoading || items.length === 0}>
+            <Button
+              onClick={copyAllImages}
+              disabled={isLoading || items.length === 0}
+            >
               Скопировать все
             </Button>
             <Button
@@ -173,7 +183,11 @@ const TelegramClipboardCopyPage: React.FC = () => {
             >
               Скопировать ссылки
             </Button>
-            <Button variant="outline-secondary" onClick={loadFiles} disabled={isLoading}>
+            <Button
+              variant="outline-secondary"
+              onClick={loadFiles}
+              disabled={isLoading}
+            >
               Обновить
             </Button>
           </div>
@@ -190,7 +204,9 @@ const TelegramClipboardCopyPage: React.FC = () => {
                     className={styles.image}
                     loading="lazy"
                   />
-                  <figcaption className={styles.caption}>{item.sourceUrl}</figcaption>
+                  <figcaption className={styles.caption}>
+                    {item.sourceUrl}
+                  </figcaption>
                 </figure>
               ))}
             </div>
