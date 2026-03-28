@@ -36,9 +36,7 @@ const DarkVeil = lazy(
 );
 const FaultyTerminal = lazy(
   () =>
-    import(
-      "react-bits/src/ts-default/Backgrounds/FaultyTerminal/FaultyTerminal"
-    )
+    import("react-bits/src/ts-default/Backgrounds/FaultyTerminal/FaultyTerminal")
 );
 const Galaxy = lazy(
   () => import("react-bits/src/ts-default/Backgrounds/Galaxy/Galaxy")
@@ -64,12 +62,7 @@ const Prism = lazy(
 );
 const PrismaticBurst = lazy(
   () =>
-    import(
-      "react-bits/src/ts-default/Backgrounds/PrismaticBurst/PrismaticBurst"
-    )
-);
-const Squares = lazy(
-  () => import("react-bits/src/ts-default/Backgrounds/Squares/Squares")
+    import("react-bits/src/ts-default/Backgrounds/PrismaticBurst/PrismaticBurst")
 );
 const Threads = lazy(
   () => import("react-bits/src/ts-default/Backgrounds/Threads/Threads")
@@ -84,11 +77,8 @@ const FloatingLines = lazy(
 const ColorBends = lazy(
   () => import("react-bits/src/ts-default/Backgrounds/ColorBends/ColorBends")
 );
-const GridScan = lazy(() =>
-  import("react-bits/src/ts-default/Backgrounds/GridScan/GridScan").then(
-    module => ({ default: module.GridScan })
-  )
-);
+// GridScan компонента может не существовать в этой версии react-bits
+// const GridScan = lazy(() => import("react-bits/src/ts-default/Backgrounds/GridScan/GridScan"));
 
 // ОПТИМИЗАЦИЯ: Загружаем музыку НЕ eager - только когда нужно
 const musicFiles = import.meta.glob("./music/*.{mp3,ogg,wav}", {
@@ -157,20 +147,6 @@ const backgroundConfigs = [
           lightSpread={1.2}
           rayLength={2.5}
           followMouse={false}
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "Squares",
-    element: (
-      <Suspense fallback={<div />}>
-        <Squares
-          direction="diagonal"
-          speed={1.0}
-          borderColor="#B19EEF"
-          squareSize={40}
-          hoverFillColor="rgba(177, 158, 239, 0.3)"
         />
       </Suspense>
     ),
@@ -330,33 +306,6 @@ const backgroundConfigs = [
           mouseInfluence={0}
           parallax={0.25}
           noise={0.05}
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "GridScan",
-    element: (
-      <Suspense fallback={<div />}>
-        <GridScan
-          enableWebcam={false}
-          showPreview={false}
-          linesColor="#311b4f"
-          scanColor="#5227FF"
-          scanOpacity={0.25}
-          gridScale={0.08}
-          lineThickness={1.2}
-          lineStyle="solid"
-          lineJitter={0.05}
-          enablePost={true}
-          bloomIntensity={0.4}
-          bloomThreshold={0.6}
-          bloomSmoothing={0.8}
-          chromaticAberration={0.0015}
-          noiseIntensity={0.02}
-          scanGlow={0.6}
-          scanSoftness={1.6}
-          scanDirection="pingpong"
         />
       </Suspense>
     ),
@@ -574,9 +523,6 @@ const Credits: React.FC = () => {
       } catch {
         // Автоплей может запретиться — пробуем с muted
         audioRef.current.muted = true;
-        await audioRef.current.play().catch(() => {
-          // ignore
-        });
         // Снимем mute как только можно
         setTimeout(() => {
           if (audioRef.current) audioRef.current.muted = false;

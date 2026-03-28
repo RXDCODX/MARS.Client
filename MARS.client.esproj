@@ -3,7 +3,8 @@
     <StartupCommand>yarn dev</StartupCommand>
     <JavaScriptTestRoot>src\</JavaScriptTestRoot>
     <JavaScriptTestFramework>Jest</JavaScriptTestFramework>
-    <!-- Allows the build (or compile) script located on package.json to run on Build -->
+    <!-- Отключаем автоматический build скрипт, чтобы избежать npm install конфликтов -->
+    <!-- Сборка клиента выполняется через yarn build вручную или через MARS.Server target -->
     <ShouldRunBuildScript>false</ShouldRunBuildScript>
     <!-- Folder where production build objects will be placed -->
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
