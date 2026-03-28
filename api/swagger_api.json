@@ -5880,6 +5880,84 @@
         }
       }
     },
+    "/api/TelegramClipboardCopy/{requestId}": {
+      "get": {
+        "tags": [
+          "TelegramClipboardCopy"
+        ],
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringArrayOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringArrayOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringArrayOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/TelegramClipboardCopy/complete/{requestId}": {
+      "post": {
+        "tags": [
+          "TelegramClipboardCopy"
+        ],
+        "parameters": [
+          {
+            "name": "requestId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/TelegramDiscordBridge/bindings": {
       "get": {
         "tags": [
@@ -10705,6 +10783,9 @@
     },
     {
       "name": "StreamArchive"
+    },
+    {
+      "name": "TelegramClipboardCopy"
     },
     {
       "name": "TelegramDiscordBridge"

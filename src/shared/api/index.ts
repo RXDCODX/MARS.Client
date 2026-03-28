@@ -26,6 +26,7 @@ export { ShikimoriRateLimiter } from "./http-clients/ShikimoriRateLimiter";
 export { SoundRequest } from "./http-clients/SoundRequest";
 export { SpotifyAuth } from "./http-clients/SpotifyAuth";
 export { StreamArchive } from "./http-clients/StreamArchive";
+export { TelegramClipboardCopy } from "./http-clients/TelegramClipboardCopy";
 export { TelegramDiscordBridge } from "./http-clients/TelegramDiscordBridge";
 export { TestLogger } from "./http-clients/TestLogger";
 export { TtsVoice } from "./http-clients/TtsVoice";
