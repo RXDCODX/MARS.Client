@@ -16,6 +16,10 @@ import {
   RxdcodxViewers,
   TelegramusHubSignalRContext,
 } from "@/shared/api";
+import {
+  allReactBitsBackgroundNames,
+  reactBitsBackgroundComponentRegistry,
+} from "@/shared/components/ReactBitsBackgroundsLegacy/registry";
 import { useTwitchStore } from "@/shared/twitchStore/twitchStore";
 import Announce from "@/shared/Utils/Announce/Announce";
 
@@ -24,9 +28,6 @@ import styles from "./Credits.module.scss";
 // ОПТИМИЗАЦИЯ: Lazy loading для тяжелых анимаций - загружаем только когда нужно
 const ElectricBorder = lazy(
   () => import("@/shared/components/ElectricBorderLegacy")
-);
-const ReactBitsBackgroundLegacy = lazy(
-  () => import("@/shared/components/ReactBitsBackgroundLegacy")
 );
 
 // ОПТИМИЗАЦИЯ: Загружаем музыку НЕ eager - только когда нужно
@@ -42,58 +43,19 @@ const musicUrls = Object.keys(musicFiles).sort();
 // Ключ для сохранения индекса трека между запусками
 const MUSIC_INDEX_STORAGE_KEY = "credits-music-index";
 
-const allReactBitsBackgroundNames = [
-  "Aurora",
-  "Balatro",
-  "Ballpit",
-  "Beams",
-  "ColorBends",
-  "DarkVeil",
-  "Dither",
-  "DotGrid",
-  "EvilEye",
-  "FaultyTerminal",
-  "FloatingLines",
-  "Galaxy",
-  "GradientBlinds",
-  "Grainient",
-  "GridDistortion",
-  "GridMotion",
-  "GridScan",
-  "Hyperspeed",
-  "Iridescence",
-  "LetterGlitch",
-  "LightPillar",
-  "LightRays",
-  "Lightning",
-  "LineWaves",
-  "LiquidChrome",
-  "LiquidEther",
-  "Orb",
-  "Particles",
-  "PixelBlast",
-  "PixelSnow",
-  "Plasma",
-  "Prism",
-  "PrismaticBurst",
-  "Radar",
-  "RippleGrid",
-  "ShapeGrid",
-  "Silk",
-  "SoftAurora",
-  "Threads",
-  "Waves",
-];
+// Локально завендоренный каталог всех ts-default background-компонентов react-bits
+const backgroundConfigs = allReactBitsBackgroundNames.map(name => {
+  const BackgroundComponent = reactBitsBackgroundComponentRegistry[name];
 
-// ОПТИМИЗАЦИЯ: все react-bits фоны из ts-default идут через локальный легаси-рендер
-const backgroundConfigs = allReactBitsBackgroundNames.map(name => ({
-  name,
-  element: (
-    <Suspense fallback={<div />}>
-      <ReactBitsBackgroundLegacy name={name} />
-    </Suspense>
-  ),
-}));
+  return {
+    name,
+    element: (
+      <Suspense fallback={<div />}>
+        <BackgroundComponent />
+      </Suspense>
+    ),
+  };
+});
 
 // Импортируем иконки через import.meta.glob
 const iconFiles = import.meta.glob("./icons/*.png", {
