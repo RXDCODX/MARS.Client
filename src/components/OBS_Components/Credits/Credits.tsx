@@ -25,6 +25,9 @@ import styles from "./Credits.module.scss";
 const ElectricBorder = lazy(
   () => import("@/shared/components/ElectricBorderLegacy")
 );
+const BeamsLegacy = lazy(() => import("@/shared/components/BeamsLegacy"));
+const SilkLegacy = lazy(() => import("@/shared/components/SilkLegacy"));
+const GridScanLegacy = lazy(() => import("@/shared/components/GridScanLegacy"));
 const Aurora = lazy(
   () => import("react-bits/src/ts-default/Backgrounds/Aurora/Aurora")
 );
@@ -77,8 +80,7 @@ const FloatingLines = lazy(
 const ColorBends = lazy(
   () => import("react-bits/src/ts-default/Backgrounds/ColorBends/ColorBends")
 );
-// GridScan компонента может не существовать в этой версии react-bits
-// const GridScan = lazy(() => import("react-bits/src/ts-default/Backgrounds/GridScan/GridScan"));
+// Легаси-фоны: в текущей версии react-bits часть старых фонов отсутствует/ломает рендер
 
 // ОПТИМИЗАЦИЯ: Загружаем музыку НЕ eager - только когда нужно
 const musicFiles = import.meta.glob("./music/*.{mp3,ogg,wav}", {
@@ -94,8 +96,53 @@ const musicUrls = Object.keys(musicFiles).sort();
 const MUSIC_INDEX_STORAGE_KEY = "credits-music-index";
 
 // ОПТИМИЗАЦИЯ: Конфигурации фонов теперь возвращают JSX динамически
-// Бекграунды под названием Beams и Silk вместе вызывают баг не рендера app.tsx
 const backgroundConfigs = [
+  {
+    name: "Beams",
+    element: (
+      <Suspense fallback={<div />}>
+        <BeamsLegacy
+          beamWidth={2.6}
+          beamHeight={15}
+          beamNumber={12}
+          lightColor="#FF9FFC"
+          speed={2}
+          noiseIntensity={1.5}
+          scale={0.35}
+          rotation={18}
+        />
+      </Suspense>
+    ),
+  },
+  {
+    name: "Silk",
+    element: (
+      <Suspense fallback={<div />}>
+        <SilkLegacy
+          speed={5}
+          scale={1}
+          color="#5227FF"
+          noiseIntensity={1.4}
+          rotation={0.35}
+        />
+      </Suspense>
+    ),
+  },
+  {
+    name: "GridScan",
+    element: (
+      <Suspense fallback={<div />}>
+        <GridScanLegacy
+          lineThickness={1.1}
+          linesColor="#392e4e"
+          scanColor="#FF9FFC"
+          scanOpacity={0.45}
+          gridScale={0.12}
+          noiseIntensity={0.03}
+        />
+      </Suspense>
+    ),
+  },
   {
     name: "Aurora",
     element: (
