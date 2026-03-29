@@ -19,14 +19,13 @@
 .heroTitle {
   font-size: 3rem;
   font-weight: 700;
-  margin: 0 0 20px 0;
+  margin: 0 0 20px;
   text-shadow: var(--text-shadow-medium);
 }
 
 .heroSubtitle {
   font-size: 1.2rem;
   opacity: 0.9;
-  margin: 0;
   max-width: 600px;
   margin: 0 auto;
   text-shadow: var(--text-shadow-light);
@@ -48,7 +47,7 @@
   h2 {
     font-size: 2.5rem;
     font-weight: 700;
-    margin: 0 0 20px 0;
+    margin: 0 0 20px;
     color: var(--bs-body-color);
     text-shadow: var(--text-shadow-medium);
   }
@@ -57,7 +56,7 @@
     font-size: 1.1rem;
     color: var(--bs-body-color);
     line-height: 1.6;
-    margin: 0 0 40px 0;
+    margin: 0 0 40px;
     text-shadow: var(--text-shadow-light);
   }
 }
@@ -103,7 +102,7 @@
   h3 {
     font-size: 1.2rem;
     font-weight: 600;
-    margin: 0 0 5px 0;
+    margin: 0 0 5px;
     color: var(--bs-body-color);
     text-shadow: var(--text-shadow-light);
   }
@@ -126,14 +125,14 @@
   h2 {
     font-size: 2rem;
     font-weight: 700;
-    margin: 0 0 15px 0;
+    margin: 0 0 15px;
     color: var(--bs-body-color);
     text-shadow: var(--text-shadow-light);
   }
 
   > p {
     color: var(--bs-body-color);
-    margin: 0 0 30px 0;
+    margin: 0 0 30px;
     line-height: 1.6;
     text-shadow: var(--text-shadow-light);
   }
@@ -171,7 +170,7 @@
     &:focus {
       outline: none;
       border-color: var(--bs-primary);
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      box-shadow: 0 0 0 3px rgb(102 126 234 / 10%);
     }
 
     &::placeholder {
@@ -239,7 +238,7 @@
     text-align: center;
     font-size: 2.5rem;
     font-weight: 700;
-    margin: 0 0 60px 0;
+    margin: 0 0 60px;
     color: var(--bs-body-color);
     text-shadow: var(--text-shadow-medium);
   }
@@ -261,7 +260,7 @@
   h3 {
     font-size: 1.3rem;
     font-weight: 600;
-    margin: 0 0 15px 0;
+    margin: 0 0 15px;
     color: var(--bs-body-color);
     text-shadow: var(--text-shadow-light);
   }
@@ -275,7 +274,7 @@
 }
 
 // Адаптивность
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .heroTitle {
     font-size: 2.5rem;
   }
@@ -300,7 +299,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .hero {
     padding: 60px 0;
   }

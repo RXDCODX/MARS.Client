@@ -4,7 +4,7 @@
   background: var(--bs-body-bg);
   padding: 1rem 0;
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     padding: 0.5rem 0;
   }
 }
@@ -28,7 +28,7 @@
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 25px rgb(0 0 0 / 15%);
     border-color: var(--bs-primary);
   }
 
@@ -130,7 +130,7 @@
   background: white;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 10px rgb(0 0 0 / 10%);
   margin-bottom: 2rem;
 
   .input-group {
@@ -195,7 +195,7 @@
   gap: 1.5rem;
   margin-top: 2rem;
 
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     grid-template-columns: 1fr;
     gap: 1.25rem;
   }
@@ -240,7 +240,7 @@
     align-items: center;
     gap: 2rem;
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
       flex-direction: column;
       text-align: center;
       gap: 1rem;
@@ -251,7 +251,7 @@
     width: 80px;
     height: 80px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgb(255 255 255 / 20%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -266,7 +266,7 @@
       font-weight: 700;
       margin-bottom: 0.5rem;
 
-      @media (max-width: 768px) {
+      @media (width <= 768px) {
         font-size: 2rem;
       }
     }
@@ -287,7 +287,7 @@
   transition: all 0.3s ease;
 
   &:hover {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgb(0 0 0 / 10%);
   }
 
   .card-header {
@@ -351,7 +351,7 @@
 
       &:focus {
         border-color: var(--bs-primary);
-        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.15);
+        box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 15%);
         transform: translateY(-1px);
       }
 
@@ -386,7 +386,7 @@
   .modal-content {
     border-radius: 12px;
     border: none;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 40px rgb(0 0 0 / 20%);
   }
 
   .modal-header {
@@ -407,7 +407,7 @@
       width: 64px;
       height: 64px;
       border-radius: 50%;
-      background: rgba(220, 53, 69, 0.1);
+      background: rgb(220 53 69 / 10%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -430,8 +430,8 @@
     }
 
     .warning-alert {
-      background: rgba(255, 193, 7, 0.1);
-      border: 1px solid rgba(255, 193, 7, 0.3);
+      background: rgb(255 193 7 / 10%);
+      border: 1px solid rgb(255 193 7 / 30%);
       border-radius: 8px;
       padding: 1rem;
       margin-bottom: 1.5rem;
@@ -456,7 +456,7 @@
 }
 
 // Адаптивность
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .randomMemePage {
     padding: 0.5rem;
   }
@@ -500,7 +500,7 @@
   }
 }
 
-@media (max-width: 576px) {
+@media (width <= 576px) {
   .statsCard .display-4 {
     font-size: 2rem;
   }
@@ -587,7 +587,7 @@
   transition: all 0.3s ease;
 
   &:hover {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgb(0 0 0 / 10%);
   }
 
   .card-header {
@@ -601,7 +601,7 @@
     max-height: 500px;
     max-width: 100%;
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgb(0 0 0 / 10%);
     transition: transform 0.3s ease;
 
     &:hover {
@@ -614,7 +614,7 @@
     max-height: 500px;
     max-width: 100%;
     border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 15px rgb(0 0 0 / 10%);
     transition: transform 0.3s ease;
 
     &:hover {
@@ -627,7 +627,7 @@
     width: 100%;
     max-width: 400px;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 10px rgb(0 0 0 / 10%);
   }
 
   .memeActions {
@@ -683,7 +683,7 @@
 }
 
 // Адаптивность для отображения мема
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .memeDisplayCard {
     .memeActions {
       flex-direction: column;
@@ -701,7 +701,7 @@
   }
 }
 
-@media (max-width: 576px) {
+@media (width <= 576px) {
   .memeDisplayCard {
     .memeImage {
       max-height: 250px;

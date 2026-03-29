@@ -2,8 +2,8 @@
 
 // Переменные для новой верстки
 $primary-color: #3f00ff;
-$secondary-color: #ffffff;
-$background-color: rgba(0, 0, 0, 0.8);
+$secondary-color: #fff;
+$background-color: rgb(0 0 0 / 80%);
 $border-color: #3f00ff;
 $border-radius: 12px;
 $shadow-blur: 8px;
@@ -40,9 +40,11 @@ $font-size-small: 14px;
   transform: translateX(-50%);
   background: $background-color;
   border: 2px solid $border-color;
+
   // border-radius: $border-radius;
   padding: $spacing $spacing * 2;
   box-shadow: 0 4px 20px rgba($primary-color, 0.4);
+
   // clip-path: polygon(
   //   0 0,
   //   100% 0,
@@ -128,6 +130,7 @@ $font-size-small: 14px;
 // Левый игрок
 .playerLeft {
   @extend .playerBar;
+
   flex-direction: row;
 
   .score {
@@ -151,6 +154,7 @@ $font-size-small: 14px;
 // Правый игрок
 .playerRight {
   @extend .playerBar;
+
   flex-direction: row;
 
   .flag {
@@ -176,7 +180,7 @@ $font-size-small: 14px;
   h2 {
     margin: 0;
     font-size: $font-size-medium;
-    -webkit-text-size-adjust: auto;
+    text-size-adjust: auto;
     font-weight: 600;
     color: $secondary-color;
     line-height: 1.2;
@@ -209,7 +213,7 @@ $font-size-small: 14px;
     font-size: $font-size-large;
     font-weight: 700;
     color: $secondary-color;
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 4px rgb(0 0 0 / 30%);
   }
 }
 
@@ -241,7 +245,7 @@ $font-size-small: 14px;
   height: 25px;
   border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 40%);
   flex-shrink: 0;
 
   img {
@@ -253,22 +257,22 @@ $font-size-small: 14px;
 
 // Статусы игроков
 .winner {
-  border-color: #00ff00;
-  box-shadow: 0 4px 20px rgba(#00ff00, 0.6);
+  border-color: #0f0;
+  box-shadow: 0 4px 20px rgba(#0f0, 0.6);
 
   .score {
     background: linear-gradient(
       135deg,
-      #00ff00,
-      color.adjust(#00ff00, $lightness: -15%)
+      #0f0,
+      color.adjust(#0f0, $lightness: -15%)
     );
-    box-shadow: 0 4px 15px rgba(#00ff00, 0.6);
+    box-shadow: 0 4px 15px rgba(#0f0, 0.6);
   }
 }
 
 .loser {
-  border-color: #ff0000;
-  box-shadow: 0 4px 20px rgba(#ff0000, 0.4);
+  border-color: #f00;
+  box-shadow: 0 4px 20px rgba(#f00, 0.4);
   opacity: 0.7;
 }
 
@@ -305,7 +309,7 @@ $font-size-small: 14px;
 }
 
 // Адаптивность
-@media (max-width: 1200px) {
+@media (width <= 1200px) {
   .playersContainer {
     padding: 0 $spacing * 2;
   }
@@ -315,7 +319,7 @@ $font-size-small: 14px;
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .playersContainer {
     flex-direction: column;
     gap: $spacing;

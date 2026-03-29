@@ -35,9 +35,8 @@
 
   .badges {
     display: inline-flex;
-    flex-direction: row;
+    flex-flow: row nowrap;
     align-items: center;
-    flex-wrap: nowrap;
     white-space: nowrap;
     gap: 4px;
     flex-shrink: 0;
@@ -69,7 +68,6 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 4px;
-  word-wrap: break-word;
   word-break: break-word; // переносим длинные слова
   overflow-wrap: break-word; // дополнительная поддержка переноса
   font-size: 2em;

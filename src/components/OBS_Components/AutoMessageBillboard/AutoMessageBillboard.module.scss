@@ -31,7 +31,7 @@
   font-size: 16px;
   line-height: 1.4;
   text-align: center;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  border: 2px solid rgb(255 255 255 / 20%);
   overflow: visible;
   white-space: break-spaces;
 
@@ -39,10 +39,7 @@
   &::before {
     content: "";
     position: absolute;
-    top: -2px;
-    left: -2px;
-    right: -2px;
-    bottom: -2px;
+    inset: -2px;
     background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
     border-radius: 17px;
     z-index: -1;
@@ -64,15 +61,15 @@
 }
 
 .message {
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   hyphens: auto;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+  text-shadow: 1px 1px 2px rgb(0 0 0 / 30%);
   margin: 0;
   padding: 0;
 
   // Добавляем эффект свечения для текста
   &::selection {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgb(255 255 255 / 30%);
   }
 
   // Стили для эмодзи - используем глобальный селектор только для эмодзи
@@ -92,7 +89,7 @@
 }
 
 // Медиа-запросы для адаптивности
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .billboard {
     width: 280px;
     font-size: 14px;
@@ -100,7 +97,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .billboard {
     width: 250px;
     font-size: 13px;
@@ -119,7 +116,7 @@
 .testTitle {
   font-size: 2rem;
   font-weight: 700;
-  margin: 0 0 20px 0;
+  margin: 0 0 20px;
   color: #333;
   text-align: center;
 }
@@ -152,7 +149,7 @@
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgb(0 0 0 / 20%);
   }
 
   &.active {

@@ -7,10 +7,10 @@
   height: auto;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
   border: 1px solid #e0e0e0;
   z-index: 1000;
-  font-family: "InterTight", sans-serif;
+  font-family: InterTight, sans-serif;
 }
 
 .quizContent {
@@ -33,7 +33,7 @@
 }
 
 .timerValue {
-  -webkit-text-size-adjust: auto;
+  text-size-adjust: auto;
   font-weight: 600;
   color: #333;
   margin-left: 8px;
@@ -65,7 +65,7 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  -webkit-text-size-adjust: auto;
+  text-size-adjust: auto;
 }
 
 .choicesContainer {
@@ -81,7 +81,7 @@
   border-radius: 8px;
   background: white;
   color: #333;
-  -webkit-text-size-adjust: auto;
+  text-size-adjust: auto;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -92,8 +92,8 @@
   align-items: center;
   justify-content: center;
   box-shadow:
-    inset 0 -1px 0 rgba(0, 0, 0, 0.03),
-    0 1px 2px rgba(0, 0, 0, 0.08);
+    inset 0 -1px 0 rgb(0 0 0 / 3%),
+    0 1px 2px rgb(0 0 0 / 8%);
 
   &:hover:not(:disabled) {
     border-color: #ff6b35;
@@ -109,14 +109,14 @@
     border-color: #4caf50;
     background: #4caf50;
     color: white;
-    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+    box-shadow: 0 2px 8px rgb(76 175 80 / 30%);
   }
 
   &.incorrect {
     border-color: #f44336;
     background: #f44336;
     color: white;
-    box-shadow: 0 2px 8px rgba(244, 67, 54, 0.3);
+    box-shadow: 0 2px 8px rgb(244 67 54 / 30%);
   }
 }
 
@@ -143,7 +143,7 @@
   font-size: 10px;
   font-weight: 600;
   color: #333;
-  font-family: "InterTight", sans-serif;
+  font-family: InterTight, sans-serif;
 }
 
 .scoreContainer {
@@ -158,7 +158,7 @@
   background: #f5f5f5;
   padding: 4px 8px;
   border-radius: 12px;
-  font-family: "InterTight", sans-serif;
+  font-family: InterTight, sans-serif;
 }
 
 .resultMessage {
@@ -194,14 +194,14 @@
   margin-top: 20px;
 
   h3 {
-    margin: 0 0 16px 0;
+    margin: 0 0 16px;
     color: #333;
     font-size: 20px;
     font-weight: 700;
   }
 
   p {
-    margin: 0 0 20px 0;
+    margin: 0 0 20px;
     color: #666;
     font-size: 18px;
     font-weight: 600;
@@ -224,7 +224,7 @@
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(255, 107, 53, 0.3);
+    box-shadow: 0 6px 20px rgb(255 107 53 / 30%);
   }
 
   &:active {
@@ -270,7 +270,7 @@
 }
 
 // Адаптивность
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .quizContainer {
     width: 90vw;
     margin: 20px;

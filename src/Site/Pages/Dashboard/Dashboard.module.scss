@@ -14,7 +14,6 @@
     color: var(--bs-body-color);
     margin-bottom: 8px;
     background: var(--primary-gradient);
-    -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     text-shadow: var(--text-shadow-medium);
@@ -81,18 +80,19 @@
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
 }
 
-@media (max-width: 1024px) {
+@media (width <= 1024px) {
   .mainContent {
     grid-template-columns: 1fr;
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .dashboard {
     padding: 16px;
   }

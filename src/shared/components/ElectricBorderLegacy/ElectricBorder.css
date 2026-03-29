@@ -1,6 +1,7 @@
 .electric-border {
   --electric-light-color: oklch(from var(--electric-border-color) l c h);
   --eb-border-width: 2px;
+
   position: relative;
   border-radius: inherit;
   overflow: visible;
@@ -50,7 +51,7 @@
 
 .eb-glow-1 {
   border: var(--eb-border-width) solid
-    oklch(from var(--electric-border-color) l c h / 0.6);
+    oklch(from var(--electric-border-color) l c h / 60%);
   opacity: 0.5;
   filter: blur(calc(0.5px + (var(--eb-border-width) * 0.25)));
 }

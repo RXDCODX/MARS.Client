@@ -1,5 +1,6 @@
 // Bootstrap CSS
 @use "../styles/bootstrap";
+
 // УДАЛЁН: bootstrap-icons CSS - используем только нужные иконки через react-bootstrap-icons
 
 /* Применяем стили только если не в Storybook */
@@ -24,32 +25,32 @@ html:not([data-storybook]) {
   --bs-dark: #212529;
 
   // Фоновые цвета
-  --bs-body-bg: #ffffff;
+  --bs-body-bg: #fff;
   --bs-body-color: #212529;
   --bs-body-bg-rgb: 255, 255, 255;
   --bs-body-color-rgb: 33, 37, 41;
 
   // Цвета компонентов
-  --bs-card-bg: #ffffff;
-  --bs-card-border-color: rgba(0, 0, 0, 0.125);
+  --bs-card-bg: #fff;
+  --bs-card-border-color: rgb(0 0 0 / 12.5%);
   --bs-border-color: #dee2e6;
-  --bs-border-color-translucent: rgba(0, 0, 0, 0.125);
+  --bs-border-color-translucent: rgb(0 0 0 / 12.5%);
 
   // Тени
-  --bs-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
-  --bs-box-shadow-sm: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.075);
-  --bs-box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.175);
+  --bs-box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 7.5%);
+  --bs-box-shadow-sm: 0 0.0625rem 0.125rem rgb(0 0 0 / 7.5%);
+  --bs-box-shadow-lg: 0 1rem 3rem rgb(0 0 0 / 17.5%);
 
   // Тени для текста
-  --text-shadow-light: 0 1px 2px rgba(0, 0, 0, 0.1);
-  --text-shadow-medium: 0 2px 4px rgba(0, 0, 0, 0.15);
-  --text-shadow-heavy: 0 4px 8px rgba(0, 0, 0, 0.2);
+  --text-shadow-light: 0 1px 2px rgb(0 0 0 / 10%);
+  --text-shadow-medium: 0 2px 4px rgb(0 0 0 / 15%);
+  --text-shadow-heavy: 0 4px 8px rgb(0 0 0 / 20%);
 
   // Градиенты
   --bs-gradient: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.15),
-    rgba(255, 255, 255, 0)
+    rgb(255 255 255 / 15%),
+    rgb(255 255 255 / 0%)
   );
   --primary-gradient: linear-gradient(
     135deg,
@@ -58,8 +59,8 @@ html:not([data-storybook]) {
   );
 
   // Дополнительные цвета для тем
-  --bs-white: #ffffff;
-  --bs-black: #000000;
+  --bs-white: #fff;
+  --bs-black: #000;
   --bs-gray-100: #f8f9fa;
   --bs-gray-200: #e9ecef;
   --bs-gray-300: #dee2e6;
@@ -86,8 +87,8 @@ html:not([data-storybook]) {
   --site-text-secondary: #6c757d;
   --site-text-tertiary: #adb5bd;
   --site-text-muted: #adb5bd;
-  --site-text-light: #ffffff;
-  --site-text-dark: #000000;
+  --site-text-light: #fff;
+  --site-text-dark: #000;
   --site-text-accent: #667eea;
   --site-text-success: #198754;
   --site-text-warning: #ffc107;
@@ -95,11 +96,11 @@ html:not([data-storybook]) {
   --site-text-info: #0dcaf0;
 
   // Цвета фонов (автоматически инвертируются в темной теме)
-  --site-bg-primary: #ffffff;
+  --site-bg-primary: #fff;
   --site-bg-secondary: #f8f9fa;
   --site-bg-tertiary: #e9ecef;
-  --site-bg-card: #ffffff;
-  --site-bg-overlay: rgba(255, 255, 255, 0.9);
+  --site-bg-card: #fff;
+  --site-bg-overlay: rgb(255 255 255 / 90%);
   --site-bg-accent: #667eea;
   --site-bg-success: #00ff8c;
   --site-bg-warning: #fbff00;
@@ -116,18 +117,18 @@ html:not([data-storybook]) {
   --site-border-info: #0dcaf0;
 
   // Цвета теней (автоматически инвертируются в темной теме)
-  --site-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --site-shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.15);
-  --site-shadow-heavy: 0 10px 15px rgba(0, 0, 0, 0.2);
-  --site-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+  --site-shadow-light: 0 1px 3px rgb(0 0 0 / 10%);
+  --site-shadow-medium: 0 4px 6px rgb(0 0 0 / 15%);
+  --site-shadow-heavy: 0 10px 15px rgb(0 0 0 / 20%);
+  --site-shadow-inset: inset 0 1px 2px rgb(0 0 0 / 10%);
 
   // Цвета для hover эффектов
-  --site-hover-bg: rgba(0, 0, 0, 0.05);
+  --site-hover-bg: rgb(0 0 0 / 5%);
   --site-hover-text: #495057;
   --site-hover-border: #adb5bd;
 
   // Цвета для фокуса
-  --site-focus-ring: rgba(102, 126, 234, 0.25);
+  --site-focus-ring: rgb(102 126 234 / 25%);
   --site-focus-border: #667eea;
 
   // Цвета для scroll bars
@@ -159,25 +160,25 @@ html:not([data-storybook]) {
 
   // Цвета компонентов для темной темы
   --bs-card-bg: #343a40;
-  --bs-card-border-color: rgba(255, 255, 255, 0.125);
+  --bs-card-border-color: rgb(255 255 255 / 12.5%);
   --bs-border-color: #495057;
-  --bs-border-color-translucent: rgba(255, 255, 255, 0.125);
+  --bs-border-color-translucent: rgb(255 255 255 / 12.5%);
 
   // Тени для темной темы
-  --bs-box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.3);
-  --bs-box-shadow-sm: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.3);
-  --bs-box-shadow-lg: 0 1rem 3rem rgba(0, 0, 0, 0.5);
+  --bs-box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 30%);
+  --bs-box-shadow-sm: 0 0.0625rem 0.125rem rgb(0 0 0 / 30%);
+  --bs-box-shadow-lg: 0 1rem 3rem rgb(0 0 0 / 50%);
 
   // Тени для текста в темной теме
-  --text-shadow-light: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --text-shadow-medium: 0 2px 4px rgba(0, 0, 0, 0.4);
-  --text-shadow-heavy: 0 4px 8px rgba(0, 0, 0, 0.5);
+  --text-shadow-light: 0 1px 2px rgb(0 0 0 / 30%);
+  --text-shadow-medium: 0 2px 4px rgb(0 0 0 / 40%);
+  --text-shadow-heavy: 0 4px 8px rgb(0 0 0 / 50%);
 
   // Градиенты для темной темы
   --bs-gradient: linear-gradient(
     180deg,
-    rgba(255, 255, 255, 0.15),
-    rgba(255, 255, 255, 0)
+    rgb(255 255 255 / 15%),
+    rgb(255 255 255 / 0%)
   );
   --primary-gradient: linear-gradient(
     135deg,
@@ -187,7 +188,7 @@ html:not([data-storybook]) {
 
   // Дополнительные цвета для темной темы
   --bs-white: #f8f9fa;
-  --bs-black: #ffffff;
+  --bs-black: #fff;
   --bs-gray-100: #212529;
   --bs-gray-200: #343a40;
   --bs-gray-300: #495057;
@@ -214,8 +215,8 @@ html:not([data-storybook]) {
   --site-text-secondary: #adb5bd;
   --site-text-tertiary: #6c757d;
   --site-text-muted: #6c757d;
-  --site-text-light: #000000;
-  --site-text-dark: #ffffff;
+  --site-text-light: #000;
+  --site-text-dark: #fff;
   --site-text-accent: #7c8df8;
   --site-text-success: #20c997;
   --site-text-warning: #ffc107;
@@ -227,7 +228,7 @@ html:not([data-storybook]) {
   --site-bg-secondary: #343a40;
   --site-bg-tertiary: #495057;
   --site-bg-card: #343a40;
-  --site-bg-overlay: rgba(33, 37, 41, 0.9);
+  --site-bg-overlay: rgb(33 37 41 / 90%);
   --site-bg-accent: #7c8df8;
   --site-bg-success: #0f5132;
   --site-bg-warning: #dfa700;
@@ -244,18 +245,18 @@ html:not([data-storybook]) {
   --site-border-info: #0dcaf0;
 
   // Цвета теней (инвертированы)
-  --site-shadow-light: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --site-shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.4);
-  --site-shadow-heavy: 0 10px 15px rgba(0, 0, 0, 0.5);
-  --site-shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.3);
+  --site-shadow-light: 0 1px 3px rgb(0 0 0 / 30%);
+  --site-shadow-medium: 0 4px 6px rgb(0 0 0 / 40%);
+  --site-shadow-heavy: 0 10px 15px rgb(0 0 0 / 50%);
+  --site-shadow-inset: inset 0 1px 2px rgb(0 0 0 / 30%);
 
   // Цвета для hover эффектов (инвертированы)
-  --site-hover-bg: rgba(255, 255, 255, 0.05);
+  --site-hover-bg: rgb(255 255 255 / 5%);
   --site-hover-text: #ced4da;
   --site-hover-border: #6c757d;
 
   // Цвета для фокуса (инвертированы)
-  --site-focus-ring: rgba(124, 141, 248, 0.25);
+  --site-focus-ring: rgb(124 141 248 / 25%);
   --site-focus-border: #7c8df8;
 
   // Цвета для scroll bars (инвертированы)
@@ -281,6 +282,7 @@ body[data-theme="dark"] {
   --table-header-bg: var(--bs-light);
   --table-border: var(--bs-border-color);
   --accent: var(--bs-primary);
+
   color: var(--bs-body-color) !important;
 }
 
@@ -386,7 +388,6 @@ h6,
 p,
 span,
 div {
-  word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
   max-width: 100%;
@@ -431,7 +432,6 @@ div {
 
 /* Исправление для текста, который улетает за границы */
 .text-overflow-fix {
-  word-wrap: break-word;
   overflow-wrap: break-word;
   hyphens: auto;
 }
@@ -475,6 +475,7 @@ div {
 }
 
 /* ===== УТИЛИТЫ ДЛЯ КОМПОНЕНТОВ САЙТА ===== */
+
 /* Утилиты для текста */
 .site-text-primary {
   color: var(--site-text-primary) !important;
@@ -642,7 +643,7 @@ div {
   background: var(--site-scrollbar-thumb-hover) !important;
 }
 
-@media (max-width: 992px) {
+@media (width <= 992px) {
   .row {
     gap: 1rem;
   }

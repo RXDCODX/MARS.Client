@@ -260,7 +260,7 @@
       }
     }
 
-    &:not(.btn-primary):not(.btn-danger) {
+    &:not(.btn-primary, .btn-danger) {
       background: var(--site-bg-card);
       border-color: var(--site-border-primary);
       color: var(--site-text-primary);
@@ -308,7 +308,7 @@
   }
 
   // Адаптивность
-  @media (max-width: 768px) {
+  @media (width <= 768px) {
     padding: 16px;
 
     .header {
@@ -336,7 +336,7 @@
     }
   }
 
-  @media (max-width: 480px) {
+  @media (width <= 480px) {
     padding: 12px;
 
     .header {

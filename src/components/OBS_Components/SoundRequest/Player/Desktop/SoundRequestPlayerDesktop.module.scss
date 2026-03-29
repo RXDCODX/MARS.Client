@@ -9,12 +9,12 @@
   left: 50%;
   transform: translate(-50%, -50%);
   box-sizing: border-box;
-  background: rgba(0, 0, 0, 0.85);
+  background: rgb(0 0 0 / 85%);
   border-radius: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgb(255 255 255 / 10%);
   box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+    0 20px 60px rgb(0 0 0 / 50%),
+    0 0 0 1px rgb(255 255 255 / 5%) inset;
   backdrop-filter: blur(10px);
 }
 
@@ -38,12 +38,13 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
+
   /* важен для корректного скролла вложенных списков */
-  background: rgba(255, 255, 255, 0.02);
+  background: rgb(255 255 255 / 2%);
   border-radius: 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgb(255 255 255 / 8%);
   padding: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 12px rgb(0 0 0 / 30%);
 }
 
 .leftCol.reversedMode,
@@ -70,18 +71,18 @@
   }
 
   &::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgb(255 255 255 / 5%);
     border-radius: 4px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
+    background: rgb(255 255 255 / 20%);
     border-radius: 4px;
     border: 2px solid transparent;
     background-clip: padding-box;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.3);
+      background: rgb(255 255 255 / 30%);
       background-clip: padding-box;
     }
   }
@@ -93,35 +94,35 @@
   align-items: center;
   padding: 0.75rem;
   border-radius: 0.75rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background: rgb(255 255 255 / 5%);
+  border: 1px solid rgb(255 255 255 / 10%);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
   transition: all 0.2s ease;
 
   &.current {
     color: white !important;
-    background: rgba(0, 150, 136, 1);
-    border-color: rgba(255, 255, 255, 0.5);
+    background: rgb(0 150 136 / 100%);
+    border-color: rgb(255 255 255 / 50%);
     box-shadow:
-      0 4px 16px rgba(0, 150, 136, 0.3),
-      0 0 0 1px rgba(0, 150, 136, 0.2) inset;
+      0 4px 16px rgb(0 150 136 / 30%),
+      0 0 0 1px rgb(0 150 136 / 20%) inset;
 
     &:hover,
     &.pairHovered {
-      background: rgba(0, 150, 136, 1);
-      border-color: rgba(255, 255, 255, 0.5);
+      background: rgb(0 150 136 / 100%);
+      border-color: rgb(255 255 255 / 50%);
       box-shadow:
-        0 4px 16px rgba(0, 150, 136, 0.3),
-        0 0 0 1px rgba(0, 150, 136, 0.2) inset;
+        0 4px 16px rgb(0 150 136 / 30%),
+        0 0 0 1px rgb(0 150 136 / 20%) inset;
       transform: translateY(-2px);
     }
   }
 
   &:hover,
   &.pairHovered {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background: rgb(255 255 255 / 8%);
+    border-color: rgb(255 255 255 / 15%);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 30%);
     transform: translateY(-2px);
   }
 
@@ -134,11 +135,11 @@
   position: sticky;
   top: 0;
   z-index: 2;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgb(0 0 0 / 70%);
   backdrop-filter: blur(8px);
   padding-bottom: 0.5rem;
   margin-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgb(255 255 255 / 10%);
 }
 
 .thumb {
@@ -147,7 +148,7 @@
   border-radius: 0.5rem;
   background: var(--bs-dark);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 30%);
   position: relative;
 
   img {
@@ -159,8 +160,8 @@
   &.thumbPlaying {
     border: 2px solid var(--bs-success);
     box-shadow:
-      0 0 20px rgba(0, 255, 0, 0.3),
-      0 2px 8px rgba(0, 0, 0, 0.3);
+      0 0 20px rgb(0 255 0 / 30%),
+      0 2px 8px rgb(0 0 0 / 30%);
     animation: pulseBorder 2s ease-in-out infinite;
   }
 }
@@ -169,14 +170,14 @@
   0%,
   100% {
     box-shadow:
-      0 0 20px rgba(0, 255, 0, 0.3),
-      0 2px 8px rgba(0, 0, 0, 0.3);
+      0 0 20px rgb(0 255 0 / 30%),
+      0 2px 8px rgb(0 0 0 / 30%);
   }
 
   50% {
     box-shadow:
-      0 0 30px rgba(0, 255, 0, 0.6),
-      0 2px 8px rgba(0, 0, 0, 0.3);
+      0 0 30px rgb(0 255 0 / 60%),
+      0 2px 8px rgb(0 0 0 / 30%);
   }
 }
 
@@ -186,7 +187,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgb(0 0 0 / 40%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -211,7 +212,7 @@
   background: var(--bs-success);
   border-radius: 2px;
   animation: equalizerBounce 0.8s ease-in-out infinite;
-  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+  box-shadow: 0 0 10px rgb(0 255 0 / 50%);
 
   &:nth-child(1) {
     animation-delay: 0s;
@@ -363,35 +364,35 @@
   align-items: center;
   padding: 0.75rem;
   border-radius: 0.75rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background: rgb(255 255 255 / 5%);
+  border: 1px solid rgb(255 255 255 / 10%);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
   transition: all 0.2s ease;
 
   &.current {
     color: white !important;
-    background: rgba(0, 150, 136, 1);
-    border-color: rgba(255, 255, 255, 0.5);
+    background: rgb(0 150 136 / 100%);
+    border-color: rgb(255 255 255 / 50%);
     box-shadow:
-      0 4px 16px rgba(0, 150, 136, 0.3),
-      0 0 0 1px rgba(0, 150, 136, 0.2) inset;
+      0 4px 16px rgb(0 150 136 / 30%),
+      0 0 0 1px rgb(0 150 136 / 20%) inset;
 
     &:hover,
     &.pairHovered {
-      background: rgba(0, 150, 136, 1);
-      border-color: rgba(255, 255, 255, 0.5);
+      background: rgb(0 150 136 / 100%);
+      border-color: rgb(255 255 255 / 50%);
       box-shadow:
-        0 4px 16px rgba(0, 150, 136, 0.3),
-        0 0 0 1px rgba(0, 150, 136, 0.2) inset;
+        0 4px 16px rgb(0 150 136 / 30%),
+        0 0 0 1px rgb(0 150 136 / 20%) inset;
       transform: translateY(-2px);
     }
   }
 
   &:hover,
   &.pairHovered {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background: rgb(255 255 255 / 8%);
+    border-color: rgb(255 255 255 / 15%);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 30%);
     transform: translateY(-2px);
   }
 
@@ -406,8 +407,8 @@
   border-radius: 50%;
   overflow: hidden;
   background: var(--bs-dark);
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgb(255 255 255 / 15%);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 30%);
 
   img {
     width: 100%;
@@ -463,15 +464,11 @@
   flex: 1;
   border-radius: 0.75rem;
   overflow: hidden;
-  background: linear-gradient(
-    135deg,
-    rgba(20, 20, 20, 0.95),
-    rgba(40, 40, 40, 0.95)
-  );
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: linear-gradient(135deg, rgb(20 20 20 / 95%), rgb(40 40 40 / 95%));
+  border: 1px solid rgb(255 255 255 / 15%);
   box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.4),
-    0 0 0 1px rgba(255, 255, 255, 0.1) inset;
+    0 8px 24px rgb(0 0 0 / 40%),
+    0 0 0 1px rgb(255 255 255 / 10%) inset;
 }
 
 .toolbar::before {
@@ -523,21 +520,21 @@
   align-items: center;
   justify-content: center;
   border-radius: 0.5rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgb(255 255 255 / 5%);
+  border: 1px solid rgb(255 255 255 / 10%);
   transition: all 0.2s ease;
   cursor: pointer;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.2);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background: rgb(255 255 255 / 12%);
+    border-color: rgb(255 255 255 / 20%);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 30%);
     transform: translateY(-2px);
   }
 
   &:active {
     transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 6px rgb(0 0 0 / 30%);
   }
 
   &.stopped {
@@ -560,29 +557,29 @@
   &.videoMode {
     background: linear-gradient(
       135deg,
-      rgba(102, 126, 234, 0.15),
-      rgba(13, 110, 253, 0.15)
+      rgb(102 126 234 / 15%),
+      rgb(13 110 253 / 15%)
     );
-    border-color: rgba(102, 126, 234, 0.4);
+    border-color: rgb(102 126 234 / 40%);
     color: #667eea;
 
     &:hover {
       background: linear-gradient(
         135deg,
-        rgba(102, 126, 234, 0.25),
-        rgba(13, 110, 253, 0.25)
+        rgb(102 126 234 / 25%),
+        rgb(13 110 253 / 25%)
       );
-      border-color: rgba(102, 126, 234, 0.6);
+      border-color: rgb(102 126 234 / 60%);
       box-shadow:
-        0 4px 12px rgba(102, 126, 234, 0.4),
-        0 0 0 3px rgba(102, 126, 234, 0.1);
+        0 4px 12px rgb(102 126 234 / 40%),
+        0 0 0 3px rgb(102 126 234 / 10%);
     }
 
     &:active {
       background: linear-gradient(
         135deg,
-        rgba(102, 126, 234, 0.35),
-        rgba(13, 110, 253, 0.35)
+        rgb(102 126 234 / 35%),
+        rgb(13 110 253 / 35%)
       );
     }
   }
@@ -590,29 +587,29 @@
   &.noVideoMode {
     background: linear-gradient(
       135deg,
-      rgba(255, 193, 7, 0.15),
-      rgba(255, 152, 0, 0.15)
+      rgb(255 193 7 / 15%),
+      rgb(255 152 0 / 15%)
     );
-    border-color: rgba(255, 193, 7, 0.4);
+    border-color: rgb(255 193 7 / 40%);
     color: #ffc107;
 
     &:hover {
       background: linear-gradient(
         135deg,
-        rgba(255, 193, 7, 0.25),
-        rgba(255, 152, 0, 0.25)
+        rgb(255 193 7 / 25%),
+        rgb(255 152 0 / 25%)
       );
-      border-color: rgba(255, 193, 7, 0.6);
+      border-color: rgb(255 193 7 / 60%);
       box-shadow:
-        0 4px 12px rgba(255, 193, 7, 0.4),
-        0 0 0 3px rgba(255, 193, 7, 0.1);
+        0 4px 12px rgb(255 193 7 / 40%),
+        0 0 0 3px rgb(255 193 7 / 10%);
     }
 
     &:active {
       background: linear-gradient(
         135deg,
-        rgba(255, 193, 7, 0.35),
-        rgba(255, 152, 0, 0.35)
+        rgb(255 193 7 / 35%),
+        rgb(255 152 0 / 35%)
       );
     }
   }
@@ -620,29 +617,29 @@
   &.audioOnlyMode {
     background: linear-gradient(
       135deg,
-      rgba(0, 188, 212, 0.15),
-      rgba(0, 150, 136, 0.15)
+      rgb(0 188 212 / 15%),
+      rgb(0 150 136 / 15%)
     );
-    border-color: rgba(0, 188, 212, 0.4);
+    border-color: rgb(0 188 212 / 40%);
     color: #00bcd4;
 
     &:hover {
       background: linear-gradient(
         135deg,
-        rgba(0, 188, 212, 0.25),
-        rgba(0, 150, 136, 0.25)
+        rgb(0 188 212 / 25%),
+        rgb(0 150 136 / 25%)
       );
-      border-color: rgba(0, 188, 212, 0.6);
+      border-color: rgb(0 188 212 / 60%);
       box-shadow:
-        0 4px 12px rgba(0, 188, 212, 0.4),
-        0 0 0 3px rgba(0, 188, 212, 0.1);
+        0 4px 12px rgb(0 188 212 / 40%),
+        0 0 0 3px rgb(0 188 212 / 10%);
     }
 
     &:active {
       background: linear-gradient(
         135deg,
-        rgba(0, 188, 212, 0.35),
-        rgba(0, 150, 136, 0.35)
+        rgb(0 188 212 / 35%),
+        rgb(0 150 136 / 35%)
       );
     }
   }
@@ -666,13 +663,13 @@
   gap: 0.75rem;
 }
 
-@media (max-width: 1200px) {
+@media (width <= 1200px) {
   .topSplit {
     grid-template-columns: 6fr 4fr;
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .topSplit {
     grid-template-columns: 1fr;
   }

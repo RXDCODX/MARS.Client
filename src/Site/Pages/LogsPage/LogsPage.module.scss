@@ -125,7 +125,7 @@
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 15px rgb(0 0 0 / 15%);
     }
   }
 }
@@ -293,7 +293,7 @@
 
 .message {
   max-width: 400px;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   line-height: 1.4;
 }
 
@@ -368,7 +368,7 @@
 }
 
 // Адаптивность
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .logsPage {
     padding: 1rem 0;
   }
@@ -416,7 +416,7 @@
   }
 }
 
-@media (max-width: 576px) {
+@media (width <= 576px) {
   .controlsCard,
   .statsCard,
   .logsTableCard {

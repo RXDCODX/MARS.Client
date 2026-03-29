@@ -30,7 +30,7 @@
   font-size: 1rem;
   line-height: 1.5;
   margin-bottom: 1rem;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 // Секция с данными
@@ -54,14 +54,13 @@
   color: var(--bs-light);
   padding: 1rem;
   border-radius: 0.375rem;
-  font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+  font-family: Monaco, Menlo, "Ubuntu Mono", monospace;
   font-size: 0.875rem;
   line-height: 1.4;
-  overflow-x: auto;
+  overflow: auto;
   white-space: pre-wrap;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   max-height: 300px;
-  overflow-y: auto;
 }
 
 // Секция метаданных
@@ -81,7 +80,7 @@
   grid-template-columns: 1fr;
   gap: 0.5rem;
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     grid-template-columns: 1fr 1fr;
   }
 }
@@ -108,7 +107,7 @@
 // Значение метаданных
 .metadataValue {
   color: var(--bs-secondary);
-  word-wrap: break-word;
+  overflow-wrap: break-word;
   flex: 1;
 }
 
@@ -131,7 +130,7 @@
 }
 
 // Адаптивность для мобильных устройств
-@media (max-width: 767.98px) {
+@media (width <= 767.98px) {
   .modalBody {
     padding: 1rem;
     max-height: 60vh;

@@ -26,7 +26,7 @@
   h3 {
     font-size: 24px;
     font-weight: 700;
-    margin: 0 0 20px 0;
+    margin: 0 0 20px;
     color: var(--site-text-primary);
     text-shadow: var(--site-shadow-light);
   }
@@ -34,7 +34,7 @@
   h4 {
     font-size: 18px;
     font-weight: 600;
-    margin: 0 0 15px 0;
+    margin: 0 0 15px;
     color: var(--site-text-primary);
     text-shadow: var(--site-shadow-light);
   }
@@ -43,7 +43,6 @@
     line-height: 1.6;
     color: var(--site-text-secondary);
     margin: 0;
-    word-wrap: break-word;
     overflow-wrap: break-word;
     hyphens: auto;
     text-shadow: var(--site-shadow-light);
@@ -127,7 +126,7 @@
 }
 
 // Адаптивность
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .footer {
     padding: 40px 0 20px;
   }
@@ -147,7 +146,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@media (width <= 480px) {
   .container {
     padding: 0 15px;
   }

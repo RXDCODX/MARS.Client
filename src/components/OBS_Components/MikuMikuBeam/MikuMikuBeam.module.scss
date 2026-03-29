@@ -25,7 +25,7 @@
   width: 100%;
   height: 100%;
   object-fit: contain;
-  background-color: #000000;
+  background-color: #000;
 }
 
 // Общий стиль для бегущих строк
@@ -37,9 +37,9 @@
   overflow: hidden;
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.95) 0%,
-    rgba(0, 0, 0, 0.85) 50%,
-    rgba(0, 0, 0, 0.95) 100%
+    rgb(0 0 0 / 95%) 0%,
+    rgb(0 0 0 / 85%) 50%,
+    rgb(0 0 0 / 95%) 100%
   );
   z-index: 10000;
   display: flex;
@@ -49,15 +49,15 @@
 // Верхняя бегущая строка (0-150px)
 .tickerTop {
   top: 0;
-  border-bottom: 3px solid rgba(57, 255, 255, 0.6);
-  box-shadow: 0 4px 20px rgba(57, 255, 255, 0.3);
+  border-bottom: 3px solid rgb(57 255 255 / 60%);
+  box-shadow: 0 4px 20px rgb(57 255 255 / 30%);
 }
 
 // Нижняя бегущая строка (920-1080px)
 .tickerBottom {
   bottom: 0;
-  border-top: 3px solid rgba(255, 57, 255, 0.6);
-  box-shadow: 0 -4px 20px rgba(255, 57, 255, 0.3);
+  border-top: 3px solid rgb(255 57 255 / 60%);
+  box-shadow: 0 -4px 20px rgb(255 57 255 / 30%);
 }
 
 // Контент бегущей строки
@@ -105,9 +105,9 @@
     left: 50%;
     width: 100%;
     height: 4px;
-    background-color: #ff0000;
+    background-color: #f00;
     transform: translate(-50%, -50%) rotate(45deg);
-    box-shadow: 0 0 10px rgba(255, 0, 0, 0.9);
+    box-shadow: 0 0 10px rgb(255 0 0 / 90%);
   }
 
   // Вторая линия креста (из правого верхнего угла в левый нижний)
@@ -118,9 +118,9 @@
     left: 50%;
     width: 100%;
     height: 4px;
-    background-color: #ff0000;
+    background-color: #f00;
     transform: translate(-50%, -50%) rotate(-45deg);
-    box-shadow: 0 0 10px rgba(255, 0, 0, 0.9);
+    box-shadow: 0 0 10px rgb(255 0 0 / 90%);
   }
 }
 
@@ -130,8 +130,8 @@
   height: 70px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  border: 3px solid rgb(255 255 255 / 30%);
+  box-shadow: 0 0 20px rgb(255 255 255 / 20%);
   flex-shrink: 0;
 }
 
@@ -141,16 +141,16 @@
   height: 70px;
   border-radius: 50%;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+  border: 3px solid rgb(255 255 255 / 30%);
+  box-shadow: 0 0 20px rgb(255 255 255 / 20%);
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2rem;
   font-weight: 700;
-  color: #ffffff;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  color: #fff;
+  text-shadow: 2px 2px 4px rgb(0 0 0 / 50%);
 }
 
 // Имя пользователя
@@ -158,11 +158,11 @@
   font-size: 2rem;
   font-weight: 700;
   text-shadow:
-    0 0 10px currentColor,
-    0 0 20px currentColor,
-    2px 2px 4px rgba(0, 0, 0, 0.8);
+    0 0 10px currentcolor,
+    0 0 20px currentcolor,
+    2px 2px 4px rgb(0 0 0 / 80%);
   letter-spacing: 1px;
-  color: #ffffff;
+  color: #fff;
 }
 
 // Анимация движения налево
@@ -188,7 +188,7 @@
 }
 
 // Адаптивность для меньших экранов
-@media (max-width: 1920px) {
+@media (width <= 1920px) {
   .ticker {
     height: 120px;
   }
@@ -203,7 +203,7 @@
   }
 }
 
-@media (max-width: 1280px) {
+@media (width <= 1280px) {
   .ticker {
     height: 100px;
   }

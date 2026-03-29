@@ -8,8 +8,10 @@
   z-index: 1000;
   pointer-events: none;
   overflow: hidden;
+
   --default-font: "InterTight";
   --mono-font: "InterTight";
+
   font-feature-settings: "tnum";
   font-variant-numeric: tabular-nums;
 }
@@ -18,7 +20,7 @@
   position: absolute;
   top: 20px;
   right: 20px;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgb(0 0 0 / 80%);
   padding: 15px;
   border-radius: 10px;
   display: flex;
@@ -26,7 +28,7 @@
   gap: 10px;
   pointer-events: auto;
   z-index: 1001;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid rgb(255 255 255 / 20%);
   backdrop-filter: blur(10px);
 }
 
@@ -44,7 +46,7 @@
   &:hover {
     background: linear-gradient(135deg, #764ba2, #667eea);
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 12px rgb(102 126 234 / 40%);
   }
 
   &:active {
@@ -67,7 +69,7 @@
 .speedSlider {
   width: 100%;
   height: 4px;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgb(255 255 255 / 20%);
   border-radius: 2px;
   outline: none;
   cursor: pointer;
@@ -102,8 +104,10 @@
   z-index: 1000;
   pointer-events: none;
   overflow: hidden;
+
   --default-font: "InterTight";
   --mono-font: "InterTight";
+
   font-feature-settings: "tnum";
   font-variant-numeric: tabular-nums;
 
@@ -147,19 +151,19 @@
 }
 
 .timerValue {
-  color: #ff0000;
+  color: #f00;
   font-size: 96px;
   font-weight: 700;
   font-family: var(--mono-font);
   text-shadow:
-    2px 2px 4px rgba(0, 0, 0, 0.8),
-    -2px -2px 4px rgba(0, 0, 0, 0.8),
-    2px -2px 4px rgba(0, 0, 0, 0.8),
-    -2px 2px 4px rgba(0, 0, 0, 0.8),
-    0 0 8px rgba(255, 0, 0, 0.6),
-    0 0 16px rgba(255, 0, 0, 0.4),
-    0 0 24px rgba(255, 0, 0, 0.3),
-    0 0 32px rgba(255, 0, 0, 0.2);
+    2px 2px 4px rgb(0 0 0 / 80%),
+    -2px -2px 4px rgb(0 0 0 / 80%),
+    2px -2px 4px rgb(0 0 0 / 80%),
+    -2px 2px 4px rgb(0 0 0 / 80%),
+    0 0 8px rgb(255 0 0 / 60%),
+    0 0 16px rgb(255 0 0 / 40%),
+    0 0 24px rgb(255 0 0 / 30%),
+    0 0 32px rgb(255 0 0 / 20%);
   animation: timerPulse 2s ease-in-out infinite alternate;
 }
 
@@ -182,11 +186,13 @@
   object-fit: cover;
   z-index: 1003;
   pointer-events: none;
+
   // Оптимизация производительности
   will-change: transform;
   transform: translateZ(0);
   backface-visibility: hidden;
+
   // Улучшение качества рендеринга
-  image-rendering: optimizeSpeed;
+  image-rendering: optimizespeed;
   image-rendering: -webkit-optimize-contrast;
 }

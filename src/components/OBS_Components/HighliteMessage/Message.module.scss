@@ -52,19 +52,16 @@
     height: 100%;
     width: 100%;
     display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-content: center;
+    flex-flow: row wrap;
+    place-content: center center;
     align-items: center;
-    justify-content: center;
 
     &:first-child {
       align-content: flex-end;
     }
 
     &:last-child {
-      align-content: flex-start;
-      justify-content: space-around;
+      place-content: flex-start space-around;
     }
   }
 }
@@ -91,7 +88,7 @@
   white-space: pre-wrap;
   overflow: visible;
   width: 100%;
-  font-family: "Ubuntu-Italic", "Lucida Sans", helvetica, sans;
+  font-family: Ubuntu-Italic, "Lucida Sans", helvetica, sans;
   line-height: normal;
   height: 300px;
   text-align: center;
@@ -166,6 +163,7 @@
 
 .right {
   --_p: 100%;
+
   border-bottom-right-radius: 0 0;
   place-self: end;
 }

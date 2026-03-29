@@ -16,6 +16,7 @@
 // Специальные стили для админ панели
 .adminThemeToggle {
   @extend .themeToggle;
+
   background-color: var(--site-bg-card) !important;
   border-color: var(--site-border-primary) !important;
   color: var(--site-text-primary) !important;

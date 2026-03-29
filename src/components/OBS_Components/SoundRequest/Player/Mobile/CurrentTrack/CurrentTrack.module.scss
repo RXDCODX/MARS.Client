@@ -30,8 +30,8 @@
   transition: all 0.3s ease;
 
   &.playing {
-    background: rgba(0, 150, 136, 0.1);
-    border: 1px solid rgba(0, 150, 136, 0.3);
+    background: rgb(0 150 136 / 10%);
+    border: 1px solid rgb(0 150 136 / 30%);
   }
 }
 
@@ -42,7 +42,7 @@
   border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
 
   img {
     width: 100%;
@@ -54,7 +54,7 @@
 .playingOverlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgb(0 0 0 / 50%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,7 +73,7 @@
   background: var(--bs-success);
   border-radius: 2px;
   animation: equalizerBounce 0.8s ease-in-out infinite;
-  box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+  box-shadow: 0 0 10px rgb(0 255 0 / 50%);
 
   &:nth-child(1) {
     animation-delay: 0s;
@@ -112,21 +112,21 @@
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 0;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .trackAuthor {
   color: var(--bs-secondary);
   font-size: 1rem;
   margin-bottom: 0;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .requestedBy {
   color: var(--bs-text-muted);
   font-size: 0.85rem;
   margin-bottom: 0;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .duration {

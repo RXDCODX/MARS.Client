@@ -31,25 +31,25 @@
         height: 56px;
         border-radius: 50%;
         object-fit: cover;
-        border: 2px solid rgba(29, 185, 84, 0.4);
+        border: 2px solid rgb(29 185 84 / 40%);
         background: var(--site-bg-primary);
       }
 
       .userInfo {
-        margin: 5px 0 0 0;
+        margin: 5px 0 0;
         font-size: 0.95rem;
         opacity: 0.95;
       }
 
       .nickInfo,
       .productInfo {
-        margin: 5px 0 0 0;
+        margin: 5px 0 0;
         font-size: 0.9rem;
         opacity: 0.9;
       }
 
       .deviceInfo {
-        margin: 5px 0 0 0;
+        margin: 5px 0 0;
         font-size: 0.9rem;
         opacity: 0.85;
       }
@@ -60,7 +60,7 @@
       }
     }
 
-    @media (max-width: 768px) {
+    @media (width <= 768px) {
       .statusContent {
         flex-direction: column;
         align-items: flex-start;
