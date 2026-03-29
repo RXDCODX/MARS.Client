@@ -95,23 +95,42 @@ const TelegramClipboardCopyPage: React.FC = () => {
         return;
       }
 
-      const clipboardItems = items.map(
-        item =>
-          new ClipboardItem({ [item.blob.type || "image/png"]: item.blob })
-      );
-      await navigator.clipboard.write(clipboardItems);
-
-      await fetch(
-        `/api/TelegramClipboardCopy/complete/${encodeURIComponent(requestId)}`,
-        {
-          method: "POST",
+      // Браузеры не поддерживают копирование нескольких ClipboardItem одновременно
+      // Копируем изображения по очереди
+      let successCount = 0;
+      for (const item of items) {
+        try {
+          const clipboardItem = new ClipboardItem({
+            [item.blob.type || "image/png"]: item.blob,
+          });
+          await navigator.clipboard.write([clipboardItem]);
+          successCount++;
+        } catch (itemError) {
+          console.warn(
+            `Не удалось скопировать изображение ${item.sourceUrl}:`,
+            itemError
+          );
         }
-      );
+      }
 
-      showToast({
-        success: true,
-        message: `Скопировано изображений: ${clipboardItems.length}`,
-      });
+      if (successCount > 0) {
+        await fetch(
+          `/api/TelegramClipboardCopy/complete/${encodeURIComponent(requestId)}`,
+          {
+            method: "POST",
+          }
+        );
+
+        showToast({
+          success: true,
+          message: `Скопировано изображений: ${successCount} из ${items.length}`,
+        });
+      } else {
+        showToast({
+          success: false,
+          message: "Не удалось скопировать ни одного изображения",
+        });
+      }
     } catch (error) {
       showToast({
         success: false,

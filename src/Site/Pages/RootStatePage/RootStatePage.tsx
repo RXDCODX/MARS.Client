@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -11,7 +11,7 @@ import {
   Table,
 } from "react-bootstrap";
 
-import { RootState as RootStateClient } from "@/shared/api";
+import { appConfigurationService } from "@/shared/api/services/AppConfigurationService";
 import type { RootState as RootStateDto } from "@/shared/api/types/data-contracts";
 import type { OperationResult } from "@/shared/types/OperationResult";
 import { useToastModal } from "@/shared/Utils/ToastModal";
@@ -34,7 +34,6 @@ const defaultForm: RootStateForm = {
 
 const RootStatePage: React.FC = () => {
   const { showToast } = useToastModal();
-  const api = useMemo(() => new RootStateClient(), []);
 
   const [items, setItems] = useState<RootStateDto[]>([]);
   const [loading, setLoading] = useState(true);
@@ -49,8 +48,7 @@ const RootStatePage: React.FC = () => {
     setError("");
 
     try {
-      const response = await api.rootStateList();
-      const operation = response.data as OperationResult<RootStateDto[]>;
+      const operation = await appConfigurationService.getRootStates();
 
       if (operation.success) {
         setItems(Array.isArray(operation.data) ? operation.data : []);
@@ -69,7 +67,7 @@ const RootStatePage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [api, showToast]);
+  }, [showToast]);
 
   useEffect(() => {
     void loadItems();
@@ -110,18 +108,19 @@ const RootStatePage: React.FC = () => {
       let operation: OperationResult;
 
       if (editingName) {
-        const response = await api.rootStateValuePartialUpdate(editingName, {
-          value: form.value,
-        });
-        operation = response.data as OperationResult;
+        operation = await appConfigurationService.updateRootStateValue(
+          editingName,
+          {
+            value: form.value,
+          }
+        );
       } else {
-        const response = await api.rootStateCreate({
+        operation = await appConfigurationService.upsertRootState({
           name: trimmedName,
           value: form.value,
           description: form.description,
           typeDescription: form.typeDescription,
         });
-        operation = response.data as OperationResult;
       }
 
       showToast(operation);
@@ -153,8 +152,7 @@ const RootStatePage: React.FC = () => {
     setError("");
 
     try {
-      const response = await api.rootStateDelete(name);
-      const operation = response.data as OperationResult;
+      const operation = await appConfigurationService.deleteRootState(name);
       showToast(operation);
 
       if (operation.success) {

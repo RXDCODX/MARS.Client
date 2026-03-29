@@ -1,7 +1,7 @@
 import {
   CSSProperties,
-  type ReactNode,
   memo,
+  type ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -10,15 +10,9 @@ import {
 import { Spinner } from "react-bootstrap";
 import { useShallow } from "zustand/react/shallow";
 
-import {
-  PlayerStateStateEnum,
-  RootState as RootStateClient,
-  SpotifyAuth,
-} from "@/shared/api";
-import type {
-  RootState as RootStateDto,
-  SpotifyAuthStatusResult,
-} from "@/shared/api/types/data-contracts";
+import { PlayerStateStateEnum, SpotifyAuth } from "@/shared/api";
+import { appConfigurationService } from "@/shared/api/services/AppConfigurationService";
+import type { SpotifyAuthStatusResult } from "@/shared/api/types/data-contracts";
 import type { OperationResult } from "@/shared/types/OperationResult";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
@@ -62,7 +56,6 @@ const parseProvider = (value?: string): ProviderName => {
  */
 function PlayerToolbarComponent() {
   const { showToast } = useToastModal();
-  const rootStateApi = useMemo(() => new RootStateClient(), []);
   const spotifyAuthApi = useMemo(() => new SpotifyAuth(), []);
 
   // Селективная подписка - ТОЛЬКО поля для прогресс-бара
@@ -85,10 +78,9 @@ function PlayerToolbarComponent() {
     setIsLoadingProvider(true);
 
     try {
-      const response = await rootStateApi.rootStateDetail(
+      const operation = await appConfigurationService.getRootState(
         SOUND_REQUEST_PROVIDER_KEY
       );
-      const operation = response.data as OperationResult<RootStateDto>;
 
       if (operation.success) {
         setProvider(parseProvider(operation.data?.value));
@@ -100,7 +92,7 @@ function PlayerToolbarComponent() {
     } finally {
       setIsLoadingProvider(false);
     }
-  }, [rootStateApi]);
+  }, []);
 
   useEffect(() => {
     void loadProvider();
@@ -129,14 +121,12 @@ function PlayerToolbarComponent() {
         }
       }
 
-      const response = await rootStateApi.rootStateCreate({
+      const operation = await appConfigurationService.upsertRootState({
         name: SOUND_REQUEST_PROVIDER_KEY,
         value: nextProvider,
         description: "Активный провайдер SoundRequest (YouTube/Spotify)",
         typeDescription: "enum: SoundRequestProvider",
       });
-
-      const operation = response.data as OperationResult;
       if (operation.success) {
         setProvider(nextProvider);
         showToast({
@@ -158,7 +148,7 @@ function PlayerToolbarComponent() {
     } finally {
       setIsSavingProvider(false);
     }
-  }, [provider, rootStateApi, showToast, spotifyAuthApi]);
+  }, [provider, showToast, spotifyAuthApi]);
 
   // Вычисляем прогресс трека
   const isPlaying = state === PlayerStateStateEnum.Playing;
@@ -177,7 +167,9 @@ function PlayerToolbarComponent() {
   const isProviderButtonDisabled = isLoadingProvider || isSavingProvider;
   const providerIconUrl = PROVIDER_ICONS[provider];
   const providerColorClass =
-    provider === PROVIDER_SPOTIFY ? styles.spotifyProvider : styles.youtubeProvider;
+    provider === PROVIDER_SPOTIFY
+      ? styles.spotifyProvider
+      : styles.youtubeProvider;
   const providerButtonClassName = [
     styles.tbBtn,
     styles.providerToggleButton,
