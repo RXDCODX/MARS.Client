@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 
 import styles from "./ChoosePath.module.scss";
 import CurrentTrackInfo from "./CurrentTrack/CurrentTrackManager";
-import { SoundRequestPlayer } from "./Player/SoundRequestPlayer";
+import { TrackList } from "./TrackList/TrackList";
 import { VideoScreen } from "./VideoScreen/VideoScreen";
 
 const ChoosePath: React.FC = () => {
@@ -44,7 +44,7 @@ const ChoosePath: React.FC = () => {
 
   // Если путь /sr/tracklist - рендерим TrackList (Player)
   if (path === "/sr/tracklist") {
-    return <SoundRequestPlayer />;
+    return <TrackList />;
   }
 
   // Если путь /sr/currenttrack - рендерим CurrentTrack

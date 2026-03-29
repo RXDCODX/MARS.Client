@@ -1,7 +1,26 @@
-import { CSSProperties, memo } from "react";
+import {
+  CSSProperties,
+  type ReactNode,
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { Spinner } from "react-bootstrap";
 import { useShallow } from "zustand/react/shallow";
 
-import { PlayerStateStateEnum } from "@/shared/api";
+import {
+  PlayerStateStateEnum,
+  RootState as RootStateClient,
+  SpotifyAuth,
+} from "@/shared/api";
+import type {
+  RootState as RootStateDto,
+  SpotifyAuthStatusResult,
+} from "@/shared/api/types/data-contracts";
+import type { OperationResult } from "@/shared/types/OperationResult";
+import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import { usePlayerStore } from "../../stores/usePlayerStore";
 import { parseDurationToSeconds } from "../../utils";
@@ -19,11 +38,33 @@ import {
 } from "./Buttons";
 import { ViewModeToggle } from "./ViewModeToggle";
 
+const SOUND_REQUEST_PROVIDER_KEY = "SoundRequestProvider";
+const PROVIDER_YOUTUBE = "YouTube";
+const PROVIDER_SPOTIFY = "Spotify";
+const PROVIDER_ICONS = {
+  [PROVIDER_YOUTUBE]: "/icons/providers/youtube.svg",
+  [PROVIDER_SPOTIFY]: "/icons/providers/spotify.svg",
+} as const;
+
+type ProviderName = typeof PROVIDER_YOUTUBE | typeof PROVIDER_SPOTIFY;
+
+const parseProvider = (value?: string): ProviderName => {
+  if (value?.trim().toLowerCase() === PROVIDER_SPOTIFY.toLowerCase()) {
+    return PROVIDER_SPOTIFY;
+  }
+
+  return PROVIDER_YOUTUBE;
+};
+
 /**
  * Тулбар плеера
  * Подписывается ТОЛЬКО на данные для прогресс-бара (не на volume, isMuted и т.д.)
  */
 function PlayerToolbarComponent() {
+  const { showToast } = useToastModal();
+  const rootStateApi = useMemo(() => new RootStateClient(), []);
+  const spotifyAuthApi = useMemo(() => new SpotifyAuth(), []);
+
   // Селективная подписка - ТОЛЬКО поля для прогресс-бара
   const { state, trackId, trackDuration, currentTrackProgress } =
     usePlayerStore(
@@ -35,6 +76,89 @@ function PlayerToolbarComponent() {
         currentTrackProgress: storeState.playerState?.currentTrackProgress,
       }))
     );
+
+  const [provider, setProvider] = useState<ProviderName>(PROVIDER_YOUTUBE);
+  const [isLoadingProvider, setIsLoadingProvider] = useState(true);
+  const [isSavingProvider, setIsSavingProvider] = useState(false);
+
+  const loadProvider = useCallback(async () => {
+    setIsLoadingProvider(true);
+
+    try {
+      const response = await rootStateApi.rootStateDetail(
+        SOUND_REQUEST_PROVIDER_KEY
+      );
+      const operation = response.data as OperationResult<RootStateDto>;
+
+      if (operation.success) {
+        setProvider(parseProvider(operation.data?.value));
+      } else {
+        setProvider(PROVIDER_YOUTUBE);
+      }
+    } catch {
+      setProvider(PROVIDER_YOUTUBE);
+    } finally {
+      setIsLoadingProvider(false);
+    }
+  }, [rootStateApi]);
+
+  useEffect(() => {
+    void loadProvider();
+  }, [loadProvider]);
+
+  const toggleProvider = useCallback(async () => {
+    const nextProvider =
+      provider === PROVIDER_YOUTUBE ? PROVIDER_SPOTIFY : PROVIDER_YOUTUBE;
+
+    setIsSavingProvider(true);
+    try {
+      if (nextProvider === PROVIDER_SPOTIFY) {
+        const statusResponse = await spotifyAuthApi.spotifyAuthStatusList();
+        const statusOperation =
+          statusResponse.data as OperationResult<SpotifyAuthStatusResult>;
+
+        const isSpotifyLinked =
+          statusOperation.success && Boolean(statusOperation.data?.isLinked);
+        if (!isSpotifyLinked) {
+          showToast({
+            success: false,
+            message:
+              "Spotify аккаунт не подключен. Подключите его в админ-панели: /spotify",
+          });
+          return;
+        }
+      }
+
+      const response = await rootStateApi.rootStateCreate({
+        name: SOUND_REQUEST_PROVIDER_KEY,
+        value: nextProvider,
+        description: "Активный провайдер SoundRequest (YouTube/Spotify)",
+        typeDescription: "enum: SoundRequestProvider",
+      });
+
+      const operation = response.data as OperationResult;
+      if (operation.success) {
+        setProvider(nextProvider);
+        showToast({
+          success: true,
+          message: `Провайдер переключен: ${nextProvider}`,
+        });
+      } else {
+        showToast({
+          success: false,
+          message: operation.message ?? "Не удалось переключить провайдер",
+        });
+      }
+    } catch (error) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Ошибка при переключении провайдера";
+      showToast({ success: false, message });
+    } finally {
+      setIsSavingProvider(false);
+    }
+  }, [provider, rootStateApi, showToast, spotifyAuthApi]);
 
   // Вычисляем прогресс трека
   const isPlaying = state === PlayerStateStateEnum.Playing;
@@ -50,12 +174,53 @@ function PlayerToolbarComponent() {
     "--track-progress": `${Math.round(progress * 100)}%`,
   } as CSSProperties;
 
+  const isProviderButtonDisabled = isLoadingProvider || isSavingProvider;
+  const providerIconUrl = PROVIDER_ICONS[provider];
+  const providerColorClass =
+    provider === PROVIDER_SPOTIFY ? styles.spotifyProvider : styles.youtubeProvider;
+  const providerButtonClassName = [
+    styles.tbBtn,
+    styles.providerToggleButton,
+    providerColorClass,
+  ].join(" ");
+
+  let providerButtonContent: ReactNode;
+  if (isProviderButtonDisabled) {
+    providerButtonContent = (
+      <span className={styles.providerButtonContent}>
+        <Spinner size="sm" animation="border" />
+        <span>{provider}</span>
+      </span>
+    );
+  } else {
+    providerButtonContent = (
+      <span className={styles.providerButtonContent}>
+        <img
+          src={providerIconUrl}
+          alt={`${provider} icon`}
+          className={styles.providerIcon}
+          loading="lazy"
+        />
+        <span>{provider}</span>
+      </span>
+    );
+  }
+
   return (
     <div className={styles.toolbar} style={progressStyle}>
       <div className={styles.toolbarInner}>
         <div className={styles.leftSection}>
           <ViewModeToggle />
           <AddTrackButton />
+          <button
+            type="button"
+            className={providerButtonClassName}
+            onClick={() => void toggleProvider()}
+            disabled={isProviderButtonDisabled}
+            title={`Провайдер SoundRequest: ${provider}`}
+          >
+            {providerButtonContent}
+          </button>
         </div>
 
         <div className={styles.controlButtons}>
@@ -64,10 +229,7 @@ function PlayerToolbarComponent() {
           <StopButton />
           <SkipButton />
           <MuteButton />
-
-          <div className={styles.extraButtons}>
-            <VideoStateButton />
-          </div>
+          <VideoStateButton />
         </div>
 
         <div className={styles.volumeWrap}>
