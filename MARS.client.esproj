@@ -6,6 +6,9 @@
     <!-- Отключаем автоматический build скрипт, чтобы избежать npm install конфликтов -->
     <!-- Сборка клиента выполняется через yarn build вручную или через MARS.Server target -->
     <ShouldRunBuildScript>false</ShouldRunBuildScript>
+    <!-- Отключаем авто-установку зависимостей из SDK, чтобы не запускались lifecycle scripts (husky hooks) -->
+    <ShouldRunNpmInstall>false</ShouldRunNpmInstall>
+    <NpmInstallCommand>yarn install --ignore-scripts</NpmInstallCommand>
     <!-- Folder where production build objects will be placed -->
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
     <BuildCommand>yarn build</BuildCommand>
