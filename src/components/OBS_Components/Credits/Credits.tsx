@@ -25,62 +25,9 @@ import styles from "./Credits.module.scss";
 const ElectricBorder = lazy(
   () => import("@/shared/components/ElectricBorderLegacy")
 );
-const BeamsLegacy = lazy(() => import("@/shared/components/BeamsLegacy"));
-const SilkLegacy = lazy(() => import("@/shared/components/SilkLegacy"));
-const GridScanLegacy = lazy(() => import("@/shared/components/GridScanLegacy"));
-const Aurora = lazy(
-  () => import("react-bits/src/ts-default/Backgrounds/Aurora/Aurora")
+const ReactBitsBackgroundLegacy = lazy(
+  () => import("@/shared/components/ReactBitsBackgroundLegacy")
 );
-const Balatro = lazy(
-  () => import("react-bits/src/ts-default/Backgrounds/Balatro/Balatro")
-);
-const DarkVeil = lazy(
-  () => import("react-bits/src/ts-default/Backgrounds/DarkVeil/DarkVeil")
-);
-const FaultyTerminal = lazy(
-  () =>
-    import("react-bits/src/ts-default/Backgrounds/FaultyTerminal/FaultyTerminal")
-);
-const Galaxy = lazy(
-  () => import("react-bits/src/ts-default/Backgrounds/Galaxy/Galaxy")
-);
-const Iridescence = lazy(
-  () => import("react-bits/src/ts-default/Backgrounds/Iridescence/Iridescence")
-);
-const Lightning = lazy(
-  () => import("react-bits/src/ts-default/Backgrounds/Lightning/Lightning")
-);
-const LightRays = lazy(
-  () => import("react-bits/src/ts-default/Backgrounds/LightRays/LightRays")
-);
-const LiquidChrome = lazy(
-  () =>
-    import("react-bits/src/ts-default/Backgrounds/LiquidChrome/LiquidChrome")
-);
-const Particles = lazy(
-  () => import("react-bits/src/ts-default/Backgrounds/Particles/Particles")
-);
-const Prism = lazy(
-  () => import("react-bits/src/ts-default/Backgrounds/Prism/Prism")
-);
-const PrismaticBurst = lazy(
-  () =>
-    import("react-bits/src/ts-default/Backgrounds/PrismaticBurst/PrismaticBurst")
-);
-const Threads = lazy(
-  () => import("react-bits/src/ts-default/Backgrounds/Threads/Threads")
-);
-const LightPillar = lazy(
-  () => import("react-bits/src/ts-default/Backgrounds/LightPillar/LightPillar")
-);
-const FloatingLines = lazy(
-  () =>
-    import("react-bits/src/ts-default/Backgrounds/FloatingLines/FloatingLines")
-);
-const ColorBends = lazy(
-  () => import("react-bits/src/ts-default/Backgrounds/ColorBends/ColorBends")
-);
-// Легаси-фоны: в текущей версии react-bits часть старых фонов отсутствует/ломает рендер
 
 // ОПТИМИЗАЦИЯ: Загружаем музыку НЕ eager - только когда нужно
 const musicFiles = import.meta.glob("./music/*.{mp3,ogg,wav}", {
@@ -95,269 +42,58 @@ const musicUrls = Object.keys(musicFiles).sort();
 // Ключ для сохранения индекса трека между запусками
 const MUSIC_INDEX_STORAGE_KEY = "credits-music-index";
 
-// ОПТИМИЗАЦИЯ: Конфигурации фонов теперь возвращают JSX динамически
-const backgroundConfigs = [
-  {
-    name: "Beams",
-    element: (
-      <Suspense fallback={<div />}>
-        <BeamsLegacy
-          beamWidth={2.6}
-          beamHeight={15}
-          beamNumber={12}
-          lightColor="#FF9FFC"
-          speed={2}
-          noiseIntensity={1.5}
-          scale={0.35}
-          rotation={18}
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "Silk",
-    element: (
-      <Suspense fallback={<div />}>
-        <SilkLegacy
-          speed={5}
-          scale={1}
-          color="#5227FF"
-          noiseIntensity={1.4}
-          rotation={0.35}
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "GridScan",
-    element: (
-      <Suspense fallback={<div />}>
-        <GridScanLegacy
-          lineThickness={1.1}
-          linesColor="#392e4e"
-          scanColor="#FF9FFC"
-          scanOpacity={0.45}
-          gridScale={0.12}
-          noiseIntensity={0.03}
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "Aurora",
-    element: (
-      <Suspense fallback={<div />}>
-        <Aurora
-          colorStops={["#5227FF", "#7cff67", "#5227FF"]}
-          amplitude={1.2}
-          blend={0.6}
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "DarkVeil",
-    element: (
-      <Suspense fallback={<div />}>
-        <DarkVeil
-          hueShift={200}
-          noiseIntensity={0.05}
-          scanlineIntensity={0.1}
-          speed={0.8}
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "Liquid Chrome",
-    element: (
-      <Suspense fallback={<div />}>
-        <LiquidChrome interactive={false} />
-      </Suspense>
-    ),
-  },
-  {
-    name: "Lightning",
-    element: (
-      <Suspense fallback={<div />}>
-        <Lightning hue={280} speed={1.2} intensity={1.5} size={1.2} />
-      </Suspense>
-    ),
-  },
-  {
-    name: "LightRays",
-    element: (
-      <Suspense fallback={<div />}>
-        <LightRays
-          raysColor="#5227FF"
-          raysSpeed={1.5}
-          lightSpread={1.2}
-          rayLength={2.5}
-          followMouse={false}
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "Balatro",
-    element: (
-      <Suspense fallback={<div />}>
-        <Balatro
-          mouseInteraction={false}
-          color1="#DE443B"
-          color2="#006BB4"
-          color3="#162325"
-          isRotate={true}
-          spinSpeed={5}
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "FaultyTerminal",
-    element: (
-      <Suspense fallback={<div />}>
-        <FaultyTerminal
-          mouseReact={false}
-          tint="#5227FF"
-          flickerAmount={0.8}
-          glitchAmount={0.9}
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "Galaxy",
-    element: (
-      <Suspense fallback={<div />}>
-        <Galaxy
-          mouseInteraction={false}
-          hueShift={200}
-          density={1.5}
-          glowIntensity={0.5}
-          transparent={false}
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "Iridescence",
-    element: (
-      <Suspense fallback={<div />}>
-        <Iridescence
-          mouseReact={false}
-          color={[1, 0.8, 1]}
-          speed={1.5}
-          amplitude={0.2}
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "Particles",
-    element: (
-      <Suspense fallback={<div />}>
-        <Particles
-          moveParticlesOnHover={false}
-          particleCount={250}
-          particleColors={["#5227FF", "#FF9FFC", "#B19EEF"]}
-          alphaParticles={true}
-          disableRotation={false}
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "Prism",
-    element: (
-      <Suspense fallback={<div />}>
-        <Prism
-          animationType="rotate"
-          glow={1.5}
-          bloom={1.2}
-          transparent={false}
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "PrismaticBurst",
-    element: (
-      <Suspense fallback={<div />}>
-        <PrismaticBurst
-          animationType="rotate3d"
-          intensity={2.5}
-          speed={0.6}
-          colors={["#5227FF", "#FF9FFC", "#B19EEF", "#7cff67"]}
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "Threads",
-    element: (
-      <Suspense fallback={<div />}>
-        <Threads
-          enableMouseInteraction={false}
-          color={[0.7, 0.5, 1]}
-          amplitude={1.2}
-          distance={0.3}
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "LightPillar",
-    element: (
-      <Suspense fallback={<div />}>
-        <LightPillar
-          topColor="#7cff67"
-          bottomColor="#5227FF"
-          intensity={1.1}
-          rotationSpeed={0.25}
-          glowAmount={0.0075}
-          pillarWidth={3.5}
-          pillarHeight={0.45}
-          noiseIntensity={0.35}
-          mixBlendMode="screen"
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "FloatingLines",
-    element: (
-      <Suspense fallback={<div />}>
-        <FloatingLines
-          linesGradient={["#5227FF", "#FF9FFC", "#7cff67", "#B19EEF"]}
-          enabledWaves={["top", "middle", "bottom"]}
-          lineCount={[4, 6, 5]}
-          lineDistance={[12, 10, 14]}
-          animationSpeed={0.9}
-          interactive={false}
-          parallax={false}
-          mixBlendMode="screen"
-        />
-      </Suspense>
-    ),
-  },
-  {
-    name: "ColorBends",
-    element: (
-      <Suspense fallback={<div />}>
-        <ColorBends
-          colors={["#5227FF", "#FF9FFC", "#7cff67", "#B19EEF"]}
-          rotation={35}
-          speed={0.18}
-          warpStrength={1.2}
-          mouseInfluence={0}
-          parallax={0.25}
-          noise={0.05}
-        />
-      </Suspense>
-    ),
-  },
+const allReactBitsBackgroundNames = [
+  "Aurora",
+  "Balatro",
+  "Ballpit",
+  "Beams",
+  "ColorBends",
+  "DarkVeil",
+  "Dither",
+  "DotGrid",
+  "EvilEye",
+  "FaultyTerminal",
+  "FloatingLines",
+  "Galaxy",
+  "GradientBlinds",
+  "Grainient",
+  "GridDistortion",
+  "GridMotion",
+  "GridScan",
+  "Hyperspeed",
+  "Iridescence",
+  "LetterGlitch",
+  "LightPillar",
+  "LightRays",
+  "Lightning",
+  "LineWaves",
+  "LiquidChrome",
+  "LiquidEther",
+  "Orb",
+  "Particles",
+  "PixelBlast",
+  "PixelSnow",
+  "Plasma",
+  "Prism",
+  "PrismaticBurst",
+  "Radar",
+  "RippleGrid",
+  "ShapeGrid",
+  "Silk",
+  "SoftAurora",
+  "Threads",
+  "Waves",
 ];
+
+// ОПТИМИЗАЦИЯ: все react-bits фоны из ts-default идут через локальный легаси-рендер
+const backgroundConfigs = allReactBitsBackgroundNames.map(name => ({
+  name,
+  element: (
+    <Suspense fallback={<div />}>
+      <ReactBitsBackgroundLegacy name={name} />
+    </Suspense>
+  ),
+}));
 
 // Импортируем иконки через import.meta.glob
 const iconFiles = import.meta.glob("./icons/*.png", {
