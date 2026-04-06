@@ -3,8 +3,8 @@ import { Button, Form } from "react-bootstrap";
 
 import styles from "../LogsPage.module.scss";
 import {
-  LogsFilters as LogsFiltersType,
   LogsFiltersProps,
+  LogsFilters as LogsFiltersType,
 } from "../LogsPage.types";
 
 const BootstrapButton = Button as any;
