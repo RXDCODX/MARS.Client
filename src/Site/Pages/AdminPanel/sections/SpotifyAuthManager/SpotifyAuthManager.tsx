@@ -12,6 +12,7 @@ import { useToastModal } from "@/shared/Utils/ToastModal";
 import styles from "./SpotifyAuthManager.module.scss";
 
 const SpotifyAuthManager: React.FC = () => {
+  const BootstrapButton = Button as any;
   const [clientId, setClientId] = useState("");
   const [clientSecret, setClientSecret] = useState("");
   const [status, setStatus] = useState<SpotifyAuthStatusResult | null>(null);
@@ -178,14 +179,14 @@ const SpotifyAuthManager: React.FC = () => {
                   )}
                 </div>
               </div>
-              <Button
+              <BootstrapButton
                 variant="danger"
                 onClick={handleDisconnect}
                 disabled={isLoading}
                 className={styles.disconnectBtn}
               >
                 Отключить
-              </Button>
+              </BootstrapButton>
             </div>
           </Alert>
         )}
@@ -228,7 +229,7 @@ const SpotifyAuthManager: React.FC = () => {
             </Form.Group>
 
             <div className={styles.buttonGroup}>
-              <Button
+              <BootstrapButton
                 variant="success"
                 onClick={handleStartAuth}
                 disabled={isLoading || !clientId || !clientSecret}
@@ -242,7 +243,7 @@ const SpotifyAuthManager: React.FC = () => {
                 ) : (
                   "Подключить Spotify"
                 )}
-              </Button>
+              </BootstrapButton>
             </div>
 
             {status?.hasClientCredentials && !status?.isLinked && (

@@ -2,6 +2,8 @@ import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 
 import { CreateMediaItemRequest } from "@/shared/api";
 
+const BootstrapButton = Button as any;
+
 interface CreateMediaItemModalProps {
   show: boolean;
   onHide: () => void;
@@ -135,12 +137,12 @@ const CreateMediaItemModal: React.FC<CreateMediaItemModalProps> = ({
           </Form.Group>
 
           <div className="d-flex gap-2">
-            <Button type="submit" variant="primary">
+            <BootstrapButton type="submit" variant="primary">
               Create
-            </Button>
-            <Button variant="secondary" onClick={resetForm}>
+            </BootstrapButton>
+            <BootstrapButton variant="secondary" onClick={resetForm}>
               Cancel
-            </Button>
+            </BootstrapButton>
           </div>
         </Form>
       </Modal.Body>

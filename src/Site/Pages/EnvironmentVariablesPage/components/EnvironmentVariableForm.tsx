@@ -14,6 +14,8 @@ import styles from "../EnvironmentVariablesPage.module.scss";
 import { useEnvironmentVariablesStore } from "../store/useEnvironmentVariablesStore";
 import { formatDateTime } from "../utils/formatDateTime";
 
+const BootstrapButton = Button as any;
+
 const EnvironmentVariableForm: React.FC = () => {
   const { showToast } = useToastModal();
 
@@ -114,18 +116,26 @@ const EnvironmentVariableForm: React.FC = () => {
       <Modal.Footer className={styles.formModalFooter}>
         {formMode === "edit" && (
           <div className="d-flex align-items-center gap-2">
-            <Button variant="outline-danger" size="sm" onClick={handleDelete}>
+            <BootstrapButton
+              variant="outline-danger"
+              size="sm"
+              onClick={handleDelete}
+            >
               <Trash2 size={16} className="me-2" />
               Удалить
-            </Button>
+            </BootstrapButton>
           </div>
         )}
 
         <div className={styles.formModalActions}>
-          <Button variant="outline-secondary" size="sm" onClick={cancelForm}>
+          <BootstrapButton
+            variant="outline-secondary"
+            size="sm"
+            onClick={cancelForm}
+          >
             Закрыть
-          </Button>
-          <Button
+          </BootstrapButton>
+          <BootstrapButton
             variant="primary"
             size="sm"
             onClick={handleSubmit}
@@ -137,7 +147,7 @@ const EnvironmentVariableForm: React.FC = () => {
               <Save size={16} className="me-2" />
             )}
             Сохранить
-          </Button>
+          </BootstrapButton>
         </div>
       </Modal.Footer>
     </Modal>

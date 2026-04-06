@@ -46,6 +46,7 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
   error,
   onCharacterSelect,
 }) => {
+  const BootstrapButton = Button as any;
   const navigate = useNavigate();
   const { showToast } = useToastModal();
   const [pendingChanges, setPendingChanges] = useState<FramedataChange[]>([]);
@@ -271,7 +272,7 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
         <Card.Footer>
           <Row className="g-2 justify-content-center">
             <Col xs={4}>
-              <Button
+              <BootstrapButton
                 size="sm"
                 variant="success"
                 className="w-100"
@@ -283,20 +284,20 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
                 }
               >
                 Принять все
-              </Button>
+              </BootstrapButton>
             </Col>
             <Col xs={4}>
-              <Button
+              <BootstrapButton
                 size="sm"
                 variant="warning"
                 className="w-100"
                 onClick={() => navigate("/framedata/pending")}
               >
                 Начать рассматривать
-              </Button>
+              </BootstrapButton>
             </Col>
             <Col xs={4}>
-              <Button
+              <BootstrapButton
                 size="sm"
                 variant="danger"
                 className="w-100"
@@ -308,7 +309,7 @@ const CharacterGrid: React.FC<CharacterGridProps> = ({
                 }
               >
                 Отменить все
-              </Button>
+              </BootstrapButton>
             </Col>
           </Row>
         </Card.Footer>

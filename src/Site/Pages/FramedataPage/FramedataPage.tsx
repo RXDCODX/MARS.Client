@@ -15,6 +15,7 @@ import { NavigationState } from "./FramedataPage.types";
 
 const FramedataPage: React.FC = () => {
   const api = useMemo(() => new Framedata(), []);
+  const BootstrapButton = Button as any;
   const [navigationState, setNavigationState] = useState<NavigationState>({
     currentView: "characters",
     selectedCharacter: null,
@@ -172,9 +173,9 @@ const FramedataPage: React.FC = () => {
         <Alert variant="danger">
           <Alert.Heading>Ошибка загрузки данных</Alert.Heading>
           <p>{navigationState.error}</p>
-          <Button onClick={loadCharacters} variant="outline-danger">
+          <BootstrapButton onClick={loadCharacters} variant="outline-danger">
             Попробовать снова
-          </Button>
+          </BootstrapButton>
         </Alert>
       </Container>
     );

@@ -75,6 +75,7 @@ const ChangeDetailsPage: React.FC<ChangeDetailsPageProps> = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const BootstrapButton = Button as any;
 
   const [change] = useState<FramedataChange | undefined>(
     propChange || location.state?.change
@@ -1107,9 +1108,9 @@ const ChangeDetailsPage: React.FC<ChangeDetailsPageProps> = ({
         <Alert variant="danger">
           <Alert.Heading>Изменение не найдено</Alert.Heading>
           <p>Вернитесь к списку ожидающих изменений.</p>
-          <Button onClick={() => navigate("/framedata/pending")}>
+          <BootstrapButton onClick={() => navigate("/framedata/pending")}>
             Вернуться к списку
-          </Button>
+          </BootstrapButton>
         </Alert>
       </Container>
     );
@@ -1119,24 +1120,24 @@ const ChangeDetailsPage: React.FC<ChangeDetailsPageProps> = ({
     <Container className={styles.framedataPage}>
       <div className="d-flex align-items-center justify-content-between mb-4">
         <div>
-          <Button
+          <BootstrapButton
             variant="outline-secondary"
             onClick={() => navigate("/framedata/pending")}
             className="me-3"
           >
             ← Назад к списку
-          </Button>
+          </BootstrapButton>
           <h2 className="mb-0 d-inline-block">
             Детали изменения: {change.characterName}
           </h2>
         </div>
         <div className="d-flex gap-2">
-          <Button variant="success" onClick={handleApprove}>
+          <BootstrapButton variant="success" onClick={handleApprove}>
             Принять
-          </Button>
-          <Button variant="danger" onClick={handleReject}>
+          </BootstrapButton>
+          <BootstrapButton variant="danger" onClick={handleReject}>
             Отклонить
-          </Button>
+          </BootstrapButton>
         </div>
       </div>
 

@@ -33,6 +33,7 @@ const defaultForm: RootStateForm = {
 };
 
 const RootStatePage: React.FC = () => {
+  const BootstrapButton = Button as any;
   const { showToast } = useToastModal();
 
   const [items, setItems] = useState<RootStateDto[]>([]);
@@ -175,9 +176,12 @@ const RootStatePage: React.FC = () => {
     <Container fluid className={styles.page}>
       <div className={styles.header}>
         <h1 className="mb-0">Управление RootState</h1>
-        <Button variant="outline-secondary" onClick={() => void loadItems()}>
+        <BootstrapButton
+          variant="outline-secondary"
+          onClick={() => void loadItems()}
+        >
           Обновить
-        </Button>
+        </BootstrapButton>
       </div>
 
       {!!error && (
@@ -256,7 +260,11 @@ const RootStatePage: React.FC = () => {
                 </Form.Group>
 
                 <div className={styles.actions}>
-                  <Button type="submit" variant="primary" disabled={saving}>
+                  <BootstrapButton
+                    type="submit"
+                    variant="primary"
+                    disabled={saving}
+                  >
                     {saving ? (
                       <>
                         <Spinner as="span" size="sm" className="me-2" />
@@ -267,16 +275,16 @@ const RootStatePage: React.FC = () => {
                     ) : (
                       "Создать"
                     )}
-                  </Button>
+                  </BootstrapButton>
 
                   {editingName && (
-                    <Button
+                    <BootstrapButton
                       type="button"
                       variant="outline-secondary"
                       onClick={resetForm}
                     >
                       Отмена
-                    </Button>
+                    </BootstrapButton>
                   )}
                 </div>
               </Form>
@@ -315,14 +323,14 @@ const RootStatePage: React.FC = () => {
                           <td>{item.typeDescription}</td>
                           <td>
                             <div className={styles.actionsRight}>
-                              <Button
+                              <BootstrapButton
                                 size="sm"
                                 variant="outline-primary"
                                 onClick={() => handleEdit(item)}
                               >
                                 Изменить
-                              </Button>
-                              <Button
+                              </BootstrapButton>
+                              <BootstrapButton
                                 size="sm"
                                 variant="outline-danger"
                                 disabled={deletingName === item.name}
@@ -331,7 +339,7 @@ const RootStatePage: React.FC = () => {
                                 {deletingName === item.name
                                   ? "Удаление..."
                                   : "Удалить"}
-                              </Button>
+                              </BootstrapButton>
                             </div>
                           </td>
                         </tr>

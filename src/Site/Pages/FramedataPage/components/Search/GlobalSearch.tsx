@@ -28,6 +28,7 @@ interface SearchResult {
 }
 
 const GlobalSearch: React.FC<GlobalSearchProps> = ({ characters }) => {
+  const BootstrapButton = Button as any;
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -281,7 +282,7 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ characters }) => {
             </Col>
             <Col md={4} className="d-flex align-items-end">
               <div className="d-flex gap-2 w-100">
-                <Button
+                <BootstrapButton
                   type="submit"
                   variant="primary"
                   size="lg"
@@ -301,15 +302,15 @@ const GlobalSearch: React.FC<GlobalSearchProps> = ({ characters }) => {
                   ) : (
                     "Найти"
                   )}
-                </Button>
-                <Button
+                </BootstrapButton>
+                <BootstrapButton
                   variant="outline-secondary"
                   size="lg"
                   onClick={handleClear}
                   disabled={!searchQuery.trim()}
                 >
                   ✕
-                </Button>
+                </BootstrapButton>
               </div>
             </Col>
           </Row>

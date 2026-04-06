@@ -5,6 +5,8 @@ import { Button, Modal, Spinner, Table } from "react-bootstrap";
 import styles from "../LogsPage.module.scss";
 import { Log, LogsTableProps } from "../LogsPage.types";
 
+const BootstrapButton = Button as any;
+
 const LogsTable: React.FC<LogsTableProps> = ({
   logs,
   isLoading,
@@ -105,7 +107,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
           <div className="d-flex justify-content-between align-items-center">
             <h3>Логи приложения ({totalCount.toLocaleString()})</h3>
             <div className="d-flex gap-2">
-              <Button
+              <BootstrapButton
                 variant={viewMode === "table" ? "primary" : "outline-primary"}
                 size="sm"
                 onClick={() => setViewMode("table")}
@@ -113,8 +115,8 @@ const LogsTable: React.FC<LogsTableProps> = ({
               >
                 <TableIcon size={16} />
                 Таблица
-              </Button>
-              <Button
+              </BootstrapButton>
+              <BootstrapButton
                 variant={viewMode === "text" ? "primary" : "outline-primary"}
                 size="sm"
                 onClick={() => setViewMode("text")}
@@ -122,7 +124,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
               >
                 <List size={16} />
                 Текст
-              </Button>
+              </BootstrapButton>
             </div>
           </div>
         </div>
@@ -159,7 +161,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
                     </td>
                     <td>
                       <div className="d-flex gap-2">
-                        <Button
+                        <BootstrapButton
                           variant="outline-primary"
                           size="sm"
                           onClick={() => handleViewDetails(log)}
@@ -168,9 +170,9 @@ const LogsTable: React.FC<LogsTableProps> = ({
                         >
                           <Eye size={14} />
                           Детали
-                        </Button>
+                        </BootstrapButton>
 
-                        <Button
+                        <BootstrapButton
                           variant="outline-success"
                           size="sm"
                           onClick={() => handleExportLog(log)}
@@ -179,7 +181,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
                         >
                           <Download size={14} />
                           Экспорт
-                        </Button>
+                        </BootstrapButton>
                       </div>
                     </td>
                   </tr>
@@ -207,7 +209,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
               <small className="text-muted">
                 Показано {logs.length} из {totalCount.toLocaleString()} записей
               </small>
-              <Button
+              <BootstrapButton
                 variant="outline-success"
                 size="sm"
                 onClick={() => {
@@ -226,7 +228,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
               >
                 <Download size={14} />
                 Экспорт в TXT
-              </Button>
+              </BootstrapButton>
             </div>
           </div>
         )}
@@ -341,11 +343,11 @@ const LogsTable: React.FC<LogsTableProps> = ({
           )}
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseModal}>
+          <BootstrapButton variant="secondary" onClick={handleCloseModal}>
             Закрыть
-          </Button>
+          </BootstrapButton>
           {selectedLog && (
-            <Button
+            <BootstrapButton
               variant="success"
               onClick={() => {
                 handleExportLog(selectedLog);
@@ -355,7 +357,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
             >
               <Download size={16} />
               Экспортировать
-            </Button>
+            </BootstrapButton>
           )}
         </Modal.Footer>
       </Modal>

@@ -7,6 +7,8 @@ import { useToastModal } from "@/shared/Utils/ToastModal";
 import styles from "../EnvironmentVariablesPage.module.scss";
 import { useEnvironmentVariablesStore } from "../store/useEnvironmentVariablesStore";
 
+const BootstrapButton = Button as any;
+
 const EnvironmentVariablesToolbar: React.FC = () => {
   const { showToast } = useToastModal();
   const searchQuery = useEnvironmentVariablesStore(state => state.searchQuery);
@@ -62,24 +64,24 @@ const EnvironmentVariablesToolbar: React.FC = () => {
             onChange={event => setSearchQuery(event.target.value)}
           />
         </InputGroup>
-        <Button
+        <BootstrapButton
           variant="outline-secondary"
           size="sm"
           onClick={clearSearch}
           disabled={!searchQuery.trim()}
         >
           Очистить
-        </Button>
+        </BootstrapButton>
       </div>
       <div className={styles.toolbarRight}>
-        <Button
+        <BootstrapButton
           variant="outline-primary"
           size="sm"
           onClick={toggleSortDirection}
         >
           Сортировка: {sortDirection === "asc" ? "A → Я" : "Я → A"}
-        </Button>
-        <Button
+        </BootstrapButton>
+        <BootstrapButton
           variant="outline-secondary"
           size="sm"
           onClick={handleRefresh}
@@ -87,8 +89,8 @@ const EnvironmentVariablesToolbar: React.FC = () => {
         >
           <RefreshCcw size={16} className="me-2" />
           Обновить список
-        </Button>
-        <Button
+        </BootstrapButton>
+        <BootstrapButton
           variant="outline-warning"
           size="sm"
           onClick={handleReload}
@@ -100,11 +102,11 @@ const EnvironmentVariablesToolbar: React.FC = () => {
             <RefreshCcw size={16} className="me-2" />
           )}
           Перезагрузить с сервера
-        </Button>
-        <Button variant="primary" size="sm" onClick={startCreate}>
+        </BootstrapButton>
+        <BootstrapButton variant="primary" size="sm" onClick={startCreate}>
           <Plus size={16} className="me-2" />
           Новая переменная
-        </Button>
+        </BootstrapButton>
       </div>
     </div>
   );

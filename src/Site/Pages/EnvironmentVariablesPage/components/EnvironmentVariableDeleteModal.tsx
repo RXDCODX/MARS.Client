@@ -4,6 +4,8 @@ import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import { useEnvironmentVariablesStore } from "../store/useEnvironmentVariablesStore";
 
+const BootstrapButton = Button as any;
+
 const EnvironmentVariableDeleteModal: React.FC = () => {
   const { showToast } = useToastModal();
   const confirmDeleteKey = useEnvironmentVariablesStore(
@@ -34,15 +36,19 @@ const EnvironmentVariableDeleteModal: React.FC = () => {
         <strong>{confirmDeleteKey}</strong>? Действие нельзя отменить.
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={closeDeleteConfirm}>
+        <BootstrapButton variant="secondary" onClick={closeDeleteConfirm}>
           Отмена
-        </Button>
-        <Button variant="danger" onClick={handleDelete} disabled={isDeleting}>
+        </BootstrapButton>
+        <BootstrapButton
+          variant="danger"
+          onClick={handleDelete}
+          disabled={isDeleting}
+        >
           {isDeleting ? (
             <Spinner animation="border" size="sm" className="me-2" />
           ) : null}
           Удалить
-        </Button>
+        </BootstrapButton>
       </Modal.Footer>
     </Modal>
   );

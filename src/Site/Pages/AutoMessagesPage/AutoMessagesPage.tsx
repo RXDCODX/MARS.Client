@@ -24,6 +24,7 @@ import styles from "./AutoMessagesPage.module.scss";
 const emptyMessage = "";
 
 const AutoMessagesPage: React.FC = () => {
+  const BootstrapButton = Button as any;
   const { showToast } = useToastModal();
   const api = useMemo(() => new AutoMessages(), []);
 
@@ -139,9 +140,12 @@ const AutoMessagesPage: React.FC = () => {
     <Container fluid className={styles.page}>
       <div className={styles.header}>
         <h1>Управление автосообщениями</h1>
-        <Button variant="outline-secondary" onClick={() => void loadItems()}>
+        <BootstrapButton
+          variant="outline-secondary"
+          onClick={() => void loadItems()}
+        >
           Обновить
-        </Button>
+        </BootstrapButton>
       </div>
 
       {!!error && (
@@ -173,7 +177,11 @@ const AutoMessagesPage: React.FC = () => {
                 </Form.Group>
 
                 <div className={styles.actions}>
-                  <Button type="submit" variant="primary" disabled={saving}>
+                  <BootstrapButton
+                    type="submit"
+                    variant="primary"
+                    disabled={saving}
+                  >
                     {saving ? (
                       <>
                         <Spinner as="span" size="sm" className="me-2" />
@@ -184,12 +192,15 @@ const AutoMessagesPage: React.FC = () => {
                     ) : (
                       "Создать"
                     )}
-                  </Button>
+                  </BootstrapButton>
 
                   {editingId && (
-                    <Button variant="outline-secondary" onClick={resetForm}>
+                    <BootstrapButton
+                      variant="outline-secondary"
+                      onClick={resetForm}
+                    >
                       Отмена
-                    </Button>
+                    </BootstrapButton>
                   )}
                 </div>
               </Form>
@@ -224,14 +235,14 @@ const AutoMessagesPage: React.FC = () => {
                           <td>{item.message}</td>
                           <td>
                             <div className={styles.actionsRight}>
-                              <Button
+                              <BootstrapButton
                                 size="sm"
                                 variant="outline-primary"
                                 onClick={() => handleEdit(item)}
                               >
                                 Изменить
-                              </Button>
-                              <Button
+                              </BootstrapButton>
+                              <BootstrapButton
                                 size="sm"
                                 variant="outline-danger"
                                 disabled={deletingId === item.id}
@@ -240,7 +251,7 @@ const AutoMessagesPage: React.FC = () => {
                                 {deletingId === item.id
                                   ? "Удаление..."
                                   : "Удалить"}
-                              </Button>
+                              </BootstrapButton>
                             </div>
                           </td>
                         </tr>

@@ -62,6 +62,10 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
   const [error, setError] = useState<string | null>(null);
   const avatarFileInputRef = useRef<HTMLInputElement>(null);
   const fullBodyFileInputRef = useRef<HTMLInputElement>(null);
+  const handleBackClick = () => {
+    onBack();
+  };
+  const BootstrapButton = Button as any;
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -351,14 +355,14 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
                         (e.preventDefault(), handleAddStrength())
                       }
                     />
-                    <Button
+                    <BootstrapButton
                       variant="outline-success"
                       size="sm"
                       onClick={handleAddStrength}
                       disabled={!newStrength.trim()}
                     >
                       +
-                    </Button>
+                    </BootstrapButton>
                   </div>
                   <div
                     className="d-flex flex-wrap gap-1"
@@ -372,14 +376,14 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
                         style={{ whiteSpace: "normal", textAlign: "left" }}
                       >
                         {strength}
-                        <Button
+                        <BootstrapButton
                           variant="link"
                           size="sm"
                           className="p-0 text-white text-decoration-none"
                           onClick={() => handleRemoveStrength(strength)}
                         >
                           ×
-                        </Button>
+                        </BootstrapButton>
                       </Badge>
                     ))}
                   </div>
@@ -399,14 +403,14 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
                         (e.preventDefault(), handleAddWeakness())
                       }
                     />
-                    <Button
+                    <BootstrapButton
                       variant="outline-danger"
                       size="sm"
                       onClick={handleAddWeakness}
                       disabled={!newWeakness.trim()}
                     >
                       +
-                    </Button>
+                    </BootstrapButton>
                   </div>
                   <div
                     className="d-flex flex-wrap gap-1"
@@ -420,14 +424,14 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
                         style={{ whiteSpace: "normal", textAlign: "left" }}
                       >
                         {weakness}
-                        <Button
+                        <BootstrapButton
                           variant="link"
                           size="sm"
                           className="p-0 text-white text-decoration-none"
                           onClick={() => handleRemoveWeakness(weakness)}
                         >
                           ×
-                        </Button>
+                        </BootstrapButton>
                       </Badge>
                     ))}
                   </div>
@@ -478,13 +482,13 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
 
                   {selectedAvatarImage && (
                     <div className="d-flex gap-2 mb-3">
-                      <Button
+                      <BootstrapButton
                         variant="outline-danger"
                         size="sm"
                         onClick={handleRemoveAvatarImage}
                       >
                         Убрать изображение
-                      </Button>
+                      </BootstrapButton>
                     </div>
                   )}
 
@@ -537,13 +541,13 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
 
                   {selectedFullBodyImage && (
                     <div className="d-flex gap-2 mb-3">
-                      <Button
+                      <BootstrapButton
                         variant="outline-danger"
                         size="sm"
                         onClick={handleRemoveFullBodyImage}
                       >
                         Убрать изображение
-                      </Button>
+                      </BootstrapButton>
                     </div>
                   )}
 
@@ -562,10 +566,19 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
             )}
 
             <div className="d-flex gap-2 justify-content-end mt-4">
-              <Button variant="secondary" onClick={onBack} disabled={isLoading}>
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={handleBackClick}
+                disabled={isLoading}
+              >
                 Назад
-              </Button>
-              <Button type="submit" variant="primary" disabled={isLoading}>
+              </button>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={isLoading}
+              >
                 {isLoading ? (
                   <>
                     <Spinner
@@ -579,7 +592,7 @@ const CharacterEditForm: React.FC<CharacterEditFormProps> = ({
                 ) : (
                   "Сохранить изменения"
                 )}
-              </Button>
+              </button>
             </div>
           </Form>
         </Card.Body>

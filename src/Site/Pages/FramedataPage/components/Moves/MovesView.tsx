@@ -31,6 +31,7 @@ const MovesView: React.FC<MovesViewProps> = ({
   onBack,
   isLoading = false,
 }) => {
+  const BootstrapButton = Button as any;
   const charName =
     character.name.charAt(0).toUpperCase() + character.name.slice(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -130,9 +131,13 @@ const MovesView: React.FC<MovesViewProps> = ({
 
       <div className={styles.movesContent}>
         <div className="d-flex align-items-center mb-4">
-          <Button variant="outline-secondary" onClick={onBack} className="me-3">
+          <BootstrapButton
+            variant="outline-secondary"
+            onClick={onBack}
+            className="me-3"
+          >
             ← Назад к персонажу
-          </Button>
+          </BootstrapButton>
           <div className="d-flex align-items-center">
             <img
               src={getCharacterAvatar(character, "150x200")}

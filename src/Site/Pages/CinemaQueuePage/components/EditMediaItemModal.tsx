@@ -2,6 +2,8 @@ import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 
 import { UpdateMediaItemRequest } from "@/shared/api";
 
+const BootstrapButton = Button as any;
+
 interface EditMediaItemModalProps {
   show: boolean;
   onHide: () => void;
@@ -134,12 +136,12 @@ const EditMediaItemModal: React.FC<EditMediaItemModalProps> = ({
         </Form.Group>
 
         <div className="d-flex gap-2">
-          <Button type="submit" variant="primary">
+          <BootstrapButton type="submit" variant="primary">
             Update
-          </Button>
-          <Button variant="secondary" onClick={onHide}>
+          </BootstrapButton>
+          <BootstrapButton variant="secondary" onClick={onHide}>
             Cancel
-          </Button>
+          </BootstrapButton>
         </div>
       </Form>
     </Modal.Body>

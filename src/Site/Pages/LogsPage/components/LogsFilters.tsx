@@ -7,6 +7,8 @@ import {
   LogsFiltersProps,
 } from "../LogsPage.types";
 
+const BootstrapButton = Button as any;
+
 const LogsFilters: React.FC<LogsFiltersProps> = ({
   filters,
   onFiltersChange,
@@ -146,7 +148,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
         {/* Кнопки управления - отдельный row */}
         <div className={styles.buttonsRow}>
           <div className={styles.buttonsGroup}>
-            <Button
+            <BootstrapButton
               type="submit"
               variant="primary"
               disabled={isLoading}
@@ -154,9 +156,9 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
             >
               <Search size={16} />
               {isLoading ? "Поиск..." : "Найти логи"}
-            </Button>
+            </BootstrapButton>
 
-            <Button
+            <BootstrapButton
               type="button"
               variant="outline-secondary"
               onClick={handleReset}
@@ -165,9 +167,9 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
             >
               <RotateCcw size={16} />
               Сбросить
-            </Button>
+            </BootstrapButton>
 
-            <Button
+            <BootstrapButton
               type="button"
               variant="outline-info"
               onClick={() => {
@@ -184,9 +186,9 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
             >
               <Filter size={16} />
               Последние 24 часа
-            </Button>
+            </BootstrapButton>
 
-            <Button
+            <BootstrapButton
               type="button"
               variant="outline-warning"
               onClick={() => {
@@ -215,7 +217,7 @@ const LogsFilters: React.FC<LogsFiltersProps> = ({
             >
               <Filter size={16} />
               За эту неделю
-            </Button>
+            </BootstrapButton>
           </div>
         </div>
       </form>

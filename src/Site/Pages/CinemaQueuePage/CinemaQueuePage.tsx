@@ -20,6 +20,7 @@ import MediaItemsTable from "./components/MediaItemsTable";
 import StatisticsCards from "./components/StatisticsCards";
 
 const CinemaQueuePage: React.FC = () => {
+  const BootstrapButton = Button as any;
   const [mediaItems, setMediaItems] = useState<CinemaMediaItemDto[]>([]);
   const [statistics, setStatistics] = useState<CinemaQueueStatistics | null>(
     null
@@ -229,14 +230,14 @@ const CinemaQueuePage: React.FC = () => {
           Cinema Queue Management
         </h1>
         <div className="d-flex gap-2">
-          <Button
+          <BootstrapButton
             variant="primary"
             onClick={() => setModalVisible(true)}
             size="lg"
           >
             <Plus className="me-2" />
             Add New Item
-          </Button>
+          </BootstrapButton>
         </div>
       </div>
 

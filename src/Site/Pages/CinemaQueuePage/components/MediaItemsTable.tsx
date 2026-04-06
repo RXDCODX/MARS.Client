@@ -5,6 +5,8 @@ import { CinemaMediaItemDto } from "@/shared/api";
 
 import styles from "../CinemaQueuePage.module.scss";
 
+const BootstrapButton = Button as any;
+
 interface MediaItemsTableProps {
   mediaItems: CinemaMediaItemDto[];
   loading: boolean;
@@ -113,7 +115,7 @@ const MediaItemsTable: React.FC<MediaItemsTableProps> = ({
                 <td>{new Date(item.createdAt).toLocaleDateString()}</td>
                 <td>
                   <div className="d-flex gap-1">
-                    <Button
+                    <BootstrapButton
                       variant="primary"
                       size="sm"
                       onClick={() => onMarkAsNext(item.id)}
@@ -121,23 +123,23 @@ const MediaItemsTable: React.FC<MediaItemsTableProps> = ({
                     >
                       <PlayCircle className="me-1" />
                       Mark Next
-                    </Button>
-                    <Button
+                    </BootstrapButton>
+                    <BootstrapButton
                       variant="outline-secondary"
                       size="sm"
                       onClick={() => onEdit(item)}
                     >
                       <Pencil className="me-1" />
                       Edit
-                    </Button>
-                    <Button
+                    </BootstrapButton>
+                    <BootstrapButton
                       variant="outline-danger"
                       size="sm"
                       onClick={() => onDelete(item.id)}
                     >
                       <Trash className="me-1" />
                       Delete
-                    </Button>
+                    </BootstrapButton>
                   </div>
                 </td>
               </tr>

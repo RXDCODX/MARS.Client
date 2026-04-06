@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import type { MouseEvent as ReactMouseEvent } from "react";
 import {
   Alert,
   Badge,
@@ -71,6 +72,7 @@ enum SortField {
 const PendingChangesPage: React.FC = () => {
   const navigate = useNavigate();
   const { showToast } = useToastModal();
+  const BootstrapButton = Button as any;
   const [changes, setChanges] = useState<FramedataChange[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
@@ -354,7 +356,7 @@ const PendingChangesPage: React.FC = () => {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h2 className="mb-0">Ожидающие изменения</h2>
         <div className="d-flex gap-2">
-          <Button
+          <BootstrapButton
             variant="success"
             size="sm"
             onClick={handleApplyAll}
@@ -375,8 +377,8 @@ const PendingChangesPage: React.FC = () => {
             ) : (
               "Принять все"
             )}
-          </Button>
-          <Button
+          </BootstrapButton>
+          <BootstrapButton
             variant="danger"
             size="sm"
             onClick={handleRejectAll}
@@ -397,7 +399,7 @@ const PendingChangesPage: React.FC = () => {
             ) : (
               "Отклонить все"
             )}
-          </Button>
+          </BootstrapButton>
         </div>
       </div>
 
@@ -562,28 +564,28 @@ const PendingChangesPage: React.FC = () => {
                         {new Date(change.detectedAt).toLocaleString("ru-RU")}
                       </div>
                       <div className="d-flex gap-2">
-                        <Button
+                        <BootstrapButton
                           variant="success"
                           size="sm"
                           className="flex-fill"
-                          onClick={e => {
+                          onClick={(e: ReactMouseEvent<HTMLButtonElement>) => {
                             e.stopPropagation();
                             handleApprove(change);
                           }}
                         >
                           Принять
-                        </Button>
-                        <Button
+                        </BootstrapButton>
+                        <BootstrapButton
                           variant="danger"
                           size="sm"
                           className="flex-fill"
-                          onClick={e => {
+                          onClick={(e: ReactMouseEvent<HTMLButtonElement>) => {
                             e.stopPropagation();
                             handleReject(change);
                           }}
                         >
                           Отклонить
-                        </Button>
+                        </BootstrapButton>
                       </div>
                     </div>
                   </Card.Body>
