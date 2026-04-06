@@ -387,3 +387,4 @@ dist-ssr
 *storybook.log
 storybook-static
 tsconfig.app.tsbuildinfo
+.yarn/install-state.gz
