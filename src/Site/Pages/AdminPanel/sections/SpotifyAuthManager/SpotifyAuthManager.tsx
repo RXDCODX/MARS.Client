@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Alert, Button, Card, Form, Spinner } from "react-bootstrap";
 
 import { SpotifyAuth } from "@/shared/api";
@@ -20,18 +20,13 @@ const SpotifyAuthManager: React.FC = () => {
   const [isCheckingStatus, setIsCheckingStatus] = useState(true);
   const { showToast } = useToastModal();
 
-  const apiClient = new SpotifyAuth();
+  const apiClient = useMemo(() => new SpotifyAuth(), []);
 
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
-
-  const checkAuthStatus = async () => {
+  const checkAuthStatus = useCallback(async () => {
     setIsCheckingStatus(true);
     try {
       const response = await apiClient.spotifyAuthStatusList();
-      const result =
-        response as unknown as OperationResult<SpotifyAuthStatusResult>;
+      const result = response.data;
       if (result.success && result.data) {
         setStatus(result.data);
         setClientId(result.data.hasClientCredentials ? "████████████" : "");
@@ -42,7 +37,7 @@ const SpotifyAuthManager: React.FC = () => {
     } finally {
       setIsCheckingStatus(false);
     }
-  };
+  }, [apiClient]);
 
   const handleStartAuth = async () => {
     if (
@@ -63,9 +58,9 @@ const SpotifyAuthManager: React.FC = () => {
       const response = await apiClient.spotifyAuthStartCreate({
         clientId: clientId.trim(),
         clientSecret: clientSecret.trim(),
+        redirectUri: `${window.location.origin}/api/SpotifyAuth/callback`,
       });
-      const result =
-        response as unknown as OperationResult<SpotifyAuthStartResult>;
+      const result = response.data as OperationResult<SpotifyAuthStartResult>;
 
       if (result.success && result.data?.authUrl) {
         showToast({
@@ -102,7 +97,7 @@ const SpotifyAuthManager: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await apiClient.spotifyAuthDisconnectCreate();
-      const result = response as unknown as OperationResult;
+      const result = response.data as OperationResult;
       if (result.success) {
         showToast({
           success: true,
@@ -127,6 +122,10 @@ const SpotifyAuthManager: React.FC = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, [checkAuthStatus]);
 
   if (isCheckingStatus) {
     return (
