@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import type { PlayerState, QueueItem } from "@/shared/api";
-import { PlayerStateVideoStateEnum } from "@/shared/api";
+import { PlayerStateStateEnum, PlayerStateVideoStateEnum } from "@/shared/api";
 
 import { UnifiedPlayerView } from "../components";
 import { useVideoScreenStore } from "../store/useVideoScreenStore";
@@ -98,6 +98,22 @@ export function useVideoStateRenderer({
     useVideoScreenStore.getState().setLocalVolume(volume * 100);
   }, []);
 
+  const onPlay = useCallback(() => {
+    if (isMainPlayer) {
+      void useVideoScreenStore
+        .getState()
+        .syncPlaybackState(PlayerStateStateEnum.Playing);
+    }
+  }, [isMainPlayer]);
+
+  const onPause = useCallback(() => {
+    if (isMainPlayer) {
+      void useVideoScreenStore
+        .getState()
+        .syncPlaybackState(PlayerStateStateEnum.Paused);
+    }
+  }, [isMainPlayer]);
+
   // Создаем стабильный playerState объект
   const stablePlayerState = useMemo(
     () =>
@@ -138,6 +154,8 @@ export function useVideoStateRenderer({
         onError={onError}
         onProgress={onProgress}
         onVolumeChange={onVolumeChange}
+        onPlay={onPlay}
+        onPause={onPause}
       />
     );
   }, [
@@ -157,6 +175,8 @@ export function useVideoStateRenderer({
     onError,
     onProgress,
     onVolumeChange,
+    onPlay,
+    onPause,
   ]);
 
   return {

@@ -2,7 +2,10 @@ import { HubConnection } from "@microsoft/signalr";
 import { create } from "zustand";
 
 import type { PlayerState, QueueItem } from "@/shared/api";
-import { SoundRequestHubSignalRConnectionBuilder } from "@/shared/api";
+import {
+  PlayerStateStateEnum,
+  SoundRequestHubSignalRConnectionBuilder,
+} from "@/shared/api";
 
 import { parseDurationToSeconds } from "../utils/parseDuration";
 
@@ -24,6 +27,9 @@ interface VideoScreenStoreState {
   notifyStarted: (track: QueueItem["track"]) => Promise<void>;
   notifyError: (track: QueueItem["track"]) => Promise<void>;
   setLocalVolume: (volume: number) => void;
+  syncPlaybackState: (
+    nextState: PlayerStateStateEnum.Playing | PlayerStateStateEnum.Paused
+  ) => Promise<void>;
 }
 
 function extractQueueItemId(state: PlayerState | null): string | undefined {
@@ -254,6 +260,48 @@ export const useVideoScreenStore = create<VideoScreenStoreState>(
         localVolume: volume,
         isVolumeManuallyChanged: true,
       });
+    },
+
+    syncPlaybackState: async nextState => {
+      const state = get();
+
+      if (!state.playerState) {
+        return;
+      }
+
+      if (state.playerState.state === nextState) {
+        return;
+      }
+
+      const previousState = state.playerState;
+
+      // Оптимистично обновляем локальный state, чтобы ReactPlayer не откатывал play/pause
+      // до прихода PlayerStateChange с сервера.
+      set({
+        playerState: {
+          ...previousState,
+          state: nextState,
+        },
+      });
+
+      if (!state.connection) {
+        return;
+      }
+
+      const newState: PlayerState = {
+        ...previousState,
+        state: nextState,
+      };
+
+      try {
+        await state.connection.invoke("FrontStateChange", newState);
+      } catch (error) {
+        set({ playerState: previousState });
+        console.error(
+          "[VideoScreenStore] Не удалось синхронизировать play/pause состояние",
+          error
+        );
+      }
     },
   })
 );

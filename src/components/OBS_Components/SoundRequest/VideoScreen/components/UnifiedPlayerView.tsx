@@ -31,6 +31,8 @@ interface Props {
     loadedSeconds: number;
   }) => void;
   onVolumeChange?: (volume: number) => void;
+  onPlay?: () => void;
+  onPause?: () => void;
 }
 
 /**
@@ -54,11 +56,16 @@ function UnifiedPlayerViewComponent({
   onError,
   onProgress,
   onVolumeChange,
+  onPlay,
+  onPause,
 }: Props) {
+  const PAUSE_SUPPRESSION_MS = 900;
   const isPlaying = playerState.state === "Playing";
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const playerRef = useRef<any>(null);
   const progressAppliedRef = useRef<boolean>(false);
+  const ignorePauseUntilRef = useRef<number>(0);
+  const isBufferingRef = useRef<boolean>(false);
 
   // Используем queueItemId если доступен, иначе fallback на URL
   // queueItemId гарантирует пересоздание плеера при новом заказе
@@ -288,6 +295,44 @@ function UnifiedPlayerViewComponent({
     [isMainPlayer, onProgress]
   );
 
+  const handlePlay = useCallback(() => {
+    ignorePauseUntilRef.current = Date.now() + PAUSE_SUPPRESSION_MS;
+
+    if (isMainPlayer && onPlay) {
+      onPlay();
+    }
+  }, [isMainPlayer, onPlay]);
+
+  const handlePlaying = useCallback(() => {
+    ignorePauseUntilRef.current = Date.now() + PAUSE_SUPPRESSION_MS;
+
+    if (isMainPlayer && onPlay) {
+      onPlay();
+    }
+  }, [isMainPlayer, onPlay]);
+
+  const handleBuffer = useCallback(() => {
+    isBufferingRef.current = true;
+  }, []);
+
+  const handleBufferEnd = useCallback(() => {
+    isBufferingRef.current = false;
+  }, []);
+
+  const handlePause = useCallback(() => {
+    if (isBufferingRef.current) {
+      return;
+    }
+
+    if (Date.now() < ignorePauseUntilRef.current) {
+      return;
+    }
+
+    if (isMainPlayer && onPause) {
+      onPause();
+    }
+  }, [isMainPlayer, onPause]);
+
   return (
     <div className={containerClassName}>
       {/* Единый ReactPlayer для всех режимов - пропсы НЕИЗМЕННЫ для предотвращения ререндера */}
@@ -303,6 +348,11 @@ function UnifiedPlayerViewComponent({
           onStart={handleStart}
           onError={handleError}
           onProgress={handleProgress}
+          onPlay={handlePlay}
+          onPlaying={handlePlaying}
+          onBuffer={handleBuffer}
+          onBufferEnd={handleBufferEnd}
+          onPause={handlePause}
           width="100%"
           height="100%"
           controls={true}

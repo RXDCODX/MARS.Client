@@ -28,6 +28,8 @@ interface Props {
     loadedSeconds: number;
   }) => void;
   onVolumeChange?: (volume: number) => void;
+  onPlay?: () => void;
+  onPause?: () => void;
 }
 
 /**
@@ -49,11 +51,15 @@ function VideoPlayerViewComponent({
   onError,
   onProgress,
   onVolumeChange,
+  onPlay,
+  onPause,
 }: Props) {
+  const PAUSE_SUPPRESSION_MS = 900;
   const isPlaying = playerState.state === "Playing";
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const playerRef = useRef<any>(null);
   const progressAppliedRef = useRef<boolean>(false);
+  const ignorePauseUntilRef = useRef<number>(0);
 
   // Используем queueItemId если доступен, иначе fallback на URL
   // queueItemId гарантирует пересоздание плеера при новом заказе
@@ -219,6 +225,29 @@ function VideoPlayerViewComponent({
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           onProgress={(state: any) => {
             if (isMainPlayer) onProgress(state);
+          }}
+          onPlay={() => {
+            ignorePauseUntilRef.current = Date.now() + PAUSE_SUPPRESSION_MS;
+
+            if (isMainPlayer && onPlay) {
+              onPlay();
+            }
+          }}
+          onPlaying={() => {
+            ignorePauseUntilRef.current = Date.now() + PAUSE_SUPPRESSION_MS;
+
+            if (isMainPlayer && onPlay) {
+              onPlay();
+            }
+          }}
+          onPause={() => {
+            if (Date.now() < ignorePauseUntilRef.current) {
+              return;
+            }
+
+            if (isMainPlayer && onPause) {
+              onPause();
+            }
           }}
           width="100%"
           height="100%"
