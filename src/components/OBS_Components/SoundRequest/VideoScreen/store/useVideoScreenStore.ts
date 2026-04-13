@@ -18,6 +18,7 @@ interface VideoScreenStoreState {
   isInitialized: boolean;
   localVolume: number;
   isVolumeManuallyChanged: boolean;
+  isMainPlayerContext: boolean;
 
   init: (defaultHasUserInteracted: boolean) => Promise<void>;
   dispose: () => Promise<void>;
@@ -30,6 +31,7 @@ interface VideoScreenStoreState {
   syncPlaybackState: (
     nextState: PlayerStateStateEnum.Playing | PlayerStateStateEnum.Paused
   ) => Promise<void>;
+  setIsMainPlayerContext: (isMainPlayer: boolean) => void;
 }
 
 function extractQueueItemId(state: PlayerState | null): string | undefined {
@@ -46,6 +48,7 @@ export const useVideoScreenStore = create<VideoScreenStoreState>(
     isInitialized: false,
     localVolume: 100,
     isVolumeManuallyChanged: false,
+    isMainPlayerContext: true,
 
     init: async defaultHasUserInteracted => {
       const currentState = get();
@@ -302,6 +305,10 @@ export const useVideoScreenStore = create<VideoScreenStoreState>(
           error
         );
       }
+    },
+
+    setIsMainPlayerContext: isMainPlayer => {
+      set({ isMainPlayerContext: isMainPlayer });
     },
   })
 );

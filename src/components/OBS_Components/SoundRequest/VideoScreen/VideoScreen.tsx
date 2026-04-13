@@ -46,6 +46,7 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
     document.addEventListener("click", handleUserInteraction, { once: true });
     document.addEventListener("touchstart", handleUserInteraction, {
       once: true,
+      passive: true,
     });
 
     return () => {

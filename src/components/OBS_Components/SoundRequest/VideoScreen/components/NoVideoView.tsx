@@ -1,13 +1,12 @@
-import { memo, useCallback, useEffect, useMemo, useRef } from "react";
-import ReactPlayer from "react-player";
+import { memo, useMemo } from "react";
 
 import type { PlayerState, QueueItem } from "@/shared/api";
 import { useInjectStyles } from "@/shared/hooks/useInjectStyles";
 
 import { useTrackProgress } from "../../Player/Desktop/useTrackProgress";
-import { parseDurationToSeconds } from "../utils/parseDuration";
 import { InfoBar } from "./InfoBar";
 import styles from "./NoVideoView.module.scss";
+import { useReactCustomPlayer } from "./useReactCustomPlayer";
 
 interface Props {
   currentTrack: NonNullable<QueueItem["track"]>;
@@ -19,16 +18,6 @@ interface Props {
   userAvatar?: string;
   userColor?: string;
   localVolume: number;
-  onEnded: () => void;
-  onStart: () => void;
-  onError: () => void;
-  onProgress: (state: {
-    played: number;
-    playedSeconds: number;
-    loaded: number;
-    loadedSeconds: number;
-  }) => void;
-  onVolumeChange?: (volume: number) => void;
 }
 
 /**
@@ -46,53 +35,23 @@ function NoVideoViewComponent({
   userAvatar,
   userColor,
   localVolume,
-  onEnded,
-  onStart,
-  onError,
-  onProgress,
-  onVolumeChange,
 }: Props) {
-  const isPlaying = playerState.state === "Playing";
   const authors = currentTrack.authors?.join(", ") || "Неизвестный автор";
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const playerRef = useRef<any>(null);
-  const progressAppliedRef = useRef<boolean>(false);
 
-  // Используем queueItemId если доступен, иначе fallback на URL
-  // queueItemId гарантирует пересоздание плеера при новом заказе
-  const playerKey = queueItemId || currentTrack.url;
-
-  // Определяем нужно ли мьютить: мьютим если не было взаимодействия ИЛИ если в стейте указан мьют
-  const shouldMute = !hasUserInteracted || playerState.isMuted;
-
-  // Сбрасываем флаг восстановления при смене трека
-  useEffect(() => {
-    progressAppliedRef.current = false;
-  }, [queueItemId]);
-
-  // Обработка прогресса плеера - просто обновляем процент
-  const handleTimeUpdate = useCallback(
-    (event: React.SyntheticEvent<HTMLVideoElement, Event>) => {
-      const durationSeconds = parseDurationToSeconds(currentTrack.duration);
-      const currentTime = event.currentTarget?.currentTime ?? 0;
-
-      const playedRatio =
-        durationSeconds > 0 ? currentTime / durationSeconds : 0;
-
-      onProgress({
-        played: playedRatio,
-        playedSeconds: currentTime,
-        loaded: 0,
-        loadedSeconds: 0,
-      });
-    },
-    [currentTrack.duration, onProgress]
-  );
-
-  const durationSeconds = useMemo(
-    () => parseDurationToSeconds(currentTrack.duration),
-    [currentTrack.duration]
-  );
+  const { playerContainerRef, playerElement, playbackInfo } =
+    useReactCustomPlayer({
+      track: currentTrack,
+      queueItemId,
+      playerState,
+      isMainPlayer,
+      hasUserInteracted,
+      localVolume,
+      playerView: {
+        width: "0",
+        height: "0",
+        controls: false,
+      },
+    });
 
   const trackKey = useMemo(() => {
     if (queueItemId) {
@@ -105,8 +64,8 @@ function NoVideoViewComponent({
   }, [currentTrack.id, currentTrack.url, queueItemId]);
 
   const animatedProgress = useTrackProgress({
-    durationSec: durationSeconds,
-    isPlaying,
+    durationSec: playbackInfo.maxTrackTimeSeconds,
+    isPlaying: playbackInfo.isTrackPlaying,
     trackId: trackKey,
     initialProgress: playerState.currentTrackProgress,
   });
@@ -148,62 +107,8 @@ function NoVideoViewComponent({
       style={{ margin: 0, padding: 0, maxWidth: "100vw" }}
     >
       {/* Скрытый аудио плеер */}
-      <div className={styles.hiddenPlayer}>
-        <ReactPlayer
-          ref={playerRef}
-          key={playerKey}
-          src={currentTrack.url}
-          playing={isPlaying}
-          volume={localVolume / 100}
-          muted={!isMainPlayer || shouldMute}
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          onVolumeChange={(volume: any) => {
-            if (onVolumeChange && typeof volume === "number") {
-              onVolumeChange(volume);
-            }
-          }}
-          onEnded={() => {
-            if (isMainPlayer) onEnded();
-          }}
-          onStart={() => {
-            if (isMainPlayer) onStart();
-          }}
-          onError={() => {
-            if (isMainPlayer) onError();
-          }}
-          onProgress={(
-            event: React.SyntheticEvent<HTMLVideoElement, Event>
-          ) => {
-            if (isMainPlayer) handleTimeUpdate(event);
-          }}
-          width="0"
-          height="0"
-          controls={false}
-          onReady={() => {
-            // Применяем прогресс при готовности плеера
-            const savedProgressSeconds = parseDurationToSeconds(
-              playerState.currentTrackProgress
-            );
-
-            if (
-              savedProgressSeconds > 0 &&
-              !progressAppliedRef.current &&
-              playerRef.current
-            ) {
-              const internalPlayer = playerRef.current.getInternalPlayer();
-
-              if (internalPlayer && "currentTime" in internalPlayer) {
-                (internalPlayer as HTMLVideoElement).currentTime =
-                  savedProgressSeconds;
-                progressAppliedRef.current = true;
-
-                console.log(
-                  `[NoVideoView] Восстановлен прогресс: ${savedProgressSeconds}s для трека ${currentTrack.trackName}`
-                );
-              }
-            }
-          }}
-        />
+      <div className={styles.hiddenPlayer} ref={playerContainerRef}>
+        {playerElement}
       </div>
 
       {/* Информационная полоска с прогрессом */}

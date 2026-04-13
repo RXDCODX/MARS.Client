@@ -3,9 +3,10 @@
 .infoBar {
   width: 100%;
   display: flex;
-  max-height: 200px;
+  height: 200px;
+  align-items: center;
   justify-content: center;
-  padding: 40px 0;
+  padding: 0;
   position: relative;
   border-top: 3px solid rgb(255 255 255 / 20%);
   flex-shrink: 0;
@@ -22,128 +23,75 @@
   opacity: 0.6;
 }
 
-.progressOverlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    to right,
-    rgb(255 255 255 / 30%) 0%,
-    rgb(255 255 255 / 50%) var(--track-progress, 0%),
-    rgb(0 0 0 / 30%) var(--track-progress, 0%),
-    rgb(0 0 0 / 30%) 100%
-  );
-  backdrop-filter: blur(5px);
-  will-change: background;
-  z-index: 1;
-}
-
 .infoBarContent {
   display: flex;
   align-items: center;
   width: 100%;
+  height: 100%;
   padding: 0 40px;
   position: relative;
-  z-index: 2;
-}
-
-.userInfo {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 40px;
-}
-
-.userContent {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1;
-
-  > .container {
-    align-items: flex-end;
-
-    > span {
-      align-self: flex-end;
-    }
-  }
+  z-index: 1;
 }
 
 .avatar {
-  width: 140px;
-  height: 140px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid rgb(255 255 255 / 30%);
   box-shadow: 0 4px 12px rgb(0 0 0 / 40%);
-}
-
-.userNameContainer {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  max-width: 40vw;
-  white-space: nowrap;
-
-  > div > div:not(:first-child) {
-    display: none;
-  }
-}
-
-.userName {
-  font-size: 8rem;
-  font-weight: bold;
-  color: #fff;
-  text-shadow:
-    rgb(0 0 0) 2px 0 0,
-    rgb(0 0 0) 1.75517px 0.958851px 0,
-    rgb(0 0 0) 1.0806px 1.68294px 0,
-    rgb(0 0 0) 0.141474px 1.99499px 0,
-    rgb(0 0 0) -0.832294px 1.81859px 0,
-    rgb(0 0 0) -1.60229px 1.19694px 0,
-    rgb(0 0 0) -1.97998px 0.28224px 0,
-    rgb(0 0 0) -1.87291px -0.701566px 0,
-    rgb(0 0 0) -1.30729px -1.5136px 0,
-    rgb(0 0 0) -0.421592px -1.95506px 0,
-    rgb(0 0 0) 0.567324px -1.91785px 0,
-    rgb(0 0 0) 1.41734px -1.41108px 0,
-    rgb(0 0 0) 1.92034px -0.558831px 0;
-  white-space: nowrap;
-}
-
-.divider {
-  width: 3px;
-  height: 100px;
-  background: linear-gradient(
-    180deg,
-    transparent 0%,
-    rgb(0 0 0 / 50%) 50%,
-    transparent 100%
-  );
   flex-shrink: 0;
 }
 
-.trackInfo {
-  flex: 1;
+.mainMarqueeContainer {
   display: flex;
-  flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  flex: 1 1 auto;
   min-width: 0;
-  padding-left: 40px;
+  height: 100%;
+  overflow: hidden;
+  padding-right: 180px;
 }
 
-.trackNameContainer {
+.mainMarquee {
+  width: 100%;
   min-width: 0;
   overflow: hidden;
-  white-space: nowrap;
+  align-self: center;
 
-  > div > div:not(:first-child) {
-    display: none;
+  :global(.rfm-marquee-container),
+  :global(.rfm-marquee),
+  :global(.rfm-initial-child-container) {
+    overflow: hidden !important;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 }
 
-.trackName {
-  font-size: 4rem;
+.mainMarqueeContent {
+  display: flex;
+  align-items: center;
+  min-width: max-content;
+  gap: 20px;
+  line-height: 1;
+  white-space: nowrap;
+  padding-right: 120px;
+}
+
+.userNameBlock,
+.trackNameBlock {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.userName {
+  display: inline-block;
+  flex-shrink: 0;
+  font-size: 6rem;
   font-weight: bold;
   color: #fff;
   text-shadow:
@@ -163,19 +111,12 @@
   white-space: nowrap;
 }
 
-.artistContainer {
-  min-width: 0;
-  overflow: hidden;
-  white-space: nowrap;
-
-  > div > div:not(:first-child) {
-    display: none;
-  }
-}
-
-.artist {
-  font-size: 1.5rem;
-  color: rgb(255 255 255 / 90%);
+.trackName {
+  display: inline-block;
+  flex-shrink: 0;
+  font-size: 5rem;
+  font-weight: bold;
+  color: #fff;
   text-shadow:
     rgb(0 0 0) 2px 0 0,
     rgb(0 0 0) 1.75517px 0.958851px 0,
@@ -191,4 +132,134 @@
     rgb(0 0 0) 1.41734px -1.41108px 0,
     rgb(0 0 0) 1.92034px -0.558831px 0;
   white-space: nowrap;
+}
+
+.contentSeparator {
+  display: inline-block;
+  flex-shrink: 0;
+  font-size: 4rem;
+  font-weight: 700;
+  color: rgb(255 255 255 / 80%);
+  line-height: 1;
+  text-shadow:
+    rgb(0 0 0) 2px 0 0,
+    rgb(0 0 0) 1.75517px 0.958851px 0,
+    rgb(0 0 0) 1.0806px 1.68294px 0,
+    rgb(0 0 0) 0.141474px 1.99499px 0,
+    rgb(0 0 0) -0.832294px 1.81859px 0,
+    rgb(0 0 0) -1.60229px 1.19694px 0,
+    rgb(0 0 0) -1.97998px 0.28224px 0,
+    rgb(0 0 0) -1.87291px -0.701566px 0,
+    rgb(0 0 0) -1.30729px -1.5136px 0,
+    rgb(0 0 0) -0.421592px -1.95506px 0,
+    rgb(0 0 0) 0.567324px -1.91785px 0,
+    rgb(0 0 0) 1.41734px -1.41108px 0,
+    rgb(0 0 0) 1.92034px -0.558831px 0;
+}
+
+.progressPercentOverlay {
+  position: absolute;
+  top: 50%;
+  right: 40px;
+  transform: translateY(-50%);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.progressPercentLabel {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #fff;
+  padding: 8px 18px;
+  border-radius: 14px;
+  background: rgb(0 0 0 / 45%);
+  border: 2px solid rgb(255 255 255 / 30%);
+  text-shadow:
+    rgb(0 0 0) 2px 0 0,
+    rgb(0 0 0) 1.75517px 0.958851px 0,
+    rgb(0 0 0) 1.0806px 1.68294px 0,
+    rgb(0 0 0) 0.141474px 1.99499px 0,
+    rgb(0 0 0) -0.832294px 1.81859px 0,
+    rgb(0 0 0) -1.60229px 1.19694px 0,
+    rgb(0 0 0) -1.97998px 0.28224px 0,
+    rgb(0 0 0) -1.87291px -0.701566px 0,
+    rgb(0 0 0) -1.30729px -1.5136px 0,
+    rgb(0 0 0) -0.421592px -1.95506px 0,
+    rgb(0 0 0) 0.567324px -1.91785px 0,
+    rgb(0 0 0) 1.41734px -1.41108px 0,
+    rgb(0 0 0) 1.92034px -0.558831px 0;
+}
+
+@media (max-width: 1200px) {
+  .infoBar {
+    height: 150px;
+  }
+
+  .avatar {
+    width: 64px;
+    height: 64px;
+  }
+
+  .userName {
+    font-size: 3.8rem;
+  }
+
+  .trackName {
+    font-size: 3rem;
+  }
+
+  .contentSeparator {
+    font-size: 2.6rem;
+  }
+
+  .progressPercentLabel {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .infoBar {
+    height: 110px;
+  }
+
+  .infoBarContent {
+    padding: 0 20px;
+  }
+
+  .mainMarqueeContainer {
+    padding-right: 120px;
+  }
+
+  .mainMarqueeContent {
+    gap: 12px;
+    padding-right: 80px;
+  }
+
+  .avatar {
+    width: 48px;
+    height: 48px;
+    border-width: 2px;
+  }
+
+  .userName {
+    font-size: 2.4rem;
+  }
+
+  .trackName {
+    font-size: 1.9rem;
+  }
+
+  .contentSeparator {
+    font-size: 1.6rem;
+  }
+
+  .progressPercentOverlay {
+    right: 20px;
+  }
+
+  .progressPercentLabel {
+    font-size: 1.4rem;
+    padding: 6px 10px;
+    border-radius: 10px;
+  }
 }
