@@ -1,59 +1,9 @@
-import { useEffect, useRef } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { useVideoScreenStore } from "../store/useVideoScreenStore";
-import { parseDurationToSeconds } from "../utils/parseDuration";
 import { CustomMarquee } from "./CustomMarquee";
 import styles from "./InfoBar.module.scss";
-
-/**
- * Компонент локального отображения прогресса в реальном времени с 60FPS.
- * Получает элемент video/audio напрямую из DOM, обходя ререндеры React.
- */
-function ProgressPercentLabel({ trackDuration }: { trackDuration?: string }) {
-  const labelRef = useRef<HTMLDivElement>(null);
-  const durationSeconds = parseDurationToSeconds(trackDuration);
-
-  useEffect(() => {
-    if (!durationSeconds || durationSeconds <= 0) return;
-
-    let frameId: number;
-
-    const updateProgress = () => {
-      const mediaElement = document.querySelector(
-        "video, audio"
-      ) as HTMLMediaElement | null;
-
-      if (mediaElement && labelRef.current) {
-        const currentProgress = mediaElement.currentTime;
-        const calculatedProgressPercent =
-          (currentProgress / durationSeconds) * 100;
-        const sanitizedProgress = Math.min(
-          Math.max(calculatedProgressPercent, 0),
-          100
-        );
-
-        labelRef.current.textContent = `${sanitizedProgress.toFixed(1)}%`;
-      }
-
-      frameId = requestAnimationFrame(updateProgress);
-    };
-
-    frameId = requestAnimationFrame(updateProgress);
-
-    return () => {
-      cancelAnimationFrame(frameId);
-    };
-  }, [durationSeconds]);
-
-  return (
-    <div className={styles.progressPercentOverlay}>
-      <div ref={labelRef} className={styles.progressPercentLabel}>
-        0.0%
-      </div>
-    </div>
-  );
-}
+import { ProgressPercentLabel } from "./ProgressPercentLabel";
 
 /**
  * Компонент информационной полоски с прогрессом

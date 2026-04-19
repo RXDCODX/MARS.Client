@@ -337,7 +337,21 @@ export default function PixelSnow({
       rendererRef.current = null;
       materialRef.current = null;
     };
-  }, [handleResize]); // Only recreate scene when handleResize changes
+  }, [
+    brightness,
+    colorVector,
+    density,
+    depthFade,
+    direction,
+    farPlane,
+    flakeSize,
+    gamma,
+    handleResize,
+    minFlakeSize,
+    pixelResolution,
+    speed,
+    variantValue,
+  ]); // Only recreate scene when handleResize changes
 
   // Update material uniforms when props change
   useEffect(() => {

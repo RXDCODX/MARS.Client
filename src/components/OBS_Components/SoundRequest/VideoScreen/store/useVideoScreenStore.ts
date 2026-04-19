@@ -18,6 +18,7 @@ interface VideoScreenStoreState {
   localVolume: number;
   isVolumeManuallyChanged: boolean;
   isMainPlayerContext: boolean;
+  getCurrentTimeRef: (() => number) | null;
 
   init: (defaultHasUserInteracted: boolean) => Promise<void>;
   dispose: () => Promise<void>;
@@ -31,6 +32,7 @@ interface VideoScreenStoreState {
     nextState: PlayerStateStateEnum.Playing | PlayerStateStateEnum.Paused
   ) => Promise<void>;
   setIsMainPlayerContext: (isMainPlayer: boolean) => void;
+  registerTimeGetter: (getter: (() => number) | null) => void;
 }
 
 function extractQueueItemId(state: PlayerState | null): string | undefined {
@@ -66,6 +68,7 @@ export const useVideoScreenStore = create<VideoScreenStoreState>(
     localVolume: 100,
     isVolumeManuallyChanged: false,
     isMainPlayerContext: true,
+    getCurrentTimeRef: null,
 
     init: async defaultHasUserInteracted => {
       const currentState = get();
@@ -259,6 +262,9 @@ export const useVideoScreenStore = create<VideoScreenStoreState>(
 
     setIsMainPlayerContext: isMainPlayer => {
       set({ isMainPlayerContext: isMainPlayer });
+    },
+    registerTimeGetter: getter => {
+      set({ getCurrentTimeRef: getter });
     },
   })
 );

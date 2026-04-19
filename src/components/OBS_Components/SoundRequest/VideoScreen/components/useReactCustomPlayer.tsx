@@ -88,6 +88,22 @@ export function useReactCustomPlayer({
     progressAppliedRef.current = false;
   }, [playerKey]);
 
+  useEffect(() => {
+    if (isMainPlayer) {
+      useVideoScreenStore.getState().registerTimeGetter(() => {
+        const player = playerRef.current;
+        if (player && typeof player.currentTime === "number") {
+          return player.currentTime;
+        }
+        return 0;
+      });
+
+      return () => {
+        useVideoScreenStore.getState().registerTimeGetter(null);
+      };
+    }
+  }, [isMainPlayer]);
+
   useEffect(
     () => () => {
       if (volumeTrackingCleanupRef.current) {
