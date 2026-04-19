@@ -42,6 +42,7 @@ interface UseReactCustomPlayerResult {
   playbackInfo: {
     isTrackPlaying: boolean;
     maxTrackTimeSeconds: number;
+    currentSecondProgress: number;
   };
 }
 
@@ -92,6 +93,7 @@ export function useReactCustomPlayer({
     () => parseDurationToSeconds(track.duration),
     [track.duration]
   );
+  const [currentSecondProgress, setCurrentSecondProgress] = useState<number>(0);
 
   useEffect(() => {
     progressAppliedRef.current = false;
@@ -217,6 +219,7 @@ export function useReactCustomPlayer({
 
       if (isMainPlayer) {
         void useVideoScreenStore.getState().reportProgress(playedSecods);
+        setCurrentSecondProgress(playedSecods);
       }
     },
     [isMainPlayer]
@@ -329,6 +332,7 @@ export function useReactCustomPlayer({
     playbackInfo: {
       isTrackPlaying,
       maxTrackTimeSeconds,
+      currentSecondProgress,
     },
   };
 }

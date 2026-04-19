@@ -108,7 +108,7 @@ function VideoPlayerViewComponent({
           userColor={userColor}
           trackName={trackName}
           artistName={authors}
-          currentTrackProgress={playerState.currentTrackProgress}
+          currentTrackProgress={playbackInfo.currentSecondProgress}
           trackDuration={currentTrack.duration}
         />
       )}

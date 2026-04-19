@@ -10,8 +10,7 @@ interface Props {
   userColor?: string;
   trackName: string;
   artistName: string;
-  progressPercent?: number;
-  currentTrackProgress?: string;
+  currentTrackProgress?: number;
   trackDuration?: string;
 }
 
@@ -25,7 +24,6 @@ function InfoBarComponent({
   userColor,
   trackName,
   artistName,
-  progressPercent,
   currentTrackProgress,
   trackDuration,
 }: Props) {
@@ -35,7 +33,11 @@ function InfoBarComponent({
   );
 
   const currentProgressSeconds = useMemo(
-    () => parseDurationToSeconds(currentTrackProgress),
+    () =>
+      typeof currentTrackProgress === "number" &&
+      Number.isFinite(currentTrackProgress)
+        ? currentTrackProgress
+        : 0,
     [currentTrackProgress]
   );
 
@@ -51,31 +53,18 @@ function InfoBarComponent({
     return (currentProgressSeconds / durationSeconds) * 100;
   }, [currentProgressSeconds, durationSeconds]);
 
-  const progressValue = useMemo(() => {
-    if (
-      typeof progressPercent === "number" &&
-      Number.isFinite(progressPercent)
-    ) {
-      return progressPercent;
-    }
-
-    return calculatedProgressPercent;
-  }, [calculatedProgressPercent, progressPercent]);
-
   const sanitizedProgress = useCallback(() => {
-    if (!Number.isFinite(progressValue)) {
+    if (!Number.isFinite(calculatedProgressPercent)) {
       return 0;
     }
-    return Math.min(Math.max(progressValue, 0), 100);
-  }, [progressValue]);
+    return Math.min(Math.max(calculatedProgressPercent, 0), 100);
+  }, [calculatedProgressPercent]);
 
   const progressLabel = `${sanitizedProgress().toFixed(1)}%`;
 
   useEffect(() => {
     console.log("[InfoBar] incoming progress", {
-      progressPercent,
       calculatedProgressPercent,
-      progressValue,
       sanitizedProgress,
       progressLabel,
       currentTrackProgress,
@@ -93,8 +82,6 @@ function InfoBarComponent({
     calculatedProgressPercent,
     durationSeconds,
     progressLabel,
-    progressPercent,
-    progressValue,
     sanitizedProgress,
     trackDuration,
     trackName,

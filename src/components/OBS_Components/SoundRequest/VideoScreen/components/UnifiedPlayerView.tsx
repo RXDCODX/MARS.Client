@@ -149,7 +149,8 @@ function UnifiedPlayerViewComponent() {
             userColor={userColor}
             trackName={trackName}
             artistName={authors}
-            progressPercent={progressPercent}
+            currentTrackProgress={playbackInfo.currentSecondProgress}
+            trackDuration={currentTrack.duration}
           />
         </div>
       )}
