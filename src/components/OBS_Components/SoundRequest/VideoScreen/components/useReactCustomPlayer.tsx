@@ -84,6 +84,14 @@ export function useReactCustomPlayer({
   );
   const [currentSecondProgress, setCurrentSecondProgress] = useState<number>(0);
 
+  const [lastSignalRState, setLastSignalRState] = useState(
+    signalRIsTrackPlaying
+  );
+  if (lastSignalRState !== signalRIsTrackPlaying) {
+    setLastSignalRState(signalRIsTrackPlaying);
+    setLocalPlaybackOverrideState({ key: playerKey, value: null });
+  }
+
   useEffect(() => {
     progressAppliedRef.current = false;
   }, [playerKey]);
