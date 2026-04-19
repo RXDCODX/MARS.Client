@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from "react";
-import Marquee from "react-fast-marquee";
 
 import { parseDurationToSeconds } from "../utils/parseDuration";
+import { CustomMarquee } from "./CustomMarquee";
 import styles from "./InfoBar.module.scss";
 
 interface Props {
@@ -108,44 +108,28 @@ function InfoBarComponent({
 
       <div className={styles.infoBarContent}>
         <div className={styles.mainMarqueeContainer}>
-          <Marquee
-            className={styles.mainMarquee}
-            play={true}
-            pauseOnHover={false}
-            gradient={false}
-          >
-            <div className={styles.mainMarqueeContent}>
-              {userAvatar && (
-                <img
-                  src={userAvatar}
-                  alt={userName}
-                  className={styles.avatar}
-                />
-              )}
+          <CustomMarquee speed={60} trailingGapCount={5}>
+            {userAvatar && (
+              <img src={userAvatar} alt={userName} className={styles.avatar} />
+            )}
 
-              <span className={styles.userNameBlock}>
-                <span className={styles.userName} style={{ color: userColor }}>
-                  {userName}
-                </span>
+            <span className={styles.userNameBlock}>
+              <span className={styles.userName} style={{ color: userColor }}>
+                {userName}
               </span>
+            </span>
 
-              {userAvatar && (
-                <img
-                  src={userAvatar}
-                  alt={userName}
-                  className={styles.avatar}
-                />
-              )}
+            {userAvatar && (
+              <img src={userAvatar} alt={userName} className={styles.avatar} />
+            )}
 
-              <span className={styles.contentSeparator}>{"   "}</span>
-              <span className={styles.trackNameBlock}>
-                <span className={styles.trackName}>
-                  {/* {artistName ? `${trackName} - ${artistName}` : trackName} */}
-                  {trackName}
-                </span>
+            <span className={styles.contentSeparator}>•</span>
+            <span className={styles.trackNameBlock}>
+              <span className={styles.trackName}>
+                {artistName ? `${artistName} - ${trackName}` : trackName}
               </span>
-            </div>
-          </Marquee>
+            </span>
+          </CustomMarquee>
         </div>
 
         <div className={styles.progressPercentOverlay}>

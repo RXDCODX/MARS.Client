@@ -58,27 +58,6 @@
   min-width: 0;
   overflow: hidden;
   align-self: center;
-
-  :global(.rfm-marquee-container),
-  :global(.rfm-marquee),
-  :global(.rfm-initial-child-container) {
-    overflow: hidden !important;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-    }
-  }
-}
-
-.mainMarqueeContent {
-  display: flex;
-  align-items: center;
-  min-width: max-content;
-  gap: 20px;
-  line-height: 1;
-  white-space: nowrap;
-  padding-right: 120px;
 }
 
 .userNameBlock,
