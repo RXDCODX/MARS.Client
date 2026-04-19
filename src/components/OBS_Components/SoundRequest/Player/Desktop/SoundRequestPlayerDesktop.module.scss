@@ -24,6 +24,7 @@
   margin-bottom: 1rem;
   position: relative;
   z-index: 1;
+  min-height: 0;
 }
 
 .topSplit {
@@ -31,6 +32,8 @@
   grid-template-columns: 7fr 3fr;
   gap: 1rem;
   width: 100%;
+  height: 100%;
+  min-height: 0;
 }
 
 .leftCol,
@@ -38,6 +41,8 @@
   display: flex;
   flex-direction: column;
   min-height: 0;
+  height: 100%;
+  overflow: hidden;
 
   /* важен для корректного скролла вложенных списков */
   background: rgb(255 255 255 / 2%);
@@ -62,7 +67,12 @@
 }
 
 .scrollList {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   padding-right: 0.5rem;
 
   /* Кастомный скроллбар */
@@ -98,6 +108,7 @@
   border: 1px solid rgb(255 255 255 / 10%);
   box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
   transition: all 0.2s ease;
+  flex-shrink: 0;
 
   &.current {
     color: white !important;
@@ -124,10 +135,6 @@
     border-color: rgb(255 255 255 / 15%);
     box-shadow: 0 4px 12px rgb(0 0 0 / 30%);
     transform: translateY(-2px);
-  }
-
-  & + & {
-    margin-top: 0.5rem;
   }
 }
 
@@ -368,6 +375,7 @@
   border: 1px solid rgb(255 255 255 / 10%);
   box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
   transition: all 0.2s ease;
+  flex-shrink: 0;
 
   &.current {
     color: white !important;
@@ -394,10 +402,6 @@
     border-color: rgb(255 255 255 / 15%);
     box-shadow: 0 4px 12px rgb(0 0 0 / 30%);
     transform: translateY(-2px);
-  }
-
-  & + & {
-    margin-top: 0.5rem;
   }
 }
 
