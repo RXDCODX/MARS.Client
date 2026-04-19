@@ -1,4 +1,5 @@
-import { ReactNode, useEffect, useRef, useState } from "react";
+import type { CSSProperties, ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import styles from "./CustomMarquee.module.scss";
 
@@ -21,10 +22,18 @@ export function CustomMarquee({
   trailingGapCount = 0,
   pauseOnHover = false,
 }: CustomMarqueeProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const [contentWidth, setContentWidth] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
+  const trailingGapElements = useMemo(
+    () =>
+      Array.from({ length: trailingGapCount }).map((_, index) => (
+        <span key={index} className={styles.trailingGap} aria-hidden="true">
+          &nbsp;&nbsp;
+        </span>
+      )),
+    [trailingGapCount]
+  );
 
   useEffect(() => {
     if (!contentRef.current) return;
@@ -51,17 +60,12 @@ export function CustomMarquee({
     return (
       <div
         className={styles.customMarqueeContainer}
-        ref={containerRef}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
         <div className={styles.customMarqueeContent} ref={contentRef}>
           {children}
-          {Array.from({ length: trailingGapCount }).map((_, index) => (
-            <span key={index} className={styles.trailingGap} aria-hidden="true">
-              &nbsp;&nbsp;
-            </span>
-          ))}
+          {trailingGapElements}
         </div>
       </div>
     );
@@ -74,7 +78,6 @@ export function CustomMarquee({
   return (
     <div
       className={styles.customMarqueeContainer}
-      ref={containerRef}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={
@@ -82,24 +85,16 @@ export function CustomMarquee({
           "--marquee-duration": `${duration}s`,
           "--marquee-distance": `-${totalDistance}px`,
           "--marquee-paused": isHovered && pauseOnHover ? "paused" : "running",
-        } as React.CSSProperties
+        } as CSSProperties
       }
     >
       <div className={styles.customMarqueeContent} ref={contentRef}>
         {children}
-        {Array.from({ length: trailingGapCount }).map((_, index) => (
-          <span key={index} className={styles.trailingGap} aria-hidden="true">
-            &nbsp;&nbsp;
-          </span>
-        ))}
+        {trailingGapElements}
       </div>
       <div className={styles.customMarqueeContent} aria-hidden="true">
         {children}
-        {Array.from({ length: trailingGapCount }).map((_, index) => (
-          <span key={index} className={styles.trailingGap} aria-hidden="true">
-            &nbsp;&nbsp;
-          </span>
-        ))}
+        {trailingGapElements}
       </div>
     </div>
   );

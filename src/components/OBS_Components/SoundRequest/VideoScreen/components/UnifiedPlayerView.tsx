@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { memo } from "react";
 
 import { PlayerStateVideoStateEnum } from "@/shared/api";
 import { useInjectStyles } from "@/shared/hooks/useInjectStyles";
@@ -7,6 +7,23 @@ import { InfoBar } from "./InfoBar";
 import styles from "./UnifiedPlayerView.module.scss";
 import { useReactCustomPlayer } from "./useReactCustomPlayer";
 import { useUnifiedPlayerViewModel } from "./useUnifiedPlayerViewModel";
+
+const TRANSPARENT_BACKGROUND_STYLES = `
+  body {
+    background-color: transparent !important;
+    background: transparent !important;
+  }
+
+  #root {
+    background-color: transparent !important;
+    background: transparent !important;
+  }
+
+  html {
+    background-color: transparent !important;
+    background: transparent !important;
+  }
+`;
 
 /**
  * Единый компонент плеера для всех режимов (Video, NoVideo, AudioOnly)
@@ -43,79 +60,34 @@ function UnifiedPlayerViewComponent() {
       },
     });
 
-  const authors = currentTrack.authors?.join(", ") || "Неизвестный автор";
+  const authors = currentTrack.authors?.join(", ") ?? "Неизвестный автор";
   const trackName = currentTrack.trackName ?? "";
 
-  // Инжектим стили для прозрачного фона в режимах NoVideo и AudioOnly
-  const transparentBackgroundStyles = useMemo(() => {
-    const needsTransparentBackground =
-      videoState === PlayerStateVideoStateEnum.NoVideo ||
-      videoState === PlayerStateVideoStateEnum.AudioOnly;
+  const isVideoMode = videoState === PlayerStateVideoStateEnum.Video;
+  const isNoVideoMode = videoState === PlayerStateVideoStateEnum.NoVideo;
+  const needsTransparentBackground = !isVideoMode;
 
-    if (!needsTransparentBackground) {
-      return "";
-    }
-
-    return `
-      body {
-        background-color: transparent !important;
-        background: transparent !important;
-      }
-      
-      #root {
-        background-color: transparent !important;
-        background: transparent !important;
-      }
-      
-      html {
-        background-color: transparent !important;
-        background: transparent !important;
-      }
-    `;
-  }, [videoState]);
-
-  useInjectStyles(transparentBackgroundStyles, "video-screen-transparent-bg");
-
-  // Определяем класс плеера и контейнера для видимости
-  const isVideoVisible = videoState === PlayerStateVideoStateEnum.Video;
-  const playerClassName = useMemo(
-    () => (isVideoVisible ? styles.videoPlayer : styles.hiddenPlayer),
-    [isVideoVisible]
+  useInjectStyles(
+    needsTransparentBackground ? TRANSPARENT_BACKGROUND_STYLES : "",
+    "video-screen-transparent-bg"
   );
 
-  // Определяем контейнер в зависимости от режима
-  const containerClassName = useMemo(() => {
-    switch (videoState) {
-      case PlayerStateVideoStateEnum.Video:
-        return styles.videoContainer;
-
-      case PlayerStateVideoStateEnum.NoVideo:
-        return styles.noVideoContainer;
-
-      case PlayerStateVideoStateEnum.AudioOnly:
-        return styles.audioOnlyContainer;
-
-      default:
-        return styles.videoContainer;
-    }
-  }, [videoState]);
-
-  // Определяем нужно ли показывать InfoBar и его позиционирование
-  const showInfoBar =
-    isMainPlayer &&
-    (videoState === PlayerStateVideoStateEnum.Video ||
-      videoState === PlayerStateVideoStateEnum.NoVideo);
-
-  const isNoVideoMode = videoState === PlayerStateVideoStateEnum.NoVideo;
+  const playerClassName = isVideoMode
+    ? styles.videoPlayer
+    : styles.hiddenPlayer;
+  const containerClassName = isVideoMode
+    ? styles.videoContainer
+    : isNoVideoMode
+      ? styles.noVideoContainer
+      : styles.audioOnlyContainer;
+  const showInfoBar = isMainPlayer && (isVideoMode || isNoVideoMode);
 
   return (
     <div className={containerClassName}>
-      {/* Единый ReactPlayer для всех режимов - пропсы НЕИЗМЕННЫ для предотвращения ререндера */}
       <div className={playerClassName} ref={playerContainerRef}>
         {playerElement}
       </div>
 
-      {/* Информационная полоска с прогрессом */}
       {showInfoBar && (
         <div className={isNoVideoMode ? styles.infoBarBottom : undefined}>
           <InfoBar

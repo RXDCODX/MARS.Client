@@ -29,7 +29,6 @@ export const useSoundRequestPlayer = () => {
 
   // Ref'ы для управления изменением громкости
   const isVolumeChangingRef = useRef(false);
-  const volumeDebounceTimerRef = useRef<NodeJS.Timeout | null>(null);
   const volumeIgnoreTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Ref для актуального состояния плеера (чтобы избежать зависимости в useCallback)
@@ -65,6 +64,9 @@ export const useSoundRequestPlayer = () => {
 
       playerStateRef.current = state;
       setPlayerState(state);
+      if (typeof state.volume === "number" && Number.isFinite(state.volume)) {
+        setVolume(state.volume);
+      }
       usePlayerStore.getState().setPlayerState(state);
     });
 
@@ -106,9 +108,6 @@ export const useSoundRequestPlayer = () => {
         connectionRef.current = null;
       }
       // Очищаем таймеры при размонтировании
-      if (volumeDebounceTimerRef.current) {
-        clearTimeout(volumeDebounceTimerRef.current);
-      }
       if (volumeIgnoreTimerRef.current) {
         clearTimeout(volumeIgnoreTimerRef.current);
       }
@@ -198,6 +197,12 @@ export const useSoundRequestPlayer = () => {
 
       playerStateRef.current = response.data.data;
       setPlayerState(response.data.data);
+      if (
+        typeof response.data.data.volume === "number" &&
+        Number.isFinite(response.data.data.volume)
+      ) {
+        setVolume(response.data.data.volume);
+      }
       usePlayerStore.getState().setPlayerState(response.data.data);
       console.log("[useSoundRequestPlayer] Состояние плеера обновлено");
     } catch (error) {
@@ -428,17 +433,12 @@ export const useSoundRequestPlayer = () => {
       isVolumeChangingRef.current = true;
 
       // Отменяем предыдущие таймеры
-      if (volumeDebounceTimerRef.current) {
-        clearTimeout(volumeDebounceTimerRef.current);
-      }
       if (volumeIgnoreTimerRef.current) {
         clearTimeout(volumeIgnoreTimerRef.current);
       }
 
-      // Устанавливаем таймер для отправки на бэкенд (debounce 150ms)
-      volumeDebounceTimerRef.current = setTimeout(() => {
-        updatePlayerState({ volume: newVolume });
-      }, 150);
+      // Отправляем на бэкенд сразу, без debounce
+      void updatePlayerState({ volume: newVolume });
 
       // Устанавливаем таймер для снятия флага игнорирования (300ms - даём время на обработку)
       volumeIgnoreTimerRef.current = setTimeout(() => {

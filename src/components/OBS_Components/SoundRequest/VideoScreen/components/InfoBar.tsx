@@ -1,5 +1,3 @@
-import { useCallback, useEffect, useMemo } from "react";
-
 import { parseDurationToSeconds } from "../utils/parseDuration";
 import { CustomMarquee } from "./CustomMarquee";
 import styles from "./InfoBar.module.scss";
@@ -27,66 +25,23 @@ function InfoBarComponent({
   currentTrackProgress,
   trackDuration,
 }: Props) {
-  const durationSeconds = useMemo(
-    () => parseDurationToSeconds(trackDuration),
-    [trackDuration]
-  );
+  const durationSeconds = parseDurationToSeconds(trackDuration);
+  const currentProgressSeconds =
+    typeof currentTrackProgress === "number" &&
+    Number.isFinite(currentTrackProgress)
+      ? currentTrackProgress
+      : 0;
+  const calculatedProgressPercent =
+    Number.isFinite(durationSeconds) &&
+    durationSeconds > 0 &&
+    Number.isFinite(currentProgressSeconds)
+      ? (currentProgressSeconds / durationSeconds) * 100
+      : 0;
+  const sanitizedProgress = Number.isFinite(calculatedProgressPercent)
+    ? Math.min(Math.max(calculatedProgressPercent, 0), 100)
+    : 0;
 
-  const currentProgressSeconds = useMemo(
-    () =>
-      typeof currentTrackProgress === "number" &&
-      Number.isFinite(currentTrackProgress)
-        ? currentTrackProgress
-        : 0,
-    [currentTrackProgress]
-  );
-
-  const calculatedProgressPercent = useMemo(() => {
-    if (!Number.isFinite(durationSeconds) || durationSeconds <= 0) {
-      return 0;
-    }
-
-    if (!Number.isFinite(currentProgressSeconds)) {
-      return 0;
-    }
-
-    return (currentProgressSeconds / durationSeconds) * 100;
-  }, [currentProgressSeconds, durationSeconds]);
-
-  const sanitizedProgress = useCallback(() => {
-    if (!Number.isFinite(calculatedProgressPercent)) {
-      return 0;
-    }
-    return Math.min(Math.max(calculatedProgressPercent, 0), 100);
-  }, [calculatedProgressPercent]);
-
-  const progressLabel = `${sanitizedProgress().toFixed(1)}%`;
-
-  useEffect(() => {
-    console.log("[InfoBar] incoming progress", {
-      calculatedProgressPercent,
-      sanitizedProgress,
-      progressLabel,
-      currentTrackProgress,
-      currentProgressSeconds,
-      trackDuration,
-      durationSeconds,
-      userName,
-      trackName,
-      artistName,
-    });
-  }, [
-    artistName,
-    currentProgressSeconds,
-    currentTrackProgress,
-    calculatedProgressPercent,
-    durationSeconds,
-    progressLabel,
-    sanitizedProgress,
-    trackDuration,
-    trackName,
-    userName,
-  ]);
+  const progressLabel = `${sanitizedProgress.toFixed(1)}%`;
 
   return (
     <div className={styles.infoBar}>

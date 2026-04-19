@@ -1,7 +1,6 @@
 import { useCallback, useEffect } from "react";
-import { useShallow } from "zustand/react/shallow";
 
-import { useVideoStateRenderer } from "./hooks";
+import { UnifiedPlayerView } from "./components/UnifiedPlayerView";
 import { useVideoScreenStore } from "./store/useVideoScreenStore";
 import styles from "./VideoScreen.module.scss";
 
@@ -13,14 +12,13 @@ interface Props {
 export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
   const isMainPlayer = groupName === "mainplayer";
 
-  const playerState = useVideoScreenStore(
-    useShallow(state => state.playerState)
+  const currentTrack = useVideoScreenStore(
+    state => state.playerState?.currentQueueItem?.track ?? null
   );
   const hasUserInteracted = useVideoScreenStore(
-    useShallow(state => state.hasUserInteracted)
+    state => state.hasUserInteracted
   );
 
-  // Инициализация и очистка с использованием getState()
   useEffect(() => {
     void useVideoScreenStore.getState().init(import.meta.env.PROD);
 
@@ -29,7 +27,10 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
     };
   }, []);
 
-  // Обработчик взаимодействия с использованием getState()
+  useEffect(() => {
+    useVideoScreenStore.getState().setIsMainPlayerContext(isMainPlayer);
+  }, [isMainPlayer]);
+
   const handleUserInteraction = useCallback(() => {
     useVideoScreenStore.getState().markUserInteraction();
   }, []);
@@ -55,31 +56,23 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
     };
   }, [handleUserInteraction, hasUserInteracted]);
 
-  const currentQueueItem = playerState?.currentQueueItem;
-  const currentTrack = currentQueueItem?.track;
-
-  const { component, videoState } = useVideoStateRenderer({
-    isMainPlayer,
-  });
-
   if (!currentTrack) {
-    console.log("[VideoScreen] Нет трека - показываем пустой экран");
     return null;
   }
 
-  console.log("[VideoScreen] Рендеринг с videoState:", videoState);
-  console.log("[VideoScreen] Рендерим плеер с треком:", currentTrack.trackName);
-
-  const classList = [styles.videoSection, styles.fullScreen];
-  if (className) {
-    classList.push(className);
-  }
-
-  const videoSectionClassName = classList.filter(Boolean).join(" ");
+  const videoSectionClassName = [
+    styles.videoSection,
+    styles.fullScreen,
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <div className={styles.container} style={{ padding: 0 }}>
-      <div className={videoSectionClassName}>{component}</div>
+      <div className={videoSectionClassName}>
+        <UnifiedPlayerView />
+      </div>
     </div>
   );
 }

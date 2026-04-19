@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import type { PlayerState, QueueItem } from "@/shared/api";
@@ -20,54 +19,39 @@ interface UseUnifiedPlayerViewModelResult {
 }
 
 export function useUnifiedPlayerViewModel(): UseUnifiedPlayerViewModelResult {
-  const playerStateFromStore = useVideoScreenStore(
-    useShallow(state => state.playerState)
-  );
-  const hasUserInteracted = useVideoScreenStore(
-    useShallow(state => state.hasUserInteracted)
-  );
-  const localVolume = useVideoScreenStore(
-    useShallow(state => state.localVolume)
-  );
-  const isMainPlayer = useVideoScreenStore(
-    useShallow(state => state.isMainPlayerContext)
-  );
+  const { playerStateFromStore, hasUserInteracted, localVolume, isMainPlayer } =
+    useVideoScreenStore(
+      useShallow(state => ({
+        playerStateFromStore: state.playerState,
+        hasUserInteracted: state.hasUserInteracted,
+        localVolume: state.localVolume,
+        isMainPlayer: state.isMainPlayerContext,
+      }))
+    );
 
-  const queueItemId = playerStateFromStore?.currentQueueItem?.id;
-  const currentTrack = playerStateFromStore?.currentQueueItem
-    ?.track as NonNullable<QueueItem["track"]>;
+  const currentQueueItem = playerStateFromStore?.currentQueueItem;
+  const queueItemId = currentQueueItem?.id;
+  const currentTrack = currentQueueItem?.track as NonNullable<
+    QueueItem["track"]
+  >;
+  const requestedByUser = currentQueueItem?.requestedByTwitchUser;
 
-  const userName = useMemo(() => {
-    const user = playerStateFromStore?.currentQueueItem?.requestedByTwitchUser;
+  const userName =
+    requestedByUser?.displayName ??
+    requestedByUser?.userLogin ??
+    "Неизвестный пользователь";
 
-    if (user?.displayName) {
-      return user.displayName;
-    }
+  const userAvatar = requestedByUser?.profileImageUrl;
+  const userColor = requestedByUser?.chatColor;
 
-    if (user?.userLogin) {
-      return user.userLogin;
-    }
-
-    return "Неизвестный пользователь";
-  }, [playerStateFromStore?.currentQueueItem?.requestedByTwitchUser]);
-
-  const userAvatar =
-    playerStateFromStore?.currentQueueItem?.requestedByTwitchUser
-      ?.profileImageUrl;
-  const userColor =
-    playerStateFromStore?.currentQueueItem?.requestedByTwitchUser?.chatColor;
-
-  const playerState = useMemo(
-    () =>
-      playerStateFromStore ??
-      ({
-        state: "Paused",
-        volume: 100,
-        isMuted: false,
-        videoState: PlayerStateVideoStateEnum.Video,
-      } as PlayerState),
-    [playerStateFromStore]
-  );
+  const playerState =
+    playerStateFromStore ??
+    ({
+      state: "Paused",
+      volume: 100,
+      isMuted: false,
+      videoState: PlayerStateVideoStateEnum.Video,
+    } as PlayerState);
 
   const videoState =
     playerStateFromStore?.videoState ?? PlayerStateVideoStateEnum.Video;

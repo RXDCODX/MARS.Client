@@ -13,14 +13,7 @@ import { PlayerStateStateEnum } from "@/shared/api";
 import { useVideoScreenStore } from "../store/useVideoScreenStore";
 import { parseDurationToSeconds } from "../utils/parseDuration";
 
-export interface PlayerProgressState {
-  played: number;
-  playedSeconds: number;
-  loaded: number;
-  loadedSeconds: number;
-}
-
-interface UseReactCustomPlayerParams {
+export interface UseReactCustomPlayerParams {
   track: NonNullable<QueueItem["track"]>;
   queueItemId?: string;
   playerState: PlayerState;
@@ -62,11 +55,7 @@ export function useReactCustomPlayer({
   const [localPlaybackOverrideState, setLocalPlaybackOverrideState] = useState<{
     key: string;
     value: boolean | null;
-  }>({
-    key: playerKey,
-    value: null,
-  });
-
+  }>({ key: playerKey, value: null });
   const localPlaybackOverride =
     localPlaybackOverrideState.key === playerKey
       ? localPlaybackOverrideState.value
@@ -97,7 +86,7 @@ export function useReactCustomPlayer({
 
   useEffect(() => {
     progressAppliedRef.current = false;
-  }, [queueItemId]);
+  }, [playerKey]);
 
   useEffect(
     () => () => {
@@ -178,10 +167,6 @@ export function useReactCustomPlayer({
       if (mediaElement) {
         mediaElement.currentTime = savedProgressSeconds;
         progressAppliedRef.current = true;
-
-        console.log(
-          `[useReactCustomPlayer] Восстановлен прогресс: ${savedProgressSeconds}s для трека ${track.trackName}`
-        );
       }
     }
 
@@ -190,7 +175,6 @@ export function useReactCustomPlayer({
     playerState.currentTrackProgress,
     resolveMediaElement,
     setupVolumeTracking,
-    track.trackName,
   ]);
 
   const handleEnded = useCallback(() => {
@@ -215,11 +199,11 @@ export function useReactCustomPlayer({
 
   const handleProgress = useCallback(
     (state: SyntheticEvent<HTMLVideoElement, Event>) => {
-      const playedSecods = state.currentTarget.currentTime;
+      const playedSeconds = state.currentTarget.currentTime;
 
       if (isMainPlayer) {
-        void useVideoScreenStore.getState().reportProgress(playedSecods);
-        setCurrentSecondProgress(playedSecods);
+        void useVideoScreenStore.getState().reportProgress(playedSeconds);
+        setCurrentSecondProgress(playedSeconds);
       }
     },
     [isMainPlayer]
