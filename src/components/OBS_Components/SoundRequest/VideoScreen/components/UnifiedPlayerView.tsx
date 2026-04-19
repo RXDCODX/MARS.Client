@@ -3,7 +3,6 @@ import { memo, useMemo } from "react";
 import { PlayerStateVideoStateEnum } from "@/shared/api";
 import { useInjectStyles } from "@/shared/hooks/useInjectStyles";
 
-import { useTrackProgress } from "../../Player/Desktop/useTrackProgress";
 import { InfoBar } from "./InfoBar";
 import styles from "./UnifiedPlayerView.module.scss";
 import { useReactCustomPlayer } from "./useReactCustomPlayer";
@@ -43,30 +42,6 @@ function UnifiedPlayerViewComponent() {
         controls: true,
       },
     });
-
-  const trackKey = useMemo(() => {
-    if (queueItemId) {
-      return queueItemId;
-    }
-    if (currentTrack.id) {
-      return currentTrack.id;
-    }
-    return currentTrack.url;
-  }, [currentTrack.id, currentTrack.url, queueItemId]);
-
-  const animatedProgress = useTrackProgress({
-    durationSec: playbackInfo.maxTrackTimeSeconds,
-    isPlaying: playbackInfo.isTrackPlaying,
-    trackId: trackKey,
-    initialProgress: playerState.currentTrackProgress,
-  });
-
-  const progressPercent = useMemo(() => {
-    if (!Number.isFinite(animatedProgress)) {
-      return 0;
-    }
-    return Math.min(animatedProgress * 100, 100);
-  }, [animatedProgress]);
 
   const authors = currentTrack.authors?.join(", ") || "Неизвестный автор";
   const trackName = currentTrack.trackName ?? "";

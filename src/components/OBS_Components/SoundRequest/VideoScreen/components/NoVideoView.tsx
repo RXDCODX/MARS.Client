@@ -1,9 +1,8 @@
-import { memo, useMemo } from "react";
+import { memo } from "react";
 
 import type { PlayerState, QueueItem } from "@/shared/api";
 import { useInjectStyles } from "@/shared/hooks/useInjectStyles";
 
-import { useTrackProgress } from "../../Player/Desktop/useTrackProgress";
 import { InfoBar } from "./InfoBar";
 import styles from "./NoVideoView.module.scss";
 import { useReactCustomPlayer } from "./useReactCustomPlayer";
@@ -52,31 +51,6 @@ function NoVideoViewComponent({
         controls: false,
       },
     });
-
-  const trackKey = useMemo(() => {
-    if (queueItemId) {
-      return queueItemId;
-    }
-    if (currentTrack.id) {
-      return currentTrack.id;
-    }
-    return currentTrack.url;
-  }, [currentTrack.id, currentTrack.url, queueItemId]);
-
-  const animatedProgress = useTrackProgress({
-    durationSec: playbackInfo.maxTrackTimeSeconds,
-    isPlaying: playbackInfo.isTrackPlaying,
-    trackId: trackKey,
-    initialProgress: playerState.currentTrackProgress,
-  });
-
-  const progressPercent = useMemo(() => {
-    if (!Number.isFinite(animatedProgress)) {
-      return 0;
-    }
-
-    return Math.min(animatedProgress * 100, 100);
-  }, [animatedProgress]);
 
   const trackName = currentTrack.trackName ?? "";
 
