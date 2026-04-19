@@ -1,5 +1,6 @@
-import React, { useRef, useEffect } from 'react';
-import './ShapeGrid.css';
+import "./ShapeGrid.css";
+
+import React, { useEffect, useRef } from "react";
 
 type CanvasStrokeStyle = string | CanvasGradient | CanvasPattern;
 
@@ -9,23 +10,23 @@ interface GridOffset {
 }
 
 interface ShapeGridProps {
-  direction?: 'diagonal' | 'up' | 'right' | 'down' | 'left';
+  direction?: "diagonal" | "up" | "right" | "down" | "left";
   speed?: number;
   borderColor?: CanvasStrokeStyle;
   squareSize?: number;
   hoverFillColor?: CanvasStrokeStyle;
-  shape?: 'square' | 'hexagon' | 'circle' | 'triangle';
+  shape?: "square" | "hexagon" | "circle" | "triangle";
   hoverTrailAmount?: number;
 }
 
 const ShapeGrid: React.FC<ShapeGridProps> = ({
-  direction = 'right',
+  direction = "right",
   speed = 1,
-  borderColor = '#999',
+  borderColor = "#999",
   squareSize = 40,
-  hoverFillColor = '#222',
-  shape = 'square',
-  hoverTrailAmount = 0
+  hoverFillColor = "#222",
+  shape = "square",
+  hoverTrailAmount = 0,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const requestRef = useRef<number | null>(null);
@@ -39,10 +40,10 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
 
-    const isHex = shape === 'hexagon';
-    const isTri = shape === 'triangle';
+    const isHex = shape === "hexagon";
+    const isTri = shape === "triangle";
     const hexHoriz = squareSize * 1.5;
     const hexVert = squareSize * Math.sqrt(3);
 
@@ -53,7 +54,7 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
       numSquaresY.current = Math.ceil(canvas.height / squareSize) + 1;
     };
 
-    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener("resize", resizeCanvas);
     resizeCanvas();
 
     const drawHex = (cx: number, cy: number, size: number) => {
@@ -76,7 +77,12 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
       ctx.closePath();
     };
 
-    const drawTriangle = (cx: number, cy: number, size: number, flip: boolean) => {
+    const drawTriangle = (
+      cx: number,
+      cy: number,
+      size: number,
+      flip: boolean
+    ) => {
       if (!ctx) return;
       ctx.beginPath();
       if (flip) {
@@ -97,7 +103,8 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
 
       if (isHex) {
         const colShift = Math.floor(gridOffset.current.x / hexHoriz);
-        const offsetX = ((gridOffset.current.x % hexHoriz) + hexHoriz) % hexHoriz;
+        const offsetX =
+          ((gridOffset.current.x % hexHoriz) + hexHoriz) % hexHoriz;
         const offsetY = ((gridOffset.current.y % hexVert) + hexVert) % hexVert;
 
         const cols = Math.ceil(canvas.width / hexHoriz) + 3;
@@ -106,7 +113,10 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
         for (let col = -2; col < cols; col++) {
           for (let row = -2; row < rows; row++) {
             const cx = col * hexHoriz + offsetX;
-            const cy = row * hexVert + ((col + colShift) % 2 !== 0 ? hexVert / 2 : 0) + offsetY;
+            const cy =
+              row * hexVert +
+              ((col + colShift) % 2 !== 0 ? hexVert / 2 : 0) +
+              offsetY;
 
             const cellKey = `${col},${row}`;
             const alpha = cellOpacities.current.get(cellKey);
@@ -128,7 +138,8 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
         const colShift = Math.floor(gridOffset.current.x / halfW);
         const rowShift = Math.floor(gridOffset.current.y / squareSize);
         const offsetX = ((gridOffset.current.x % halfW) + halfW) % halfW;
-        const offsetY = ((gridOffset.current.y % squareSize) + squareSize) % squareSize;
+        const offsetY =
+          ((gridOffset.current.y % squareSize) + squareSize) % squareSize;
 
         const cols = Math.ceil(canvas.width / halfW) + 4;
         const rows = Math.ceil(canvas.height / squareSize) + 4;
@@ -137,7 +148,8 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
           for (let row = -2; row < rows; row++) {
             const cx = col * halfW + offsetX;
             const cy = row * squareSize + squareSize / 2 + offsetY;
-            const flip = ((col + colShift + row + rowShift) % 2 + 2) % 2 !== 0;
+            const flip =
+              (((col + colShift + row + rowShift) % 2) + 2) % 2 !== 0;
 
             const cellKey = `${col},${row}`;
             const alpha = cellOpacities.current.get(cellKey);
@@ -154,9 +166,11 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
             ctx.stroke();
           }
         }
-      } else if (shape === 'circle') {
-        const offsetX = ((gridOffset.current.x % squareSize) + squareSize) % squareSize;
-        const offsetY = ((gridOffset.current.y % squareSize) + squareSize) % squareSize;
+      } else if (shape === "circle") {
+        const offsetX =
+          ((gridOffset.current.x % squareSize) + squareSize) % squareSize;
+        const offsetY =
+          ((gridOffset.current.y % squareSize) + squareSize) % squareSize;
 
         const cols = Math.ceil(canvas.width / squareSize) + 3;
         const rows = Math.ceil(canvas.height / squareSize) + 3;
@@ -182,8 +196,10 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
           }
         }
       } else {
-        const offsetX = ((gridOffset.current.x % squareSize) + squareSize) % squareSize;
-        const offsetY = ((gridOffset.current.y % squareSize) + squareSize) % squareSize;
+        const offsetX =
+          ((gridOffset.current.x % squareSize) + squareSize) % squareSize;
+        const offsetY =
+          ((gridOffset.current.y % squareSize) + squareSize) % squareSize;
 
         const cols = Math.ceil(canvas.width / squareSize) + 3;
         const rows = Math.ceil(canvas.height / squareSize) + 3;
@@ -216,8 +232,8 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
         canvas.height / 2,
         Math.sqrt(canvas.width ** 2 + canvas.height ** 2) / 2
       );
-      gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
-      gradient.addColorStop(1, '#060010');
+      gradient.addColorStop(0, "rgba(0, 0, 0, 0)");
+      gradient.addColorStop(1, "#060010");
 
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -229,21 +245,27 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
       const wrapY = isHex ? hexVert : isTri ? squareSize * 2 : squareSize;
 
       switch (direction) {
-        case 'right':
-          gridOffset.current.x = (gridOffset.current.x - effectiveSpeed + wrapX) % wrapX;
+        case "right":
+          gridOffset.current.x =
+            (gridOffset.current.x - effectiveSpeed + wrapX) % wrapX;
           break;
-        case 'left':
-          gridOffset.current.x = (gridOffset.current.x + effectiveSpeed + wrapX) % wrapX;
+        case "left":
+          gridOffset.current.x =
+            (gridOffset.current.x + effectiveSpeed + wrapX) % wrapX;
           break;
-        case 'up':
-          gridOffset.current.y = (gridOffset.current.y + effectiveSpeed + wrapY) % wrapY;
+        case "up":
+          gridOffset.current.y =
+            (gridOffset.current.y + effectiveSpeed + wrapY) % wrapY;
           break;
-        case 'down':
-          gridOffset.current.y = (gridOffset.current.y - effectiveSpeed + wrapY) % wrapY;
+        case "down":
+          gridOffset.current.y =
+            (gridOffset.current.y - effectiveSpeed + wrapY) % wrapY;
           break;
-        case 'diagonal':
-          gridOffset.current.x = (gridOffset.current.x - effectiveSpeed + wrapX) % wrapX;
-          gridOffset.current.y = (gridOffset.current.y - effectiveSpeed + wrapY) % wrapY;
+        case "diagonal":
+          gridOffset.current.x =
+            (gridOffset.current.x - effectiveSpeed + wrapX) % wrapX;
+          gridOffset.current.y =
+            (gridOffset.current.y - effectiveSpeed + wrapY) % wrapY;
           break;
         default:
           break;
@@ -258,7 +280,10 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
       const targets = new Map<string, number>();
 
       if (hoveredSquareRef.current) {
-        targets.set(`${hoveredSquareRef.current.x},${hoveredSquareRef.current.y}`, 1);
+        targets.set(
+          `${hoveredSquareRef.current.x},${hoveredSquareRef.current.y}`,
+          1
+        );
       }
 
       if (hoverTrailAmount > 0) {
@@ -266,7 +291,10 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
           const t = trailCells.current[i];
           const key = `${t.x},${t.y}`;
           if (!targets.has(key)) {
-            targets.set(key, (trailCells.current.length - i) / (trailCells.current.length + 1));
+            targets.set(
+              key,
+              (trailCells.current.length - i) / (trailCells.current.length + 1)
+            );
           }
         }
       }
@@ -295,7 +323,8 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
 
       if (isHex) {
         const colShift = Math.floor(gridOffset.current.x / hexHoriz);
-        const offsetX = ((gridOffset.current.x % hexHoriz) + hexHoriz) % hexHoriz;
+        const offsetX =
+          ((gridOffset.current.x % hexHoriz) + hexHoriz) % hexHoriz;
         const offsetY = ((gridOffset.current.y % hexVert) + hexVert) % hexVert;
         const adjustedX = mouseX - offsetX;
         const adjustedY = mouseY - offsetY;
@@ -311,14 +340,16 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
         ) {
           if (hoveredSquareRef.current && hoverTrailAmount > 0) {
             trailCells.current.unshift({ ...hoveredSquareRef.current });
-            if (trailCells.current.length > hoverTrailAmount) trailCells.current.length = hoverTrailAmount;
+            if (trailCells.current.length > hoverTrailAmount)
+              trailCells.current.length = hoverTrailAmount;
           }
           hoveredSquareRef.current = { x: col, y: row };
         }
       } else if (isTri) {
         const halfW = squareSize / 2;
         const offsetX = ((gridOffset.current.x % halfW) + halfW) % halfW;
-        const offsetY = ((gridOffset.current.y % squareSize) + squareSize) % squareSize;
+        const offsetY =
+          ((gridOffset.current.y % squareSize) + squareSize) % squareSize;
 
         const adjustedX = mouseX - offsetX;
         const adjustedY = mouseY - offsetY;
@@ -333,13 +364,16 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
         ) {
           if (hoveredSquareRef.current && hoverTrailAmount > 0) {
             trailCells.current.unshift({ ...hoveredSquareRef.current });
-            if (trailCells.current.length > hoverTrailAmount) trailCells.current.length = hoverTrailAmount;
+            if (trailCells.current.length > hoverTrailAmount)
+              trailCells.current.length = hoverTrailAmount;
           }
           hoveredSquareRef.current = { x: col, y: row };
         }
-      } else if (shape === 'circle') {
-        const offsetX = ((gridOffset.current.x % squareSize) + squareSize) % squareSize;
-        const offsetY = ((gridOffset.current.y % squareSize) + squareSize) % squareSize;
+      } else if (shape === "circle") {
+        const offsetX =
+          ((gridOffset.current.x % squareSize) + squareSize) % squareSize;
+        const offsetY =
+          ((gridOffset.current.y % squareSize) + squareSize) % squareSize;
 
         const adjustedX = mouseX - offsetX;
         const adjustedY = mouseY - offsetY;
@@ -354,13 +388,16 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
         ) {
           if (hoveredSquareRef.current && hoverTrailAmount > 0) {
             trailCells.current.unshift({ ...hoveredSquareRef.current });
-            if (trailCells.current.length > hoverTrailAmount) trailCells.current.length = hoverTrailAmount;
+            if (trailCells.current.length > hoverTrailAmount)
+              trailCells.current.length = hoverTrailAmount;
           }
           hoveredSquareRef.current = { x: col, y: row };
         }
       } else {
-        const offsetX = ((gridOffset.current.x % squareSize) + squareSize) % squareSize;
-        const offsetY = ((gridOffset.current.y % squareSize) + squareSize) % squareSize;
+        const offsetX =
+          ((gridOffset.current.x % squareSize) + squareSize) % squareSize;
+        const offsetY =
+          ((gridOffset.current.y % squareSize) + squareSize) % squareSize;
 
         const adjustedX = mouseX - offsetX;
         const adjustedY = mouseY - offsetY;
@@ -375,7 +412,8 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
         ) {
           if (hoveredSquareRef.current && hoverTrailAmount > 0) {
             trailCells.current.unshift({ ...hoveredSquareRef.current });
-            if (trailCells.current.length > hoverTrailAmount) trailCells.current.length = hoverTrailAmount;
+            if (trailCells.current.length > hoverTrailAmount)
+              trailCells.current.length = hoverTrailAmount;
           }
           hoveredSquareRef.current = { x: col, y: row };
         }
@@ -385,22 +423,31 @@ const ShapeGrid: React.FC<ShapeGridProps> = ({
     const handleMouseLeave = () => {
       if (hoveredSquareRef.current && hoverTrailAmount > 0) {
         trailCells.current.unshift({ ...hoveredSquareRef.current });
-        if (trailCells.current.length > hoverTrailAmount) trailCells.current.length = hoverTrailAmount;
+        if (trailCells.current.length > hoverTrailAmount)
+          trailCells.current.length = hoverTrailAmount;
       }
       hoveredSquareRef.current = null;
     };
 
-    canvas.addEventListener('mousemove', handleMouseMove);
-    canvas.addEventListener('mouseleave', handleMouseLeave);
+    canvas.addEventListener("mousemove", handleMouseMove);
+    canvas.addEventListener("mouseleave", handleMouseLeave);
     requestRef.current = requestAnimationFrame(updateAnimation);
 
     return () => {
-      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener("resize", resizeCanvas);
       if (requestRef.current) cancelAnimationFrame(requestRef.current);
-      canvas.removeEventListener('mousemove', handleMouseMove);
-      canvas.removeEventListener('mouseleave', handleMouseLeave);
+      canvas.removeEventListener("mousemove", handleMouseMove);
+      canvas.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [direction, speed, borderColor, hoverFillColor, squareSize, shape, hoverTrailAmount]);
+  }, [
+    direction,
+    speed,
+    borderColor,
+    hoverFillColor,
+    squareSize,
+    shape,
+    hoverTrailAmount,
+  ]);
 
   return <canvas ref={canvasRef} className="shapegrid-canvas"></canvas>;
 };

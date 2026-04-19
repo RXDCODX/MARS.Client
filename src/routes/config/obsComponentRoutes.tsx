@@ -47,15 +47,11 @@ const explosionVideoLoader = () =>
 const ExplosionVideo = lazy(explosionVideoLoader);
 
 const autoMessageBillboardLoader = () =>
-  import(
-    "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboard"
-  );
+  import("@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboard");
 const AutoMessageBillboard = lazy(autoMessageBillboardLoader);
 
 const autoMessageBillboardTestLoader = () =>
-  import(
-    "@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboardTest"
-  );
+  import("@/components/OBS_Components/AutoMessageBillboard/AutoMessageBillboardTest");
 const AutoMessageBillboardTest = lazy(autoMessageBillboardTestLoader);
 
 const fumoFridayLoader = () =>

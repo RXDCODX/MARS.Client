@@ -129,7 +129,6 @@ export const ToastModalProvider: React.FC<{ children: React.ReactNode }> = ({
    * result.data - отображается в модальном окне при клике
    */
   const showToast = useCallback(
-    // eslint-disable-next-line prettier/prettier
     <TData = unknown,>(result: OperationResult<TData>) => {
       // Определяем тип тоста на основе result.success
       const type = result.success ? "success" : "error";

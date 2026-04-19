@@ -37,31 +37,24 @@ function UnifiedPlayerViewComponent() {
     playerState,
     isMainPlayer,
     hasUserInteracted,
-    userName,
-    userAvatar,
-    userColor,
     localVolume,
     videoState,
   } = useUnifiedPlayerViewModel();
 
-  const { playerContainerRef, playerElement, playbackInfo } =
-    useReactCustomPlayer({
-      track: currentTrack,
-      queueItemId,
-      playerState,
-      isMainPlayer,
-      hasUserInteracted,
-      localVolume,
-      pauseSuppressionMs: 900,
-      playerView: {
-        width: "100%",
-        height: "100%",
-        controls: true,
-      },
-    });
-
-  const authors = currentTrack.authors?.join(", ") ?? "Неизвестный автор";
-  const trackName = currentTrack.trackName ?? "";
+  const { playerContainerRef, playerElement } = useReactCustomPlayer({
+    track: currentTrack,
+    queueItemId,
+    playerState,
+    isMainPlayer,
+    hasUserInteracted,
+    localVolume,
+    pauseSuppressionMs: 900,
+    playerView: {
+      width: "100%",
+      height: "100%",
+      controls: true,
+    },
+  });
 
   const isVideoMode = videoState === PlayerStateVideoStateEnum.Video;
   const isNoVideoMode = videoState === PlayerStateVideoStateEnum.NoVideo;
@@ -90,15 +83,7 @@ function UnifiedPlayerViewComponent() {
 
       {showInfoBar && (
         <div className={isNoVideoMode ? styles.infoBarBottom : undefined}>
-          <InfoBar
-            userName={userName}
-            userAvatar={userAvatar}
-            userColor={userColor}
-            trackName={trackName}
-            artistName={authors}
-            currentTrackProgress={playbackInfo.currentSecondProgress}
-            trackDuration={currentTrack.duration}
-          />
+          <InfoBar />
         </div>
       )}
     </div>

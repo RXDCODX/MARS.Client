@@ -11,9 +11,6 @@ interface UseUnifiedPlayerViewModelResult {
   playerState: PlayerState;
   isMainPlayer: boolean;
   hasUserInteracted: boolean;
-  userName: string;
-  userAvatar?: string;
-  userColor?: string;
   localVolume: number;
   videoState: PlayerStateVideoStateEnum;
 }
@@ -34,15 +31,6 @@ export function useUnifiedPlayerViewModel(): UseUnifiedPlayerViewModelResult {
   const currentTrack = currentQueueItem?.track as NonNullable<
     QueueItem["track"]
   >;
-  const requestedByUser = currentQueueItem?.requestedByTwitchUser;
-
-  const userName =
-    requestedByUser?.displayName ??
-    requestedByUser?.userLogin ??
-    "Неизвестный пользователь";
-
-  const userAvatar = requestedByUser?.profileImageUrl;
-  const userColor = requestedByUser?.chatColor;
 
   const playerState =
     playerStateFromStore ??
@@ -62,9 +50,6 @@ export function useUnifiedPlayerViewModel(): UseUnifiedPlayerViewModelResult {
     playerState,
     isMainPlayer,
     hasUserInteracted,
-    userName,
-    userAvatar,
-    userColor,
     localVolume,
     videoState,
   };

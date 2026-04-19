@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Navbar as BootstrapNavbar, Container, Nav } from "react-bootstrap";
+import { Container, Nav, Navbar as BootstrapNavbar } from "react-bootstrap";
 
 import Dashboard from "../Dashboard/Dashboard";
 import styles from "./AdminPanel.module.scss";

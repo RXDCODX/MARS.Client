@@ -1,47 +1,91 @@
+import { useEffect, useRef } from "react";
+import { useShallow } from "zustand/react/shallow";
+
+import { useVideoScreenStore } from "../store/useVideoScreenStore";
 import { parseDurationToSeconds } from "../utils/parseDuration";
 import { CustomMarquee } from "./CustomMarquee";
 import styles from "./InfoBar.module.scss";
 
-interface Props {
-  userName: string;
-  userAvatar?: string;
-  userColor?: string;
-  trackName: string;
-  artistName: string;
-  currentTrackProgress?: number;
-  trackDuration?: string;
+/**
+ * Компонент локального отображения прогресса в реальном времени с 60FPS.
+ * Получает элемент video/audio напрямую из DOM, обходя ререндеры React.
+ */
+function ProgressPercentLabel({ trackDuration }: { trackDuration?: string }) {
+  const labelRef = useRef<HTMLDivElement>(null);
+  const durationSeconds = parseDurationToSeconds(trackDuration);
+
+  useEffect(() => {
+    if (!durationSeconds || durationSeconds <= 0) return;
+
+    let frameId: number;
+
+    const updateProgress = () => {
+      const mediaElement = document.querySelector(
+        "video, audio"
+      ) as HTMLMediaElement | null;
+
+      if (mediaElement && labelRef.current) {
+        const currentProgress = mediaElement.currentTime;
+        const calculatedProgressPercent =
+          (currentProgress / durationSeconds) * 100;
+        const sanitizedProgress = Math.min(
+          Math.max(calculatedProgressPercent, 0),
+          100
+        );
+
+        labelRef.current.textContent = `${sanitizedProgress.toFixed(1)}%`;
+      }
+
+      frameId = requestAnimationFrame(updateProgress);
+    };
+
+    frameId = requestAnimationFrame(updateProgress);
+
+    return () => {
+      cancelAnimationFrame(frameId);
+    };
+  }, [durationSeconds]);
+
+  return (
+    <div className={styles.progressPercentOverlay}>
+      <div ref={labelRef} className={styles.progressPercentLabel}>
+        0.0%
+      </div>
+    </div>
+  );
 }
 
 /**
  * Компонент информационной полоски с прогрессом
  * Показывает информацию о пользователе и треке с визуализацией прогресса
  */
-function InfoBarComponent({
-  userName,
-  userAvatar,
-  userColor,
-  trackName,
-  artistName,
-  currentTrackProgress,
-  trackDuration,
-}: Props) {
-  const durationSeconds = parseDurationToSeconds(trackDuration);
-  const currentProgressSeconds =
-    typeof currentTrackProgress === "number" &&
-    Number.isFinite(currentTrackProgress)
-      ? currentTrackProgress
-      : 0;
-  const calculatedProgressPercent =
-    Number.isFinite(durationSeconds) &&
-    durationSeconds > 0 &&
-    Number.isFinite(currentProgressSeconds)
-      ? (currentProgressSeconds / durationSeconds) * 100
-      : 0;
-  const sanitizedProgress = Number.isFinite(calculatedProgressPercent)
-    ? Math.min(Math.max(calculatedProgressPercent, 0), 100)
-    : 0;
+function InfoBarComponent() {
+  const {
+    userName,
+    userAvatar,
+    userColor,
+    trackName,
+    artistName,
+    trackDuration,
+  } = useVideoScreenStore(
+    useShallow(state => {
+      const currentQueueItem = state.playerState?.currentQueueItem;
+      const currentTrack = currentQueueItem?.track;
+      const requestedByUser = currentQueueItem?.requestedByTwitchUser;
 
-  const progressLabel = `${sanitizedProgress.toFixed(1)}%`;
+      return {
+        userName:
+          requestedByUser?.displayName ??
+          requestedByUser?.userLogin ??
+          "Неизвестный пользователь",
+        userAvatar: requestedByUser?.profileImageUrl,
+        userColor: requestedByUser?.chatColor,
+        trackName: currentTrack?.trackName ?? "",
+        artistName: currentTrack?.authors?.join(", ") ?? "Неизвестный автор",
+        trackDuration: currentTrack?.duration,
+      };
+    })
+  );
 
   return (
     <div className={styles.infoBar}>
@@ -74,9 +118,7 @@ function InfoBarComponent({
           </CustomMarquee>
         </div>
 
-        <div className={styles.progressPercentOverlay}>
-          <div className={styles.progressPercentLabel}>{progressLabel}</div>
-        </div>
+        <ProgressPercentLabel trackDuration={trackDuration} />
       </div>
     </div>
   );
