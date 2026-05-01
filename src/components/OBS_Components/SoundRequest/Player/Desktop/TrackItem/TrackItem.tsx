@@ -61,27 +61,6 @@ function TrackItemComponent({
       onMouseLeave={onMouseLeave}
       key={track.id}
     >
-      {!isCurrent && queueItemId && onPlayNow && (
-        <button
-          className={`${styles.actionButton} ${styles.playNowButton}`}
-          onClick={handlePlayNow}
-          title="Воспроизвести сейчас"
-          type="button"
-          disabled={isPlayNowPending}
-        >
-          <Play size={18} />
-        </button>
-      )}
-      {!isCurrent && queueItemId && onDelete && (
-        <button
-          className={`${styles.actionButton} ${styles.deleteButton}`}
-          onClick={handleDelete}
-          title="Удалить из очереди"
-          type="button"
-        >
-          <X size={18} />
-        </button>
-      )}
       <div
         className={`${styles.thumb} ${showPlayingIndicator ? styles.thumbPlaying : ""}`}
       >
@@ -101,7 +80,28 @@ function TrackItemComponent({
             </div>
           </div>
         )}
+        {!isCurrent && queueItemId && onPlayNow && (
+          <button
+            className={`${styles.thumbPlayButton}`}
+            onClick={handlePlayNow}
+            title="Воспроизвести сейчас"
+            type="button"
+            disabled={isPlayNowPending}
+          >
+            <Play size={24} />
+          </button>
+        )}
       </div>
+      {!isCurrent && queueItemId && onDelete && (
+        <button
+          className={`${styles.actionButton} ${styles.deleteButton}`}
+          onClick={handleDelete}
+          title="Удалить из очереди"
+          type="button"
+        >
+          <X size={18} />
+        </button>
+      )}
       <div className={styles.itemBody}>
         <div className={styles.itemTitle}>
           <span className={styles.trackName}>{track.trackName}</span>
