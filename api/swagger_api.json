@@ -2976,6 +2976,102 @@
         }
       }
     },
+    "/api/GooglePhotos/authorize": {
+      "post": {
+        "tags": [
+          "GooglePhotos"
+        ],
+        "parameters": [
+          {
+            "name": "telegramAdminId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/GooglePhotos/oauth-callback": {
+      "get": {
+        "tags": [
+          "GooglePhotos"
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "error",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/GooglePhotos/status": {
+      "get": {
+        "tags": [
+          "GooglePhotos"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/KeyboardHook/status": {
       "get": {
         "tags": [
@@ -5306,6 +5402,46 @@
             "in": "query",
             "schema": {
               "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/SoundRequest/play-now/{queueItemId}": {
+      "post": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "parameters": [
+          {
+            "name": "queueItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
             }
           }
         ],
@@ -10744,6 +10880,9 @@
     },
     {
       "name": "FramedataChanges"
+    },
+    {
+      "name": "GooglePhotos"
     },
     {
       "name": "KeyboardHook"

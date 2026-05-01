@@ -732,15 +732,15 @@ export interface TekkenCharacter {
   /** @maxLength 200 */
   pageUrl: string;
   /** @format byte */
-  image?: string;
+  image?: Blob;
   /** @maxLength 20 */
   imageExtension?: string;
   /** @format byte */
-  avatarImage?: string;
+  avatarImage?: Blob;
   /** @maxLength 20 */
   avatarImageExtension?: string;
   /** @format byte */
-  fullBodyImage?: string;
+  fullBodyImage?: Blob;
   /** @maxLength 20 */
   fullBodyImageExtension?: string;
   movelist?: Move[];
@@ -773,15 +773,15 @@ export interface TekkenCharacterPendingDto {
   /** @maxLength 200 */
   pageUrl: string;
   /** @format byte */
-  image?: string;
+  image?: Blob;
   /** @maxLength 20 */
   imageExtension?: string;
   /** @format byte */
-  avatarImage?: string;
+  avatarImage?: Blob;
   /** @maxLength 20 */
   avatarImageExtension?: string;
   /** @format byte */
-  fullBodyImage?: string;
+  fullBodyImage?: Blob;
   /** @maxLength 20 */
   fullBodyImageExtension?: string;
   movelist?: MovePending[];
