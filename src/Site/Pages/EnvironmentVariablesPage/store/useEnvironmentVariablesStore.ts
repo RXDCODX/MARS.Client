@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
-import { EnvironmentVariable } from "@/shared/api/http-clients/EnvironmentVariable";
 import { defaultApiConfig } from "@/shared/api/api-config";
+import { EnvironmentVariable } from "@/shared/api/http-clients/EnvironmentVariable";
 import type {
   EnvironmentVariable as EnvironmentVariableDto,
   SetEnvironmentVariableRequest,
@@ -136,8 +136,7 @@ export const useEnvironmentVariablesStore =
 
         if (!operation.success) {
           const message =
-            operation.message ??
-            "Не удалось загрузить переменные окружения";
+            operation.message ?? "Не удалось загрузить переменные окружения";
           set(state => ({
             ...state,
             isLoading: false,

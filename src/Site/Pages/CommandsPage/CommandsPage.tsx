@@ -27,14 +27,14 @@ import {
   Tabs,
 } from "react-bootstrap";
 
-import { Commands } from "@/shared/api";
-import { defaultApiConfig } from "@/shared/api/api-config";
 import {
   CommandInfo,
   CommandParameterInfo,
+  Commands,
   CommandsAdminPlatformInfoListParamsEnum,
   CommandsUserPlatformInfoListParamsEnum,
 } from "@/shared/api";
+import { defaultApiConfig } from "@/shared/api/api-config";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
 

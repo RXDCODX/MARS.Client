@@ -1,16 +1,17 @@
 import type { HubConnection } from "@microsoft/signalr";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { LogMessageDto, Logs } from "@/shared/api";
-import { LoggerHubSignalRConnectionBuilder } from "@/shared/api";
-import { defaultApiConfig } from "@/shared/api/api-config";
 import {
   Log,
+  LoggerHubSignalRConnectionBuilder,
   LogLogLevelEnum,
+  LogMessageDto,
   LogResponse,
+  Logs,
   LogsListParamsLogLevelEnum,
   LogsStatistics,
 } from "@/shared/api";
+import { defaultApiConfig } from "@/shared/api/api-config";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import { LogsFilters, LogsPageState } from "../LogsPage.types";

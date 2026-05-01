@@ -11,8 +11,8 @@ import {
   Table,
 } from "react-bootstrap";
 
-import { RootState } from "@/shared/api/http-clients/RootState";
 import { defaultApiConfig } from "@/shared/api/api-config";
+import { RootState } from "@/shared/api/http-clients/RootState";
 import type { RootState as RootStateDto } from "@/shared/api/types/data-contracts";
 import type { OperationResult } from "@/shared/types/OperationResult";
 import { useToastModal } from "@/shared/Utils/ToastModal";
@@ -35,7 +35,10 @@ const defaultForm: RootStateForm = {
 
 const RootStatePage: React.FC = () => {
   const { showToast } = useToastModal();
-  const appConfigurationService = useMemo(() => new RootState(defaultApiConfig), []);
+  const appConfigurationService = useMemo(
+    () => new RootState(defaultApiConfig),
+    []
+  );
 
   const [items, setItems] = useState<RootStateDto[]>([]);
   const [loading, setLoading] = useState(true);

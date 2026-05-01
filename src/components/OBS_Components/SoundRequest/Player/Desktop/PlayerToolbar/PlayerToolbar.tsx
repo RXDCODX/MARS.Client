@@ -11,8 +11,8 @@ import { Spinner } from "react-bootstrap";
 import { useShallow } from "zustand/react/shallow";
 
 import { PlayerStateStateEnum, SpotifyAuth } from "@/shared/api";
-import { RootState } from "@/shared/api/http-clients/RootState";
 import { defaultApiConfig } from "@/shared/api/api-config";
+import { RootState } from "@/shared/api/http-clients/RootState";
 import type { SpotifyAuthStatusResult } from "@/shared/api/types/data-contracts";
 import type { OperationResult } from "@/shared/types/OperationResult";
 import { useToastModal } from "@/shared/Utils/ToastModal";
@@ -80,9 +80,7 @@ function PlayerToolbarComponent() {
 
     try {
       const client = new RootState(defaultApiConfig);
-      const response = await client.rootStateDetail(
-        SOUND_REQUEST_PROVIDER_KEY
-      );
+      const response = await client.rootStateDetail(SOUND_REQUEST_PROVIDER_KEY);
       const operation = response.data;
 
       if (operation.success) {
