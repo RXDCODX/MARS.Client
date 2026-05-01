@@ -2,8 +2,10 @@ import { useCallback, useReducer, useRef } from "react";
 import { Textfit } from "react-textfit";
 import { useShallow } from "zustand/react/shallow";
 
-import { ChatMessage } from "@/shared/api";
-import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
+import {
+  ChatMessage,
+  TelegramusHubSignalRContext as SignalRContext,
+} from "@/shared/api";
 import InjectStyles from "@/shared/components/InjectStyles";
 import animate from "@/shared/styles/animate.module.scss";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
@@ -22,6 +24,8 @@ enum StateStatus {
   add,
   remove,
 }
+
+const MESSAGE_LIFETIME_MS = import.meta.env.DEV ? 12000 : 7000;
 
 export interface HighliteMessageProps {
   message: ChatMessage;
@@ -107,6 +111,19 @@ export default function Message() {
     dispatch({ type: StateStatus.remove, messageProps: message });
   }, []);
 
+  const startHideAnimation = useCallback(
+    (message: HighliteMessageProps) => {
+      setTimeout(() => {
+        divHard.current!.onanimationend = () => {
+          handleRemoveEvent(message);
+        };
+        divHard.current!.className =
+          styles.container + " " + animate.fadeOut + " " + animate.animated;
+      }, MESSAGE_LIFETIME_MS);
+    },
+    [handleRemoveEvent]
+  );
+
   return (
     <>
       <InjectStyles
@@ -135,20 +152,7 @@ export default function Message() {
                 alt={`Face: ${currentMessage.faceImage.name}`}
                 src={currentMessage.faceImage.url}
                 onLoad={() => {
-                  setTimeout(
-                    () => {
-                      divHard.current!.onanimationend = () => {
-                        handleRemoveEvent(currentMessage);
-                      };
-                      divHard.current!.className =
-                        styles.container +
-                        " " +
-                        animate.fadeOut +
-                        " " +
-                        animate.animated;
-                    },
-                    import.meta.env.DEV ? 99999 : 7000
-                  );
+                  startHideAnimation(currentMessage);
                 }}
               />
             )}
@@ -160,20 +164,7 @@ export default function Message() {
                 loop
                 muted
                 onLoadedMetadata={() => {
-                  setTimeout(
-                    () => {
-                      divHard.current!.onanimationend = () => {
-                        handleRemoveEvent(currentMessage);
-                      };
-                      divHard.current!.className =
-                        styles.container +
-                        " " +
-                        animate.fadeOut +
-                        " " +
-                        animate.animated;
-                    },
-                    import.meta.env.DEV ? 99999 : 7000
-                  );
+                  startHideAnimation(currentMessage);
                 }}
               />
             )}
@@ -211,6 +202,11 @@ export default function Message() {
                 {currentMessage.message.message}
               </Textfit>
             </div>
+            <div
+              key={currentMessage.message.id}
+              className={styles.expireTimer}
+              style={{ animationDuration: `${MESSAGE_LIFETIME_MS}ms` }}
+            />
           </div>
         </div>
       )}
