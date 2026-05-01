@@ -10,6 +10,7 @@ import {
   SoundRequest,
   SoundRequestHubSignalRConnectionBuilder,
 } from "@/shared/api";
+import { defaultApiConfig } from "@/shared/api/api-config";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import { usePlayerStore } from "../stores/usePlayerStore";
@@ -21,10 +22,10 @@ import { usePlayerStore } from "../stores/usePlayerStore";
 export const useSoundRequestPlayer = () => {
   const [playerState, setPlayerState] = useState<PlayerState | null>(null);
   const [queue, setQueue] = useState<QueueItem[]>([]);
-  const [history, setHistory] = useState<BaseTrackInfo[]>([]);
+  const [history, setHistory] = useState<QueueItem[]>([]);
 
   const { showToast } = useToastModal();
-  const soundRequestApi = useMemo(() => new SoundRequest(), []);
+  const soundRequestApi = useMemo(() => new SoundRequest(defaultApiConfig), []);
   const connectionRef = useRef<HubConnection | null>(null);
 
   // Ref'ы для управления изменением громкости
@@ -134,9 +135,10 @@ export const useSoundRequestPlayer = () => {
           "[useSoundRequestPlayer] Обновление очереди и истории (последние 5 треков)"
         );
         const queueResponse = await soundRequestApi.soundRequestQueueList();
-        const historyResponse = await soundRequestApi.soundRequestHistoryList({
-          count: 5,
-        });
+        const historyResponse =
+          await soundRequestApi.soundRequestHistoryQueueItemsList({
+            count: 5,
+          });
 
         if (queueResponse.data.success && queueResponse.data.data) {
           setQueue(queueResponse.data.data);
@@ -246,9 +248,10 @@ export const useSoundRequestPlayer = () => {
     async (count: number = 20) => {
       try {
         console.log("[useSoundRequestPlayer] Запрос истории...");
-        const response = await soundRequestApi.soundRequestHistoryList({
-          count,
-        });
+        const response =
+          await soundRequestApi.soundRequestHistoryQueueItemsList({
+            count,
+          });
         console.log("[useSoundRequestPlayer] История получена:", {
           success: response.data.success,
           count: response.data.data?.length || 0,

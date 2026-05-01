@@ -82,10 +82,10 @@ function UserColumnComponent() {
         [...history]
           .reverse()
           .slice(0, MAX_QUEUE_IN_HISTORY_MODE)
-          .forEach((track, index) => {
+          .forEach((item, index) => {
             userItems.push(
               <div
-                key={`history-user-${track.id}-${index}`}
+                key={`history-user-${item.id}-${index}`}
                 className={styles.userRow}
                 style={{ opacity: 0, pointerEvents: "none" }}
               >
@@ -134,10 +134,10 @@ function UserColumnComponent() {
       case TrackListViewMode.Reversed:
         // Обратный режим: пустые UserItem для истории -> текущий пользователь
         // Не разворачиваем, так как column-reverse сделает за нас
-        history.forEach((track, index) => {
+        history.forEach((item, index) => {
           userItems.push(
             <div
-              key={`history-user-${track.id}-${index}`}
+              key={`history-user-${item.id}-${index}`}
               className={styles.userRow}
               style={{ opacity: 0, pointerEvents: "none" }}
             >

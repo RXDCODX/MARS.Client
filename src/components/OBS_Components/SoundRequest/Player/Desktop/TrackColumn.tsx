@@ -29,7 +29,12 @@ function TrackColumnComponent() {
   );
 
   // Получаем обработчики из хука
-  const { handleItemHover, handleDeleteFromQueue } = useQueueActions();
+  const {
+    handleItemHover,
+    handleDeleteFromQueue,
+    handlePlayNow,
+    playingNowId,
+  } = useQueueActions();
 
   // Используем переименованные переменные
   const current = currentTrack;
@@ -81,16 +86,21 @@ function TrackColumnComponent() {
         [...history]
           .reverse()
           .slice(0, MAX_QUEUE_IN_HISTORY_MODE)
-          .forEach((track, index) => {
-            trackItems.push(
-              <TrackItem
-                key={`history-${track.id}-${index}`}
-                track={track}
-                isHistory
-                onMouseEnter={() => handleItemHover(track.id, true)}
-                onMouseLeave={() => handleItemHover(track.id, false)}
-              />
-            );
+          .forEach((item, index) => {
+            if (item.track) {
+              trackItems.push(
+                <TrackItem
+                  key={`history-${item.id}-${index}`}
+                  track={item.track}
+                  queueItemId={item.id}
+                  isHistory
+                  onMouseEnter={() => handleItemHover(item.track?.id, true)}
+                  onMouseLeave={() => handleItemHover(item.track?.id, false)}
+                  onPlayNow={handlePlayNow}
+                  isPlayNowPending={playingNowId === item.id}
+                />
+              );
+            }
           });
         if (current) {
           trackItems.push(
@@ -114,6 +124,8 @@ function TrackColumnComponent() {
                 queueItemId={q.id}
                 onMouseEnter={() => handleItemHover(q.track?.id, true)}
                 onMouseLeave={() => handleItemHover(q.track?.id, false)}
+                onPlayNow={handlePlayNow}
+                isPlayNowPending={playingNowId === q.id}
                 onDelete={handleDeleteFromQueue}
               />
             );
@@ -125,16 +137,21 @@ function TrackColumnComponent() {
       case TrackListViewMode.Reversed:
         // Обратный режим: история -> текущий трек (снизу)
         // Не разворачиваем, так как column-reverse сделает за нас
-        history.toReversed().forEach((track, index) => {
-          trackItems.push(
-            <TrackItem
-              key={`history-${track.id}-${index}`}
-              track={track}
-              isHistory
-              onMouseEnter={() => handleItemHover(track.id, true)}
-              onMouseLeave={() => handleItemHover(track.id, false)}
-            />
-          );
+        history.toReversed().forEach((item, index) => {
+          if (item.track) {
+            trackItems.push(
+              <TrackItem
+                key={`history-${item.id}-${index}`}
+                track={item.track}
+                queueItemId={item.id}
+                isHistory
+                onMouseEnter={() => handleItemHover(item.track?.id, true)}
+                onMouseLeave={() => handleItemHover(item.track?.id, false)}
+                onPlayNow={handlePlayNow}
+                isPlayNowPending={playingNowId === item.id}
+              />
+            );
+          }
         });
         if (current) {
           trackItems.push(
@@ -160,6 +177,8 @@ function TrackColumnComponent() {
     history,
     handleItemHover,
     handleDeleteFromQueue,
+    handlePlayNow,
+    playingNowId,
   ]);
 
   return (

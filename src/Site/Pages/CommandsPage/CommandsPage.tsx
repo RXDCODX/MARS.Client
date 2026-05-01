@@ -28,6 +28,7 @@ import {
 } from "react-bootstrap";
 
 import { Commands } from "@/shared/api";
+import { defaultApiConfig } from "@/shared/api/api-config";
 import {
   CommandInfo,
   CommandParameterInfo,
@@ -516,7 +517,7 @@ const DisplayModeToggle: React.FC<{
 const CommandsPage: React.FC = () => {
   const colors = useSiteColors();
   const { showToast } = useToastModal();
-  const [commandsService] = useState(() => new Commands());
+  const [commandsService] = useState(() => new Commands(defaultApiConfig));
   const parametersPanelRef = useRef<HTMLDivElement>(null);
 
   // Состояние компонента

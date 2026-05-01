@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 
 import { LogMessageDto, Logs } from "@/shared/api";
 import { LoggerHubSignalRConnectionBuilder } from "@/shared/api";
+import { defaultApiConfig } from "@/shared/api/api-config";
 import {
   Log,
   LogLogLevelEnum,
@@ -16,7 +17,7 @@ import { LogsFilters, LogsPageState } from "../LogsPage.types";
 
 export const useLogsData = () => {
   const { showToast } = useToastModal();
-  const [logsService] = useState(() => new Logs());
+  const [logsService] = useState(() => new Logs(defaultApiConfig));
   const [isRealtime, setIsRealtime] = useState(false); // TODO: Починить режим реального времени - логгер логирует информацию о передаче данных по хабу
 
   // Состояние страницы

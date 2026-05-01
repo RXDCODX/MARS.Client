@@ -17,6 +17,7 @@ import {
   CreateAutoMessageRequest,
   UpdateAutoMessageRequest,
 } from "@/shared/api";
+import { defaultApiConfig } from "@/shared/api/api-config";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import styles from "./AutoMessagesPage.module.scss";
@@ -26,7 +27,7 @@ const emptyMessage = "";
 const AutoMessagesPage: React.FC = () => {
   const BootstrapButton = Button as any;
   const { showToast } = useToastModal();
-  const api = useMemo(() => new AutoMessages(), []);
+  const api = useMemo(() => new AutoMessages(defaultApiConfig), []);
 
   const [items, setItems] = useState<AutoMessageDto[]>([]);
   const [loading, setLoading] = useState(true);

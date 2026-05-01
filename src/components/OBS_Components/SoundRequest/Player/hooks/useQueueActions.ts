@@ -1,6 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 
 import { SoundRequest } from "@/shared/api";
+import { defaultApiConfig } from "@/shared/api/api-config";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import styles from "../Desktop/SoundRequestPlayerDesktop.module.scss";
@@ -12,8 +13,9 @@ import { usePlayerStore } from "../stores/usePlayerStore";
  */
 export const useQueueActions = () => {
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [playingNowId, setPlayingNowId] = useState<string | null>(null);
   const { showToast } = useToastModal();
-  const soundRequestApi = useMemo(() => new SoundRequest(), []);
+  const soundRequestApi = useMemo(() => new SoundRequest(defaultApiConfig), []);
 
   // Обработчик hover для синхронизации между колонками
   const handleItemHover = useCallback(
@@ -72,9 +74,45 @@ export const useQueueActions = () => {
     [deletingId, soundRequestApi, showToast]
   );
 
+  const handlePlayNow = useCallback(
+    async (queueItemId: string) => {
+      if (playingNowId) return;
+
+      setPlayingNowId(queueItemId);
+
+      try {
+        const response =
+          await soundRequestApi.soundRequestPlayNowCreate(queueItemId);
+
+        if (response.data.success) {
+          showToast({
+            success: true,
+            message: response.data.message || "Трек запущен",
+          });
+        } else {
+          showToast({
+            success: false,
+            message: response.data.message || "Не удалось запустить трек",
+          });
+        }
+      } catch (error) {
+        console.error("Ошибка при немедленном воспроизведении трека:", error);
+        showToast({
+          success: false,
+          message: "Произошла ошибка при запуске трека",
+        });
+      } finally {
+        setPlayingNowId(null);
+      }
+    },
+    [playingNowId, soundRequestApi, showToast]
+  );
+
   return {
     handleItemHover,
     handleDeleteFromQueue,
+    handlePlayNow,
     deletingId,
+    playingNowId,
   };
 };

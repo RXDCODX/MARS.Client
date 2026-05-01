@@ -195,6 +195,31 @@ export class SoundRequest<
    * No description
    *
    * @tags SoundRequest
+   * @name SoundRequestHistoryQueueItemsList
+   * @request GET:/api/SoundRequest/history/queue-items
+   * @response `200` `OperationResult<QueueItem[]>` OK
+   */
+  soundRequestHistoryQueueItemsList = (
+    query?: {
+      /**
+       * @format int32
+       * @default 20
+       */
+      count: number;
+    },
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<QueueItem[]>, any>({
+      path: `/api/SoundRequest/history/queue-items`,
+      method: "GET",
+      query: query,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags SoundRequest
    * @name SoundRequestCurrentSongList
    * @request GET:/api/SoundRequest/current-song
    * @response `200` `OperationResult<String>` OK

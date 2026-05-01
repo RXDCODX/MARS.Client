@@ -1,6 +1,7 @@
 import { create } from "zustand";
 
-import { appConfigurationService } from "@/shared/api/services/AppConfigurationService";
+import { EnvironmentVariable } from "@/shared/api/http-clients/EnvironmentVariable";
+import { defaultApiConfig } from "@/shared/api/api-config";
 import type {
   EnvironmentVariable as EnvironmentVariableDto,
   SetEnvironmentVariableRequest,
@@ -127,15 +128,15 @@ export const useEnvironmentVariablesStore =
       }));
 
       try {
-        const operation =
-          await appConfigurationService.getEnvironmentVariables();
-        const typedOperation = operation as OperationResult<
+        const client = new EnvironmentVariable(defaultApiConfig);
+        const response = await client.environmentVariableList();
+        const operation = response.data as OperationResult<
           EnvironmentVariableDto[] | undefined
         >;
 
-        if (!typedOperation.success) {
+        if (!operation.success) {
           const message =
-            typedOperation.message ??
+            operation.message ??
             "Не удалось загрузить переменные окружения";
           set(state => ({
             ...state,
@@ -148,10 +149,10 @@ export const useEnvironmentVariablesStore =
             formMode: "create",
             formValues: defaultFormValues,
           }));
-          return showToast ? typedOperation : createErrorResult(message);
+          return showToast ? operation : createErrorResult(message);
         }
 
-        const variables = mapVariables(typedOperation.data);
+        const variables = mapVariables(operation.data);
 
         set(state => {
           const nextSelectedKey = focusKey ?? state.selectedKey ?? null;
@@ -231,8 +232,9 @@ export const useEnvironmentVariablesStore =
       }));
 
       try {
-        const operation =
-          await appConfigurationService.reloadEnvironmentVariables();
+        const client = new EnvironmentVariable(defaultApiConfig);
+        const response = await client.environmentVariableReloadCreate();
+        const operation = response.data;
 
         if (!operation.success) {
           return operation;
@@ -368,8 +370,9 @@ export const useEnvironmentVariablesStore =
       }));
 
       try {
-        const operation =
-          await appConfigurationService.upsertEnvironmentVariable(payload);
+        const client = new EnvironmentVariable(defaultApiConfig);
+        const response = await client.environmentVariableCreate(payload);
+        const operation = response.data;
 
         if (!operation.success) {
           return operation;
@@ -423,8 +426,9 @@ export const useEnvironmentVariablesStore =
       }));
 
       try {
-        const operation =
-          await appConfigurationService.deleteEnvironmentVariable(key);
+        const client = new EnvironmentVariable(defaultApiConfig);
+        const response = await client.environmentVariableDelete(key);
+        const operation = response.data;
 
         if (!operation.success) {
           return operation;

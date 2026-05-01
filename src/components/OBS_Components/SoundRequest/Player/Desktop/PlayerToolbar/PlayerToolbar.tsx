@@ -11,7 +11,8 @@ import { Spinner } from "react-bootstrap";
 import { useShallow } from "zustand/react/shallow";
 
 import { PlayerStateStateEnum, SpotifyAuth } from "@/shared/api";
-import { appConfigurationService } from "@/shared/api/services/AppConfigurationService";
+import { RootState } from "@/shared/api/http-clients/RootState";
+import { defaultApiConfig } from "@/shared/api/api-config";
 import type { SpotifyAuthStatusResult } from "@/shared/api/types/data-contracts";
 import type { OperationResult } from "@/shared/types/OperationResult";
 import { useToastModal } from "@/shared/Utils/ToastModal";
@@ -78,9 +79,11 @@ function PlayerToolbarComponent() {
     setIsLoadingProvider(true);
 
     try {
-      const operation = await appConfigurationService.getRootState(
+      const client = new RootState(defaultApiConfig);
+      const response = await client.rootStateDetail(
         SOUND_REQUEST_PROVIDER_KEY
       );
+      const operation = response.data;
 
       if (operation.success) {
         setProvider(parseProvider(operation.data?.value));
@@ -121,12 +124,14 @@ function PlayerToolbarComponent() {
         }
       }
 
-      const operation = await appConfigurationService.upsertRootState({
+      const client = new RootState(defaultApiConfig);
+      const response = await client.rootStateCreate({
         name: SOUND_REQUEST_PROVIDER_KEY,
         value: nextProvider,
         description: "Активный провайдер SoundRequest (YouTube/Spotify)",
         typeDescription: "enum: SoundRequestProvider",
       });
+      const operation = response.data;
       if (operation.success) {
         setProvider(nextProvider);
         showToast({

@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { Play, X } from "lucide-react";
 import { memo, useCallback } from "react";
 
 import { BaseTrackInfo } from "@/shared/api";
@@ -14,7 +14,9 @@ interface TrackItemProps {
   isHistory?: boolean;
   onMouseEnter?: () => void;
   onMouseLeave?: () => void;
+  onPlayNow?: (queueItemId: string) => void;
   onDelete?: (queueItemId: string) => void;
+  isPlayNowPending?: boolean;
 }
 
 function TrackItemComponent({
@@ -25,9 +27,21 @@ function TrackItemComponent({
   isHistory = false,
   onMouseEnter,
   onMouseLeave,
+  onPlayNow,
   onDelete,
+  isPlayNowPending = false,
 }: TrackItemProps) {
   const showPlayingIndicator = isCurrent && isPlaying;
+
+  const handlePlayNow = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (queueItemId && onPlayNow) {
+        onPlayNow(queueItemId);
+      }
+    },
+    [queueItemId, onPlayNow]
+  );
 
   const handleDelete = useCallback(
     (e: React.MouseEvent) => {
@@ -47,9 +61,20 @@ function TrackItemComponent({
       onMouseLeave={onMouseLeave}
       key={track.id}
     >
+      {!isCurrent && queueItemId && onPlayNow && (
+        <button
+          className={`${styles.actionButton} ${styles.playNowButton}`}
+          onClick={handlePlayNow}
+          title="Воспроизвести сейчас"
+          type="button"
+          disabled={isPlayNowPending}
+        >
+          <Play size={18} />
+        </button>
+      )}
       {!isCurrent && queueItemId && onDelete && (
         <button
-          className={styles.deleteButton}
+          className={`${styles.actionButton} ${styles.deleteButton}`}
           onClick={handleDelete}
           title="Удалить из очереди"
           type="button"

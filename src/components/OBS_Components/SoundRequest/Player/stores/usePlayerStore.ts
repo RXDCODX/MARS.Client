@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { BaseTrackInfo, PlayerState, QueueItem } from "@/shared/api";
+import { PlayerState, QueueItem } from "@/shared/api";
 
 export enum TrackListViewMode {
   Default = "default", // Текущий трек сверху + очередь
@@ -12,7 +12,7 @@ interface PlayerStore {
   // Состояние
   playerState: PlayerState | null;
   queue: QueueItem[];
-  history: BaseTrackInfo[];
+  history: QueueItem[];
   viewMode: TrackListViewMode;
   volume: number;
   loading: boolean;
@@ -29,8 +29,8 @@ interface PlayerStore {
   rollbackQueue: (queue: QueueItem[]) => void;
 
   // Методы управления историей
-  setHistory: (history: BaseTrackInfo[]) => void;
-  addToHistory: (track: BaseTrackInfo) => void;
+  setHistory: (history: QueueItem[]) => void;
+  addToHistory: (item: QueueItem) => void;
 
   // Методы управления громкостью
   setVolume: (volume: number) => void;
@@ -89,18 +89,18 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   setHistory: history => set({ history }),
 
   // Добавить трек в историю
-  addToHistory: track => {
+  addToHistory: item => {
     const currentHistory = get().history;
 
     // Проверяем, нужно ли вообще обновлять историю
     // Если трек уже первый в истории - не делаем ничего
-    if (currentHistory.length > 0 && currentHistory[0].id === track.id) {
+    if (currentHistory.length > 0 && currentHistory[0].id === item.id) {
       return;
     }
 
     // Создаем новый массив вручную без slice - max 5 элементов
     const MAX_HISTORY = 5;
-    const updatedHistory: BaseTrackInfo[] = [track];
+    const updatedHistory: QueueItem[] = [item];
 
     // Добавляем элементы из текущей истории, пропуская дубликаты
     for (
@@ -108,7 +108,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
       i < currentHistory.length && updatedHistory.length < MAX_HISTORY;
       i++
     ) {
-      if (currentHistory[i].id !== track.id) {
+      if (currentHistory[i].id !== item.id) {
         updatedHistory.push(currentHistory[i]);
       }
     }

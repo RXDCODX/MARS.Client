@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Button,
@@ -11,7 +11,8 @@ import {
   Table,
 } from "react-bootstrap";
 
-import { appConfigurationService } from "@/shared/api/services/AppConfigurationService";
+import { RootState } from "@/shared/api/http-clients/RootState";
+import { defaultApiConfig } from "@/shared/api/api-config";
 import type { RootState as RootStateDto } from "@/shared/api/types/data-contracts";
 import type { OperationResult } from "@/shared/types/OperationResult";
 import { useToastModal } from "@/shared/Utils/ToastModal";
@@ -33,8 +34,8 @@ const defaultForm: RootStateForm = {
 };
 
 const RootStatePage: React.FC = () => {
-  const BootstrapButton = Button as any;
   const { showToast } = useToastModal();
+  const appConfigurationService = useMemo(() => new RootState(defaultApiConfig), []);
 
   const [items, setItems] = useState<RootStateDto[]>([]);
   const [loading, setLoading] = useState(true);
@@ -49,7 +50,8 @@ const RootStatePage: React.FC = () => {
     setError("");
 
     try {
-      const operation = await appConfigurationService.getRootStates();
+      const response = await appConfigurationService!.rootStateList();
+      const operation = response.data;
 
       if (operation.success) {
         setItems(Array.isArray(operation.data) ? operation.data : []);
@@ -68,7 +70,7 @@ const RootStatePage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [showToast]);
+  }, [appConfigurationService, showToast]);
 
   useEffect(() => {
     void loadItems();
@@ -109,19 +111,22 @@ const RootStatePage: React.FC = () => {
       let operation: OperationResult;
 
       if (editingName) {
-        operation = await appConfigurationService.updateRootStateValue(
-          editingName,
-          {
-            value: form.value,
-          }
-        );
+        const response =
+          await appConfigurationService!.rootStateValuePartialUpdate(
+            editingName,
+            {
+              value: form.value,
+            }
+          );
+        operation = response.data;
       } else {
-        operation = await appConfigurationService.upsertRootState({
+        const response = await appConfigurationService!.rootStateCreate({
           name: trimmedName,
           value: form.value,
           description: form.description,
           typeDescription: form.typeDescription,
         });
+        operation = response.data;
       }
 
       showToast(operation);
@@ -153,7 +158,8 @@ const RootStatePage: React.FC = () => {
     setError("");
 
     try {
-      const operation = await appConfigurationService.deleteRootState(name);
+      const response = await appConfigurationService!.rootStateDelete(name);
+      const operation = response.data;
       showToast(operation);
 
       if (operation.success) {
@@ -176,12 +182,9 @@ const RootStatePage: React.FC = () => {
     <Container fluid className={styles.page}>
       <div className={styles.header}>
         <h1 className="mb-0">Управление RootState</h1>
-        <BootstrapButton
-          variant="outline-secondary"
-          onClick={() => void loadItems()}
-        >
+        <Button variant="outline-secondary" onClick={() => void loadItems()}>
           Обновить
-        </BootstrapButton>
+        </Button>
       </div>
 
       {!!error && (
@@ -260,11 +263,7 @@ const RootStatePage: React.FC = () => {
                 </Form.Group>
 
                 <div className={styles.actions}>
-                  <BootstrapButton
-                    type="submit"
-                    variant="primary"
-                    disabled={saving}
-                  >
+                  <Button type="submit" variant="primary" disabled={saving}>
                     {saving ? (
                       <>
                         <Spinner as="span" size="sm" className="me-2" />
@@ -275,16 +274,16 @@ const RootStatePage: React.FC = () => {
                     ) : (
                       "Создать"
                     )}
-                  </BootstrapButton>
+                  </Button>
 
                   {editingName && (
-                    <BootstrapButton
+                    <Button
                       type="button"
                       variant="outline-secondary"
                       onClick={resetForm}
                     >
                       Отмена
-                    </BootstrapButton>
+                    </Button>
                   )}
                 </div>
               </Form>
@@ -323,14 +322,14 @@ const RootStatePage: React.FC = () => {
                           <td>{item.typeDescription}</td>
                           <td>
                             <div className={styles.actionsRight}>
-                              <BootstrapButton
+                              <Button
                                 size="sm"
                                 variant="outline-primary"
                                 onClick={() => handleEdit(item)}
                               >
                                 Изменить
-                              </BootstrapButton>
-                              <BootstrapButton
+                              </Button>
+                              <Button
                                 size="sm"
                                 variant="outline-danger"
                                 disabled={deletingName === item.name}
@@ -339,7 +338,7 @@ const RootStatePage: React.FC = () => {
                                 {deletingName === item.name
                                   ? "Удаление..."
                                   : "Удалить"}
-                              </BootstrapButton>
+                              </Button>
                             </div>
                           </td>
                         </tr>

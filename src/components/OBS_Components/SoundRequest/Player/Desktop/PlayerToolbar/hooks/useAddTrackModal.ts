@@ -1,6 +1,7 @@
 import { useCallback, useMemo } from "react";
 
 import { SoundRequest } from "@/shared/api";
+import { defaultApiConfig } from "@/shared/api/api-config";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 /**
@@ -9,7 +10,7 @@ import { useToastModal } from "@/shared/Utils/ToastModal";
  */
 export function useAddTrackModal() {
   const { showToast } = useToastModal();
-  const soundRequestApi = useMemo(() => new SoundRequest(), []);
+  const soundRequestApi = useMemo(() => new SoundRequest(defaultApiConfig), []);
 
   const addTrack = useCallback(
     async (query: string) => {

@@ -5322,6 +5322,46 @@
         }
       }
     },
+    "/api/SoundRequest/history/queue-items": {
+      "get": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "parameters": [
+          {
+            "name": "count",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueueItemListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueueItemListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueueItemListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/SoundRequest/current-song": {
       "get": {
         "tags": [
