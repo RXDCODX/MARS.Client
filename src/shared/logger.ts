@@ -13,7 +13,7 @@ const LogLevelNames = {
 type LogLevel = keyof typeof LogLevelNames;
 
 export const logger: ILogger = {
-  log: (level: number, message: string) => {
+  log: (level: number, message: any) => {
     if (!(level in LogLevelNames)) {
       console.log("%cUnknown level:", "color: red;", message);
       return;
@@ -22,37 +22,71 @@ export const logger: ILogger = {
     const levelName = LogLevelNames[level as LogLevel];
     const levelColor = getLevelColor(level);
 
-    // Пытаемся найти и распарсить JSON (для WebSocket)
-    const jsonData = tryParseJson(message);
+    // Попробуем аккуратно обработать разные типы сообщения
+    const parsed = tryParseJson(message);
 
-    if (jsonData) {
-      // Если это JSON - выводим как объект с подсветкой
+    if (parsed !== null && typeof parsed === "object") {
+      // Если это объект — передаём его отдельным аргументом, чтобы в консоли можно было развернуть
       console.log(
-        `%c${levelName}:%c (JSON)`,
+        `%c${levelName}:`,
         `color: ${levelColor}; font-weight: bold;`,
-        "color: gray;",
-        jsonData
+        parsed
       );
     } else {
-      // Обычное сообщение
+      // Обычное сообщение — оставляем форматирование с двумя стилями
       console.log(
         `%c${levelName}:%c`,
         `color: ${levelColor}; font-weight: bold;`,
         "color: inherit;",
-        message
+        typeof message === "string"
+          ? message
+          : (message?.toString?.() ?? String(message))
       );
     }
   },
 };
 
 // Вспомогательные функции
-function tryParseJson(str: string) {
+function tryParseJson(input: any) {
   try {
-    // Ищем JSON в строках вида: Content: '{"protocol":"json"}'
-    const jsonMatch = str.match("Content: '(.*?)[\u001E']");
-    const jsonString = jsonMatch?.[1] || str;
+    if (input === null || input === undefined) return null;
 
-    return JSON.parse(jsonString);
+    // Если это уже объект — возвращаем как есть
+    if (typeof input === "object") return input;
+
+    if (typeof input !== "string") return null;
+
+    const str = input.trim();
+
+    // Пробуем парсить как есть
+    try {
+      return JSON.parse(str);
+    } catch {
+      // Игнорируем и пробуем искать JSON внутри строки
+    }
+
+    // Ищем ближайший JSON-объект или массив внутри строки
+    const firstBrace = str.indexOf("{");
+    const firstBracket = str.indexOf("[");
+    const start =
+      firstBrace >= 0 && (firstBrace < firstBracket || firstBracket === -1)
+        ? firstBrace
+        : firstBracket;
+    if (start >= 0) {
+      const lastBrace = str.lastIndexOf("}");
+      const lastBracket = str.lastIndexOf("]");
+      const end = Math.max(lastBrace, lastBracket);
+      if (end > start) {
+        const candidate = str.substring(start, end + 1);
+        try {
+          return JSON.parse(candidate);
+        } catch {
+          // fallthrough
+        }
+      }
+    }
+
+    return null;
   } catch {
     return null;
   }
