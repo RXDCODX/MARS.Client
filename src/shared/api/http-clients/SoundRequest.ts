@@ -65,6 +65,7 @@ import type {
   PlayerState,
   ProblemDetails,
   QueueItem,
+  QueueReorderRequest,
   RateLimiterInfo,
   Reward,
   RewardRedemption,
@@ -282,6 +283,26 @@ export class SoundRequest<
     this.request<OperationResult<String>, any>({
       path: `/api/SoundRequest/play-now/${queueItemId}`,
       method: "POST",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags SoundRequest
+   * @name SoundRequestQueueReorderCreate
+   * @request POST:/api/SoundRequest/queue/reorder
+   * @response `200` `OperationResult<String>` OK
+   */
+  soundRequestQueueReorderCreate = (
+    data: QueueReorderRequest,
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<String>, any>({
+      path: `/api/SoundRequest/queue/reorder`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
       format: "json",
       ...params,
     });

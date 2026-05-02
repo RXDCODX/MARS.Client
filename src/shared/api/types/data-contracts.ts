@@ -396,6 +396,7 @@ export interface MediaPositionInfo {
 
 export interface MediaStylesInfo {
   isBorder: boolean;
+  isShowLetterbox: boolean;
 }
 
 export interface MediaTextInfo {
@@ -588,6 +589,13 @@ export interface QueueItem {
   requestedByTwitchUser?: TwitchUser;
   /** @format date-time */
   requestedAt: string;
+}
+
+export interface QueueReorderRequest {
+  /** @format uuid */
+  queueItemId: string;
+  /** @format int32 */
+  newPosition: number;
 }
 
 export interface RateLimiterInfo {
@@ -857,6 +865,12 @@ export interface TwitchUser {
   isVip: boolean;
   /** @format date-time */
   followedAt?: string;
+  /** @format date */
+  weddingDate?: string;
+  /** @format date */
+  lastWeddingCongratulatedOn?: string;
+  /** @format int32 */
+  lastWeddingCongratulatedMonths?: number;
   /** @format date-time */
   lastUpdated: string;
   /** @format date-time */

@@ -5509,6 +5509,66 @@
         }
       }
     },
+    "/api/SoundRequest/queue/reorder": {
+      "post": {
+        "tags": [
+          "SoundRequest"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/QueueReorderRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/QueueReorderRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/QueueReorderRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StringOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/SpotifyAuth/start": {
       "post": {
         "tags": [
@@ -8711,11 +8771,15 @@
       },
       "MediaStylesInfo": {
         "required": [
-          "isBorder"
+          "isBorder",
+          "isShowLetterbox"
         ],
         "type": "object",
         "properties": {
           "isBorder": {
+            "type": "boolean"
+          },
+          "isShowLetterbox": {
             "type": "boolean"
           }
         },
@@ -9508,6 +9572,24 @@
         ],
         "description": "Результат операции с данными типа any",
         "x-generic-type-argument": "any"
+      },
+      "QueueReorderRequest": {
+        "required": [
+          "newPosition",
+          "queueItemId"
+        ],
+        "type": "object",
+        "properties": {
+          "queueItemId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "newPosition": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
       },
       "RateLimiterInfo": {
         "required": [
@@ -10561,6 +10643,21 @@
           "followedAt": {
             "type": "string",
             "format": "date-time",
+            "nullable": true
+          },
+          "weddingDate": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "lastWeddingCongratulatedOn": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "lastWeddingCongratulatedMonths": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "lastUpdated": {

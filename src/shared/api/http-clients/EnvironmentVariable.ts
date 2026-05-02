@@ -65,6 +65,7 @@ import type {
   PlayerState,
   ProblemDetails,
   QueueItem,
+  QueueReorderRequest,
   RateLimiterInfo,
   Reward,
   RewardRedemption,
