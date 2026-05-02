@@ -1,4 +1,10 @@
-import { JSX, memo, useMemo } from "react";
+import {
+  type JSX,
+  memo,
+  type RefObject,
+  type UIEventHandler,
+  useMemo,
+} from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { useQueueActions } from "../hooks";
@@ -6,7 +12,12 @@ import { TrackListViewMode, usePlayerStore } from "../stores/usePlayerStore";
 import styles from "./SoundRequestPlayerDesktop.module.scss";
 import { UserItem } from "./UserItem";
 
-function UserColumnComponent() {
+interface UserColumnProps {
+  scrollListRef?: RefObject<HTMLDivElement>;
+  onScroll?: UIEventHandler<HTMLDivElement>;
+}
+
+function UserColumnComponent({ scrollListRef, onScroll }: UserColumnProps) {
   // Получаем данные напрямую из стора - ТОЛЬКО нужные поля
   const {
     currentTrack,
@@ -183,7 +194,13 @@ function UserColumnComponent() {
     <div
       className={`${styles.rightCol} ${viewMode === TrackListViewMode.Reversed ? styles.reversedMode : ""}`}
     >
-      <div className={styles.scrollList}>{renderUsersList}</div>
+      <div
+        ref={scrollListRef}
+        className={styles.scrollList}
+        onScroll={onScroll}
+      >
+        {renderUsersList}
+      </div>
     </div>
   );
 }
