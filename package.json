@@ -8,6 +8,7 @@
     "prod": "vite --mode production --port 9159",
     "predeploy": "yarn vite build",
     "deploy": "gh-pages -d dist",
+    "prebuild": "node ./scripts/clean-dists.js",
     "build": "vite build --mode production",
     "build:api": "node build-api.js",
     "preview": "vite preview",
