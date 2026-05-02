@@ -95,7 +95,9 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
 
   return (
     <div ref={divRef} style={{ width: "100%" }}>
-      <BigTextBlockForAudio content={mediaInfo} />
+      {mediaInfo.mediaInfo.stylesInfo.isShowLetterbox && (
+        <BigTextBlockForAudio content={mediaInfo} />
+      )}
       <audio
         id={Id}
         key={Id}
