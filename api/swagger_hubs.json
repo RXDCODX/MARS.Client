@@ -490,6 +490,23 @@
         "responses": { }
       }
     },
+    "/hubs/telegramus/AllRefund": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/TwitchUser"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/telegramus/AutoMessage": {
       "post": {
         "tags": [
@@ -1476,6 +1493,11 @@
                 "$ref": "#/components/schemas/HostCoolDown"
               }
             ]
+          },
+          "lastWeddingCongratulatedMonths": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -2494,21 +2516,6 @@
           "followedAt": {
             "type": "string",
             "format": "date-time",
-            "nullable": true
-          },
-          "weddingDate": {
-            "type": "string",
-            "format": "date",
-            "nullable": true
-          },
-          "lastWeddingCongratulatedOn": {
-            "type": "string",
-            "format": "date",
-            "nullable": true
-          },
-          "lastWeddingCongratulatedMonths": {
-            "type": "integer",
-            "format": "int32",
             "nullable": true
           },
           "lastUpdated": {

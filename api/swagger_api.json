@@ -10645,21 +10645,6 @@
             "format": "date-time",
             "nullable": true
           },
-          "weddingDate": {
-            "type": "string",
-            "format": "date",
-            "nullable": true
-          },
-          "lastWeddingCongratulatedOn": {
-            "type": "string",
-            "format": "date",
-            "nullable": true
-          },
-          "lastWeddingCongratulatedMonths": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
           "lastUpdated": {
             "type": "string",
             "format": "date-time"

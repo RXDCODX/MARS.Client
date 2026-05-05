@@ -865,12 +865,6 @@ export interface TwitchUser {
   isVip: boolean;
   /** @format date-time */
   followedAt?: string;
-  /** @format date */
-  weddingDate?: string;
-  /** @format date */
-  lastWeddingCongratulatedOn?: string;
-  /** @format int32 */
-  lastWeddingCongratulatedMonths?: number;
   /** @format date-time */
   lastUpdated: string;
   /** @format date-time */
@@ -1348,6 +1342,8 @@ export interface Host {
   hostCoolDown: HostCoolDown;
   hostGreetings: HostAutoHello;
   isPrivated: boolean;
+  /** @format int32 */
+  lastWeddingCongratulatedMonths?: number;
   /** @format int64 */
   orderCount: number;
   twitchId: string;
