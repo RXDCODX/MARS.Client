@@ -123,8 +123,7 @@ const tikTokEditLoader = () =>
   import("@/components/OBS_Components/TikTokBigEdit/TikTokLayoutManager");
 const TikTokLayoutManager = lazy(tikTokEditLoader);
 
-const AllRefundLoader = () => import("@/components/OBS_Components/AllRefund");
-const AllRefundManager = lazy(AllRefundLoader);
+import { AllRefundManager } from "./AllRefundLoader";
 
 // Регистрируем OBS компоненты для фоновой загрузки
 // Эти компоненты загружаются редко, поэтому у них низкий приоритет
@@ -154,7 +153,6 @@ registerPrefetchComponents([
   scoreboardLoader,
   managerLoader,
   waifuAlertsLoader,
-  AllRefundLoader,
 ]);
 
 // Массив OBS компонентов (без Layout для интеграции в OBS)
