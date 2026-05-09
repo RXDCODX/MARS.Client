@@ -1,5 +1,5 @@
 import ScoreboardAdminPanel from "@/components/OBS_Components/Scoreboard/AdminPanel/AdminPanel";
-import TelegramClipboardCopyPage from "@/Site/Pages/TelegramClipboardCopyPage";
+import TelegramClipboardCopyPage from "@/components/Site/Pages/TelegramClipboardCopyPage";
 
 import { RouteConfig } from "./RouteConfig";
 

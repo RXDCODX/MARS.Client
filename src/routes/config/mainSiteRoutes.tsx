@@ -1,7 +1,7 @@
 import { lazy, Suspense } from "react";
 
 import { PageLoader } from "@/components/shared/LazyLoader";
-import Layout from "@/Site/Pages/Layout/Layout";
+import Layout from "@/components/Site/Pages/Layout/Layout";
 
 import {
   registerCriticalComponents,
@@ -10,80 +10,89 @@ import {
 import { RouteConfig } from "./RouteConfig";
 
 // КРИТИЧНЫЕ компоненты - загружаются сразу для главной страницы
-const welcomePageLoader = () => import("@/Site/Pages/WelcomePage");
+const welcomePageLoader = () => import("@/components/Site/Pages/WelcomePage");
 const WelcomePage = lazy(welcomePageLoader);
 
 // Регистрируем критичный компонент
 registerCriticalComponents([welcomePageLoader]);
 
 // Остальные страницы - lazy loading для оптимизации производительности
-const aboutPageLoader = () => import("@/Site/Pages/AboutPage");
+const aboutPageLoader = () => import("@/components/Site/Pages/AboutPage");
 const AboutPage = lazy(aboutPageLoader);
 
-const docsPageLoader = () => import("@/Site/Pages/DocsPage");
+const docsPageLoader = () => import("@/components/Site/Pages/DocsPage");
 const DocsPage = lazy(docsPageLoader);
 
-const contactsPageLoader = () => import("@/Site/Pages/ContactsPage");
+const contactsPageLoader = () => import("@/components/Site/Pages/ContactsPage");
 const ContactsPage = lazy(contactsPageLoader);
 
-const routesPageLoader = () => import("@/Site/Pages/RoutesPage/RoutesPage");
+const routesPageLoader = () =>
+  import("@/components/Site/Pages/RoutesPage/RoutesPage");
 const RoutesPage = lazy(routesPageLoader);
 
 // Тяжелые страницы - lazy loading для оптимизации производительности
 const framedataPageLoader = () =>
-  import("@/Site/Pages/FramedataPage/FramedataPage");
+  import("@/components/Site/Pages/FramedataPage/FramedataPage");
 const FramedataPage = lazy(framedataPageLoader);
 
 const pendingChangesPageLoader = () =>
-  import("@/Site/Pages/FramedataPage").then(m => ({
+  import("@/components/Site/Pages/FramedataPage").then(m => ({
     default: m.PendingChangesPage,
   }));
 const PendingChangesPage = lazy(pendingChangesPageLoader);
 
 const changeDetailsPageLoader = () =>
-  import("@/Site/Pages/FramedataPage").then(m => ({
+  import("@/components/Site/Pages/FramedataPage").then(m => ({
     default: m.ChangeDetailsPage,
   }));
 const ChangeDetailsPage = lazy(changeDetailsPageLoader);
 
 const randomMemePageLoader = () =>
-  import("@/Site/Pages/RandomMemePage/RandomMemePage");
+  import("@/components/Site/Pages/RandomMemePage/RandomMemePage");
 const RandomMemePage = lazy(randomMemePageLoader);
 
 const randomMemeDetailsPageLoader = () =>
-  import("@/Site/Pages/RandomMemePage/pages").then(m => ({
+  import("@/components/Site/Pages/RandomMemePage/pages").then(m => ({
     default: m.RandomMemeDetailsPage,
   }));
 const RandomMemeDetailsPage = lazy(randomMemeDetailsPageLoader);
 
 const randomMemeEditPageLoader = () =>
-  import("@/Site/Pages/RandomMemePage/pages").then(m => ({
+  import("@/components/Site/Pages/RandomMemePage/pages").then(m => ({
     default: m.RandomMemeEditPage,
   }));
 const RandomMemeEditPage = lazy(randomMemeEditPageLoader);
 
 const cinemaQueuePageLoader = () =>
-  import("@/Site/Pages/CinemaQueuePage/CinemaQueuePage");
+  import("@/components/Site/Pages/CinemaQueuePage/CinemaQueuePage");
 const CinemaQueuePage = lazy(cinemaQueuePageLoader);
 
 const commandsPageLoader = () =>
-  import("@/Site/Pages/CommandsPage/CommandsPage");
+  import("@/components/Site/Pages/CommandsPage/CommandsPage");
 const CommandsPage = lazy(commandsPageLoader);
 
 const mediaInfoListPageLoader = () =>
-  import("@/Site/Pages/MediaInfoPage/MediaInfoListPage").then(m => ({
+  import("@/components/Site/Pages/MediaInfoPage/MediaInfoListPage").then(m => ({
     default: m.MediaInfoListPage,
   }));
 const MediaInfoListPage = lazy(mediaInfoListPageLoader);
 
+const mediaInfoCreatePageLoader = () =>
+  import("@/components/Site/Pages/MediaInfoPage/MediaInfoCreatePage").then(
+    m => ({
+      default: m.MediaInfoCreatePage,
+    })
+  );
+const MediaInfoCreatePage = lazy(mediaInfoCreatePageLoader);
+
 const mediaInfoEditPageLoader = () =>
-  import("@/Site/Pages/MediaInfoPage/MediaInfoEditPage").then(m => ({
+  import("@/components/Site/Pages/MediaInfoPage/MediaInfoEditPage").then(m => ({
     default: m.MediaInfoEditPage,
   }));
 const MediaInfoEditPage = lazy(mediaInfoEditPageLoader);
 
 const environmentVariablesPageLoader = () =>
-  import("@/Site/Pages/EnvironmentVariablesPage/EnvironmentVariablesPage").then(
+  import("@/components/Site/Pages/EnvironmentVariablesPage/EnvironmentVariablesPage").then(
     m => ({ default: m.default })
   );
 
@@ -106,6 +115,7 @@ registerPrefetchComponents([
   randomMemeEditPageLoader,
   cinemaQueuePageLoader,
   mediaInfoListPageLoader,
+  mediaInfoCreatePageLoader,
   mediaInfoEditPageLoader,
   environmentVariablesPageLoader,
 ]);
@@ -240,6 +250,18 @@ export const mainSiteRoutes: RouteConfig[] = [
       <Layout>
         <Suspense fallback={<PageLoader />}>
           <MediaInfoListPage />
+        </Suspense>
+      </Layout>
+    ),
+  },
+  {
+    path: "/media-info/create",
+    name: "Создание медиа",
+    type: "site",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <MediaInfoCreatePage />
         </Suspense>
       </Layout>
     ),

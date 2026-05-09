@@ -1,4 +1,4 @@
-import ServiceDetails from "@/Site/Pages/ServerViewer/ServiceDetails";
+import ServiceDetails from "@/components/Site/Pages/ServerViewer/ServiceDetails";
 
 // Компонент-обертка для страницы деталей сервиса
 const ServiceDetailsPage = () => (

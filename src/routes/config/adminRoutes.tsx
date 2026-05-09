@@ -1,65 +1,67 @@
 import { lazy, Suspense } from "react";
 
 import { PageLoader } from "@/components/shared/LazyLoader";
-import Layout from "@/Site/Pages/Layout/Layout";
+import Layout from "@/components/Site/Pages/Layout/Layout";
 
 import { registerPrefetchComponents } from "../utils/prefetchRoutes";
 import { RouteConfig } from "./RouteConfig";
 
 // Тяжелые админ страницы - lazy loading
 const logsPageLoader = () =>
-  import("@/Site/Pages").then(m => ({ default: m.LogsPage }));
+  import("@/components/Site/Pages").then(m => ({ default: m.LogsPage }));
 const LogsPage = lazy(logsPageLoader);
 
 const serverViewerLoader = () =>
-  import("@/Site/Pages/ServerViewer/ServerViewer");
+  import("@/components/Site/Pages/ServerViewer/ServerViewer");
 const ServerViewer = lazy(serverViewerLoader);
 
-const twitchRewardsPageLoader = () => import("@/Site/Pages/TwitchRewardsPage");
+const twitchRewardsPageLoader = () =>
+  import("@/components/Site/Pages/TwitchRewardsPage");
 const TwitchRewardsPage = lazy(twitchRewardsPageLoader);
 
-const autoMessagesPageLoader = () => import("@/Site/Pages/AutoMessagesPage");
+const autoMessagesPageLoader = () =>
+  import("@/components/Site/Pages/AutoMessagesPage");
 const AutoMessagesPage = lazy(autoMessagesPageLoader);
 
 const telegramDiscordBridgePageLoader = () =>
-  import("@/Site/Pages/TelegramDiscordBridgePage");
+  import("@/components/Site/Pages/TelegramDiscordBridgePage");
 const TelegramDiscordBridgePage = lazy(telegramDiscordBridgePageLoader);
 
 const serviceDetailsPageLoader = () => import("./ServiceDetailsPage");
 const ServiceDetailsPage = lazy(serviceDetailsPageLoader);
 
 const environmentVariablesPageLoader = () =>
-  import("@/Site/Pages").then(m => ({
+  import("@/components/Site/Pages").then(m => ({
     default: m.EnvironmentVariablesPage,
   }));
 const EnvironmentVariablesPage = lazy(environmentVariablesPageLoader);
 
 const rootStatePageLoader = () =>
-  import("@/Site/Pages").then(m => ({
+  import("@/components/Site/Pages").then(m => ({
     default: m.RootStatePage,
   }));
 const RootStatePage = lazy(rootStatePageLoader);
 
 const ttsVoicePageLoader = () =>
-  import("@/Site/Pages").then(m => ({
+  import("@/components/Site/Pages").then(m => ({
     default: m.TtsVoicePage,
   }));
 const TtsVoicePage = lazy(ttsVoicePageLoader);
 
 const commandsPageLoader = () =>
-  import("@/Site/Pages").then(m => ({
+  import("@/components/Site/Pages").then(m => ({
     default: m.CommandsPage,
   }));
 const CommandsPage = lazy(commandsPageLoader);
 
 const cinemaQueuePageLoader = () =>
-  import("@/Site/Pages").then(m => ({
+  import("@/components/Site/Pages").then(m => ({
     default: m.CinemaQueuePage,
   }));
 const CinemaQueuePage = lazy(cinemaQueuePageLoader);
 
 const spotifyAuthManagerLoader = () =>
-  import("@/Site/Pages/AdminPanel/sections/SpotifyAuthManager");
+  import("@/components/Site/Pages/AdminPanel/sections/SpotifyAuthManager");
 const SpotifyAuthManager = lazy(spotifyAuthManagerLoader);
 
 // Регистрируем админ компоненты для фоновой загрузки
