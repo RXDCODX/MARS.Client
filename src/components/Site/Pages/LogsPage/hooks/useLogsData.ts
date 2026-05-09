@@ -19,7 +19,7 @@ import { LogsFilters, LogsPageState } from "../LogsPage.types";
 export const useLogsData = () => {
   const { showToast } = useToastModal();
   const [logsService] = useState(() => new Logs(defaultApiConfig));
-  const [isRealtime, setIsRealtime] = useState(false); // TODO: Починить режим реального времени - логгер логирует информацию о передаче данных по хабу
+  const [isRealtime, setIsRealtime] = useState(true);
 
   // Состояние страницы
   const [state, setState] = useState<LogsPageState>({
@@ -110,9 +110,11 @@ export const useLogsData = () => {
         totalCount: logResponse.totalCount || 0,
         isLoading: false,
       });
-    } catch (error) {
+    } catch (error: unknown) {
       const errorMessage =
-        error instanceof Error ? error.message : "Неизвестная ошибка";
+        error instanceof Error
+          ? error.message
+          : String(error ?? "Неизвестная ошибка");
       updateState({
         error: `Ошибка при загрузке логов: ${errorMessage}`,
         isLoading: false,
@@ -149,7 +151,7 @@ export const useLogsData = () => {
         statistics: stats,
         isLoadingStats: false,
       });
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Ошибка при загрузке статистики:", error);
       updateState({ isLoadingStats: false });
     }
@@ -209,13 +211,17 @@ export const useLogsData = () => {
   // Загрузка данных при изменении фильтров или пагинации
   useEffect(() => {
     if (!isRealtime) {
-      loadLogs();
+      (async () => {
+        await loadLogs();
+      })();
     }
   }, [isRealtime, loadLogs]);
 
   // Загрузка статистики при монтировании компонента
   useEffect(() => {
-    loadStatistics();
+    (async () => {
+      await loadStatistics();
+    })();
   }, [loadStatistics]);
 
   // Автоматическое обновление каждые 30 секунд в режиме REST
@@ -272,14 +278,34 @@ export const useLogsData = () => {
 
     connection.on("Log", onLog);
 
-    connection.start().catch(error => {
-      showToast({
-        success: false,
-        message:
-          "Не удалось установить соединение для получения логов в реальном времени! " +
-          error.message,
-      });
+    let retryDelay = 1000;
+
+    const startWithRetry = async () => {
+      try {
+        await connection.start();
+        retryDelay = 1000;
+      } catch (error: unknown) {
+        const errMsg =
+          error instanceof Error ? error.message : String(error ?? "");
+
+        showToast({
+          success: false,
+          message:
+            "Не удалось установить соединение для получения логов в реальном времени: " +
+            errMsg,
+        });
+
+        setTimeout(() => startWithRetry(), retryDelay);
+        retryDelay = Math.min(30000, retryDelay * 2);
+      }
+    };
+
+    connection.onclose(() => {
+      // Попробуем переподключиться
+      startWithRetry();
     });
+
+    startWithRetry();
 
     return () => {
       connection.off("Log", onLog);
