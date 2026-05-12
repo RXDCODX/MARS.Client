@@ -89,7 +89,10 @@ export default function TelegramSticker({ mediaInfo, callBack }: Props) {
         style={{ width: "320px", height: "320px" }}
         background="transparent"
       />
-      <div className="sticker-text" style={{ color: textColor, textAlign: "center" }}>
+      <div
+        className="sticker-text"
+        style={{ color: textColor, textAlign: "center" }}
+      >
         {replaceEmotes({
           text: textInfo.text,
           parser,
