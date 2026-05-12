@@ -13,6 +13,7 @@ import {
 } from "@/shared/Utils";
 
 import styles from "./Media.module.scss";
+import { getMediaFrameStyle } from "./mediaFrameStyle";
 
 const Player = createComponent({
   elementClass: TGSPlayer,
@@ -37,6 +38,7 @@ export default function TelegramSticker({ mediaInfo, callBack }: Props) {
   const parser = useTwitchStore(state => state.parser);
   const parserToLInk = useTwitchStore(state => state.parseToLink);
   const textColor = textInfo.textColor ?? "inherit";
+  const frameStyle = getMediaFrameStyle(mediaInfo);
 
   const [style, setStyle] = useState<React.CSSProperties>(
     positionInfo.isProportion
@@ -86,7 +88,7 @@ export default function TelegramSticker({ mediaInfo, callBack }: Props) {
         autoplay
         loop
         src={fileInfo.filePath}
-        style={{ width: "320px", height: "320px" }}
+        style={{ width: "320px", height: "320px", ...frameStyle }}
         background="transparent"
       />
       <div

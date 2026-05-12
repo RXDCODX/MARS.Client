@@ -1,21 +1,22 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Textfit } from "react-textfit";
 
-import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
 import {
   MediaDto,
   MediaFileInfo,
+  MediaInfo,
   MediaMetaInfo,
   MediaPositionInfo,
   MediaStylesInfo,
   MediaTextInfo,
+  TelegramusHubSignalRContext as SignalRContext,
 } from "@/shared/api";
-import { MediaInfo } from "@/shared/api";
 import { KeyWordText } from "@/shared/components/KeyWordText";
 import { getCoordinates, getRandomRotation } from "@/shared/Utils";
 
 import common from "../../OBSCommon.module.scss";
 import styles from "./Media.module.scss";
+import { getMediaFrameStyle } from "./mediaFrameStyle";
 
 declare global {
   interface Window {
@@ -32,6 +33,7 @@ interface Props {
 export function Video({ MediaInfo, callback, isHighPrior }: Props) {
   const { fileInfo, id, positionInfo, textInfo, metaInfo } =
     MediaInfo.mediaInfo;
+  const frameStyle = getMediaFrameStyle(MediaInfo);
   const player = useRef<HTMLVideoElement>(null);
   const [, setBackupTimer] = useState<NodeJS.Timeout>();
   const [videoProgress, setVideoProgress] = useState(0);
@@ -309,6 +311,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
           width: baseStyles.width,
           height: baseStyles.height,
           objectFit: "fill",
+          ...frameStyle,
         }}
         onCanPlay={e => {
           // Настраиваем AudioContext и GainNode

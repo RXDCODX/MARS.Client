@@ -5,6 +5,7 @@ import { getCoordinates, getRandomRotation } from "@/shared/Utils";
 
 import common from "../../OBSCommon.module.scss";
 import styles from "./Media.module.scss";
+import { getMediaFrameStyle } from "./mediaFrameStyle";
 
 interface Props {
   callBack: () => void;
@@ -46,6 +47,7 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
     textAlign: "center",
     maxWidth: positionInfo.width + "px",
   };
+  const frameStyle = getMediaFrameStyle(MediaInfo);
 
   const mergeTransformStyles = (
     coordinates: CSSProperties,
@@ -73,7 +75,7 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
           key={id}
           alt={"IMAGE ERROR"}
           className={styles.media}
-          style={imageStyle}
+          style={{ ...imageStyle, ...frameStyle }}
           onLoad={event => {
             const cords = getCoordinates(event.currentTarget, mediaInfo);
             const rotation = getRandomRotation(mediaInfo);
@@ -97,7 +99,7 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
           key={id}
           alt={"IMAGE ERROR"}
           className={styles.media}
-          style={imageStyle}
+          style={{ ...imageStyle, ...frameStyle }}
           onError={e =>
             console.log(
               "%c" + e,
