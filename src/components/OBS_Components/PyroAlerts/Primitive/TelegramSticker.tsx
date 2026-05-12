@@ -36,6 +36,7 @@ export default function TelegramSticker({ mediaInfo, callBack }: Props) {
   } = mediaInfo.mediaInfo;
   const parser = useTwitchStore(state => state.parser);
   const parserToLInk = useTwitchStore(state => state.parseToLink);
+  const textColor = textInfo.textColor ?? "inherit";
 
   const [style, setStyle] = useState<React.CSSProperties>(
     positionInfo.isProportion
@@ -88,7 +89,7 @@ export default function TelegramSticker({ mediaInfo, callBack }: Props) {
         style={{ width: "320px", height: "320px" }}
         background="transparent"
       />
-      <div className="sticker-text">
+      <div className="sticker-text" style={{ color: textColor, textAlign: "center" }}>
         {replaceEmotes({
           text: textInfo.text,
           parser,

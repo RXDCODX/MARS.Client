@@ -3,17 +3,18 @@
   flex-direction: column;
   color: white;
   max-height: 100%;
-  position: absolute;
+  position: relative;
 }
 
 .imageContainer {
-  display: flex;
+  display: inline-flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
+  justify-content: flex-start;
+  gap: 8px;
   position: absolute;
+  width: fit-content;
+  height: fit-content;
 }
 
 .key_word {

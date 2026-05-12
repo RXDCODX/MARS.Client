@@ -25,14 +25,47 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const [style, setStyle] = useState<CSSProperties>({
+  const [containerStyle, setContainerStyle] = useState<CSSProperties>({
+    display: "inline-flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    gap: "8px",
+    position: "absolute",
+    visibility: "hidden",
+  });
+
+  const [imageStyle, setImageStyle] = useState<CSSProperties>({
     maxWidth: positionInfo.width + "px",
     maxHeight: positionInfo.height + "px",
     visibility: "hidden",
   });
 
+  const textStyle: CSSProperties = {
+    color: textInfo.textColor ?? "inherit",
+    textAlign: "center",
+    maxWidth: positionInfo.width + "px",
+  };
+
+  const mergeTransformStyles = (
+    coordinates: CSSProperties,
+    rotation: CSSProperties
+  ): CSSProperties => {
+    const coordinatesTransform = coordinates.transform?.toString() ?? "";
+    const rotationTransform = rotation.transform?.toString() ?? "";
+    const transform = [coordinatesTransform, rotationTransform]
+      .filter(Boolean)
+      .join(" ");
+
+    return {
+      ...coordinates,
+      ...rotation,
+      ...(transform ? { transform } : {}),
+    };
+  };
+
   return (
-    <div ref={ref} className={styles["imageContainer"]}>
+    <div ref={ref} className={styles["imageContainer"]} style={containerStyle}>
       {positionInfo.isProportion ? (
         <img
           id={id}
@@ -40,14 +73,16 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
           key={id}
           alt={"IMAGE ERROR"}
           className={styles.media}
-          style={style}
+          style={imageStyle}
           onLoad={event => {
             const cords = getCoordinates(event.currentTarget, mediaInfo);
             const rotation = getRandomRotation(mediaInfo);
-            const size = { ...style };
-            setStyle(() => ({
-              ...cords,
-              ...rotation,
+            const size = { ...imageStyle };
+            setContainerStyle(() => ({
+              ...mergeTransformStyles(cords, rotation),
+              visibility: "visible",
+            }));
+            setImageStyle(() => ({
               ...size,
               visibility: "visible",
             }));
@@ -62,7 +97,7 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
           key={id}
           alt={"IMAGE ERROR"}
           className={styles.media}
-          style={style}
+          style={imageStyle}
           onError={e =>
             console.log(
               "%c" + e,
@@ -73,10 +108,12 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
           onLoad={event => {
             const cords = getCoordinates(event.currentTarget, mediaInfo);
             const rotation = getRandomRotation(mediaInfo);
-            const size = { ...style };
-            setStyle(() => ({
-              ...cords,
-              ...rotation,
+            const size = { ...imageStyle };
+            setContainerStyle(() => ({
+              ...mergeTransformStyles(cords, rotation),
+              visibility: "visible",
+            }));
+            setImageStyle(() => ({
               ...size,
               visibility: "visible",
             }));
@@ -84,7 +121,9 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
         />
       )}
       {textInfo.text !== "" && (
-        <div className={common.textStrokeShadow}>{textInfo.text}</div>
+        <div className={common.textStrokeShadow} style={textStyle}>
+          {textInfo.text}
+        </div>
       )}
     </div>
   );
