@@ -126,9 +126,16 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
   const memoizedTextInfo = useMemo(
     () => ({
       keyWordsColor: textInfo.keyWordsColor,
+      textColor: textInfo.textColor,
+      keySymbol: textInfo.keyWordSybmolDelimiter,
       text: textInfo.text,
     }),
-    [textInfo.keyWordsColor, textInfo.text]
+    [
+      textInfo.keyWordsColor,
+      textInfo.textColor,
+      textInfo.keyWordSybmolDelimiter,
+      textInfo.text,
+    ]
   );
 
   // Обновляем baseStyles при изменении initialStyles
@@ -337,12 +344,13 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
         forceSingleModeWidth
         mode="single"
         min={30}
-        style={{ justifyContent: "center", display: "flex" }}
+        style={{ justifyContent: "center", display: "flex", width: "100%" }}
       >
         <KeyWordText
           keyWordColor={memoizedTextInfo.keyWordsColor}
+          textColor={memoizedTextInfo.textColor}
           classNameForKeyWordedSpan={styles.key_word}
-          keySymbol="#"
+          keySymbol={memoizedTextInfo.keySymbol ?? "#"}
           isQuouted
           keyWordedString={memoizedTextInfo.text ?? ""}
         />

@@ -1,6 +1,8 @@
 import { CSSProperties, useEffect, useRef, useState } from "react";
+import { Textfit } from "react-textfit";
 
 import { MediaDto } from "@/shared/api";
+import { KeyWordText } from "@/shared/components/KeyWordText";
 import { getCoordinates, getRandomRotation } from "@/shared/Utils";
 
 import common from "../../OBSCommon.module.scss";
@@ -42,13 +44,7 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
     visibility: "hidden",
   });
 
-  const textStyle: CSSProperties = {
-    color: textInfo.textColor ?? "inherit",
-    textAlign: "center",
-    maxWidth: positionInfo.width + "px",
-  };
   const frameStyle = getMediaFrameStyle(MediaInfo);
-
   const mergeTransformStyles = (
     coordinates: CSSProperties,
     rotation: CSSProperties
@@ -123,9 +119,22 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
         />
       )}
       {textInfo.text !== "" && (
-        <div className={common.textStrokeShadow} style={textStyle}>
-          {textInfo.text}
-        </div>
+        <Textfit
+          className={common.textStrokeShadow}
+          forceSingleModeWidth
+          mode="single"
+          min={30}
+          style={{ justifyContent: "center", display: "flex", width: "100%" }}
+        >
+          <KeyWordText
+            keyWordColor={textInfo.keyWordsColor}
+            textColor={textInfo.textColor}
+            classNameForKeyWordedSpan={styles.key_word}
+            keySymbol={textInfo.keyWordSybmolDelimiter ?? "#"}
+            isQuouted
+            keyWordedString={textInfo.text ?? ""}
+          />
+        </Textfit>
       )}
     </div>
   );

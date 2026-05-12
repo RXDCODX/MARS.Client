@@ -1,8 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { MediaDto, MediaMetaInfoPriorityEnum } from "@/shared/api";
-import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
+import {
+  MediaDto,
+  MediaMetaInfoPriorityEnum,
+  TelegramusHubSignalRContext as SignalRContext,
+} from "@/shared/api";
+import { useInjectStyles } from "@/shared/hooks";
 import Announce from "@/shared/Utils/Announce/Announce";
 
 import Alert from "./Alert";
@@ -77,6 +81,12 @@ export default function PyroAlerts() {
       return () => clearTimeout(timer);
     }
   }, [highPriorityQueue, currentHighPriority]);
+
+  useInjectStyles(`
+    body {
+    overflow: hidden;
+  }
+    `);
 
   // Подписки на SignalR события
   SignalRContext.useSignalREffect("alert", handleAlert, [handleAlert]);

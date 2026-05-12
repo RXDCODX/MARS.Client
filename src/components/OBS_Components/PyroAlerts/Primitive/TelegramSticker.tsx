@@ -3,15 +3,14 @@ import { TGSPlayer } from "@lottiefiles/lottie-player/dist/tgs-player";
 import { useEffect, useRef, useState } from "react";
 // eslint-disable-next-line no-restricted-imports
 import react from "react";
+import { Textfit } from "react-textfit";
 
 import { MediaDto } from "@/shared/api";
+import { KeyWordText } from "@/shared/components/KeyWordText";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
-import {
-  getCoordinates,
-  getRandomRotation,
-  replaceEmotes,
-} from "@/shared/Utils";
+import { getCoordinates, getRandomRotation } from "@/shared/Utils";
 
+import common from "../../OBSCommon.module.scss";
 import styles from "./Media.module.scss";
 import { getMediaFrameStyle } from "./mediaFrameStyle";
 
@@ -37,7 +36,6 @@ export default function TelegramSticker({ mediaInfo, callBack }: Props) {
   } = mediaInfo.mediaInfo;
   const parser = useTwitchStore(state => state.parser);
   const parserToLInk = useTwitchStore(state => state.parseToLink);
-  const textColor = textInfo.textColor ?? "inherit";
   const frameStyle = getMediaFrameStyle(mediaInfo);
 
   const [style, setStyle] = useState<React.CSSProperties>(
@@ -91,16 +89,24 @@ export default function TelegramSticker({ mediaInfo, callBack }: Props) {
         style={{ width: "320px", height: "320px", ...frameStyle }}
         background="transparent"
       />
-      <div
-        className="sticker-text"
-        style={{ color: textColor, textAlign: "center" }}
-      >
-        {replaceEmotes({
-          text: textInfo.text,
-          parser,
-          newParser: parserToLInk,
-        })}
-      </div>
+      {textInfo.text !== "" && (
+        <Textfit
+          className={common.textStrokeShadow}
+          forceSingleModeWidth
+          mode="single"
+          min={30}
+          style={{ justifyContent: "center", display: "flex", width: "100%" }}
+        >
+          <KeyWordText
+            keyWordColor={textInfo.keyWordsColor}
+            textColor={textInfo.textColor}
+            classNameForKeyWordedSpan={styles.key_word}
+            keySymbol={textInfo.keyWordSybmolDelimiter ?? "#"}
+            isQuouted
+            keyWordedString={textInfo.text ?? ""}
+          />
+        </Textfit>
+      )}
     </div>
   );
 }

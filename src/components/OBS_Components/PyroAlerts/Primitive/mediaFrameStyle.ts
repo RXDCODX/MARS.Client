@@ -10,5 +10,6 @@ export function getMediaFrameStyle(mediaInfo: MediaDto): CSSProperties {
   return {
     boxShadow: "0 0 0 12px #ffffff",
     borderRadius: "12px",
+    backgroundColor: "#ffffff",
   };
 }

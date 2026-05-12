@@ -3,6 +3,8 @@ import "./Announce.module.scss";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { Textfit } from "react-textfit";
 
+import { useInjectStyles } from "@/shared/hooks";
+
 interface Props {
   title: string;
   callback?: () => void;
@@ -21,6 +23,33 @@ export default function Announce({ title, callback }: Props) {
   const nodeRef = useRef(null);
   // Цвет фиксируется на маунте
   const [backgroundColor] = useState(getRandomColor);
+
+    useInjectStyles(`
+    #announce{
+      text-shadow:
+        rgb(0 0 0) 2px 0 0,
+        rgb(0 0 0) 1.75517px 0.958851px 0,
+        rgb(0 0 0) 1.0806px 1.68294px 0,
+        rgb(0 0 0) 0.141474px 1.99499px 0,
+        rgb(0 0 0) -0.832294px 1.81859px 0,
+        rgb(0 0 0) -1.60229px 1.19694px 0,
+        rgb(0 0 0) -1.97998px 0.28224px 0,
+        rgb(0 0 0) -1.87291px -0.701566px 0,
+        rgb(0 0 0) -1.30729px -1.5136px 0,
+        rgb(0 0 0) -0.421592px -1.95506px 0,
+        rgb(0 0 0) 0.567324px -1.91785px 0,
+        rgb(0 0 0) 1.41734px -1.41108px 0,
+        rgb(0 0 0) 1.92034px -0.558831px 0;
+
+      :global .animated-gradient-text {
+        text-shadow: none !important;
+      }
+
+      & .animated-gradient-text {
+        text-shadow: none !important;
+      }
+    }
+    `);
 
   // Отключить в Storybook
   if (import.meta.env.VITE_STATE === "book") {
@@ -51,6 +80,7 @@ export default function Announce({ title, callback }: Props) {
     children: React.ReactNode;
     callback: () => void;
   }
+
 
   const FadeOut: React.FC<FadeOutProps> = ({
     duration,
