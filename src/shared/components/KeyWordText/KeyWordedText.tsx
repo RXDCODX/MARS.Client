@@ -31,11 +31,13 @@ export function KeyWordedText({
 
   const parts = keyWordedString.split(regex);
 
+
   return (
     <div style={{ color: textColor, width: "100%" }}>
       <div style={{ width: "100%", textAlign: "center" }}>
         {parts.map((part, index) => {
           if (part.startsWith(keySymbol) && part.endsWith(keySymbol)) {
+            
             const content = part.slice(1, -1);
             return (
               <span
