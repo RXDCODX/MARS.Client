@@ -53,22 +53,6 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
       currentQueueItemId: state.playerState?.currentQueueItem?.id,
       isPlaying: state.playerState?.state === PlayerStateStateEnum.Playing,
       queue: state.queue,
-  import {
-    DndContext,
-    PointerSensor,
-    useSensor,
-    useSensors,
-    DragEndEvent,
-    DragStartEvent,
-    DragOverEvent,
-  } from "@dnd-kit/core";
-  import {
-    SortableContext,
-    verticalListSortingStrategy,
-    useSortable,
-    arrayMove,
-  } from "@dnd-kit/sortable";
-  import { CSS } from "@dnd-kit/utilities";
       history: state.history,
       viewMode: state.viewMode,
     }))

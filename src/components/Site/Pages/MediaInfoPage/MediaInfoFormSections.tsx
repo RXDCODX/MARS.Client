@@ -147,7 +147,6 @@ export const MediaInfoFormSections: React.FC<Props> = ({
           <span>Стоимость</span>
           <input
             type="number"
-            min={0}
             value={formData.metaInfo.twitchPointsCost}
             onChange={event =>
               onChange("metaInfo.twitchPointsCost", Number(event.target.value))
