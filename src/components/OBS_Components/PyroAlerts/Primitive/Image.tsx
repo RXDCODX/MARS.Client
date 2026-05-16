@@ -2,6 +2,7 @@ import { CSSProperties, useEffect, useRef, useState } from "react";
 import { Textfit } from "react-textfit";
 
 import { MediaDto } from "@/shared/api";
+import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
 import { KeyWordText } from "@/shared/components/KeyWordText";
 import { getCoordinates, getRandomRotation } from "@/shared/Utils";
 
@@ -85,8 +86,20 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
               visibility: "visible",
             }));
           }}
-          onError={e => console.log(e)}
-          onErrorCapture={e => console.log(e)}
+          onError={e => {
+            console.log(e);
+            SignalRContext.invoke(
+              "TwitchMsg",
+              `RandomMem: failed to load IMAGE id=${id} path=${fileInfo.filePath}`
+            );
+          }}
+          onErrorCapture={e => {
+            console.log(e);
+            SignalRContext.invoke(
+              "TwitchMsg",
+              `RandomMem: failed to load IMAGE id=${id} path=${fileInfo.filePath}`
+            );
+          }}
         />
       ) : (
         <img
@@ -96,13 +109,23 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
           alt={"IMAGE ERROR"}
           className={styles.media}
           style={{ ...imageStyle, ...frameStyle }}
-          onError={e =>
+          onError={e => {
             console.log(
               "%c" + e,
               "color: #7289DA; -webkit-text-stroke: 2px black; font-size: 72px; font-weight: bold;"
-            )
-          }
-          onErrorCapture={e => console.log(e)}
+            );
+            SignalRContext.invoke(
+              "TwitchMsg",
+              `RandomMem: failed to load IMAGE id=${id} path=${fileInfo.filePath}`
+            );
+          }}
+          onErrorCapture={e => {
+            console.log(e);
+            SignalRContext.invoke(
+              "TwitchMsg",
+              `RandomMem: failed to load IMAGE id=${id} path=${fileInfo.filePath}`
+            );
+          }}
           onLoad={event => {
             const cords = getCoordinates(event.currentTarget, mediaInfo);
             const rotation = getRandomRotation(mediaInfo);

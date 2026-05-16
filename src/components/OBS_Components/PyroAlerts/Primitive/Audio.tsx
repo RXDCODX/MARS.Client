@@ -108,6 +108,10 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
             "%c" + e,
             "color: #7289DA; -webkit-text-stroke: 2px black; font-size: 72px; font-weight: bold;"
           );
+          SignalRContext.invoke(
+            "TwitchMsg",
+            `RandomMem: failed to play AUDIO id=${Id} path=${fileInfo.filePath}`
+          );
           error();
         }}
         onEnded={() => {

@@ -162,8 +162,20 @@ export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
             e.currentTarget.volume = 1.0;
           }}
           onEnded={() => setIsBellPlayed(true)}
-          onError={() => error()}
-          onErrorCapture={() => error()}
+          onError={() => {
+            SignalRContext.invoke(
+              "TwitchMsg",
+              `RandomMem: failed to play VOICE path=${voiceSrc}`
+            );
+            error();
+          }}
+          onErrorCapture={() => {
+            SignalRContext.invoke(
+              "TwitchMsg",
+              `RandomMem: failed to play VOICE path=${voiceSrc}`
+            );
+            error();
+          }}
           onCanPlayThrough={muteAll}
         />
       )}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import { MediaDto, MediaMetaInfoPriorityEnum } from "@/shared/api";
@@ -103,8 +103,52 @@ export default function PyroAlerts() {
   // Подписки на SignalR события
   SignalRContext.useSignalREffect("RandomMem", handleAlert, [handleAlert]);
 
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const observer = new MutationObserver(mutations => {
+      for (const m of mutations) {
+        for (const node of Array.from(m.addedNodes)) {
+          if (!(node instanceof HTMLElement)) continue;
+
+          // Ищем первый элемент с id внутри добавленной ноды (media id ставится на element: img/video wrapper)
+          const elemWithId = (node.matches && node.matches("[id]")) ? node : node.querySelector("[id]");
+          const id = elemWithId?.id;
+          if (!id) continue;
+
+          // Через 1.5s проверяем, появился ли элемент и видим ли он
+          setTimeout(() => {
+            const el = document.getElementById(id);
+            if (!el) {
+              SignalRContext.invoke(
+                "TwitchMsg",
+                `RandomMem: element with id=${id} was not found after mutation`
+              );
+              return;
+            }
+
+            const style = window.getComputedStyle(el);
+            const isVisible = style.visibility !== "hidden" && el.getBoundingClientRect().width > 0 && el.getBoundingClientRect().height > 0;
+            if (!isVisible) {
+              SignalRContext.invoke(
+                "TwitchMsg",
+                `RandomMem: element id=${id} is not visible after mutation`
+              );
+            }
+          }, 1500);
+        }
+      }
+    });
+
+    observer.observe(containerRef.current, { childList: true, subtree: true });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <>
+    <div ref={containerRef}>
       {!announced && (
         <Announce title={"RandomMem"} callback={() => setAnnounced(true)} />
       )}
@@ -128,6 +172,6 @@ export default function PyroAlerts() {
             remove={remove}
           />
         ))}
-    </>
+    </div>
   );
 }
