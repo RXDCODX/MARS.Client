@@ -188,13 +188,15 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
   }, [
     viewMode,
     current,
-    isPlaying,
     queueWithoutCurrent,
     history,
+    isPlaying,
     handleItemHover,
     handleDeleteFromQueue,
     handlePlayNow,
     playingNowId,
+    handleMoveUp,
+    handleMoveDown,
   ]);
 
   const ids = queueWithoutCurrent.map(q => q.id);

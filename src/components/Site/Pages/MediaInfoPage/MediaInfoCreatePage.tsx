@@ -3,7 +3,7 @@ import "./MediaInfoPage.scss";
 import { useCallback, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { ApiMediaInfo, MediaInfoApi } from "@/shared/api";
+import { ApiMediaInfo, MediaFileInfoTypeEnum, MediaInfoApi } from "@/shared/api";
 
 import { MediaInfoFormSections } from "./MediaInfoFormSections";
 import {
@@ -97,8 +97,97 @@ export const MediaInfoCreatePage: React.FC = () => {
         </div>
       )}
 
-      <section className="card-shell editor-shell">
-        <form className="editor-form" onSubmit={handleSubmit}>
+      <div className="editor-layout">
+        <section className="preview-card card-shell">
+          <div className="preview-card-header">
+            <div>
+              <p className="eyebrow">Предпросмотр</p>
+              <h2>{formData.metaInfo.displayName || "Без названия"}</h2>
+              <p className="preview-subtitle">{formData.fileInfo.filePath || "Путь к файлу не указан"}</p>
+            </div>
+
+            <div className="preview-badges">
+              <span className={`badge priority-badge priority-${formData.metaInfo.priority.toLowerCase()}`}>
+                {formData.metaInfo.priority}
+              </span>
+              <span className={`badge type-badge type-${formData.fileInfo.type.toLowerCase()}`}>
+                {formData.fileInfo.type}
+              </span>
+            </div>
+          </div>
+
+          <div className="preview-stage">
+            {(() => {
+              const filePath = formData.fileInfo.filePath;
+              const type = formData.fileInfo.type;
+              if (
+                type === MediaFileInfoTypeEnum.Image ||
+                type === MediaFileInfoTypeEnum.Gif
+              ) {
+                return filePath ? (
+                  <img className="preview-media" src={filePath} alt={formData.metaInfo.displayName} />
+                ) : (
+                  <div className="preview-empty">
+                    <h3>Нет изображения для предпросмотра</h3>
+                  </div>
+                );
+              }
+
+              if (type === MediaFileInfoTypeEnum.Audio) {
+                return filePath ? (
+                  <audio className="preview-media preview-audio" controls src={filePath} />
+                ) : (
+                  <div className="preview-empty">
+                    <h3>Нет аудио для предпросмотра</h3>
+                  </div>
+                );
+              }
+
+              if (type === MediaFileInfoTypeEnum.Video) {
+                return filePath ? (
+                  <video className="preview-media preview-video" controls src={filePath} />
+                ) : (
+                  <div className="preview-empty">
+                    <h3>Нет видео для предпросмотра</h3>
+                  </div>
+                );
+              }
+
+              return (
+                <div className="preview-empty">
+                  <h3>Неподдерживаемый формат</h3>
+                  <p>{formData.fileInfo.type}</p>
+                </div>
+              );
+            })()}
+          </div>
+
+          <div className="preview-meta-grid">
+            <div className="meta-chip">
+              <span>Файл</span>
+              <strong>{formData.fileInfo.fileName || "Не указан"}</strong>
+            </div>
+            <div className="meta-chip">
+              <span>Длительность</span>
+              <strong>{formData.metaInfo.duration}s</strong>
+            </div>
+            <div className="meta-chip">
+              <span>Reward</span>
+              <strong>{formData.metaInfo.twitchGuid ?? "Не привязана"}</strong>
+            </div>
+            <div className="meta-chip">
+              <span>Баллы</span>
+              <strong>{formData.metaInfo.twitchPointsCost}</strong>
+            </div>
+          </div>
+
+          <div className="preview-description">
+            <p>{formData.textInfo.text || "Описание алерта не заполнено"}</p>
+          </div>
+        </section>
+
+        <section className="card-shell editor-shell">
+          <form className="editor-form" onSubmit={handleSubmit}>
           <div className="editor-form-header">
             <div>
               <h2>Карточка алерта</h2>

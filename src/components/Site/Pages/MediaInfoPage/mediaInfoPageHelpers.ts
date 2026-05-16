@@ -85,6 +85,43 @@ export function updateMediaInfoValue(
 
   current[keys[keys.length - 1]] = value;
 
+  // If file info changed and displayName is empty, auto-fill it from filename/path
+  try {
+    const fileInfoKey = keys[0] === "fileInfo";
+    const metaInfo = (next as unknown as ApiMediaInfo).metaInfo;
+
+    if (fileInfoKey && metaInfo) {
+      const currentDisplay = metaInfo.displayName;
+      if (!currentDisplay || currentDisplay.trim() === "") {
+        // prefer fileName then filePath
+        const fileName = (next as unknown as ApiMediaInfo).fileInfo
+          .fileName as string;
+        let base = "";
+
+        if (fileName && fileName.trim() !== "") {
+          base = fileName;
+        } else {
+          const fp = (next as unknown as ApiMediaInfo).fileInfo
+            .filePath as string;
+          if (fp && fp.trim() !== "") {
+            const parts = fp.split(/[/\\]/).filter(Boolean);
+            base = parts.length ? parts[parts.length - 1] : fp;
+          }
+        }
+
+        if (base) {
+          // strip extension
+          const dotIndex = base.lastIndexOf(".");
+          const nameWithoutExt = dotIndex > 0 ? base.slice(0, dotIndex) : base;
+          (next as unknown as ApiMediaInfo).metaInfo.displayName =
+            nameWithoutExt;
+        }
+      }
+    }
+  } catch {
+    // swallow any errors in helper
+  }
+
   return next as unknown as ApiMediaInfo;
 }
 

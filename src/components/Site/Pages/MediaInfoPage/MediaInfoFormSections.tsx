@@ -146,9 +146,9 @@ export const MediaInfoFormSections: React.FC<Props> = ({
         <label className="field">
           <span>Стоимость</span>
           <input
-            type="number"
             value={formData.metaInfo.twitchPointsCost}
             onChange={event =>
+              // allow any numeric value including negative
               onChange("metaInfo.twitchPointsCost", Number(event.target.value))
             }
           />
@@ -215,6 +215,105 @@ export const MediaInfoFormSections: React.FC<Props> = ({
           required
         />
       </label>
+
+      <label className="field">
+        <span>Загрузить файл</span>
+        <input
+          type="file"
+          onChange={async event => {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+
+            // local state for upload indicator
+            // use a tiny inline state via closure: create element-level state using DOM is messy,
+            // but for simplicity update formData immediately to show filename
+            onChange("fileInfo.fileName", file.name);
+            const extension = file.name.includes(".")
+              ? file.name.slice(file.name.lastIndexOf("."))
+              : "";
+            onChange("fileInfo.extension", extension);
+
+            try {
+              const fd = new FormData();
+              fd.append("file", file);
+
+              const resp = await fetch("/api/MediaInfoApi/upload", {
+                method: "POST",
+                body: fd,
+              });
+
+              const json = await resp.json();
+              if (!resp.ok || !json || !json.success) {
+                const msg = json?.message ?? "Ошибка загрузки файла";
+                onChange("fileInfo.filePath", "");
+                alert(msg);
+              } else {
+                const info = json.data;
+                onChange("fileInfo.fileName", info.fileName);
+                onChange("fileInfo.extension", info.extension);
+                onChange("fileInfo.filePath", info.filePath);
+                onChange("fileInfo.isLocalFile", !!info.isLocalFile);
+
+                if (
+                  !formData.metaInfo.displayName ||
+                  formData.metaInfo.displayName.trim() === ""
+                ) {
+                  const base =
+                    info.fileName ||
+                    (info.filePath || "").split("/").pop() ||
+                    "";
+                  const dot = base.lastIndexOf(".");
+                  const name = dot > 0 ? base.slice(0, dot) : base;
+                  if (name) onChange("metaInfo.displayName", name);
+                }
+              }
+            } catch (err) {
+              onChange("fileInfo.filePath", "");
+
+              console.error(err);
+              alert("Ошибка при загрузке файла");
+            } finally {
+              // reset input
+              if (event.target) event.target.value = "";
+            }
+          }}
+        />
+      </label>
+
+      {formData.fileInfo.filePath && (
+        <div className="field">
+          <span>Предпросмотр</span>
+          <div>
+            {(() => {
+              const ext = (formData.fileInfo.extension || "").toLowerCase();
+              const fp = formData.fileInfo.filePath;
+              if (
+                [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"].includes(ext)
+              ) {
+                return (
+                  <img
+                    src={fp}
+                    alt={formData.metaInfo.displayName}
+                    style={{ maxWidth: "100%", borderRadius: 8 }}
+                  />
+                );
+              }
+              if ([".mp3", ".wav", ".ogg"].includes(ext)) {
+                return <audio controls src={fp} />;
+              }
+              if ([".mp4", ".webm", ".mov", ".avi"].includes(ext)) {
+                return <video controls src={fp} style={{ maxWidth: "100%" }} />;
+              }
+
+              return (
+                <div className="muted-line">
+                  Файл: {formData.fileInfo.fileName}
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+      )}
 
       <div className="form-grid form-grid-three">
         <label className="field">

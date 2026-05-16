@@ -40,12 +40,19 @@ function TrackItemComponent({
   onPlayNow,
   onDelete,
   isPlayNowPending = false,
-  dragHandleProps,
+  onMoveUp,
+  onMoveDown,
+  onNativeDragEnter,
+  onNativeDragOver,
+  onNativeDragLeave,
+  showInsertAbove = false,
 }: TrackItemProps) {
   const showPlayingIndicator = isCurrent && isPlaying;
 
+  const aa = useSortable({ id: queueItemId! });
+
   // dnd-kit sortable
-  const sortable = queueItemId ? useSortable({ id: queueItemId }) : null;
+  const sortable = queueItemId ? aa : null;
   const setNodeRef = sortable ? sortable.setNodeRef : undefined;
   const transform = sortable ? sortable.transform : undefined;
   const transition = sortable ? sortable.transition : undefined;
@@ -79,26 +86,11 @@ function TrackItemComponent({
       e.stopPropagation();
       if (queueItemId && onMoveUp) onMoveUp(queueItemId);
     },
-    [queueItemId, onMoveUp]
+    [onMoveUp, queueItemId]
   );
 
   const handleMoveDown = useCallback(
     (e: React.MouseEvent) => {
-      const handleDragEnter = useCallback(
-        (e: React.DragEvent) => {
-          e.preventDefault();
-          if (queueItemId && onNativeDragEnter) onNativeDragEnter(queueItemId);
-        },
-        [onNativeDragEnter, queueItemId]
-      );
-
-      const handleDragLeave = useCallback(
-        (e: React.DragEvent) => {
-          e.preventDefault();
-          if (queueItemId && onNativeDragLeave) onNativeDragLeave(queueItemId);
-        },
-        [onNativeDragLeave, queueItemId]
-      );
       e.stopPropagation();
       if (queueItemId && onMoveDown) onMoveDown(queueItemId);
     },
