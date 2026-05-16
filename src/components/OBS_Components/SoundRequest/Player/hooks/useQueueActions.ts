@@ -108,10 +108,66 @@ export const useQueueActions = () => {
     [playingNowId, soundRequestApi, showToast]
   );
 
+  // Обработчики перемещения элементов очереди (вверх/вниз)
+  const handleMoveTo = useCallback(
+    async (queueItemId: string, newPosition: number) => {
+      const previousQueue = [...usePlayerStore.getState().queue];
+
+      // Оптимистичное обновление локальной очереди
+      const currentQueue = previousQueue;
+      const index = currentQueue.findIndex(i => i.id === queueItemId);
+      if (index === -1) return;
+
+      const item = currentQueue[index];
+      const updated = currentQueue.slice();
+      // Удаляем элемент
+      updated.splice(index, 1);
+      // Вставляем на новую позицию (ограничиваем границы)
+      const pos = Math.max(0, Math.min(newPosition, updated.length));
+      updated.splice(pos, 0, item);
+      usePlayerStore.getState().setQueue(updated);
+
+      try {
+        const response = await soundRequestApi.soundRequestQueueReorderCreate({
+          queueItemId,
+          newPosition: pos,
+        } as any);
+
+        if (!response.data.success) {
+          usePlayerStore.getState().rollbackQueue(previousQueue);
+          showToast({ success: false, message: response.data.message || "Не удалось переместить трек" });
+        }
+      } catch (error) {
+        console.error("Ошибка при перемещении трека:", error);
+        usePlayerStore.getState().rollbackQueue(previousQueue);
+        showToast({ success: false, message: "Произошла ошибка при перемещении трека" });
+      }
+    },
+    [soundRequestApi, showToast]
+  );
+
+  const handleMoveUp = useCallback((queueItemId: string) => {
+    const queue = usePlayerStore.getState().queue;
+    const idx = queue.findIndex(i => i.id === queueItemId);
+    if (idx <= 0) return;
+    handleMoveTo(queueItemId, idx - 1);
+  }, [handleMoveTo]);
+
+  const handleMoveDown = useCallback((queueItemId: string) => {
+    const queue = usePlayerStore.getState().queue;
+    const idx = queue.findIndex(i => i.id === queueItemId);
+    if (idx === -1 || idx >= queue.length - 1) return;
+    handleMoveTo(queueItemId, idx + 1);
+  }, [handleMoveTo]);
+
   return {
     handleItemHover,
     handleDeleteFromQueue,
     handlePlayNow,
+    handleMoveUp,
+    handleMoveDown,
+    // Полная переупорядочивающая фунция (queueItemId, newIndex)
+    handleReorder: handleMoveTo,
     deletingId,
     playingNowId,
   };

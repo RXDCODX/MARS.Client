@@ -4,15 +4,34 @@ import {
   type RefObject,
   type UIEventHandler,
   useMemo,
+  useState,
+  useCallback,
 } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { PlayerStateStateEnum } from "@/shared/api";
 
 import { useQueueActions } from "../hooks";
+
 import { TrackListViewMode, usePlayerStore } from "../stores/usePlayerStore";
 import styles from "./SoundRequestPlayerDesktop.module.scss";
 import { TrackItem } from "./TrackItem";
+
+import {
+  DndContext,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+  DragStartEvent,
+  DragOverlay,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+  arrayMove,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 interface TrackColumnProps {
   scrollListRef?: RefObject<HTMLDivElement>;
@@ -34,6 +53,22 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
       currentQueueItemId: state.playerState?.currentQueueItem?.id,
       isPlaying: state.playerState?.state === PlayerStateStateEnum.Playing,
       queue: state.queue,
+  import {
+    DndContext,
+    PointerSensor,
+    useSensor,
+    useSensors,
+    DragEndEvent,
+    DragStartEvent,
+    DragOverEvent,
+  } from "@dnd-kit/core";
+  import {
+    SortableContext,
+    verticalListSortingStrategy,
+    useSortable,
+    arrayMove,
+  } from "@dnd-kit/sortable";
+  import { CSS } from "@dnd-kit/utilities";
       history: state.history,
       viewMode: state.viewMode,
     }))
@@ -45,6 +80,9 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
     handleDeleteFromQueue,
     handlePlayNow,
     playingNowId,
+    handleMoveUp,
+    handleMoveDown,
+    handleReorder,
   } = useQueueActions();
 
   // Используем переименованные переменные
@@ -55,12 +93,16 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
     () => queue.filter(x => x.id !== currentQueueItemId),
     [queue, currentQueueItemId]
   );
+
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const sensors = useSensors(useSensor(PointerSensor));
+
   const renderTracksList = useMemo(() => {
     const trackItems: JSX.Element[] = [];
 
     switch (viewMode) {
       case TrackListViewMode.Default:
-        // Обычный режим: текущий трек -> вся очередь (overflow hidden скроет лишнее)
+        // Обычный режим: текущий трек -> вся очередь
         if (current) {
           trackItems.push(
             <TrackItem
@@ -73,6 +115,8 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
             />
           );
         }
+
+        // Сортируемые элементы очереди
         queueWithoutCurrent.forEach(q => {
           if (q.track) {
             trackItems.push(
@@ -83,36 +127,19 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
                 onMouseEnter={() => handleItemHover(q.track?.id, true)}
                 onMouseLeave={() => handleItemHover(q.track?.id, false)}
                 onDelete={handleDeleteFromQueue}
+                onPlayNow={handlePlayNow}
+                isPlayNowPending={playingNowId === q.id}
+                onMoveUp={handleMoveUp}
+                onMoveDown={handleMoveDown}
               />
             );
           }
         });
+
         break;
 
       case TrackListViewMode.WithHistory: {
-        // С историей: история -> текущий трек -> очередь (ограниченная)
-        // Ограничиваем общее количество треков, чтобы не выталкивать тулбар
         const MAX_QUEUE_IN_HISTORY_MODE = 4;
-
-        [...history]
-          .reverse()
-          .slice(0, MAX_QUEUE_IN_HISTORY_MODE)
-          .forEach((item, index) => {
-            if (item.track) {
-              trackItems.push(
-                <TrackItem
-                  key={`history-${item.id}-${index}`}
-                  track={item.track}
-                  queueItemId={item.id}
-                  isHistory
-                  onMouseEnter={() => handleItemHover(item.track?.id, true)}
-                  onMouseLeave={() => handleItemHover(item.track?.id, false)}
-                  onPlayNow={handlePlayNow}
-                  isPlayNowPending={playingNowId === item.id}
-                />
-              );
-            }
-          });
         if (current) {
           trackItems.push(
             <TrackItem
@@ -125,7 +152,6 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
             />
           );
         }
-        // Показываем только первые N треков из очереди
         queueWithoutCurrent.slice(0, MAX_QUEUE_IN_HISTORY_MODE).forEach(q => {
           if (q.track) {
             trackItems.push(
@@ -138,6 +164,8 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
                 onPlayNow={handlePlayNow}
                 isPlayNowPending={playingNowId === q.id}
                 onDelete={handleDeleteFromQueue}
+                onMoveUp={handleMoveUp}
+                onMoveDown={handleMoveDown}
               />
             );
           }
@@ -146,8 +174,6 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
       }
 
       case TrackListViewMode.Reversed:
-        // Обратный режим: история -> текущий трек (снизу)
-        // Не разворачиваем, так как column-reverse сделает за нас
         history.toReversed().forEach((item, index) => {
           if (item.track) {
             trackItems.push(
@@ -192,16 +218,68 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
     playingNowId,
   ]);
 
+  const ids = queueWithoutCurrent.map(q => q.id);
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const id = event.active.id as string | undefined;
+    setActiveId(id ?? null);
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const active = event.active?.id as string | undefined;
+    const over = event.over?.id as string | undefined;
+    if (active && over && active !== over) {
+      const from = ids.findIndex(i => i === active);
+      const to = ids.findIndex(i => i === over);
+      if (from !== -1 && to !== -1) {
+        // call reorder (handles optimistic update)
+        handleReorder(active, to);
+      }
+    }
+    setActiveId(null);
+  };
+
   return (
     <div
       className={`${styles.leftCol} ${viewMode === TrackListViewMode.Reversed ? styles.reversedMode : ""} ${viewMode === TrackListViewMode.WithHistory ? styles.withHistory : ""}`}
     >
-      <div
-        ref={scrollListRef}
-        className={styles.scrollList}
-        onScroll={onScroll}
-      >
-        {renderTracksList}
+      <div>
+        <div
+          ref={scrollListRef}
+          className={styles.scrollList}
+          onScroll={onScroll}
+        >
+          <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+            <SortableContext items={ids} strategy={verticalListSortingStrategy}>
+              {renderTracksList}
+            </SortableContext>
+            <DragOverlay>
+              {activeId ? (
+                // Minimal overlay: reuse item appearance for active id
+                (() => {
+                  const activeItem = queueWithoutCurrent.find(q => q.id === activeId);
+                  if (!activeItem) return null;
+                  return (
+                    <div className={`${styles.item} ${styles.dragOverlay}`}>
+                      <div className={styles.thumb}>
+                        {activeItem.track?.artworkUrl ? (
+                          <img src={activeItem.track.artworkUrl} alt="art" />
+                        ) : (
+                          <div className={styles.thumbPlaceholder} />
+                        )}
+                      </div>
+                      <div className={styles.itemBody}>
+                        <div className={styles.itemTitle}>
+                          <span className={styles.trackName}>{activeItem.track?.trackName}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()
+              ) : null}
+            </DragOverlay>
+          </DndContext>
+        </div>
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
-import { Play, X } from "lucide-react";
+import { Play, X, ChevronUp, ChevronDown, Move } from "lucide-react";
 import { memo, useCallback } from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 import { BaseTrackInfo } from "@/shared/api";
 
@@ -16,6 +18,14 @@ interface TrackItemProps {
   onMouseLeave?: () => void;
   onPlayNow?: (queueItemId: string) => void;
   onDelete?: (queueItemId: string) => void;
+  onMoveUp?: (queueItemId: string) => void;
+  onMoveDown?: (queueItemId: string) => void;
+  onDropTo?: (targetQueueItemId: string, sourceQueueItemId: string) => void;
+  dragHandleProps?: any;
+  onNativeDragEnter?: (queueItemId: string) => void;
+  onNativeDragOver?: (queueItemId: string) => void;
+  onNativeDragLeave?: (queueItemId: string) => void;
+  showInsertAbove?: boolean;
   isPlayNowPending?: boolean;
 }
 
@@ -30,8 +40,18 @@ function TrackItemComponent({
   onPlayNow,
   onDelete,
   isPlayNowPending = false,
+  dragHandleProps,
 }: TrackItemProps) {
   const showPlayingIndicator = isCurrent && isPlaying;
+
+  // dnd-kit sortable
+  const sortable = queueItemId ? useSortable({ id: queueItemId }) : null;
+  const setNodeRef = sortable ? sortable.setNodeRef : undefined;
+  const transform = sortable ? sortable.transform : undefined;
+  const transition = sortable ? sortable.transition : undefined;
+  const isDragging = sortable ? sortable.isDragging : false;
+  const attributes = sortable ? sortable.attributes : undefined;
+  const listeners = sortable ? sortable.listeners : undefined;
 
   const handlePlayNow = useCallback(
     (e: React.MouseEvent) => {
@@ -53,14 +73,87 @@ function TrackItemComponent({
     [queueItemId, onDelete]
   );
 
+      if (queueItemId && onNativeDragOver) onNativeDragOver(queueItemId);
+  const handleMoveUp = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation();
+      if (queueItemId && onMoveUp) onMoveUp(queueItemId);
+    },
+    [queueItemId, onMoveUp]
+  );
+
+  const handleMoveDown = useCallback(
+    (e: React.MouseEvent) => {
+
+    const handleDragEnter = useCallback((e: React.DragEvent) => {
+      e.preventDefault();
+      if (queueItemId && onNativeDragEnter) onNativeDragEnter(queueItemId);
+    }, [onNativeDragEnter, queueItemId]);
+
+    const handleDragLeave = useCallback((e: React.DragEvent) => {
+      e.preventDefault();
+      if (queueItemId && onNativeDragLeave) onNativeDragLeave(queueItemId);
+    }, [onNativeDragLeave, queueItemId]);
+      e.stopPropagation();
+      if (queueItemId && onMoveDown) onMoveDown(queueItemId);
+    },
+    [queueItemId, onMoveDown]
+  );
+
+  // we no longer use native drag handlers when using dnd-kit; keep callbacks for fallback
+
+  const style: React.CSSProperties = {};
+  if (transform) {
+    style.transform = CSS.Transform.toString(transform) || undefined;
+  }
+  if (transition) {
+    style.transition = transition;
+  }
+
   return (
     <div
-      className={`${styles.item} ${isCurrent ? `${styles.sticky} ${styles.current}` : ""} ${isHistory ? styles.historyItem : ""}`}
+      ref={setNodeRef}
+      className={`${styles.item} ${isCurrent ? `${styles.sticky} ${styles.current}` : ""} ${isHistory ? styles.historyItem : ""} ${isDragging ? "dragging" : ""}`}
       data-track-id={track.id}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       key={track.id}
+      tabIndex={queueItemId ? 0 : -1}
+      onKeyDown={e => {
+        if (!queueItemId) return;
+        if (e.key === "ArrowUp") {
+          e.preventDefault();
+          if (onMoveUp) onMoveUp(queueItemId);
+        } else if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (onMoveDown) onMoveDown(queueItemId);
+        }
+      }}
+      style={style}
     >
+      {showInsertAbove && <div className={styles.insertIndicator} />}
+
+      <div className={styles.controlsColumn}>
+        <button
+          className={styles.moveButton}
+          onClick={handleMoveUp}
+          title="Переместить выше"
+          type="button"
+        >
+          <ChevronUp size={16} />
+        </button>
+        <button
+          className={styles.moveButton}
+          onClick={handleMoveDown}
+          title="Переместить ниже"
+          type="button"
+        >
+          <ChevronDown size={16} />
+        </button>
+        <div className={styles.dragHandle} title="Перетащить" {...(attributes || {})} {...(listeners || {})}>
+          <Move size={14} />
+        </div>
+      </div>
       <div
         className={`${styles.thumb} ${showPlayingIndicator ? styles.thumbPlaying : ""}`}
       >

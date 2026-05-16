@@ -11,9 +11,13 @@ const dirname =
     ? __dirname
     : path.dirname(fileURLToPath(import.meta.url));
 
-export default defineConfig({
-  plugins: [tsconfigPaths()],
-  resolve: {
+export default defineConfig(() => {
+  const plugins = [tsconfigPaths()];
+  const includeStorybook = !process.env.SKIP_STORYBOOK_VITEST;
+
+  return {
+    plugins,
+    resolve: {
     alias: {
       "@": path.resolve(dirname, "src"),
       "@/components": path.resolve(dirname, "src/components"),
@@ -28,39 +32,53 @@ export default defineConfig({
       "@/api": path.resolve(dirname, "src/shared/api"),
       "@/types": path.resolve(dirname, "src/shared/types"),
     },
-  },
-  test: {
-    projects: [
-      {
-        extends: true,
-        test: {
-          name: "unit",
-          environment: "jsdom",
-          include: ["src/**/*.test.{ts,tsx}", "src/**/*.spec.{ts,tsx}"],
-        },
-      },
-      {
-        extends: true,
-        plugins: [
-          storybookTest({
-            configDir: path.join(dirname, ".storybook"),
-          }),
-        ],
-        test: {
-          name: "storybook",
-          browser: {
-            enabled: true,
-            headless: true,
-            provider: playwright(),
-            instances: [
-              {
-                browser: "chromium",
+    },
+    test: {
+      projects: includeStorybook
+        ? [
+            {
+              extends: true,
+              test: {
+                name: "unit",
+                environment: "jsdom",
+                include: ["src/**/*.test.{ts,tsx}", "src/**/*.spec.{ts,tsx}"],
+                setupFiles: ["src/tests/vitest.setup.ts"],
               },
-            ],
-          },
-          setupFiles: [".storybook/vitest.setup.ts"],
-        },
-      },
-    ],
-  },
+            },
+            {
+              extends: true,
+              plugins: [
+                storybookTest({
+                  configDir: path.join(dirname, ".storybook"),
+                }),
+              ],
+              test: {
+                name: "storybook",
+                browser: {
+                  enabled: true,
+                  headless: true,
+                  provider: playwright(),
+                  instances: [
+                    {
+                      browser: "chromium",
+                    },
+                  ],
+                },
+                setupFiles: [".storybook/vitest.setup.ts"],
+              },
+            },
+          ]
+        : [
+            {
+              extends: true,
+              test: {
+                name: "unit",
+                environment: "jsdom",
+                include: ["src/**/*.test.{ts,tsx}", "src/**/*.spec.{ts,tsx}"],
+                setupFiles: ["src/tests/vitest.setup.ts"],
+              },
+            },
+          ],
+    },
+  };
 });

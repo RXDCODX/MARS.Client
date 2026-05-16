@@ -178,6 +178,53 @@
   }
 }
 
+.controlsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+}
+
+.moveButton {
+  width: 32px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgb(255 255 255 / 6%);
+  border: 1px solid rgb(255 255 255 / 8%);
+  color: var(--bs-light);
+  cursor: pointer;
+  transition: all 0.12s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    background: rgb(255 255 255 / 10%);
+  }
+}
+
+.dragHandle {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--bs-secondary);
+}
+
+.insertIndicator {
+  height: 6px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
+  border-radius: 3px;
+  margin-bottom: 6px;
+  transition: opacity 0.12s ease;
+}
+
 @keyframes pulseBorder {
   0%,
   100% {
@@ -389,6 +436,16 @@
   justify-content: space-between;
   gap: 1rem;
   min-width: 0;
+}
+
+.dragOverlay {
+  opacity: 0.95;
+  transform: none !important;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 50%);
+}
+
+.dragging {
+  opacity: 0.85;
 }
 
 .itemLink {
