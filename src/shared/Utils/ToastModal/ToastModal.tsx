@@ -2,11 +2,9 @@
  * Компонент ToastModal для отображения уведомлений на основе OperationResult
  */
 
-import "react-toastify/dist/ReactToastify.css";
-
 import { useCallback } from "react";
 import { Modal } from "react-bootstrap";
-import { toast, ToastContainer, ToastOptions } from "react-toastify";
+import toast, { Toaster } from "react-hot-toast";
 
 import { OperationResult } from "@/shared/types/OperationResult";
 
@@ -130,15 +128,12 @@ export const ToastModalProvider: React.FC<{ children: React.ReactNode }> = ({
    */
   const showToast = useCallback(
     <TData = unknown,>(result: OperationResult<TData>) => {
-      // Определяем тип тоста на основе result.success
       const type = result.success ? "success" : "error";
 
-      // Сообщение из result.message или дефолтное
       const message =
         result.message ||
         (result.success ? "Операция выполнена успешно" : "Произошла ошибка");
 
-      // Формируем данные для тоста
       const toastData: ToastModalData<TData> = {
         type,
         message,
@@ -147,26 +142,31 @@ export const ToastModalProvider: React.FC<{ children: React.ReactNode }> = ({
         operationResult: result,
       };
 
-      // Настройки тоста
-      const toastOptions: ToastOptions = {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        onClick: () => {
-          // При клике на toast открываем модальное окно с подробностями
-          openModal(toastData);
-        },
+      const toastOptions = {
+        duration: 5000,
+        position: "bottom-right" as const,
       };
 
-      // Показываем тост в зависимости от типа
-      if (type === "success") {
-        toast.success(message, toastOptions);
-      } else {
-        toast.error(message, toastOptions);
-      }
+      // Показываем кастомный тост с поддержкой клика для открытия модального окна
+      toast.custom(
+        t => (
+          <div
+            onClick={() => {
+              openModal(toastData);
+              // закрываем тост после клика
+              toast.dismiss(t.id);
+            }}
+            className={
+              type === "success"
+                ? `${styles.hotToast} ${styles.hotToastSuccess}`
+                : `${styles.hotToast} ${styles.hotToastError}`
+            }
+          >
+            <div className={styles.hotToastMessage}>{message}</div>
+          </div>
+        ),
+        toastOptions
+      );
     },
     [openModal]
   );
@@ -182,17 +182,11 @@ export const ToastModalProvider: React.FC<{ children: React.ReactNode }> = ({
   return (
     <ToastModalContext.Provider value={contextValue}>
       {children}
-      <ToastContainer
+      <Toaster
         position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
+        toastOptions={{
+          duration: 5000,
+        }}
       />
       {modalData && (
         <ToastModal data={modalData} show={showModal} onClose={closeModal} />
