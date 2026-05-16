@@ -1,37 +1,32 @@
 import {
+  DndContext,
+  DragEndEvent,
+  DragOverlay,
+  DragStartEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import {
   type JSX,
   memo,
   type RefObject,
   type UIEventHandler,
   useMemo,
   useState,
-  useCallback,
 } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import { PlayerStateStateEnum } from "@/shared/api";
 
 import { useQueueActions } from "../hooks";
-
 import { TrackListViewMode, usePlayerStore } from "../stores/usePlayerStore";
 import styles from "./SoundRequestPlayerDesktop.module.scss";
 import { TrackItem } from "./TrackItem";
-
-import {
-  DndContext,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  DragEndEvent,
-  DragStartEvent,
-  DragOverlay,
-} from "@dnd-kit/core";
-import {
-  SortableContext,
-  verticalListSortingStrategy,
-  arrayMove,
-} from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 
 interface TrackColumnProps {
   scrollListRef?: RefObject<HTMLDivElement>;
@@ -233,34 +228,42 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
           className={styles.scrollList}
           onScroll={onScroll}
         >
-          <DndContext sensors={sensors} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+          <DndContext
+            sensors={sensors}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+          >
             <SortableContext items={ids} strategy={verticalListSortingStrategy}>
               {renderTracksList}
             </SortableContext>
             <DragOverlay>
-              {activeId ? (
-                // Minimal overlay: reuse item appearance for active id
-                (() => {
-                  const activeItem = queueWithoutCurrent.find(q => q.id === activeId);
-                  if (!activeItem) return null;
-                  return (
-                    <div className={`${styles.item} ${styles.dragOverlay}`}>
-                      <div className={styles.thumb}>
-                        {activeItem.track?.artworkUrl ? (
-                          <img src={activeItem.track.artworkUrl} alt="art" />
-                        ) : (
-                          <div className={styles.thumbPlaceholder} />
-                        )}
-                      </div>
-                      <div className={styles.itemBody}>
-                        <div className={styles.itemTitle}>
-                          <span className={styles.trackName}>{activeItem.track?.trackName}</span>
+              {activeId
+                ? // Minimal overlay: reuse item appearance for active id
+                  (() => {
+                    const activeItem = queueWithoutCurrent.find(
+                      q => q.id === activeId
+                    );
+                    if (!activeItem) return null;
+                    return (
+                      <div className={`${styles.item} ${styles.dragOverlay}`}>
+                        <div className={styles.thumb}>
+                          {activeItem.track?.artworkUrl ? (
+                            <img src={activeItem.track.artworkUrl} alt="art" />
+                          ) : (
+                            <div className={styles.thumbPlaceholder} />
+                          )}
+                        </div>
+                        <div className={styles.itemBody}>
+                          <div className={styles.itemTitle}>
+                            <span className={styles.trackName}>
+                              {activeItem.track?.trackName}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                })()
-              ) : null}
+                    );
+                  })()
+                : null}
             </DragOverlay>
           </DndContext>
         </div>
