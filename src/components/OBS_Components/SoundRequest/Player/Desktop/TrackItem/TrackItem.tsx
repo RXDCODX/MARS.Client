@@ -21,7 +21,6 @@ interface TrackItemProps {
   onMoveUp?: (queueItemId: string) => void;
   onMoveDown?: (queueItemId: string) => void;
   onDropTo?: (targetQueueItemId: string, sourceQueueItemId: string) => void;
-  dragHandleProps?: any;
   onNativeDragEnter?: (queueItemId: string) => void;
   onNativeDragOver?: (queueItemId: string) => void;
   onNativeDragLeave?: (queueItemId: string) => void;
@@ -42,9 +41,7 @@ function TrackItemComponent({
   isPlayNowPending = false,
   onMoveUp,
   onMoveDown,
-  onNativeDragEnter,
   onNativeDragOver,
-  onNativeDragLeave,
   showInsertAbove = false,
 }: TrackItemProps) {
   const showPlayingIndicator = isCurrent && isPlaying;
@@ -131,7 +128,7 @@ function TrackItemComponent({
       {showInsertAbove && <div className={styles.insertIndicator} />}
 
       <div className={styles.controlsColumn}>
-        <button
+        {/* <button
           className={styles.moveButton}
           onClick={handleMoveUp}
           title="Переместить выше"
@@ -146,7 +143,7 @@ function TrackItemComponent({
           type="button"
         >
           <ChevronDown size={16} />
-        </button>
+        </button> */}
         <div
           className={styles.dragHandle}
           title="Перетащить"

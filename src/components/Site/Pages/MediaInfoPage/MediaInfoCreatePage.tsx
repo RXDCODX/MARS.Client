@@ -3,7 +3,11 @@ import "./MediaInfoPage.scss";
 import { useCallback, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import { ApiMediaInfo, MediaFileInfoTypeEnum, MediaInfoApi } from "@/shared/api";
+import {
+  ApiMediaInfo,
+  MediaFileInfoTypeEnum,
+  MediaInfoApi,
+} from "@/shared/api";
 
 import { MediaInfoFormSections } from "./MediaInfoFormSections";
 import {
@@ -103,14 +107,20 @@ export const MediaInfoCreatePage: React.FC = () => {
             <div>
               <p className="eyebrow">Предпросмотр</p>
               <h2>{formData.metaInfo.displayName || "Без названия"}</h2>
-              <p className="preview-subtitle">{formData.fileInfo.filePath || "Путь к файлу не указан"}</p>
+              <p className="preview-subtitle">
+                {formData.fileInfo.filePath || "Путь к файлу не указан"}
+              </p>
             </div>
 
             <div className="preview-badges">
-              <span className={`badge priority-badge priority-${formData.metaInfo.priority.toLowerCase()}`}>
+              <span
+                className={`badge priority-badge priority-${formData.metaInfo.priority.toLowerCase()}`}
+              >
                 {formData.metaInfo.priority}
               </span>
-              <span className={`badge type-badge type-${formData.fileInfo.type.toLowerCase()}`}>
+              <span
+                className={`badge type-badge type-${formData.fileInfo.type.toLowerCase()}`}
+              >
                 {formData.fileInfo.type}
               </span>
             </div>
@@ -125,7 +135,11 @@ export const MediaInfoCreatePage: React.FC = () => {
                 type === MediaFileInfoTypeEnum.Gif
               ) {
                 return filePath ? (
-                  <img className="preview-media" src={filePath} alt={formData.metaInfo.displayName} />
+                  <img
+                    className="preview-media"
+                    src={filePath}
+                    alt={formData.metaInfo.displayName}
+                  />
                 ) : (
                   <div className="preview-empty">
                     <h3>Нет изображения для предпросмотра</h3>
@@ -135,7 +149,11 @@ export const MediaInfoCreatePage: React.FC = () => {
 
               if (type === MediaFileInfoTypeEnum.Audio) {
                 return filePath ? (
-                  <audio className="preview-media preview-audio" controls src={filePath} />
+                  <audio
+                    className="preview-media preview-audio"
+                    controls
+                    src={filePath}
+                  />
                 ) : (
                   <div className="preview-empty">
                     <h3>Нет аудио для предпросмотра</h3>
@@ -145,7 +163,11 @@ export const MediaInfoCreatePage: React.FC = () => {
 
               if (type === MediaFileInfoTypeEnum.Video) {
                 return filePath ? (
-                  <video className="preview-media preview-video" controls src={filePath} />
+                  <video
+                    className="preview-media preview-video"
+                    controls
+                    src={filePath}
+                  />
                 ) : (
                   <div className="preview-empty">
                     <h3>Нет видео для предпросмотра</h3>
@@ -188,47 +210,48 @@ export const MediaInfoCreatePage: React.FC = () => {
 
         <section className="card-shell editor-shell">
           <form className="editor-form" onSubmit={handleSubmit}>
-          <div className="editor-form-header">
-            <div>
-              <h2>Карточка алерта</h2>
-              <p>
-                Заполняй данные последовательно. Reward ID можно создать прямо
-                здесь.
-              </p>
+            <div className="editor-form-header">
+              <div>
+                <h2>Карточка алерта</h2>
+                <p>
+                  Заполняй данные последовательно. Reward ID можно создать прямо
+                  здесь.
+                </p>
+              </div>
+
+              <div className="editor-form-actions">
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={loading}
+                >
+                  {loading ? "Сохраняем..." : "Создать запись"}
+                </button>
+              </div>
             </div>
 
-            <div className="editor-form-actions">
+            <MediaInfoFormSections
+              formData={formData}
+              onChange={handleChange}
+              onGenerateRewardId={handleGenerateRewardId}
+              onClearRewardId={handleClearRewardId}
+            />
+
+            <div className="editor-footer-actions">
               <button
                 type="submit"
                 className="btn btn-primary"
                 disabled={loading}
               >
-                {loading ? "Сохраняем..." : "Создать запись"}
+                {loading ? "Создаём..." : "Создать"}
               </button>
+              <Link to="/media-info" className="btn btn-secondary">
+                Отмена
+              </Link>
             </div>
-          </div>
-
-          <MediaInfoFormSections
-            formData={formData}
-            onChange={handleChange}
-            onGenerateRewardId={handleGenerateRewardId}
-            onClearRewardId={handleClearRewardId}
-          />
-
-          <div className="editor-footer-actions">
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={loading}
-            >
-              {loading ? "Создаём..." : "Создать"}
-            </button>
-            <Link to="/media-info" className="btn btn-secondary">
-              Отмена
-            </Link>
-          </div>
-        </form>
-      </section>
+          </form>
+        </section>
+      </div>
     </div>
   );
 };
