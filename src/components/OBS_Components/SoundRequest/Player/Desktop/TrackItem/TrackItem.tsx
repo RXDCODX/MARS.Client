@@ -1,7 +1,7 @@
-import { Play, X, ChevronUp, ChevronDown, Move } from "lucide-react";
-import { memo, useCallback } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { ChevronDown, ChevronUp, Move, Play, X } from "lucide-react";
+import { memo, useCallback } from "react";
 
 import { BaseTrackInfo } from "@/shared/api";
 
@@ -73,7 +73,7 @@ function TrackItemComponent({
     [queueItemId, onDelete]
   );
 
-      if (queueItemId && onNativeDragOver) onNativeDragOver(queueItemId);
+  if (queueItemId && onNativeDragOver) onNativeDragOver(queueItemId);
   const handleMoveUp = useCallback(
     (e: React.MouseEvent) => {
       e.stopPropagation();
@@ -84,16 +84,21 @@ function TrackItemComponent({
 
   const handleMoveDown = useCallback(
     (e: React.MouseEvent) => {
+      const handleDragEnter = useCallback(
+        (e: React.DragEvent) => {
+          e.preventDefault();
+          if (queueItemId && onNativeDragEnter) onNativeDragEnter(queueItemId);
+        },
+        [onNativeDragEnter, queueItemId]
+      );
 
-    const handleDragEnter = useCallback((e: React.DragEvent) => {
-      e.preventDefault();
-      if (queueItemId && onNativeDragEnter) onNativeDragEnter(queueItemId);
-    }, [onNativeDragEnter, queueItemId]);
-
-    const handleDragLeave = useCallback((e: React.DragEvent) => {
-      e.preventDefault();
-      if (queueItemId && onNativeDragLeave) onNativeDragLeave(queueItemId);
-    }, [onNativeDragLeave, queueItemId]);
+      const handleDragLeave = useCallback(
+        (e: React.DragEvent) => {
+          e.preventDefault();
+          if (queueItemId && onNativeDragLeave) onNativeDragLeave(queueItemId);
+        },
+        [onNativeDragLeave, queueItemId]
+      );
       e.stopPropagation();
       if (queueItemId && onMoveDown) onMoveDown(queueItemId);
     },
@@ -150,7 +155,12 @@ function TrackItemComponent({
         >
           <ChevronDown size={16} />
         </button>
-        <div className={styles.dragHandle} title="Перетащить" {...(attributes || {})} {...(listeners || {})}>
+        <div
+          className={styles.dragHandle}
+          title="Перетащить"
+          {...(attributes || {})}
+          {...(listeners || {})}
+        >
           <Move size={14} />
         </div>
       </div>

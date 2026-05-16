@@ -4,7 +4,9 @@ import { vi } from "vitest";
 vi.mock("@/shared/api", () => ({
   SoundRequest: function () {
     return {
-      soundRequestQueueReorderCreate: async (_: any) => ({ data: { success: true } }),
+      soundRequestQueueReorderCreate: async (_: any) => ({
+        data: { success: true },
+      }),
     };
   },
   // export any types used at runtime as undefined/mocks

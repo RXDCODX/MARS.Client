@@ -4,7 +4,9 @@ import { vi } from "vitest";
 vi.mock("@/shared/api", () => ({
   SoundRequest: function () {
     return {
-      soundRequestQueueReorderCreate: async (_: any) => ({ data: { success: true } }),
+      soundRequestQueueReorderCreate: async (_: any) => ({
+        data: { success: true },
+      }),
     };
   },
 }));
@@ -13,9 +15,9 @@ vi.mock("@/shared/api/api-config", () => ({
   defaultApiConfig: { baseURL: "" },
 }));
 
+import { fireEvent, render, waitFor } from "@testing-library/react";
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import { usePlayerStore } from "../stores/usePlayerStore";
 import { useQueueActions } from "./useQueueActions";
@@ -33,8 +35,12 @@ function TestComponent() {
 
   return (
     <div>
-      <button data-testid="up-b" onClick={() => handleMoveUp("b")}>up-b</button>
-      <button data-testid="down-b" onClick={() => handleMoveDown("b")}>down-b</button>
+      <button data-testid="up-b" onClick={() => handleMoveUp("b")}>
+        up-b
+      </button>
+      <button data-testid="down-b" onClick={() => handleMoveDown("b")}>
+        down-b
+      </button>
     </div>
   );
 }
@@ -44,14 +50,30 @@ describe("useQueueActions reorder", () => {
     const r = render(<TestComponent />);
 
     // initial order
-    expect(usePlayerStore.getState().queue.map(q => q.id)).toEqual(["a", "b", "c"]);
+    expect(usePlayerStore.getState().queue.map(q => q.id)).toEqual([
+      "a",
+      "b",
+      "c",
+    ]);
 
     fireEvent.click(r.getByTestId("up-b"));
 
-    await waitFor(() => expect(usePlayerStore.getState().queue.map(q => q.id)).toEqual(["b", "a", "c"]));
+    await waitFor(() =>
+      expect(usePlayerStore.getState().queue.map(q => q.id)).toEqual([
+        "b",
+        "a",
+        "c",
+      ])
+    );
 
     fireEvent.click(r.getByTestId("down-b"));
 
-    await waitFor(() => expect(usePlayerStore.getState().queue.map(q => q.id)).toEqual(["a", "b", "c"]));
+    await waitFor(() =>
+      expect(usePlayerStore.getState().queue.map(q => q.id)).toEqual([
+        "a",
+        "b",
+        "c",
+      ])
+    );
   });
 });

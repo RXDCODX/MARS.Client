@@ -135,30 +135,42 @@ export const useQueueActions = () => {
 
         if (!response.data.success) {
           usePlayerStore.getState().rollbackQueue(previousQueue);
-          showToast({ success: false, message: response.data.message || "Не удалось переместить трек" });
+          showToast({
+            success: false,
+            message: response.data.message || "Не удалось переместить трек",
+          });
         }
       } catch (error) {
         console.error("Ошибка при перемещении трека:", error);
         usePlayerStore.getState().rollbackQueue(previousQueue);
-        showToast({ success: false, message: "Произошла ошибка при перемещении трека" });
+        showToast({
+          success: false,
+          message: "Произошла ошибка при перемещении трека",
+        });
       }
     },
     [soundRequestApi, showToast]
   );
 
-  const handleMoveUp = useCallback((queueItemId: string) => {
-    const queue = usePlayerStore.getState().queue;
-    const idx = queue.findIndex(i => i.id === queueItemId);
-    if (idx <= 0) return;
-    handleMoveTo(queueItemId, idx - 1);
-  }, [handleMoveTo]);
+  const handleMoveUp = useCallback(
+    (queueItemId: string) => {
+      const queue = usePlayerStore.getState().queue;
+      const idx = queue.findIndex(i => i.id === queueItemId);
+      if (idx <= 0) return;
+      handleMoveTo(queueItemId, idx - 1);
+    },
+    [handleMoveTo]
+  );
 
-  const handleMoveDown = useCallback((queueItemId: string) => {
-    const queue = usePlayerStore.getState().queue;
-    const idx = queue.findIndex(i => i.id === queueItemId);
-    if (idx === -1 || idx >= queue.length - 1) return;
-    handleMoveTo(queueItemId, idx + 1);
-  }, [handleMoveTo]);
+  const handleMoveDown = useCallback(
+    (queueItemId: string) => {
+      const queue = usePlayerStore.getState().queue;
+      const idx = queue.findIndex(i => i.id === queueItemId);
+      if (idx === -1 || idx >= queue.length - 1) return;
+      handleMoveTo(queueItemId, idx + 1);
+    },
+    [handleMoveTo]
+  );
 
   return {
     handleItemHover,
