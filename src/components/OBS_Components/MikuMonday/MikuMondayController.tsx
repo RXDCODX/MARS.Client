@@ -6,6 +6,7 @@ import Announce from "@/shared/Utils/Announce/Announce";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import MikuMonday from "./MikuMonday";
+import { requestUnmuteOtherAudio } from "./mikuMondayAudio";
 import useMikuMondayStore from "./store/mikuMondayStore";
 
 export default function MikuMondayController() {
@@ -51,6 +52,12 @@ export default function MikuMondayController() {
       showToast(createErrorResult(error));
     }
   }, [status, error, showToast]);
+
+  useEffect(() => {
+    if (!currentAlert && !isAlertShowing) {
+      requestUnmuteOtherAudio().catch(() => void 0);
+    }
+  }, [currentAlert, isAlertShowing]);
 
   useEffect(() => {
     const preloadVideo = document.createElement("video");

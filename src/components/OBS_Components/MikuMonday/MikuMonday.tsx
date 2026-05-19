@@ -1,6 +1,7 @@
 import "react-roulette-pro/dist/index.css";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import ReactPlayer from "react-player";
 
 import type { MikuTrackDto } from "@/shared/api";
 
@@ -10,11 +11,11 @@ import RouletteStage from "./components/stages/RouletteStage";
 import WaitingStage from "./components/stages/WaitingStage";
 import { useRouletteGroups } from "./hooks/useRouletteGroups";
 import styles from "./MikuMonday.module.scss";
+import { requestMuteOtherAudio } from "./mikuMondayAudio";
 import useMikuMondayStore from "./store/mikuMondayStore";
 
 type StageKey = "waiting" | "intro" | "roulette" | "result";
 const QUEUE_PAUSE_MS = 2000;
-const BACKGROUND_AUDIO_START_PROGRESS = 0.33;
 const BACKGROUND_AUDIO_TARGET_VOLUME = 0.25;
 const BACKGROUND_AUDIO_FADE_IN_MS = 5500;
 const BACKGROUND_AUDIO_FADE_OUT_MS = 5500;
@@ -75,11 +76,12 @@ function MikuMondayContent() {
   const [stage, setStage] = useState<StageKey>("waiting");
   const [isVideoVisible, setIsVideoVisible] = useState(false);
   const [backgroundTrack, setBackgroundTrack] = useState<MikuTrackDto>();
+  const [backgroundVolume, setBackgroundVolume] = useState(0);
   const waitingTimeoutRef = useRef<number | null>(null);
   const stageSyncTimeoutRef = useRef<number | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const backgroundAudioRef = useRef<HTMLAudioElement | null>(null);
   const backgroundAudioFadeIntervalRef = useRef<number | null>(null);
+  const backgroundVolumeRef = useRef(0);
 
   const shouldPlayBackgroundAudio =
     Boolean(currentAlert) && stage !== "waiting";
@@ -96,20 +98,18 @@ function MikuMondayContent() {
     }
 
     return ids;
-  }, [currentAlert?.selectedTrack?.id, winnerTrack?.id]);
+  }, [currentAlert, winnerTrack]);
 
-  const backgroundTrackCandidates = useMemo(() => {
-    if (!currentAlert?.availableTracks) {
-      return [];
-    }
-
-    return currentAlert.availableTracks.filter(
-      track =>
-        Boolean(track.url) &&
-        track.url.trim().length > 0 &&
-        !excludedBackgroundTrackIds.has(track.id)
-    );
-  }, [currentAlert?.availableTracks, excludedBackgroundTrackIds]);
+  const backgroundTrackCandidates = useMemo(
+    () =>
+      currentAlert?.availableTracks?.filter(
+        track =>
+          Boolean(track.url) &&
+          track.url.trim().length > 0 &&
+          !excludedBackgroundTrackIds.has(track.id)
+      ) ?? [],
+    [currentAlert, excludedBackgroundTrackIds]
+  );
 
   const clearBackgroundAudioFadeInterval = useCallback(() => {
     if (backgroundAudioFadeIntervalRef.current !== null) {
@@ -118,19 +118,20 @@ function MikuMondayContent() {
     }
   }, []);
 
+  useEffect(() => {
+    backgroundVolumeRef.current = backgroundVolume;
+  }, [backgroundVolume]);
+
   const fadeBackgroundAudioTo = useCallback(
     (targetVolume: number, durationMs: number, onComplete?: () => void) => {
-      const audio = backgroundAudioRef.current;
-      if (!audio) {
-        return;
-      }
-
       clearBackgroundAudioFadeInterval();
 
-      const startVolume = audio.volume;
+      const startVolume = backgroundVolumeRef.current;
       const volumeDelta = targetVolume - startVolume;
       if (Math.abs(volumeDelta) < 0.001 || durationMs <= 0) {
-        audio.volume = Math.max(0, Math.min(1, targetVolume));
+        const nextVolume = Math.max(0, Math.min(1, targetVolume));
+        backgroundVolumeRef.current = nextVolume;
+        setBackgroundVolume(nextVolume);
         onComplete?.();
         return;
       }
@@ -144,10 +145,12 @@ function MikuMondayContent() {
       backgroundAudioFadeIntervalRef.current = window.setInterval(() => {
         currentStep += 1;
         const progress = Math.min(1, currentStep / steps);
-        audio.volume = Math.max(
+        const nextVolume = Math.max(
           0,
           Math.min(1, startVolume + volumeDelta * progress)
         );
+        backgroundVolumeRef.current = nextVolume;
+        setBackgroundVolume(nextVolume);
 
         if (progress >= 1) {
           clearBackgroundAudioFadeInterval();
@@ -159,35 +162,18 @@ function MikuMondayContent() {
   );
 
   const startBackgroundAudio = useCallback(() => {
-    const audio = backgroundAudioRef.current;
-    if (!audio || !backgroundTrack?.url) {
+    if (!backgroundTrack?.url) {
       return;
     }
 
+    void requestMuteOtherAudio();
     clearBackgroundAudioFadeInterval();
-    audio.volume = 0;
-
-    const handleLoadedMetadata = () => {
-      if (Number.isFinite(audio.duration) && audio.duration > 0) {
-        audio.currentTime = audio.duration * BACKGROUND_AUDIO_START_PROGRESS;
-      }
-    };
-
-    audio.addEventListener("loadedmetadata", handleLoadedMetadata, {
-      once: true,
-    });
-
-    audio
-      .play()
-      .then(() => {
-        fadeBackgroundAudioTo(
-          BACKGROUND_AUDIO_TARGET_VOLUME,
-          BACKGROUND_AUDIO_FADE_IN_MS
-        );
-      })
-      .catch(err => {
-        console.warn("[MikuMonday] Не удалось запустить фоновый трек:", err);
-      });
+    backgroundVolumeRef.current = 0;
+    setBackgroundVolume(0);
+    fadeBackgroundAudioTo(
+      BACKGROUND_AUDIO_TARGET_VOLUME,
+      BACKGROUND_AUDIO_FADE_IN_MS
+    );
   }, [
     backgroundTrack?.url,
     clearBackgroundAudioFadeInterval,
@@ -195,14 +181,9 @@ function MikuMondayContent() {
   ]);
 
   const stopBackgroundAudio = useCallback(() => {
-    const audio = backgroundAudioRef.current;
-    if (!audio) {
-      return;
-    }
-
     fadeBackgroundAudioTo(0, BACKGROUND_AUDIO_FADE_OUT_MS, () => {
-      audio.pause();
-      audio.currentTime = 0;
+      backgroundVolumeRef.current = 0;
+      setBackgroundVolume(0);
     });
   }, [fadeBackgroundAudioTo]);
 
@@ -245,103 +226,61 @@ function MikuMondayContent() {
   );
 
   useEffect(() => {
-    if (!currentAlert) {
-      setBackgroundTrack(undefined);
-      return;
-    }
+    const updateBackgroundTrackId = window.setTimeout(() => {
+      if (!currentAlert) {
+        if (backgroundTrack) {
+          setBackgroundTrack(undefined);
+        }
+        return;
+      }
 
-    if (backgroundTrackCandidates.length === 0) {
-      setBackgroundTrack(undefined);
-      return;
-    }
+      if (backgroundTrackCandidates.length === 0) {
+        if (backgroundTrack) {
+          setBackgroundTrack(undefined);
+        }
+        return;
+      }
 
-    // При переходе на result stage — всегда выбираем новый трек для смены
-    if (stage === "result") {
+      const currentTrackIsValid =
+        backgroundTrack &&
+        backgroundTrackCandidates.some(
+          track => track.id === backgroundTrack.id
+        );
+
+      if (stage !== "result" && currentTrackIsValid) {
+        return;
+      }
+
       const randomIndex = Math.floor(
         Math.random() * backgroundTrackCandidates.length
       );
       const nextBackgroundTrack = backgroundTrackCandidates[randomIndex];
+
       setBackgroundTrack(nextBackgroundTrack);
-      console.log("[MikuMonday] Выбран новый фоновый трек (result stage)", {
-        backgroundTrackId: nextBackgroundTrack.id,
-        backgroundTrackNumber: nextBackgroundTrack.number,
-        backgroundTrackArtist: nextBackgroundTrack.artist,
-        backgroundTrackTitle: nextBackgroundTrack.title,
-      });
-      return;
-    }
 
-    const currentTrackIsValid =
-      backgroundTrack &&
-      backgroundTrackCandidates.some(track => track.id === backgroundTrack.id);
+      console.log(
+        stage === "result"
+          ? "[MikuMonday] Выбран новый фоновый трек (result stage)"
+          : "[MikuMonday] Выбран фоновый трек",
+        {
+          backgroundTrackId: nextBackgroundTrack.id,
+          backgroundTrackNumber: nextBackgroundTrack.number,
+          backgroundTrackArtist: nextBackgroundTrack.artist,
+          backgroundTrackTitle: nextBackgroundTrack.title,
+          excludedTrackIds: Array.from(excludedBackgroundTrackIds),
+        }
+      );
+    }, 0);
 
-    if (currentTrackIsValid) {
-      return;
-    }
-
-    const randomIndex = Math.floor(
-      Math.random() * backgroundTrackCandidates.length
-    );
-    const nextBackgroundTrack = backgroundTrackCandidates[randomIndex];
-
-    setBackgroundTrack(nextBackgroundTrack);
-
-    console.log("[MikuMonday] Выбран фоновый трек", {
-      backgroundTrackId: nextBackgroundTrack.id,
-      backgroundTrackNumber: nextBackgroundTrack.number,
-      backgroundTrackArtist: nextBackgroundTrack.artist,
-      backgroundTrackTitle: nextBackgroundTrack.title,
-      excludedTrackIds: Array.from(excludedBackgroundTrackIds),
-    });
+    return () => {
+      window.clearTimeout(updateBackgroundTrackId);
+    };
   }, [
     currentAlert,
     stage,
     backgroundTrack,
     backgroundTrackCandidates,
     excludedBackgroundTrackIds,
-  ]);
-
-  useEffect(() => {
-    const audio = backgroundAudioRef.current;
-    if (!audio) {
-      return;
-    }
-
-    if (!backgroundTrack?.url) {
-      stopBackgroundAudio();
-      return;
-    }
-
-    audio.src = backgroundTrack.url;
-    audio.load();
-
-    if (!shouldPlayBackgroundAudio) {
-      stopBackgroundAudio();
-    }
-  }, [
-    backgroundTrack?.id,
-    backgroundTrack?.url,
-    shouldPlayBackgroundAudio,
-    stopBackgroundAudio,
-  ]);
-
-  useEffect(() => {
-    if (!backgroundTrack?.url) {
-      stopBackgroundAudio();
-      return;
-    }
-
-    if (shouldPlayBackgroundAudio) {
-      startBackgroundAudio();
-      return;
-    }
-
-    stopBackgroundAudio();
-  }, [
-    shouldPlayBackgroundAudio,
-    backgroundTrack?.url,
-    startBackgroundAudio,
-    stopBackgroundAudio,
   ]);
 
   useEffect(() => {
@@ -375,6 +314,22 @@ function MikuMondayContent() {
 
   const shouldSkipAvailableTracksUpdate =
     currentAlert?.skipAvailableTracksUpdate === true;
+
+  const handleBackgroundPlayerPlay = useCallback(() => {
+    startBackgroundAudio();
+  }, [startBackgroundAudio]);
+
+  const handleBackgroundPlayerPause = useCallback(() => {
+    stopBackgroundAudio();
+  }, [stopBackgroundAudio]);
+
+  const handleBackgroundPlayerEnded = useCallback(() => {
+    stopBackgroundAudio();
+  }, [stopBackgroundAudio]);
+
+  const handleBackgroundPlayerError = useCallback(() => {
+    stopBackgroundAudio();
+  }, [stopBackgroundAudio]);
 
   const handleIntroComplete = useCallback(() => {
     console.log("[MikuMonday] handleIntroComplete вызван", {
@@ -503,7 +458,37 @@ function MikuMondayContent() {
 
   return (
     <>
-      <audio ref={backgroundAudioRef} preload="auto" loop />
+      {backgroundTrack?.url ? (
+        <div
+          aria-hidden="true"
+          style={{
+            position: "fixed",
+            inset: 0,
+            width: 1,
+            height: 1,
+            opacity: 0,
+            pointerEvents: "none",
+            zIndex: -1,
+            overflow: "hidden",
+          }}
+        >
+          <ReactPlayer
+            key={backgroundTrack.id}
+            src={backgroundTrack.url}
+            playing={shouldPlayBackgroundAudio}
+            loop={true}
+            volume={backgroundVolume}
+            muted={false}
+            width={1}
+            height={1}
+            controls={false}
+            onPlay={handleBackgroundPlayerPlay}
+            onPause={handleBackgroundPlayerPause}
+            onEnded={handleBackgroundPlayerEnded}
+            onError={handleBackgroundPlayerError}
+          />
+        </div>
+      ) : null}
       {videoBackground}
       {stageContent}
     </>
