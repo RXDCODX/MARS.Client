@@ -215,7 +215,7 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
       if (from !== -1 && to !== -1) {
         // call reorder (handles optimistic update)
         if (to == 0) {
-          to = 1; // не даем перетащить на первое место, так как там текущий трек
+          to += 1; // фикс для корректного перемещения на первое место (там может быть текущий трек, который не участвует в сортировке)
         }
 
         handleReorder(active, to);
