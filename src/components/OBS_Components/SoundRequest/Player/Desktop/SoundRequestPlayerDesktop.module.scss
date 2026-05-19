@@ -59,7 +59,7 @@
 
 .leftCol.withHistory {
   .scrollList {
-    overflow-y: auto;
+    overflow-y: scroll;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -69,11 +69,12 @@
 .scrollList {
   flex: 1;
   min-height: 0;
-  overflow-y: auto;
+  overflow-y: scroll;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   padding-right: 0.5rem;
+  scrollbar-gutter: stable;
 
   /* Кастомный скроллбар */
   &::-webkit-scrollbar {

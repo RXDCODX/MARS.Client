@@ -6,9 +6,7 @@
   "paths": {
     "/api/AutoMessages": {
       "get": {
-        "tags": [
-          "AutoMessages"
-        ],
+        "tags": ["AutoMessages"],
         "responses": {
           "200": {
             "description": "OK",
@@ -33,9 +31,7 @@
         }
       },
       "post": {
-        "tags": [
-          "AutoMessages"
-        ],
+        "tags": ["AutoMessages"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -93,9 +89,7 @@
     },
     "/api/AutoMessages/{id}": {
       "get": {
-        "tags": [
-          "AutoMessages"
-        ],
+        "tags": ["AutoMessages"],
         "parameters": [
           {
             "name": "id",
@@ -131,9 +125,7 @@
         }
       },
       "put": {
-        "tags": [
-          "AutoMessages"
-        ],
+        "tags": ["AutoMessages"],
         "parameters": [
           {
             "name": "id",
@@ -200,9 +192,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "AutoMessages"
-        ],
+        "tags": ["AutoMessages"],
         "parameters": [
           {
             "name": "id",
@@ -240,9 +230,7 @@
     },
     "/api/ChannelRewardsManager": {
       "get": {
-        "tags": [
-          "ChannelRewardsManager"
-        ],
+        "tags": ["ChannelRewardsManager"],
         "responses": {
           "200": {
             "description": "OK",
@@ -269,9 +257,7 @@
     },
     "/api/ChannelRewardsManager/local": {
       "get": {
-        "tags": [
-          "ChannelRewardsManager"
-        ],
+        "tags": ["ChannelRewardsManager"],
         "responses": {
           "200": {
             "description": "OK",
@@ -296,9 +282,7 @@
         }
       },
       "post": {
-        "tags": [
-          "ChannelRewardsManager"
-        ],
+        "tags": ["ChannelRewardsManager"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -356,9 +340,7 @@
     },
     "/api/ChannelRewardsManager/local/{localId}": {
       "get": {
-        "tags": [
-          "ChannelRewardsManager"
-        ],
+        "tags": ["ChannelRewardsManager"],
         "parameters": [
           {
             "name": "localId",
@@ -394,9 +376,7 @@
         }
       },
       "put": {
-        "tags": [
-          "ChannelRewardsManager"
-        ],
+        "tags": ["ChannelRewardsManager"],
         "parameters": [
           {
             "name": "localId",
@@ -463,9 +443,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "ChannelRewardsManager"
-        ],
+        "tags": ["ChannelRewardsManager"],
         "parameters": [
           {
             "name": "localId",
@@ -503,9 +481,7 @@
     },
     "/api/ChannelRewardsManager/{rewardId}": {
       "get": {
-        "tags": [
-          "ChannelRewardsManager"
-        ],
+        "tags": ["ChannelRewardsManager"],
         "parameters": [
           {
             "name": "rewardId",
@@ -542,9 +518,7 @@
     },
     "/api/ChannelRewardsManager/sync": {
       "post": {
-        "tags": [
-          "ChannelRewardsManager"
-        ],
+        "tags": ["ChannelRewardsManager"],
         "responses": {
           "200": {
             "description": "OK",
@@ -571,9 +545,7 @@
     },
     "/api/ChannelRewardsManager/sync-services": {
       "post": {
-        "tags": [
-          "ChannelRewardsManager"
-        ],
+        "tags": ["ChannelRewardsManager"],
         "responses": {
           "200": {
             "description": "OK",
@@ -600,9 +572,7 @@
     },
     "/api/CinemaQueue": {
       "get": {
-        "tags": [
-          "CinemaQueue"
-        ],
+        "tags": ["CinemaQueue"],
         "responses": {
           "200": {
             "description": "OK",
@@ -627,9 +597,7 @@
         }
       },
       "post": {
-        "tags": [
-          "CinemaQueue"
-        ],
+        "tags": ["CinemaQueue"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -687,9 +655,7 @@
     },
     "/api/CinemaQueue/{id}": {
       "get": {
-        "tags": [
-          "CinemaQueue"
-        ],
+        "tags": ["CinemaQueue"],
         "parameters": [
           {
             "name": "id",
@@ -725,9 +691,7 @@
         }
       },
       "put": {
-        "tags": [
-          "CinemaQueue"
-        ],
+        "tags": ["CinemaQueue"],
         "parameters": [
           {
             "name": "id",
@@ -794,9 +758,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "CinemaQueue"
-        ],
+        "tags": ["CinemaQueue"],
         "parameters": [
           {
             "name": "id",
@@ -834,9 +796,7 @@
     },
     "/api/CinemaQueue/next": {
       "get": {
-        "tags": [
-          "CinemaQueue"
-        ],
+        "tags": ["CinemaQueue"],
         "responses": {
           "200": {
             "description": "OK",
@@ -863,9 +823,7 @@
     },
     "/api/CinemaQueue/status/{status}": {
       "get": {
-        "tags": [
-          "CinemaQueue"
-        ],
+        "tags": ["CinemaQueue"],
         "parameters": [
           {
             "name": "status",
@@ -909,9 +867,7 @@
     },
     "/api/CinemaQueue/{id}/mark-as-next": {
       "post": {
-        "tags": [
-          "CinemaQueue"
-        ],
+        "tags": ["CinemaQueue"],
         "parameters": [
           {
             "name": "id",
@@ -949,9 +905,7 @@
     },
     "/api/CinemaQueue/{id}/status": {
       "patch": {
-        "tags": [
-          "CinemaQueue"
-        ],
+        "tags": ["CinemaQueue"],
         "parameters": [
           {
             "name": "id",
@@ -1029,9 +983,7 @@
     },
     "/api/CinemaQueue/{id}/priority": {
       "patch": {
-        "tags": [
-          "CinemaQueue"
-        ],
+        "tags": ["CinemaQueue"],
         "parameters": [
           {
             "name": "id",
@@ -1091,9 +1043,7 @@
     },
     "/api/CinemaQueue/statistics": {
       "get": {
-        "tags": [
-          "CinemaQueue"
-        ],
+        "tags": ["CinemaQueue"],
         "responses": {
           "200": {
             "description": "OK",
@@ -1120,9 +1070,7 @@
     },
     "/api/CinemaQueue/metadata": {
       "get": {
-        "tags": [
-          "CinemaQueue"
-        ],
+        "tags": ["CinemaQueue"],
         "parameters": [
           {
             "name": "url",
@@ -1158,9 +1106,7 @@
     },
     "/api/Commands/user": {
       "get": {
-        "tags": [
-          "Commands"
-        ],
+        "tags": ["Commands"],
         "responses": {
           "200": {
             "description": "OK",
@@ -1187,9 +1133,7 @@
     },
     "/api/Commands/admin": {
       "get": {
-        "tags": [
-          "Commands"
-        ],
+        "tags": ["Commands"],
         "responses": {
           "200": {
             "description": "OK",
@@ -1216,9 +1160,7 @@
     },
     "/api/Commands/user/platform/{platform}": {
       "get": {
-        "tags": [
-          "Commands"
-        ],
+        "tags": ["Commands"],
         "parameters": [
           {
             "name": "platform",
@@ -1264,9 +1206,7 @@
     },
     "/api/Commands/admin/platform/{platform}": {
       "get": {
-        "tags": [
-          "Commands"
-        ],
+        "tags": ["Commands"],
         "parameters": [
           {
             "name": "platform",
@@ -1312,9 +1252,7 @@
     },
     "/api/Commands/user/platform/{platform}/info": {
       "get": {
-        "tags": [
-          "Commands"
-        ],
+        "tags": ["Commands"],
         "parameters": [
           {
             "name": "platform",
@@ -1360,9 +1298,7 @@
     },
     "/api/Commands/admin/platform/{platform}/info": {
       "get": {
-        "tags": [
-          "Commands"
-        ],
+        "tags": ["Commands"],
         "parameters": [
           {
             "name": "platform",
@@ -1408,9 +1344,7 @@
     },
     "/api/Commands/{commandName}/parameters": {
       "get": {
-        "tags": [
-          "Commands"
-        ],
+        "tags": ["Commands"],
         "parameters": [
           {
             "name": "commandName",
@@ -1447,9 +1381,7 @@
     },
     "/api/Commands/{commandName}/execute": {
       "post": {
-        "tags": [
-          "Commands"
-        ],
+        "tags": ["Commands"],
         "parameters": [
           {
             "name": "commandName",
@@ -1505,9 +1437,7 @@
     },
     "/api/EnvironmentVariable": {
       "get": {
-        "tags": [
-          "EnvironmentVariable"
-        ],
+        "tags": ["EnvironmentVariable"],
         "responses": {
           "200": {
             "description": "OK",
@@ -1532,9 +1462,7 @@
         }
       },
       "post": {
-        "tags": [
-          "EnvironmentVariable"
-        ],
+        "tags": ["EnvironmentVariable"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1592,9 +1520,7 @@
     },
     "/api/EnvironmentVariable/{key}": {
       "get": {
-        "tags": [
-          "EnvironmentVariable"
-        ],
+        "tags": ["EnvironmentVariable"],
         "parameters": [
           {
             "name": "key",
@@ -1629,9 +1555,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "EnvironmentVariable"
-        ],
+        "tags": ["EnvironmentVariable"],
         "parameters": [
           {
             "name": "key",
@@ -1668,9 +1592,7 @@
     },
     "/api/EnvironmentVariable/reload": {
       "post": {
-        "tags": [
-          "EnvironmentVariable"
-        ],
+        "tags": ["EnvironmentVariable"],
         "responses": {
           "200": {
             "description": "OK",
@@ -1697,9 +1619,7 @@
     },
     "/api/Framedata/characters": {
       "get": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "parameters": [
           {
             "name": "page",
@@ -1744,9 +1664,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -1804,9 +1722,7 @@
     },
     "/api/Framedata/characters/{name}": {
       "get": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "parameters": [
           {
             "name": "name",
@@ -1841,9 +1757,7 @@
         }
       },
       "put": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "parameters": [
           {
             "name": "name",
@@ -1909,9 +1823,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "parameters": [
           {
             "name": "name",
@@ -1948,9 +1860,7 @@
     },
     "/api/Framedata/characters/{characterName}/moves": {
       "get": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "parameters": [
           {
             "name": "characterName",
@@ -2003,9 +1913,7 @@
         }
       },
       "post": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "parameters": [
           {
             "name": "characterName",
@@ -2073,9 +1981,7 @@
     },
     "/api/Framedata/characters/{characterName}/moves/{command}": {
       "get": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "parameters": [
           {
             "name": "characterName",
@@ -2118,9 +2024,7 @@
         }
       },
       "put": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "parameters": [
           {
             "name": "characterName",
@@ -2194,9 +2098,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "parameters": [
           {
             "name": "characterName",
@@ -2241,9 +2143,7 @@
     },
     "/api/Framedata/moves/search": {
       "get": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "parameters": [
           {
             "name": "characterName",
@@ -2332,9 +2232,7 @@
     },
     "/api/Framedata/characters/{name}/image": {
       "get": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "parameters": [
           {
             "name": "name",
@@ -2354,9 +2252,7 @@
     },
     "/api/Framedata/characters/{name}/avatar": {
       "get": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "parameters": [
           {
             "name": "name",
@@ -2376,9 +2272,7 @@
     },
     "/api/Framedata/characters/{name}/fullbody": {
       "get": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "parameters": [
           {
             "name": "name",
@@ -2398,9 +2292,7 @@
     },
     "/api/Framedata/parse": {
       "post": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -2458,9 +2350,7 @@
     },
     "/api/Framedata/parse-characters-only": {
       "post": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -2518,9 +2408,7 @@
     },
     "/api/Framedata/supplement": {
       "post": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -2578,21 +2466,14 @@
     },
     "/api/Framedata/supplement/{source}": {
       "post": {
-        "tags": [
-          "Framedata"
-        ],
+        "tags": ["Framedata"],
         "parameters": [
           {
             "name": "source",
             "in": "path",
             "required": true,
             "schema": {
-              "enum": [
-                "None",
-                "Wavu",
-                "Tekkendocs",
-                "Okizeme"
-              ],
+              "enum": ["None", "Wavu", "Tekkendocs", "Okizeme"],
               "type": "string"
             }
           }
@@ -2623,9 +2504,7 @@
     },
     "/api/FramedataChanges/pending/characters": {
       "get": {
-        "tags": [
-          "FramedataChanges"
-        ],
+        "tags": ["FramedataChanges"],
         "responses": {
           "200": {
             "description": "OK",
@@ -2652,9 +2531,7 @@
     },
     "/api/FramedataChanges/pending/moves": {
       "get": {
-        "tags": [
-          "FramedataChanges"
-        ],
+        "tags": ["FramedataChanges"],
         "parameters": [
           {
             "name": "characterName",
@@ -2690,9 +2567,7 @@
     },
     "/api/FramedataChanges/approve/character/{name}": {
       "post": {
-        "tags": [
-          "FramedataChanges"
-        ],
+        "tags": ["FramedataChanges"],
         "parameters": [
           {
             "name": "name",
@@ -2729,9 +2604,7 @@
     },
     "/api/FramedataChanges/reject/character/{name}": {
       "post": {
-        "tags": [
-          "FramedataChanges"
-        ],
+        "tags": ["FramedataChanges"],
         "parameters": [
           {
             "name": "name",
@@ -2768,9 +2641,7 @@
     },
     "/api/FramedataChanges/approve/move/{characterName}/{command}": {
       "post": {
-        "tags": [
-          "FramedataChanges"
-        ],
+        "tags": ["FramedataChanges"],
         "parameters": [
           {
             "name": "characterName",
@@ -2815,9 +2686,7 @@
     },
     "/api/FramedataChanges/reject/move/{characterName}/{command}": {
       "post": {
-        "tags": [
-          "FramedataChanges"
-        ],
+        "tags": ["FramedataChanges"],
         "parameters": [
           {
             "name": "characterName",
@@ -2862,9 +2731,7 @@
     },
     "/api/FramedataChanges/approve/all": {
       "post": {
-        "tags": [
-          "FramedataChanges"
-        ],
+        "tags": ["FramedataChanges"],
         "responses": {
           "200": {
             "description": "OK",
@@ -2891,9 +2758,7 @@
     },
     "/api/FramedataChanges/reject/all": {
       "post": {
-        "tags": [
-          "FramedataChanges"
-        ],
+        "tags": ["FramedataChanges"],
         "responses": {
           "200": {
             "description": "OK",
@@ -2920,9 +2785,7 @@
     },
     "/api/FramedataChanges/scrape": {
       "post": {
-        "tags": [
-          "FramedataChanges"
-        ],
+        "tags": ["FramedataChanges"],
         "responses": {
           "200": {
             "description": "OK",
@@ -2949,9 +2812,7 @@
     },
     "/api/FramedataChanges/stats": {
       "get": {
-        "tags": [
-          "FramedataChanges"
-        ],
+        "tags": ["FramedataChanges"],
         "responses": {
           "200": {
             "description": "OK",
@@ -2978,9 +2839,7 @@
     },
     "/api/GooglePhotos/authorize": {
       "post": {
-        "tags": [
-          "GooglePhotos"
-        ],
+        "tags": ["GooglePhotos"],
         "parameters": [
           {
             "name": "telegramAdminId",
@@ -3017,9 +2876,7 @@
     },
     "/api/GooglePhotos/oauth-callback": {
       "get": {
-        "tags": [
-          "GooglePhotos"
-        ],
+        "tags": ["GooglePhotos"],
         "parameters": [
           {
             "name": "code",
@@ -3045,9 +2902,7 @@
     },
     "/api/GooglePhotos/status": {
       "get": {
-        "tags": [
-          "GooglePhotos"
-        ],
+        "tags": ["GooglePhotos"],
         "responses": {
           "200": {
             "description": "OK",
@@ -3074,9 +2929,7 @@
     },
     "/api/KeyboardHook/status": {
       "get": {
-        "tags": [
-          "KeyboardHook"
-        ],
+        "tags": ["KeyboardHook"],
         "responses": {
           "200": {
             "description": "OK"
@@ -3086,9 +2939,7 @@
     },
     "/api/KeyboardHook/combinations": {
       "get": {
-        "tags": [
-          "KeyboardHook"
-        ],
+        "tags": ["KeyboardHook"],
         "responses": {
           "200": {
             "description": "OK"
@@ -3098,9 +2949,7 @@
     },
     "/api/KeyboardHook/info": {
       "get": {
-        "tags": [
-          "KeyboardHook"
-        ],
+        "tags": ["KeyboardHook"],
         "responses": {
           "200": {
             "description": "OK"
@@ -3110,9 +2959,7 @@
     },
     "/api/LoggerTest/test-logging": {
       "post": {
-        "tags": [
-          "LoggerTest"
-        ],
+        "tags": ["LoggerTest"],
         "responses": {
           "200": {
             "description": "OK",
@@ -3139,9 +2986,7 @@
     },
     "/api/LoggerTest/test-exception": {
       "post": {
-        "tags": [
-          "LoggerTest"
-        ],
+        "tags": ["LoggerTest"],
         "responses": {
           "200": {
             "description": "OK",
@@ -3168,9 +3013,7 @@
     },
     "/api/LoggerTest/test-structured": {
       "post": {
-        "tags": [
-          "LoggerTest"
-        ],
+        "tags": ["LoggerTest"],
         "responses": {
           "200": {
             "description": "OK",
@@ -3197,9 +3040,7 @@
     },
     "/api/Logs": {
       "get": {
-        "tags": [
-          "Logs"
-        ],
+        "tags": ["Logs"],
         "parameters": [
           {
             "name": "page",
@@ -3301,9 +3142,7 @@
     },
     "/api/Logs/by-level/{logLevel}": {
       "get": {
-        "tags": [
-          "Logs"
-        ],
+        "tags": ["Logs"],
         "parameters": [
           {
             "name": "logLevel",
@@ -3349,9 +3188,7 @@
     },
     "/api/Logs/by-date-range": {
       "get": {
-        "tags": [
-          "Logs"
-        ],
+        "tags": ["Logs"],
         "parameters": [
           {
             "name": "fromDate",
@@ -3396,9 +3233,7 @@
     },
     "/api/Logs/recent": {
       "get": {
-        "tags": [
-          "Logs"
-        ],
+        "tags": ["Logs"],
         "parameters": [
           {
             "name": "count",
@@ -3436,9 +3271,7 @@
     },
     "/api/Logs/statistics": {
       "get": {
-        "tags": [
-          "Logs"
-        ],
+        "tags": ["Logs"],
         "responses": {
           "200": {
             "description": "OK",
@@ -3465,9 +3298,7 @@
     },
     "/api/Logs/test": {
       "post": {
-        "tags": [
-          "Logs"
-        ],
+        "tags": ["Logs"],
         "responses": {
           "200": {
             "description": "OK",
@@ -3494,9 +3325,7 @@
     },
     "/api/MediaInfoApi": {
       "get": {
-        "tags": [
-          "MediaInfoApi"
-        ],
+        "tags": ["MediaInfoApi"],
         "responses": {
           "200": {
             "description": "OK",
@@ -3521,9 +3350,7 @@
         }
       },
       "post": {
-        "tags": [
-          "MediaInfoApi"
-        ],
+        "tags": ["MediaInfoApi"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -3581,9 +3408,7 @@
     },
     "/api/MediaInfoApi/{id}": {
       "get": {
-        "tags": [
-          "MediaInfoApi"
-        ],
+        "tags": ["MediaInfoApi"],
         "parameters": [
           {
             "name": "id",
@@ -3619,9 +3444,7 @@
         }
       },
       "put": {
-        "tags": [
-          "MediaInfoApi"
-        ],
+        "tags": ["MediaInfoApi"],
         "parameters": [
           {
             "name": "id",
@@ -3688,9 +3511,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "MediaInfoApi"
-        ],
+        "tags": ["MediaInfoApi"],
         "parameters": [
           {
             "name": "id",
@@ -3728,9 +3549,7 @@
     },
     "/api/MediaInfoApi/{id}/file": {
       "get": {
-        "tags": [
-          "MediaInfoApi"
-        ],
+        "tags": ["MediaInfoApi"],
         "parameters": [
           {
             "name": "id",
@@ -3751,9 +3570,7 @@
     },
     "/memory/{escapedFileName}": {
       "get": {
-        "tags": [
-          "PyroAlerts"
-        ],
+        "tags": ["PyroAlerts"],
         "parameters": [
           {
             "name": "escapedFileName",
@@ -3773,9 +3590,7 @@
     },
     "/api/RandomMeme/types": {
       "get": {
-        "tags": [
-          "RandomMeme"
-        ],
+        "tags": ["RandomMeme"],
         "responses": {
           "200": {
             "description": "OK",
@@ -3800,9 +3615,7 @@
         }
       },
       "post": {
-        "tags": [
-          "RandomMeme"
-        ],
+        "tags": ["RandomMeme"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -3860,9 +3673,7 @@
     },
     "/api/RandomMeme/types/{id}": {
       "get": {
-        "tags": [
-          "RandomMeme"
-        ],
+        "tags": ["RandomMeme"],
         "parameters": [
           {
             "name": "id",
@@ -3898,9 +3709,7 @@
         }
       },
       "put": {
-        "tags": [
-          "RandomMeme"
-        ],
+        "tags": ["RandomMeme"],
         "parameters": [
           {
             "name": "id",
@@ -3967,9 +3776,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "RandomMeme"
-        ],
+        "tags": ["RandomMeme"],
         "parameters": [
           {
             "name": "id",
@@ -4007,9 +3814,7 @@
     },
     "/api/RandomMeme/orders": {
       "get": {
-        "tags": [
-          "RandomMeme"
-        ],
+        "tags": ["RandomMeme"],
         "responses": {
           "200": {
             "description": "OK",
@@ -4034,9 +3839,7 @@
         }
       },
       "post": {
-        "tags": [
-          "RandomMeme"
-        ],
+        "tags": ["RandomMeme"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -4094,9 +3897,7 @@
     },
     "/api/RandomMeme/orders/type/{typeId}": {
       "get": {
-        "tags": [
-          "RandomMeme"
-        ],
+        "tags": ["RandomMeme"],
         "parameters": [
           {
             "name": "typeId",
@@ -4134,9 +3935,7 @@
     },
     "/api/RandomMeme/orders/{id}": {
       "get": {
-        "tags": [
-          "RandomMeme"
-        ],
+        "tags": ["RandomMeme"],
         "parameters": [
           {
             "name": "id",
@@ -4172,9 +3971,7 @@
         }
       },
       "put": {
-        "tags": [
-          "RandomMeme"
-        ],
+        "tags": ["RandomMeme"],
         "parameters": [
           {
             "name": "id",
@@ -4241,9 +4038,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "RandomMeme"
-        ],
+        "tags": ["RandomMeme"],
         "parameters": [
           {
             "name": "id",
@@ -4281,9 +4076,7 @@
     },
     "/api/RandomMeme/random": {
       "get": {
-        "tags": [
-          "RandomMeme"
-        ],
+        "tags": ["RandomMeme"],
         "parameters": [
           {
             "name": "typeId",
@@ -4320,9 +4113,7 @@
     },
     "/api/RandomMeme/count": {
       "get": {
-        "tags": [
-          "RandomMeme"
-        ],
+        "tags": ["RandomMeme"],
         "parameters": [
           {
             "name": "typeId",
@@ -4359,9 +4150,7 @@
     },
     "/api/RandomMeme/file/{id}": {
       "get": {
-        "tags": [
-          "RandomMeme"
-        ],
+        "tags": ["RandomMeme"],
         "parameters": [
           {
             "name": "id",
@@ -4405,9 +4194,7 @@
     },
     "/api/RandomMeme/file/random": {
       "get": {
-        "tags": [
-          "RandomMeme"
-        ],
+        "tags": ["RandomMeme"],
         "parameters": [
           {
             "name": "typeId",
@@ -4450,9 +4237,7 @@
     },
     "/api/RandomMeme/orders/reorder/{typeId}": {
       "post": {
-        "tags": [
-          "RandomMeme"
-        ],
+        "tags": ["RandomMeme"],
         "parameters": [
           {
             "name": "typeId",
@@ -4490,9 +4275,7 @@
     },
     "/api/RootState": {
       "get": {
-        "tags": [
-          "RootState"
-        ],
+        "tags": ["RootState"],
         "responses": {
           "200": {
             "description": "OK",
@@ -4517,9 +4300,7 @@
         }
       },
       "post": {
-        "tags": [
-          "RootState"
-        ],
+        "tags": ["RootState"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -4577,9 +4358,7 @@
     },
     "/api/RootState/{name}": {
       "get": {
-        "tags": [
-          "RootState"
-        ],
+        "tags": ["RootState"],
         "parameters": [
           {
             "name": "name",
@@ -4614,9 +4393,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "RootState"
-        ],
+        "tags": ["RootState"],
         "parameters": [
           {
             "name": "name",
@@ -4653,9 +4430,7 @@
     },
     "/api/RootState/{name}/value": {
       "patch": {
-        "tags": [
-          "RootState"
-        ],
+        "tags": ["RootState"],
         "parameters": [
           {
             "name": "name",
@@ -4723,9 +4498,7 @@
     },
     "/api/RxdcodxViewers/all": {
       "get": {
-        "tags": [
-          "RxdcodxViewers"
-        ],
+        "tags": ["RxdcodxViewers"],
         "parameters": [
           {
             "name": "forceUseCash",
@@ -4761,9 +4534,7 @@
     },
     "/api/RxdcodxViewers/without-avatars": {
       "get": {
-        "tags": [
-          "RxdcodxViewers"
-        ],
+        "tags": ["RxdcodxViewers"],
         "responses": {
           "200": {
             "description": "OK",
@@ -4790,9 +4561,7 @@
     },
     "/api/RxdcodxViewers/without-avatars/count": {
       "get": {
-        "tags": [
-          "RxdcodxViewers"
-        ],
+        "tags": ["RxdcodxViewers"],
         "responses": {
           "200": {
             "description": "OK",
@@ -4819,9 +4588,7 @@
     },
     "/api/RxdcodxViewers/update-avatars": {
       "post": {
-        "tags": [
-          "RxdcodxViewers"
-        ],
+        "tags": ["RxdcodxViewers"],
         "responses": {
           "200": {
             "description": "OK",
@@ -4848,9 +4615,7 @@
     },
     "/api/RxdcodxViewers/debug/avatars": {
       "get": {
-        "tags": [
-          "RxdcodxViewers"
-        ],
+        "tags": ["RxdcodxViewers"],
         "responses": {
           "200": {
             "description": "OK",
@@ -4877,9 +4642,7 @@
     },
     "/api/ServiceManager/status": {
       "get": {
-        "tags": [
-          "ServiceManager"
-        ],
+        "tags": ["ServiceManager"],
         "responses": {
           "200": {
             "description": "OK",
@@ -4906,9 +4669,7 @@
     },
     "/api/ServiceManager/service/{serviceName}": {
       "get": {
-        "tags": [
-          "ServiceManager"
-        ],
+        "tags": ["ServiceManager"],
         "parameters": [
           {
             "name": "serviceName",
@@ -4945,9 +4706,7 @@
     },
     "/api/ServiceManager/service/{serviceName}/start": {
       "post": {
-        "tags": [
-          "ServiceManager"
-        ],
+        "tags": ["ServiceManager"],
         "parameters": [
           {
             "name": "serviceName",
@@ -4984,9 +4743,7 @@
     },
     "/api/ServiceManager/service/{serviceName}/stop": {
       "post": {
-        "tags": [
-          "ServiceManager"
-        ],
+        "tags": ["ServiceManager"],
         "parameters": [
           {
             "name": "serviceName",
@@ -5023,9 +4780,7 @@
     },
     "/api/ServiceManager/service/{serviceName}/restart": {
       "post": {
-        "tags": [
-          "ServiceManager"
-        ],
+        "tags": ["ServiceManager"],
         "parameters": [
           {
             "name": "serviceName",
@@ -5062,9 +4817,7 @@
     },
     "/api/ServiceManager/service/{serviceName}/logs": {
       "get": {
-        "tags": [
-          "ServiceManager"
-        ],
+        "tags": ["ServiceManager"],
         "parameters": [
           {
             "name": "serviceName",
@@ -5110,9 +4863,7 @@
     },
     "/api/ServiceManager/service/{serviceName}/active": {
       "post": {
-        "tags": [
-          "ServiceManager"
-        ],
+        "tags": ["ServiceManager"],
         "parameters": [
           {
             "name": "serviceName",
@@ -5168,9 +4919,7 @@
     },
     "/api/ServiceManager/services": {
       "get": {
-        "tags": [
-          "ServiceManager"
-        ],
+        "tags": ["ServiceManager"],
         "responses": {
           "200": {
             "description": "OK",
@@ -5197,9 +4946,7 @@
     },
     "/api/ShikimoriRateLimiter/info": {
       "get": {
-        "tags": [
-          "ShikimoriRateLimiter"
-        ],
+        "tags": ["ShikimoriRateLimiter"],
         "responses": {
           "200": {
             "description": "OK",
@@ -5226,9 +4973,7 @@
     },
     "/api/SoundRequest/state": {
       "get": {
-        "tags": [
-          "SoundRequest"
-        ],
+        "tags": ["SoundRequest"],
         "responses": {
           "200": {
             "description": "OK",
@@ -5255,9 +5000,7 @@
     },
     "/api/SoundRequest/queue": {
       "get": {
-        "tags": [
-          "SoundRequest"
-        ],
+        "tags": ["SoundRequest"],
         "responses": {
           "200": {
             "description": "OK",
@@ -5284,9 +5027,7 @@
     },
     "/api/SoundRequest/history": {
       "get": {
-        "tags": [
-          "SoundRequest"
-        ],
+        "tags": ["SoundRequest"],
         "parameters": [
           {
             "name": "count",
@@ -5324,9 +5065,7 @@
     },
     "/api/SoundRequest/history/queue-items": {
       "get": {
-        "tags": [
-          "SoundRequest"
-        ],
+        "tags": ["SoundRequest"],
         "parameters": [
           {
             "name": "count",
@@ -5364,9 +5103,7 @@
     },
     "/api/SoundRequest/current-song": {
       "get": {
-        "tags": [
-          "SoundRequest"
-        ],
+        "tags": ["SoundRequest"],
         "responses": {
           "200": {
             "description": "OK",
@@ -5393,9 +5130,7 @@
     },
     "/api/SoundRequest/queue/{queueItemId}": {
       "delete": {
-        "tags": [
-          "SoundRequest"
-        ],
+        "tags": ["SoundRequest"],
         "parameters": [
           {
             "name": "queueItemId",
@@ -5433,9 +5168,7 @@
     },
     "/api/SoundRequest/add-track": {
       "post": {
-        "tags": [
-          "SoundRequest"
-        ],
+        "tags": ["SoundRequest"],
         "parameters": [
           {
             "name": "query",
@@ -5471,9 +5204,7 @@
     },
     "/api/SoundRequest/play-now/{queueItemId}": {
       "post": {
-        "tags": [
-          "SoundRequest"
-        ],
+        "tags": ["SoundRequest"],
         "parameters": [
           {
             "name": "queueItemId",
@@ -5511,9 +5242,7 @@
     },
     "/api/SoundRequest/queue/reorder": {
       "post": {
-        "tags": [
-          "SoundRequest"
-        ],
+        "tags": ["SoundRequest"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -5571,9 +5300,7 @@
     },
     "/api/SpotifyAuth/start": {
       "post": {
-        "tags": [
-          "SpotifyAuth"
-        ],
+        "tags": ["SpotifyAuth"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -5631,9 +5358,7 @@
     },
     "/api/SpotifyAuth/callback": {
       "get": {
-        "tags": [
-          "SpotifyAuth"
-        ],
+        "tags": ["SpotifyAuth"],
         "parameters": [
           {
             "name": "code",
@@ -5697,9 +5422,7 @@
     },
     "/api/SpotifyAuth/status": {
       "get": {
-        "tags": [
-          "SpotifyAuth"
-        ],
+        "tags": ["SpotifyAuth"],
         "responses": {
           "200": {
             "description": "OK",
@@ -5726,9 +5449,7 @@
     },
     "/api/SpotifyAuth/disconnect": {
       "post": {
-        "tags": [
-          "SpotifyAuth"
-        ],
+        "tags": ["SpotifyAuth"],
         "responses": {
           "200": {
             "description": "OK",
@@ -5755,9 +5476,7 @@
     },
     "/api/StreamArchive": {
       "get": {
-        "tags": [
-          "StreamArchive"
-        ],
+        "tags": ["StreamArchive"],
         "responses": {
           "200": {
             "description": "OK",
@@ -5782,9 +5501,7 @@
         }
       },
       "post": {
-        "tags": [
-          "StreamArchive"
-        ],
+        "tags": ["StreamArchive"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -5842,9 +5559,7 @@
     },
     "/api/StreamArchive/{id}": {
       "get": {
-        "tags": [
-          "StreamArchive"
-        ],
+        "tags": ["StreamArchive"],
         "parameters": [
           {
             "name": "id",
@@ -5880,9 +5595,7 @@
         }
       },
       "put": {
-        "tags": [
-          "StreamArchive"
-        ],
+        "tags": ["StreamArchive"],
         "parameters": [
           {
             "name": "id",
@@ -5949,9 +5662,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "StreamArchive"
-        ],
+        "tags": ["StreamArchive"],
         "parameters": [
           {
             "name": "id",
@@ -5989,9 +5700,7 @@
     },
     "/api/StreamArchive/validate-folder": {
       "post": {
-        "tags": [
-          "StreamArchive"
-        ],
+        "tags": ["StreamArchive"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -6049,9 +5758,7 @@
     },
     "/api/StreamArchive/{configId}/files": {
       "get": {
-        "tags": [
-          "StreamArchive"
-        ],
+        "tags": ["StreamArchive"],
         "parameters": [
           {
             "name": "configId",
@@ -6089,9 +5796,7 @@
     },
     "/api/StreamArchive/statistics": {
       "get": {
-        "tags": [
-          "StreamArchive"
-        ],
+        "tags": ["StreamArchive"],
         "responses": {
           "200": {
             "description": "OK",
@@ -6118,9 +5823,7 @@
     },
     "/api/TelegramClipboardCopy/{requestId}": {
       "get": {
-        "tags": [
-          "TelegramClipboardCopy"
-        ],
+        "tags": ["TelegramClipboardCopy"],
         "parameters": [
           {
             "name": "requestId",
@@ -6157,9 +5860,7 @@
     },
     "/api/TelegramClipboardCopy/complete/{requestId}": {
       "post": {
-        "tags": [
-          "TelegramClipboardCopy"
-        ],
+        "tags": ["TelegramClipboardCopy"],
         "parameters": [
           {
             "name": "requestId",
@@ -6196,9 +5897,7 @@
     },
     "/api/TelegramDiscordBridge/bindings": {
       "get": {
-        "tags": [
-          "TelegramDiscordBridge"
-        ],
+        "tags": ["TelegramDiscordBridge"],
         "responses": {
           "200": {
             "description": "OK",
@@ -6223,9 +5922,7 @@
         }
       },
       "post": {
-        "tags": [
-          "TelegramDiscordBridge"
-        ],
+        "tags": ["TelegramDiscordBridge"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -6283,9 +5980,7 @@
     },
     "/api/TelegramDiscordBridge/bindings/{id}": {
       "delete": {
-        "tags": [
-          "TelegramDiscordBridge"
-        ],
+        "tags": ["TelegramDiscordBridge"],
         "parameters": [
           {
             "name": "id",
@@ -6323,9 +6018,7 @@
     },
     "/api/TelegramDiscordBridge/bindings/{id}/enabled": {
       "put": {
-        "tags": [
-          "TelegramDiscordBridge"
-        ],
+        "tags": ["TelegramDiscordBridge"],
         "parameters": [
           {
             "name": "id",
@@ -6394,9 +6087,7 @@
     },
     "/api/TelegramDiscordBridge/states": {
       "get": {
-        "tags": [
-          "TelegramDiscordBridge"
-        ],
+        "tags": ["TelegramDiscordBridge"],
         "responses": {
           "200": {
             "description": "OK",
@@ -6423,9 +6114,7 @@
     },
     "/api/TelegramDiscordBridge/telegram-channels": {
       "get": {
-        "tags": [
-          "TelegramDiscordBridge"
-        ],
+        "tags": ["TelegramDiscordBridge"],
         "responses": {
           "200": {
             "description": "OK",
@@ -6452,9 +6141,7 @@
     },
     "/api/TelegramDiscordBridge/discord-channels": {
       "get": {
-        "tags": [
-          "TelegramDiscordBridge"
-        ],
+        "tags": ["TelegramDiscordBridge"],
         "responses": {
           "200": {
             "description": "OK",
@@ -6481,9 +6168,7 @@
     },
     "/api/TestLogger/test-warning": {
       "post": {
-        "tags": [
-          "TestLogger"
-        ],
+        "tags": ["TestLogger"],
         "responses": {
           "200": {
             "description": "OK",
@@ -6510,9 +6195,7 @@
     },
     "/api/TestLogger/test-error": {
       "post": {
-        "tags": [
-          "TestLogger"
-        ],
+        "tags": ["TestLogger"],
         "responses": {
           "200": {
             "description": "OK",
@@ -6539,9 +6222,7 @@
     },
     "/api/TestLogger/test-critical": {
       "post": {
-        "tags": [
-          "TestLogger"
-        ],
+        "tags": ["TestLogger"],
         "responses": {
           "200": {
             "description": "OK",
@@ -6568,9 +6249,7 @@
     },
     "/api/tts/blocked": {
       "get": {
-        "tags": [
-          "TtsVoice"
-        ],
+        "tags": ["TtsVoice"],
         "responses": {
           "200": {
             "description": "OK",
@@ -6595,9 +6274,7 @@
         }
       },
       "post": {
-        "tags": [
-          "TtsVoice"
-        ],
+        "tags": ["TtsVoice"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -6655,9 +6332,7 @@
     },
     "/api/tts/blocked/{voiceName}": {
       "delete": {
-        "tags": [
-          "TtsVoice"
-        ],
+        "tags": ["TtsVoice"],
         "parameters": [
           {
             "name": "voiceName",
@@ -6694,9 +6369,7 @@
     },
     "/api/tts/installed": {
       "get": {
-        "tags": [
-          "TtsVoice"
-        ],
+        "tags": ["TtsVoice"],
         "responses": {
           "200": {
             "description": "OK",
@@ -6723,9 +6396,7 @@
     },
     "/api/tts/linked": {
       "get": {
-        "tags": [
-          "TtsVoice"
-        ],
+        "tags": ["TtsVoice"],
         "responses": {
           "200": {
             "description": "OK",
@@ -6752,9 +6423,7 @@
     },
     "/api/tts/reset/{userName}": {
       "post": {
-        "tags": [
-          "TtsVoice"
-        ],
+        "tags": ["TtsVoice"],
         "parameters": [
           {
             "name": "userName",
@@ -6791,9 +6460,7 @@
     },
     "/api/tts/reset-all": {
       "post": {
-        "tags": [
-          "TtsVoice"
-        ],
+        "tags": ["TtsVoice"],
         "responses": {
           "200": {
             "description": "OK",
@@ -6820,9 +6487,7 @@
     },
     "/api/tts/speak": {
       "post": {
-        "tags": [
-          "TtsVoice"
-        ],
+        "tags": ["TtsVoice"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -6880,9 +6545,7 @@
     },
     "/TwitchUserAuth": {
       "get": {
-        "tags": [
-          "Twitch"
-        ],
+        "tags": ["Twitch"],
         "parameters": [
           {
             "name": "code",
@@ -6918,9 +6581,7 @@
     },
     "/api/twitch/rewards": {
       "get": {
-        "tags": [
-          "TwitchRewards"
-        ],
+        "tags": ["TwitchRewards"],
         "parameters": [
           {
             "name": "onlyManageable",
@@ -6955,9 +6616,7 @@
         }
       },
       "post": {
-        "tags": [
-          "TwitchRewards"
-        ],
+        "tags": ["TwitchRewards"],
         "requestBody": {
           "content": {
             "application/json": {
@@ -7015,9 +6674,7 @@
     },
     "/api/twitch/rewards/{rewardId}": {
       "patch": {
-        "tags": [
-          "TwitchRewards"
-        ],
+        "tags": ["TwitchRewards"],
         "parameters": [
           {
             "name": "rewardId",
@@ -7083,9 +6740,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "TwitchRewards"
-        ],
+        "tags": ["TwitchRewards"],
         "parameters": [
           {
             "name": "rewardId",
@@ -7122,9 +6777,7 @@
     },
     "/api/twitch/rewards/{rewardId}/redemptions": {
       "get": {
-        "tags": [
-          "TwitchRewards"
-        ],
+        "tags": ["TwitchRewards"],
         "parameters": [
           {
             "name": "rewardId",
@@ -7183,9 +6836,7 @@
     },
     "/api/twitch/rewards/{rewardId}/redemptions/status": {
       "post": {
-        "tags": [
-          "TwitchRewards"
-        ],
+        "tags": ["TwitchRewards"],
         "parameters": [
           {
             "name": "rewardId",
@@ -7263,9 +6914,7 @@
     },
     "/api/WTelegram/relogin": {
       "post": {
-        "tags": [
-          "WTelegram"
-        ],
+        "tags": ["WTelegram"],
         "responses": {
           "200": {
             "description": "OK"
@@ -7275,9 +6924,7 @@
     },
     "/api/WTelegram/status": {
       "get": {
-        "tags": [
-          "WTelegram"
-        ],
+        "tags": ["WTelegram"],
         "responses": {
           "200": {
             "description": "OK"
@@ -7360,10 +7007,7 @@
         "x-generic-type-argument": "null"
       },
       "AutoMessageDto": {
-        "required": [
-          "id",
-          "message"
-        ],
+        "required": ["id", "message"],
         "type": "object",
         "properties": {
           "id": {
@@ -7819,12 +7463,7 @@
             }
           },
           "visibility": {
-            "enum": [
-              "None",
-              "FullList",
-              "ShortList",
-              "All"
-            ],
+            "enum": ["None", "FullList", "ShortList", "All"],
             "type": "string"
           }
         },
@@ -7840,12 +7479,7 @@
         "x-generic-type-argument": "any"
       },
       "CommandParameterInfo": {
-        "required": [
-          "description",
-          "name",
-          "required",
-          "type"
-        ],
+        "required": ["description", "name", "required", "type"],
         "type": "object",
         "properties": {
           "name": {
@@ -7877,9 +7511,7 @@
         "x-generic-type-argument": "any"
       },
       "CreateAutoMessageRequest": {
-        "required": [
-          "message"
-        ],
+        "required": ["message"],
         "type": "object",
         "properties": {
           "message": {
@@ -7953,10 +7585,7 @@
         "additionalProperties": false
       },
       "CreateMediaItemRequest": {
-        "required": [
-          "mediaUrl",
-          "priority"
-        ],
+        "required": ["mediaUrl", "priority"],
         "type": "object",
         "properties": {
           "title": {
@@ -7999,9 +7628,7 @@
         "additionalProperties": false
       },
       "CreateMemeOrderDto": {
-        "required": [
-          "filePath"
-        ],
+        "required": ["filePath"],
         "type": "object",
         "properties": {
           "filePath": {
@@ -8017,10 +7644,7 @@
         "additionalProperties": false
       },
       "CreateMemeTypeDto": {
-        "required": [
-          "folderPath",
-          "name"
-        ],
+        "required": ["folderPath", "name"],
         "type": "object",
         "properties": {
           "name": {
@@ -8196,12 +7820,7 @@
         "additionalProperties": false
       },
       "DiscordChannelOptionDto": {
-        "required": [
-          "guildId",
-          "guildName",
-          "id",
-          "name"
-        ],
+        "required": ["guildId", "guildName", "id", "name"],
         "type": "object",
         "properties": {
           "id": {
@@ -8231,11 +7850,7 @@
         "x-generic-type-argument": "any"
       },
       "EnvironmentVariable": {
-        "required": [
-          "createdAt",
-          "key",
-          "updatedAt"
-        ],
+        "required": ["createdAt", "key", "updatedAt"],
         "type": "object",
         "properties": {
           "key": {
@@ -8279,9 +7894,7 @@
         "x-generic-type-argument": "null"
       },
       "FollowerInfo": {
-        "required": [
-          "userId"
-        ],
+        "required": ["userId"],
         "type": "object",
         "properties": {
           "userId": {
@@ -8364,10 +7977,7 @@
         "x-generic-type-argument": "null"
       },
       "GlobalCooldownSetting": {
-        "required": [
-          "globalCooldownSeconds",
-          "isEnabled"
-        ],
+        "required": ["globalCooldownSeconds", "isEnabled"],
         "type": "object",
         "properties": {
           "isEnabled": {
@@ -8413,12 +8023,7 @@
         "x-generic-type-argument": "number"
       },
       "Log": {
-        "required": [
-          "id",
-          "logLevel",
-          "message",
-          "whenLogged"
-        ],
+        "required": ["id", "logLevel", "message", "whenLogged"],
         "type": "object",
         "properties": {
           "id": {
@@ -8461,13 +8066,7 @@
         "x-generic-type-argument": "any"
       },
       "LogResponse": {
-        "required": [
-          "logs",
-          "page",
-          "pageSize",
-          "totalCount",
-          "totalPages"
-        ],
+        "required": ["logs", "page", "pageSize", "totalCount", "totalPages"],
         "type": "object",
         "properties": {
           "logs": {
@@ -8505,12 +8104,7 @@
         "x-generic-type-argument": "null"
       },
       "LogsStatistics": {
-        "required": [
-          "criticalLogs",
-          "errorLogs",
-          "totalLogs",
-          "warningLogs"
-        ],
+        "required": ["criticalLogs", "errorLogs", "totalLogs", "warningLogs"],
         "type": "object",
         "properties": {
           "totalLogs": {
@@ -8552,10 +8146,7 @@
         "x-generic-type-argument": "null"
       },
       "MaxPerStreamSetting": {
-        "required": [
-          "isEnabled",
-          "maxPerStream"
-        ],
+        "required": ["isEnabled", "maxPerStream"],
         "type": "object",
         "properties": {
           "isEnabled": {
@@ -8571,10 +8162,7 @@
         "additionalProperties": false
       },
       "MaxPerUserPerStreamSetting": {
-        "required": [
-          "isEnabled",
-          "maxPerUserPerStream"
-        ],
+        "required": ["isEnabled", "maxPerUserPerStream"],
         "type": "object",
         "properties": {
           "isEnabled": {
@@ -8661,11 +8249,7 @@
             "format": "int32"
           },
           "priority": {
-            "enum": [
-              "Low",
-              "Normal",
-              "High"
-            ],
+            "enum": ["Low", "Normal", "High"],
             "type": "string"
           },
           "volume": {
@@ -8676,9 +8260,7 @@
         "additionalProperties": false
       },
       "MediaMetadata": {
-        "required": [
-          "title"
-        ],
+        "required": ["title"],
         "type": "object",
         "properties": {
           "title": {
@@ -8770,10 +8352,7 @@
         "additionalProperties": false
       },
       "MediaStylesInfo": {
-        "required": [
-          "isBorder",
-          "isShowLetterbox"
-        ],
+        "required": ["isBorder", "isShowLetterbox"],
         "type": "object",
         "properties": {
           "isBorder": {
@@ -8812,11 +8391,7 @@
         "additionalProperties": false
       },
       "MemeOrderDto": {
-        "required": [
-          "filePath",
-          "id",
-          "order"
-        ],
+        "required": ["filePath", "id", "order"],
         "type": "object",
         "properties": {
           "id": {
@@ -8866,11 +8441,7 @@
         "x-generic-type-argument": "null"
       },
       "MemeTypeDto": {
-        "required": [
-          "folderPath",
-          "id",
-          "name"
-        ],
+        "required": ["folderPath", "id", "name"],
         "type": "object",
         "properties": {
           "id": {
@@ -9281,9 +8852,7 @@
         "x-generic-type-argument": "null"
       },
       "OperationResult": {
-        "required": [
-          "success"
-        ],
+        "required": ["success"],
         "type": "object",
         "properties": {
           "success": {
@@ -9316,18 +8885,11 @@
         "additionalProperties": false
       },
       "ParseRequest": {
-        "required": [
-          "source"
-        ],
+        "required": ["source"],
         "type": "object",
         "properties": {
           "source": {
-            "enum": [
-              "None",
-              "Wavu",
-              "Tekkendocs",
-              "Okizeme"
-            ],
+            "enum": ["None", "Wavu", "Tekkendocs", "Okizeme"],
             "type": "string"
           },
           "characterNames": {
@@ -9369,11 +8931,7 @@
         "additionalProperties": false
       },
       "ParseResult": {
-        "required": [
-          "message",
-          "parsedCharacters",
-          "success"
-        ],
+        "required": ["message", "parsedCharacters", "success"],
         "type": "object",
         "properties": {
           "success": {
@@ -9424,11 +8982,6 @@
             "format": "uuid",
             "nullable": true
           },
-          "nextQueueItemId": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
-          },
           "currentTrackProgress": {
             "type": "string",
             "format": "date-span",
@@ -9445,11 +8998,7 @@
             "type": "string"
           },
           "videoState": {
-            "enum": [
-              "Video",
-              "NoVideo",
-              "AudioOnly"
-            ],
+            "enum": ["Video", "NoVideo", "AudioOnly"],
             "type": "string"
           },
           "isMuted": {
@@ -9512,7 +9061,7 @@
             "nullable": true
           }
         },
-        "additionalProperties": { }
+        "additionalProperties": {}
       },
       "QueueItem": {
         "required": [
@@ -9574,10 +9123,7 @@
         "x-generic-type-argument": "any"
       },
       "QueueReorderRequest": {
-        "required": [
-          "newPosition",
-          "queueItemId"
-        ],
+        "required": ["newPosition", "queueItemId"],
         "type": "object",
         "properties": {
           "queueItemId": {
@@ -9629,9 +9175,7 @@
         "x-generic-type-argument": "null"
       },
       "Reward": {
-        "required": [
-          "cost"
-        ],
+        "required": ["cost"],
         "type": "object",
         "properties": {
           "id": {
@@ -9658,10 +9202,7 @@
         "additionalProperties": false
       },
       "RewardRedemption": {
-        "required": [
-          "redeemedAt",
-          "status"
-        ],
+        "required": ["redeemedAt", "status"],
         "type": "object",
         "properties": {
           "broadcasterId": {
@@ -9705,11 +9246,7 @@
             "readOnly": true
           },
           "status": {
-            "enum": [
-              "UNFULFILLED",
-              "FULFILLED",
-              "CANCELED"
-            ],
+            "enum": ["UNFULFILLED", "FULFILLED", "CANCELED"],
             "type": "string",
             "readOnly": true
           },
@@ -9731,12 +9268,7 @@
         "additionalProperties": false
       },
       "RootState": {
-        "required": [
-          "description",
-          "name",
-          "typeDescription",
-          "value"
-        ],
+        "required": ["description", "name", "typeDescription", "value"],
         "type": "object",
         "properties": {
           "name": {
@@ -9837,11 +9369,7 @@
         "x-generic-type-argument": "null"
       },
       "ServiceLog": {
-        "required": [
-          "level",
-          "message",
-          "timestamp"
-        ],
+        "required": ["level", "message", "timestamp"],
         "type": "object",
         "properties": {
           "timestamp": {
@@ -9871,9 +9399,7 @@
         "x-generic-type-argument": "any"
       },
       "SetEnvironmentVariableRequest": {
-        "required": [
-          "key"
-        ],
+        "required": ["key"],
         "type": "object",
         "properties": {
           "key": {
@@ -9891,10 +9417,7 @@
         "additionalProperties": false
       },
       "SpeakRequest": {
-        "required": [
-          "message",
-          "name"
-        ],
+        "required": ["message", "name"],
         "type": "object",
         "properties": {
           "name": {
@@ -9911,10 +9434,7 @@
         "additionalProperties": false
       },
       "SpotifyAuthCompleteResult": {
-        "required": [
-          "message",
-          "success"
-        ],
+        "required": ["message", "success"],
         "type": "object",
         "properties": {
           "success": {
@@ -9944,10 +9464,7 @@
         "x-generic-type-argument": "null"
       },
       "SpotifyAuthStartRequest": {
-        "required": [
-          "clientId",
-          "clientSecret"
-        ],
+        "required": ["clientId", "clientSecret"],
         "type": "object",
         "properties": {
           "clientId": {
@@ -9964,12 +9481,7 @@
         "additionalProperties": false
       },
       "SpotifyAuthStartResult": {
-        "required": [
-          "authUrl",
-          "message",
-          "state",
-          "success"
-        ],
+        "required": ["authUrl", "message", "state", "success"],
         "type": "object",
         "properties": {
           "success": {
@@ -9997,11 +9509,7 @@
         "x-generic-type-argument": "null"
       },
       "SpotifyAuthStatusResult": {
-        "required": [
-          "hasClientCredentials",
-          "isLinked",
-          "message"
-        ],
+        "required": ["hasClientCredentials", "isLinked", "message"],
         "type": "object",
         "properties": {
           "isLinked": {
@@ -10084,14 +9592,7 @@
             "type": "boolean"
           },
           "fileConvertType": {
-            "enum": [
-              "None",
-              "Mp4",
-              "Webm",
-              "Mkv",
-              "Avi",
-              "Mov"
-            ],
+            "enum": ["None", "Mp4", "Webm", "Mkv", "Avi", "Mov"],
             "type": "string"
           }
         },
@@ -10161,18 +9662,11 @@
         "x-generic-type-argument": "any"
       },
       "SupplementRequest": {
-        "required": [
-          "source"
-        ],
+        "required": ["source"],
         "type": "object",
         "properties": {
           "source": {
-            "enum": [
-              "None",
-              "Wavu",
-              "Tekkendocs",
-              "Okizeme"
-            ],
+            "enum": ["None", "Wavu", "Tekkendocs", "Okizeme"],
             "type": "string"
           },
           "requestDelaySeconds": {
@@ -10207,12 +9701,7 @@
         "additionalProperties": false
       },
       "TekkenCharacter": {
-        "required": [
-          "displayName",
-          "lastUpdateTime",
-          "name",
-          "pageUrl"
-        ],
+        "required": ["displayName", "lastUpdateTime", "name", "pageUrl"],
         "type": "object",
         "properties": {
           "name": {
@@ -10358,12 +9847,7 @@
         "x-generic-type-argument": "null"
       },
       "TekkenCharacterPendingDto": {
-        "required": [
-          "isNew",
-          "lastUpdateTime",
-          "name",
-          "pageUrl"
-        ],
+        "required": ["isNew", "lastUpdateTime", "name", "pageUrl"],
         "type": "object",
         "properties": {
           "name": {
@@ -10454,10 +9938,7 @@
         "x-generic-type-argument": "any"
       },
       "TelegramChannelOptionDto": {
-        "required": [
-          "id",
-          "title"
-        ],
+        "required": ["id", "title"],
         "type": "object",
         "properties": {
           "id": {
@@ -10480,10 +9961,7 @@
         "x-generic-type-argument": "any"
       },
       "TelegramDiscordBindingCreateRequest": {
-        "required": [
-          "discordChannelId",
-          "telegramChannelId"
-        ],
+        "required": ["discordChannelId", "telegramChannelId"],
         "type": "object",
         "properties": {
           "telegramChannelId": {
@@ -10553,9 +10031,7 @@
         "x-generic-type-argument": "null"
       },
       "TelegramDiscordBindingSetEnabledRequest": {
-        "required": [
-          "isEnabled"
-        ],
+        "required": ["isEnabled"],
         "type": "object",
         "properties": {
           "isEnabled": {
@@ -10733,17 +10209,11 @@
         "additionalProperties": false
       },
       "UpdateCustomRewardRedemptionStatusRequest": {
-        "required": [
-          "status"
-        ],
+        "required": ["status"],
         "type": "object",
         "properties": {
           "status": {
-            "enum": [
-              "UNFULFILLED",
-              "FULFILLED",
-              "CANCELED"
-            ],
+            "enum": ["UNFULFILLED", "FULFILLED", "CANCELED"],
             "type": "string"
           }
         },
@@ -10863,10 +10333,7 @@
         "additionalProperties": false
       },
       "UpdateMemeOrderDto": {
-        "required": [
-          "filePath",
-          "order"
-        ],
+        "required": ["filePath", "order"],
         "type": "object",
         "properties": {
           "filePath": {
@@ -10888,10 +10355,7 @@
         "additionalProperties": false
       },
       "UpdateMemeTypeDto": {
-        "required": [
-          "folderPath",
-          "name"
-        ],
+        "required": ["folderPath", "name"],
         "type": "object",
         "properties": {
           "name": {
@@ -10907,9 +10371,7 @@
         "additionalProperties": false
       },
       "UpdateValueRequest": {
-        "required": [
-          "value"
-        ],
+        "required": ["value"],
         "type": "object",
         "properties": {
           "value": {
@@ -10919,9 +10381,7 @@
         "additionalProperties": false
       },
       "UpdateVoiceRequest": {
-        "required": [
-          "voiceName"
-        ],
+        "required": ["voiceName"],
         "type": "object",
         "properties": {
           "voiceName": {
@@ -10931,9 +10391,7 @@
         "additionalProperties": false
       },
       "ValidateFolderRequest": {
-        "required": [
-          "folderPath"
-        ],
+        "required": ["folderPath"],
         "type": "object",
         "properties": {
           "folderPath": {
@@ -10943,12 +10401,7 @@
         "additionalProperties": false
       },
       "ValidateFolderResponse": {
-        "required": [
-          "accessible",
-          "exists",
-          "sampleFiles",
-          "videoFilesCount"
-        ],
+        "required": ["accessible", "exists", "sampleFiles", "videoFilesCount"],
         "type": "object",
         "properties": {
           "exists": {

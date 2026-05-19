@@ -224,51 +224,49 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
     <div
       className={`${styles.leftCol} ${viewMode === TrackListViewMode.Reversed ? styles.reversedMode : ""} ${viewMode === TrackListViewMode.WithHistory ? styles.withHistory : ""}`}
     >
-      <div>
-        <div
-          ref={scrollListRef}
-          className={styles.scrollList}
-          onScroll={onScroll}
+      <div
+        ref={scrollListRef}
+        className={styles.scrollList}
+        onScroll={onScroll}
+      >
+        <DndContext
+          sensors={sensors}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
         >
-          <DndContext
-            sensors={sensors}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
-          >
-            <SortableContext items={ids} strategy={verticalListSortingStrategy}>
-              {renderTracksList}
-            </SortableContext>
-            <DragOverlay>
-              {activeId
-                ? // Minimal overlay: reuse item appearance for active id
-                  (() => {
-                    const activeItem = queueWithoutCurrent.find(
-                      q => q.id === activeId
-                    );
-                    if (!activeItem) return null;
-                    return (
-                      <div className={`${styles.item} ${styles.dragOverlay}`}>
-                        <div className={styles.thumb}>
-                          {activeItem.track?.artworkUrl ? (
-                            <img src={activeItem.track.artworkUrl} alt="art" />
-                          ) : (
-                            <div className={styles.thumbPlaceholder} />
-                          )}
-                        </div>
-                        <div className={styles.itemBody}>
-                          <div className={styles.itemTitle}>
-                            <span className={styles.trackName}>
-                              {activeItem.track?.trackName}
-                            </span>
-                          </div>
+          <SortableContext items={ids} strategy={verticalListSortingStrategy}>
+            {renderTracksList}
+          </SortableContext>
+          <DragOverlay>
+            {activeId
+              ? // Minimal overlay: reuse item appearance for active id
+                (() => {
+                  const activeItem = queueWithoutCurrent.find(
+                    q => q.id === activeId
+                  );
+                  if (!activeItem) return null;
+                  return (
+                    <div className={`${styles.item} ${styles.dragOverlay}`}>
+                      <div className={styles.thumb}>
+                        {activeItem.track?.artworkUrl ? (
+                          <img src={activeItem.track.artworkUrl} alt="art" />
+                        ) : (
+                          <div className={styles.thumbPlaceholder} />
+                        )}
+                      </div>
+                      <div className={styles.itemBody}>
+                        <div className={styles.itemTitle}>
+                          <span className={styles.trackName}>
+                            {activeItem.track?.trackName}
+                          </span>
                         </div>
                       </div>
-                    );
-                  })()
-                : null}
-            </DragOverlay>
-          </DndContext>
-        </div>
+                    </div>
+                  );
+                })()
+              : null}
+          </DragOverlay>
+        </DndContext>
       </div>
     </div>
   );

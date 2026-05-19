@@ -550,8 +550,6 @@ export interface PlayerState {
   stateVersion: string;
   /** @format uuid */
   currentQueueItemId?: string;
-  /** @format uuid */
-  nextQueueItemId?: string;
   /** @format date-span */
   currentTrackProgress?: string;
   state: PlayerStateStateEnum;
