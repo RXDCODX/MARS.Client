@@ -211,9 +211,13 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
     const over = event.over?.id as string | undefined;
     if (active && over && active !== over) {
       const from = ids.findIndex(i => i === active);
-      const to = ids.findIndex(i => i === over);
+      let to = ids.findIndex(i => i === over);
       if (from !== -1 && to !== -1) {
         // call reorder (handles optimistic update)
+        if (to == 0) {
+          to = 1; // не даем перетащить на первое место, так как там текущий трек
+        }
+
         handleReorder(active, to);
       }
     }
