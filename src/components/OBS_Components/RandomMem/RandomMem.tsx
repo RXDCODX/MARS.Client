@@ -134,7 +134,7 @@ export default function PyroAlerts() {
             if (!isVisible) {
               SignalRContext.invoke(
                 "TwitchMsg",
-                `RandomMem: element id=${id} is not visible after mutation`
+                `RandomMem: element id=${id} src = ${messageProps.mediaInfo.fileInfo.filePath} is not visible after mutation`
               );
             }
           }, 1500);
