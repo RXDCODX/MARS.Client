@@ -3,10 +3,7 @@ import "./MediaInfoPage.scss";
 import { useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-import {
-  ApiMediaInfo,
-  MediaFileInfoTypeEnum,
-} from "@/shared/api";
+import { ApiMediaInfo, MediaFileInfoTypeEnum } from "@/shared/api";
 
 import { MediaInfoFormSections } from "./MediaInfoFormSections";
 import {
@@ -40,7 +37,9 @@ export const MediaInfoCreatePage: React.FC = () => {
     }
 
     const previewUrl = URL.createObjectURL(file);
-    setFormData(previous => applySelectedFileToMediaInfo(previous, file, previewUrl));
+    setFormData(previous =>
+      applySelectedFileToMediaInfo(previous, file, previewUrl)
+    );
   }, []);
 
   const handleGenerateRewardId = useCallback(() => {
