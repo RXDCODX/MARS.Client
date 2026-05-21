@@ -17,6 +17,79 @@ export const mediaInfoPriorities: MediaMetaInfoPriorityEnum[] = [
   MediaMetaInfoPriorityEnum.High,
 ];
 
+export function getMediaFileTypeByExtension(
+  extension: string
+): MediaFileInfoTypeEnum {
+  const normalizedExtension = extension.toLowerCase();
+
+  switch (normalizedExtension) {
+    case ".jpg":
+    case ".jpeg":
+    case ".png":
+    case ".webp":
+      return MediaFileInfoTypeEnum.Image;
+    case ".gif":
+      return MediaFileInfoTypeEnum.Gif;
+    case ".mp3":
+    case ".wav":
+    case ".ogg":
+    case ".oga":
+      return MediaFileInfoTypeEnum.Audio;
+    case ".mp4":
+    case ".webm":
+    case ".mov":
+    case ".avi":
+      return MediaFileInfoTypeEnum.Video;
+    case ".tgs":
+      return MediaFileInfoTypeEnum.TelegramSticker;
+    default:
+      return MediaFileInfoTypeEnum.None;
+  }
+}
+
+export function applySelectedFileToMediaInfo(
+  source: ApiMediaInfo,
+  file: File,
+  previewUrl: string
+): ApiMediaInfo {
+  const extension = file.name.includes(".")
+    ? file.name.slice(file.name.lastIndexOf(".")).toLowerCase()
+    : "";
+  const mediaFileType = getMediaFileTypeByExtension(extension);
+
+  let result = updateMediaInfoValue(
+    updateMediaInfoValue(
+      updateMediaInfoValue(
+        updateMediaInfoValue(source, "fileInfo.fileName", file.name),
+        "fileInfo.extension",
+        extension
+      ),
+      "fileInfo.filePath",
+      previewUrl
+    ),
+    "fileInfo.isLocalFile",
+    true
+  );
+
+  result = updateMediaInfoValue(result, "fileInfo.type", mediaFileType);
+
+  return result;
+}
+
+export function buildMediaInfoFormData(
+  alert: ApiMediaInfo,
+  file?: File | null
+): FormData {
+  const formData = new FormData();
+  formData.append("alertJson", JSON.stringify(alert));
+
+  if (file) {
+    formData.append("file", file);
+  }
+
+  return formData;
+}
+
 export function createDefaultMediaInfo(
   overrides?: Partial<ApiMediaInfo>
 ): ApiMediaInfo {

@@ -6,37 +6,49 @@
   "paths": {
     "/hubs/scoreboard/ForceProcessPendingUpdates": {
       "post": {
-        "tags": ["ScoreboardHub"],
-        "responses": {}
+        "tags": [
+          "ScoreboardHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/scoreboard/GetCurrentState": {
       "post": {
-        "tags": ["ScoreboardHub"],
-        "responses": {}
+        "tags": [
+          "ScoreboardHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/scoreboard/JoinAsClient": {
       "post": {
-        "tags": ["ScoreboardHub"],
-        "responses": {}
+        "tags": [
+          "ScoreboardHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/scoreboard/OnConnectedAsync": {
       "post": {
-        "tags": ["ScoreboardHub"],
-        "responses": {}
+        "tags": [
+          "ScoreboardHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/scoreboard/OnDisconnectedAsync": {
       "post": {
-        "tags": ["ScoreboardHub"],
-        "responses": {}
+        "tags": [
+          "ScoreboardHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/scoreboard/SetPlayerFinal": {
       "post": {
-        "tags": ["ScoreboardHub"],
+        "tags": [
+          "ScoreboardHub"
+        ],
         "parameters": [
           {
             "name": "playerPosition",
@@ -54,12 +66,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/scoreboard/SetVisibility": {
       "post": {
-        "tags": ["ScoreboardHub"],
+        "tags": [
+          "ScoreboardHub"
+        ],
         "parameters": [
           {
             "name": "isVisible",
@@ -69,12 +83,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/scoreboard/UpdatePlayerScore": {
       "post": {
-        "tags": ["ScoreboardHub"],
+        "tags": [
+          "ScoreboardHub"
+        ],
         "parameters": [
           {
             "name": "playerPosition",
@@ -93,12 +109,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/scoreboard/UpdateState": {
       "post": {
-        "tags": ["ScoreboardHub"],
+        "tags": [
+          "ScoreboardHub"
+        ],
         "parameters": [
           {
             "name": "state",
@@ -108,12 +126,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/soundrequest/Ended": {
       "post": {
-        "tags": ["SoundRequestHub"],
+        "tags": [
+          "SoundRequestHub"
+        ],
         "parameters": [
           {
             "name": "info",
@@ -123,12 +143,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/soundrequest/ErrorPlaying": {
       "post": {
-        "tags": ["SoundRequestHub"],
+        "tags": [
+          "SoundRequestHub"
+        ],
         "parameters": [
           {
             "name": "info",
@@ -138,12 +160,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/soundrequest/FrontStateChange": {
       "post": {
-        "tags": ["SoundRequestHub"],
+        "tags": [
+          "SoundRequestHub"
+        ],
         "parameters": [
           {
             "name": "newState",
@@ -153,30 +177,38 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/soundrequest/OnConnectedAsync": {
       "post": {
-        "tags": ["SoundRequestHub"],
-        "responses": {}
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/soundrequest/PlayPrevious": {
       "post": {
-        "tags": ["SoundRequestHub"],
-        "responses": {}
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/soundrequest/SkipTrack": {
       "post": {
-        "tags": ["SoundRequestHub"],
-        "responses": {}
+        "tags": [
+          "SoundRequestHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/soundrequest/Started": {
       "post": {
-        "tags": ["SoundRequestHub"],
+        "tags": [
+          "SoundRequestHub"
+        ],
         "parameters": [
           {
             "name": "info",
@@ -186,12 +218,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/soundrequest/TrackProgress": {
       "post": {
-        "tags": ["SoundRequestHub"],
+        "tags": [
+          "SoundRequestHub"
+        ],
         "parameters": [
           {
             "name": "seconds",
@@ -202,30 +236,38 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/ExplosionGo": {
       "post": {
-        "tags": ["TelegramusHub"],
-        "responses": {}
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/telegramus/MikuMikuDeleteTwitchMessages": {
       "post": {
-        "tags": ["TelegramusHub"],
-        "responses": {}
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/telegramus/MikuMondayTracks": {
       "post": {
-        "tags": ["TelegramusHub"],
-        "responses": {}
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/telegramus/MuteAll": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "args",
@@ -238,18 +280,22 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/OnConnectedAsync": {
       "post": {
-        "tags": ["TelegramusHub"],
-        "responses": {}
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/telegramus/TwitchMsg": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "msg",
@@ -259,24 +305,30 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/UnmuteSessions": {
       "post": {
-        "tags": ["TelegramusHub"],
-        "responses": {}
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/tuna/BeYm": {
       "post": {
-        "tags": ["TunaHub"],
-        "responses": {}
+        "tags": [
+          "TunaHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/tuna/GetYandexMusicTracks": {
       "post": {
-        "tags": ["TunaHub"],
+        "tags": [
+          "TunaHub"
+        ],
         "parameters": [
           {
             "name": "title",
@@ -312,13 +364,17 @@
     },
     "/hubs/tuna/OnConnectedAsync": {
       "post": {
-        "tags": ["TunaHub"],
-        "responses": {}
+        "tags": [
+          "TunaHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/tuna/SendPlayerData": {
       "post": {
-        "tags": ["TunaHub"],
+        "tags": [
+          "TunaHub"
+        ],
         "parameters": [
           {
             "name": "info",
@@ -328,12 +384,133 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
+      }
+    },
+    "/hubs/tts/OnConnectedAsync": {
+      "post": {
+        "tags": [
+          "VoiceRecognitionHub"
+        ],
+        "responses": { },
+        "security": [
+          { }
+        ]
+      }
+    },
+    "/hubs/tts/OnDisconnectedAsync": {
+      "post": {
+        "tags": [
+          "VoiceRecognitionHub"
+        ],
+        "responses": { },
+        "security": [
+          { }
+        ]
+      }
+    },
+    "/hubs/tts/RegisterAsTtsConsumer": {
+      "post": {
+        "tags": [
+          "VoiceRecognitionHub"
+        ],
+        "responses": { },
+        "security": [
+          { }
+        ]
+      }
+    },
+    "/hubs/tts/ReportTtsPlaybackCompleted": {
+      "post": {
+        "tags": [
+          "VoiceRecognitionHub"
+        ],
+        "parameters": [
+          {
+            "name": "text",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "duration",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-span"
+            }
+          }
+        ],
+        "responses": { },
+        "security": [
+          { }
+        ]
+      }
+    },
+    "/hubs/tts/ReportTtsPlaybackFailed": {
+      "post": {
+        "tags": [
+          "VoiceRecognitionHub"
+        ],
+        "parameters": [
+          {
+            "name": "text",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "error",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { },
+        "security": [
+          { }
+        ]
+      }
+    },
+    "/hubs/tts/ReportTtsPlaybackStarted": {
+      "post": {
+        "tags": [
+          "VoiceRecognitionHub"
+        ],
+        "parameters": [
+          {
+            "name": "text",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { },
+        "security": [
+          { }
+        ]
+      }
+    },
+    "/hubs/tts/UnregisterAsTtsConsumer": {
+      "post": {
+        "tags": [
+          "VoiceRecognitionHub"
+        ],
+        "responses": { },
+        "security": [
+          { }
+        ]
       }
     },
     "/hubs/logger/Log": {
       "post": {
-        "tags": ["LoggerHub"],
+        "tags": [
+          "LoggerHub"
+        ],
         "parameters": [
           {
             "name": "logMessage",
@@ -343,12 +520,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/AddNewWaifu": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "content",
@@ -372,12 +551,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/Adhd": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "seconds",
@@ -388,12 +569,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/Alert": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "info",
@@ -403,12 +586,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/Alerts": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "info",
@@ -421,12 +606,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/AllRefund": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "user",
@@ -436,12 +623,39 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/AudioQuizStart": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "round",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/AudioQuizRoundDto"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/AudioQuizStop": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/telegramus/AutoMessage": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "message",
@@ -451,18 +665,22 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/Credits": {
       "post": {
-        "tags": ["TelegramusHub"],
-        "responses": {}
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/telegramus/DeleteMessage": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -472,18 +690,22 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/Explosion": {
       "post": {
-        "tags": ["TelegramusHub"],
-        "responses": {}
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/telegramus/FumoFriday": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "displayName",
@@ -500,12 +722,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/GaoAlert": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "gaoAlert",
@@ -515,12 +739,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/Highlite": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "message",
@@ -544,18 +770,22 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/LeroyAlert": {
       "post": {
-        "tags": ["TelegramusHub"],
-        "responses": {}
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/telegramus/MakeScreenEmojisParticles": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "message",
@@ -565,28 +795,35 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/MakeScreenParticles": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "particles",
             "in": "query",
             "schema": {
-              "enum": ["Confetty", "Fireworks"],
+              "enum": [
+                "Confetty",
+                "Fireworks"
+              ],
               "type": "string"
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/MergeWaifu": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "content",
@@ -617,18 +854,22 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/MichaelJackson": {
       "post": {
-        "tags": ["TelegramusHub"],
-        "responses": {}
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/telegramus/MikuMikuBeam": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "users",
@@ -641,12 +882,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/MikuMonday": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "mikuMondayData",
@@ -656,12 +899,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/NewMessage": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "id",
@@ -678,18 +923,22 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/PhonkEdit": {
       "post": {
-        "tags": ["TelegramusHub"],
-        "responses": {}
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
       }
     },
     "/hubs/telegramus/PostTwitchInfo": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "clientId",
@@ -706,12 +955,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/RandomMem": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "mediaInfo",
@@ -721,27 +972,14 @@
             }
           }
         ],
-        "responses": {}
-      }
-    },
-    "/hubs/telegramus/TemplateMessage": {
-      "post": {
-        "tags": ["TelegramusHub"],
-        "parameters": [
-          {
-            "name": "message",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/TikTokEdit": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "guid",
@@ -759,12 +997,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/UpdateWaifuPrizes": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "prizes",
@@ -777,12 +1017,14 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     },
     "/hubs/telegramus/WaifuRoll": {
       "post": {
-        "tags": ["TelegramusHub"],
+        "tags": [
+          "TelegramusHub"
+        ],
         "parameters": [
           {
             "name": "content",
@@ -813,12 +1055,33 @@
             }
           }
         ],
-        "responses": {}
+        "responses": { }
       }
     }
   },
   "components": {
     "schemas": {
+      "AudioQuizRoundDto": {
+        "required": [
+          "roundSeconds",
+          "trackUrl"
+        ],
+        "type": "object",
+        "properties": {
+          "trackUrl": {
+            "type": "string"
+          },
+          "artworkUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "roundSeconds": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "AutoArtImage": {
         "required": [
           "byteSize",
@@ -1125,7 +1388,11 @@
             "readOnly": true
           },
           "noisy": {
-            "enum": ["NotSet", "True", "False"],
+            "enum": [
+              "NotSet",
+              "True",
+              "False"
+            ],
             "type": "string",
             "readOnly": true
           },
@@ -1208,7 +1475,10 @@
         "additionalProperties": false
       },
       "CheerBadge": {
-        "required": ["cheerAmount", "color"],
+        "required": [
+          "cheerAmount",
+          "color"
+        ],
         "type": "object",
         "properties": {
           "cheerAmount": {
@@ -1216,7 +1486,13 @@
             "format": "int32"
           },
           "color": {
-            "enum": ["Gray", "Purple", "Green", "Blue", "Red"],
+            "enum": [
+              "Gray",
+              "Purple",
+              "Green",
+              "Blue",
+              "Red"
+            ],
             "type": "string",
             "readOnly": true
           }
@@ -1224,7 +1500,13 @@
         "additionalProperties": false
       },
       "Emote": {
-        "required": ["endIndex", "id", "imageUrl", "name", "startIndex"],
+        "required": [
+          "endIndex",
+          "id",
+          "imageUrl",
+          "name",
+          "startIndex"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1252,7 +1534,9 @@
         "additionalProperties": false
       },
       "EmoteSet": {
-        "required": ["emotes"],
+        "required": [
+          "emotes"
+        ],
         "type": "object",
         "properties": {
           "emotes": {
@@ -1270,7 +1554,10 @@
         "additionalProperties": false
       },
       "GaoAlertDto": {
-        "required": ["id", "isJustText"],
+        "required": [
+          "id",
+          "isJustText"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1364,7 +1651,11 @@
         "additionalProperties": false
       },
       "HostAutoHello": {
-        "required": ["guid", "hostId", "time"],
+        "required": [
+          "guid",
+          "hostId",
+          "time"
+        ],
         "type": "object",
         "properties": {
           "guid": {
@@ -1390,7 +1681,11 @@
         "additionalProperties": false
       },
       "HostCoolDown": {
-        "required": ["guid", "hostId", "time"],
+        "required": [
+          "guid",
+          "hostId",
+          "time"
+        ],
         "type": "object",
         "properties": {
           "guid": {
@@ -1469,7 +1764,13 @@
         "additionalProperties": false
       },
       "LogMessageDto": {
-        "required": ["category", "id", "logLevel", "message", "timestamp"],
+        "required": [
+          "category",
+          "id",
+          "logLevel",
+          "message",
+          "timestamp"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1513,7 +1814,10 @@
         "additionalProperties": false
       },
       "MediaDto": {
-        "required": ["mediaInfo", "uploadStartTime"],
+        "required": [
+          "mediaInfo",
+          "uploadStartTime"
+        ],
         "type": "object",
         "properties": {
           "mediaInfo": {
@@ -1655,7 +1959,11 @@
             "format": "int32"
           },
           "priority": {
-            "enum": ["Low", "Normal", "High"],
+            "enum": [
+              "Low",
+              "Normal",
+              "High"
+            ],
             "type": "string"
           },
           "volume": {
@@ -1727,7 +2035,10 @@
         "additionalProperties": false
       },
       "MediaStylesInfo": {
-        "required": ["isBorder", "isShowLetterbox"],
+        "required": [
+          "isBorder",
+          "isShowLetterbox"
+        ],
         "type": "object",
         "properties": {
           "isBorder": {
@@ -1806,7 +2117,13 @@
         "additionalProperties": false
       },
       "MikuTrackDto": {
-        "required": ["artist", "id", "number", "title", "url"],
+        "required": [
+          "artist",
+          "id",
+          "number",
+          "title",
+          "url"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -1873,7 +2190,11 @@
             "type": "string"
           },
           "videoState": {
-            "enum": ["Video", "NoVideo", "AudioOnly"],
+            "enum": [
+              "Video",
+              "NoVideo",
+              "AudioOnly"
+            ],
             "type": "string"
           },
           "isMuted": {
@@ -1890,20 +2211,16 @@
               }
             ],
             "nullable": true
-          },
-          "nextQueueItem": {
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/QueueItem"
-              }
-            ],
-            "nullable": true
           }
         },
         "additionalProperties": false
       },
       "PrizeType": {
-        "required": ["id", "image", "text"],
+        "required": [
+          "id",
+          "image",
+          "text"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2151,7 +2468,10 @@
         "additionalProperties": false
       },
       "ScoreboardMetaDto": {
-        "required": ["fightRule", "title"],
+        "required": [
+          "fightRule",
+          "title"
+        ],
         "type": "object",
         "properties": {
           "title": {
@@ -2164,7 +2484,14 @@
         "additionalProperties": false
       },
       "ScoreboardPlayerDto": {
-        "required": ["final", "flag", "name", "score", "sponsor", "tag"],
+        "required": [
+          "final",
+          "flag",
+          "name",
+          "score",
+          "sponsor",
+          "tag"
+        ],
         "type": "object",
         "properties": {
           "name": {
@@ -2204,7 +2531,9 @@
         "additionalProperties": false
       },
       "TunaMusicDTO": {
-        "required": ["data"],
+        "required": [
+          "data"
+        ],
         "type": "object",
         "properties": {
           "data": {
@@ -2279,6 +2608,7 @@
         "required": [
           "createdAt",
           "displayName",
+          "isBroadcaster",
           "isModerator",
           "isSimpleUser",
           "isVip",
@@ -2319,6 +2649,10 @@
           "isVip": {
             "type": "boolean"
           },
+          "isBroadcaster": {
+            "type": "boolean",
+            "readOnly": true
+          },
           "followedAt": {
             "type": "string",
             "format": "date-time",
@@ -2340,7 +2674,10 @@
         "additionalProperties": false
       },
       "User": {
-        "required": ["createdAt", "viewCount"],
+        "required": [
+          "createdAt",
+          "viewCount"
+        ],
         "type": "object",
         "properties": {
           "id": {
@@ -2523,6 +2860,9 @@
     },
     {
       "name": "TunaHub"
+    },
+    {
+      "name": "VoiceRecognitionHub"
     }
   ]
 }

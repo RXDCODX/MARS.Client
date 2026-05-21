@@ -1,16 +1,17 @@
 import "./MediaInfoPage.scss";
 
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import {
   ApiMediaInfo,
   MediaFileInfoTypeEnum,
-  MediaInfoApi,
 } from "@/shared/api";
 
 import { MediaInfoFormSections } from "./MediaInfoFormSections";
 import {
+  applySelectedFileToMediaInfo,
+  buildMediaInfoFormData,
   createDefaultMediaInfo,
   updateMediaInfoValue,
 } from "./mediaInfoPageHelpers";
@@ -20,13 +21,26 @@ export const MediaInfoCreatePage: React.FC = () => {
   const [formData, setFormData] = useState<ApiMediaInfo>(() =>
     createDefaultMediaInfo()
   );
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const mediaInfoApi = useMemo(() => new MediaInfoApi(), []);
-
   const handleChange = useCallback((path: string, value: unknown) => {
     setFormData(previous => updateMediaInfoValue(previous, path, value));
+  }, []);
+
+  const handleFileSelected = useCallback((file: File | null) => {
+    setSelectedFile(file);
+
+    if (!file) {
+      setFormData(previous =>
+        updateMediaInfoValue(previous, "fileInfo.filePath", "")
+      );
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(file);
+    setFormData(previous => applySelectedFileToMediaInfo(previous, file, previewUrl));
   }, []);
 
   const handleGenerateRewardId = useCallback(() => {
@@ -44,12 +58,17 @@ export const MediaInfoCreatePage: React.FC = () => {
       setLoading(true);
 
       try {
-        const response = await mediaInfoApi.mediaInfoApiCreate(formData);
-        if (response.data.success && response.data.data) {
+        const response = await fetch("/api/MediaInfoApi", {
+          method: "POST",
+          body: buildMediaInfoFormData(formData, selectedFile),
+        });
+        const result = await response.json();
+
+        if (response.ok && result?.success && result.data) {
           setError(null);
-          navigate(`/media-info/edit/${response.data.data.id}`);
+          navigate(`/media-info/edit/${result.data.id}`);
         } else {
-          setError(response.data.message ?? "Не удалось создать медиа");
+          setError(result?.message ?? "Не удалось создать медиа");
         }
       } catch (createError) {
         setError(
@@ -61,7 +80,7 @@ export const MediaInfoCreatePage: React.FC = () => {
         setLoading(false);
       }
     },
-    [formData, mediaInfoApi, navigate]
+    [formData, navigate, selectedFile]
   );
 
   return (
@@ -235,6 +254,7 @@ export const MediaInfoCreatePage: React.FC = () => {
               onChange={handleChange}
               onGenerateRewardId={handleGenerateRewardId}
               onClearRewardId={handleClearRewardId}
+              onFileSelected={handleFileSelected}
             />
 
             <div className="editor-footer-actions">

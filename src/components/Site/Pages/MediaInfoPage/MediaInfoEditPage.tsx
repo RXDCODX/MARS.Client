@@ -11,6 +11,8 @@ import {
 
 import { MediaInfoFormSections } from "./MediaInfoFormSections";
 import {
+  applySelectedFileToMediaInfo,
+  buildMediaInfoFormData,
   formatMediaDuration,
   formatMediaRewardId,
   updateMediaInfoValue,
@@ -38,7 +40,11 @@ const getMediaPreviewKind = (
 };
 
 const MediaInfoPreviewCard: React.FC<{ item: ApiMediaInfo }> = ({ item }) => {
-  const fileUrl = `/api/MediaInfoApi/${item.id}/file`;
+  const fileUrl =
+    item.fileInfo.filePath.startsWith("blob:") ||
+    item.fileInfo.filePath.startsWith("data:")
+      ? item.fileInfo.filePath
+      : `/api/MediaInfoApi/${item.id}/file`;
   const previewKind = getMediaPreviewKind(item);
 
   return (
@@ -129,6 +135,7 @@ export const MediaInfoEditPage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [alert, setAlert] = useState<ApiMediaInfo | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -149,6 +156,7 @@ export const MediaInfoEditPage: React.FC = () => {
       const response = await mediaInfoApi.mediaInfoApiDetail(id);
       if (response.data.success && response.data.data) {
         setAlert(response.data.data);
+        setSelectedFile(null);
         setError(null);
       } else {
         setAlert(null);
@@ -180,6 +188,23 @@ export const MediaInfoEditPage: React.FC = () => {
     });
   }, []);
 
+  const handleFileSelected = useCallback((file: File | null) => {
+    setSelectedFile(file);
+
+    setAlert(previous => {
+      if (!previous) {
+        return previous;
+      }
+
+      if (!file) {
+        return updateMediaInfoValue(previous, "fileInfo.filePath", "");
+      }
+
+      const previewUrl = URL.createObjectURL(file);
+      return applySelectedFileToMediaInfo(previous, file, previewUrl);
+    });
+  }, []);
+
   const handleGenerateRewardId = useCallback(() => {
     handleChange("metaInfo.twitchGuid", crypto.randomUUID());
   }, [handleChange]);
@@ -200,13 +225,19 @@ export const MediaInfoEditPage: React.FC = () => {
       setSaving(true);
 
       try {
-        const response = await mediaInfoApi.mediaInfoApiUpdate(id, alert);
-        if (response.data.success && response.data.data) {
-          setAlert(response.data.data);
+        const response = await fetch(`/api/MediaInfoApi/${id}`, {
+          method: "PUT",
+          body: buildMediaInfoFormData(alert, selectedFile),
+        });
+        const result = await response.json();
+
+        if (response.ok && result?.success && result.data) {
+          setAlert(result.data);
+          setSelectedFile(null);
           setSuccess("Изменения сохранены");
           setError(null);
         } else {
-          setError(response.data.message ?? "Не удалось сохранить изменения");
+          setError(result?.message ?? "Не удалось сохранить изменения");
         }
       } catch (saveError) {
         setError(
@@ -218,7 +249,7 @@ export const MediaInfoEditPage: React.FC = () => {
         setSaving(false);
       }
     },
-    [alert, id, mediaInfoApi]
+    [alert, id, selectedFile]
   );
 
   const handleDelete = useCallback(async () => {
@@ -379,6 +410,7 @@ export const MediaInfoEditPage: React.FC = () => {
               onChange={handleChange}
               onGenerateRewardId={handleGenerateRewardId}
               onClearRewardId={handleClearRewardId}
+              onFileSelected={handleFileSelected}
             />
 
             <div className="editor-footer-actions">
