@@ -1,8 +1,10 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
-import { ChatMessage } from "@/shared/api";
+import {
+  ChatMessage,
+  TelegramusHubSignalRContext as SignalRContext,
+} from "@/shared/api";
 import InjectStyles from "@/shared/components/InjectStyles";
 import Announce from "@/shared/Utils/Announce/Announce";
 
@@ -27,11 +29,16 @@ export default function ChatVertical({
   // Используем внешние сообщения или внутренние
   const messages =
     externalMessages !== undefined ? externalMessages : internalMessages;
-  const handleRemove =
-    onRemoveMessage ||
-    ((id: string) => {
-      setInternalMessages(prev => prev.filter(m => m.id !== id));
-    });
+  const handleRemove = useCallback(
+    (id: string) => {
+      if (onRemoveMessage) {
+        onRemoveMessage(id);
+      } else {
+        setInternalMessages(prev => prev.filter(m => m.id !== id));
+      }
+    },
+    [onRemoveMessage]
+  );
 
   // ScrollToBottom после появления нового сообщения (и анимации)
   const scrollRef = useRef<HTMLDivElement>(null);

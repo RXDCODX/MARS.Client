@@ -49,7 +49,7 @@ export function Message({ message, onRemove }: Props) {
   useEffect(() => {
     const timer = setTimeout(() => onRemove && onRemove(), messageLifetime);
     return () => clearTimeout(timer);
-  }, [onRemove, message]);
+  }, [onRemove, message.id]);
 
   useEffect(() => {
     const messageElement = messageContentRef.current;
