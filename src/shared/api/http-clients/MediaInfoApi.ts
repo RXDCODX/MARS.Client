@@ -20,12 +20,12 @@ import {
 import type {
   ApiMediaInfo,
   AutoMessageDto,
+  BaseCommand,
   BaseTrackInfo,
   ChannelRewardDefinition,
   ChannelRewardRecord,
   CinemaMediaItemDto,
   CinemaQueueStatistics,
-  CommandInfo,
   CommandParameterInfo,
   CreateAutoMessageRequest,
   CreateCustomRewardsRequest,
@@ -73,14 +73,12 @@ import type {
   ServiceInfo,
   ServiceLog,
   SetEnvironmentVariableRequest,
-  SpeakRequest,
   SpotifyAuthCompleteResult,
   SpotifyAuthStartRequest,
   SpotifyAuthStartResult,
   SpotifyAuthStatusResult,
   StreamArchiveConfig,
   StringServiceStatusDictionary,
-  StringStringDictionary,
   SupplementRequest,
   TekkenCharacter,
   TekkenCharacterPagedResult,
@@ -99,12 +97,11 @@ import type {
   UpdateMemeOrderDto,
   UpdateMemeTypeDto,
   UpdateValueRequest,
-  UpdateVoiceRequest,
   ValidateFolderRequest,
   ValidateFolderResponse,
+  BaseCommandAvailablePlatformsEnum,
+  BaseCommandVisibilityEnum,
   CinemaMediaItemDtoStatusEnum,
-  CommandInfoAvailablePlatformsEnum,
-  CommandInfoVisibilityEnum,
   LogLogLevelEnum,
   MediaFileInfoTypeEnum,
   MediaMetaInfoPriorityEnum,
@@ -160,12 +157,19 @@ export class MediaInfoApi<
    * @request POST:/api/MediaInfoApi
    * @response `200` `OperationResult<ApiMediaInfo>` OK
    */
-  mediaInfoApiCreate = (data: ApiMediaInfo, params: RequestParams = {}) =>
+  mediaInfoApiCreate = (
+    data: {
+      AlertJson: string;
+      /** @format binary */
+      File: File;
+    },
+    params: RequestParams = {}
+  ) =>
     this.request<OperationResult<ApiMediaInfo>, any>({
       path: `/api/MediaInfoApi`,
       method: "POST",
       body: data,
-      type: ContentType.Json,
+      type: ContentType.FormData,
       format: "json",
       ...params,
     });
@@ -194,14 +198,18 @@ export class MediaInfoApi<
    */
   mediaInfoApiUpdate = (
     id: string,
-    data: ApiMediaInfo,
+    data: {
+      AlertJson: string;
+      /** @format binary */
+      File: File;
+    },
     params: RequestParams = {}
   ) =>
     this.request<OperationResult<ApiMediaInfo>, any>({
       path: `/api/MediaInfoApi/${id}`,
       method: "PUT",
       body: data,
-      type: ContentType.Json,
+      type: ContentType.FormData,
       format: "json",
       ...params,
     });

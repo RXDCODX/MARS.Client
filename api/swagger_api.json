@@ -3745,35 +3745,6 @@
         }
       }
     },
-    "/api/MediaInfoApi/upload": {
-      "post": {
-        "tags": [
-          "MediaInfoApi"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ObjectOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ObjectOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ObjectOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/memory/{escapedFileName}": {
       "get": {
         "tags": [
@@ -9131,6 +9102,7 @@
         "required": [
           "id",
           "isMuted",
+          "pausedByMute",
           "state",
           "stateVersion",
           "videoState",
@@ -9175,6 +9147,9 @@
             "type": "string"
           },
           "isMuted": {
+            "type": "boolean"
+          },
+          "pausedByMute": {
             "type": "boolean"
           },
           "volume": {

@@ -39,6 +39,16 @@ export interface AutoMessageDto {
   message: string;
 }
 
+export interface BaseCommand {
+  commandName: string;
+  description: string;
+  isAdminCommand: boolean;
+  availablePlatforms: BaseCommandAvailablePlatformsEnum[];
+  aliases: string[];
+  parameters: CommandParameterInfo[];
+  visibility: BaseCommandVisibilityEnum;
+}
+
 export interface BaseTrackInfo {
   /** @format uuid */
   id: string;
@@ -144,15 +154,6 @@ export interface CinemaQueueStatistics {
   cancelledItems: number;
   /** @format int32 */
   postponedItems: number;
-}
-
-export interface CommandInfo {
-  name: string;
-  description: string;
-  isAdminCommand: boolean;
-  parameters: CommandParameterInfo[];
-  availablePlatforms: CommandInfoAvailablePlatformsEnum[];
-  visibility: CommandInfoVisibilityEnum;
 }
 
 export interface CommandParameterInfo {
@@ -555,10 +556,10 @@ export interface PlayerState {
   state: PlayerStateStateEnum;
   videoState: PlayerStateVideoStateEnum;
   isMuted: boolean;
+  pausedByMute: boolean;
   /** @format float */
   volume: number;
   currentQueueItem?: QueueItem;
-  nextQueueItem?: QueueItem;
 }
 
 export interface ProblemDetails {
@@ -661,12 +662,6 @@ export interface SetEnvironmentVariableRequest {
   key: string;
   value?: string;
   description?: string;
-}
-
-export interface SpeakRequest {
-  name: string;
-  message: string;
-  voiceName?: string;
 }
 
 export interface SpotifyAuthCompleteResult {
@@ -861,6 +856,7 @@ export interface TwitchUser {
   chatColor?: string;
   isModerator: boolean;
   isVip: boolean;
+  isBroadcaster: boolean;
   /** @format date-time */
   followedAt?: string;
   /** @format date-time */
@@ -959,10 +955,6 @@ export interface UpdateValueRequest {
   value: string;
 }
 
-export interface UpdateVoiceRequest {
-  voiceName: string;
-}
-
 export interface ValidateFolderRequest {
   folderPath: string;
 }
@@ -975,15 +967,7 @@ export interface ValidateFolderResponse {
   sampleFiles: string[];
 }
 
-export enum CinemaMediaItemDtoStatusEnum {
-  Pending = "Pending",
-  InProgress = "InProgress",
-  Completed = "Completed",
-  Cancelled = "Cancelled",
-  Postponed = "Postponed",
-}
-
-export enum CommandInfoAvailablePlatformsEnum {
+export enum BaseCommandAvailablePlatformsEnum {
   None = "None",
   Api = "Api",
   Telegram = "Telegram",
@@ -993,11 +977,19 @@ export enum CommandInfoAvailablePlatformsEnum {
   All = "All",
 }
 
-export enum CommandInfoVisibilityEnum {
+export enum BaseCommandVisibilityEnum {
   None = "None",
   FullList = "FullList",
   ShortList = "ShortList",
   All = "All",
+}
+
+export enum CinemaMediaItemDtoStatusEnum {
+  Pending = "Pending",
+  InProgress = "InProgress",
+  Completed = "Completed",
+  Cancelled = "Cancelled",
+  Postponed = "Postponed",
 }
 
 export enum LogLogLevelEnum {
@@ -1234,6 +1226,13 @@ export enum LogsByLevelDetailParamsEnum {
 // ========================================
 // SignalR-специфичные типы
 // ========================================
+
+export interface AudioQuizRoundDto {
+  artworkUrl?: string;
+  /** @format int32 */
+  roundSeconds: number;
+  trackUrl: string;
+}
 
 export interface AutoArtImage {
   artist: any;

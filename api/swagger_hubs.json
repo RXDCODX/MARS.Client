@@ -2154,6 +2154,7 @@
         "required": [
           "id",
           "isMuted",
+          "pausedByMute",
           "state",
           "stateVersion",
           "videoState",
@@ -2198,6 +2199,9 @@
             "type": "string"
           },
           "isMuted": {
+            "type": "boolean"
+          },
+          "pausedByMute": {
             "type": "boolean"
           },
           "volume": {

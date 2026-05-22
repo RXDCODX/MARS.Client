@@ -20,12 +20,12 @@ import {
 import type {
   ApiMediaInfo,
   AutoMessageDto,
+  BaseCommand,
   BaseTrackInfo,
   ChannelRewardDefinition,
   ChannelRewardRecord,
   CinemaMediaItemDto,
   CinemaQueueStatistics,
-  CommandInfo,
   CommandParameterInfo,
   CreateAutoMessageRequest,
   CreateCustomRewardsRequest,
@@ -73,14 +73,12 @@ import type {
   ServiceInfo,
   ServiceLog,
   SetEnvironmentVariableRequest,
-  SpeakRequest,
   SpotifyAuthCompleteResult,
   SpotifyAuthStartRequest,
   SpotifyAuthStartResult,
   SpotifyAuthStatusResult,
   StreamArchiveConfig,
   StringServiceStatusDictionary,
-  StringStringDictionary,
   SupplementRequest,
   TekkenCharacter,
   TekkenCharacterPagedResult,
@@ -99,12 +97,11 @@ import type {
   UpdateMemeOrderDto,
   UpdateMemeTypeDto,
   UpdateValueRequest,
-  UpdateVoiceRequest,
   ValidateFolderRequest,
   ValidateFolderResponse,
+  BaseCommandAvailablePlatformsEnum,
+  BaseCommandVisibilityEnum,
   CinemaMediaItemDtoStatusEnum,
-  CommandInfoAvailablePlatformsEnum,
-  CommandInfoVisibilityEnum,
   LogLogLevelEnum,
   MediaFileInfoTypeEnum,
   MediaMetaInfoPriorityEnum,
@@ -209,13 +206,13 @@ export class Commands<
    * @tags Commands
    * @name CommandsUserPlatformInfoList
    * @request GET:/api/Commands/user/platform/{platform}/info
-   * @response `200` `OperationResult<CommandInfo[]>` OK
+   * @response `200` `OperationResult<BaseCommand[]>` OK
    */
   commandsUserPlatformInfoList = (
     platform: CommandsUserPlatformInfoListParamsEnum,
     params: RequestParams = {}
   ) =>
-    this.request<OperationResult<CommandInfo[]>, any>({
+    this.request<OperationResult<BaseCommand[]>, any>({
       path: `/api/Commands/user/platform/${platform}/info`,
       method: "GET",
       format: "json",
@@ -227,13 +224,13 @@ export class Commands<
    * @tags Commands
    * @name CommandsAdminPlatformInfoList
    * @request GET:/api/Commands/admin/platform/{platform}/info
-   * @response `200` `OperationResult<CommandInfo[]>` OK
+   * @response `200` `OperationResult<BaseCommand[]>` OK
    */
   commandsAdminPlatformInfoList = (
     platform: CommandsAdminPlatformInfoListParamsEnum,
     params: RequestParams = {}
   ) =>
-    this.request<OperationResult<CommandInfo[]>, any>({
+    this.request<OperationResult<BaseCommand[]>, any>({
       path: `/api/Commands/admin/platform/${platform}/info`,
       method: "GET",
       format: "json",
