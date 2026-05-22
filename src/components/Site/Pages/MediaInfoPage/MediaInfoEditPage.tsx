@@ -185,13 +185,14 @@ export const MediaInfoEditPage: React.FC = () => {
     loadAlert();
   }, [loadAlert]);
 
-  useEffect(() => {
-    return () => {
+  useEffect(
+    () => () => {
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl);
       }
-    };
-  }, [previewUrl]);
+    },
+    [previewUrl]
+  );
 
   const handleChange = useCallback((path: string, value: unknown) => {
     setAlert(previous => {
