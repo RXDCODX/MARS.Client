@@ -17,7 +17,6 @@ export { default as LogsPage } from "./LogsPage";
 export { default as RootStatePage } from "./RootStatePage";
 export { default as ServerViewer } from "./ServerViewer/ServerViewer";
 export { default as TelegramDiscordBridgePage } from "./TelegramDiscordBridgePage";
-export { default as TtsVoicePage } from "./TtsVoicePage/TtsVoicePage";
 
 // MediaInfo страницы
 export {

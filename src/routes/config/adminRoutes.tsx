@@ -42,12 +42,6 @@ const rootStatePageLoader = () =>
   }));
 const RootStatePage = lazy(rootStatePageLoader);
 
-const ttsVoicePageLoader = () =>
-  import("@/components/Site/Pages").then(m => ({
-    default: m.TtsVoicePage,
-  }));
-const TtsVoicePage = lazy(ttsVoicePageLoader);
-
 const commandsPageLoader = () =>
   import("@/components/Site/Pages").then(m => ({
     default: m.CommandsPage,
@@ -74,7 +68,6 @@ registerPrefetchComponents([
   serviceDetailsPageLoader,
   environmentVariablesPageLoader,
   rootStatePageLoader,
-  ttsVoicePageLoader,
   commandsPageLoader,
   cinemaQueuePageLoader,
   spotifyAuthManagerLoader,
@@ -210,18 +203,6 @@ export const adminRoutes: RouteConfig[] = [
       <Layout>
         <Suspense fallback={<PageLoader />}>
           <TelegramDiscordBridgePage />
-        </Suspense>
-      </Layout>
-    ),
-  },
-  {
-    path: "/tts-voice",
-    name: "Голоса TTS",
-    type: "control panel",
-    element: (
-      <Layout>
-        <Suspense fallback={<PageLoader />}>
-          <TtsVoicePage />
         </Suspense>
       </Layout>
     ),
