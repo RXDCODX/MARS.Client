@@ -15,6 +15,8 @@ type Props = {
   onGenerateRewardId: () => void;
   onClearRewardId: () => void;
   onFileSelected: (file: File | null) => void;
+  helpText?: string;
+  previewUrl?: string | null;
 };
 
 export const MediaInfoFormSections: React.FC<Props> = ({
@@ -23,6 +25,8 @@ export const MediaInfoFormSections: React.FC<Props> = ({
   onGenerateRewardId,
   onClearRewardId,
   onFileSelected,
+  helpText,
+  previewUrl,
 }) => (
   <div className="media-info-form-sections">
     <section className="form-section-card">
@@ -179,6 +183,7 @@ export const MediaInfoFormSections: React.FC<Props> = ({
       <div className="section-heading">
         <h2>Файл</h2>
         <p>Путь, тип и локальность медиа.</p>
+        {helpText ? <p>{helpText}</p> : null}
       </div>
 
       <div className="form-grid form-grid-two">
@@ -213,7 +218,7 @@ export const MediaInfoFormSections: React.FC<Props> = ({
           type="text"
           value={formData.fileInfo.filePath}
           onChange={event => onChange("fileInfo.filePath", event.target.value)}
-          placeholder="/media/alerts/..."
+          placeholder="/Alerts/uploaded_mems/..."
           required
         />
       </label>
@@ -235,13 +240,13 @@ export const MediaInfoFormSections: React.FC<Props> = ({
         />
       </label>
 
-      {formData.fileInfo.filePath && (
+      {(previewUrl || formData.fileInfo.filePath) && (
         <div className="field">
           <span>Предпросмотр</span>
           <div>
             {(() => {
               const ext = (formData.fileInfo.extension || "").toLowerCase();
-              const fp = formData.fileInfo.filePath;
+              const fp = previewUrl || formData.fileInfo.filePath;
               if (
                 [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"].includes(ext)
               ) {

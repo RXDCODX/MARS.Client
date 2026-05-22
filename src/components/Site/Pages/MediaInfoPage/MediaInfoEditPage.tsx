@@ -39,12 +39,11 @@ const getMediaPreviewKind = (
   return "unsupported";
 };
 
-const MediaInfoPreviewCard: React.FC<{ item: ApiMediaInfo }> = ({ item }) => {
-  const fileUrl =
-    item.fileInfo.filePath.startsWith("blob:") ||
-    item.fileInfo.filePath.startsWith("data:")
-      ? item.fileInfo.filePath
-      : `/api/MediaInfoApi/${item.id}/file`;
+const MediaInfoPreviewCard: React.FC<{
+  item: ApiMediaInfo;
+  previewUrl?: string | null;
+}> = ({ item, previewUrl }) => {
+  const fileUrl = previewUrl ?? `/api/MediaInfoApi/${item.id}/file`;
   const previewKind = getMediaPreviewKind(item);
 
   return (
@@ -136,6 +135,7 @@ export const MediaInfoEditPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [alert, setAlert] = useState<ApiMediaInfo | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -157,6 +157,13 @@ export const MediaInfoEditPage: React.FC = () => {
       if (response.data.success && response.data.data) {
         setAlert(response.data.data);
         setSelectedFile(null);
+        setPreviewUrl(previous => {
+          if (previous) {
+            URL.revokeObjectURL(previous);
+          }
+
+          return null;
+        });
         setError(null);
       } else {
         setAlert(null);
@@ -178,6 +185,14 @@ export const MediaInfoEditPage: React.FC = () => {
     loadAlert();
   }, [loadAlert]);
 
+  useEffect(() => {
+    return () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    };
+  }, [previewUrl]);
+
   const handleChange = useCallback((path: string, value: unknown) => {
     setAlert(previous => {
       if (!previous) {
@@ -197,11 +212,26 @@ export const MediaInfoEditPage: React.FC = () => {
       }
 
       if (!file) {
-        return updateMediaInfoValue(previous, "fileInfo.filePath", "");
+        setPreviewUrl(previousPreview => {
+          if (previousPreview) {
+            URL.revokeObjectURL(previousPreview);
+          }
+
+          return null;
+        });
+
+        return previous;
       }
 
-      const previewUrl = URL.createObjectURL(file);
-      return applySelectedFileToMediaInfo(previous, file, previewUrl);
+      setPreviewUrl(previousPreview => {
+        if (previousPreview) {
+          URL.revokeObjectURL(previousPreview);
+        }
+
+        return URL.createObjectURL(file);
+      });
+
+      return applySelectedFileToMediaInfo(previous, file);
     });
   }, []);
 
@@ -219,6 +249,11 @@ export const MediaInfoEditPage: React.FC = () => {
       event.preventDefault();
 
       if (!alert || !id) {
+        return;
+      }
+
+      if (selectedFile && !alert.fileInfo.filePath.trim()) {
+        setError("Укажи путь к файлу перед сохранением");
         return;
       }
 
@@ -251,6 +286,9 @@ export const MediaInfoEditPage: React.FC = () => {
     },
     [alert, id, selectedFile]
   );
+
+  const helpText =
+    "Если выбран новый файл, он хранится в памяти клиента до сохранения. Укажи целевой путь внутри Alerts/uploaded_mems/ перед нажатием Сохранить.";
 
   const handleDelete = useCallback(async () => {
     if (!alert || !id) {
@@ -374,7 +412,7 @@ export const MediaInfoEditPage: React.FC = () => {
       )}
 
       <div className="editor-layout">
-        <MediaInfoPreviewCard item={alert} />
+        <MediaInfoPreviewCard item={alert} previewUrl={previewUrl} />
 
         <section className="card-shell editor-shell">
           <form className="editor-form" onSubmit={handleSubmit}>
@@ -411,6 +449,8 @@ export const MediaInfoEditPage: React.FC = () => {
               onGenerateRewardId={handleGenerateRewardId}
               onClearRewardId={handleClearRewardId}
               onFileSelected={handleFileSelected}
+              helpText={helpText}
+              previewUrl={previewUrl}
             />
 
             <div className="editor-footer-actions">

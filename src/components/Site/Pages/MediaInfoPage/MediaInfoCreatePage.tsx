@@ -1,6 +1,6 @@
 import "./MediaInfoPage.scss";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { ApiMediaInfo, MediaFileInfoTypeEnum } from "@/shared/api";
@@ -19,6 +19,7 @@ export const MediaInfoCreatePage: React.FC = () => {
     createDefaultMediaInfo()
   );
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,19 +29,29 @@ export const MediaInfoCreatePage: React.FC = () => {
 
   const handleFileSelected = useCallback((file: File | null) => {
     setSelectedFile(file);
+    setPreviewUrl(previous => {
+      if (previous) {
+        URL.revokeObjectURL(previous);
+      }
+
+      return file ? URL.createObjectURL(file) : null;
+    });
 
     if (!file) {
-      setFormData(previous =>
-        updateMediaInfoValue(previous, "fileInfo.filePath", "")
-      );
       return;
     }
 
-    const previewUrl = URL.createObjectURL(file);
-    setFormData(previous =>
-      applySelectedFileToMediaInfo(previous, file, previewUrl)
-    );
+    setFormData(previous => applySelectedFileToMediaInfo(previous, file));
   }, []);
+
+  useEffect(
+    () => () => {
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
+    },
+    [previewUrl]
+  );
 
   const handleGenerateRewardId = useCallback(() => {
     handleChange("metaInfo.twitchGuid", crypto.randomUUID());
@@ -54,6 +65,12 @@ export const MediaInfoCreatePage: React.FC = () => {
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
+
+      if (selectedFile && !formData.fileInfo.filePath.trim()) {
+        setError("Укажи путь к файлу перед сохранением");
+        return;
+      }
+
       setLoading(true);
 
       try {
@@ -81,6 +98,9 @@ export const MediaInfoCreatePage: React.FC = () => {
     },
     [formData, navigate, selectedFile]
   );
+
+  const helpText =
+    "Выбранный файл хранится в памяти клиента до сохранения. Укажи целевой путь внутри Alerts/uploaded_mems/ перед нажатием Создать.";
 
   return (
     <div className="media-info-page media-info-create-page">
@@ -146,7 +166,7 @@ export const MediaInfoCreatePage: React.FC = () => {
 
           <div className="preview-stage">
             {(() => {
-              const filePath = formData.fileInfo.filePath;
+              const filePath = previewUrl || formData.fileInfo.filePath;
               const type = formData.fileInfo.type;
               if (
                 type === MediaFileInfoTypeEnum.Image ||
@@ -254,6 +274,8 @@ export const MediaInfoCreatePage: React.FC = () => {
               onGenerateRewardId={handleGenerateRewardId}
               onClearRewardId={handleClearRewardId}
               onFileSelected={handleFileSelected}
+              helpText={helpText}
+              previewUrl={previewUrl}
             />
 
             <div className="editor-footer-actions">

@@ -49,8 +49,7 @@ export function getMediaFileTypeByExtension(
 
 export function applySelectedFileToMediaInfo(
   source: ApiMediaInfo,
-  file: File,
-  previewUrl: string
+  file: File
 ): ApiMediaInfo {
   const extension = file.name.includes(".")
     ? file.name.slice(file.name.lastIndexOf(".")).toLowerCase()
@@ -59,13 +58,9 @@ export function applySelectedFileToMediaInfo(
 
   let result = updateMediaInfoValue(
     updateMediaInfoValue(
-      updateMediaInfoValue(
-        updateMediaInfoValue(source, "fileInfo.fileName", file.name),
-        "fileInfo.extension",
-        extension
-      ),
-      "fileInfo.filePath",
-      previewUrl
+      updateMediaInfoValue(source, "fileInfo.fileName", file.name),
+      "fileInfo.extension",
+      extension
     ),
     "fileInfo.isLocalFile",
     true
