@@ -517,7 +517,7 @@ export const MediaInfoFormSections: React.FC<Props> = ({
           <input
             type="number"
             min={0}
-            max={100}
+            max={400}
             value={formData.metaInfo.volume}
             onChange={event =>
               onChange("metaInfo.volume", Number(event.target.value))
