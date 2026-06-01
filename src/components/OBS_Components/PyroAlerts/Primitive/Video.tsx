@@ -230,7 +230,8 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
       const video = event.currentTarget;
 
       if (player.current) {
-        muteAll();
+        // debugger;
+        // muteAll();
         const fakeMediaInfo: MediaInfo = {
           id: "stub",
           fileInfo: {} as MediaFileInfo,
