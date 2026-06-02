@@ -230,8 +230,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
       const video = event.currentTarget;
 
       if (player.current) {
-        // debugger;
-        // muteAll();
+        muteAll();
         const fakeMediaInfo: MediaInfo = {
           id: "stub",
           fileInfo: {} as MediaFileInfo,
@@ -267,7 +266,6 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
     [
       memoizedPositionInfo.isUseOriginalWidthAndHeight,
       memoizedPositionInfoForFunctions,
-      muteAll,
     ]
   );
 
