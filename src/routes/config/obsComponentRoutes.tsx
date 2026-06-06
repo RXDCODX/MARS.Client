@@ -11,6 +11,18 @@ const afkScreenLoader = () =>
   import("@/components/OBS_Components/AFKScreen/AFKScreen");
 const AFKScreen = lazy(afkScreenLoader);
 
+const matrixScreenLoader = () =>
+  import("@/components/OBS_Components/MatrixScreen/MatrixScreen").then(m => ({
+    default: m.default,
+  }));
+const MatrixScreen = lazy(matrixScreenLoader);
+
+const matrixConfiguratorLoader = () =>
+  import("@/components/OBS_Components/MatrixScreen/MatrixConfigurator").then(m => ({
+    default: m.default,
+  }));
+const MatrixConfigurator = lazy(matrixConfiguratorLoader);
+
 const chatHorizontalLoader = () =>
   import("@/components/OBS_Components/ChatHorizontal/ChatHorizontal");
 const ChatHorizontal = lazy(chatHorizontalLoader);
@@ -133,6 +145,8 @@ registerPrefetchComponents([
   chatHorizontalLoader,
   chatVerticalLoader,
   highliteMessageLoader,
+  matrixScreenLoader,
+  matrixConfiguratorLoader,
   // Тяжелые компоненты
   // choosePathLoader, - убрано из предзагрузки, чтобы CSS загружался только при рендере компонента
   creditsLoader,
@@ -464,6 +478,30 @@ export const obsComponentRoutes: RouteConfig[] = [
       <OBSComponentWrapper>
         <Suspense fallback={<OBSLazyLoader />}>
           <ExplosionVideo />
+        </Suspense>
+      </OBSComponentWrapper>
+    ),
+  },
+  {
+    path: "/matrix",
+    name: "Matrix Screen",
+    type: "obs",
+    element: (
+      <OBSComponentWrapper>
+        <Suspense fallback={<OBSLazyLoader />}>
+          <MatrixScreen />
+        </Suspense>
+      </OBSComponentWrapper>
+    ),
+  },
+  {
+    path: "/matrix-configurator",
+    name: "Matrix Конфигуратор",
+    type: "obs",
+    element: (
+      <OBSComponentWrapper>
+        <Suspense fallback={<OBSLazyLoader />}>
+          <MatrixConfigurator />
         </Suspense>
       </OBSComponentWrapper>
     ),
