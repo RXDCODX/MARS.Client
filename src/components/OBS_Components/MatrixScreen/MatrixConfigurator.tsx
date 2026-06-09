@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import MatrixScreen, { MatrixOptions } from "./MatrixScreen";
 
@@ -10,21 +10,52 @@ function getOptionsFromUrl(): MatrixOptions {
   const paramMap: { [key: string]: string | number | boolean | null } = {};
 
   // Строковые параметры
-  const stringParams = ["version", "font", "effect", "palette", "stripeColors", "url"];
+  const stringParams = [
+    "version",
+    "font",
+    "effect",
+    "palette",
+    "stripeColors",
+    "url",
+  ];
   stringParams.forEach(param => {
     const value = params.get(param);
     if (value) paramMap[param] = value;
   });
 
   // Булевы параметры
-  const booleanParams = ["skipIntro", "glyphFlip", "volumetric", "camera", "loops", "suppressWarnings"];
+  const booleanParams = [
+    "skipIntro",
+    "glyphFlip",
+    "volumetric",
+    "camera",
+    "loops",
+    "suppressWarnings",
+  ];
   booleanParams.forEach(param => {
     const value = params.get(param);
     if (value !== null) paramMap[param] = value === "true";
   });
 
   // Числовые параметры
-  const numberParams = ["numColumns", "glyphRotation", "slant", "bloomSize", "bloomStrength", "ditherMagnitude", "resolution", "raindropLength", "animationSpeed", "fallSpeed", "cycleSpeed", "density", "forwardSpeed", "fps", "cursorIntensity", "glintIntensity"];
+  const numberParams = [
+    "numColumns",
+    "glyphRotation",
+    "slant",
+    "bloomSize",
+    "bloomStrength",
+    "ditherMagnitude",
+    "resolution",
+    "raindropLength",
+    "animationSpeed",
+    "fallSpeed",
+    "cycleSpeed",
+    "density",
+    "forwardSpeed",
+    "fps",
+    "cursorIntensity",
+    "glintIntensity",
+  ];
   numberParams.forEach(param => {
     const value = params.get(param);
     if (value) {
@@ -47,10 +78,15 @@ function updateUrlWithOptions(options: MatrixOptions) {
     }
 
     const stringValue = String(value);
-    
+
     // Цветовые параметры не должны кодироваться
-    if (key === "backgroundColor" || key === "cursorColor" || key === "glintColor" || 
-        key === "stripeColors" || key === "palette") {
+    if (
+      key === "backgroundColor" ||
+      key === "cursorColor" ||
+      key === "glintColor" ||
+      key === "stripeColors" ||
+      key === "palette"
+    ) {
       colorParams.push({ key, value: stringValue });
     } else if (typeof value === "boolean") {
       params.set(key, stringValue);
@@ -64,7 +100,7 @@ function updateUrlWithOptions(options: MatrixOptions) {
   params.forEach((value, key) => {
     parts.push(`${key}=${value}`);
   });
-  
+
   // Добавляем цветовые параметры без кодирования
   colorParams.forEach(({ key, value }) => {
     parts.push(`${key}=${value}`);
