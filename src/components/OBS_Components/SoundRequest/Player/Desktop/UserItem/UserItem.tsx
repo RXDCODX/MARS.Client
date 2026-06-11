@@ -32,6 +32,7 @@ function UserItemComponent({
     <div
       className={`${styles.userRow} ${isCurrent ? `${styles.sticky} ${styles.current}` : ""}`}
       data-track-id={trackId}
+      data-testid={`user-item-${user?.twitchId ?? "unknown"}`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       key={`${user?.twitchId}+${trackId}`}

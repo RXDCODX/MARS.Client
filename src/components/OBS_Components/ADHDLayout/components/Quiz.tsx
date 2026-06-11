@@ -131,7 +131,7 @@ export function Quiz() {
   }
 
   return (
-    <div className={styles.quizContainer}>
+    <div className={styles.quizContainer} data-testid="adhd-quiz">
       <div className={styles.quizContent}>
         {/* Шапка: сова + текст вопроса слева, таймер справа */}
         <div className={styles.quizHeader}>

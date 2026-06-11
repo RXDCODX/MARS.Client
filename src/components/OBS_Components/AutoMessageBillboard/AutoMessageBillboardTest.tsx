@@ -38,7 +38,7 @@ export default function AutoMessageBillboardTest() {
   };
 
   return (
-    <div className={styles.testContainer}>
+    <div className={styles.testContainer} data-testid="obs-auto-message-test">
       <h1 className={styles.testTitle}>Тест AutoMessageBillboard</h1>
 
       <div className={styles.testControls}>

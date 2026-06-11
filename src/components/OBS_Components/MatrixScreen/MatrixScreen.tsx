@@ -320,6 +320,7 @@ export default function MatrixScreen({
     <div
       className={className}
       style={{ width: "100%", height: "100%", ...style }}
+      data-testid="obs-matrix-screen"
     >
       <iframe
         src={src}
@@ -327,6 +328,7 @@ export default function MatrixScreen({
         style={{ width: "100%", height: "100%", border: "none" }}
         allow="autoplay; clipboard-write"
         sandbox="allow-scripts allow-same-origin"
+        data-testid="matrix-iframe"
       />
     </div>
   );

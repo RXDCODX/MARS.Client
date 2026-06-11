@@ -150,7 +150,7 @@ function AllRefund({ user, onComplete }: AllRefundProps) {
   }, []);
 
   return (
-    <div className={styles.root}>
+    <div className={styles.root} data-testid="all-refund-content">
       <motion.div
         className={styles.backdrop}
         animate={{
@@ -166,6 +166,7 @@ function AllRefund({ user, onComplete }: AllRefundProps) {
         className={`${styles.timerShell} ${
           compactMode ? styles.timerCompact : styles.timerIntro
         }`}
+        data-testid="all-refund-timer"
         animate={{
           backgroundColor: compactMode
             ? "rgba(0, 0, 0, 0)"
@@ -182,8 +183,8 @@ function AllRefund({ user, onComplete }: AllRefundProps) {
           opacity: { duration: 0.2 },
         }}
       >
-        <div className={styles.timerCaption}>Возврат баллов канала</div>
-        <div className={styles.timerValue}>{timerValue}</div>
+        <div className={styles.timerCaption} data-testid="text-timer-caption">Возврат баллов канала</div>
+        <div className={styles.timerValue} data-testid="text-timer-value">{timerValue}</div>
       </motion.div>
 
       <AnimatePresence initial={false} mode="wait">
@@ -191,6 +192,7 @@ function AllRefund({ user, onComplete }: AllRefundProps) {
           <motion.div
             key="intro"
             className={styles.introPanel}
+            data-testid="all-refund-intro"
             initial={{ opacity: 0, y: 20, scale: 0.985 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{
@@ -201,7 +203,7 @@ function AllRefund({ user, onComplete }: AllRefundProps) {
             }}
             transition={{ duration: 0.55, ease: "easeOut" }}
           >
-            <div className={styles.heroLine}>Алармагеддон</div>
+            <div className={styles.heroLine} data-testid="text-hero-line">Алармагеддон</div>
             <div className={styles.rewardLine}>
               активировал награду, которая через 10 секунд начнёт в течение 1
               минуты возвращать всем зрителям все потраченные баллы канала
@@ -220,7 +222,7 @@ function AllRefund({ user, onComplete }: AllRefundProps) {
 
               <div className={styles.userMeta}>
                 <div className={styles.userLabel}>Юзер</div>
-                <div className={styles.userName} style={{ color: userColor }}>
+                <div className={styles.userName} style={{ color: userColor }} data-testid="text-user-name">
                   {displayName}
                 </div>
               </div>

@@ -47,6 +47,7 @@ function CurrentTrackComponent({
         style={{
           ...baseStyles,
         }}
+        data-testid="obs-current-track"
       >
         <AnimationControl AnimationStart={shouldAnimate} swapTrack={swapChange}>
           {shouldAnimate && !swap && <CurrentTrackElement track={oldTrack} />}

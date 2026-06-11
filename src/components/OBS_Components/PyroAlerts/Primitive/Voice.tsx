@@ -200,7 +200,7 @@ export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
         />
       )}
       {
-        <div className={styles.container}>
+        <div className={styles.container} data-testid="pyro-alert-voice">
           <div className={styles.block}>
             <Textfit forceSingleModeWidth max={2000} min={1}>
               всем тихо

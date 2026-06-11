@@ -131,6 +131,7 @@ const MikuMikuBeamComponent = () => {
       )}
       <div
         className={`${styles.container} ${videoState.isActive ? styles.active : ""}`}
+        data-testid="obs-mikumikubeam"
       >
         {videoState.isActive && (
           <>

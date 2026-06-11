@@ -129,7 +129,7 @@ const MichaelJackson = () => {
       {!announced && (
         <Announce callback={() => setAnnounced(true)} title="MichaelJackson" />
       )}
-      <div className={`${styles.root} ${state.isActive ? styles.active : ""}`}>
+      <div className={`${styles.root} ${state.isActive ? styles.active : ""}`} data-testid="obs-michael-jackson">
         {state.currentVideo && (
           <video
             src={state.currentVideo.src}

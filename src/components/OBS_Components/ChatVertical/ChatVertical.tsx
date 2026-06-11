@@ -97,7 +97,7 @@ export default function ChatVertical({
       {!announced && (
         <Announce title={"Chat Vertical"} callback={() => setAnnounced(true)} />
       )}
-      <div className={styles.chatContainer}>
+      <div className={styles.chatContainer} data-testid="obs-chat-vertical">
         <AnimatePresence initial={false} mode="popLayout">
           {internalMessages.map((message: ChatMessageWithPending) => (
             <motion.div

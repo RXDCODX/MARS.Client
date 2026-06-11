@@ -74,6 +74,7 @@ export default function GaoAlertController() {
           pointerEvents: "none",
           zIndex: 1000,
         }}
+        data-testid="obs-gao-alert"
       >
         {state.current && (
           <GaoAlert dto={state.current} onComplete={handleComplete} />

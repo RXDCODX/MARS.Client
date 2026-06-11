@@ -144,6 +144,7 @@ export default function Message() {
             styles.container + " " + animate.fadeIn + " " + animate.animated
           }
           ref={divHard}
+          data-testid="highlite-message-content"
         >
           {/* IMAGE */}
           <div className={styles["buble-image"]}>

@@ -109,6 +109,7 @@ function TrackItemComponent({
       ref={setNodeRef}
       className={`${styles.item} ${isCurrent ? `${styles.sticky} ${styles.current}` : ""} ${isHistory ? styles.historyItem : ""} ${isDragging ? "dragging" : ""}`}
       data-track-id={track.id}
+      data-testid={`track-item-${track.id}`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
       key={track.id}

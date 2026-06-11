@@ -17,7 +17,7 @@ export function Cirno({ callback, displayName }: Props) {
   const [show, setShow] = useState<boolean>(true);
 
   return (
-    <div className={styles["box-container"]}>
+    <div className={styles["box-container"]} data-testid="fumo-cirno">
       <div
         style={{ visibility: show ? "visible" : "hidden" }}
         className={styles.container}

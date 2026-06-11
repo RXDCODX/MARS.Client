@@ -27,6 +27,7 @@ function SkipButtonComponent() {
       onClick={handleClick}
       disabled={loading || !actions}
       title="Следующий"
+      data-testid="button-skip"
     >
       <SkipForward />
     </Button>

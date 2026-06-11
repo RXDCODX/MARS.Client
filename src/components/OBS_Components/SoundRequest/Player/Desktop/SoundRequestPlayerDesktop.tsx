@@ -43,7 +43,7 @@ function SoundRequestPlayerDesktopComponent() {
   }, []);
 
   return (
-    <div className={styles.root}>
+    <div className={styles.root} data-testid="obs-sr-player-desktop">
       <div className={styles.container1}>
         {/* Верхний блок 9 частей высоты: 7:3 по ширине */}
         <div className={styles.topSplit}>

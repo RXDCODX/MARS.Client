@@ -88,7 +88,7 @@ export default function AllRefundManager() {
       {!isAnnounced && (
         <Announce title="All Refund" callback={() => setIsAnnounced(true)} />
       )}
-      <div style={{ width: "100%", height: "100%" }}>
+      <div style={{ width: "100%", height: "100%" }} data-testid="obs-all-refund">
         {state.playing && state.current && (
           <AllRefund
             key={state.current.id}

@@ -554,7 +554,7 @@ const Credits: React.FC = () => {
         <Announce title={"Credits"} callback={() => setAnnounced(true)} />
       )}
       <audio ref={audioRef} style={{ visibility: "hidden" }} />
-      <div className={`${styles.root} ${isActive ? styles.active : ""}`}>
+      <div className={`${styles.root} ${isActive ? styles.active : ""}`} data-testid="obs-credits">
         {isActive && (
           <>
             {/* Рендерим выбранный фон */}
@@ -567,7 +567,7 @@ const Credits: React.FC = () => {
             <div className={styles.maskBottom} />
             {/* Невидимый аудио-элемент для проигрывания музыки титров */}
             {isLoading && (
-              <div className={styles.loading}>Загрузка данных титров...</div>
+              <div className={styles.loading} data-testid="status-loading">Загрузка данных титров...</div>
             )}
             {contentReady && (
               <motion.div
@@ -579,7 +579,7 @@ const Credits: React.FC = () => {
               >
                 <div className={styles.block}>
                   {streamerInfo && (
-                    <div className={styles.streamerSection}>
+                    <div className={styles.streamerSection} data-testid="credits-streamer-section">
                       <Suspense
                         fallback={<div style={{ width: 400, height: 400 }} />}
                       >
@@ -597,6 +597,7 @@ const Credits: React.FC = () => {
                             src={streamerInfo.profileImageUrl}
                             alt={streamerInfo.displayName}
                             className={styles.streamerAvatar}
+                            data-testid="img-streamer-avatar"
                           />
                         </ElectricBorder>
                       </Suspense>
@@ -608,6 +609,7 @@ const Credits: React.FC = () => {
                         <span
                           className={styles.streamerName}
                           style={{ color: streamerInfo.chatColor }}
+                          data-testid="text-streamer-name"
                         >
                           {streamerInfo.displayName.toUpperCase()}
                         </span>
@@ -624,21 +626,21 @@ const Credits: React.FC = () => {
                   )}
                 </div>
 
-                <div className={styles.block}>
+                <div className={styles.block} data-testid="credits-moderators">
                   <SectionTitle leftIcon={icons.mods} rightIcon={icons.mods}>
                     СПАСИБО МОДЕРАТОРАМ
                   </SectionTitle>
                   <div className={styles.list}>{renderNames(moderators)}</div>
                 </div>
 
-                <div className={styles.block}>
+                <div className={styles.block} data-testid="credits-vips">
                   <SectionTitle leftIcon={icons.vip} rightIcon={icons.vip}>
                     СПАСИБО VIP
                   </SectionTitle>
                   <div className={styles.list}>{renderNames(vips)}</div>
                 </div>
 
-                <div className={styles.block}>
+                <div className={styles.block} data-testid="credits-followers">
                   <SectionTitle
                     leftIcon={icons.follower}
                     rightIcon={icons.follower}

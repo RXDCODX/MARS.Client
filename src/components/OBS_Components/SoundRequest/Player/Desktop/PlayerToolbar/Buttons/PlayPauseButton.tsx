@@ -30,6 +30,7 @@ function PlayPauseButtonComponent() {
       onClick={handleClick}
       disabled={loading || !actions}
       title={isPlaying ? "Пауза" : "Воспроизвести"}
+      data-testid="button-play-pause"
     >
       {isPlaying ? <Pause /> : <Play />}
     </Button>

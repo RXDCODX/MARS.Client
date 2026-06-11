@@ -94,7 +94,7 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
   );
 
   return (
-    <div ref={divRef} style={{ width: "100%" }}>
+    <div ref={divRef} style={{ width: "100%" }} data-testid="pyro-alert-audio">
       {mediaInfo.mediaInfo.stylesInfo.isShowLetterbox && (
         <BigTextBlockForAudio content={mediaInfo} />
       )}

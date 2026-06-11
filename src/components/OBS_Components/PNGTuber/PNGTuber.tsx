@@ -278,6 +278,7 @@ const PNGTuber: FC<PNGTuberProps> = ({
       ref={containerRef}
       className={className}
       style={{ ...containerStyle, position: "relative" }}
+      data-testid="obs-pngtuber"
     >
       <img
         ref={imageRef}

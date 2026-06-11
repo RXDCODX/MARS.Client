@@ -81,6 +81,7 @@ export function FumoFridayController() {
               onClick={play}
               className={styles.testButton}
               disabled={!!currentMessage}
+              data-testid="button-test-fumo"
             >
               Test FumoFriday Alert
             </button>

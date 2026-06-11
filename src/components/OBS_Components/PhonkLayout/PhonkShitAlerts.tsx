@@ -22,7 +22,7 @@ export default function PhonkShitAlerts({
     `);
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} data-testid="phonk-alert">
       {/* Left black bar */}
       <div className={`${styles.sideBar} ${styles.leftBar}`} />
 

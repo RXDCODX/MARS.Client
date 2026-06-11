@@ -51,7 +51,7 @@ function AddTrackModalComponent() {
   }, [isSubmitting, close]);
 
   return (
-    <Modal show={isOpen} onHide={handleClose} centered>
+    <Modal show={isOpen} onHide={handleClose} centered data-testid="modal-add-track">
       <Modal.Header closeButton>
         <Modal.Title>Добавить трек</Modal.Title>
       </Modal.Header>
@@ -66,6 +66,7 @@ function AddTrackModalComponent() {
               onChange={e => setQuery(e.target.value)}
               autoFocus
               disabled={isSubmitting}
+              data-testid="input-add-track-query"
             />
           </Form.Group>
         </Modal.Body>
@@ -74,6 +75,7 @@ function AddTrackModalComponent() {
             className={`${styles.modalButton} ${styles.secondary}`}
             onClick={handleClose}
             disabled={isSubmitting}
+            data-testid="button-add-track-cancel"
           >
             Отмена
           </Button>
@@ -81,6 +83,7 @@ function AddTrackModalComponent() {
             className={`${styles.modalButton} ${styles.primary}`}
             type="submit"
             disabled={!query.trim() || isSubmitting}
+            data-testid="button-add-track-submit"
           >
             {isSubmitting ? "Добавление..." : "Добавить"}
           </Button>

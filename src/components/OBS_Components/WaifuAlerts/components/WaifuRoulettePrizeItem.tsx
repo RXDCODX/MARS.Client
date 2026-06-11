@@ -22,6 +22,7 @@ export default function WaifuRoulettePrizeItem({
           width: `${PRIZE_ITEM_WIDTH}px`,
           height: `${PRIZE_ITEM_HEIGHT}px`,
         }}
+        data-testid="waifu-prize-item"
       >
         <div className={styles.inner}>
           <img

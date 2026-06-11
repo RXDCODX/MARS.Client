@@ -200,7 +200,7 @@ export default function WaifuAlerts() {
   }, [announced, currentMessage, isRouletted, prizes, rouletteIndex]);
 
   return (
-    <div className={common.textStrokeShadow}>
+    <div className={common.textStrokeShadow} data-testid="obs-waifu-alerts">
       <InjectStyles
         styles={`
           html, body {
@@ -245,7 +245,7 @@ export default function WaifuAlerts() {
         !currentMessage.waifu.isMerged &&
         rouletteIndex === -1 &&
         prizes.length === 0 && (
-          <div className={styles["roulette-name-text"]}>
+          <div className={styles["roulette-name-text"]} data-testid="status-loading-roulette">
             <span>Загрузка рулетки...</span>
           </div>
         )}
@@ -260,7 +260,7 @@ export default function WaifuAlerts() {
               styles.baza + " " + animate.bounceIn + " " + animate.animated
             }
           >
-            <div className={styles["alert-box"]}>
+            <div className={styles["alert-box"]} data-testid="waifu-alert-box">
               <img
                 src={currentMessage.waifu.imageUrl}
                 style={{ height: "498px", width: "320px" }}
@@ -309,7 +309,7 @@ export default function WaifuAlerts() {
                 }}
               />
             </div>
-            <div className={styles["alert-box"]}>
+            <div className={styles["alert-box"]} data-testid="waifu-alert-text">
               <span
                 className={`${common.textStrokeShadow} text-shadow block-text`}
                 style={{
@@ -373,7 +373,7 @@ export default function WaifuAlerts() {
               })}
             />
             {/** Images With text */}
-            <div className={styles["merge-container"]}>
+            <div className={styles["merge-container"]} data-testid="waifu-merge-container">
               <div className={styles["merge-image"]}>
                 <img
                   src={currentMessage.waifuHusband?.twitchUser?.profileImageUrl}

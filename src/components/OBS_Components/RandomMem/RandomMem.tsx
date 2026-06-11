@@ -148,7 +148,7 @@ export default function PyroAlerts() {
   }, []);
 
   return (
-    <div ref={containerRef}>
+    <div ref={containerRef} data-testid="obs-random-mem">
       {!announced && (
         <Announce title={"RandomMem"} callback={() => setAnnounced(true)} />
       )}

@@ -28,6 +28,7 @@ function MuteButtonComponent() {
       onClick={handleClick}
       disabled={loading || !actions}
       title={isMuted ? "Звук выкл." : "Звук вкл."}
+      data-testid="button-mute"
     >
       {isMuted ? <VolumeX /> : <Volume2 />}
     </Button>

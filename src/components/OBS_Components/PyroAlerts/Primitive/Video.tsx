@@ -304,7 +304,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
   }, [callback, memoizedMetaInfo, unmuteAll]);
 
   return (
-    <div id={memoizedId} key={id} className={styles.media} style={baseStyles}>
+    <div id={memoizedId} key={id} className={styles.media} style={baseStyles} data-testid="pyro-alert-video">
       <video
         ref={player}
         src={memoizedMediaInfo.filePath}

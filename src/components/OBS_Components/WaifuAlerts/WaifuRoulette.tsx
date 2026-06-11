@@ -61,6 +61,7 @@ export default function WaifuRoulette({
         setVisible(true);
       }}
       style={baseStyle}
+      data-testid="waifu-roulette"
     >
       <div
         ref={heightDiv}

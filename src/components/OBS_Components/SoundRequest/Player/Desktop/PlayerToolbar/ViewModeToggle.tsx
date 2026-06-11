@@ -67,6 +67,7 @@ function ViewModeToggleComponent() {
       onClick={handleToggle}
       title={title}
       type="button"
+      data-testid="button-view-mode-toggle"
     >
       <div className={styles.iconWrapper}>
         {icon}

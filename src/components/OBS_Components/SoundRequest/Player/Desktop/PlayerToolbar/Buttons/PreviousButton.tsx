@@ -27,6 +27,7 @@ function PreviousButtonComponent() {
       onClick={handleClick}
       disabled={loading || !actions}
       title="Предыдущий трек"
+      data-testid="button-previous"
     >
       <SkipBack />
     </Button>

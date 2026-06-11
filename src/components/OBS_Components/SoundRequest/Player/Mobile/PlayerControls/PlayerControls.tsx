@@ -39,7 +39,7 @@ function PlayerControlsComponent() {
   }, [actions]);
 
   return (
-    <Grid templateColumns="repeat(3, 1fr)" gap={2} w="full">
+    <Grid templateColumns="repeat(3, 1fr)" gap={2} w="full" data-testid="player-controls-mobile">
       <Button
         onClick={handleTogglePlayPause}
         disabled={loading || !actions}

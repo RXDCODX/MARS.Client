@@ -55,7 +55,7 @@ export function GaoAlert({ dto, onComplete }: GaoAlertProps) {
   }, [onComplete]);
 
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} data-testid="gao-alert-content">
       {!isTextOnly && avatarUrl && (
         <img
           className={`${styles.avatarBg} ${overlayVisible ? styles.avatarBg_visible : ""}`}
@@ -66,7 +66,7 @@ export function GaoAlert({ dto, onComplete }: GaoAlertProps) {
       )}
 
       <div className={styles.textBlock}>
-        <span>
+        <span data-testid="text-gao-username">
           {isTextOnly
             ? (dto.justText ?? "")
             : (dto.twitchUser?.displayName ?? "")}
@@ -78,6 +78,7 @@ export function GaoAlert({ dto, onComplete }: GaoAlertProps) {
         src={overlayImage}
         alt={variant}
         draggable={false}
+        data-testid="img-gao-overlay"
       />
 
       <audio ref={audioRef} src={voiceSrc} autoPlay onError={onComplete} />

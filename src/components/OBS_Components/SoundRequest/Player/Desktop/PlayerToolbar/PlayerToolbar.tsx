@@ -202,7 +202,7 @@ function PlayerToolbarComponent() {
   }
 
   return (
-    <div className={styles.toolbar} style={progressStyle}>
+    <div className={styles.toolbar} style={progressStyle} data-testid="player-toolbar">
       <div className={styles.toolbarInner}>
         <div className={styles.leftSection}>
           <ViewModeToggle />
@@ -213,6 +213,7 @@ function PlayerToolbarComponent() {
             onClick={() => void toggleProvider()}
             disabled={isProviderButtonDisabled}
             title={`Провайдер SoundRequest: ${provider}`}
+            data-testid="button-provider-toggle"
           >
             {providerButtonContent}
           </button>

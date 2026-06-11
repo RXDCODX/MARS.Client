@@ -13,7 +13,7 @@ import { VolumeControls } from "./VolumeControls";
  */
 function SoundRequestPlayerMobileComponent() {
   return (
-    <div className={styles.root}>
+    <div className={styles.root} data-testid="obs-sr-player-mobile">
       {/* Текущий трек */}
       <Card className={styles.card}>
         <Card.Body>

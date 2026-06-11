@@ -30,6 +30,7 @@ function StopButtonComponent() {
       onClick={handleClick}
       disabled={loading || !actions}
       title="Стоп"
+      data-testid="button-stop"
     >
       <Square />
     </Button>

@@ -164,11 +164,11 @@ const AFKScreen = () => {
   }, [getRandomPlaylist]);
 
   return (
-    <div className="afk-screen-container" onClick={handleUserInteraction}>
+    <div className="afk-screen-container" onClick={handleUserInteraction} data-testid="obs-afk-screen">
       {hasError && (
-        <div className="error-message">
+        <div className="error-message" data-testid="status-error">
           <p>Ошибка загрузки видео</p>
-          <button onClick={handleRetry} className="retry-button">
+          <button onClick={handleRetry} className="retry-button" data-testid="button-retry">
             Попробовать снова
           </button>
         </div>

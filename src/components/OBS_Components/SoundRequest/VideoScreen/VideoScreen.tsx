@@ -69,7 +69,7 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
     .join(" ");
 
   return (
-    <div className={styles.container} style={{ padding: 0 }}>
+    <div className={styles.container} style={{ padding: 0 }} data-testid="obs-video-screen">
       <div className={videoSectionClassName}>
         <UnifiedPlayerView />
       </div>

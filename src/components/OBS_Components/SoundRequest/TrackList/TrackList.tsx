@@ -7,7 +7,7 @@ import styles from "./TrackList.module.scss";
  */
 export function TrackList() {
   return (
-    <div className={styles.root}>
+    <div className={styles.root} data-testid="obs-tracklist">
       <SoundRequestPlayer />
     </div>
   );

@@ -81,6 +81,7 @@ function VolumeControlsComponent() {
       _dark={{
         bg: "gray.700",
       }}
+      data-testid="volume-controls-mobile"
     >
       <IconButton
         onClick={handleMute}

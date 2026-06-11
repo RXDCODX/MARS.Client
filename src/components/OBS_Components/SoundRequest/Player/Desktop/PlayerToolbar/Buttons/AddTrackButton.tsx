@@ -19,6 +19,7 @@ function AddTrackButtonComponent() {
       disabled={loading}
       title="Добавить трек"
       style={{ marginLeft: "2rem" }}
+      data-testid="button-add-track"
     >
       <Plus />
     </Button>

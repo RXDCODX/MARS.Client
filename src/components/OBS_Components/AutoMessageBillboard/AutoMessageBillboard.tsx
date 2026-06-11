@@ -159,6 +159,7 @@ export default function AutoMessageBillboard({
           alignItems: "center",
           justifyContent: "center",
         }}
+        data-testid="obs-auto-message"
       >
         <AnimatePresence mode="wait">
           {currentMessage && (

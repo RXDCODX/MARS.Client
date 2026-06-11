@@ -64,7 +64,7 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
   };
 
   return (
-    <div ref={ref} className={styles["imageContainer"]} style={containerStyle}>
+    <div ref={ref} className={styles["imageContainer"]} style={containerStyle} data-testid="pyro-alert-image">
       {positionInfo.isProportion ? (
         <img
           id={id}

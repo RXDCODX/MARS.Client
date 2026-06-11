@@ -142,11 +142,11 @@ export function ADHDController() {
         <Announce title={"ADHD"} callback={() => setAnnounced(true)} />
       )}
       {state.isVisible && (
-        <div className={styles.adhdControllerContainer}>
+        <div className={styles.adhdControllerContainer} data-testid="obs-adhd">
           <ADHDPage />
-          <div className={styles.timerOverlay}>
+          <div className={styles.timerOverlay} data-testid="adhd-timer">
             <div className={styles.timerContent}>
-              <span className={styles.timerValue}>
+              <span className={styles.timerValue} data-testid="text-adhd-timer-value">
                 {formatTime(state.remainingTime)}
               </span>
             </div>

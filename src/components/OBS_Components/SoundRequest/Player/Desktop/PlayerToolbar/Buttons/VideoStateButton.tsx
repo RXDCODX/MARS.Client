@@ -65,6 +65,7 @@ function VideoStateButtonComponent() {
       onClick={handleClick}
       disabled={loading || !actions}
       title={videoTitle}
+      data-testid="button-video-state"
     >
       {videoIcon}
     </Button>

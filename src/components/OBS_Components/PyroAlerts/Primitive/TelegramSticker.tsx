@@ -81,6 +81,7 @@ export default function TelegramSticker({ mediaInfo, callBack }: Props) {
       className={styles.media}
       style={style}
       ref={elementRef}
+      data-testid="pyro-alert-sticker"
     >
       <Player
         autoplay

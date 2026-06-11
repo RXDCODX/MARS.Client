@@ -15,7 +15,9 @@ export default function HighliteMessage() {
           callback={() => setAnnounced(true)}
         />
       )}
-      <Message />
+      <div data-testid="obs-highlite-message">
+        <Message />
+      </div>
     </>
   );
 }

@@ -2,7 +2,7 @@ import { getImagePath } from "./imageAssets";
 import styles from "./Notifications.module.scss";
 
 export const Notifications: React.FC = () => (
-  <div className={styles.notifications}>
+  <div className={styles.notifications} data-testid="adhd-notifications">
     <div className={styles.notificationsContainer}>
       <div className={`${styles.notification} ${styles.notificationFirst}`}>
         <div className={styles.notificationIconWrapper}>

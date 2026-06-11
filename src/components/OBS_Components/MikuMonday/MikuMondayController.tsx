@@ -78,7 +78,7 @@ export default function MikuMondayController() {
       {!isAnnounced && (
         <Announce title={"Miku Monday"} callback={() => setAnnounced(true)} />
       )}
-      <div>
+      <div data-testid="obs-miku-monday">
         <InjectStyles
           styles={`
           html, body {

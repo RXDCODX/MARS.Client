@@ -10,9 +10,9 @@ interface Props {
 }
 
 const CurrentTrackElementComponent = ({ track }: Props) => (
-  <div className={styles.wrapper}>
+  <div className={styles.wrapper} data-testid="current-track-element">
     <div className={styles.cover}>
-      {track.cover && <img src={track.cover} alt="Album cover" />}
+      {track.cover && <img src={track.cover} alt="Album cover" data-testid="img-album-cover" />}
     </div>
     <div className={styles.container}>
       <div className={styles.trackinfo}>
@@ -26,6 +26,7 @@ const CurrentTrackElementComponent = ({ track }: Props) => (
               width: "100%",
               textAlign: "center",
             }}
+            data-testid="text-track-artists"
           >
             {track.artists.join(", ")}
           </Textfit>
@@ -38,6 +39,7 @@ const CurrentTrackElementComponent = ({ track }: Props) => (
               width: "100%",
               textAlign: "center",
             }}
+            data-testid="text-track-title"
           >
             {track.title}
           </Textfit>
