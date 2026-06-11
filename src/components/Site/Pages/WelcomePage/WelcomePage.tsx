@@ -1,308 +1,274 @@
-import { Card, Col, Container, Row } from "react-bootstrap";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { useSiteColors } from "@/shared/Utils/useSiteColors";
+import { reactBitsBackgroundComponentRegistry } from "@/shared/components/ReactBitsBackgroundsLegacy/registry";
 
-import styles from "./WelcomePage.module.scss";
+const ParticlesBg = reactBitsBackgroundComponentRegistry.Particles;
+
+interface ServerStats {
+  cpuUsagePercent: number;
+  memoryWorkingSetBytes: number;
+  memoryPrivateBytes: number;
+  memoryGcHeapBytes: number;
+  memoryTotalBytes: number;
+  uptimeSeconds: number;
+  threadCount: number;
+  activeServicesCount: number;
+  totalServicesCount: number;
+  osVersion: string;
+  runtimeVersion: string;
+  machineName: string;
+  processorCount: number;
+}
+
+const formatBytes = (bytes: number): string => {
+  if (bytes === 0) return "0 B";
+  const k = 1024;
+  const sizes = ["B", "KB", "MB", "GB", "TB"];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+};
+
+const formatUptime = (seconds: number): string => {
+  const days = Math.floor(seconds / 86400);
+  const hours = Math.floor((seconds % 86400) / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = Math.floor(seconds % 60);
+  const parts: string[] = [];
+  if (days > 0) parts.push(`${days}д`);
+  if (hours > 0) parts.push(`${hours}ч`);
+  if (minutes > 0) parts.push(`${minutes}м`);
+  parts.push(`${secs}с`);
+  return parts.join(" ");
+};
 
 const WelcomePage: React.FC = () => {
-  const colors = useSiteColors();
+  const [stats, setStats] = useState<ServerStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const features = [
-    {
-      icon: "🎮",
-      title: "OBS Компоненты",
-      description:
-        "Множество готовых компонентов для OBS Studio: чаты, алерты, анимации и многое другое.",
-      link: "/pyroalerts",
-    },
-    {
-      icon: "⚙️",
-      title: "Панель управления",
-      description:
-        "Мощная админ-панель для управления всеми аспектами вашего стрима.",
-      link: "/admin",
-    },
-    {
-      icon: "📊",
-      title: "Аналитика",
-      description:
-        "Детальная статистика и аналитика для отслеживания успеха вашего контента.",
-      link: "/dashboard",
-    },
-    {
-      icon: "🔧",
-      title: "API Интеграция",
-      description: "Полная интеграция с различными платформами и сервисами.",
-      link: "/services",
-    },
-    {
-      icon: "⌨️",
-      title: "Выполнение команд",
-      description:
-        "Интерфейс для выполнения команд с разделенными инпутами для разных параметров.",
-      link: "/commands",
-    },
-  ];
+  const fetchStats = async () => {
+    try {
+      const response = await fetch("/api/ServerStats");
+      const data = await response.json();
+      if (data.success) {
+        setStats(data.data);
+        setError(null);
+      } else {
+        setError(data.message || "Ошибка получения данных");
+      }
+    } catch {
+      setError("Сервер недоступен");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const obsComponents = [
-    {
-      name: "Pyro Alerts",
-      path: "/pyroalerts",
-      description: "Красивые алерты для донатов",
-    },
-    {
-      name: "Waifu Alerts",
-      path: "/waifu",
-      description: "Алерты с аниме персонажами",
-    },
-    {
-      name: "Chat Horizontal",
-      path: "/chath",
-      description: "Горизонтальный чат",
-    },
-    { name: "Chat Vertical", path: "/chatv", description: "Вертикальный чат" },
-    { name: "Fumo Friday", path: "/fumofriday", description: "Пятничные фумо" },
-    {
-      name: "Screen Particles",
-      path: "/confetti",
-      description: "Экранные эффекты",
-    },
-    {
-      name: "AFK Screen",
-      path: "/afkscreen",
-      description: "Автоматическое воспроизведение видео из плейлиста",
-    },
-  ];
+  useEffect(() => {
+    fetchStats();
+    intervalRef.current = setInterval(fetchStats, 3000);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
+
+  const memoryUsedPercent = stats
+    ? Math.round((stats.memoryWorkingSetBytes / stats.memoryTotalBytes) * 100)
+    : 0;
+
+  const gcUsedPercent = stats
+    ? Math.round((stats.memoryGcHeapBytes / stats.memoryTotalBytes) * 100)
+    : 0;
 
   return (
-    <Container className="text-wrap text-center align-content-center text-text-bg-primary align-align-items-center">
-      <div className={styles.welcomePage}>
-        {/* Hero Section */}
-        <section
-          className={`${styles.hero} w-100 py-5`}
-          style={{
-            backgroundColor: colors.background.secondary,
-            color: colors.text.primary,
-          }}
-        >
-          <Container>
-            <Row className="align-items-center flex-column">
-              <Col lg={8} className="text-center">
-                <h1
-                  className="display-4 fw-bold mb-4"
-                  style={colors.utils.getTextStyle("primary")}
-                >
-                  Добро пожаловать в{" "}
-                  <span style={{ color: colors.text.accent }}>MARS Client</span>
-                </h1>
-                <p
-                  className="lead mb-4"
-                  style={colors.utils.getTextStyle("secondary")}
-                >
-                  Мощная платформа для создания профессиональных стримов с
-                  интерактивными компонентами
-                </p>
-              </Col>
-              <Col lg={4} className="text-center mt-4 mt-lg-0">
-                <div
-                  className={styles.floatingCard}
-                  style={{
-                    backgroundColor: colors.background.card,
-                    borderColor: colors.border.primary,
-                    boxShadow: colors.shadow.medium,
-                  }}
-                >
-                  <Card
-                    className="border-0 shadow-lg"
-                    style={{ backgroundColor: colors.background.card }}
-                  >
-                    <Card.Body className="text-center p-4">
-                      <div className="display-4 mb-3">🚀</div>
-                      <h3 style={colors.utils.getTextStyle("primary")}>
-                        Быстрый старт
-                      </h3>
-                      <p style={colors.utils.getTextStyle("secondary")}>
-                        Начните использовать компоненты за минуты
-                      </p>
-                    </Card.Body>
-                  </Card>
-                </div>
-              </Col>
-            </Row>
-          </Container>
-        </section>
-
-        {/* Features Section */}
-        <section
-          className="py-5"
-          style={{ backgroundColor: colors.background.primary }}
-        >
-          <Container>
-            <Row className="text-center mb-5">
-              <Col>
-                <h2
-                  className="display-5 fw-bold mb-3"
-                  style={colors.utils.getTextStyle("primary")}
-                >
-                  Возможности платформы
-                </h2>
-              </Col>
-            </Row>
-            <Row className="g-4">
-              {features.map((feature, index) => (
-                <Col key={index} lg={3} md={6}>
-                  <Card
-                    className="h-100 border-0 shadow-sm"
-                    style={{
-                      backgroundColor: colors.background.card,
-                      borderColor: colors.border.primary,
-                      boxShadow: colors.shadow.light,
-                    }}
-                  >
-                    <Card.Body className="text-center p-4">
-                      <div className="display-6 mb-3">{feature.icon}</div>
-                      <h3
-                        className="h5 mb-3"
-                        style={colors.utils.getTextStyle("primary")}
-                      >
-                        {feature.title}
-                      </h3>
-                      <p
-                        className="mb-3"
-                        style={colors.utils.getTextStyle("secondary")}
-                      >
-                        {feature.description}
-                      </p>
-                      <Link
-                        to={feature.link}
-                        className="btn btn-outline-primary btn-sm"
-                        style={{
-                          borderColor: colors.border.accent,
-                          color: colors.text.accent,
-                        }}
-                      >
-                        Узнать больше →
-                      </Link>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-          </Container>
-        </section>
-
-        {/* OBS Components Section */}
-        <section
-          className="py-5"
-          style={{ backgroundColor: colors.background.secondary }}
-        >
-          <Container>
-            <Row className="text-center mb-5">
-              <Col>
-                <h2
-                  className="display-5 fw-bold mb-3"
-                  style={colors.utils.getTextStyle("primary")}
-                >
-                  OBS Компоненты
-                </h2>
-                <p
-                  className="lead"
-                  style={colors.utils.getTextStyle("secondary")}
-                >
-                  Готовые компоненты для интеграции в OBS Studio
-                </p>
-              </Col>
-            </Row>
-            <Row className="g-4">
-              {obsComponents.map((component, index) => (
-                <Col key={index} lg={4} md={6}>
-                  <Card
-                    as={Link}
-                    to={component.path}
-                    className="h-100 border-0 shadow-sm text-decoration-none"
-                    style={{
-                      backgroundColor: colors.background.card,
-                      borderColor: colors.border.primary,
-                      boxShadow: colors.shadow.light,
-                    }}
-                  >
-                    <Card.Body className="p-4">
-                      <h3
-                        className="h5 mb-2"
-                        style={colors.utils.getTextStyle("primary")}
-                      >
-                        {component.name}
-                      </h3>
-                      <p
-                        className="mb-3"
-                        style={colors.utils.getTextStyle("secondary")}
-                      >
-                        {component.description}
-                      </p>
-                      <div style={{ color: colors.text.accent }}>→</div>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-          </Container>
-        </section>
-
-        {/* CTA Section */}
-        <section
-          className="py-5"
-          style={{
-            backgroundColor: colors.background.accent,
-            color: colors.text.light,
-          }}
-        >
-          <Container>
-            <Row className="text-center">
-              <Col>
-                <h2
-                  className="display-5 fw-bold mb-3"
-                  style={colors.utils.getTextStyle("light")}
-                >
-                  Готовы начать?
-                </h2>
-                <p
-                  className="lead mb-4"
-                  style={{ color: colors.text.light, opacity: 0.9 }}
-                >
-                  Присоединяйтесь к тысячам стримеров, которые уже используют
-                  MARS Client
-                </p>
-                <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center">
-                  <Link
-                    to="/admin"
-                    className="btn btn-light btn-lg"
-                    style={{
-                      backgroundColor: colors.background.primary,
-                      color: colors.text.primary,
-                      borderColor: colors.border.primary,
-                    }}
-                  >
-                    Перейти к панели управления
-                  </Link>
-                  <Link
-                    to="/contacts"
-                    className="btn btn-outline-light btn-lg"
-                    style={{
-                      borderColor: colors.text.light,
-                      color: colors.text.light,
-                    }}
-                  >
-                    Связаться с нами
-                  </Link>
-                </div>
-              </Col>
-            </Row>
-          </Container>
-        </section>
+    <div className="relative min-h-screen" data-testid="page-welcome">
+      <div className="fixed inset-0 -z-10">
+        <Suspense fallback={null}>
+          <ParticlesBg
+            className="absolute inset-0"
+            particleCount={80}
+            speed={1}
+            color="#667eea"
+            opacity={0.3}
+          />
+        </Suspense>
       </div>
-    </Container>
+
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <h1 className="text-3xl font-bold tracking-tight text-[var(--site-text-primary)]">
+              MARS Server Dashboard
+            </h1>
+            <div className="flex items-center gap-2 text-sm">
+              <span
+                className={`h-2 w-2 rounded-full ${error ? "bg-red-500 shadow-[0_0_6px_#ef4444]" : "bg-emerald-500 shadow-[0_0_6px_#22c55e]"}`}
+              />
+              <span className="text-[var(--site-text-secondary)]">
+                {error ? "Офлайн" : "Онлайн"}
+              </span>
+            </div>
+          </div>
+          {stats && (
+            <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--site-text-secondary)] opacity-80">
+              <span>{stats.machineName}</span>
+              <span className="opacity-40">|</span>
+              <span>{stats.osVersion}</span>
+              <span className="opacity-40">|</span>
+              <span>{stats.runtimeVersion}</span>
+            </div>
+          )}
+        </header>
+
+        {loading && (
+          <div className="flex flex-col items-center justify-center gap-4 py-16">
+            <div className="h-10 w-10 animate-spin rounded-full border-4 border-[var(--site-border-primary)] border-t-[var(--site-text-accent)]" />
+            <p className="text-[var(--site-text-secondary)]">Загрузка статистики...</p>
+          </div>
+        )}
+
+        {error && !stats && (
+          <div className="flex flex-col items-center justify-center gap-4 py-16">
+            <div className="text-4xl">⚠️</div>
+            <p className="text-[var(--site-text-secondary)]">{error}</p>
+            <button
+              onClick={fetchStats}
+              className="rounded-lg border border-[var(--site-border-primary)] bg-[var(--site-bg-secondary)] px-4 py-2 text-sm font-medium text-[var(--site-text-primary)] transition-all hover:-translate-y-0.5 hover:bg-[var(--site-bg-tertiary)]"
+            >
+              Повторить
+            </button>
+          </div>
+        )}
+
+        {stats && (
+          <>
+            <div className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <StatCard
+                title="CPU"
+                value={`${stats.cpuUsagePercent}%`}
+                subtitle={`${stats.processorCount} ядер`}
+                icon="⚡"
+                progress={stats.cpuUsagePercent}
+                dataTestId="stat-cpu"
+              />
+              <StatCard
+                title="Память (Working Set)"
+                value={formatBytes(stats.memoryWorkingSetBytes)}
+                subtitle={`из ${formatBytes(stats.memoryTotalBytes)}`}
+                icon="💾"
+                progress={memoryUsedPercent}
+                dataTestId="stat-memory-working"
+              />
+              <StatCard
+                title="GC Heap"
+                value={formatBytes(stats.memoryGcHeapBytes)}
+                subtitle={`${gcUsedPercent}% от total`}
+                icon="🗑️"
+                progress={gcUsedPercent}
+                dataTestId="stat-gc-heap"
+              />
+              <StatCard
+                title="Аптайм"
+                value={formatUptime(stats.uptimeSeconds)}
+                subtitle="время работы"
+                icon="⏱️"
+                dataTestId="stat-uptime"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <StatCard
+                title="Потоки"
+                value={String(stats.threadCount)}
+                subtitle="активных потоков"
+                icon="🧵"
+                dataTestId="stat-threads"
+              />
+              <StatCard
+                title="Сервисы"
+                value={`${stats.activeServicesCount}/${stats.totalServicesCount}`}
+                subtitle="активных"
+                icon="⚙️"
+                dataTestId="stat-services"
+              />
+              <div className="col-span-1 rounded-xl border border-[var(--site-border-primary)] bg-[var(--site-bg-card)] p-5 shadow-[var(--site-shadow-light)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--site-shadow-medium)] sm:col-span-2 lg:col-span-2">
+                <p className="mb-3 text-xs font-medium uppercase tracking-wider text-[var(--site-text-secondary)]">
+                  Быстрые ссылки
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { to: "/admin", icon: "🔧", label: "Панель управления" },
+                    { to: "/logs", icon: "📋", label: "Логи" },
+                    { to: "/services", icon: "🔌", label: "Сервисы" },
+                    { to: "/routes", icon: "🗺️", label: "Маршруты" },
+                  ].map((link) => (
+                    <Link
+                      key={link.to}
+                      to={link.to}
+                      className="flex items-center gap-2 rounded-lg bg-[var(--site-bg-tertiary)] px-3 py-2.5 text-sm font-medium text-[var(--site-text-primary)] transition-all hover:translate-x-1 hover:bg-[var(--site-hover-bg)]"
+                      data-testid={`link-${link.label.toLowerCase().replace(/\s/g, "-")}`}
+                    >
+                      <span>{link.icon}</span>
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
   );
 };
+
+interface StatCardProps {
+  title: string;
+  value: string;
+  subtitle: string;
+  icon: string;
+  progress?: number;
+  dataTestId: string;
+}
+
+const StatCard: React.FC<StatCardProps> = ({
+  title,
+  value,
+  subtitle,
+  icon,
+  progress,
+  dataTestId,
+}) => (
+  <div
+    className="rounded-xl border border-[var(--site-border-primary)] bg-[var(--site-bg-card)] p-5 shadow-[var(--site-shadow-light)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--site-shadow-medium)]"
+    data-testid={dataTestId}
+  >
+    <div className="mb-2 flex items-center gap-2">
+      <span className="text-lg">{icon}</span>
+      <span className="text-xs font-medium uppercase tracking-wider text-[var(--site-text-secondary)]">
+        {title}
+      </span>
+    </div>
+    <div className="mb-0.5 text-2xl font-bold text-[var(--site-text-primary)]">{value}</div>
+    <div className="text-xs text-[var(--site-text-muted)] opacity-70">{subtitle}</div>
+    {progress !== undefined && (
+      <div className="mt-3 h-1 overflow-hidden rounded-full bg-[var(--site-bg-tertiary)]">
+        <div
+          className="h-full rounded-full transition-all duration-300"
+          style={{
+            width: `${Math.min(progress, 100)}%`,
+            backgroundColor:
+              progress > 80
+                ? "var(--site-text-danger)"
+                : progress > 60
+                  ? "var(--site-text-warning)"
+                  : "var(--site-text-success)",
+          }}
+        />
+      </div>
+    )}
+  </div>
+);
 
 export default WelcomePage;

@@ -124,12 +124,7 @@ export default function FumoAlerts() {
               id: String(p.id),
               text: p.text || "",
             }))}
-            twitchUser={{
-              twitchId: "",
-              displayName: currentFumoMessage.displayName,
-              profileImageUrl: "",
-              chatColor: currentFumoMessage.color || undefined,
-            }}
+            twitchUser={currentFumoMessage.twitchUser}
           />
         )}
       {currentFumoMessage &&
@@ -176,7 +171,7 @@ export default function FumoAlerts() {
                 }, 7000);
 
                 sendMessage(
-                  `@${currentFumoMessage.displayName}, ${getFumoText(currentFumoMessage)} ${getFumoTitle(currentFumoMessage)}!`
+                  `@${currentFumoMessage.twitchUser.displayName}, ${getFumoText(currentFumoMessage)} ${getFumoTitle(currentFumoMessage)}!`
                 );
               }}
               onError={() => {
@@ -192,14 +187,28 @@ export default function FumoAlerts() {
             />
           </div>
           <div className={styles["alert-box"]}>
+            {currentFumoMessage.twitchUser.profileImageUrl && (
+              <img
+                src={currentFumoMessage.twitchUser.profileImageUrl}
+                alt={currentFumoMessage.twitchUser.displayName}
+                style={{
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "50%",
+                  border: `4px solid ${currentFumoMessage.twitchUser.chatColor || "white"}`,
+                  boxShadow: `0 0 20px ${currentFumoMessage.twitchUser.chatColor || "white"}`,
+                  marginBottom: "10px",
+                }}
+              />
+            )}
             <span
               className={`${common.textStrokeShadow} text-shadow block-text`}
               style={{
-                color: "white",
+                color: currentFumoMessage.twitchUser.chatColor || "white",
               }}
             >
               <Textfit min={1} max={1500} forceSingleModeWidth>
-                {currentFumoMessage.displayName.toUpperCase()}
+                {currentFumoMessage.twitchUser.displayName.toUpperCase()}
               </Textfit>
             </span>
             <span

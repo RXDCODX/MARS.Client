@@ -6,7 +6,7 @@ import { devtools } from "zustand/middleware";
 
 import { FumoAlertProps } from "@/components/OBS_Components/FumoAlerts/helper";
 import { WaifuAlertProps } from "@/components/OBS_Components/WaifuAlerts/helper";
-import { Fumo, Host, Waifu } from "@/shared/api";
+import { Fumo, Host, TwitchUser, Waifu } from "@/shared/api";
 import { TelegramusHubSignalRConnectionBuilder } from "@/shared/api/signalr-clients/TelegramusHub/SignalRContext";
 import useFumoPrizesStore from "@/shared/stores/fumoPrizesStore";
 import useWaifuPrizesStore from "@/shared/stores/waifuPrizesStore";
@@ -129,10 +129,10 @@ export const useTelegramusHubStore = create<
         // FumoRoll обработчик
         connection.on(
           "FumoRoll",
-          (fumo: Fumo, displayName: string, color?: string) => {
+          (fumo: Fumo, twitchUser: TwitchUser, color?: string) => {
             const parsed: FumoAlertProps = {
               fumo,
-              displayName,
+              twitchUser,
               color,
             };
             const { fumoMessages, isFumoShowing } = get();

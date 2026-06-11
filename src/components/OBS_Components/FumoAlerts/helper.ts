@@ -1,8 +1,8 @@
-import { Fumo } from "@/shared/api";
+import { Fumo, TwitchUser } from "@/shared/api";
 
 export interface FumoAlertProps {
   fumo: Fumo;
-  displayName: string;
+  twitchUser: TwitchUser;
   color?: string;
 }
 

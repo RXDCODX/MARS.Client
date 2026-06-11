@@ -1,59 +1,38 @@
-import { Button } from "react-bootstrap";
-
 import { useTheme } from "@/contexts/Theme";
-
-import styles from "./ThemeToggle.module.scss";
 
 interface ThemeToggleProps {
   variant?: "default" | "admin";
   size?: "sm" | "md" | "lg";
 }
 
-const ThemeToggle: React.FC<ThemeToggleProps> = ({
-  variant = "default",
-  size = "sm",
-}) => {
+const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = "default" }) => {
   const { theme, toggleTheme } = useTheme();
 
-  const getButtonVariant = () => {
-    if (variant === "admin") {
-      return "outline-secondary";
-    }
-    return theme === "light" ? "outline-dark" : "outline-light";
-  };
-
-  const getButtonSize = () => {
-    switch (size) {
-      case "lg":
-        return "lg";
-      default:
-        return "sm";
-    }
-  };
-
-  const getButtonClass = () =>
-    variant === "admin" ? styles.adminThemeToggle : styles.themeToggle;
-
   return (
-    <Button
-      variant={getButtonVariant()}
-      size={getButtonSize()}
+    <button
       onClick={toggleTheme}
-      className={getButtonClass()}
+      className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-all hover:-translate-y-0.5 ${
+        variant === "admin"
+          ? "border-[var(--site-border-secondary)] bg-[var(--site-bg-secondary)] text-[var(--site-text-primary)] hover:bg-[var(--site-bg-tertiary)]"
+          : theme === "light"
+            ? "border-[var(--site-border-primary)] bg-[var(--site-bg-secondary)] text-[var(--site-text-primary)] hover:bg-[var(--site-bg-tertiary)]"
+            : "border-[var(--site-border-primary)] bg-[var(--site-bg-secondary)] text-[var(--site-text-primary)] hover:bg-[var(--site-bg-tertiary)]"
+      }`}
       title={`Переключить на ${theme === "light" ? "темную" : "светлую"} тему`}
+      data-testid="button-theme-toggle"
     >
       {theme === "light" ? (
         <>
-          <i className="bi bi-moon-fill"></i>
-          <span className="ms-1 d-none d-sm-inline">Темная</span>
+          <span>🌙</span>
+          <span className="hidden sm:inline">Тёмная</span>
         </>
       ) : (
         <>
-          <i className="bi bi-sun-fill"></i>
-          <span className="ms-1 d-none d-sm-inline">Светлая</span>
+          <span>☀️</span>
+          <span className="hidden sm:inline">Светлая</span>
         </>
       )}
-    </Button>
+    </button>
   );
 };
 

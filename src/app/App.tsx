@@ -1,4 +1,5 @@
 import "./global.scss";
+import "./tailwind.css";
 
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { usePrefetchRoutes } from "@/routes/hooks/usePrefetchRoutes";

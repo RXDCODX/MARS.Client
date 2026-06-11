@@ -1,56 +1,46 @@
-import { FolderOpen, Monitor } from "lucide-react";
-import { useState } from "react";
-import { Container, Nav, Navbar } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { ChevronDown, FolderOpen, Monitor } from "lucide-react";
+import { Suspense, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
 
 import ThemeToggle from "@/components/ThemeToggle";
-import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
-import styles from "./Header.module.scss";
-
-// Интерфейсы для типизации навигации
 interface NavigationItem {
   label: string;
   path: string;
+  icon?: string;
 }
 
 interface NavigationGroup {
   label: string;
+  icon?: string;
   children: NavigationItem[];
 }
 
 const Header: React.FC = () => {
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [activeSubDropdown, setActiveSubDropdown] = useState<string | null>(
-    null
-  );
-  const colors = useSiteColors();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const location = useLocation();
 
   const sitePages: NavigationItem[] = [
-    { label: "Главная", path: "/" },
-    { label: "О проекте", path: "/about" },
-    { label: "Документация", path: "/docs" },
-    { label: "Команды", path: "/commands" },
-    { label: "Контакты", path: "/contacts" },
-    { label: "Управление алертами", path: "/media-info" },
-    { label: "Cinema Queue", path: "/cinema-queue" },
-    { label: "Все маршруты", path: "/routes" },
+    { label: "Главная", path: "/", icon: "🏠" },
+    { label: "О проекте", path: "/about", icon: "ℹ️" },
+    { label: "Документация", path: "/docs", icon: "📖" },
+    { label: "Команды", path: "/commands", icon: "⌨️" },
+    { label: "Контакты", path: "/contacts", icon: "📧" },
+    { label: "Управление алертами", path: "/media-info", icon: "🔔" },
+    { label: "Cinema Queue", path: "/cinema-queue", icon: "🎬" },
+    { label: "Все маршруты", path: "/routes", icon: "🗺️" },
   ];
 
   const framedataPages: NavigationItem[] = [
-    {
-      label: "Просмотр фреймдаты",
-      path: "/framedata",
-    },
-    {
-      label: "Изменения",
-      path: "/framedata/pending",
-    },
+    { label: "Просмотр фреймдаты", path: "/framedata", icon: "📊" },
+    { label: "Изменения", path: "/framedata/pending", icon: "✏️" },
   ];
 
   const obsComponents: NavigationGroup[] = [
     {
       label: "Чат",
+      icon: "💬",
       children: [
         { label: "Горизонтальный чат", path: "/chath" },
         { label: "Вертикальный чат", path: "/chatv" },
@@ -58,6 +48,7 @@ const Header: React.FC = () => {
     },
     {
       label: "Алерты",
+      icon: "🔔",
       children: [
         { label: "Pyro Alerts", path: "/pyroalerts" },
         { label: "Waifu Alerts", path: "/waifu" },
@@ -67,6 +58,7 @@ const Header: React.FC = () => {
     },
     {
       label: "Развлечения",
+      icon: "🎮",
       children: [
         { label: "Fumo Friday", path: "/fumofriday" },
         { label: "Random Mem", path: "/randommem" },
@@ -77,314 +69,300 @@ const Header: React.FC = () => {
     },
     {
       label: "Звук",
+      icon: "🎵",
       children: [{ label: "Текущий трек", path: "/sr/currenttrack" }],
     },
   ];
 
   const controlRoomPages: NavigationItem[] = [
-    { label: "Панель управления", path: "/admin" },
-    { label: "Логи", path: "/logs" },
-    { label: "Дашборд", path: "/dashboard" },
-    { label: "Просмотр серверов", path: "/main" },
-    { label: "Сервисы", path: "/services" },
-    { label: "RootState", path: "/root-state" },
-    { label: "Твич награды", path: "/twitch-rewards" },
-    { label: "Автосообщения", path: "/auto-messages" },
-    { label: "Telegram ↔ Discord Bridge", path: "/telegram-discord-bridge" },
+    { label: "Панель управления", path: "/admin", icon: "⚙️" },
+    { label: "Логи", path: "/logs", icon: "📋" },
+    { label: "Дашборд", path: "/dashboard", icon: "📊" },
+    { label: "Просмотр серверов", path: "/main", icon: "🖥️" },
+    { label: "Сервисы", path: "/services", icon: "🔌" },
+    { label: "RootState", path: "/root-state", icon: "💾" },
+    { label: "Твич награды", path: "/twitch-rewards", icon: "🎁" },
+    { label: "Автосообщения", path: "/auto-messages", icon: "📨" },
+    { label: "Telegram ↔ Discord Bridge", path: "/telegram-discord-bridge", icon: "🔗" },
   ];
 
-  const handleDropdownToggle = (dropdownName: string) => {
-    setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName);
-    setActiveSubDropdown(null);
-  };
+  const isActive = (path: string) => location.pathname === path;
 
-  const handleMouseLeave = () => {
-    setActiveDropdown(null);
-    setActiveSubDropdown(null);
-  };
-
-  const handleMainDropdownMouseLeave = () => {
-    setActiveDropdown(null);
+  const handleDropdownToggle = (name: string) => {
+    setActiveDropdown(activeDropdown === name ? null : name);
   };
 
   const handleLinkClick = () => {
     setActiveDropdown(null);
-    setActiveSubDropdown(null);
+    setMobileOpen(false);
   };
 
-  return (
-    <Navbar
-      expand="lg"
-      className={styles.header}
-      sticky="top"
-      style={{
-        backgroundColor: colors.background.secondary,
-        borderBottom: `1px solid ${colors.border.primary}`,
-        boxShadow: colors.shadow.medium,
-      }}
+  const renderDropdown = (
+    name: string,
+    label: string,
+    items: NavigationItem[],
+    isActiveFn: (item: NavigationItem) => boolean
+  ) => (
+    <div
+      className="relative pb-2"
+      onMouseLeave={() => setActiveDropdown(null)}
+      data-testid={`nav-dropdown-${name}`}
     >
-      <Container>
-        <Navbar.Brand
-          as={Link}
-          to="/routes"
-          className={styles.logo}
-          style={colors.utils.getTextStyle("primary")}
+      <button
+        onClick={() => handleDropdownToggle(name)}
+        onMouseEnter={() => setActiveDropdown(name)}
+        className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-[var(--site-bg-tertiary)] hover:text-[var(--site-text-accent)] ${
+          activeDropdown === name
+            ? "bg-[var(--site-bg-tertiary)] text-[var(--site-text-accent)]"
+            : "text-[var(--site-text-primary)]"
+        }`}
+      >
+        {label}
+        <ChevronDown
+          size={12}
+          className={`transition-transform duration-200 ${activeDropdown === name ? "rotate-180" : ""}`}
+        />
+      </button>
+      {activeDropdown === name && (
+        <div
+          className="absolute left-0 top-full z-50 pt-2 min-w-[220px] origin-top rounded-xl border border-[var(--site-border-primary)] bg-[var(--site-bg-card)] p-1.5 shadow-[var(--site-shadow-heavy)] animate-dropdown-open"
+          data-testid={`nav-dropdown-menu-${name}`}
         >
-          <i className="bi bi-rocket-takeoff me-2"></i>
-          MARS Client
-        </Navbar.Brand>
+          {items.map((item, index) => (
+            <Link
+              key={index}
+              to={item.path}
+              onClick={handleLinkClick}
+              className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:translate-x-0.5 hover:bg-[var(--site-hover-bg)] hover:text-[var(--site-text-accent)] ${
+                isActiveFn(item)
+                  ? "bg-[var(--site-hover-bg)] text-[var(--site-text-accent)]"
+                  : "text-[var(--site-text-primary)]"
+              }`}
+            >
+              {item.icon && <span className="w-5 text-center">{item.icon}</span>}
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
 
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto">
-            {/* Страницы сайта */}
-            <div className={styles.dropdownContainer}>
-              <button
-                className={styles.dropdownButton}
-                onClick={() => handleDropdownToggle("site")}
-                onMouseEnter={() => setActiveDropdown("site")}
-                style={colors.utils.getTextStyle("primary")}
+  return (
+    <nav
+      className="sticky top-0 z-[1030] border-b border-[var(--site-border-primary)] bg-[var(--site-bg-secondary)]/80 backdrop-blur-xl"
+      data-testid="navbar"
+    >
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 sm:px-6 lg:px-8">
+        <Link
+          to="/"
+          className="flex items-center gap-2 rounded-lg px-2 py-1 transition-all hover:bg-[var(--site-bg-tertiary)] hover:scale-[1.02]"
+          data-testid="nav-logo"
+        >
+          <span className="text-xl">🚀</span>
+          <span className="bg-gradient-to-r from-[var(--site-text-primary)] to-[var(--site-text-accent)] bg-clip-text text-lg font-extrabold tracking-tight text-transparent">
+            MARS
+          </span>
+        </Link>
+
+        <button
+          className="flex flex-col gap-1 rounded-lg p-2 transition-opacity hover:opacity-100 lg:hidden"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          data-testid="nav-mobile-toggle"
+        >
+          <span className={`block h-0.5 w-5 bg-[var(--site-text-primary)] transition-all ${mobileOpen ? "translate-y-1.5 rotate-45" : ""}`} />
+          <span className={`block h-0.5 w-5 bg-[var(--site-text-primary)] transition-all ${mobileOpen ? "opacity-0" : ""}`} />
+          <span className={`block h-0.5 w-5 bg-[var(--site-text-primary)] transition-all ${mobileOpen ? "-translate-y-1.5 -rotate-45" : ""}`} />
+        </button>
+
+        <div className={`hidden items-center gap-1 lg:flex`}>
+          {renderDropdown("site", "Страницы сайта", sitePages, (item) => isActive(item.path))}
+          {renderDropdown("framedata", "Фреймдата", framedataPages, (item) =>
+            isActive(item.path)
+          )}
+
+          <div
+            className="relative pb-2"
+            onMouseLeave={() => setActiveDropdown(null)}
+            data-testid="nav-dropdown-obs"
+          >
+            <button
+              onClick={() => handleDropdownToggle("obs")}
+              onMouseEnter={() => setActiveDropdown("obs")}
+              className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-[var(--site-bg-tertiary)] hover:text-[var(--site-text-accent)] ${
+                activeDropdown === "obs"
+                  ? "bg-[var(--site-bg-tertiary)] text-[var(--site-text-accent)]"
+                  : "text-[var(--site-text-primary)]"
+              }`}
+            >
+              OBS
+              <ChevronDown
+                size={12}
+                className={`transition-transform duration-200 ${activeDropdown === "obs" ? "rotate-180" : ""}`}
+              />
+            </button>
+            {activeDropdown === "obs" && (
+              <div
+                className="absolute left-0 top-full z-50 pt-2 min-w-[220px] origin-top rounded-xl border border-[var(--site-border-primary)] bg-[var(--site-bg-card)] p-1.5 shadow-[var(--site-shadow-heavy)] animate-dropdown-open"
               >
-                Страницы сайта <i className="bi bi-chevron-down ms-1"></i>
-              </button>
-              {activeDropdown === "site" && (
-                <div
-                  className={styles.dropdownMenu}
-                  onMouseLeave={handleMouseLeave}
-                  style={{
-                    backgroundColor: colors.background.card,
-                    border: `1px solid ${colors.border.primary}`,
-                    boxShadow: colors.shadow.medium,
-                  }}
-                >
-                  {sitePages.map((item, index) => (
-                    <div key={index} className={styles.dropdownItem}>
-                      <Link
-                        to={item.path}
-                        onClick={handleLinkClick}
-                        style={colors.utils.getTextStyle("primary")}
-                      >
-                        {item.label}
-                      </Link>
+                {obsComponents.map((group, gi) => (
+                  <div key={gi} className="group/obs relative">
+                    <div className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-[var(--site-text-primary)]">
+                      <span className="w-5 text-center">{group.icon}</span>
+                      {group.label}
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Фреймдата */}
-            <div className={styles.dropdownContainer}>
-              <button
-                className={styles.dropdownButton}
-                onClick={() => handleDropdownToggle("framedata")}
-                onMouseEnter={() => setActiveDropdown("framedata")}
-                style={colors.utils.getTextStyle("primary")}
-              >
-                Фреймдата <i className="bi bi-chevron-down ms-1"></i>
-              </button>
-              {activeDropdown === "framedata" && (
-                <div
-                  className={styles.dropdownMenu}
-                  onMouseLeave={handleMouseLeave}
-                  style={{
-                    backgroundColor: colors.background.card,
-                    border: `1px solid ${colors.border.primary}`,
-                    boxShadow: colors.shadow.medium,
-                  }}
-                >
-                  {framedataPages.map((item, index) => (
-                    <div key={index} className={styles.dropdownItem}>
-                      <Link
-                        to={item.path}
-                        onClick={handleLinkClick}
-                        style={colors.utils.getTextStyle("primary")}
-                      >
-                        {item.label}
-                      </Link>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* OBS Компоненты */}
-            <div className={styles.dropdownContainer}>
-              <button
-                className={styles.dropdownButton}
-                onClick={() => handleDropdownToggle("obs")}
-                onMouseEnter={() => setActiveDropdown("obs")}
-                style={colors.utils.getTextStyle("primary")}
-              >
-                OBS Компоненты <i className="bi bi-chevron-down ms-1"></i>
-              </button>
-              {activeDropdown === "obs" && (
-                <div
-                  className={styles.dropdownMenu}
-                  onMouseLeave={handleMainDropdownMouseLeave}
-                  style={{
-                    backgroundColor: colors.background.card,
-                    border: `1px solid ${colors.border.primary}`,
-                    boxShadow: colors.shadow.medium,
-                  }}
-                >
-                  {obsComponents.map((item, index) => (
-                    <div key={index} className={styles.dropdownItem}>
-                      {item.children ? (
-                        <div
-                          className={styles.subDropdownContainer}
-                          onMouseEnter={() =>
-                            setActiveSubDropdown(`obs-${index}`)
-                          }
-                          onMouseLeave={() => setActiveSubDropdown(null)}
-                        >
-                          <button
-                            className={styles.subDropdownButton}
-                            onMouseEnter={() =>
-                              setActiveSubDropdown(`obs-${index}`)
-                            }
-                            style={colors.utils.getTextStyle("primary")}
+                    <div className="hidden group-hover/obs:block">
+                      <div className="ml-6 border-l border-[var(--site-border-primary)] pl-2">
+                        {group.children.map((child, ci) => (
+                          <Link
+                            key={ci}
+                            to={child.path}
+                            onClick={handleLinkClick}
+                            className={`block rounded-lg px-3 py-1.5 text-xs font-medium transition-all hover:translate-x-0.5 hover:bg-[var(--site-hover-bg)] hover:text-[var(--site-text-accent)] ${
+                              isActive(child.path)
+                                ? "bg-[var(--site-hover-bg)] text-[var(--site-text-accent)]"
+                                : "text-[var(--site-text-primary)]"
+                            }`}
                           >
-                            {item.label}{" "}
-                            <i className="bi bi-chevron-right ms-1"></i>
-                          </button>
-                          {activeSubDropdown === `obs-${index}` && (
-                            <div
-                              className={styles.subDropdownMenu}
-                              onMouseEnter={() =>
-                                setActiveSubDropdown(`obs-${index}`)
-                              }
-                              onMouseLeave={() => setActiveSubDropdown(null)}
-                              style={{
-                                backgroundColor: colors.background.card,
-                                border: `1px solid ${colors.border.primary}`,
-                                boxShadow: colors.shadow.medium,
-                              }}
-                            >
-                              {item.children.map((child, childIndex) => (
-                                <div
-                                  key={childIndex}
-                                  className={styles.subDropdownItem}
-                                >
-                                  <Link
-                                    to={child.path}
-                                    onClick={handleLinkClick}
-                                    style={colors.utils.getTextStyle("primary")}
-                                  >
-                                    {child.label}
-                                  </Link>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <Link
-                          to="#"
-                          onClick={handleLinkClick}
-                          style={colors.utils.getTextStyle("primary")}
-                        >
-                          {item.label}
-                        </Link>
-                      )}
+                            {child.label}
+                          </Link>
+                        ))}
+                      </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
-            {/* Панель управления */}
-            <div className={styles.dropdownContainer}>
-              <button
-                className={styles.dropdownButton}
-                onClick={() => handleDropdownToggle("control")}
-                onMouseEnter={() => setActiveDropdown("control")}
-                style={colors.utils.getTextStyle("primary")}
-              >
-                Панель управления <i className="bi bi-chevron-down ms-1"></i>
-              </button>
-              {activeDropdown === "control" && (
-                <div
-                  className={styles.dropdownMenu}
-                  onMouseLeave={handleMouseLeave}
-                  style={{
-                    backgroundColor: colors.background.card,
-                    border: `1px solid ${colors.border.primary}`,
-                    boxShadow: colors.shadow.medium,
-                  }}
-                >
-                  {controlRoomPages.map((item, index) => (
-                    <div key={index} className={styles.dropdownItem}>
-                      <Link
-                        to={item.path}
-                        onClick={handleLinkClick}
-                        style={colors.utils.getTextStyle("primary")}
-                      >
-                        {item.label}
-                      </Link>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </Nav>
+          {renderDropdown(
+            "control",
+            "Управление",
+            controlRoomPages,
+            (item) => isActive(item.path)
+          )}
+        </div>
 
-          <Nav className="ms-auto">
+        <div className="hidden items-center gap-2 lg:flex">
+          <Suspense fallback={null}>
             <ThemeToggle />
+          </Suspense>
+          <a
+            href="/ui"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-[var(--site-text-primary)] transition-all hover:bg-[var(--site-bg-tertiary)] hover:text-[var(--site-text-accent)]"
+            title="Swagger UI"
+            data-testid="nav-link-ui"
+          >
+            <Monitor size={18} />
+          </a>
+          <a
+            href="/static"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-[var(--site-text-primary)] transition-all hover:bg-[var(--site-bg-tertiary)] hover:text-[var(--site-text-accent)]"
+            title="Static files"
+            data-testid="nav-link-static"
+          >
+            <FolderOpen size={18} />
+          </a>
+        </div>
+      </div>
 
-            {/* Иконка для перехода на /ui */}
-            <Nav.Link
-              as={Link}
-              to="/ui"
-              className="ms-3"
-              style={{
-                ...colors.utils.getTextStyle("primary"),
-                fontSize: "1.2rem",
-                padding: "0.5rem",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                minWidth: "40px",
-                height: "40px",
-                borderRadius: "8px",
-                transition: "all 0.3s ease",
-              }}
-              title="Перейти на /ui"
-              href="/ui"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <Monitor size={20} />
-            </Nav.Link>
+      {mobileOpen && (
+        <div className="border-t border-[var(--site-border-primary)] bg-[var(--site-bg-secondary)] px-4 py-3 lg:hidden">
+          <MobileNav
+            sitePages={sitePages}
+            framedataPages={framedataPages}
+            obsComponents={obsComponents}
+            controlRoomPages={controlRoomPages}
+            isActive={isActive}
+            onLinkClick={handleLinkClick}
+          />
+          <div className="mt-3 flex justify-center gap-2 border-t border-[var(--site-border-primary)] pt-3">
+            <Suspense fallback={null}>
+              <ThemeToggle />
+            </Suspense>
+          </div>
+        </div>
+      )}
 
-            {/* Иконка для перехода на /static с релоудом */}
-            <Nav.Link
-              className="ms-2"
-              style={{
-                ...colors.utils.getTextStyle("primary"),
-                fontSize: "1.2rem",
-                padding: "0.5rem",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                minWidth: "40px",
-                height: "40px",
-                borderRadius: "8px",
-                transition: "all 0.3s ease",
-                cursor: "pointer",
-              }}
-              title="Перейти на /static с обновлением страницы"
-              href="/static"
-              as={Link}
-              to="/static"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              <FolderOpen size={20} />
-            </Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Container>
-    </Navbar>
+      <style>{`
+        @keyframes dropdown-open {
+          from { opacity: 0; transform: scaleY(0.95) translateY(-4px); }
+          to { opacity: 1; transform: scaleY(1) translateY(0); }
+        }
+        .animate-dropdown-open {
+          animation: dropdown-open 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+      `}</style>
+    </nav>
+  );
+};
+
+interface MobileNavProps {
+  sitePages: NavigationItem[];
+  framedataPages: NavigationItem[];
+  obsComponents: NavigationGroup[];
+  controlRoomPages: NavigationItem[];
+  isActive: (path: string) => boolean;
+  onLinkClick: () => void;
+}
+
+const MobileNav: React.FC<MobileNavProps> = ({
+  sitePages,
+  framedataPages,
+  obsComponents,
+  controlRoomPages,
+  isActive,
+  onLinkClick,
+}) => {
+  const [openSection, setOpenSection] = useState<string | null>(null);
+
+  const sections = [
+    { key: "site", label: "Страницы сайта", items: sitePages },
+    { key: "framedata", label: "Фреймдата", items: framedataPages },
+    { key: "obs", label: "OBS Компоненты", items: obsComponents.flatMap((g) => g.children) },
+    { key: "control", label: "Управление", items: controlRoomPages },
+  ];
+
+  return (
+    <div className="flex flex-col gap-1">
+      {sections.map((section) => (
+        <div key={section.key}>
+          <button
+            onClick={() => setOpenSection(openSection === section.key ? null : section.key)}
+            className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-[var(--site-text-primary)] transition-all hover:bg-[var(--site-bg-tertiary)]"
+          >
+            {section.label}
+            <ChevronDown
+              size={14}
+              className={`transition-transform ${openSection === section.key ? "rotate-180" : ""}`}
+            />
+          </button>
+          {openSection === section.key && (
+            <div className="ml-4 flex flex-col gap-0.5 border-l border-[var(--site-border-primary)] pl-3">
+              {section.items.map((item, i) => (
+                <Link
+                  key={i}
+                  to={item.path}
+                  onClick={onLinkClick}
+                  className={`rounded-lg px-3 py-2 text-sm transition-all hover:bg-[var(--site-hover-bg)] hover:text-[var(--site-text-accent)] ${
+                    isActive(item.path)
+                      ? "bg-[var(--site-hover-bg)] text-[var(--site-text-accent)]"
+                      : "text-[var(--site-text-primary)]"
+                  }`}
+                >
+                  {item.icon && <span className="mr-2">{item.icon}</span>}
+                  {item.label}
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
   );
 };
 

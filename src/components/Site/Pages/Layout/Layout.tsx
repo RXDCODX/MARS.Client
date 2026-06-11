@@ -1,5 +1,3 @@
-import { Container } from "react-bootstrap";
-
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
 import Footer from "./Footer/Footer";
@@ -22,9 +20,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       }}
     >
       <Header />
-      <Container fluid className={styles.main}>
-        {children}
-      </Container>
+      <main className={styles.main}>{children}</main>
       <Footer />
     </div>
   );
