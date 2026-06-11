@@ -17,6 +17,7 @@ interface Props {
   callback: () => void;
   shuffle: () => void;
   twitchUser: TwitchUser;
+  wide?: boolean;
 }
 
 export default function WaifuRoulette({
@@ -25,6 +26,7 @@ export default function WaifuRoulette({
   callback,
   twitchUser,
   shuffle,
+  wide,
 }: Props) {
   if (prizes.length === 0) {
     throw new Error("Prizes is empty");
@@ -102,7 +104,7 @@ export default function WaifuRoulette({
             hideCenterDelimiter: true,
           }}
           prizeItemRenderFunction={prize => (
-            <WaifuRoulettePrizeItem image={prize.image} text={prize.text} />
+            <WaifuRoulettePrizeItem image={prize.image} text={prize.text} wide={wide} />
           )}
           onPrizeDefined={() => {
             setVisible(false);

@@ -125,6 +125,7 @@ export default function FumoAlerts() {
               text: p.text || "",
             }))}
             twitchUser={currentFumoMessage.twitchUser}
+            wide
           />
         )}
       {currentFumoMessage &&
