@@ -7084,8 +7084,12 @@
           "availablePlatforms",
           "commandName",
           "description",
+          "inlineDescription",
+          "inlineTitle",
           "isAdminCommand",
           "parameters",
+          "supportsInline",
+          "supportsMediaInline",
           "visibility"
         ],
         "type": "object",
@@ -7137,8 +7141,30 @@
               "None",
               "FullList",
               "ShortList",
+              "Inline",
               "All"
             ],
+            "type": "string",
+            "readOnly": true
+          },
+          "supportsInline": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "supportsMediaInline": {
+            "type": "boolean",
+            "readOnly": true
+          },
+          "inlinePreviewUrl": {
+            "type": "string",
+            "nullable": true,
+            "readOnly": true
+          },
+          "inlineTitle": {
+            "type": "string",
+            "readOnly": true
+          },
+          "inlineDescription": {
             "type": "string",
             "readOnly": true
           }
@@ -8292,6 +8318,7 @@
           "extension",
           "fileName",
           "filePath",
+          "isFileNotConvertable",
           "isLocalFile",
           "type"
         ],
@@ -8320,6 +8347,9 @@
           },
           "extension": {
             "type": "string"
+          },
+          "isFileNotConvertable": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -10252,6 +10282,7 @@
           "createdAt",
           "displayName",
           "isBroadcaster",
+          "isInBlockList",
           "isModerator",
           "isSimpleUser",
           "isVip",
@@ -10308,6 +10339,9 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "isInBlockList": {
+            "type": "boolean"
           },
           "isSimpleUser": {
             "type": "boolean",

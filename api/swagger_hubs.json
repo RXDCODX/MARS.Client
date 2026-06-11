@@ -725,6 +725,37 @@
         "responses": { }
       }
     },
+    "/hubs/telegramus/FumoRoll": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "fumo",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Fumo"
+            }
+          },
+          {
+            "name": "displayName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "color",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/telegramus/GaoAlert": {
       "post": {
         "tags": [
@@ -994,6 +1025,26 @@
             "in": "query",
             "schema": {
               "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/UpdateFumoPrizes": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "prizes",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/FumoPrizeType"
+              }
             }
           }
         ],
@@ -1553,6 +1604,88 @@
         },
         "additionalProperties": false
       },
+      "Fumo": {
+        "required": [
+          "character",
+          "lastOrder",
+          "mfcId",
+          "name",
+          "orderCount",
+          "rating",
+          "ratingCount",
+          "thumbnailUrl",
+          "whenAdded"
+        ],
+        "type": "object",
+        "properties": {
+          "mfcId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "maxLength": 300,
+            "minLength": 1,
+            "type": "string"
+          },
+          "character": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "origin": {
+            "maxLength": 100,
+            "type": "string",
+            "nullable": true
+          },
+          "thumbnailUrl": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "rating": {
+            "type": "number",
+            "format": "double"
+          },
+          "ratingCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "whenAdded": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastOrder": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "orderCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FumoPrizeType": {
+        "required": [
+          "id",
+          "image",
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "image": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "GaoAlertDto": {
         "required": [
           "id",
@@ -1839,6 +1972,7 @@
           "extension",
           "fileName",
           "filePath",
+          "isFileNotConvertable",
           "isLocalFile",
           "type"
         ],
@@ -1867,6 +2001,9 @@
           },
           "extension": {
             "type": "string"
+          },
+          "isFileNotConvertable": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -2613,6 +2750,7 @@
           "createdAt",
           "displayName",
           "isBroadcaster",
+          "isInBlockList",
           "isModerator",
           "isSimpleUser",
           "isVip",
@@ -2669,6 +2807,9 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "isInBlockList": {
+            "type": "boolean"
           },
           "isSimpleUser": {
             "type": "boolean",

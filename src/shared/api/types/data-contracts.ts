@@ -47,6 +47,11 @@ export interface BaseCommand {
   aliases: string[];
   parameters: CommandParameterInfo[];
   visibility: BaseCommandVisibilityEnum;
+  supportsInline: boolean;
+  supportsMediaInline: boolean;
+  inlinePreviewUrl?: string;
+  inlineTitle: string;
+  inlineDescription: string;
 }
 
 export interface BaseTrackInfo {
@@ -351,6 +356,7 @@ export interface MediaFileInfo {
   isLocalFile: boolean;
   fileName: string;
   extension: string;
+  isFileNotConvertable: boolean;
 }
 
 export interface MediaMetaInfo {
@@ -863,6 +869,7 @@ export interface TwitchUser {
   lastUpdated: string;
   /** @format date-time */
   createdAt: string;
+  isInBlockList: boolean;
   isSimpleUser: boolean;
 }
 
@@ -981,6 +988,7 @@ export enum BaseCommandVisibilityEnum {
   None = "None",
   FullList = "FullList",
   ShortList = "ShortList",
+  Inline = "Inline",
   All = "All",
 }
 
@@ -1325,6 +1333,45 @@ export interface Emote {
 export interface EmoteSet {
   emotes: Emote[];
   rawEmoteSetString?: string;
+}
+
+export interface Fumo {
+  /**
+   * @minLength 1
+   * @maxLength 100
+   */
+  character: string;
+  /** @format date-time */
+  lastOrder: string;
+  /** @format int32 */
+  mfcId: number;
+  /**
+   * @minLength 1
+   * @maxLength 300
+   */
+  name: string;
+  /** @format int32 */
+  orderCount: number;
+  /** @maxLength 100 */
+  origin?: string;
+  /** @format double */
+  rating: number;
+  /** @format int32 */
+  ratingCount: number;
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  thumbnailUrl: string;
+  /** @format date-time */
+  whenAdded: string;
+}
+
+export interface FumoPrizeType {
+  /** @format int32 */
+  id: number;
+  image: string;
+  text: string;
 }
 
 export interface GaoAlertDto {

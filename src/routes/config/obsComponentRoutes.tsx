@@ -127,6 +127,10 @@ const waifuAlertsLoader = () =>
   import("@/components/OBS_Components/WaifuAlerts/WaifuAlerts");
 const WaifuAlerts = lazy(waifuAlertsLoader);
 
+const fumoAlertsLoader = () =>
+  import("@/components/OBS_Components/FumoAlerts/FumoAlerts");
+const FumoAlerts = lazy(fumoAlertsLoader);
+
 const phonkEditLoader = () =>
   import("@/components/OBS_Components/PhonkLayout/PhonkLayoutManager");
 const PhonkLayoutManager = lazy(phonkEditLoader);
@@ -167,6 +171,7 @@ registerPrefetchComponents([
   scoreboardLoader,
   managerLoader,
   waifuAlertsLoader,
+  fumoAlertsLoader,
 ]);
 
 // Массив OBS компонентов (без Layout для интеграции в OBS)
@@ -346,6 +351,18 @@ export const obsComponentRoutes: RouteConfig[] = [
       <OBSComponentWrapper>
         <Suspense fallback={<OBSLazyLoader />}>
           <WaifuAlerts />
+        </Suspense>
+      </OBSComponentWrapper>
+    ),
+  },
+  {
+    path: "/fumo",
+    name: "Fumo Алерты",
+    type: "obs",
+    element: (
+      <OBSComponentWrapper>
+        <Suspense fallback={<OBSLazyLoader />}>
+          <FumoAlerts />
         </Suspense>
       </OBSComponentWrapper>
     ),

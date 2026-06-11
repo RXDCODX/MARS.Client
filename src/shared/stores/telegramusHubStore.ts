@@ -4,9 +4,11 @@ import { PrizeType } from "react-roulette-pro";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
+import { FumoAlertProps } from "@/components/OBS_Components/FumoAlerts/helper";
 import { WaifuAlertProps } from "@/components/OBS_Components/WaifuAlerts/helper";
-import { Host, Waifu } from "@/shared/api";
+import { Fumo, Host, Waifu } from "@/shared/api";
 import { TelegramusHubSignalRConnectionBuilder } from "@/shared/api/signalr-clients/TelegramusHub/SignalRContext";
+import useFumoPrizesStore from "@/shared/stores/fumoPrizesStore";
 import useWaifuPrizesStore from "@/shared/stores/waifuPrizesStore";
 
 interface TelegramusHubActions {
@@ -15,22 +17,30 @@ interface TelegramusHubActions {
   invoke: (methodName: string, ...args: unknown[]) => Promise<unknown>;
 
   dequeueCurrent: () => void;
+  dequeueFumoCurrent: () => void;
 }
 
 interface TelegramusHubState {
   connection?: HubConnection;
   isConnected: boolean;
 
-  // Очередь алертов
+  // Очередь алертов вайфу
   messages: WaifuAlertProps[];
   currentMessage?: WaifuAlertProps;
   isWaifuShowing: boolean;
+
+  // Очередь алертов Fumo
+  fumoMessages: FumoAlertProps[];
+  currentFumoMessage?: FumoAlertProps;
+  isFumoShowing: boolean;
 }
 
 const initialState: TelegramusHubState = {
   isConnected: false,
   messages: [],
   isWaifuShowing: false,
+  fumoMessages: [],
+  isFumoShowing: false,
 };
 
 export const useTelegramusHubStore = create<
@@ -116,6 +126,29 @@ export const useTelegramusHubStore = create<
           }
         );
 
+        // FumoRoll обработчик
+        connection.on(
+          "FumoRoll",
+          (fumo: Fumo, displayName: string, color?: string) => {
+            const parsed: FumoAlertProps = {
+              fumo,
+              displayName,
+              color,
+            };
+            const { fumoMessages, isFumoShowing } = get();
+            if (!isFumoShowing) {
+              set({
+                fumoMessages: [...fumoMessages],
+                currentFumoMessage: parsed,
+                isFumoShowing: true,
+              });
+              return;
+            }
+            set({ fumoMessages: [...fumoMessages, parsed] });
+          }
+        );
+
+        // UpdateWaifuPrizes обработчик
         const handlePrizesUpdate = (prizes: PrizeType[]) => {
           if (!prizes || prizes.length === 0) {
             return;
@@ -125,6 +158,17 @@ export const useTelegramusHubStore = create<
 
         connection.on("updatewaifuprizes", handlePrizesUpdate);
         connection.on("UpdateWaifuPrizes", handlePrizesUpdate);
+
+        // UpdateFumoPrizes обработчик
+        const handleFumoPrizesUpdate = (prizes: PrizeType[]) => {
+          if (!prizes || prizes.length === 0) {
+            return;
+          }
+          useFumoPrizesStore.getState().addPrizes(prizes);
+        };
+
+        connection.on("updatefumoprizes", handleFumoPrizesUpdate);
+        connection.on("UpdateFumoPrizes", handleFumoPrizesUpdate);
 
         await connection.start();
         set({ connection, isConnected: true });
@@ -173,6 +217,35 @@ export const useTelegramusHubStore = create<
           return;
         }
         set({ messages: [], currentMessage: undefined, isWaifuShowing: false });
+      },
+
+      dequeueFumoCurrent: () => {
+        const { fumoMessages, currentFumoMessage } = get();
+        if (fumoMessages.length > 0 && currentFumoMessage) {
+          const newArray = fumoMessages.filter(
+            m => m.fumo.mfcId !== currentFumoMessage.fumo.mfcId
+          );
+          if (newArray.length > 0) {
+            const next = newArray[0];
+            set({
+              fumoMessages: newArray,
+              currentFumoMessage: next,
+              isFumoShowing: true,
+            });
+            return;
+          }
+          set({
+            fumoMessages: [],
+            currentFumoMessage: undefined,
+            isFumoShowing: false,
+          });
+          return;
+        }
+        set({
+          fumoMessages: [],
+          currentFumoMessage: undefined,
+          isFumoShowing: false,
+        });
       },
     }),
     { name: "TelegramusHubStore" }
