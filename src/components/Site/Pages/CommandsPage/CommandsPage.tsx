@@ -827,7 +827,7 @@ const CommandsPage: React.FC = () => {
   ];
 
   return (
-    <div style={{ padding: "16px 0" }}>
+    <div className="page-container">
       <div
         style={{
           display: "flex",

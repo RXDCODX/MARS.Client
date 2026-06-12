@@ -1,5 +1,6 @@
 import "./MediaInfoPage.scss";
 
+import { Alert, Button, Flex, Spin, Tag } from "antd";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -58,16 +59,20 @@ const MediaInfoPreviewCard: React.FC<{
         </div>
 
         <div className="preview-badges">
-          <span
-            className={`badge priority-badge priority-${item.metaInfo.priority.toLowerCase()}`}
+          <Tag
+            color={
+              item.metaInfo.priority === "High"
+                ? "red"
+                : item.metaInfo.priority === "Low"
+                  ? "default"
+                  : "blue"
+            }
           >
             {item.metaInfo.priority}
-          </span>
-          <span
-            className={`badge type-badge type-${item.fileInfo.type.toLowerCase()}`}
-          >
+          </Tag>
+          <Tag color="cyan">
             {item.fileInfo.type}
-          </span>
+          </Tag>
         </div>
       </div>
 
@@ -330,9 +335,9 @@ export const MediaInfoEditPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="media-info-page media-info-edit-page">
+      <div className="media-info-page media-info-edit-page" data-testid="media-info-edit-page">
         <div className="state-block">
-          <div className="loading-spinner" />
+          <Spin size="large" data-testid="loading-spinner" />
           <p>Загружаем карточку алерта...</p>
         </div>
       </div>
@@ -341,12 +346,14 @@ export const MediaInfoEditPage: React.FC = () => {
 
   if (!alert) {
     return (
-      <div className="media-info-page media-info-edit-page">
+      <div className="media-info-page media-info-edit-page" data-testid="media-info-edit-page">
         <div className="state-block empty-state">
           <h2>Алерт не найден</h2>
           <p>Запрашиваемая запись отсутствует или была удалена.</p>
-          <Link to="/media-info" className="btn btn-primary">
-            Вернуться к списку
+          <Link to="/media-info">
+            <Button type="primary" data-testid="button-back-to-list-not-found">
+              Вернуться к списку
+            </Button>
           </Link>
         </div>
       </div>
@@ -354,7 +361,7 @@ export const MediaInfoEditPage: React.FC = () => {
   }
 
   return (
-    <div className="media-info-page media-info-edit-page">
+    <div className="media-info-page media-info-edit-page" data-testid="media-info-edit-page">
       <section className="media-info-hero">
         <div className="hero-copy">
           <p className="eyebrow">Редактирование</p>
@@ -366,50 +373,45 @@ export const MediaInfoEditPage: React.FC = () => {
         </div>
 
         <div className="hero-actions">
-          <button
-            type="button"
-            className="btn btn-outline-secondary hero-button"
+          <Button
+            className="hero-button"
             onClick={handleCancel}
+            data-testid="button-back"
           >
             Назад
-          </button>
-          <button
-            type="button"
-            className="btn btn-outline-danger hero-button"
+          </Button>
+          <Button
+            danger
+            className="hero-button"
             onClick={handleDelete}
-            disabled={saving}
+            loading={saving}
+            data-testid="button-delete"
           >
             Удалить
-          </button>
+          </Button>
         </div>
       </section>
 
       {error && (
-        <div className="alert alert-danger page-alert">
-          <div className="alert-content">
-            <strong>Ошибка:</strong> {error}
-          </div>
-          <button
-            type="button"
-            className="btn-close"
-            onClick={() => setError(null)}
-          >
-            ×
-          </button>
-        </div>
+        <Alert
+          type="error"
+          message={`Ошибка: ${error}`}
+          closable
+          onClose={() => setError(null)}
+          style={{ marginBottom: 18, borderRadius: 18 }}
+          data-testid="error-alert"
+        />
       )}
 
       {success && (
-        <div className="alert alert-success page-alert success-alert">
-          <div className="alert-content">{success}</div>
-          <button
-            type="button"
-            className="btn-close"
-            onClick={() => setSuccess(null)}
-          >
-            ×
-          </button>
-        </div>
+        <Alert
+          type="success"
+          message={success}
+          closable
+          onClose={() => setSuccess(null)}
+          style={{ marginBottom: 18, borderRadius: 18 }}
+          data-testid="success-alert"
+        />
       )}
 
       <div className="editor-layout">
@@ -426,22 +428,22 @@ export const MediaInfoEditPage: React.FC = () => {
                 </p>
               </div>
 
-              <div className="editor-form-actions">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
+              <Flex gap={12} wrap="wrap" className="editor-form-actions">
+                <Button
                   onClick={handleGenerateRewardId}
+                  data-testid="button-new-reward"
                 >
                   Новый reward id
-                </button>
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={saving}
+                </Button>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={saving}
+                  data-testid="button-save"
                 >
                   {saving ? "Сохраняем..." : "Сохранить"}
-                </button>
-              </div>
+                </Button>
+              </Flex>
             </div>
 
             <MediaInfoFormSections
@@ -454,22 +456,22 @@ export const MediaInfoEditPage: React.FC = () => {
               previewUrl={previewUrl}
             />
 
-            <div className="editor-footer-actions">
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={saving}
+            <Flex gap={12} wrap="wrap" justify="flex-end" className="editor-footer-actions">
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={saving}
+                data-testid="button-save-footer"
               >
                 {saving ? "Сохраняем..." : "Сохранить изменения"}
-              </button>
-              <button
-                type="button"
-                className="btn btn-secondary"
+              </Button>
+              <Button
                 onClick={handleCancel}
+                data-testid="button-cancel-edit"
               >
                 К списку
-              </button>
-            </div>
+              </Button>
+            </Flex>
           </form>
         </section>
       </div>

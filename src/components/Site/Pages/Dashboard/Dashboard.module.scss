@@ -1,6 +1,6 @@
 .dashboard {
   padding: 24px;
-  background: var(--bs-body-bg);
+  background: var(--site-bg-primary);
   min-height: 100vh;
 }
 
@@ -11,7 +11,7 @@
   h1 {
     font-size: 2.5rem;
     font-weight: 700;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     margin-bottom: 8px;
     background: var(--primary-gradient);
     -webkit-text-fill-color: transparent;
@@ -21,7 +21,7 @@
 
   p {
     font-size: 1.1rem;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     margin: 0;
     text-shadow: var(--text-shadow-light);
   }
@@ -62,7 +62,7 @@
 
   p {
     font-size: 1.1rem;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     text-shadow: var(--text-shadow-light);
   }
 }
@@ -70,8 +70,8 @@
 .loadingSpinner {
   width: 40px;
   height: 40px;
-  border: 4px solid var(--bs-border-color);
-  border-top: 4px solid var(--bs-primary);
+  border: 4px solid var(--site-border-primary);
+  border-top: 4px solid var(--site-text-accent);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

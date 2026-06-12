@@ -3,6 +3,7 @@ import {
   MediaFileInfoTypeEnum,
   MediaMetaInfoPriorityEnum,
 } from "@/shared/api";
+import { Button, Flex, Form, Input, InputNumber, Select, Switch } from "antd";
 
 import {
   mediaInfoFileTypes,
@@ -28,88 +29,103 @@ export const MediaInfoFormSections: React.FC<Props> = ({
   helpText,
   previewUrl,
 }) => (
-  <div className="media-info-form-sections">
+  <Flex vertical gap={18} data-testid="media-info-form-sections">
     <section className="form-section-card">
       <div className="section-heading">
         <h2>Основные данные</h2>
         <p>Название, триггер и сам текст алерта.</p>
       </div>
 
-      <div className="form-grid form-grid-two">
-        <label className="field">
-          <span>Отображаемое имя</span>
-          <input
-            type="text"
+      <Flex gap={14} wrap="wrap">
+        <Form.Item
+          label="Отображаемое имя"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 200 }}
+          required
+        >
+          <Input
             value={formData.metaInfo.displayName}
             onChange={event =>
               onChange("metaInfo.displayName", event.target.value)
             }
             placeholder="Например: Welcome clip"
-            required
+            data-testid="input-display-name"
           />
-        </label>
+        </Form.Item>
 
-        <label className="field">
-          <span>Триггер</span>
-          <input
-            type="text"
+        <Form.Item
+          label="Триггер"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 200 }}
+        >
+          <Input
             value={formData.textInfo.triggerWord ?? ""}
             onChange={event =>
               onChange("textInfo.triggerWord", event.target.value)
             }
             placeholder="Команда или слово"
+            data-testid="input-trigger-word"
           />
-        </label>
-      </div>
+        </Form.Item>
+      </Flex>
 
-      <label className="field">
-        <span>Текст алерта</span>
-        <textarea
+      <Form.Item label="Текст алерта" layout="vertical">
+        <Input.TextArea
           value={formData.textInfo.text ?? ""}
           onChange={event => onChange("textInfo.text", event.target.value)}
           rows={4}
           placeholder="Текст, который увидит зритель"
+          data-testid="input-alert-text"
         />
-      </label>
+      </Form.Item>
 
-      <div className="form-grid form-grid-three">
-        <label className="field">
-          <span>Цвет текста</span>
-          <input
-            type="text"
+      <Flex gap={14} wrap="wrap">
+        <Form.Item
+          label="Цвет текста"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 160 }}
+        >
+          <Input
             value={formData.textInfo.textColor ?? ""}
             onChange={event =>
               onChange("textInfo.textColor", event.target.value)
             }
             placeholder="#ffffff"
+            data-testid="input-text-color"
           />
-        </label>
+        </Form.Item>
 
-        <label className="field">
-          <span>Цвет ключевых слов</span>
-          <input
-            type="text"
+        <Form.Item
+          label="Цвет ключевых слов"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 160 }}
+        >
+          <Input
             value={formData.textInfo.keyWordsColor ?? ""}
             onChange={event =>
               onChange("textInfo.keyWordsColor", event.target.value)
             }
             placeholder="#f7c948"
+            data-testid="input-keywords-color"
           />
-        </label>
+        </Form.Item>
 
-        <label className="field">
-          <span>Разделитель ключевых слов</span>
-          <input
-            type="text"
+        <Form.Item
+          label="Разделитель ключевых слов"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 160 }}
+        >
+          <Input
             value={formData.textInfo.keyWordSybmolDelimiter ?? ""}
             onChange={event =>
               onChange("textInfo.keyWordSybmolDelimiter", event.target.value)
             }
             placeholder="#"
             maxLength={1}
+            data-testid="input-keyword-delimiter"
           />
-        </label>
-      </div>
+        </Form.Item>
+      </Flex>
     </section>
 
     <section className="form-section-card reward-card">
@@ -133,11 +149,13 @@ export const MediaInfoFormSections: React.FC<Props> = ({
         </span>
       </div>
 
-      <div className="form-grid form-grid-two">
-        <label className="field">
-          <span>Reward ID</span>
-          <input
-            type="text"
+      <Flex gap={14} wrap="wrap">
+        <Form.Item
+          label="Reward ID"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 200 }}
+        >
+          <Input
             value={formData.metaInfo.twitchGuid ?? ""}
             onChange={event =>
               onChange(
@@ -146,37 +164,43 @@ export const MediaInfoFormSections: React.FC<Props> = ({
               )
             }
             placeholder="UUID кастомной награды"
+            data-testid="input-reward-id"
           />
-        </label>
+        </Form.Item>
 
-        <label className="field">
-          <span>Стоимость</span>
-          <input
+        <Form.Item
+          label="Стоимость"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 200 }}
+        >
+          <InputNumber
             value={formData.metaInfo.twitchPointsCost}
-            onChange={event =>
-              // allow any numeric value including negative
-              onChange("metaInfo.twitchPointsCost", Number(event.target.value))
-            }
+            onChange={value => {
+              if (value !== null) {
+                onChange("metaInfo.twitchPointsCost", value);
+              }
+            }}
+            style={{ width: "100%" }}
+            data-testid="input-points-cost"
           />
-        </label>
-      </div>
+        </Form.Item>
+      </Flex>
 
-      <div className="reward-actions">
-        <button
-          type="button"
-          className="btn btn-secondary"
+      <Flex gap={12} wrap="wrap" className="reward-actions">
+        <Button
+          type="default"
           onClick={onGenerateRewardId}
+          data-testid="button-generate-reward"
         >
           Сгенерировать новый reward id
-        </button>
-        <button
-          type="button"
-          className="btn btn-outline-secondary"
+        </Button>
+        <Button
           onClick={onClearRewardId}
+          data-testid="button-clear-reward"
         >
           Очистить привязку
-        </button>
-      </div>
+        </Button>
+      </Flex>
     </section>
 
     <section className="form-section-card">
@@ -186,47 +210,51 @@ export const MediaInfoFormSections: React.FC<Props> = ({
         {helpText ? <p>{helpText}</p> : null}
       </div>
 
-      <div className="form-grid form-grid-two">
-        <label className="field">
-          <span>Имя файла</span>
-          <input
-            type="text"
+      <Flex gap={14} wrap="wrap">
+        <Form.Item
+          label="Имя файла"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 200 }}
+          required
+        >
+          <Input
             value={formData.fileInfo.fileName}
             onChange={event =>
               onChange("fileInfo.fileName", event.target.value)
             }
-            required
+            data-testid="input-file-name"
           />
-        </label>
+        </Form.Item>
 
-        <label className="field">
-          <span>Расширение</span>
-          <input
-            type="text"
+        <Form.Item
+          label="Расширение"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 200 }}
+          required
+        >
+          <Input
             value={formData.fileInfo.extension}
             onChange={event =>
               onChange("fileInfo.extension", event.target.value)
             }
-            required
+            data-testid="input-file-extension"
           />
-        </label>
-      </div>
+        </Form.Item>
+      </Flex>
 
-      <label className="field">
-        <span>Путь к файлу</span>
-        <input
-          type="text"
+      <Form.Item label="Путь к файлу" layout="vertical" required>
+        <Input
           value={formData.fileInfo.filePath}
           onChange={event => onChange("fileInfo.filePath", event.target.value)}
           placeholder="/Alerts/uploaded_mems/..."
-          required
+          data-testid="input-file-path"
         />
-      </label>
+      </Form.Item>
 
-      <label className="field">
-        <span>Загрузить файл</span>
+      <Form.Item label="Загрузить файл" layout="vertical">
         <input
           type="file"
+          data-testid="input-file-upload"
           onChange={event => {
             const file = event.target.files && event.target.files[0];
             if (file) {
@@ -238,7 +266,7 @@ export const MediaInfoFormSections: React.FC<Props> = ({
             }
           }}
         />
-      </label>
+      </Form.Item>
 
       {(previewUrl || formData.fileInfo.filePath) && (
         <div className="field">
@@ -275,44 +303,53 @@ export const MediaInfoFormSections: React.FC<Props> = ({
         </div>
       )}
 
-      <div className="form-grid form-grid-three">
-        <label className="field">
-          <span>Тип файла</span>
-          <select
+      <Flex gap={14} wrap="wrap">
+        <Form.Item
+          label="Тип файла"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 160 }}
+        >
+          <Select
             value={formData.fileInfo.type}
-            onChange={event =>
-              onChange(
-                "fileInfo.type",
-                event.target.value as MediaFileInfoTypeEnum
-              )
-            }
-          >
-            {mediaInfoFileTypes.map(type => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </select>
-        </label>
+            onChange={value => onChange("fileInfo.type", value)}
+            options={mediaInfoFileTypes.map(type => ({
+              label: type,
+              value: type,
+            }))}
+            data-testid="select-file-type"
+          />
+        </Form.Item>
 
-        <label className="field">
-          <span>Локальный файл</span>
-          <select
+        <Form.Item
+          label="Локальный файл"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 160 }}
+        >
+          <Select
             value={formData.fileInfo.isLocalFile ? "true" : "false"}
-            onChange={event =>
-              onChange("fileInfo.isLocalFile", event.target.value === "true")
+            onChange={value =>
+              onChange("fileInfo.isLocalFile", value === "true")
             }
-          >
-            <option value="true">Да</option>
-            <option value="false">Нет</option>
-          </select>
-        </label>
+            options={[
+              { label: "Да", value: "true" },
+              { label: "Нет", value: "false" },
+            ]}
+            data-testid="select-local-file"
+          />
+        </Form.Item>
 
-        <label className="field">
-          <span>Формат preview</span>
-          <input type="text" value={formData.fileInfo.extension} disabled />
-        </label>
-      </div>
+        <Form.Item
+          label="Формат preview"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 160 }}
+        >
+          <Input
+            value={formData.fileInfo.extension}
+            disabled
+            data-testid="input-preview-format"
+          />
+        </Form.Item>
+      </Flex>
     </section>
 
     <section className="form-section-card">
@@ -321,152 +358,192 @@ export const MediaInfoFormSections: React.FC<Props> = ({
         <p>Координаты, масштаб и флаги поведения.</p>
       </div>
 
-      <div className="form-grid form-grid-four">
-        <label className="field">
-          <span>X</span>
-          <input
-            type="number"
+      <Flex gap={14} wrap="wrap">
+        <Form.Item
+          label="X"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 120 }}
+        >
+          <InputNumber
             value={formData.positionInfo.xCoordinate}
-            onChange={event =>
-              onChange("positionInfo.xCoordinate", Number(event.target.value))
-            }
+            onChange={value => {
+              if (value !== null) {
+                onChange("positionInfo.xCoordinate", value);
+              }
+            }}
+            style={{ width: "100%" }}
+            data-testid="input-x-coordinate"
           />
-        </label>
+        </Form.Item>
 
-        <label className="field">
-          <span>Y</span>
-          <input
-            type="number"
+        <Form.Item
+          label="Y"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 120 }}
+        >
+          <InputNumber
             value={formData.positionInfo.yCoordinate}
-            onChange={event =>
-              onChange("positionInfo.yCoordinate", Number(event.target.value))
-            }
+            onChange={value => {
+              if (value !== null) {
+                onChange("positionInfo.yCoordinate", value);
+              }
+            }}
+            style={{ width: "100%" }}
+            data-testid="input-y-coordinate"
           />
-        </label>
+        </Form.Item>
 
-        <label className="field">
-          <span>Ширина</span>
-          <input
-            type="number"
+        <Form.Item
+          label="Ширина"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 120 }}
+        >
+          <InputNumber
             value={formData.positionInfo.width}
-            onChange={event =>
-              onChange("positionInfo.width", Number(event.target.value))
-            }
+            onChange={value => {
+              if (value !== null) {
+                onChange("positionInfo.width", value);
+              }
+            }}
+            style={{ width: "100%" }}
+            data-testid="input-width"
           />
-        </label>
+        </Form.Item>
 
-        <label className="field">
-          <span>Высота</span>
-          <input
-            type="number"
+        <Form.Item
+          label="Высота"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 120 }}
+        >
+          <InputNumber
             value={formData.positionInfo.height}
-            onChange={event =>
-              onChange("positionInfo.height", Number(event.target.value))
-            }
+            onChange={value => {
+              if (value !== null) {
+                onChange("positionInfo.height", value);
+              }
+            }}
+            style={{ width: "100%" }}
+            data-testid="input-height"
           />
-        </label>
-      </div>
+        </Form.Item>
+      </Flex>
 
-      <div className="form-grid form-grid-three">
-        <label className="field">
-          <span>Поворот</span>
-          <input
-            type="number"
+      <Flex gap={14} wrap="wrap">
+        <Form.Item
+          label="Поворот"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 160 }}
+        >
+          <InputNumber
             value={formData.positionInfo.rotation}
-            onChange={event =>
-              onChange("positionInfo.rotation", Number(event.target.value))
-            }
+            onChange={value => {
+              if (value !== null) {
+                onChange("positionInfo.rotation", value);
+              }
+            }}
+            style={{ width: "100%" }}
+            data-testid="input-rotation"
           />
-        </label>
+        </Form.Item>
 
-        <label className="field">
-          <span>Рандомные координаты</span>
-          <select
+        <Form.Item
+          label="Рандомные координаты"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 160 }}
+        >
+          <Select
             value={formData.positionInfo.randomCoordinates ? "true" : "false"}
-            onChange={event =>
+            onChange={value =>
               onChange(
                 "positionInfo.randomCoordinates",
-                event.target.value === "true"
+                value === "true"
               )
             }
-          >
-            <option value="true">Да</option>
-            <option value="false">Нет</option>
-          </select>
-        </label>
+            options={[
+              { label: "Да", value: "true" },
+              { label: "Нет", value: "false" },
+            ]}
+            data-testid="select-random-coordinates"
+          />
+        </Form.Item>
 
-        <label className="field">
-          <span>Пропорционально</span>
-          <select
+        <Form.Item
+          label="Пропорционально"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 160 }}
+        >
+          <Select
             value={formData.positionInfo.isProportion ? "true" : "false"}
-            onChange={event =>
+            onChange={value =>
               onChange(
                 "positionInfo.isProportion",
-                event.target.value === "true"
+                value === "true"
               )
             }
-          >
-            <option value="true">Да</option>
-            <option value="false">Нет</option>
-          </select>
-        </label>
-      </div>
+            options={[
+              { label: "Да", value: "true" },
+              { label: "Нет", value: "false" },
+            ]}
+            data-testid="select-proportion"
+          />
+        </Form.Item>
+      </Flex>
 
       <div className="toggle-grid">
         <label className="toggle-field">
-          <input
-            type="checkbox"
+          <Switch
             checked={formData.positionInfo.isRotated}
-            onChange={event =>
-              onChange("positionInfo.isRotated", event.target.checked)
+            onChange={checked =>
+              onChange("positionInfo.isRotated", checked)
             }
+            data-testid="switch-rotated"
           />
           <span>Рандомный поворот</span>
         </label>
 
         <label className="toggle-field">
-          <input
-            type="checkbox"
+          <Switch
             checked={formData.positionInfo.isResizeRequires}
-            onChange={event =>
-              onChange("positionInfo.isResizeRequires", event.target.checked)
+            onChange={checked =>
+              onChange("positionInfo.isResizeRequires", checked)
             }
+            data-testid="switch-resize-requires"
           />
           <span>Требует ресайз</span>
         </label>
 
         <label className="toggle-field">
-          <input
-            type="checkbox"
+          <Switch
             checked={formData.positionInfo.isHorizontalCenter}
-            onChange={event =>
-              onChange("positionInfo.isHorizontalCenter", event.target.checked)
+            onChange={checked =>
+              onChange("positionInfo.isHorizontalCenter", checked)
             }
+            data-testid="switch-horizontal-center"
           />
           <span>Центр по горизонтали</span>
         </label>
 
         <label className="toggle-field">
-          <input
-            type="checkbox"
+          <Switch
             checked={formData.positionInfo.isVerticallCenter}
-            onChange={event =>
-              onChange("positionInfo.isVerticallCenter", event.target.checked)
+            onChange={checked =>
+              onChange("positionInfo.isVerticallCenter", checked)
             }
+            data-testid="switch-vertical-center"
           />
           <span>Центр по вертикали</span>
         </label>
 
         <label className="toggle-field">
-          <input
-            type="checkbox"
+          <Switch
             checked={formData.positionInfo.isUseOriginalWidthAndHeight}
-            onChange={event =>
+            onChange={checked =>
               onChange(
                 "positionInfo.isUseOriginalWidthAndHeight",
-                event.target.checked
+                checked
               )
             }
+            data-testid="switch-original-size"
           />
           <span>Оригинальный размер</span>
         </label>
@@ -479,70 +556,81 @@ export const MediaInfoFormSections: React.FC<Props> = ({
         <p>Длительность, приоритет, громкость и флаги отображения.</p>
       </div>
 
-      <div className="form-grid form-grid-three">
-        <label className="field">
-          <span>Длительность, сек</span>
-          <input
-            type="number"
+      <Flex gap={14} wrap="wrap">
+        <Form.Item
+          label="Длительность, сек"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 160 }}
+        >
+          <InputNumber
             min={1}
             max={3600}
             value={formData.metaInfo.duration}
-            onChange={event =>
-              onChange("metaInfo.duration", Number(event.target.value))
-            }
+            onChange={value => {
+              if (value !== null) {
+                onChange("metaInfo.duration", value);
+              }
+            }}
+            style={{ width: "100%" }}
+            data-testid="input-duration"
           />
-        </label>
+        </Form.Item>
 
-        <label className="field">
-          <span>Приоритет</span>
-          <select
+        <Form.Item
+          label="Приоритет"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 160 }}
+        >
+          <Select
             value={formData.metaInfo.priority}
-            onChange={event =>
-              onChange(
-                "metaInfo.priority",
-                event.target.value as MediaMetaInfoPriorityEnum
-              )
-            }
-          >
-            {mediaInfoPriorities.map(priority => (
-              <option key={priority} value={priority}>
-                {priority}
-              </option>
-            ))}
-          </select>
-        </label>
+            onChange={value => onChange("metaInfo.priority", value)}
+            options={mediaInfoPriorities.map(priority => ({
+              label: priority,
+              value: priority,
+            }))}
+            data-testid="select-priority"
+          />
+        </Form.Item>
 
-        <label className="field">
-          <span>Громкость</span>
-          <input
-            type="number"
+        <Form.Item
+          label="Громкость"
+          layout="vertical"
+          style={{ flex: 1, minWidth: 160 }}
+        >
+          <InputNumber
             min={0}
             max={400}
             value={formData.metaInfo.volume}
-            onChange={event =>
-              onChange("metaInfo.volume", Number(event.target.value))
-            }
+            onChange={value => {
+              if (value !== null) {
+                onChange("metaInfo.volume", value);
+              }
+            }}
+            style={{ width: "100%" }}
+            data-testid="input-volume"
           />
-        </label>
-      </div>
+        </Form.Item>
+      </Flex>
 
       <div className="toggle-grid">
         <label className="toggle-field">
-          <input
-            type="checkbox"
+          <Switch
             checked={formData.metaInfo.isLooped}
-            onChange={event =>
-              onChange("metaInfo.isLooped", event.target.checked)
+            onChange={checked =>
+              onChange("metaInfo.isLooped", checked)
             }
+            data-testid="switch-looped"
           />
           <span>Зациклить</span>
         </label>
 
         <label className="toggle-field">
-          <input
-            type="checkbox"
+          <Switch
             checked={formData.metaInfo.vip}
-            onChange={event => onChange("metaInfo.vip", event.target.checked)}
+            onChange={checked =>
+              onChange("metaInfo.vip", checked)
+            }
+            data-testid="switch-vip"
           />
           <span>VIP</span>
         </label>
@@ -557,27 +645,27 @@ export const MediaInfoFormSections: React.FC<Props> = ({
 
       <div className="toggle-grid">
         <label className="toggle-field">
-          <input
-            type="checkbox"
+          <Switch
             checked={formData.stylesInfo.isBorder}
-            onChange={event =>
-              onChange("stylesInfo.isBorder", event.target.checked)
+            onChange={checked =>
+              onChange("stylesInfo.isBorder", checked)
             }
+            data-testid="switch-border"
           />
           <span>Рамка</span>
         </label>
 
         <label className="toggle-field">
-          <input
-            type="checkbox"
+          <Switch
             checked={formData.stylesInfo.isShowLetterbox}
-            onChange={event =>
-              onChange("stylesInfo.isShowLetterbox", event.target.checked)
+            onChange={checked =>
+              onChange("stylesInfo.isShowLetterbox", checked)
             }
+            data-testid="switch-letterbox"
           />
           <span>Letterbox</span>
         </label>
       </div>
     </section>
-  </div>
+  </Flex>
 );

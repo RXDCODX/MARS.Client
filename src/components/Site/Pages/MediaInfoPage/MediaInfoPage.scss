@@ -1,17 +1,17 @@
 .media-info-page {
   --media-bg: linear-gradient(
     180deg,
-    rgb(8 12 22 / 96%) 0%,
-    rgb(12 17 29 / 94%) 100%
+    var(--site-bg-primary) 0%,
+    var(--site-bg-secondary) 100%
   );
-  --media-card: rgb(14 20 34 / 88%);
-  --media-card-soft: rgb(17 25 42 / 82%);
-  --media-line: rgb(255 255 255 / 10%);
-  --media-text: rgb(245 247 255 / 96%);
-  --media-muted: rgb(184 192 211 / 84%);
-  --media-accent: var(--bs-primary);
-  --media-accent-2: #12b3a8;
-  --media-danger: var(--bs-danger);
+  --media-card: var(--site-bg-card);
+  --media-card-soft: var(--site-bg-secondary);
+  --media-line: var(--site-border-primary);
+  --media-text: var(--site-text-primary);
+  --media-muted: var(--site-text-secondary);
+  --media-accent: var(--site-text-accent);
+  --media-accent-2: var(--site-text-accent);
+  --media-danger: var(--site-text-danger);
   position: relative;
   padding: 28px;
   max-width: 1540px;
@@ -681,12 +681,6 @@
     border: 1px solid var(--media-line);
     background: rgb(255 255 255 / 3%);
 
-    input {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--media-accent-2);
-    }
-
     span {
       color: var(--media-text);
       font-weight: 500;
@@ -744,33 +738,6 @@
 
   .success-alert {
     margin-bottom: 18px;
-  }
-
-  .btn {
-    transition:
-      transform 0.18s ease,
-      box-shadow 0.18s ease,
-      opacity 0.18s ease;
-
-    &:hover {
-      transform: translateY(-1px);
-    }
-  }
-
-  .btn-primary {
-    background: linear-gradient(
-      135deg,
-      var(--media-accent) 0%,
-      var(--media-accent-2) 100%
-    );
-    border: 0;
-    box-shadow: 0 12px 28px rgb(18 179 168 / 24%);
-  }
-
-  .btn-outline-secondary,
-  .btn-secondary,
-  .btn-outline-danger {
-    border: 1px solid var(--media-line);
   }
 
   @media (width <= 1280px) {

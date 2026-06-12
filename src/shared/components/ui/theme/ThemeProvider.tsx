@@ -1,16 +1,16 @@
 import { ConfigProvider } from "antd";
 import type { ReactNode } from "react";
 
-import useIllustrationTheme from "./illustrationTheme";
+import useAntdTheme from "./useAntdTheme";
 
 interface ThemeProviderProps {
   children: ReactNode;
 }
 
-const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const configProps = useIllustrationTheme();
+const AntdThemeProvider = ({ children }: ThemeProviderProps) => {
+  const configProps = useAntdTheme();
 
   return <ConfigProvider {...configProps}>{children}</ConfigProvider>;
 };
 
-export default ThemeProvider;
+export default AntdThemeProvider;

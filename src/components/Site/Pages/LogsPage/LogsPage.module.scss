@@ -253,26 +253,26 @@
   text-shadow: none;
 
   &.info {
-    background: var(--bs-info-light);
-    color: var(--bs-info-dark);
+    background: var(--site-bg-info);
+    color: var(--site-text-info);
     border: 1px solid var(--site-border-info);
   }
 
   &.warning {
-    background: var(--bs-warning-light);
-    color: var(--bs-warning-dark);
+    background: var(--site-bg-warning);
+    color: var(--site-text-warning);
     border: 1px solid var(--site-border-warning);
   }
 
   &.error {
-    background: var(--bs-danger-light);
-    color: var(--bs-danger-dark);
+    background: var(--site-bg-danger);
+    color: var(--site-text-danger);
     border: 1px solid var(--site-border-danger);
   }
 
   &.critical {
-    background: var(--bs-danger-light);
-    color: var(--bs-danger-dark);
+    background: var(--site-bg-danger);
+    color: var(--site-text-danger);
     border: 1px solid var(--site-border-danger);
     font-weight: 700;
   }

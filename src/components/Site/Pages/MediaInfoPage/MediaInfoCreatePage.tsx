@@ -1,5 +1,6 @@
 import "./MediaInfoPage.scss";
 
+import { Alert, Button, Flex, Tag } from "antd";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -103,7 +104,7 @@ export const MediaInfoCreatePage: React.FC = () => {
     "Выбранный файл хранится в памяти клиента до сохранения. Укажи целевой путь внутри Alerts/uploaded_mems/ перед нажатием Создать.";
 
   return (
-    <div className="media-info-page media-info-create-page">
+    <div className="media-info-page media-info-create-page" data-testid="media-info-create-page">
       <section className="media-info-hero">
         <div className="hero-copy">
           <p className="eyebrow">Новая запись</p>
@@ -115,28 +116,23 @@ export const MediaInfoCreatePage: React.FC = () => {
         </div>
 
         <div className="hero-actions">
-          <Link
-            to="/media-info"
-            className="btn btn-outline-secondary hero-button"
-          >
-            К списку
+          <Link to="/media-info">
+            <Button className="hero-button" data-testid="button-back-to-list">
+              К списку
+            </Button>
           </Link>
         </div>
       </section>
 
       {error && (
-        <div className="alert alert-danger page-alert">
-          <div className="alert-content">
-            <strong>Ошибка:</strong> {error}
-          </div>
-          <button
-            type="button"
-            className="btn-close"
-            onClick={() => setError(null)}
-          >
-            ×
-          </button>
-        </div>
+        <Alert
+          type="error"
+          message={`Ошибка: ${error}`}
+          closable
+          onClose={() => setError(null)}
+          style={{ marginBottom: 18, borderRadius: 18 }}
+          data-testid="error-alert"
+        />
       )}
 
       <div className="editor-layout">
@@ -151,16 +147,20 @@ export const MediaInfoCreatePage: React.FC = () => {
             </div>
 
             <div className="preview-badges">
-              <span
-                className={`badge priority-badge priority-${formData.metaInfo.priority.toLowerCase()}`}
+              <Tag
+                color={
+                  formData.metaInfo.priority === "High"
+                    ? "red"
+                    : formData.metaInfo.priority === "Low"
+                      ? "default"
+                      : "blue"
+                }
               >
                 {formData.metaInfo.priority}
-              </span>
-              <span
-                className={`badge type-badge type-${formData.fileInfo.type.toLowerCase()}`}
-              >
+              </Tag>
+              <Tag color="cyan">
                 {formData.fileInfo.type}
-              </span>
+              </Tag>
             </div>
           </div>
 
@@ -257,15 +257,16 @@ export const MediaInfoCreatePage: React.FC = () => {
                 </p>
               </div>
 
-              <div className="editor-form-actions">
-                <button
-                  type="submit"
-                  className="btn btn-primary"
-                  disabled={loading}
+              <Flex gap={12} wrap="wrap" className="editor-form-actions">
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={loading}
+                  data-testid="button-submit-create"
                 >
-                  {loading ? "Сохраняем..." : "Создать запись"}
-                </button>
-              </div>
+                  Создать запись
+                </Button>
+              </Flex>
             </div>
 
             <MediaInfoFormSections
@@ -278,18 +279,21 @@ export const MediaInfoCreatePage: React.FC = () => {
               previewUrl={previewUrl}
             />
 
-            <div className="editor-footer-actions">
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={loading}
+            <Flex gap={12} wrap="wrap" justify="flex-end" className="editor-footer-actions">
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={loading}
+                data-testid="button-submit-create-footer"
               >
                 {loading ? "Создаём..." : "Создать"}
-              </button>
-              <Link to="/media-info" className="btn btn-secondary">
-                Отмена
+              </Button>
+              <Link to="/media-info">
+                <Button data-testid="button-cancel-create">
+                  Отмена
+                </Button>
               </Link>
-            </div>
+            </Flex>
           </form>
         </section>
       </div>

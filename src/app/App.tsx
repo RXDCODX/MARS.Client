@@ -2,16 +2,20 @@ import "./global.scss";
 import "./tailwind.css";
 
 import { ThemeProvider } from "@/contexts/ThemeContext";
+import { AntdStyleProvider, ThemeProvider as AntThemeProvider } from "@/shared/components/ui";
 import { usePrefetchRoutes } from "@/routes/hooks/usePrefetchRoutes";
 import Routes from "@/routes/Routes";
 
 function App() {
-  // Запускаем фоновую загрузку некритичных компонентов
   usePrefetchRoutes();
 
   return (
     <ThemeProvider>
-      <Routes />
+      <AntdStyleProvider>
+        <AntThemeProvider>
+          <Routes />
+        </AntThemeProvider>
+      </AntdStyleProvider>
     </ThemeProvider>
   );
 }

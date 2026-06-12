@@ -5,7 +5,7 @@
 // Hero Section
 .hero {
   background: var(--primary-gradient);
-  color: var(--bs-white);
+  color: var(--site-text-light);
   padding: 100px 0;
   text-align: center;
 }
@@ -34,7 +34,7 @@
 // Mission Section
 .mission {
   padding: 100px 0;
-  background: var(--bs-body-bg);
+  background: var(--site-bg-primary);
 }
 
 .missionContent {
@@ -49,14 +49,14 @@
     font-size: 2.5rem;
     font-weight: 700;
     margin: 0 0 30px;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     text-shadow: var(--text-shadow-medium);
   }
 
   p {
     font-size: 1.1rem;
     line-height: 1.7;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     margin: 0 0 20px;
     text-shadow: var(--text-shadow-light);
 
@@ -72,15 +72,15 @@
 }
 
 .statsCard {
-  background: var(--bs-card-bg);
+  background: var(--site-bg-card);
   padding: 40px;
   border-radius: 20px;
-  box-shadow: var(--bs-box-shadow);
+  box-shadow: var(--site-shadow-light);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 30px;
   text-align: center;
-  border: 1px solid var(--bs-border-color);
+  border: 1px solid var(--site-border-primary);
 }
 
 .stat {
@@ -92,14 +92,14 @@
 .statNumber {
   font-size: 2.5rem;
   font-weight: 700;
-  color: var(--bs-primary);
+  color: var(--site-text-accent);
   margin-bottom: 10px;
   text-shadow: var(--text-shadow-medium);
 }
 
 .statLabel {
   font-size: 0.9rem;
-  color: var(--bs-body-color);
+  color: var(--site-text-primary);
   font-weight: 500;
   text-shadow: var(--text-shadow-light);
 }
@@ -107,7 +107,7 @@
 // Team Section
 .team {
   padding: 100px 0;
-  background: var(--bs-card-bg);
+  background: var(--site-bg-card);
 }
 
 .sectionTitle {
@@ -115,7 +115,7 @@
   font-size: 2.5rem;
   font-weight: 700;
   margin: 0 0 60px;
-  color: var(--bs-body-color);
+  color: var(--site-text-primary);
   text-shadow: var(--text-shadow-medium);
 }
 
@@ -126,16 +126,16 @@
 }
 
 .teamCard {
-  background: var(--bs-light);
+  background: var(--site-bg-tertiary);
   padding: 40px 30px;
   border-radius: 20px;
   text-align: center;
   transition: all 0.3s ease;
-  border: 1px solid var(--bs-border-color);
+  border: 1px solid var(--site-border-primary);
 
   &:hover {
     transform: translateY(-10px);
-    box-shadow: var(--bs-box-shadow-lg);
+    box-shadow: var(--site-shadow-heavy);
   }
 }
 
@@ -153,7 +153,7 @@
 .avatarText {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--bs-white);
+  color: var(--site-text-light);
   text-shadow: var(--text-shadow-medium);
 }
 
@@ -161,20 +161,20 @@
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0 0 10px;
-  color: var(--bs-body-color);
+  color: var(--site-text-primary);
   text-shadow: var(--text-shadow-light);
 }
 
 .memberRole {
   font-size: 1rem;
-  color: var(--bs-primary);
+  color: var(--site-text-accent);
   font-weight: 600;
   margin: 0 0 15px;
   text-shadow: var(--text-shadow-light);
 }
 
 .memberDescription {
-  color: var(--bs-body-color);
+  color: var(--site-text-primary);
   line-height: 1.6;
   margin: 0;
   text-shadow: var(--text-shadow-light);
@@ -183,7 +183,7 @@
 // Timeline Section
 .timeline {
   padding: 100px 0;
-  background: var(--bs-body-bg);
+  background: var(--site-bg-primary);
 }
 
 .timelineContainer {
@@ -198,7 +198,7 @@
     top: 0;
     bottom: 0;
     width: 2px;
-    background: var(--bs-primary);
+    background: var(--site-text-accent);
     transform: translateX(-50%);
   }
 }
@@ -229,8 +229,8 @@
 }
 
 .timelineYear {
-  background: var(--bs-primary);
-  color: var(--bs-white);
+  background: var(--site-text-accent);
+  color: var(--site-text-light);
   padding: 15px 25px;
   border-radius: 25px;
   font-weight: 600;
@@ -242,22 +242,22 @@
 
 .timelineContent {
   flex: 1;
-  background: var(--bs-card-bg);
+  background: var(--site-bg-card);
   padding: 30px;
   border-radius: 15px;
-  box-shadow: var(--bs-box-shadow);
-  border: 1px solid var(--bs-border-color);
+  box-shadow: var(--site-shadow-light);
+  border: 1px solid var(--site-border-primary);
 
   h3 {
     font-size: 1.3rem;
     font-weight: 600;
     margin: 0 0 10px;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     text-shadow: var(--text-shadow-light);
   }
 
   p {
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     line-height: 1.6;
     margin: 0;
     text-shadow: var(--text-shadow-light);
@@ -268,7 +268,7 @@
 .cta {
   padding: 100px 0;
   background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-  color: var(--bs-white);
+  color: var(--site-text-light);
   text-align: center;
 
   h2 {
@@ -295,7 +295,7 @@
 
 .primaryButton {
   background: linear-gradient(45deg, #ffd700, #ffed4e);
-  color: var(--bs-dark);
+  color: var(--site-bg-primary);
   padding: 15px 30px;
   border-radius: 50px;
   text-decoration: none;
@@ -312,7 +312,7 @@
 
 .secondaryButton {
   background: rgb(255 255 255 / 10%);
-  color: var(--bs-white);
+  color: var(--site-text-light);
   padding: 15px 30px;
   border-radius: 50px;
   text-decoration: none;

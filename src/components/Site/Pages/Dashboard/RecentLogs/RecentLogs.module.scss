@@ -1,9 +1,9 @@
 .container {
-  background: var(--bs-card-bg);
+  background: var(--site-bg-card);
   border-radius: 16px;
   padding: 24px;
-  box-shadow: var(--bs-box-shadow);
-  border: 1px solid var(--bs-border-color);
+  box-shadow: var(--site-shadow-light);
+  border: 1px solid var(--site-border-primary);
 }
 
 .header {
@@ -12,31 +12,31 @@
   align-items: center;
   margin-bottom: 20px;
   padding-bottom: 16px;
-  border-bottom: 1px solid var(--bs-border-color);
+  border-bottom: 1px solid var(--site-border-primary);
 
   h3 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     margin: 0;
     text-shadow: var(--text-shadow-light);
   }
 }
 
 .refreshButton {
-  background: var(--bs-light);
-  border: 1px solid var(--bs-border-color);
+  background: var(--site-bg-tertiary);
+  border: 1px solid var(--site-border-primary);
   padding: 8px 12px;
   border-radius: 8px;
   font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  color: var(--bs-body-color);
+  color: var(--site-text-primary);
   text-shadow: var(--text-shadow-light);
 
   &:hover {
-    background: var(--bs-card-bg);
-    box-shadow: var(--bs-box-shadow);
+    background: var(--site-bg-card);
+    box-shadow: var(--site-shadow-light);
   }
 }
 
@@ -52,12 +52,12 @@
 .log {
   padding: 12px;
   border-radius: 12px;
-  border: 1px solid var(--bs-border-color);
+  border: 1px solid var(--site-border-primary);
   transition: all 0.2s ease;
 
   &:hover {
     transform: translateX(4px);
-    box-shadow: var(--bs-box-shadow);
+    box-shadow: var(--site-shadow-light);
   }
 }
 
@@ -82,54 +82,54 @@
 .logService {
   font-weight: 600;
   font-size: 0.85rem;
-  color: var(--bs-body-color);
+  color: var(--site-text-primary);
   text-shadow: var(--text-shadow-light);
 }
 
 .logTimestamp {
   font-size: 0.8rem;
-  color: var(--bs-body-color);
+  color: var(--site-text-primary);
   text-shadow: var(--text-shadow-light);
 }
 
 .logMessage {
   font-size: 0.9rem;
   line-height: 1.4;
-  color: var(--bs-body-color);
+  color: var(--site-text-primary);
   text-shadow: var(--text-shadow-light);
 }
 
 // Уровни логов
 .info {
-  background: var(--bs-info-light);
-  border-color: var(--bs-info);
+  background: var(--site-bg-info);
+  border-color: var(--site-text-info);
 }
 
 .warning {
-  background: var(--bs-warning-light);
-  border-color: var(--bs-warning);
+  background: var(--site-bg-warning);
+  border-color: var(--site-text-warning);
 }
 
 .error {
-  background: var(--bs-danger-light);
-  border-color: var(--bs-danger);
+  background: var(--site-bg-danger);
+  border-color: var(--site-text-danger);
 }
 
 .debug {
-  background: var(--bs-gray-100);
-  border-color: var(--bs-gray-400);
+  background: var(--site-bg-secondary);
+  border-color: var(--site-text-muted);
 }
 
 .footer {
   padding-top: 16px;
-  border-top: 1px solid var(--bs-border-color);
+  border-top: 1px solid var(--site-border-primary);
 }
 
 .viewAllButton {
   width: 100%;
   padding: 12px;
   background: var(--primary-gradient);
-  color: var(--bs-white);
+  color: var(--site-text-light);
   border: none;
   border-radius: 12px;
   font-weight: 600;
@@ -139,6 +139,6 @@
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: var(--bs-box-shadow-lg);
+    box-shadow: var(--site-shadow-heavy);
   }
 }

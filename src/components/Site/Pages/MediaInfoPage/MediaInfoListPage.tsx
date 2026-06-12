@@ -1,5 +1,16 @@
 import "./MediaInfoPage.scss";
 
+import {
+  Alert,
+  Button,
+  Flex,
+  Input,
+  Select,
+  Spin,
+  Table,
+  Tag,
+} from "antd";
+import type { ColumnsType } from "antd/es/table";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -43,6 +54,21 @@ const columnLabels: Record<MediaInfoSortField, string> = {
   "metaInfo.duration": "Длительность",
   "metaInfo.priority": "Приоритет",
   "metaInfo.twitchPointsCost": "Баллы",
+};
+
+const typeTagColor: Record<string, string> = {
+  Image: "cyan",
+  Audio: "purple",
+  Video: "blue",
+  Gif: "magenta",
+  TelegramSticker: "orange",
+  None: "default",
+};
+
+const priorityTagColor: Record<string, string> = {
+  Low: "default",
+  Normal: "blue",
+  High: "red",
 };
 
 export const MediaInfoListPage: React.FC = () => {
@@ -157,19 +183,22 @@ export const MediaInfoListPage: React.FC = () => {
     return sorted;
   }, [filteredItems, sortDirection, sortField]);
 
-  const handleSort = useCallback((field: MediaInfoSortField) => {
-    setSortField(previousField => {
-      if (previousField === field) {
-        setSortDirection(previousDirection =>
-          previousDirection === "asc" ? "desc" : "asc"
-        );
-        return previousField;
-      }
+  const handleSort = useCallback(
+    (field: MediaInfoSortField) => {
+      setSortField(previousField => {
+        if (previousField === field) {
+          setSortDirection(previousDirection =>
+            previousDirection === "asc" ? "desc" : "asc"
+          );
+          return previousField;
+        }
 
-      setSortDirection("asc");
-      return field;
-    });
-  }, []);
+        setSortDirection("asc");
+        return field;
+      });
+    },
+    []
+  );
 
   const handleDelete = useCallback(
     async (item: ApiMediaInfo) => {
@@ -211,8 +240,210 @@ export const MediaInfoListPage: React.FC = () => {
     [filters]
   );
 
+  const tableColumns: ColumnsType<ApiMediaInfo> = useMemo(
+    () => [
+      {
+        title: (
+          <button
+            type="button"
+            className={`sort-button ${sortField === "metaInfo.displayName" ? "active" : ""}`}
+            onClick={() => handleSort("metaInfo.displayName")}
+          >
+            <span>{columnLabels["metaInfo.displayName"]}</span>
+            <span className="sort-icon">
+              {sortField === "metaInfo.displayName"
+                ? sortDirection === "asc"
+                  ? "↑"
+                  : "↓"
+                : "↕"}
+            </span>
+          </button>
+        ),
+        dataIndex: ["metaInfo", "displayName"],
+        key: "displayName",
+        render: (_: unknown, record: ApiMediaInfo) => (
+          <div className="title-cell" data-testid={`cell-title-${record.id}`}>
+            <strong>
+              {record.metaInfo.displayName || "Без названия"}
+            </strong>
+            <span>{record.fileInfo.fileName || "Без файла"}</span>
+            {record.textInfo.triggerWord ? (
+              <span className="muted-line">
+                Триггер: {record.textInfo.triggerWord}
+              </span>
+            ) : null}
+          </div>
+        ),
+      },
+      {
+        title: (
+          <button
+            type="button"
+            className={`sort-button ${sortField === "fileInfo.filePath" ? "active" : ""}`}
+            onClick={() => handleSort("fileInfo.filePath")}
+          >
+            <span>{columnLabels["fileInfo.filePath"]}</span>
+            <span className="sort-icon">
+              {sortField === "fileInfo.filePath"
+                ? sortDirection === "asc"
+                  ? "↑"
+                  : "↓"
+                : "↕"}
+            </span>
+          </button>
+        ),
+        dataIndex: ["fileInfo", "filePath"],
+        key: "filePath",
+        render: (_: unknown, record: ApiMediaInfo) => (
+          <div className="muted-line path-cell" data-testid={`cell-path-${record.id}`}>
+            {record.fileInfo.filePath || "—"}
+          </div>
+        ),
+      },
+      {
+        title: (
+          <button
+            type="button"
+            className={`sort-button ${sortField === "fileInfo.type" ? "active" : ""}`}
+            onClick={() => handleSort("fileInfo.type")}
+          >
+            <span>{columnLabels["fileInfo.type"]}</span>
+            <span className="sort-icon">
+              {sortField === "fileInfo.type"
+                ? sortDirection === "asc"
+                  ? "↑"
+                  : "↓"
+                : "↕"}
+            </span>
+          </button>
+        ),
+        dataIndex: ["fileInfo", "type"],
+        key: "type",
+        render: (_: unknown, record: ApiMediaInfo) => (
+          <Tag color={typeTagColor[record.fileInfo.type] || "default"} data-testid={`tag-type-${record.id}`}>
+            {record.fileInfo.type}
+          </Tag>
+        ),
+      },
+      {
+        title: (
+          <button
+            type="button"
+            className={`sort-button ${sortField === "metaInfo.duration" ? "active" : ""}`}
+            onClick={() => handleSort("metaInfo.duration")}
+          >
+            <span>{columnLabels["metaInfo.duration"]}</span>
+            <span className="sort-icon">
+              {sortField === "metaInfo.duration"
+                ? sortDirection === "asc"
+                  ? "↑"
+                  : "↓"
+                : "↕"}
+            </span>
+          </button>
+        ),
+        dataIndex: ["metaInfo", "duration"],
+        key: "duration",
+        render: (duration: number) => formatMediaDuration(duration),
+      },
+      {
+        title: (
+          <button
+            type="button"
+            className={`sort-button ${sortField === "metaInfo.priority" ? "active" : ""}`}
+            onClick={() => handleSort("metaInfo.priority")}
+          >
+            <span>{columnLabels["metaInfo.priority"]}</span>
+            <span className="sort-icon">
+              {sortField === "metaInfo.priority"
+                ? sortDirection === "asc"
+                  ? "↑"
+                  : "↓"
+                : "↕"}
+            </span>
+          </button>
+        ),
+        dataIndex: ["metaInfo", "priority"],
+        key: "priority",
+        render: (_: unknown, record: ApiMediaInfo) => (
+          <Tag color={priorityTagColor[record.metaInfo.priority] || "default"} data-testid={`tag-priority-${record.id}`}>
+            {record.metaInfo.priority}
+          </Tag>
+        ),
+      },
+      {
+        title: (
+          <button
+            type="button"
+            className={`sort-button ${sortField === "metaInfo.twitchPointsCost" ? "active" : ""}`}
+            onClick={() => handleSort("metaInfo.twitchPointsCost")}
+          >
+            <span>{columnLabels["metaInfo.twitchPointsCost"]}</span>
+            <span className="sort-icon">
+              {sortField === "metaInfo.twitchPointsCost"
+                ? sortDirection === "asc"
+                  ? "↑"
+                  : "↓"
+                : "↕"}
+            </span>
+          </button>
+        ),
+        dataIndex: ["metaInfo", "twitchPointsCost"],
+        key: "points",
+      },
+      {
+        title: "Состояние",
+        key: "status",
+        render: (_: unknown, record: ApiMediaInfo) => (
+          <div className="status-stack" data-testid={`cell-status-${record.id}`}>
+            <Tag
+              color={
+                record.fileInfo.isLocalFile ? "cyan" : "default"
+              }
+            >
+              {record.fileInfo.isLocalFile
+                ? "Локальный файл"
+                : "Внешний файл"}
+            </Tag>
+            <Tag
+              color={
+                record.metaInfo.twitchGuid ? "green" : "default"
+              }
+            >
+              {record.metaInfo.twitchGuid
+                ? formatMediaRewardId(record.metaInfo.twitchGuid)
+                : "Награда не привязана"}
+            </Tag>
+          </div>
+        ),
+      },
+      {
+        title: "Действия",
+        key: "actions",
+        render: (_: unknown, record: ApiMediaInfo) => (
+          <Flex gap={8} wrap="wrap" data-testid={`cell-actions-${record.id}`}>
+            <Link to={`/media-info/edit/${record.id}`}>
+              <Button type="primary" size="small">
+                Редактировать
+              </Button>
+            </Link>
+            <Button
+              danger
+              size="small"
+              onClick={() => handleDelete(record)}
+              data-testid={`button-delete-${record.id}`}
+            >
+              Удалить
+            </Button>
+          </Flex>
+        ),
+      },
+    ],
+    [sortField, sortDirection, handleSort, handleDelete]
+  );
+
   return (
-    <div className="media-info-page media-info-list-page">
+    <div className="media-info-page media-info-list-page" data-testid="media-info-list-page">
       <section className="media-info-hero">
         <div className="hero-copy">
           <p className="eyebrow">Media info manager</p>
@@ -224,25 +455,25 @@ export const MediaInfoListPage: React.FC = () => {
         </div>
 
         <div className="hero-actions">
-          <Link to="/media-info/create" className="btn btn-primary hero-button">
-            Создать запись
+          <Link to="/media-info/create">
+            <Button type="primary" className="hero-button" data-testid="button-create">
+              Создать запись
+            </Button>
           </Link>
-          <button
-            type="button"
-            className="btn btn-outline-secondary hero-button"
+          <Button
+            className="hero-button"
             onClick={loadItems}
+            data-testid="button-refresh"
           >
             Обновить список
-          </button>
+          </Button>
         </div>
       </section>
 
       <section className="media-info-toolbar card-shell">
-        <div className="toolbar-row toolbar-row-search">
-          <label className="toolbar-field search-field">
-            <span>Поиск</span>
-            <input
-              type="search"
+        <Flex gap={14} align="flex-end" wrap="wrap" style={{ marginBottom: 18 }}>
+          <div style={{ flex: 1, minWidth: 200 }}>
+            <Input.Search
               value={filters.search}
               onChange={event =>
                 setFilters(previous => ({
@@ -251,120 +482,131 @@ export const MediaInfoListPage: React.FC = () => {
                 }))
               }
               placeholder="Название, путь, триггер, reward id"
+              allowClear
+              data-testid="input-search"
             />
-          </label>
+          </div>
 
-          <button
-            type="button"
-            className="btn btn-secondary"
+          <Button
             onClick={resetFilters}
+            data-testid="button-reset-filters"
           >
             Сбросить фильтры
-          </button>
-        </div>
+          </Button>
+        </Flex>
 
-        <div className="toolbar-row toolbar-grid">
-          <label className="toolbar-field">
-            <span>Тип</span>
-            <select
-              value={filters.type}
-              onChange={event =>
+        <Flex gap={14} wrap="wrap" style={{ marginBottom: 16 }}>
+          <div style={{ flex: 1, minWidth: 150 }}>
+            <Select
+              value={filters.type || undefined}
+              onChange={value =>
                 setFilters(previous => ({
                   ...previous,
-                  type: event.target.value,
+                  type: value ?? "",
                 }))
               }
-            >
-              <option value="">Все</option>
-              {mediaInfoFileTypes.map(type => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-          </label>
+              placeholder="Тип"
+              allowClear
+              style={{ width: "100%" }}
+              options={[
+                { label: "Все", value: "" },
+                ...mediaInfoFileTypes.map(type => ({
+                  label: type,
+                  value: type,
+                })),
+              ]}
+              data-testid="select-type-filter"
+            />
+          </div>
 
-          <label className="toolbar-field">
-            <span>Приоритет</span>
-            <select
-              value={filters.priority}
-              onChange={event =>
+          <div style={{ flex: 1, minWidth: 150 }}>
+            <Select
+              value={filters.priority || undefined}
+              onChange={value =>
                 setFilters(previous => ({
                   ...previous,
-                  priority: event.target.value,
+                  priority: value ?? "",
                 }))
               }
-            >
-              <option value="">Все</option>
-              {mediaInfoPriorities.map(priority => (
-                <option key={priority} value={priority}>
-                  {priority}
-                </option>
-              ))}
-            </select>
-          </label>
+              placeholder="Приоритет"
+              allowClear
+              style={{ width: "100%" }}
+              options={[
+                { label: "Все", value: "" },
+                ...mediaInfoPriorities.map(priority => ({
+                  label: priority,
+                  value: priority,
+                })),
+              ]}
+              data-testid="select-priority-filter"
+            />
+          </div>
 
-          <label className="toolbar-field">
-            <span>Файл</span>
-            <select
-              value={filters.localFile}
-              onChange={event =>
+          <div style={{ flex: 1, minWidth: 150 }}>
+            <Select
+              value={filters.localFile || undefined}
+              onChange={value =>
                 setFilters(previous => ({
                   ...previous,
-                  localFile: event.target.value,
+                  localFile: value ?? "",
                 }))
               }
-            >
-              <option value="">Все</option>
-              <option value="true">Локальные</option>
-              <option value="false">Внешние</option>
-            </select>
-          </label>
+              placeholder="Файл"
+              allowClear
+              style={{ width: "100%" }}
+              options={[
+                { label: "Все", value: "" },
+                { label: "Локальные", value: "true" },
+                { label: "Внешние", value: "false" },
+              ]}
+              data-testid="select-local-filter"
+            />
+          </div>
 
-          <label className="toolbar-field">
-            <span>Награда</span>
-            <select
-              value={filters.rewardState}
-              onChange={event =>
+          <div style={{ flex: 1, minWidth: 150 }}>
+            <Select
+              value={filters.rewardState || undefined}
+              onChange={value =>
                 setFilters(previous => ({
                   ...previous,
-                  rewardState: event.target.value,
+                  rewardState: value ?? "",
                 }))
               }
-            >
-              <option value="">Все</option>
-              <option value="linked">Привязана</option>
-              <option value="unlinked">Не привязана</option>
-            </select>
-          </label>
-        </div>
+              placeholder="Награда"
+              allowClear
+              style={{ width: "100%" }}
+              options={[
+                { label: "Все", value: "" },
+                { label: "Привязана", value: "linked" },
+                { label: "Не привязана", value: "unlinked" },
+              ]}
+              data-testid="select-reward-filter"
+            />
+          </div>
+        </Flex>
 
-        <div className="toolbar-summary">
+        <Flex gap={10} wrap="wrap" className="toolbar-summary">
           <span>Всего: {items.length}</span>
           <span>Показано: {sortedItems.length}</span>
           <span>Активных фильтров: {activeFiltersCount}</span>
-        </div>
+        </Flex>
       </section>
 
       {error && (
-        <div className="alert alert-danger page-alert">
-          <div className="alert-content">
-            <strong>Ошибка:</strong> {error}
-          </div>
-          <button
-            type="button"
-            className="btn-close"
-            onClick={() => setError(null)}
-          >
-            ×
-          </button>
-        </div>
+        <Alert
+          type="error"
+          message={`Ошибка: ${error}`}
+          closable
+          onClose={() => setError(null)}
+          style={{ marginBottom: 18, borderRadius: 18 }}
+          data-testid="error-alert"
+        />
       )}
 
       <section className="media-info-table-shell card-shell">
         {loading ? (
           <div className="state-block">
-            <div className="loading-spinner" />
+            <Spin size="large" data-testid="loading-spinner" />
             <p>Загружаем медиа...</p>
           </div>
         ) : sortedItems.length === 0 ? (
@@ -372,130 +614,29 @@ export const MediaInfoListPage: React.FC = () => {
             <h2>Ничего не найдено</h2>
             <p>Измени фильтры или создай новую запись.</p>
             <div className="empty-actions">
-              <Link to="/media-info/create" className="btn btn-primary">
-                Создать запись
+              <Link to="/media-info/create">
+                <Button type="primary" data-testid="button-create-empty">
+                  Создать запись
+                </Button>
               </Link>
-              <button
-                type="button"
-                className="btn btn-secondary"
+              <Button
                 onClick={resetFilters}
+                data-testid="button-reset-filters-empty"
               >
                 Сбросить фильтры
-              </button>
+              </Button>
             </div>
           </div>
         ) : (
           <div className="table-scroll">
-            <table className="media-info-table">
-              <thead>
-                <tr>
-                  {(
-                    [
-                      "metaInfo.displayName",
-                      "fileInfo.filePath",
-                      "fileInfo.type",
-                      "metaInfo.duration",
-                      "metaInfo.priority",
-                      "metaInfo.twitchPointsCost",
-                    ] as MediaInfoSortField[]
-                  ).map(field => (
-                    <th key={field}>
-                      <button
-                        type="button"
-                        className={`sort-button ${sortField === field ? "active" : ""}`}
-                        onClick={() => handleSort(field)}
-                      >
-                        <span>{columnLabels[field]}</span>
-                        <span className="sort-icon">
-                          {sortField === field
-                            ? sortDirection === "asc"
-                              ? "↑"
-                              : "↓"
-                            : "↕"}
-                        </span>
-                      </button>
-                    </th>
-                  ))}
-                  <th>Состояние</th>
-                  <th>Действия</th>
-                </tr>
-              </thead>
-              <tbody>
-                {sortedItems.map(item => (
-                  <tr key={item.id}>
-                    <td>
-                      <div className="title-cell">
-                        <strong>
-                          {item.metaInfo.displayName || "Без названия"}
-                        </strong>
-                        <span>{item.fileInfo.fileName || "Без файла"}</span>
-                        {item.textInfo.triggerWord ? (
-                          <span className="muted-line">
-                            Триггер: {item.textInfo.triggerWord}
-                          </span>
-                        ) : null}
-                      </div>
-                    </td>
-                    <td>
-                      <div className="muted-line path-cell">
-                        {item.fileInfo.filePath || "—"}
-                      </div>
-                    </td>
-                    <td>
-                      <span
-                        className={`badge type-badge type-${item.fileInfo.type.toLowerCase()}`}
-                      >
-                        {item.fileInfo.type}
-                      </span>
-                    </td>
-                    <td>{formatMediaDuration(item.metaInfo.duration)}</td>
-                    <td>
-                      <span
-                        className={`badge priority-badge priority-${item.metaInfo.priority.toLowerCase()}`}
-                      >
-                        {item.metaInfo.priority}
-                      </span>
-                    </td>
-                    <td>{item.metaInfo.twitchPointsCost}</td>
-                    <td>
-                      <div className="status-stack">
-                        <span
-                          className={`status-pill ${item.fileInfo.isLocalFile ? "is-local" : "is-external"}`}
-                        >
-                          {item.fileInfo.isLocalFile
-                            ? "Локальный файл"
-                            : "Внешний файл"}
-                        </span>
-                        <span
-                          className={`status-pill ${item.metaInfo.twitchGuid ? "is-linked" : "is-empty"}`}
-                        >
-                          {item.metaInfo.twitchGuid
-                            ? formatMediaRewardId(item.metaInfo.twitchGuid)
-                            : "Награда не привязана"}
-                        </span>
-                      </div>
-                    </td>
-                    <td>
-                      <div className="actions-cell">
-                        <Link
-                          to={`/media-info/edit/${item.id}`}
-                          className="btn btn-sm btn-primary"
-                        >
-                          Редактировать
-                        </Link>
-                        <button
-                          type="button"
-                          className="btn btn-sm btn-outline-danger"
-                          onClick={() => handleDelete(item)}
-                        >
-                          Удалить
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <Table<ApiMediaInfo>
+              columns={tableColumns}
+              dataSource={sortedItems}
+              rowKey="id"
+              pagination={false}
+              size="middle"
+              data-testid="media-info-table"
+            />
           </div>
         )}
       </section>

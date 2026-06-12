@@ -1,3 +1,5 @@
+import { SearchOutlined } from "@ant-design/icons";
+import { Button, Card, Flex, Input, Tag, Typography } from "antd";
 import { Suspense, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -21,10 +23,10 @@ const typeIcons: Record<string, string> = {
 };
 
 const typeColors: Record<string, string> = {
-  site: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-  obs: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20",
-  "control panel": "bg-amber-500/10 text-amber-500 border-amber-500/20",
-  special: "bg-purple-500/10 text-purple-500 border-purple-500/20",
+  site: "blue",
+  obs: "green",
+  "control panel": "orange",
+  special: "purple",
 };
 
 const RoutesPage: React.FC = () => {
@@ -74,136 +76,140 @@ const RoutesPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="relative min-h-screen" data-testid="routes-page">
-      <div className="fixed inset-0 -z-10 opacity-30">
+    <div style={{ position: "relative", minHeight: "100vh" }} data-testid="routes-page">
+      <div style={{ position: "fixed", inset: 0, zIndex: -10, opacity: 0.3 }}>
         <Suspense fallback={null}>
-          <GridMotionBg className="absolute inset-0" />
+          <GridMotionBg style={{ position: "absolute", inset: 0 }} />
         </Suspense>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <header className="mb-6 flex flex-wrap items-center gap-3">
-          <h1 className="text-3xl font-bold tracking-tight text-[var(--site-text-primary)]">
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 24px" }}>
+        <Flex align="center" gap={12} style={{ marginBottom: 24 }}>
+          <Typography.Title level={2} style={{ margin: 0 }}>
             Все маршруты
-          </h1>
-          <span className="rounded-full bg-[var(--site-bg-accent)] px-2.5 py-0.5 text-xs font-semibold text-[var(--site-text-light)]">
-            {allRoutes.length}
-          </span>
-        </header>
+          </Typography.Title>
+          <Tag color="purple">{allRoutes.length}</Tag>
+        </Flex>
 
-        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <div className="flex flex-wrap gap-1.5" data-testid="filter-tabs">
+        <Flex justify="space-between" align="center" wrap="wrap" gap={12} style={{ marginBottom: 24 }}>
+          <Flex gap={6} wrap="wrap" data-testid="filter-tabs">
             {types.map(type => (
-              <button
+              <Button
                 key={type}
+                size="small"
+                type={activeFilter === type ? "primary" : "default"}
                 onClick={() => setActiveFilter(type)}
-                className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-all ${
-                  activeFilter === type
-                    ? "border-[var(--site-border-accent)] bg-[var(--site-bg-accent)] text-[var(--site-text-light)]"
-                    : "border-[var(--site-border-primary)] bg-[var(--site-bg-secondary)] text-[var(--site-text-primary)] hover:bg-[var(--site-hover-bg)] hover:border-[var(--site-border-accent)]"
-                }`}
                 data-testid={`filter-tab-${type}`}
               >
                 {type === "all" ? (
                   "Все"
                 ) : (
                   <>
-                    <span>{typeIcons[type] || "📄"}</span>
+                    <span style={{ marginRight: 4 }}>{typeIcons[type] || "📄"}</span>
                     {typeLabels[type] || type}
-                    <span
-                      className={`ml-0.5 rounded-full px-1.5 py-0.5 text-[10px] font-bold ${typeColors[type] || "bg-gray-500/10 text-gray-500"}`}
+                    <Tag
+                      color={typeColors[type] || "default"}
+                      style={{ marginLeft: 4, fontSize: 10 }}
                     >
                       {typeCounts[type] || 0}
-                    </span>
+                    </Tag>
                   </>
                 )}
-              </button>
+              </Button>
             ))}
-          </div>
+          </Flex>
 
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Поиск маршрутов..."
-              value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
-              className="w-56 rounded-lg border border-[var(--site-border-primary)] bg-[var(--site-bg-tertiary)] px-3 py-1.5 pr-8 text-sm text-[var(--site-text-primary)] outline-none transition-all focus:border-[var(--site-border-accent)] focus:ring-2 focus:ring-[var(--site-focus-ring)]"
-              data-testid="search-input"
-            />
-            {searchQuery && (
-              <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-xs opacity-50 hover:opacity-100"
-                data-testid="search-clear"
-              >
-                ✕
-              </button>
-            )}
-          </div>
-        </div>
+          <Input
+            placeholder="Поиск маршрутов..."
+            prefix={<SearchOutlined />}
+            value={searchQuery}
+            onChange={e => setSearchQuery(e.target.value)}
+            allowClear
+            style={{ width: 240 }}
+            data-testid="search-input"
+          />
+        </Flex>
 
         {filteredRoutes.length === 0 ? (
-          <div className="flex flex-col items-center justify-center gap-3 py-16">
-            <div className="text-4xl opacity-50">🔍</div>
-            <p className="text-[var(--site-text-secondary)]">
-              Маршруты не найдены
-            </p>
-          </div>
+          <Flex vertical align="center" justify="center" gap={12} style={{ padding: "64px 0" }}>
+            <Typography.Text style={{ fontSize: 32, opacity: 0.5 }}>🔍</Typography.Text>
+            <Typography.Text type="secondary">Маршруты не найдены</Typography.Text>
+          </Flex>
         ) : (
-          <div className="flex flex-col gap-6">
+          <Flex vertical gap={24}>
             {Object.entries(groupedFiltered).map(([type, routes]) => (
               <div key={type}>
-                <div className="mb-3 flex items-center gap-2">
-                  <span className="text-lg">{typeIcons[type] || "📄"}</span>
-                  <h2 className="text-base font-semibold text-[var(--site-text-primary)]">
+                <Flex align="center" gap={8} style={{ marginBottom: 12 }}>
+                  <span style={{ fontSize: 18 }}>{typeIcons[type] || "📄"}</span>
+                  <Typography.Title level={5} style={{ margin: 0 }}>
                     {typeLabels[type] || type}
-                  </h2>
-                  <span
-                    className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${typeColors[type] || "bg-gray-500/10 text-gray-500 border-gray-500/20"}`}
-                  >
-                    {routes.length}
-                  </span>
-                </div>
-                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  </Typography.Title>
+                  <Tag color={typeColors[type] || "default"}>{routes.length}</Tag>
+                </Flex>
+                <Flex gap={8} wrap="wrap">
                   {routes.map((route, index) => (
                     <Link
                       key={index}
                       to={route.path}
-                      className="group flex items-center justify-between rounded-xl border border-[var(--site-border-primary)] bg-[var(--site-bg-card)] p-3.5 no-underline transition-all hover:-translate-y-0.5 hover:border-[var(--site-border-accent)] hover:shadow-[var(--site-shadow-medium)]"
+                      style={{ flex: "1 1 280px", maxWidth: "100%", textDecoration: "none" }}
                       data-testid={`route-card-${route.path.replace(/\//g, "-").replace(/^-/, "")}`}
                     >
-                      <div className="flex min-w-0 flex-col gap-0.5">
-                        <span className="truncate text-sm font-semibold text-[var(--site-text-primary)]">
-                          {route.name || route.path}
-                        </span>
-                        <code className="truncate text-xs text-[var(--site-text-muted)] opacity-60">
-                          {route.path}
-                        </code>
-                      </div>
-                      <span className="ml-2 flex-shrink-0 text-sm opacity-30 transition-all group-hover:translate-x-0.5 group-hover:opacity-100">
-                        →
-                      </span>
+                      <Card
+                        hoverable
+                        size="small"
+                        style={{ height: "100%" }}
+                      >
+                        <Flex justify="space-between" align="center">
+                          <Flex vertical gap={2} style={{ minWidth: 0, flex: 1 }}>
+                            <Typography.Text strong style={{ fontSize: 14 }} ellipsis>
+                              {route.name || route.path}
+                            </Typography.Text>
+                            <Typography.Text
+                              type="secondary"
+                              code
+                              style={{ fontSize: 12 }}
+                              ellipsis
+                            >
+                              {route.path}
+                            </Typography.Text>
+                          </Flex>
+                          <Typography.Text type="secondary" style={{ marginLeft: 8, fontSize: 16, opacity: 0.3 }}>
+                            →
+                          </Typography.Text>
+                        </Flex>
+                      </Card>
                     </Link>
                   ))}
-                </div>
+                </Flex>
               </div>
             ))}
-          </div>
+          </Flex>
         )}
 
-        <div className="mt-8 flex flex-wrap justify-center gap-6 rounded-xl border border-[var(--site-border-primary)] bg-[var(--site-bg-secondary)]/80 p-4 backdrop-blur-sm">
+        <Flex
+          justify="center"
+          gap={24}
+          wrap="wrap"
+          style={{
+            marginTop: 32,
+            padding: "16px 24px",
+            borderRadius: 16,
+            border: "3px solid var(--site-border-primary)",
+            backgroundColor: "var(--site-bg-secondary)",
+          }}
+        >
           {Object.entries(typeCounts).map(([type, count]) => (
-            <div key={type} className="flex items-center gap-1.5">
+            <Flex key={type} align="center" gap={6}>
               <span>{typeIcons[type] || "📄"}</span>
-              <span className="text-xs text-[var(--site-text-secondary)] opacity-70">
+              <Typography.Text type="secondary" style={{ fontSize: 12 }}>
                 {typeLabels[type] || type}
-              </span>
-              <span className="text-sm font-bold text-[var(--site-text-primary)]">
+              </Typography.Text>
+              <Typography.Text strong style={{ fontSize: 14 }}>
                 {count}
-              </span>
-            </div>
+              </Typography.Text>
+            </Flex>
           ))}
-        </div>
+        </Flex>
       </div>
     </div>
   );

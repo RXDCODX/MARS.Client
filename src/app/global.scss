@@ -142,6 +142,7 @@ html:not([data-storybook]) {
 
 body {
   color: var(--site-text-primary) !important;
+  background-color: var(--site-bg-primary) !important;
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
@@ -822,4 +823,11 @@ div {
     flex: 0 0 100%;
     max-width: 100%;
   }
+}
+
+/* Page layout utility */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
 }

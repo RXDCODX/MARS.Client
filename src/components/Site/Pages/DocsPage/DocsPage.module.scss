@@ -1,6 +1,6 @@
 .docsPage {
   min-height: 100vh;
-  background: var(--bs-body-bg);
+  background: var(--site-bg-primary);
   padding: 40px 0;
 }
 
@@ -14,10 +14,10 @@
 }
 
 .sidebar {
-  background: var(--bs-card-bg);
+  background: var(--site-bg-card);
   border-radius: 15px;
   padding: 30px;
-  box-shadow: var(--bs-box-shadow);
+  box-shadow: var(--site-shadow-light);
   height: fit-content;
   position: sticky;
   top: 100px;
@@ -26,7 +26,7 @@
     font-size: 1.5rem;
     font-weight: 700;
     margin: 0 0 30px;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     text-shadow: var(--text-shadow-medium);
   }
 }
@@ -44,29 +44,29 @@
   text-align: left;
   font-size: 1rem;
   font-weight: 500;
-  color: var(--bs-body-color);
+  color: var(--site-text-primary);
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.3s ease;
   text-shadow: var(--text-shadow-light);
 
   &:hover {
-    background: var(--bs-light);
-    color: var(--bs-primary);
+    background: var(--site-bg-tertiary);
+    color: var(--site-text-accent);
   }
 
   &.active {
     background: var(--primary-gradient);
-    color: var(--bs-white);
+    color: var(--site-text-light);
     text-shadow: var(--text-shadow-medium);
   }
 }
 
 .content {
-  background: var(--bs-card-bg);
+  background: var(--site-bg-card);
   border-radius: 15px;
   padding: 40px;
-  box-shadow: var(--bs-box-shadow);
+  box-shadow: var(--site-shadow-light);
 }
 
 .tabContent {
@@ -74,13 +74,13 @@
     font-size: 2rem;
     font-weight: 700;
     margin: 0 0 20px;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     text-shadow: var(--text-shadow-medium);
   }
 
   > p {
     font-size: 1.1rem;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     line-height: 1.6;
     margin: 0 0 30px;
     text-shadow: var(--text-shadow-light);
@@ -88,31 +88,31 @@
 }
 
 .stepCard {
-  background: var(--bs-light);
+  background: var(--site-bg-tertiary);
   padding: 25px;
   border-radius: 12px;
   margin-bottom: 20px;
-  border-left: 4px solid var(--bs-primary);
+  border-left: 4px solid var(--site-text-accent);
   text-shadow: var(--text-shadow-light);
 
   h3 {
     font-size: 1.3rem;
     font-weight: 600;
     margin: 0 0 15px;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     text-shadow: var(--text-shadow-light);
   }
 
   p {
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     line-height: 1.6;
     margin: 0 0 15px;
     text-shadow: var(--text-shadow-light);
   }
 
   code {
-    background: var(--bs-gray-900);
-    color: var(--bs-gray-100);
+    background: var(--site-bg-primary);
+    color: var(--site-bg-secondary);
     padding: 10px 15px;
     border-radius: 8px;
     font-family: "Courier New", monospace;
@@ -129,7 +129,7 @@
 }
 
 .componentDocCard {
-  background: var(--bs-light);
+  background: var(--site-bg-tertiary);
   padding: 25px;
   border-radius: 12px;
   border: 2px solid transparent;
@@ -137,21 +137,21 @@
   text-shadow: var(--text-shadow-light);
 
   &:hover {
-    border-color: var(--bs-primary);
+    border-color: var(--site-text-accent);
     transform: translateY(-5px);
-    box-shadow: var(--bs-box-shadow-lg);
+    box-shadow: var(--site-shadow-heavy);
   }
 
   h3 {
     font-size: 1.3rem;
     font-weight: 600;
     margin: 0 0 15px;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     text-shadow: var(--text-shadow-light);
   }
 
   p {
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     line-height: 1.6;
     margin: 0 0 20px;
     text-shadow: var(--text-shadow-light);
@@ -162,7 +162,7 @@
     padding-left: 20px;
 
     li {
-      color: var(--bs-body-color);
+      color: var(--site-text-primary);
       margin-bottom: 8px;
       line-height: 1.5;
       text-shadow: var(--text-shadow-light);
@@ -172,7 +172,7 @@
 
 .tryButton {
   background: var(--primary-gradient);
-  color: var(--bs-white);
+  color: var(--site-text-light);
   padding: 10px 20px;
   border-radius: 25px;
   text-decoration: none;
@@ -184,7 +184,7 @@
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: var(--bs-box-shadow-lg);
+    box-shadow: var(--site-shadow-heavy);
   }
 }
 
@@ -196,7 +196,7 @@
 }
 
 .adminFeature {
-  background: var(--bs-light);
+  background: var(--site-bg-tertiary);
   padding: 25px;
   border-radius: 12px;
   text-align: center;
@@ -206,12 +206,12 @@
     font-size: 1.3rem;
     font-weight: 600;
     margin: 0 0 15px;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     text-shadow: var(--text-shadow-light);
   }
 
   p {
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     line-height: 1.6;
     margin: 0 0 20px;
     text-shadow: var(--text-shadow-light);
@@ -220,7 +220,7 @@
 
 .linkButton {
   background: var(--primary-gradient);
-  color: var(--bs-white);
+  color: var(--site-text-light);
   padding: 12px 25px;
   border-radius: 25px;
   text-decoration: none;
@@ -232,7 +232,7 @@
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: var(--bs-box-shadow-lg);
+    box-shadow: var(--site-shadow-heavy);
   }
 }
 
@@ -241,7 +241,7 @@
     font-size: 1.5rem;
     font-weight: 600;
     margin: 30px 0 15px;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     text-shadow: var(--text-shadow-light);
 
     &:first-child {
@@ -250,15 +250,15 @@
   }
 
   p {
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     line-height: 1.6;
     margin: 0 0 15px;
     text-shadow: var(--text-shadow-light);
   }
 
   code {
-    background: var(--bs-gray-900);
-    color: var(--bs-gray-100);
+    background: var(--site-bg-primary);
+    color: var(--site-bg-secondary);
     padding: 10px 15px;
     border-radius: 8px;
     font-family: "Courier New", monospace;
@@ -268,24 +268,24 @@
 }
 
 .codeExample {
-  background: var(--bs-light);
+  background: var(--site-bg-tertiary);
   padding: 20px;
   border-radius: 12px;
   margin: 20px 0;
-  border-left: 4px solid var(--bs-primary);
+  border-left: 4px solid var(--site-text-accent);
   text-shadow: var(--text-shadow-light);
 
   h4 {
     font-size: 1.1rem;
     font-weight: 600;
     margin: 0 0 15px;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     text-shadow: var(--text-shadow-light);
   }
 
   code {
-    background: var(--bs-gray-900);
-    color: var(--bs-gray-100);
+    background: var(--site-bg-primary);
+    color: var(--site-bg-secondary);
     padding: 15px;
     border-radius: 8px;
     font-family: "Courier New", monospace;

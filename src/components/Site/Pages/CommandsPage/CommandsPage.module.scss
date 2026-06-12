@@ -2,7 +2,7 @@
 .selectedCommand {
   transform: translateX(4px);
   box-shadow: 0 8px 25px rgb(0 0 0 / 15%);
-  border: 2px solid var(--bs-primary) !important;
+  border: 2px solid var(--site-text-accent) !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -71,16 +71,16 @@
   transition: all 0.3s ease;
   border-radius: 8px;
   border: 2px solid transparent;
-  background: var(--bs-gray-100);
+  background: var(--site-bg-secondary);
 
   &:focus {
-    border-color: var(--bs-primary);
+    border-color: var(--site-text-accent);
     box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 15%);
     transform: translateY(-1px);
   }
 
   &:hover {
-    border-color: var(--bs-primary);
+    border-color: var(--site-text-accent);
   }
 }
 
@@ -88,14 +88,14 @@
 .resultContainer {
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   border-radius: 12px;
-  border-left: 4px solid var(--bs-primary);
+  border-left: 4px solid var(--site-text-accent);
   padding: 1.5rem;
 }
 
 // Стили для списка команд
 .commandList {
   scrollbar-width: thin;
-  scrollbar-color: var(--bs-secondary) transparent;
+  scrollbar-color: var(--site-text-secondary) transparent;
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -107,11 +107,11 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: var(--bs-secondary);
+    background-color: var(--site-text-secondary);
     border-radius: 4px;
 
     &:hover {
-      background-color: var(--bs-secondary-dark);
+      background-color: var(--site-text-secondary);
     }
   }
 }
@@ -154,12 +154,12 @@
 .commandDescription {
   line-height: 1.5;
   margin-bottom: 0.75rem;
-  color: var(--bs-gray-600);
+  color: var(--site-text-secondary);
 }
 
 // Группа параметров
 .parameterGroup {
-  border-left: 3px solid var(--bs-primary);
+  border-left: 3px solid var(--site-text-accent);
   padding-left: 1.25rem;
   margin-bottom: 2rem;
   position: relative;
@@ -175,7 +175,7 @@
     top: 0;
     width: 9px;
     height: 9px;
-    background: var(--bs-primary);
+    background: var(--site-text-accent);
     border-radius: 50%;
   }
 }
@@ -215,8 +215,8 @@
   font-family: "JetBrains Mono", "Fira Code", "Courier New", monospace;
   font-size: 0.9rem;
   line-height: 1.6;
-  background: var(--bs-dark);
-  color: var(--bs-light);
+  background: var(--site-bg-primary);
+  color: var(--site-bg-tertiary);
   padding: 1rem;
   border-radius: 8px;
   overflow-x: auto;
@@ -230,7 +230,7 @@
   .icon {
     font-size: 4rem;
     margin-bottom: 1.5rem;
-    color: var(--bs-gray-400);
+    color: var(--site-text-muted);
   }
 
   &:hover {
@@ -241,7 +241,7 @@
 // Группа вкладок
 .tabGroup {
   .nav-tabs {
-    border-bottom: 2px solid var(--bs-gray-300);
+    border-bottom: 2px solid var(--site-border-secondary);
 
     .nav-link {
       border: none;
@@ -249,19 +249,19 @@
       border-radius: 0;
       padding: 0.75rem 1.5rem;
       font-weight: 500;
-      color: var(--bs-gray-600);
+      color: var(--site-text-secondary);
       transition: all 0.3s ease;
       position: relative;
 
       &:hover {
         border-color: transparent;
-        color: var(--bs-primary);
+        color: var(--site-text-accent);
         background: transparent;
       }
 
       &.active {
-        color: var(--bs-primary);
-        border-bottom-color: var(--bs-primary);
+        color: var(--site-text-accent);
+        border-bottom-color: var(--site-text-accent);
         background: transparent;
         font-weight: 600;
       }
@@ -368,7 +368,7 @@
       border-right: none;
 
       &:focus {
-        border-color: var(--bs-primary);
+        border-color: var(--site-text-accent);
         box-shadow: none;
       }
     }
@@ -379,7 +379,7 @@
       background: white;
 
       &:focus-within {
-        border-color: var(--bs-primary);
+        border-color: var(--site-text-accent);
       }
     }
   }
@@ -389,21 +389,21 @@
 .parameterSection {
   .form-label {
     font-weight: 600;
-    color: var(--bs-gray-800);
+    color: var(--site-bg-secondary);
     margin-bottom: 0.5rem;
   }
 
   .form-text {
     font-size: 0.8rem;
-    color: var(--bs-gray-600);
+    color: var(--site-text-secondary);
     margin-top: 0.25rem;
   }
 
   .form-check {
     .form-check-input {
       &:checked {
-        background-color: var(--bs-primary);
-        border-color: var(--bs-primary);
+        background-color: var(--site-text-accent);
+        border-color: var(--site-text-accent);
       }
 
       &:focus {

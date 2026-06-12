@@ -1,7 +1,7 @@
 .page {
   min-height: 100vh;
   background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-  color: var(--bs-white);
+  color: var(--site-text-light);
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   padding: 20px;
 }
@@ -43,18 +43,18 @@
   border: none;
   border-radius: 8px;
   background: rgb(255 255 255 / 90%);
-  color: var(--bs-dark);
+  color: var(--site-bg-primary);
   font-size: 16px;
   outline: none;
   transition: all 0.3s ease;
 
   &:focus {
-    background: var(--bs-white);
+    background: var(--site-text-light);
     box-shadow: 0 0 0 3px rgb(255 255 255 / 30%);
   }
 
   &::placeholder {
-    color: var(--bs-secondary);
+    color: var(--site-text-secondary);
   }
 }
 
@@ -63,7 +63,7 @@
   border: none;
   border-radius: 8px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: var(--bs-white);
+  color: var(--site-text-light);
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -91,7 +91,7 @@
 
 .info h3 {
   margin-bottom: 15px;
-  color: var(--bs-primary);
+  color: var(--site-text-accent);
   font-size: 1.3rem;
 }
 
@@ -109,7 +109,7 @@
     content: "→";
     position: absolute;
     left: 0;
-    color: var(--bs-primary);
+    color: var(--site-text-accent);
     font-weight: bold;
   }
 }

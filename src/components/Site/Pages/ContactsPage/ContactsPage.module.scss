@@ -5,7 +5,7 @@
 // Hero Section
 .hero {
   background: var(--primary-gradient);
-  color: var(--bs-white);
+  color: var(--site-text-light);
   padding: 100px 0;
   text-align: center;
 }
@@ -34,7 +34,7 @@
 // Contact Section
 .contact {
   padding: 100px 0;
-  background: var(--bs-body-bg);
+  background: var(--site-bg-primary);
 }
 
 .contactContent {
@@ -48,13 +48,13 @@
     font-size: 2.5rem;
     font-weight: 700;
     margin: 0 0 20px;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     text-shadow: var(--text-shadow-medium);
   }
 
   > p {
     font-size: 1.1rem;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     line-height: 1.6;
     margin: 0 0 40px;
     text-shadow: var(--text-shadow-light);
@@ -71,17 +71,17 @@
   display: flex;
   align-items: center;
   padding: 20px;
-  background: var(--bs-card-bg);
+  background: var(--site-bg-card);
   border-radius: 15px;
   text-decoration: none;
   color: inherit;
   transition: all 0.3s ease;
-  box-shadow: var(--bs-box-shadow);
-  border: 1px solid var(--bs-border-color);
+  box-shadow: var(--site-shadow-light);
+  border: 1px solid var(--site-border-primary);
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: var(--bs-box-shadow-lg);
+    box-shadow: var(--site-shadow-heavy);
   }
 }
 
@@ -95,7 +95,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--bs-white);
+  color: var(--site-text-light);
 }
 
 .contactDetails {
@@ -103,12 +103,12 @@
     font-size: 1.2rem;
     font-weight: 600;
     margin: 0 0 5px;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     text-shadow: var(--text-shadow-light);
   }
 
   p {
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     margin: 0;
     text-shadow: var(--text-shadow-light);
   }
@@ -116,22 +116,22 @@
 
 // Contact Form
 .contactForm {
-  background: var(--bs-card-bg);
+  background: var(--site-bg-card);
   padding: 40px;
   border-radius: 20px;
-  box-shadow: var(--bs-box-shadow);
-  border: 1px solid var(--bs-border-color);
+  box-shadow: var(--site-shadow-light);
+  border: 1px solid var(--site-border-primary);
 
   h2 {
     font-size: 2rem;
     font-weight: 700;
     margin: 0 0 15px;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     text-shadow: var(--text-shadow-light);
   }
 
   > p {
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     margin: 0 0 30px;
     line-height: 1.6;
     text-shadow: var(--text-shadow-light);
@@ -151,7 +151,7 @@
 
   label {
     font-weight: 600;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     font-size: 0.9rem;
     text-shadow: var(--text-shadow-light);
   }
@@ -160,21 +160,21 @@
   select,
   textarea {
     padding: 15px;
-    border: 2px solid var(--bs-border-color);
+    border: 2px solid var(--site-border-primary);
     border-radius: 10px;
     font-size: 1rem;
     transition: all 0.3s ease;
-    background: var(--bs-body-bg);
-    color: var(--bs-body-color);
+    background: var(--site-bg-primary);
+    color: var(--site-text-primary);
 
     &:focus {
       outline: none;
-      border-color: var(--bs-primary);
+      border-color: var(--site-text-accent);
       box-shadow: 0 0 0 3px rgb(102 126 234 / 10%);
     }
 
     &::placeholder {
-      color: var(--bs-body-color);
+      color: var(--site-text-primary);
       opacity: 0.6;
     }
   }
@@ -187,7 +187,7 @@
 
 .submitButton {
   background: var(--primary-gradient);
-  color: var(--bs-white);
+  color: var(--site-text-light);
   padding: 15px 30px;
   border: none;
   border-radius: 50px;
@@ -200,7 +200,7 @@
 
   &:hover:not(:disabled) {
     transform: translateY(-3px);
-    box-shadow: var(--bs-box-shadow-lg);
+    box-shadow: var(--site-shadow-heavy);
   }
 
   &:disabled {
@@ -210,36 +210,36 @@
 }
 
 .successMessage {
-  background: var(--bs-success-light);
-  color: var(--bs-success-dark);
+  background: var(--site-bg-success);
+  color: var(--site-text-success);
   padding: 15px;
   border-radius: 10px;
   margin-top: 20px;
-  border: 1px solid var(--bs-success);
+  border: 1px solid var(--site-text-success);
   text-shadow: var(--text-shadow-light);
 }
 
 .errorMessage {
-  background: var(--bs-danger-light);
-  color: var(--bs-danger-dark);
+  background: var(--site-bg-danger);
+  color: var(--site-text-danger);
   padding: 15px;
   border-radius: 10px;
   margin-top: 20px;
-  border: 1px solid var(--bs-danger);
+  border: 1px solid var(--site-text-danger);
   text-shadow: var(--text-shadow-light);
 }
 
 // FAQ Section
 .faq {
   padding: 100px 0;
-  background: var(--bs-card-bg);
+  background: var(--site-bg-card);
 
   h2 {
     text-align: center;
     font-size: 2.5rem;
     font-weight: 700;
     margin: 0 0 60px;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     text-shadow: var(--text-shadow-medium);
   }
 }
@@ -251,22 +251,22 @@
 }
 
 .faqItem {
-  background: var(--bs-light);
+  background: var(--site-bg-tertiary);
   padding: 30px;
   border-radius: 15px;
-  border-left: 4px solid var(--bs-primary);
-  border: 1px solid var(--bs-border-color);
+  border-left: 4px solid var(--site-text-accent);
+  border: 1px solid var(--site-border-primary);
 
   h3 {
     font-size: 1.3rem;
     font-weight: 600;
     margin: 0 0 15px;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     text-shadow: var(--text-shadow-light);
   }
 
   p {
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     line-height: 1.6;
     margin: 0;
     text-shadow: var(--text-shadow-light);

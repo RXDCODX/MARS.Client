@@ -1,8 +1,10 @@
 // Основные стили для RandomMemePage
 .randomMemePage {
+  max-width: 1200px;
+  margin: 0 auto;
   min-height: 100vh;
-  background: var(--bs-body-bg);
-  padding: 1rem 0;
+  background: var(--site-bg-primary);
+  padding: 1rem 24px;
 
   @media (width <= 768px) {
     padding: 0.5rem 0;
@@ -21,15 +23,15 @@
 // Карточки элементов
 .memeCard {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid var(--bs-border-color);
+  border: 1px solid var(--site-border-primary);
   border-radius: 12px;
   overflow: hidden;
-  background: var(--bs-card-bg);
+  background: var(--site-bg-card);
 
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 25px rgb(0 0 0 / 15%);
-    border-color: var(--bs-primary);
+    border-color: var(--site-text-accent);
   }
 
   .card-body {
@@ -40,11 +42,11 @@
     font-size: 1.1rem;
     font-weight: 600;
     margin-bottom: 0.75rem;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
   }
 
   .card-text {
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     line-height: 1.5;
   }
 }
@@ -140,18 +142,18 @@
       padding: 0.75rem 1rem;
 
       &:focus {
-        border-color: var(--bs-primary);
+        border-color: var(--site-text-accent);
         box-shadow: none;
       }
     }
 
     .input-group-text {
       border-radius: 0 8px 8px 0;
-      background: var(--bs-light);
+      background: var(--site-bg-tertiary);
       border-left: none;
 
       .search-icon {
-        color: var(--bs-secondary);
+        color: var(--site-text-secondary);
       }
     }
   }
@@ -160,7 +162,7 @@
 // Табы
 .customTabs {
   .nav-tabs {
-    border-bottom: 2px solid var(--bs-gray-300);
+    border-bottom: 2px solid var(--site-border-secondary);
     margin-bottom: 2rem;
 
     .nav-link {
@@ -169,18 +171,18 @@
       border-radius: 0;
       padding: 0.75rem 1.5rem;
       font-weight: 500;
-      color: var(--bs-gray-600);
+      color: var(--site-text-secondary);
       transition: all 0.3s ease;
 
       &:hover {
         border-color: transparent;
-        color: var(--bs-primary);
+        color: var(--site-text-accent);
         background: transparent;
       }
 
       &.active {
-        color: var(--bs-primary);
-        border-bottom-color: var(--bs-primary);
+        color: var(--site-text-accent);
+        border-bottom-color: var(--site-text-accent);
         background: transparent;
         font-weight: 600;
       }
@@ -205,7 +207,7 @@
 .emptyState {
   text-align: center;
   padding: 3rem 2rem;
-  color: var(--bs-gray-500);
+  color: var(--site-text-muted);
 
   .empty-icon {
     font-size: 4rem;
@@ -217,7 +219,7 @@
     font-size: 1.5rem;
     font-weight: 600;
     margin-bottom: 1rem;
-    color: var(--bs-gray-700);
+    color: var(--site-text-secondary);
   }
 
   .empty-description {
@@ -281,9 +283,9 @@
 
 // Информационные карточки
 .infoCard {
-  border: 1px solid var(--bs-border-color);
+  border: 1px solid var(--site-border-primary);
   border-radius: 12px;
-  background: var(--bs-card-bg);
+  background: var(--site-bg-card);
   transition: all 0.3s ease;
 
   &:hover {
@@ -291,10 +293,10 @@
   }
 
   .card-header {
-    background: var(--bs-light);
-    border-bottom: 1px solid var(--bs-border-color);
+    background: var(--site-bg-tertiary);
+    border-bottom: 1px solid var(--site-border-primary);
     font-weight: 600;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
   }
 
   .info-item {
@@ -302,7 +304,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
-    border-bottom: 1px solid var(--bs-border-color);
+    border-bottom: 1px solid var(--site-border-primary);
 
     &:last-child {
       border-bottom: none;
@@ -310,13 +312,13 @@
 
     .info-label {
       font-weight: 500;
-      color: var(--bs-gray-600);
+      color: var(--site-text-secondary);
       font-size: 0.9rem;
     }
 
     .info-value {
       font-weight: 600;
-      color: var(--bs-body-color);
+      color: var(--site-text-primary);
       font-size: 0.95rem;
     }
   }
@@ -324,9 +326,9 @@
 
 // Форма
 .formCard {
-  border: 1px solid var(--bs-border-color);
+  border: 1px solid var(--site-border-primary);
   border-radius: 12px;
-  background: var(--bs-card-bg);
+  background: var(--site-bg-card);
 
   .card-header {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -339,24 +341,24 @@
 
     .form-label {
       font-weight: 600;
-      color: var(--bs-body-color);
+      color: var(--site-text-primary);
       margin-bottom: 0.5rem;
     }
 
     .form-control {
       border-radius: 8px;
-      border: 2px solid var(--bs-border-color);
+      border: 2px solid var(--site-border-primary);
       padding: 0.75rem;
       transition: all 0.3s ease;
 
       &:focus {
-        border-color: var(--bs-primary);
+        border-color: var(--site-text-accent);
         box-shadow: 0 0 0 0.2rem rgb(0 123 255 / 15%);
         transform: translateY(-1px);
       }
 
       &.is-invalid {
-        border-color: var(--bs-danger);
+        border-color: var(--site-text-danger);
       }
     }
 
@@ -367,7 +369,7 @@
 
     .form-text {
       font-size: 0.8rem;
-      color: var(--bs-gray-600);
+      color: var(--site-text-secondary);
       margin-top: 0.25rem;
     }
   }
@@ -377,7 +379,7 @@
     gap: 1rem;
     justify-content: flex-end;
     padding-top: 1rem;
-    border-top: 1px solid var(--bs-border-color);
+    border-top: 1px solid var(--site-border-primary);
   }
 }
 
@@ -413,18 +415,18 @@
       justify-content: center;
       margin: 0 auto 1.5rem;
       font-size: 2rem;
-      color: var(--bs-danger);
+      color: var(--site-text-danger);
     }
 
     .delete-title {
       font-size: 1.5rem;
       font-weight: 600;
       margin-bottom: 1rem;
-      color: var(--bs-body-color);
+      color: var(--site-text-primary);
     }
 
     .delete-message {
-      color: var(--bs-gray-600);
+      color: var(--site-text-secondary);
       line-height: 1.6;
       margin-bottom: 2rem;
     }
@@ -437,14 +439,14 @@
       margin-bottom: 1.5rem;
 
       .alert-icon {
-        color: var(--bs-warning);
+        color: var(--site-text-warning);
         margin-right: 0.5rem;
       }
     }
   }
 
   .modal-footer {
-    border-top: 1px solid var(--bs-border-color);
+    border-top: 1px solid var(--site-border-primary);
     padding: 1.5rem 2rem;
 
     .btn {
@@ -544,36 +546,36 @@
 // Темная тема
 [data-bs-theme="dark"] {
   .memeCard {
-    background: var(--bs-dark);
-    border-color: var(--bs-gray-700);
+    background: var(--site-bg-primary);
+    border-color: var(--site-text-secondary);
   }
 
   .searchContainer {
-    background: var(--bs-dark);
-    border: 1px solid var(--bs-gray-700);
+    background: var(--site-bg-primary);
+    border: 1px solid var(--site-text-secondary);
   }
 
   .infoCard {
-    background: var(--bs-dark);
-    border-color: var(--bs-gray-700);
+    background: var(--site-bg-primary);
+    border-color: var(--site-text-secondary);
 
     .card-header {
-      background: var(--bs-gray-800);
-      border-color: var(--bs-gray-700);
+      background: var(--site-bg-secondary);
+      border-color: var(--site-text-secondary);
     }
   }
 
   .formCard {
-    background: var(--bs-dark);
-    border-color: var(--bs-gray-700);
+    background: var(--site-bg-primary);
+    border-color: var(--site-text-secondary);
 
     .form-control {
-      background: var(--bs-gray-900);
-      border-color: var(--bs-gray-700);
-      color: var(--bs-light);
+      background: var(--site-bg-primary);
+      border-color: var(--site-text-secondary);
+      color: var(--site-bg-tertiary);
 
       &::placeholder {
-        color: var(--bs-gray-600);
+        color: var(--site-text-secondary);
       }
     }
   }
@@ -581,9 +583,9 @@
 
 // Стили для отображения мема
 .memeDisplayCard {
-  border: 1px solid var(--bs-border-color);
+  border: 1px solid var(--site-border-primary);
   border-radius: 12px;
-  background: var(--bs-card-bg);
+  background: var(--site-bg-card);
   transition: all 0.3s ease;
 
   &:hover {
@@ -591,10 +593,10 @@
   }
 
   .card-header {
-    background: var(--bs-light);
-    border-bottom: 1px solid var(--bs-border-color);
+    background: var(--site-bg-tertiary);
+    border-bottom: 1px solid var(--site-border-primary);
     font-weight: 600;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
   }
 
   .memeImage {
@@ -651,7 +653,7 @@
   .memePlaceholder {
     text-align: center;
     padding: 3rem 2rem;
-    color: var(--bs-gray-500);
+    color: var(--site-text-muted);
 
     .placeholder-icon {
       font-size: 4rem;

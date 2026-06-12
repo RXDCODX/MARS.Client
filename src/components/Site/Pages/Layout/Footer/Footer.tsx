@@ -1,10 +1,10 @@
+import { Flex, Typography } from "antd";
 import { Link } from "react-router-dom";
 
-import { useSiteColors } from "@/shared/Utils/useSiteColors";
+import styles from "./Footer.module.scss";
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
-  const colors = useSiteColors();
 
   const linkSections = [
     {
@@ -37,48 +37,44 @@ const Footer: React.FC = () => {
   ];
 
   return (
-    <footer
-      className="mt-auto border-t py-10"
-      style={{
-        backgroundColor: colors.background.secondary,
-        color: colors.text.primary,
-        borderColor: colors.border.primary,
-      }}
-      data-testid="footer"
-    >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+    <footer className={styles.footer} data-testid="footer">
+      <div className={styles.container}>
+        <div className={styles.content}>
           <div>
-            <h3
-              className="mb-3 text-lg font-semibold"
-              style={colors.utils.getTextStyle("primary")}
-            >
+            <Typography.Title level={4} style={{ marginBottom: 12 }}>
               🚀 MARS Client
-            </h3>
-            <p
-              className="text-sm leading-relaxed"
-              style={colors.utils.getTextStyle("secondary")}
-            >
+            </Typography.Title>
+            <Typography.Paragraph type="secondary" style={{ fontSize: 14 }}>
               Мощная платформа для управления стримингом и создания
               интерактивных компонентов для OBS.
-            </p>
+            </Typography.Paragraph>
           </div>
 
           {linkSections.map(section => (
             <div key={section.title}>
-              <h4
-                className="mb-3 text-sm font-semibold uppercase tracking-wider"
-                style={colors.utils.getTextStyle("primary")}
+              <Typography.Text
+                strong
+                style={{
+                  display: "block",
+                  marginBottom: 12,
+                  fontSize: 13,
+                  textTransform: "uppercase",
+                  letterSpacing: 1,
+                }}
               >
                 {section.title}
-              </h4>
-              <ul className="flex flex-col gap-1.5">
+              </Typography.Text>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                 {section.links.map(link => (
-                  <li key={link.to}>
+                  <li key={link.to} style={{ marginBottom: 8 }}>
                     <Link
                       to={link.to}
-                      className="text-sm transition-colors hover:text-[var(--site-text-accent)]"
-                      style={colors.utils.getTextStyle("secondary")}
+                      style={{
+                        color: "var(--site-text-secondary)",
+                        textDecoration: "none",
+                        fontSize: 14,
+                        transition: "color 0.2s",
+                      }}
                     >
                       {link.label}
                     </Link>
@@ -89,13 +85,19 @@ const Footer: React.FC = () => {
           ))}
         </div>
 
-        <hr className="my-6" style={{ borderColor: colors.border.primary }} />
+        <hr
+          style={{
+            border: "none",
+            borderTop: "1px solid var(--site-border-primary)",
+            margin: "24px 0",
+          }}
+        />
 
-        <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
-          <p className="text-sm" style={colors.utils.getTextStyle("muted")}>
+        <div className={styles.bottom}>
+          <Typography.Text type="secondary" style={{ fontSize: 14 }}>
             &copy; {currentYear} MARS Client. Все права защищены.
-          </p>
-          <div className="flex gap-3">
+          </Typography.Text>
+          <Flex gap={12}>
             {[
               { href: "#", label: "GitHub", icon: "🐙" },
               { href: "#", label: "Discord", icon: "💬" },
@@ -105,13 +107,17 @@ const Footer: React.FC = () => {
                 key={social.label}
                 href={social.href}
                 aria-label={social.label}
-                className="text-lg transition-transform hover:scale-110"
-                style={colors.utils.getTextStyle("secondary")}
+                style={{
+                  fontSize: 18,
+                  color: "var(--site-text-secondary)",
+                  textDecoration: "none",
+                  transition: "transform 0.2s",
+                }}
               >
                 {social.icon}
               </a>
             ))}
-          </div>
+          </Flex>
         </div>
       </div>
     </footer>

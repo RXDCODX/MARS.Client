@@ -1,6 +1,6 @@
 .adminPanel {
   min-height: 100vh;
-  background: var(--bs-body-bg);
+  background: var(--site-bg-primary);
 }
 
 .content {
@@ -19,7 +19,7 @@
   h2 {
     font-size: 2rem;
     font-weight: 700;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     margin-bottom: 16px;
     background: var(--primary-gradient);
     -webkit-text-fill-color: transparent;
@@ -29,7 +29,7 @@
 
   p {
     font-size: 1.1rem;
-    color: var(--bs-body-color);
+    color: var(--site-text-primary);
     max-width: 400px;
     line-height: 1.6;
     text-shadow: var(--text-shadow-light);

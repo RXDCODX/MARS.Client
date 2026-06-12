@@ -1,8 +1,14 @@
-import { ChevronDown, FolderOpen, Monitor } from "lucide-react";
+import {
+  ApiOutlined,
+  AppstoreOutlined,
+  MenuOutlined,
+} from "@ant-design/icons";
+import { Button, Dropdown, Flex, Space, Typography } from "antd";
 import { Suspense, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import ThemeToggle from "@/components/ThemeToggle";
+import StyleSelector from "@/components/StyleSelector/StyleSelector";
 
 interface NavigationItem {
   label: string;
@@ -17,7 +23,6 @@ interface NavigationGroup {
 }
 
 const Header: React.FC = () => {
-  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
 
@@ -87,214 +92,203 @@ const Header: React.FC = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const handleDropdownToggle = (name: string) => {
-    setActiveDropdown(activeDropdown === name ? null : name);
-  };
-
-  const handleLinkClick = () => {
-    setActiveDropdown(null);
-    setMobileOpen(false);
-  };
-
-  const renderDropdown = (
-    name: string,
-    label: string,
-    items: NavigationItem[],
-    isActiveFn: (item: NavigationItem) => boolean
-  ) => (
-    <div
-      className="relative pb-2"
-      onMouseLeave={() => setActiveDropdown(null)}
-      data-testid={`nav-dropdown-${name}`}
-    >
-      <button
-        onClick={() => handleDropdownToggle(name)}
-        onMouseEnter={() => setActiveDropdown(name)}
-        className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-[var(--site-bg-tertiary)] hover:text-[var(--site-text-accent)] ${
-          activeDropdown === name
-            ? "bg-[var(--site-bg-tertiary)] text-[var(--site-text-accent)]"
-            : "text-[var(--site-text-primary)]"
-        }`}
-      >
-        {label}
-        <ChevronDown
-          size={12}
-          className={`transition-transform duration-200 ${activeDropdown === name ? "rotate-180" : ""}`}
-        />
-      </button>
-      {activeDropdown === name && (
-        <div
-          className="absolute left-0 top-full z-50 pt-2 min-w-[220px] origin-top rounded-xl border border-[var(--site-border-primary)] bg-[var(--site-bg-card)] p-1.5 shadow-[var(--site-shadow-heavy)] animate-dropdown-open"
-          data-testid={`nav-dropdown-menu-${name}`}
-        >
-          {items.map((item, index) => (
-            <Link
-              key={index}
-              to={item.path}
-              onClick={handleLinkClick}
-              className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:translate-x-0.5 hover:bg-[var(--site-hover-bg)] hover:text-[var(--site-text-accent)] ${
-                isActiveFn(item)
-                  ? "bg-[var(--site-hover-bg)] text-[var(--site-text-accent)]"
-                  : "text-[var(--site-text-primary)]"
-              }`}
-            >
-              {item.icon && (
-                <span className="w-5 text-center">{item.icon}</span>
-              )}
+  const buildDropdownItems = (
+    items: (NavigationItem | NavigationGroup)[]
+  ) =>
+    items.map(item => {
+      if ("children" in item) {
+        return {
+          key: item.label,
+          label: (
+            <span>
+              {item.icon && <span style={{ marginRight: 6 }}>{item.icon}</span>}
               {item.label}
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+            </span>
+          ),
+          children: item.children.map(child => ({
+            key: child.path,
+            label: (
+              <Link to={child.path} data-testid={`nav-link-${child.path}`}>
+                {child.icon && (
+                  <span style={{ marginRight: 6 }}>{child.icon}</span>
+                )}
+                {child.label}
+              </Link>
+            ),
+          })),
+        };
+      }
+      return {
+        key: item.path,
+        label: (
+          <Link to={item.path} data-testid={`nav-link-${item.path}`}>
+            {item.icon && <span style={{ marginRight: 6 }}>{item.icon}</span>}
+            {item.label}
+          </Link>
+        ),
+      };
+    });
 
   return (
     <nav
-      className="sticky top-0 z-[1030] border-b border-[var(--site-border-primary)] bg-[var(--site-bg-secondary)]/80 backdrop-blur-xl"
+      style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 1030,
+        borderBottom: "3px solid var(--site-border-primary)",
+        backgroundColor: "var(--site-bg-secondary)",
+        backdropFilter: "blur(12px)",
+      }}
       data-testid="navbar"
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 sm:px-6 lg:px-8">
+      <div
+        style={{
+          maxWidth: 1200,
+          margin: "0 auto",
+          padding: "8px 24px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+        }}
+      >
         <Link
           to="/"
-          className="flex items-center gap-2 rounded-lg px-2 py-1 transition-all hover:bg-[var(--site-bg-tertiary)] hover:scale-[1.02]"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            padding: "4px 8px",
+            borderRadius: 12,
+            textDecoration: "none",
+          }}
           data-testid="nav-logo"
         >
-          <span className="text-xl">🚀</span>
-          <span className="bg-gradient-to-r from-[var(--site-text-primary)] to-[var(--site-text-accent)] bg-clip-text text-lg font-extrabold tracking-tight text-transparent">
+          <span style={{ fontSize: 20 }}>🚀</span>
+          <Typography.Text
+            strong
+            style={{
+              fontSize: 18,
+              background: "linear-gradient(135deg, var(--site-text-primary), var(--site-text-accent))",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
             MARS
-          </span>
+          </Typography.Text>
         </Link>
 
-        <button
-          className="flex flex-col gap-1 rounded-lg p-2 transition-opacity hover:opacity-100 lg:hidden"
+        <Button
+          type="text"
+          icon={<MenuOutlined />}
           onClick={() => setMobileOpen(!mobileOpen)}
+          style={{ display: "none" }}
+          className="mobile-menu-btn"
           data-testid="nav-mobile-toggle"
-        >
-          <span
-            className={`block h-0.5 w-5 bg-[var(--site-text-primary)] transition-all ${mobileOpen ? "translate-y-1.5 rotate-45" : ""}`}
-          />
-          <span
-            className={`block h-0.5 w-5 bg-[var(--site-text-primary)] transition-all ${mobileOpen ? "opacity-0" : ""}`}
-          />
-          <span
-            className={`block h-0.5 w-5 bg-[var(--site-text-primary)] transition-all ${mobileOpen ? "-translate-y-1.5 -rotate-45" : ""}`}
-          />
-        </button>
+        />
 
-        <div className={`hidden items-center gap-1 lg:flex`}>
-          {renderDropdown("site", "Страницы сайта", sitePages, item =>
-            isActive(item.path)
-          )}
+        <Flex gap={4} align="center" className="desktop-nav" style={{ display: "flex" }}>
+          <Dropdown
+            menu={{ items: buildDropdownItems(sitePages) }}
+            trigger={["hover"]}
+            placement="bottomLeft"
+            data-testid="nav-dropdown-site"
+          >
+            <Button type="text" size="small">
+              Страницы сайта ▾
+            </Button>
+          </Dropdown>
 
-          <div
-            className="relative pb-2"
-            onMouseLeave={() => setActiveDropdown(null)}
+          <Dropdown
+            menu={{ items: buildDropdownItems(obsComponents) }}
+            trigger={["hover"]}
+            placement="bottomLeft"
             data-testid="nav-dropdown-obs"
           >
-            <button
-              onClick={() => handleDropdownToggle("obs")}
-              onMouseEnter={() => setActiveDropdown("obs")}
-              className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-[var(--site-bg-tertiary)] hover:text-[var(--site-text-accent)] ${
-                activeDropdown === "obs"
-                  ? "bg-[var(--site-bg-tertiary)] text-[var(--site-text-accent)]"
-                  : "text-[var(--site-text-primary)]"
-              }`}
-            >
-              OBS
-              <ChevronDown
-                size={12}
-                className={`transition-transform duration-200 ${activeDropdown === "obs" ? "rotate-180" : ""}`}
-              />
-            </button>
-            {activeDropdown === "obs" && (
-              <div className="absolute left-0 top-full z-50 pt-2 min-w-[220px] origin-top rounded-xl border border-[var(--site-border-primary)] bg-[var(--site-bg-card)] p-1.5 shadow-[var(--site-shadow-heavy)] animate-dropdown-open">
-                {obsComponents.map((group, gi) => (
-                  <div key={gi} className="group/obs relative">
-                    <div className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-[var(--site-text-primary)]">
-                      <span className="w-5 text-center">{group.icon}</span>
-                      {group.label}
-                    </div>
-                    <div className="hidden group-hover/obs:block">
-                      <div className="ml-6 border-l border-[var(--site-border-primary)] pl-2">
-                        {group.children.map((child, ci) => (
-                          <Link
-                            key={ci}
-                            to={child.path}
-                            onClick={handleLinkClick}
-                            className={`block rounded-lg px-3 py-1.5 text-xs font-medium transition-all hover:translate-x-0.5 hover:bg-[var(--site-hover-bg)] hover:text-[var(--site-text-accent)] ${
-                              isActive(child.path)
-                                ? "bg-[var(--site-hover-bg)] text-[var(--site-text-accent)]"
-                                : "text-[var(--site-text-primary)]"
-                            }`}
-                          >
-                            {child.label}
-                          </Link>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+            <Button type="text" size="small">
+              OBS ▾
+            </Button>
+          </Dropdown>
 
-          {renderDropdown("control", "Управление", controlRoomPages, item =>
-            isActive(item.path)
-          )}
-        </div>
+          <Dropdown
+            menu={{ items: buildDropdownItems(controlRoomPages) }}
+            trigger={["hover"]}
+            placement="bottomLeft"
+            data-testid="nav-dropdown-control"
+          >
+            <Button type="text" size="small">
+              Управление ▾
+            </Button>
+          </Dropdown>
+        </Flex>
 
-        <div className="hidden items-center gap-2 lg:flex">
+        <Space className="desktop-nav" style={{ display: "flex" }}>
           <Suspense fallback={null}>
             <ThemeToggle />
           </Suspense>
-          <a
+          <StyleSelector />
+          <Button
+            type="text"
+            size="small"
+            icon={<ApiOutlined />}
             href="/ui"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-[var(--site-text-primary)] transition-all hover:bg-[var(--site-bg-tertiary)] hover:text-[var(--site-text-accent)]"
             title="Swagger UI"
             data-testid="nav-link-ui"
-          >
-            <Monitor size={18} />
-          </a>
-          <a
+          />
+          <Button
+            type="text"
+            size="small"
+            icon={<AppstoreOutlined />}
             href="/static"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-[var(--site-text-primary)] transition-all hover:bg-[var(--site-bg-tertiary)] hover:text-[var(--site-text-accent)]"
             title="Static files"
             data-testid="nav-link-static"
-          >
-            <FolderOpen size={18} />
-          </a>
-        </div>
+          />
+        </Space>
       </div>
 
       {mobileOpen && (
-        <div className="border-t border-[var(--site-border-primary)] bg-[var(--site-bg-secondary)] px-4 py-3 lg:hidden">
+        <div
+          style={{
+            borderTop: "1px solid var(--site-border-primary)",
+            backgroundColor: "var(--site-bg-secondary)",
+            padding: "12px 16px",
+          }}
+          className="mobile-nav-panel"
+        >
           <MobileNav
             sitePages={sitePages}
             obsComponents={obsComponents}
             controlRoomPages={controlRoomPages}
             isActive={isActive}
-            onLinkClick={handleLinkClick}
+            onLinkClick={() => setMobileOpen(false)}
           />
-          <div className="mt-3 flex justify-center gap-2 border-t border-[var(--site-border-primary)] pt-3">
+          <Flex
+            justify="center"
+            gap={8}
+            style={{
+              marginTop: 12,
+              paddingTop: 12,
+              borderTop: "1px solid var(--site-border-primary)",
+            }}
+          >
             <Suspense fallback={null}>
               <ThemeToggle />
             </Suspense>
-          </div>
+            <StyleSelector />
+          </Flex>
         </div>
       )}
 
       <style>{`
-        @keyframes dropdown-open {
-          from { opacity: 0; transform: scaleY(0.95) translateY(-4px); }
-          to { opacity: 1; transform: scaleY(1) translateY(0); }
+        @media (max-width: 1024px) {
+          .desktop-nav { display: none !important; }
+          .mobile-menu-btn { display: inline-flex !important; }
         }
-        .animate-dropdown-open {
-          animation: dropdown-open 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+        @media (min-width: 1025px) {
+          .mobile-nav-panel { display: none !important; }
         }
       `}</style>
     </nav>
@@ -329,35 +323,55 @@ const MobileNav: React.FC<MobileNavProps> = ({
   ];
 
   return (
-    <div className="flex flex-col gap-1">
+    <Flex vertical gap={4}>
       {sections.map(section => (
         <div key={section.key}>
-          <button
+          <Button
+            type="text"
+            block
             onClick={() =>
               setOpenSection(openSection === section.key ? null : section.key)
             }
-            className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-[var(--site-text-primary)] transition-all hover:bg-[var(--site-bg-tertiary)]"
+            style={{ justifyContent: "space-between", textAlign: "left" }}
           >
             {section.label}
-            <ChevronDown
-              size={14}
-              className={`transition-transform ${openSection === section.key ? "rotate-180" : ""}`}
-            />
-          </button>
+            <span
+              style={{
+                transform: openSection === section.key ? "rotate(180deg)" : "none",
+                transition: "transform 0.2s",
+              }}
+            >
+              ▾
+            </span>
+          </Button>
           {openSection === section.key && (
-            <div className="ml-4 flex flex-col gap-0.5 border-l border-[var(--site-border-primary)] pl-3">
+            <div
+              style={{
+                marginLeft: 16,
+                borderLeft: "2px solid var(--site-border-primary)",
+                paddingLeft: 12,
+              }}
+            >
               {section.items.map((item, i) => (
                 <Link
                   key={i}
                   to={item.path}
                   onClick={onLinkClick}
-                  className={`rounded-lg px-3 py-2 text-sm transition-all hover:bg-[var(--site-hover-bg)] hover:text-[var(--site-text-accent)] ${
-                    isActive(item.path)
-                      ? "bg-[var(--site-hover-bg)] text-[var(--site-text-accent)]"
-                      : "text-[var(--site-text-primary)]"
-                  }`}
+                  style={{
+                    display: "block",
+                    padding: "6px 12px",
+                    fontSize: 14,
+                    color: isActive(item.path)
+                      ? "var(--site-text-accent)"
+                      : "var(--site-text-primary)",
+                    textDecoration: "none",
+                    borderRadius: 8,
+                    backgroundColor: isActive(item.path)
+                      ? "var(--site-hover-bg)"
+                      : "transparent",
+                  }}
                 >
-                  {item.icon && <span className="mr-2">{item.icon}</span>}
+                  {item.icon && <span style={{ marginRight: 8 }}>{item.icon}</span>}
                   {item.label}
                 </Link>
               ))}
@@ -365,7 +379,7 @@ const MobileNav: React.FC<MobileNavProps> = ({
           )}
         </div>
       ))}
-    </div>
+    </Flex>
   );
 };
 

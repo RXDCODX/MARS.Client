@@ -1,3 +1,5 @@
+import { ReloadOutlined } from "@ant-design/icons";
+import { Button, Card, Flex, Progress, Spin, Tag, Typography } from "antd";
 import { Suspense, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -82,11 +84,11 @@ const WelcomePage: React.FC = () => {
     : 0;
 
   return (
-    <div className="relative min-h-screen" data-testid="page-welcome">
-      <div className="fixed inset-0 -z-10">
+    <div style={{ position: "relative", minHeight: "100vh" }} data-testid="page-welcome">
+      <div style={{ position: "fixed", inset: 0, zIndex: -10 }}>
         <Suspense fallback={null}>
           <ParticlesBg
-            className="absolute inset-0"
+            style={{ position: "absolute", inset: 0 }}
             particleCount={80}
             speed={1}
             color="#667eea"
@@ -95,57 +97,57 @@ const WelcomePage: React.FC = () => {
         </Suspense>
       </div>
 
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <h1 className="text-3xl font-bold tracking-tight text-[var(--site-text-primary)]">
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 24px" }}>
+        <Flex justify="space-between" align="center" wrap="wrap" gap={16} style={{ marginBottom: 32 }}>
+          <Flex align="center" gap={12}>
+            <Typography.Title level={2} style={{ margin: 0 }}>
               MARS Server Dashboard
-            </h1>
-            <div className="flex items-center gap-2 text-sm">
-              <span
-                className={`h-2 w-2 rounded-full ${error ? "bg-red-500 shadow-[0_0_6px_#ef4444]" : "bg-emerald-500 shadow-[0_0_6px_#22c55e]"}`}
-              />
-              <span className="text-[var(--site-text-secondary)]">
-                {error ? "Офлайн" : "Онлайн"}
-              </span>
-            </div>
-          </div>
+            </Typography.Title>
+            <Tag color={error ? "error" : "success"}>
+              {error ? "Офлайн" : "Онлайн"}
+            </Tag>
+          </Flex>
           {stats && (
-            <div className="flex flex-wrap items-center gap-2 text-xs text-[var(--site-text-secondary)] opacity-80">
-              <span>{stats.machineName}</span>
-              <span className="opacity-40">|</span>
-              <span>{stats.osVersion}</span>
-              <span className="opacity-40">|</span>
-              <span>{stats.runtimeVersion}</span>
-            </div>
+            <Flex gap={8} align="center" wrap="wrap">
+              <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                {stats.machineName}
+              </Typography.Text>
+              <Typography.Text type="secondary" style={{ fontSize: 12, opacity: 0.4 }}>
+                |
+              </Typography.Text>
+              <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                {stats.osVersion}
+              </Typography.Text>
+              <Typography.Text type="secondary" style={{ fontSize: 12, opacity: 0.4 }}>
+                |
+              </Typography.Text>
+              <Typography.Text type="secondary" style={{ fontSize: 12 }}>
+                {stats.runtimeVersion}
+              </Typography.Text>
+            </Flex>
           )}
-        </header>
+        </Flex>
 
         {loading && (
-          <div className="flex flex-col items-center justify-center gap-4 py-16">
-            <div className="h-10 w-10 animate-spin rounded-full border-4 border-[var(--site-border-primary)] border-t-[var(--site-text-accent)]" />
-            <p className="text-[var(--site-text-secondary)]">
-              Загрузка статистики...
-            </p>
-          </div>
+          <Flex vertical align="center" justify="center" gap={16} style={{ padding: "64px 0" }}>
+            <Spin size="large" />
+            <Typography.Text type="secondary">Загрузка статистики...</Typography.Text>
+          </Flex>
         )}
 
         {error && !stats && (
-          <div className="flex flex-col items-center justify-center gap-4 py-16">
-            <div className="text-4xl">⚠️</div>
-            <p className="text-[var(--site-text-secondary)]">{error}</p>
-            <button
-              onClick={fetchStats}
-              className="rounded-lg border border-[var(--site-border-primary)] bg-[var(--site-bg-secondary)] px-4 py-2 text-sm font-medium text-[var(--site-text-primary)] transition-all hover:-translate-y-0.5 hover:bg-[var(--site-bg-tertiary)]"
-            >
+          <Flex vertical align="center" justify="center" gap={16} style={{ padding: "64px 0" }}>
+            <Typography.Text style={{ fontSize: 32 }}>⚠️</Typography.Text>
+            <Typography.Text type="secondary">{error}</Typography.Text>
+            <Button icon={<ReloadOutlined />} onClick={fetchStats}>
               Повторить
-            </button>
-          </div>
+            </Button>
+          </Flex>
         )}
 
         {stats && (
           <>
-            <div className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <Flex gap={12} wrap="wrap" style={{ marginBottom: 12 }}>
               <StatCard
                 title="CPU"
                 value={`${stats.cpuUsagePercent}%`}
@@ -177,9 +179,9 @@ const WelcomePage: React.FC = () => {
                 icon="⏱️"
                 dataTestId="stat-uptime"
               />
-            </div>
+            </Flex>
 
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            <Flex gap={12} wrap="wrap">
               <StatCard
                 title="Потоки"
                 value={String(stats.threadCount)}
@@ -194,11 +196,19 @@ const WelcomePage: React.FC = () => {
                 icon="⚙️"
                 dataTestId="stat-services"
               />
-              <div className="col-span-1 rounded-xl border border-[var(--site-border-primary)] bg-[var(--site-bg-card)] p-5 shadow-[var(--site-shadow-light)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--site-shadow-medium)] sm:col-span-2 lg:col-span-2">
-                <p className="mb-3 text-xs font-medium uppercase tracking-wider text-[var(--site-text-secondary)]">
+              <Card
+                style={{
+                  flex: "1 1 300px",
+                  minWidth: 300,
+                }}
+              >
+                <Typography.Text
+                  type="secondary"
+                  style={{ display: "block", marginBottom: 12, fontSize: 12, textTransform: "uppercase", letterSpacing: 1 }}
+                >
                   Быстрые ссылки
-                </p>
-                <div className="grid grid-cols-2 gap-2">
+                </Typography.Text>
+                <Flex gap={8} wrap="wrap">
                   {[
                     { to: "/admin", icon: "🔧", label: "Панель управления" },
                     { to: "/logs", icon: "📋", label: "Логи" },
@@ -208,16 +218,18 @@ const WelcomePage: React.FC = () => {
                     <Link
                       key={link.to}
                       to={link.to}
-                      className="flex items-center gap-2 rounded-lg bg-[var(--site-bg-tertiary)] px-3 py-2.5 text-sm font-medium text-[var(--site-text-primary)] transition-all hover:translate-x-1 hover:bg-[var(--site-hover-bg)]"
+                      style={{ textDecoration: "none" }}
                       data-testid={`link-${link.label.toLowerCase().replace(/\s/g, "-")}`}
                     >
-                      <span>{link.icon}</span>
-                      {link.label}
+                      <Button size="small" style={{ width: "100%" }}>
+                        <span style={{ marginRight: 6 }}>{link.icon}</span>
+                        {link.label}
+                      </Button>
                     </Link>
                   ))}
-                </div>
-              </div>
-            </div>
+                </Flex>
+              </Card>
+            </Flex>
           </>
         )}
       </div>
@@ -242,39 +254,34 @@ const StatCard: React.FC<StatCardProps> = ({
   progress,
   dataTestId,
 }) => (
-  <div
-    className="rounded-xl border border-[var(--site-border-primary)] bg-[var(--site-bg-card)] p-5 shadow-[var(--site-shadow-light)] transition-all hover:-translate-y-0.5 hover:shadow-[var(--site-shadow-medium)]"
-    data-testid={dataTestId}
-  >
-    <div className="mb-2 flex items-center gap-2">
-      <span className="text-lg">{icon}</span>
-      <span className="text-xs font-medium uppercase tracking-wider text-[var(--site-text-secondary)]">
+  <Card style={{ flex: "1 1 200px", minWidth: 200 }} data-testid={dataTestId}>
+    <Flex align="center" gap={8} style={{ marginBottom: 8 }}>
+      <span style={{ fontSize: 18 }}>{icon}</span>
+      <Typography.Text
+        type="secondary"
+        style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: 1 }}
+      >
         {title}
-      </span>
-    </div>
-    <div className="mb-0.5 text-2xl font-bold text-[var(--site-text-primary)]">
+      </Typography.Text>
+    </Flex>
+    <Typography.Title level={3} style={{ margin: 0, lineHeight: 1.2 }}>
       {value}
-    </div>
-    <div className="text-xs text-[var(--site-text-muted)] opacity-70">
+    </Typography.Title>
+    <Typography.Text type="secondary" style={{ fontSize: 12 }}>
       {subtitle}
-    </div>
+    </Typography.Text>
     {progress !== undefined && (
-      <div className="mt-3 h-1 overflow-hidden rounded-full bg-[var(--site-bg-tertiary)]">
-        <div
-          className="h-full rounded-full transition-all duration-300"
-          style={{
-            width: `${Math.min(progress, 100)}%`,
-            backgroundColor:
-              progress > 80
-                ? "var(--site-text-danger)"
-                : progress > 60
-                  ? "var(--site-text-warning)"
-                  : "var(--site-text-success)",
-          }}
-        />
-      </div>
+      <Progress
+        percent={Math.min(progress, 100)}
+        showInfo={false}
+        strokeColor={
+          progress > 80 ? "var(--site-text-danger)" : progress > 60 ? "var(--site-text-warning)" : "var(--site-text-success)"
+        }
+        size="small"
+        style={{ marginTop: 8 }}
+      />
     )}
-  </div>
+  </Card>
 );
 
 export default WelcomePage;

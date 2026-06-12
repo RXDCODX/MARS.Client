@@ -1,7 +1,11 @@
-import type { ConfigProviderProps } from "antd";
+import type { Algorithm, ConfigProviderProps } from "antd";
 import { theme } from "antd";
 import { createStyles } from "antd-style";
 import { useMemo } from "react";
+
+import { Theme, useTheme } from "@/contexts/Theme";
+
+import { AntdStyle, useAntdStyle } from "./AntdStyleContext";
 
 const useStyles = createStyles(({ css, cssVar }) => {
   const illustrationBorder = {
@@ -46,22 +50,76 @@ const useStyles = createStyles(({ css, cssVar }) => {
   };
 });
 
+const lightTokens = {
+  colorText: "#2C2C2C",
+  colorPrimary: "#52C41A",
+  colorSuccess: "#51CF66",
+  colorWarning: "#FFD93D",
+  colorError: "#FA5252",
+  colorInfo: "#4DABF7",
+  colorBorder: "#2C2C2C",
+  colorBorderSecondary: "#dee2e6",
+  colorBgBase: "#FFF9F0",
+  colorBgContainer: "#FFFFFF",
+  colorBgElevated: "#FFFFFF",
+  colorBgLayout: "#F5F5F5",
+};
+
+const darkTokens = {
+  colorText: "#E8E8E8",
+  colorPrimary: "#73d13d",
+  colorSuccess: "#73d13d",
+  colorWarning: "#FFD93D",
+  colorError: "#FF6B6B",
+  colorInfo: "#69B1FF",
+  colorBorder: "#424242",
+  colorBorderSecondary: "#303030",
+  colorBgBase: "#141414",
+  colorBgContainer: "#1F1F1F",
+  colorBgElevated: "#262626",
+  colorBgLayout: "#0A0A0A",
+};
+
+const getAlgorithms = (
+  antdStyle: AntdStyle,
+  siteTheme: Theme
+): Algorithm[] => {
+  const isDark = antdStyle === "dark" || antdStyle === "dark-compact" || siteTheme === "dark";
+  const isCompact = antdStyle === "compact" || antdStyle === "dark-compact";
+
+  const algorithms: Algorithm[] = [];
+
+  if (isDark) {
+    algorithms.push(theme.darkAlgorithm);
+  } else {
+    algorithms.push(theme.defaultAlgorithm);
+  }
+
+  if (isCompact) {
+    algorithms.push(theme.compactAlgorithm);
+  }
+
+  return algorithms;
+};
+
 const useIllustrationTheme = () => {
   const { styles } = useStyles();
+  const { theme: siteTheme } = useTheme();
+  const { antdStyle } = useAntdStyle();
+
+  const isDark =
+    antdStyle === "dark" ||
+    antdStyle === "dark-compact" ||
+    siteTheme === "dark";
+
+  const algorithms = getAlgorithms(antdStyle, siteTheme);
 
   return useMemo<ConfigProviderProps>(
     () => ({
       theme: {
-        algorithm: theme.defaultAlgorithm,
+        algorithm: algorithms.length === 1 ? algorithms[0] : algorithms,
         token: {
-          colorText: "#2C2C2C",
-          colorPrimary: "#52C41A",
-          colorSuccess: "#51CF66",
-          colorWarning: "#FFD93D",
-          colorError: "#FA5252",
-          colorInfo: "#4DABF7",
-          colorBorder: "#2C2C2C",
-          colorBorderSecondary: "#2C2C2C",
+          ...(isDark ? darkTokens : lightTokens),
           lineWidth: 3,
           lineWidthBold: 3,
           borderRadius: 12,
@@ -72,8 +130,6 @@ const useIllustrationTheme = () => {
           controlHeightLG: 48,
           fontSize: 15,
           fontWeightStrong: 600,
-          colorBgBase: "#FFF9F0",
-          colorBgContainer: "#FFFFFF",
         },
         components: {
           Button: {
@@ -86,12 +142,16 @@ const useIllustrationTheme = () => {
             boxShadow: "none",
           },
           Card: {
-            boxShadow: "4px 4px 0 #2C2C2C",
-            colorBgContainer: "#FFF0F6",
+            boxShadow: isDark
+              ? "4px 4px 0 #424242"
+              : "4px 4px 0 #2C2C2C",
+            colorBgContainer: isDark ? "#1F1F1F" : "#FFF0F6",
           },
           Tooltip: {
-            colorBorder: "#2C2C2C",
-            colorBgSpotlight: "rgba(100, 100, 100, 0.95)",
+            colorBorder: isDark ? "#424242" : "#2C2C2C",
+            colorBgSpotlight: isDark
+              ? "rgba(50, 50, 50, 0.95)"
+              : "rgba(100, 100, 100, 0.95)",
             borderRadius: 8,
           },
           Select: {
@@ -175,7 +235,7 @@ const useIllustrationTheme = () => {
         },
       },
     }),
-    []
+    [algorithms, isDark, styles]
   );
 };
 

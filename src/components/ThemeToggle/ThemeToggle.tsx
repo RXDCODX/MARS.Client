@@ -1,3 +1,6 @@
+import { MoonOutlined, SunOutlined } from "@ant-design/icons";
+import { Button } from "antd";
+
 import { useTheme } from "@/contexts/Theme";
 
 interface ThemeToggleProps {
@@ -9,30 +12,18 @@ const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = "default" }) => {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <button
+    <Button
+      type="default"
+      size="small"
+      icon={theme === "light" ? <MoonOutlined /> : <SunOutlined />}
       onClick={toggleTheme}
-      className={`flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-medium transition-all hover:-translate-y-0.5 ${
-        variant === "admin"
-          ? "border-[var(--site-border-secondary)] bg-[var(--site-bg-secondary)] text-[var(--site-text-primary)] hover:bg-[var(--site-bg-tertiary)]"
-          : theme === "light"
-            ? "border-[var(--site-border-primary)] bg-[var(--site-bg-secondary)] text-[var(--site-text-primary)] hover:bg-[var(--site-bg-tertiary)]"
-            : "border-[var(--site-border-primary)] bg-[var(--site-bg-secondary)] text-[var(--site-text-primary)] hover:bg-[var(--site-bg-tertiary)]"
-      }`}
       title={`Переключить на ${theme === "light" ? "темную" : "светлую"} тему`}
       data-testid="button-theme-toggle"
     >
-      {theme === "light" ? (
-        <>
-          <span>🌙</span>
-          <span className="hidden sm:inline">Тёмная</span>
-        </>
-      ) : (
-        <>
-          <span>☀️</span>
-          <span className="hidden sm:inline">Светлая</span>
-        </>
-      )}
-    </button>
+      <span style={{ display: "inline", fontSize: 12 }}>
+        {theme === "light" ? "Тёмная" : "Светлая"}
+      </span>
+    </Button>
   );
 };
 
