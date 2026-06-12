@@ -1,6 +1,6 @@
+import { Button } from "antd";
 import { SkipForward } from "lucide-react";
 import { memo, useCallback } from "react";
-import { Button } from "react-bootstrap";
 import { useShallow } from "zustand/react/shallow";
 
 import { usePlayerStore } from "../../../stores/usePlayerStore";
@@ -22,7 +22,7 @@ function SkipButtonComponent() {
 
   return (
     <Button
-      variant="secondary"
+      type="default"
       className={styles.tbBtn}
       onClick={handleClick}
       disabled={loading || !actions}

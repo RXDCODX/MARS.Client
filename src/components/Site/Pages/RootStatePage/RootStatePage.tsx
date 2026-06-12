@@ -1,15 +1,5 @@
+import { Alert, Button, Card, Col, Input, Row, Spin, Table } from "antd";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  Alert,
-  Button,
-  Card,
-  Col,
-  Container,
-  Form,
-  Row,
-  Spinner,
-  Table,
-} from "react-bootstrap";
 
 import { defaultApiConfig } from "@/shared/api/api-config";
 import { RootState } from "@/shared/api/http-clients/RootState";
@@ -181,180 +171,180 @@ const RootStatePage: React.FC = () => {
     }
   };
 
+  const columns = [
+    {
+      title: "Имя",
+      dataIndex: "name",
+      key: "name",
+      render: (text: string) => <span className={styles.nameCell}>{text}</span>,
+    },
+    {
+      title: "Значение",
+      dataIndex: "value",
+      key: "value",
+      render: (text: string) => (
+        <span className={styles.valueCell}>{text}</span>
+      ),
+    },
+    { title: "Описание", dataIndex: "description", key: "description" },
+    {
+      title: "Тип",
+      dataIndex: "typeDescription",
+      key: "typeDescription",
+    },
+    {
+      title: "Действия",
+      key: "actions",
+      align: "right" as const,
+      render: (_: unknown, record: RootStateDto) => (
+        <div className={styles.actionsRight}>
+          <Button
+            size="small"
+            type="primary"
+            ghost
+            onClick={() => handleEdit(record)}
+          >
+            Изменить
+          </Button>
+          <Button
+            size="small"
+            danger
+            ghost
+            disabled={deletingName === record.name}
+            onClick={() => void handleDelete(record.name)}
+          >
+            {deletingName === record.name ? "Удаление..." : "Удалить"}
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
   return (
-    <Container fluid className={styles.page}>
+    <div className={styles.page}>
       <div className={styles.header}>
-        <h1 className="mb-0">Управление RootState</h1>
-        <Button variant="outline-secondary" onClick={() => void loadItems()}>
-          Обновить
-        </Button>
+        <h1 style={{ marginBottom: 0 }}>Управление RootState</h1>
+        <Button onClick={() => void loadItems()}>Обновить</Button>
       </div>
 
       {!!error && (
-        <Alert variant="danger" className="mb-3">
-          {error}
-        </Alert>
+        <Alert type="error" message={error} style={{ marginBottom: 12 }} />
       )}
 
-      <Row className="g-3">
-        <Col xl={4}>
+      <Row gutter={16}>
+        <Col xl={8}>
           <Card className={styles.card}>
-            <Card.Header>
-              <h5 className="mb-0">
-                {editingName ? "Редактирование значения" : "Создание"}
-              </h5>
-            </Card.Header>
-            <Card.Body>
-              <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Имя</Form.Label>
-                  <Form.Control
-                    value={form.name}
-                    onChange={e =>
-                      setForm(state => ({ ...state, name: e.target.value }))
-                    }
-                    placeholder="Например: feature-toggle"
-                    disabled={!!editingName}
-                    required
-                  />
-                </Form.Group>
+            <h5 style={{ marginBottom: 0 }}>
+              {editingName ? "Редактирование значения" : "Создание"}
+            </h5>
+            <form onSubmit={handleSubmit} style={{ marginTop: 16 }}>
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ display: "block", marginBottom: 4 }}>Имя</label>
+                <Input
+                  value={form.name}
+                  onChange={e =>
+                    setForm(state => ({ ...state, name: e.target.value }))
+                  }
+                  placeholder="Например: feature-toggle"
+                  disabled={!!editingName}
+                />
+              </div>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Значение</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={3}
-                    value={form.value}
-                    onChange={e =>
-                      setForm(state => ({ ...state, value: e.target.value }))
-                    }
-                    placeholder="Введите значение"
-                    required
-                  />
-                </Form.Group>
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ display: "block", marginBottom: 4 }}>
+                  Значение
+                </label>
+                <Input.TextArea
+                  rows={3}
+                  value={form.value}
+                  onChange={e =>
+                    setForm(state => ({ ...state, value: e.target.value }))
+                  }
+                  placeholder="Введите значение"
+                />
+              </div>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Описание</Form.Label>
-                  <Form.Control
-                    value={form.description}
-                    onChange={e =>
-                      setForm(state => ({
-                        ...state,
-                        description: e.target.value,
-                      }))
-                    }
-                    placeholder="Описание параметра"
-                    disabled={!!editingName}
-                    required
-                  />
-                </Form.Group>
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ display: "block", marginBottom: 4 }}>
+                  Описание
+                </label>
+                <Input
+                  value={form.description}
+                  onChange={e =>
+                    setForm(state => ({
+                      ...state,
+                      description: e.target.value,
+                    }))
+                  }
+                  placeholder="Описание параметра"
+                  disabled={!!editingName}
+                />
+              </div>
 
-                <Form.Group className="mb-3">
-                  <Form.Label>Type Description</Form.Label>
-                  <Form.Control
-                    value={form.typeDescription}
-                    onChange={e =>
-                      setForm(state => ({
-                        ...state,
-                        typeDescription: e.target.value,
-                      }))
-                    }
-                    placeholder="Например: string"
-                    disabled={!!editingName}
-                    required
-                  />
-                </Form.Group>
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ display: "block", marginBottom: 4 }}>
+                  Type Description
+                </label>
+                <Input
+                  value={form.typeDescription}
+                  onChange={e =>
+                    setForm(state => ({
+                      ...state,
+                      typeDescription: e.target.value,
+                    }))
+                  }
+                  placeholder="Например: string"
+                  disabled={!!editingName}
+                />
+              </div>
 
-                <div className={styles.actions}>
-                  <Button type="submit" variant="primary" disabled={saving}>
-                    {saving ? (
-                      <>
-                        <Spinner as="span" size="sm" className="me-2" />
-                        Сохранение...
-                      </>
-                    ) : editingName ? (
-                      "Обновить значение"
-                    ) : (
-                      "Создать"
-                    )}
-                  </Button>
-
-                  {editingName && (
-                    <Button
-                      type="button"
-                      variant="outline-secondary"
-                      onClick={resetForm}
-                    >
-                      Отмена
-                    </Button>
+              <div className={styles.actions}>
+                <Button type="primary" htmlType="submit" disabled={saving}>
+                  {saving ? (
+                    <>
+                      <Spin size="small" style={{ marginRight: 8 }} />
+                      Сохранение...
+                    </>
+                  ) : editingName ? (
+                    "Обновить значение"
+                  ) : (
+                    "Создать"
                   )}
-                </div>
-              </Form>
-            </Card.Body>
+                </Button>
+
+                {editingName && (
+                  <Button type="default" onClick={resetForm}>
+                    Отмена
+                  </Button>
+                )}
+              </div>
+            </form>
           </Card>
         </Col>
 
-        <Col xl={8}>
+        <Col xl={16}>
           <Card className={styles.card}>
-            <Card.Header>
-              <h5 className="mb-0">Список RootState</h5>
-            </Card.Header>
-            <Card.Body>
+            <h5 style={{ marginBottom: 0 }}>Список RootState</h5>
+            <div style={{ marginTop: 16 }}>
               {loading ? (
-                <div className="text-center py-4">
-                  <Spinner animation="border" />
+                <div style={{ textAlign: "center", padding: "16px 0" }}>
+                  <Spin />
                 </div>
               ) : (
-                <div className={styles.tableWrap}>
-                  <Table responsive hover className="mb-0" size="sm">
-                    <thead>
-                      <tr>
-                        <th>Имя</th>
-                        <th>Значение</th>
-                        <th>Описание</th>
-                        <th>Тип</th>
-                        <th className="text-end">Действия</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {items.map(item => (
-                        <tr key={item.name}>
-                          <td className={styles.nameCell}>{item.name}</td>
-                          <td className={styles.valueCell}>{item.value}</td>
-                          <td>{item.description}</td>
-                          <td>{item.typeDescription}</td>
-                          <td>
-                            <div className={styles.actionsRight}>
-                              <Button
-                                size="sm"
-                                variant="outline-primary"
-                                onClick={() => handleEdit(item)}
-                              >
-                                Изменить
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="outline-danger"
-                                disabled={deletingName === item.name}
-                                onClick={() => void handleDelete(item.name)}
-                              >
-                                {deletingName === item.name
-                                  ? "Удаление..."
-                                  : "Удалить"}
-                              </Button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table>
-                </div>
+                <Table
+                  columns={columns}
+                  dataSource={items}
+                  rowKey="name"
+                  size="small"
+                  pagination={false}
+                  className={styles.tableWrap}
+                />
               )}
-            </Card.Body>
+            </div>
           </Card>
         </Col>
       </Row>
-    </Container>
+    </div>
   );
 };
 

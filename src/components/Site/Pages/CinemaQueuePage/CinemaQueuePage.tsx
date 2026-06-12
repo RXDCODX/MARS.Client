@@ -1,6 +1,6 @@
+import { Button } from "antd";
 import { Plus } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Button } from "react-bootstrap";
 
 import {
   CinemaMediaItemDto,
@@ -20,7 +20,6 @@ import MediaItemsTable from "./components/MediaItemsTable";
 import StatisticsCards from "./components/StatisticsCards";
 
 const CinemaQueuePage: React.FC = () => {
-  const BootstrapButton = Button as any;
   const [mediaItems, setMediaItems] = useState<CinemaMediaItemDto[]>([]);
   const [statistics, setStatistics] = useState<CinemaQueueStatistics | null>(
     null
@@ -37,7 +36,7 @@ const CinemaQueuePage: React.FC = () => {
     priority: 1,
     scheduledFor: new Date(Date.now() + 60 * 60 * 1000)
       .toISOString()
-      .slice(0, 16), // Default to 1 hour from now
+      .slice(0, 16),
     addedBy: "",
     twitchUsername: "",
     notes: "",
@@ -50,7 +49,6 @@ const CinemaQueuePage: React.FC = () => {
   const colors = useSiteColors();
   const cinemaQueueApi = useMemo(() => new CinemaQueue(), []);
 
-  // Динамические стили на основе темы
   const pageStyles = useMemo(
     () => ({
       backgroundColor: colors.background.primary,
@@ -133,7 +131,7 @@ const CinemaQueuePage: React.FC = () => {
     } catch {
       showToast({
         success: false,
-        message: "Ошибка при создании медиа элемента",
+        message: "Ошибка при создания медиа элемента",
       });
     }
   };
@@ -229,15 +227,15 @@ const CinemaQueuePage: React.FC = () => {
         <h1 style={{ color: "var(--site-text-accent)" }}>
           Cinema Queue Management
         </h1>
-        <div className="d-flex gap-2">
-          <BootstrapButton
-            variant="primary"
+        <div style={{ display: "flex", gap: 8 }}>
+          <Button
+            type="primary"
             onClick={() => setModalVisible(true)}
-            size="lg"
+            size="large"
           >
-            <Plus className="me-2" />
+            <Plus style={{ marginRight: 8 }} />
             Add New Item
-          </BootstrapButton>
+          </Button>
         </div>
       </div>
 
@@ -252,8 +250,8 @@ const CinemaQueuePage: React.FC = () => {
       />
 
       <CreateMediaItemModal
-        show={modalVisible}
-        onHide={() => {
+        open={modalVisible}
+        onCancel={() => {
           setModalVisible(false);
           resetCreateForm();
         }}
@@ -263,8 +261,8 @@ const CinemaQueuePage: React.FC = () => {
       />
 
       <EditMediaItemModal
-        show={!!editingItem}
-        onHide={() => {
+        open={!!editingItem}
+        onCancel={() => {
           setEditingItem(null);
           setEditFormData({});
         }}

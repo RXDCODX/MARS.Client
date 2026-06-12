@@ -2,7 +2,10 @@ import styles from "./BreakingNews.module.scss";
 
 export function BreakingNews() {
   return (
-    <div className={styles.breakingNewsContainer} data-testid="adhd-breaking-news">
+    <div
+      className={styles.breakingNewsContainer}
+      data-testid="adhd-breaking-news"
+    >
       <div className={styles.breakingNewsContent}>
         <div className={styles.breakingBadge}>BREAKING</div>
         <div className={styles.breakingNewsText}>

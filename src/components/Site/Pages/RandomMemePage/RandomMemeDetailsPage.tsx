@@ -1,6 +1,6 @@
+import { Alert, Button, Spin } from "antd";
 import { ArrowLeft } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Alert, Button, Container, Spinner } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { RandomMeme } from "@/shared/api";
@@ -20,7 +20,6 @@ const RandomMemeDetailsPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
-  // Загрузка деталей мема по ID
   const loadMemeDetails = useCallback(async () => {
     if (!id) {
       setError("ID мема не указан");
@@ -52,12 +51,10 @@ const RandomMemeDetailsPage: React.FC = () => {
     }
   }, [id, api, showToast]);
 
-  // Загрузка при монтировании
   useEffect(() => {
     loadMemeDetails();
   }, [loadMemeDetails]);
 
-  // Обработчики
   const handleBack = useCallback(() => {
     navigate("/random-meme");
   }, [navigate]);
@@ -88,45 +85,47 @@ const RandomMemeDetailsPage: React.FC = () => {
     loadMemeDetails();
   }, [loadMemeDetails]);
 
-  // Отображение загрузки
   if (isLoading) {
     return (
-      <Container className={styles.randomMemePage}>
-        <div className="text-center py-5">
-          <Spinner animation="border" role="status" className="mb-3">
-            <span className="visually-hidden">Загрузка...</span>
-          </Spinner>
-          <h4>Загрузка деталей мема...</h4>
-          <p className="text-muted">Получаем информацию о меме</p>
+      <div className={styles.randomMemePage}>
+        <div style={{ textAlign: "center", padding: "40px 0" }}>
+          <Spin size="large" />
+          <h4 style={{ marginTop: 12 }}>Загрузка деталей мема...</h4>
+          <p style={{ color: "#8c8c8c" }}>Получаем информацию о меме</p>
         </div>
-      </Container>
+      </div>
     );
   }
 
-  // Отображение ошибки
   if (error || !memeOrder) {
     return (
-      <Container className={styles.randomMemePage}>
-        <Alert variant="danger">
-          <Alert.Heading>Ошибка загрузки</Alert.Heading>
-          <p className="mb-3">{error || "Мем не найден"}</p>
-          <div className="d-flex gap-2">
-            <Button variant="outline-primary" onClick={handleBack}>
-              <ArrowLeft size={16} className="me-2" />
-              Вернуться к списку
-            </Button>
-            <Button variant="outline-secondary" onClick={handleRefresh}>
-              Попробовать снова
-            </Button>
-          </div>
-        </Alert>
-      </Container>
+      <div className={styles.randomMemePage}>
+        <Alert
+          type="error"
+          showIcon
+          message="Ошибка загрузки"
+          description={
+            <div>
+              <p style={{ marginBottom: 12 }}>{error || "Мем не найден"}</p>
+              <div style={{ display: "flex", gap: 8 }}>
+                <Button
+                  onClick={handleBack}
+                  style={{ display: "flex", alignItems: "center", gap: 4 }}
+                >
+                  <ArrowLeft size={16} />
+                  Вернуться к списку
+                </Button>
+                <Button onClick={handleRefresh}>Попробовать снова</Button>
+              </div>
+            </div>
+          }
+        />
+      </div>
     );
   }
 
-  // Отображение деталей мема
   return (
-    <Container className={styles.randomMemePage}>
+    <div className={styles.randomMemePage}>
       <RandomMemeDetails
         memeOrder={memeOrder}
         isLoading={isLoading}
@@ -135,7 +134,7 @@ const RandomMemeDetailsPage: React.FC = () => {
         onDelete={handleDelete}
         onRefresh={handleRefresh}
       />
-    </Container>
+    </div>
   );
 };
 

@@ -1,6 +1,6 @@
+import { Button } from "antd";
 import { Volume2, VolumeX } from "lucide-react";
 import { memo, useCallback } from "react";
-import { Button } from "react-bootstrap";
 import { useShallow } from "zustand/react/shallow";
 
 import { usePlayerStore } from "../../../stores/usePlayerStore";
@@ -23,7 +23,7 @@ function MuteButtonComponent() {
 
   return (
     <Button
-      variant={isMuted ? "secondary" : "primary"}
+      type={isMuted ? "default" : "primary"}
       className={styles.tbBtn}
       onClick={handleClick}
       disabled={loading || !actions}

@@ -1,15 +1,5 @@
+import { Alert, Button, Card, Col, Input, Row, Spin, Table } from "antd";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  Alert,
-  Button,
-  Card,
-  Col,
-  Container,
-  Form,
-  Row,
-  Spinner,
-  Table,
-} from "react-bootstrap";
 
 import {
   AutoMessageDto,
@@ -25,7 +15,6 @@ import styles from "./AutoMessagesPage.module.scss";
 const emptyMessage = "";
 
 const AutoMessagesPage: React.FC = () => {
-  const BootstrapButton = Button as any;
   const { showToast } = useToastModal();
   const api = useMemo(() => new AutoMessages(defaultApiConfig), []);
 
@@ -137,135 +126,114 @@ const AutoMessagesPage: React.FC = () => {
     }
   };
 
+  const columns = [
+    { title: "ID", dataIndex: "id", key: "id" },
+    { title: "Сообщение", dataIndex: "message", key: "message" },
+    {
+      title: "Действия",
+      key: "actions",
+      align: "right" as const,
+      render: (_: unknown, record: AutoMessageDto) => (
+        <div className={styles.actionsRight}>
+          <Button
+            size="small"
+            type="primary"
+            ghost
+            onClick={() => handleEdit(record)}
+          >
+            Изменить
+          </Button>
+          <Button
+            size="small"
+            danger
+            ghost
+            disabled={deletingId === record.id}
+            onClick={() => void handleDelete(record.id)}
+          >
+            {deletingId === record.id ? "Удаление..." : "Удалить"}
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
   return (
-    <Container fluid className={styles.page}>
+    <div className={styles.page}>
       <div className={styles.header}>
         <h1>Управление автосообщениями</h1>
-        <BootstrapButton
-          variant="outline-secondary"
-          onClick={() => void loadItems()}
-        >
-          Обновить
-        </BootstrapButton>
+        <Button onClick={() => void loadItems()}>Обновить</Button>
       </div>
 
       {!!error && (
-        <Alert variant="danger" className="mb-3">
-          {error}
-        </Alert>
+        <Alert type="error" message={error} style={{ marginBottom: 12 }} />
       )}
 
-      <Row className="g-3">
-        <Col xl={4}>
+      <Row gutter={16}>
+        <Col xl={8}>
           <Card className={styles.card}>
-            <Card.Header>
-              <h5 className="mb-0">
-                {editingId ? "Редактирование" : "Создание"}
-              </h5>
-            </Card.Header>
-            <Card.Body>
-              <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Текст сообщения</Form.Label>
-                  <Form.Control
-                    as="textarea"
-                    rows={4}
-                    value={message}
-                    onChange={e => setMessage(e.target.value)}
-                    placeholder="Введите текст автосообщения"
-                    required
-                  />
-                </Form.Group>
+            <h5 style={{ marginBottom: 0 }}>
+              {editingId ? "Редактирование" : "Создание"}
+            </h5>
+            <form onSubmit={handleSubmit} style={{ marginTop: 16 }}>
+              <div style={{ marginBottom: 12 }}>
+                <label style={{ display: "block", marginBottom: 4 }}>
+                  Текст сообщения
+                </label>
+                <Input.TextArea
+                  rows={4}
+                  value={message}
+                  onChange={e => setMessage(e.target.value)}
+                  placeholder="Введите текст автосообщения"
+                />
+              </div>
 
-                <div className={styles.actions}>
-                  <BootstrapButton
-                    type="submit"
-                    variant="primary"
-                    disabled={saving}
-                  >
-                    {saving ? (
-                      <>
-                        <Spinner as="span" size="sm" className="me-2" />
-                        Сохранение...
-                      </>
-                    ) : editingId ? (
-                      "Сохранить"
-                    ) : (
-                      "Создать"
-                    )}
-                  </BootstrapButton>
-
-                  {editingId && (
-                    <BootstrapButton
-                      variant="outline-secondary"
-                      onClick={resetForm}
-                    >
-                      Отмена
-                    </BootstrapButton>
+              <div className={styles.actions}>
+                <Button type="primary" htmlType="submit" disabled={saving}>
+                  {saving ? (
+                    <>
+                      <Spin size="small" style={{ marginRight: 8 }} />
+                      Сохранение...
+                    </>
+                  ) : editingId ? (
+                    "Сохранить"
+                  ) : (
+                    "Создать"
                   )}
-                </div>
-              </Form>
-            </Card.Body>
+                </Button>
+
+                {editingId && (
+                  <Button type="default" onClick={resetForm}>
+                    Отмена
+                  </Button>
+                )}
+              </div>
+            </form>
           </Card>
         </Col>
 
-        <Col xl={8}>
+        <Col xl={16}>
           <Card className={styles.card}>
-            <Card.Header>
-              <h5 className="mb-0">Список автосообщений</h5>
-            </Card.Header>
-            <Card.Body>
+            <h5 style={{ marginBottom: 0 }}>Список автосообщений</h5>
+            <div style={{ marginTop: 16 }}>
               {loading ? (
                 <div className={styles.loading}>
-                  <Spinner animation="border" />
+                  <Spin />
                 </div>
               ) : (
-                <div className={styles.tableWrap}>
-                  <Table responsive hover className="mb-0" size="sm">
-                    <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>Сообщение</th>
-                        <th className="text-end">Действия</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {items.map(item => (
-                        <tr key={item.id}>
-                          <td className={styles.idCol}>{item.id}</td>
-                          <td>{item.message}</td>
-                          <td>
-                            <div className={styles.actionsRight}>
-                              <BootstrapButton
-                                size="sm"
-                                variant="outline-primary"
-                                onClick={() => handleEdit(item)}
-                              >
-                                Изменить
-                              </BootstrapButton>
-                              <BootstrapButton
-                                size="sm"
-                                variant="outline-danger"
-                                disabled={deletingId === item.id}
-                                onClick={() => void handleDelete(item.id)}
-                              >
-                                {deletingId === item.id
-                                  ? "Удаление..."
-                                  : "Удалить"}
-                              </BootstrapButton>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table>
-                </div>
+                <Table
+                  columns={columns}
+                  dataSource={items}
+                  rowKey="id"
+                  size="small"
+                  pagination={false}
+                  className={styles.tableWrap}
+                />
               )}
-            </Card.Body>
+            </div>
           </Card>
         </Col>
       </Row>
-    </Container>
+    </div>
   );
 };
 

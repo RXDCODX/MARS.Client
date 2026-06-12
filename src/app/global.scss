@@ -1,8 +1,3 @@
-// Bootstrap CSS
-@use "../styles/bootstrap";
-
-// УДАЛЁН: bootstrap-icons CSS - используем только нужные иконки через react-bootstrap-icons
-
 /* Применяем стили только если не в Storybook */
 html:not([data-storybook]) {
   font-size: 20px;
@@ -10,79 +5,7 @@ html:not([data-storybook]) {
 
 /* Кастомные CSS переменные для тем */
 :root {
-  // Основные цвета Bootstrap
-  --bs-primary: #667eea;
-  --bs-primary-rgb: 102, 126, 234;
-  --bs-secondary: #764ba2;
-  --bs-secondary-rgb: 118, 75, 162;
-
-  // Дополнительные цвета
-  --bs-success: #198754;
-  --bs-info: #0dcaf0;
-  --bs-warning: #ffc107;
-  --bs-danger: #dc3545;
-  --bs-light: #f8f9fa;
-  --bs-dark: #212529;
-
-  // Фоновые цвета
-  --bs-body-bg: #fff;
-  --bs-body-color: #212529;
-  --bs-body-bg-rgb: 255, 255, 255;
-  --bs-body-color-rgb: 33, 37, 41;
-
-  // Цвета компонентов
-  --bs-card-bg: #fff;
-  --bs-card-border-color: rgb(0 0 0 / 12.5%);
-  --bs-border-color: #dee2e6;
-  --bs-border-color-translucent: rgb(0 0 0 / 12.5%);
-
-  // Тени
-  --bs-box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 7.5%);
-  --bs-box-shadow-sm: 0 0.0625rem 0.125rem rgb(0 0 0 / 7.5%);
-  --bs-box-shadow-lg: 0 1rem 3rem rgb(0 0 0 / 17.5%);
-
-  // Тени для текста
-  --text-shadow-light: 0 1px 2px rgb(0 0 0 / 10%);
-  --text-shadow-medium: 0 2px 4px rgb(0 0 0 / 15%);
-  --text-shadow-heavy: 0 4px 8px rgb(0 0 0 / 20%);
-
-  // Градиенты
-  --bs-gradient: linear-gradient(
-    180deg,
-    rgb(255 255 255 / 15%),
-    rgb(255 255 255 / 0%)
-  );
-  --primary-gradient: linear-gradient(
-    135deg,
-    var(--bs-primary) 0%,
-    var(--bs-secondary) 100%
-  );
-
-  // Дополнительные цвета для тем
-  --bs-white: #fff;
-  --bs-black: #000;
-  --bs-gray-100: #f8f9fa;
-  --bs-gray-200: #e9ecef;
-  --bs-gray-300: #dee2e6;
-  --bs-gray-400: #ced4da;
-  --bs-gray-500: #adb5bd;
-  --bs-gray-600: #6c757d;
-  --bs-gray-700: #495057;
-  --bs-gray-800: #343a40;
-  --bs-gray-900: #212529;
-
-  // Цвета для статусов
-  --bs-success-light: #d1e7dd;
-  --bs-success-dark: #0f5132;
-  --bs-warning-light: #fff3cd;
-  --bs-warning-dark: #664d03;
-  --bs-danger-light: #f8d7da;
-  --bs-danger-dark: #721c24;
-  --bs-info-light: #cff4fc;
-  --bs-info-dark: #055160;
-
-  // ===== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ДЛЯ КОМПОНЕНТОВ САЙТА =====
-  // Цвета текста (автоматически инвертируются в темной теме)
+  // Цвета текста
   --site-text-primary: #212529;
   --site-text-secondary: #6c757d;
   --site-text-tertiary: #adb5bd;
@@ -95,7 +18,7 @@ html:not([data-storybook]) {
   --site-text-danger: #eb263a;
   --site-text-info: #0dcaf0;
 
-  // Цвета фонов (автоматически инвертируются в темной теме)
+  // Цвета фонов
   --site-bg-primary: #fff;
   --site-bg-secondary: #f8f9fa;
   --site-bg-tertiary: #e9ecef;
@@ -107,7 +30,7 @@ html:not([data-storybook]) {
   --site-bg-danger: #c50010;
   --site-bg-info: #cff4fc;
 
-  // Цвета границ (автоматически инвертируются в темной теме)
+  // Цвета границ
   --site-border-primary: #dee2e6;
   --site-border-secondary: #adb5bd;
   --site-border-accent: #667eea;
@@ -116,7 +39,7 @@ html:not([data-storybook]) {
   --site-border-danger: #dc3545;
   --site-border-info: #0dcaf0;
 
-  // Цвета теней (автоматически инвертируются в темной теме)
+  // Цвета теней
   --site-shadow-light: 0 1px 3px rgb(0 0 0 / 10%);
   --site-shadow-medium: 0 4px 6px rgb(0 0 0 / 15%);
   --site-shadow-heavy: 0 10px 15px rgb(0 0 0 / 20%);
@@ -135,81 +58,21 @@ html:not([data-storybook]) {
   --site-scrollbar-track: #f8f9fa;
   --site-scrollbar-thumb: #adb5bd;
   --site-scrollbar-thumb-hover: #6c757d;
-}
 
-[data-bs-theme="dark"] {
-  // Основные цвета Bootstrap для темной темы
-  --bs-primary: #7c8df8;
-  --bs-primary-rgb: 124, 141, 248;
-  --bs-secondary: #9b6bc7;
-  --bs-secondary-rgb: 155, 107, 199;
-
-  // Дополнительные цвета для темной темы
-  --bs-success: #20c997;
-  --bs-info: #0dcaf0;
-  --bs-warning: #ffc107;
-  --bs-danger: #dc3545;
-  --bs-light: #343a40;
-  --bs-dark: #f8f9fa;
-
-  // Фоновые цвета для темной темы
-  --bs-body-bg: #212529;
-  --bs-body-color: #f8f9fa;
-  --bs-body-bg-rgb: 33, 37, 41;
-  --bs-body-color-rgb: 248, 249, 250;
-
-  // Цвета компонентов для темной темы
-  --bs-card-bg: #343a40;
-  --bs-card-border-color: rgb(255 255 255 / 12.5%);
-  --bs-border-color: #495057;
-  --bs-border-color-translucent: rgb(255 255 255 / 12.5%);
-
-  // Тени для темной темы
-  --bs-box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 30%);
-  --bs-box-shadow-sm: 0 0.0625rem 0.125rem rgb(0 0 0 / 30%);
-  --bs-box-shadow-lg: 0 1rem 3rem rgb(0 0 0 / 50%);
-
-  // Тени для текста в темной теме
-  --text-shadow-light: 0 1px 2px rgb(0 0 0 / 30%);
-  --text-shadow-medium: 0 2px 4px rgb(0 0 0 / 40%);
-  --text-shadow-heavy: 0 4px 8px rgb(0 0 0 / 50%);
-
-  // Градиенты для темной темы
-  --bs-gradient: linear-gradient(
-    180deg,
-    rgb(255 255 255 / 15%),
-    rgb(255 255 255 / 0%)
-  );
+  // Градиенты
   --primary-gradient: linear-gradient(
     135deg,
-    var(--bs-primary) 0%,
-    var(--bs-secondary) 100%
+    var(--site-bg-accent) 0%,
+    #764ba2 100%
   );
 
-  // Дополнительные цвета для темной темы
-  --bs-white: #f8f9fa;
-  --bs-black: #fff;
-  --bs-gray-100: #212529;
-  --bs-gray-200: #343a40;
-  --bs-gray-300: #495057;
-  --bs-gray-400: #6c757d;
-  --bs-gray-500: #adb5bd;
-  --bs-gray-600: #ced4da;
-  --bs-gray-700: #dee2e6;
-  --bs-gray-800: #e9ecef;
-  --bs-gray-900: #f8f9fa;
+  // Тени для текста
+  --text-shadow-light: 0 1px 2px rgb(0 0 0 / 10%);
+  --text-shadow-medium: 0 2px 4px rgb(0 0 0 / 15%);
+  --text-shadow-heavy: 0 4px 8px rgb(0 0 0 / 20%);
+}
 
-  // Цвета для статусов в темной теме
-  --bs-success-light: #0f5132;
-  --bs-success-dark: #d1e7dd;
-  --bs-warning-light: #664d03;
-  --bs-warning-dark: #fff3cd;
-  --bs-danger-light: #721c24;
-  --bs-danger-dark: #f8d7da;
-  --bs-info-light: #055160;
-  --bs-info-dark: #cff4fc;
-
-  // ===== ИНВЕРТИРОВАННЫЕ ПЕРЕМЕННЫЕ ДЛЯ КОМПОНЕНТОВ САЙТА В ТЕМНОЙ ТЕМЕ =====
+[data-theme="dark"] {
   // Цвета текста (инвертированы)
   --site-text-primary: #f8f9fa;
   --site-text-secondary: #adb5bd;
@@ -263,102 +126,29 @@ html:not([data-storybook]) {
   --site-scrollbar-track: #343a40;
   --site-scrollbar-thumb: #6c757d;
   --site-scrollbar-thumb-hover: #adb5bd;
-}
 
-// Устаревшие переменные для совместимости
-:root {
-  --main-bg: var(--bs-body-bg);
-  --main-text: var(--bs-body-color);
-  --table-bg: var(--bs-card-bg);
-  --table-header-bg: var(--bs-light);
-  --table-border: var(--bs-border-color);
-  --accent: var(--bs-primary);
-}
+  // Градиенты для темной темы
+  --primary-gradient: linear-gradient(
+    135deg,
+    var(--site-bg-accent) 0%,
+    #9b6bc7 100%
+  );
 
-body[data-theme="dark"] {
-  --main-bg: var(--bs-body-bg);
-  --main-text: var(--bs-body-color);
-  --table-bg: var(--bs-card-bg);
-  --table-header-bg: var(--bs-light);
-  --table-border: var(--bs-border-color);
-  --accent: var(--bs-primary);
-
-  color: var(--bs-body-color) !important;
+  // Тени для текста в темной теме
+  --text-shadow-light: 0 1px 2px rgb(0 0 0 / 30%);
+  --text-shadow-medium: 0 2px 4px rgb(0 0 0 / 40%);
+  --text-shadow-heavy: 0 4px 8px rgb(0 0 0 / 50%);
 }
 
 body {
-  color: var(--bs-body-color) !important;
+  color: var(--site-text-primary) !important;
   transition:
     background-color 0.3s ease,
     color 0.3s ease;
+  overflow-x: hidden;
 }
 
-// Исключения для элементов с собственными цветами
-.btn-primary,
-.btn-info,
-.btn-success,
-.btn-danger,
-.btn-warning,
-.badge,
-.alert,
-.text-primary,
-.text-secondary,
-.text-success,
-.text-info,
-.text-warning,
-.text-danger,
-.text-light,
-.text-dark,
-.text-muted,
-.text-white,
-.text-black,
-.navbar-brand,
-.navbar-nav .nav-link,
-.dropdown-menu,
-.dropdown-item,
-.nav-link,
-.nav-item,
-.navbar-nav,
-.form-control,
-.form-label,
-.form-text,
-.list-group-item,
-.breadcrumb-item,
-.pagination .page-link {
-  color: inherit !important;
-}
-
-// Глобальные стили для таблиц
-.table,
-.table-bordered,
-.table-sm,
-.table-hover {
-  background: var(--bs-card-bg) !important;
-  color: var(--bs-body-color) !important;
-  border-color: var(--bs-border-color) !important;
-}
-
-.table thead {
-  background: var(--bs-light) !important;
-  color: var(--bs-body-bg) !important;
-}
-
-.table th,
-.table td {
-  border-color: var(--bs-border-color) !important;
-}
-
-// Стили для кнопок
-.btn-primary,
-.btn-info,
-.btn-success,
-.btn-danger,
-.btn-warning {
-  color: #fff !important;
-  text-shadow: var(--text-shadow-light);
-}
-
-// Глобальные стили для текста с тенями
+/* Глобальные стили для текста с тенями */
 h1,
 h2,
 h3,
@@ -366,11 +156,6 @@ h4,
 h5,
 h6 {
   text-shadow: var(--text-shadow-light);
-}
-
-// Глобальные стили для overflow и scroll баров
-body {
-  overflow-x: hidden;
 }
 
 /* Предотвращение выхода текста за границы */
@@ -400,7 +185,7 @@ div {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bs-light);
+  background: var(--site-scrollbar-track);
   border-radius: 4px;
 }
 
@@ -417,7 +202,7 @@ div {
 /* Для Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--bs-primary) var(--bs-light);
+  scrollbar-color: var(--site-bg-accent) var(--site-scrollbar-track);
 }
 
 /* Стили для OBS компонентов - скрываем overflow */
@@ -451,27 +236,47 @@ div {
 
 /* Утилиты для цветов */
 .text-primary {
-  color: var(--bs-primary) !important;
+  color: var(--site-text-accent) !important;
 }
 
 .text-secondary {
-  color: var(--bs-secondary) !important;
+  color: var(--site-text-secondary) !important;
+}
+
+.text-muted {
+  color: var(--site-text-muted) !important;
+}
+
+.text-success {
+  color: var(--site-text-success) !important;
+}
+
+.text-danger {
+  color: var(--site-text-danger) !important;
+}
+
+.text-warning {
+  color: var(--site-text-warning) !important;
+}
+
+.text-info {
+  color: var(--site-text-info) !important;
 }
 
 .bg-primary {
-  background-color: var(--bs-primary) !important;
+  background-color: var(--site-bg-accent) !important;
 }
 
 .bg-secondary {
-  background-color: var(--bs-secondary) !important;
+  background-color: var(--site-bg-secondary) !important;
 }
 
 .bg-body {
-  background-color: var(--bs-body-bg) !important;
+  background-color: var(--site-bg-primary) !important;
 }
 
 .bg-card {
-  background-color: var(--bs-card-bg) !important;
+  background-color: var(--site-bg-card) !important;
 }
 
 /* ===== УТИЛИТЫ ДЛЯ КОМПОНЕНТОВ САЙТА ===== */
@@ -643,8 +448,378 @@ div {
   background: var(--site-scrollbar-thumb-hover) !important;
 }
 
+/* Утилиты для отступов и flex */
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+.mb-3 {
+  margin-bottom: 1rem;
+}
+.mb-4 {
+  margin-bottom: 1.5rem;
+}
+.mt-1 {
+  margin-top: 0.25rem;
+}
+.mt-2 {
+  margin-top: 0.5rem;
+}
+.mt-3 {
+  margin-top: 1rem;
+}
+.mt-4 {
+  margin-top: 1.5rem;
+}
+.ms-1 {
+  margin-left: 0.25rem;
+}
+.ms-2 {
+  margin-left: 0.5rem;
+}
+.me-1 {
+  margin-right: 0.25rem;
+}
+.me-2 {
+  margin-right: 0.5rem;
+}
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+.p-1 {
+  padding: 0.25rem;
+}
+.p-2 {
+  padding: 0.5rem;
+}
+.p-3 {
+  padding: 1rem;
+}
+.p-4 {
+  padding: 1.5rem;
+}
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.px-3 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.py-3 {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.py-16 {
+  padding-top: 4rem;
+  padding-bottom: 4rem;
+}
+.pt-3 {
+  padding-top: 1rem;
+}
+
+.d-flex {
+  display: flex;
+}
+.d-block {
+  display: block;
+}
+.d-none {
+  display: none;
+}
+.flex-column {
+  flex-direction: column;
+}
+.flex-grow-1 {
+  flex-grow: 1;
+}
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.flex-start {
+  align-items: flex-start;
+}
+.align-items-center {
+  align-items: center;
+}
+.justify-content-center {
+  justify-content: center;
+}
+.justify-content-between {
+  justify-content: space-between;
+}
+.justify-content-end {
+  justify-content: flex-end;
+}
+.gap-1 {
+  gap: 0.25rem;
+}
+.gap-2 {
+  gap: 0.5rem;
+}
+.gap-3 {
+  gap: 0.75rem;
+}
+.gap-4 {
+  gap: 1rem;
+}
+.gap-6 {
+  gap: 1.5rem;
+}
+.gap-8 {
+  gap: 2rem;
+}
+
+.text-center {
+  text-align: center;
+}
+.text-start {
+  text-align: left;
+}
+.text-end {
+  text-align: right;
+}
+.fw-semibold {
+  font-weight: 600;
+}
+.small {
+  font-size: 0.875rem;
+}
+.rounded {
+  border-radius: 0.375rem;
+}
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+.border-t {
+  border-top: 1px solid var(--site-border-primary);
+}
+.border-l {
+  border-left: 1px solid var(--site-border-primary);
+}
+.border {
+  border: 1px solid var(--site-border-primary);
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+.overflow-auto {
+  overflow: auto;
+}
+.overflow-x-auto {
+  overflow-x: auto;
+}
+
+.w-full {
+  width: 100%;
+}
+.h-full {
+  height: 100%;
+}
+.min-w-0 {
+  min-width: 0;
+}
+
+.hidden {
+  display: none;
+}
+.visible {
+  visibility: visible;
+}
+.invisible {
+  visibility: hidden;
+}
+.opacity-30 {
+  opacity: 0.3;
+}
+.opacity-80 {
+  opacity: 0.8;
+}
+
+.relative {
+  position: relative;
+}
+.absolute {
+  position: absolute;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+.no-underline {
+  text-decoration: none;
+}
+
+.transition-all {
+  transition: all 0.2s ease;
+}
+
+.hover\:-translate-y-0_5:hover {
+  transform: translateY(-2px);
+}
+
+.hover\:translate-x-1:hover {
+  transform: translateX(4px);
+}
+
+.hover\:opacity-100:hover {
+  opacity: 1;
+}
+
+.hover\:bg-\[var\(--site-hover-bg\)\]:hover {
+  background-color: var(--site-hover-bg) !important;
+}
+
+.hover\:bg-\[var\(--site-bg-tertiary\)\]:hover {
+  background-color: var(--site-bg-tertiary) !important;
+}
+
+.hover\:border-\[var\(--site-border-accent\)\]:hover {
+  border-color: var(--site-border-accent) !important;
+}
+
+.hover\:shadow-\[var\(--site-shadow-medium\)\]:hover {
+  box-shadow: var(--site-shadow-medium) !important;
+}
+
+.hover\:text-\[var\(--site-text-accent\)\]:hover {
+  color: var(--site-text-accent) !important;
+}
+
+.text-\[var\(--site-text-primary\)\] {
+  color: var(--site-text-primary);
+}
+
+.text-\[var\(--site-text-secondary\)\] {
+  color: var(--site-text-secondary);
+}
+
+.bg-\[var\(--site-bg-tertiary\)\] {
+  background-color: var(--site-bg-tertiary);
+}
+
+.bg-\[var\(--site-bg-card\)\] {
+  background-color: var(--site-bg-card);
+}
+
+.border-\[var\(--site-border-primary\)\] {
+  border-color: var(--site-border-primary);
+}
+
+.border-\[var\(--site-border-accent\)\] {
+  border-color: var(--site-border-accent);
+}
+
+.shadow-\[var\(--site-shadow-medium\)\] {
+  box-shadow: var(--site-shadow-medium);
+}
+
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+}
+
+/* Bootstrap-like form styles */
+.form-control {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--site-text-primary);
+  background-color: var(--site-bg-primary);
+  border: 1px solid var(--site-border-primary);
+  border-radius: 8px;
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+
+  &:focus {
+    border-color: var(--site-focus-border);
+    box-shadow: 0 0 0 0.2rem var(--site-focus-ring);
+    outline: 0;
+  }
+}
+
+.form-select {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--site-text-primary);
+  background-color: var(--site-bg-primary);
+  border: 1px solid var(--site-border-primary);
+  border-radius: 8px;
+  transition:
+    border-color 0.15s ease-in-out,
+    box-shadow 0.15s ease-in-out;
+  appearance: auto;
+
+  &:focus {
+    border-color: var(--site-focus-border);
+    box-shadow: 0 0 0 0.2rem var(--site-focus-ring);
+    outline: 0;
+  }
+}
+
+.form-select-sm {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col-md-3 {
+  flex: 0 0 25%;
+  max-width: 25%;
+  padding: 0 0.5rem;
+}
+
+.col-md-6 {
+  flex: 0 0 50%;
+  max-width: 50%;
+  padding: 0 0.5rem;
+}
+
+.col-md-9 {
+  flex: 0 0 75%;
+  max-width: 75%;
+  padding: 0 0.5rem;
+}
+
 @media (width <= 992px) {
   .row {
     gap: 1rem;
+  }
+
+  .col-md-3,
+  .col-md-6,
+  .col-md-9 {
+    flex: 0 0 100%;
+    max-width: 100%;
   }
 }

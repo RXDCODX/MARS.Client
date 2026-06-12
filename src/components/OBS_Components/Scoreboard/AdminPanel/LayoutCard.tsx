@@ -1,5 +1,13 @@
+import {
+  Button,
+  Card,
+  Checkbox,
+  Flex,
+  InputNumber,
+  Slider,
+  Typography,
+} from "antd";
 import { Minimize2, Move } from "lucide-react";
-import { Button, Card, Col, Form, Row } from "react-bootstrap";
 
 import { useLayout, useLayoutActions } from "./store/scoreboardStore";
 import { defaultLayout } from "./types";
@@ -23,253 +31,242 @@ const LayoutCard: React.FC = () => {
   };
 
   return (
-    <Card className="mb-4">
-      <Card.Header className="d-flex justify-content-between align-items-center">
-        <h5 className="mb-0">
-          <Move className="me-2" />
-          Настройка макета
-        </h5>
-        <Button variant="outline-secondary" size="sm" onClick={resetToDefaults}>
-          <Minimize2 className="me-1" />
-          Сброс
-        </Button>
-      </Card.Header>
-      <Card.Body className="d-flex flex-column align-items-center">
-        <Row>
-          {/* Позиционирование */}
-          <Col md={6}>
-            <h6 className="mb-3">Позиционирование</h6>
+    <Card
+      style={{ marginBottom: 16 }}
+      title={
+        <Flex justify="space-between" align="center">
+          <Typography.Title level={5} style={{ margin: 0 }}>
+            <Move style={{ marginRight: 8 }} />
+            Настройка макета
+          </Typography.Title>
+          <Button size="small" onClick={resetToDefaults}>
+            <Minimize2 style={{ marginRight: 4 }} />
+            Сброс
+          </Button>
+        </Flex>
+      }
+    >
+      <Flex vertical gap={16} align="center">
+        <Flex gap={16} style={{ width: "100%" }}>
+          <div style={{ flex: 1 }}>
+            <Typography.Title level={6} style={{ marginBottom: 12 }}>
+              Позиционирование
+            </Typography.Title>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Заголовок - отступ сверху (px)</Form.Label>
-              <Form.Range
-                min="0"
-                max="200"
+            <div style={{ marginBottom: 12 }}>
+              <Typography.Text>Заголовок - отступ сверху (px)</Typography.Text>
+              <Slider
+                min={0}
+                max={200}
                 value={layout.headerTop}
-                onChange={e =>
-                  handleChange("headerTop", parseInt(e.target.value))
-                }
+                onChange={val => handleChange("headerTop", val)}
               />
-              <Form.Text className="text-muted">{layout.headerTop}px</Form.Text>
-            </Form.Group>
+              <Typography.Text type="secondary">
+                {layout.headerTop}px
+              </Typography.Text>
+            </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Заголовок - позиция по горизонтали (%)</Form.Label>
-              <Form.Range
-                min="0"
-                max="100"
+            <div style={{ marginBottom: 12 }}>
+              <Typography.Text>
+                Заголовок - позиция по горизонтали (%)
+              </Typography.Text>
+              <Slider
+                min={0}
+                max={100}
                 value={layout.headerLeft}
-                onChange={e =>
-                  handleChange("headerLeft", parseInt(e.target.value))
-                }
+                onChange={val => handleChange("headerLeft", val)}
               />
-              <Form.Text className="text-muted">{layout.headerLeft}%</Form.Text>
-            </Form.Group>
+              <Typography.Text type="secondary">
+                {layout.headerLeft}%
+              </Typography.Text>
+            </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Игроки - отступ сверху (px)</Form.Label>
-              <Form.Range
-                min="0"
-                max="200"
+            <div style={{ marginBottom: 12 }}>
+              <Typography.Text>Игроки - отступ сверху (px)</Typography.Text>
+              <Slider
+                min={0}
+                max={200}
                 value={layout.playersTop}
-                onChange={e =>
-                  handleChange("playersTop", parseInt(e.target.value))
-                }
+                onChange={val => handleChange("playersTop", val)}
               />
-              <Form.Text className="text-muted">
+              <Typography.Text type="secondary">
                 {layout.playersTop}px
-              </Form.Text>
-            </Form.Group>
+              </Typography.Text>
+            </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Игроки - отступ слева (px)</Form.Label>
-              <Form.Range
-                min="0"
-                max="200"
+            <div style={{ marginBottom: 12 }}>
+              <Typography.Text>Игроки - отступ слева (px)</Typography.Text>
+              <Slider
+                min={0}
+                max={200}
                 value={layout.playersLeft}
-                onChange={e =>
-                  handleChange("playersLeft", parseInt(e.target.value))
-                }
+                onChange={val => handleChange("playersLeft", val)}
               />
-              <Form.Text className="text-muted">
+              <Typography.Text type="secondary">
                 {layout.playersLeft}px
-              </Form.Text>
-            </Form.Group>
+              </Typography.Text>
+            </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Игроки - отступ справа (px)</Form.Label>
-              <Form.Range
-                min="0"
-                max="200"
+            <div style={{ marginBottom: 12 }}>
+              <Typography.Text>Игроки - отступ справа (px)</Typography.Text>
+              <Slider
+                min={0}
+                max={200}
                 value={layout.playersRight}
-                onChange={e =>
-                  handleChange("playersRight", parseInt(e.target.value))
-                }
+                onChange={val => handleChange("playersRight", val)}
               />
-              <Form.Text className="text-muted">
+              <Typography.Text type="secondary">
                 {layout.playersRight}px
-              </Form.Text>
-            </Form.Group>
-          </Col>
+              </Typography.Text>
+            </div>
+          </div>
 
-          {/* Размеры */}
-          <Col md={6}>
-            <h6 className="mb-3">Размеры</h6>
+          <div style={{ flex: 1 }}>
+            <Typography.Title level={6} style={{ marginBottom: 12 }}>
+              Размеры
+            </Typography.Title>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Ширина заголовка (px)</Form.Label>
-              <Form.Range
-                min="200"
-                max="800"
+            <div style={{ marginBottom: 12 }}>
+              <Typography.Text>Ширина заголовка (px)</Typography.Text>
+              <Slider
+                min={200}
+                max={800}
                 value={layout.headerWidth}
-                onChange={e =>
-                  handleChange("headerWidth", parseInt(e.target.value))
-                }
+                onChange={val => handleChange("headerWidth", val)}
               />
-              <Form.Text className="text-muted">
+              <Typography.Text type="secondary">
                 {layout.headerWidth}px
-              </Form.Text>
-            </Form.Group>
+              </Typography.Text>
+            </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Высота заголовка (px)</Form.Label>
-              <Form.Range
-                min="10"
-                max="120"
+            <div style={{ marginBottom: 12 }}>
+              <Typography.Text>Высота заголовка (px)</Typography.Text>
+              <Slider
+                min={10}
+                max={120}
                 value={layout.headerHeight}
-                onChange={e =>
-                  handleChange("headerHeight", parseInt(e.target.value))
-                }
+                onChange={val => handleChange("headerHeight", val)}
               />
-              <Form.Text className="text-muted">
+              <Typography.Text type="secondary">
                 {layout.headerHeight}px
-              </Form.Text>
-            </Form.Group>
+              </Typography.Text>
+            </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Ширина карточки игрока (px)</Form.Label>
-              <Form.Range
-                min="200"
-                max="600"
+            <div style={{ marginBottom: 12 }}>
+              <Typography.Text>Ширина карточки игрока (px)</Typography.Text>
+              <Slider
+                min={200}
+                max={600}
                 value={layout.playerBarWidth}
-                onChange={e =>
-                  handleChange("playerBarWidth", parseInt(e.target.value))
-                }
+                onChange={val => handleChange("playerBarWidth", val)}
               />
-              <Form.Text className="text-muted">
+              <Typography.Text type="secondary">
                 {layout.playerBarWidth}px
-              </Form.Text>
-            </Form.Group>
+              </Typography.Text>
+            </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Высота карточки игрока (px)</Form.Label>
-              <Form.Range
-                min="10"
-                max="150"
+            <div style={{ marginBottom: 12 }}>
+              <Typography.Text>Высота карточки игрока (px)</Typography.Text>
+              <Slider
+                min={10}
+                max={150}
                 value={layout.playerBarHeight}
-                onChange={e =>
-                  handleChange("playerBarHeight", parseInt(e.target.value))
-                }
+                onChange={val => handleChange("playerBarHeight", val)}
               />
-              <Form.Text className="text-muted">
+              <Typography.Text type="secondary">
                 {layout.playerBarHeight}px
-              </Form.Text>
-            </Form.Group>
+              </Typography.Text>
+            </div>
 
-            <Form.Group className="mb-3">
-              <Form.Label>Размер счета (px)</Form.Label>
-              <Form.Range
-                min="30"
-                max="80"
+            <div style={{ marginBottom: 12 }}>
+              <Typography.Text>Размер счета (px)</Typography.Text>
+              <Slider
+                min={30}
+                max={80}
                 value={layout.scoreSize}
-                onChange={e =>
-                  handleChange("scoreSize", parseInt(e.target.value))
-                }
+                onChange={val => handleChange("scoreSize", val)}
               />
-              <Form.Text className="text-muted">{layout.scoreSize}px</Form.Text>
-            </Form.Group>
-          </Col>
-        </Row>
+              <Typography.Text type="secondary">
+                {layout.scoreSize}px
+              </Typography.Text>
+            </div>
+          </div>
+        </Flex>
 
-        {/* Дополнительные настройки */}
-        <Row className="w-100 mt-3">
-          <Col md={12}>
-            <h6 className="mb-3">Дополнительные настройки</h6>
-            <Row>
-              <Col md={4}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Отступы (px)</Form.Label>
-                  <Form.Range
-                    min="5"
-                    max="30"
-                    value={layout.padding}
-                    onChange={e =>
-                      handleChange("padding", parseInt(e.target.value))
-                    }
-                  />
-                  <Form.Text className="text-muted">
-                    {layout.padding}px
-                  </Form.Text>
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group className="mb-3">
-                  <Form.Label>Расстояние между элементами (px)</Form.Label>
-                  <Form.Range
-                    min="5"
-                    max="50"
-                    value={layout.spacing}
-                    onChange={e =>
-                      handleChange("spacing", parseInt(e.target.value))
-                    }
-                  />
-                  <Form.Text className="text-muted">
-                    {layout.spacing}px
-                  </Form.Text>
-                </Form.Group>
-              </Col>
-              <Col md={4}>
-                <Form.Group className="mb-3">
-                  <Form.Check
-                    type="checkbox"
-                    label="Показывать заголовок"
-                    checked={layout.showHeader}
-                    onChange={e => handleChange("showHeader", e.target.checked)}
-                  />
-                  <Form.Check
-                    type="checkbox"
-                    label="Показывать флаги"
-                    checked={layout.showFlags}
-                    onChange={e => handleChange("showFlags", e.target.checked)}
-                  />
-                  <Form.Check
-                    type="checkbox"
-                    label="Показывать теги"
-                    checked={layout.showTags}
-                    onChange={e => handleChange("showTags", e.target.checked)}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
+        <div style={{ width: "100%" }}>
+          <Typography.Title level={6} style={{ marginBottom: 12 }}>
+            Дополнительные настройки
+          </Typography.Title>
+          <Flex gap={16}>
+            <div style={{ flex: 1 }}>
+              <div style={{ marginBottom: 12 }}>
+                <Typography.Text>Отступы (px)</Typography.Text>
+                <Slider
+                  min={5}
+                  max={30}
+                  value={layout.padding}
+                  onChange={val => handleChange("padding", val)}
+                />
+                <Typography.Text type="secondary">
+                  {layout.padding}px
+                </Typography.Text>
+              </div>
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ marginBottom: 12 }}>
+                <Typography.Text>
+                  Расстояние между элементами (px)
+                </Typography.Text>
+                <Slider
+                  min={5}
+                  max={50}
+                  value={layout.spacing}
+                  onChange={val => handleChange("spacing", val)}
+                />
+                <Typography.Text type="secondary">
+                  {layout.spacing}px
+                </Typography.Text>
+              </div>
+            </div>
+            <div style={{ flex: 1 }}>
+              <Flex vertical gap={8}>
+                <Checkbox
+                  checked={layout.showHeader}
+                  onChange={e => handleChange("showHeader", e.target.checked)}
+                >
+                  Показывать заголовок
+                </Checkbox>
+                <Checkbox
+                  checked={layout.showFlags}
+                  onChange={e => handleChange("showFlags", e.target.checked)}
+                >
+                  Показывать флаги
+                </Checkbox>
+                <Checkbox
+                  checked={layout.showTags}
+                  onChange={e => handleChange("showTags", e.target.checked)}
+                >
+                  Показывать теги
+                </Checkbox>
+              </Flex>
+            </div>
+          </Flex>
+        </div>
 
-        {/* Предварительный просмотр */}
         <iframe
           width={"1920"}
-          className="w-100"
-          src="/scoreboard"
           style={{
+            width: "100%",
             background: "var(--site-bg-primary)",
             border: "3px solid var(--site-border-accent)",
             borderRadius: "20px",
             display: "block",
             margin: "5vh 5px",
-
-            boxShadow: "0 2px 8px var(--bs-box-shadow-lg)",
+            boxShadow: "0 2px 8px var(--site-shadow-heavy)",
           }}
+          src="/scoreboard"
         ></iframe>
-      </Card.Body>
+      </Flex>
     </Card>
   );
 };

@@ -1,5 +1,5 @@
+import { Alert } from "antd";
 import { AlertCircle } from "lucide-react";
-import { Alert, Container } from "react-bootstrap";
 
 import {
   LogsFilters,
@@ -29,24 +29,24 @@ const LogsPage: React.FC = () => {
 
   return (
     <div className={styles.logsPage}>
-      <Container fluid>
-        {/* Заголовок страницы */}
+      <div style={{ width: "100%" }}>
         <LogsPageHeader />
 
-        {/* Ошибки */}
         {state.error && (
           <Alert
-            variant="danger"
+            type="error"
             className={styles.errorAlert}
-            dismissible
+            closable
             onClose={() => updateState({ error: "" })}
-          >
-            <AlertCircle size={20} className="me-2" />
-            {state.error}
-          </Alert>
+            message={
+              <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <AlertCircle size={20} />
+                {state.error}
+              </span>
+            }
+          />
         )}
 
-        {/* Фильтры */}
         <LogsFilters
           filters={filters}
           onFiltersChange={updateFilters}
@@ -55,23 +55,19 @@ const LogsPage: React.FC = () => {
           isLoading={state.isLoading}
         />
 
-        {/* Тестовые кнопки */}
         <LogsTestButtons onLogsRefresh={loadLogs} disabled={state.isLoading} />
 
-        {/* Статистика */}
         <LogsStatisticsComponent
           statistics={state.statistics}
           isLoading={state.isLoadingStats}
         />
 
-        {/* Переключатель режима отображения */}
         <LogsModeToggle
           isRealtime={isRealtime}
           onModeChange={handleModeChange}
           disabled={state.isLoading}
         />
 
-        {/* Таблица логов */}
         <LogsTable
           logs={state.logs}
           isLoading={state.isLoading}
@@ -82,7 +78,7 @@ const LogsPage: React.FC = () => {
           onPageChange={handlePageChange}
           onPageSizeChange={handlePageSizeChange}
         />
-      </Container>
+      </div>
     </div>
   );
 };

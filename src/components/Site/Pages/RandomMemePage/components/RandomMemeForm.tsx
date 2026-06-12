@@ -1,15 +1,16 @@
-import { ArrowLeft, Save } from "lucide-react";
-import { useEffect, useState } from "react";
 import {
   Alert,
   Button,
   Card,
-  Col,
-  Container,
+  Flex,
   Form,
-  Row,
-  Spinner,
-} from "react-bootstrap";
+  Input,
+  InputNumber,
+  Select,
+  Spin,
+} from "antd";
+import { ArrowLeft, Save } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import {
   MemeFormData,
@@ -30,7 +31,6 @@ const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
   const isType = !!memeType;
   const isEdit = mode === "edit";
 
-  // Состояние формы
   const [formData, setFormData] = useState<MemeFormData>(
     isType
       ? {
@@ -47,7 +47,6 @@ const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState<string>("");
 
-  // Обновление формы при изменении пропсов
   useEffect(() => {
     if (isType && memeType) {
       setFormData({
@@ -63,14 +62,12 @@ const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
     }
   }, [memeType, memeOrder, isType]);
 
-  // Обработчик изменения полей
   const handleInputChange = (field: string, value: string | number) => {
     setFormData(prev => ({
       ...prev,
       [field]: value,
     }));
 
-    // Очистка ошибки поля при изменении
     if (errors[field]) {
       setErrors(prev => ({
         ...prev,
@@ -79,7 +76,6 @@ const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
     }
   };
 
-  // Валидация формы
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
@@ -113,7 +109,6 @@ const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
     return Object.keys(newErrors).length === 0;
   };
 
-  // Обработчик отправки формы
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitError("");
@@ -133,256 +128,236 @@ const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
     }
   };
 
-  // Рендер формы типа мема
   const renderTypeForm = () => {
     const data = formData as MemeTypeFormData;
 
     return (
-      <Row className="g-3">
-        <Col md={12}>
-          <Form.Group>
-            <Form.Label className="fw-bold">
-              Название типа <span className="text-danger">*</span>
-            </Form.Label>
-            <Form.Control
-              type="text"
+      <Flex gap={12} wrap="wrap">
+        <div style={{ flex: "0 0 100%" }}>
+          <Form.Item
+            label={
+              <span style={{ fontWeight: 600 }}>
+                Название типа <span style={{ color: "#ff4d4f" }}>*</span>
+              </span>
+            }
+            validateStatus={errors.name ? "error" : undefined}
+            help={errors.name}
+          >
+            <Input
               value={data.name}
               onChange={e => handleInputChange("name", e.target.value)}
-              isInvalid={!!errors.name}
               placeholder="Введите название типа мема"
               maxLength={50}
+              status={errors.name ? "error" : undefined}
             />
-            <Form.Control.Feedback type="invalid">
-              {errors.name}
-            </Form.Control.Feedback>
-            <Form.Text className="text-muted">Максимум 50 символов</Form.Text>
-          </Form.Group>
-        </Col>
+            <span style={{ color: "#8c8c8c", fontSize: 12 }}>
+              Максимум 50 символов
+            </span>
+          </Form.Item>
+        </div>
 
-        <Col md={12}>
-          <Form.Group>
-            <Form.Label className="fw-bold">
-              Путь к папке <span className="text-danger">*</span>
-            </Form.Label>
-            <Form.Control
-              type="text"
+        <div style={{ flex: "0 0 100%" }}>
+          <Form.Item
+            label={
+              <span style={{ fontWeight: 600 }}>
+                Путь к папке <span style={{ color: "#ff4d4f" }}>*</span>
+              </span>
+            }
+            validateStatus={errors.folderPath ? "error" : undefined}
+            help={errors.folderPath}
+          >
+            <Input
               value={data.folderPath}
               onChange={e => handleInputChange("folderPath", e.target.value)}
-              isInvalid={!!errors.folderPath}
               placeholder="Введите путь к папке с мемами"
+              status={errors.folderPath ? "error" : undefined}
             />
-            <Form.Control.Feedback type="invalid">
-              {errors.folderPath}
-            </Form.Control.Feedback>
-            <Form.Text className="text-muted">
+            <span style={{ color: "#8c8c8c", fontSize: 12 }}>
               Абсолютный или относительный путь к папке
-            </Form.Text>
-          </Form.Group>
-        </Col>
-      </Row>
+            </span>
+          </Form.Item>
+        </div>
+      </Flex>
     );
   };
 
-  // Рендер формы заказа мема
   const renderOrderForm = () => {
     const data = formData as MemeOrderFormData;
 
     return (
-      <Row className="g-3">
-        <Col md={12}>
-          <Form.Group>
-            <Form.Label className="fw-bold">
-              Путь к файлу <span className="text-danger">*</span>
-            </Form.Label>
-            <Form.Control
-              type="text"
+      <Flex gap={12} wrap="wrap">
+        <div style={{ flex: "0 0 100%" }}>
+          <Form.Item
+            label={
+              <span style={{ fontWeight: 600 }}>
+                Путь к файлу <span style={{ color: "#ff4d4f" }}>*</span>
+              </span>
+            }
+            validateStatus={errors.filePath ? "error" : undefined}
+            help={errors.filePath}
+          >
+            <Input
               value={data.filePath}
               onChange={e => handleInputChange("filePath", e.target.value)}
-              isInvalid={!!errors.filePath}
               placeholder="Введите путь к файлу мема"
+              status={errors.filePath ? "error" : undefined}
             />
-            <Form.Control.Feedback type="invalid">
-              {errors.filePath}
-            </Form.Control.Feedback>
-            <Form.Text className="text-muted">
+            <span style={{ color: "#8c8c8c", fontSize: 12 }}>
               Полный путь к файлу мема
-            </Form.Text>
-          </Form.Group>
-        </Col>
+            </span>
+          </Form.Item>
+        </div>
 
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label className="fw-bold">
-              Тип мема <span className="text-danger">*</span>
-            </Form.Label>
-            <Form.Select
-              value={data.memeTypeId}
-              onChange={e =>
-                handleInputChange("memeTypeId", parseInt(e.target.value))
-              }
-              isInvalid={!!errors.memeTypeId}
-            >
-              <option value={0}>Выберите тип мема</option>
-              {memeTypes.map(type => (
-                <option key={type.id} value={type.id}>
-                  {type.name} (ID: {type.id})
-                </option>
-              ))}
-            </Form.Select>
-            <Form.Control.Feedback type="invalid">
-              {errors.memeTypeId}
-            </Form.Control.Feedback>
-          </Form.Group>
-        </Col>
+        <div style={{ flex: "0 0 calc(50% - 6px)", minWidth: 200 }}>
+          <Form.Item
+            label={
+              <span style={{ fontWeight: 600 }}>
+                Тип мема <span style={{ color: "#ff4d4f" }}>*</span>
+              </span>
+            }
+            validateStatus={errors.memeTypeId ? "error" : undefined}
+            help={errors.memeTypeId}
+          >
+            <Select
+              value={data.memeTypeId || undefined}
+              onChange={value => handleInputChange("memeTypeId", value)}
+              placeholder="Выберите тип мема"
+              status={errors.memeTypeId ? "error" : undefined}
+              options={[
+                { label: "Выберите тип мема", value: 0, disabled: true },
+                ...memeTypes.map(type => ({
+                  label: `${type.name} (ID: ${type.id})`,
+                  value: type.id,
+                })),
+              ]}
+            />
+          </Form.Item>
+        </div>
 
-        <Col md={6}>
-          <Form.Group>
-            <Form.Label className="fw-bold">
-              Порядок <span className="text-danger">*</span>
-            </Form.Label>
-            <Form.Control
-              type="number"
+        <div style={{ flex: "0 0 calc(50% - 6px)", minWidth: 200 }}>
+          <Form.Item
+            label={
+              <span style={{ fontWeight: 600 }}>
+                Порядок <span style={{ color: "#ff4d4f" }}>*</span>
+              </span>
+            }
+            validateStatus={errors.order ? "error" : undefined}
+            help={errors.order}
+          >
+            <InputNumber
               min={1}
               value={data.order}
-              onChange={e =>
-                handleInputChange("order", parseInt(e.target.value) || 1)
-              }
-              isInvalid={!!errors.order}
+              onChange={value => handleInputChange("order", value || 1)}
               placeholder="1"
+              style={{ width: "100%" }}
+              status={errors.order ? "error" : undefined}
             />
-            <Form.Control.Feedback type="invalid">
-              {errors.order}
-            </Form.Control.Feedback>
-            <Form.Text className="text-muted">
+            <span style={{ color: "#8c8c8c", fontSize: 12 }}>
               Порядок отображения в рандомизации
-            </Form.Text>
-          </Form.Group>
-        </Col>
-      </Row>
+            </span>
+          </Form.Item>
+        </div>
+      </Flex>
     );
   };
 
   return (
-    <Container fluid className="py-4">
-      {/* Заголовок */}
-      <Row className="mb-4">
-        <Col>
-          <div className="d-flex justify-content-between align-items-center">
-            <div>
-              <h1 className="d-flex align-items-center gap-3 mb-2">
-                <Save size={32} />
-                {isEdit ? "Редактирование" : "Создание"}{" "}
-                {isType ? "типа мема" : "заказа мема"}
-              </h1>
-              <p className="text-muted mb-0">
-                {isEdit
-                  ? `Редактирование ${isType ? "типа мема" : "заказа мема"}`
-                  : `Создание нового ${isType ? "типа мема" : "заказа мема"}`}
-              </p>
-            </div>
+    <div style={{ padding: "16px 0" }}>
+      <Flex justify="space-between" align="center" style={{ marginBottom: 16 }}>
+        <div>
+          <h1
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              marginBottom: 8,
+            }}
+          >
+            <Save size={32} />
+            {isEdit ? "Редактирование" : "Создание"}{" "}
+            {isType ? "типа мема" : "заказа мема"}
+          </h1>
+          <p style={{ color: "#8c8c8c", marginBottom: 0 }}>
+            {isEdit
+              ? `Редактирование ${isType ? "типа мема" : "заказа мема"}`
+              : `Создание нового ${isType ? "типа мема" : "заказа мема"}`}
+          </p>
+        </div>
 
-            <Button
-              variant="outline-secondary"
-              onClick={onCancel}
-              className="d-flex align-items-center gap-2"
-            >
-              <ArrowLeft size={16} />
-              Отмена
-            </Button>
-          </div>
-        </Col>
-      </Row>
+        <Button
+          onClick={onCancel}
+          style={{ display: "flex", alignItems: "center", gap: 6 }}
+        >
+          <ArrowLeft size={16} />
+          Отмена
+        </Button>
+      </Flex>
 
-      {/* Ошибка отправки */}
       {submitError && (
-        <Row className="mb-4">
-          <Col>
-            <Alert variant="danger">
-              <Alert.Heading>Ошибка сохранения</Alert.Heading>
-              <p className="mb-0">{submitError}</p>
-            </Alert>
-          </Col>
-        </Row>
+        <Alert
+          type="error"
+          showIcon
+          message="Ошибка сохранения"
+          description={submitError}
+          style={{ marginBottom: 16 }}
+        />
       )}
 
-      {/* Форма */}
-      <Row>
-        <Col>
-          <Card>
-            <Card.Header>
-              <h5 className="mb-0">
-                {isType ? "Параметры типа мема" : "Параметры заказа мема"}
-              </h5>
-            </Card.Header>
-            <Card.Body>
-              <Form onSubmit={handleSubmit}>
-                {isType ? renderTypeForm() : renderOrderForm()}
+      <Card title={isType ? "Параметры типа мема" : "Параметры заказа мема"}>
+        <Form onSubmitCapture={handleSubmit}>
+          {isType ? renderTypeForm() : renderOrderForm()}
 
-                {/* Кнопки действий */}
-                <Row className="mt-4">
-                  <Col>
-                    <div className="d-flex gap-3 justify-content-end">
-                      <Button
-                        variant="outline-secondary"
-                        onClick={onCancel}
-                        disabled={isSubmitting}
-                      >
-                        Отмена
-                      </Button>
-
-                      <Button
-                        variant="primary"
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="d-flex align-items-center gap-2"
-                      >
-                        {isSubmitting ? (
-                          <>
-                            <Spinner animation="border" size="sm" />
-                            Сохранение...
-                          </>
-                        ) : (
-                          <>
-                            <Save size={16} />
-                            {isEdit ? "Сохранить изменения" : "Создать"}
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </Col>
-                </Row>
-              </Form>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
-      {/* Информация о валидации */}
-      <Row className="mt-4">
-        <Col>
-          <Alert variant="info">
-            <Alert.Heading>Правила валидации</Alert.Heading>
-            <ul className="mb-0">
-              {isType ? (
+          <Flex justify="flex-end" gap={12} style={{ marginTop: 16 }}>
+            <Button onClick={onCancel} disabled={isSubmitting}>
+              Отмена
+            </Button>
+            <Button
+              type="primary"
+              htmlType="submit"
+              disabled={isSubmitting}
+              style={{ display: "flex", alignItems: "center", gap: 6 }}
+            >
+              {isSubmitting ? (
                 <>
-                  <li>
-                    Название типа обязательно и не может быть длиннее 50
-                    символов
-                  </li>
-                  <li>Путь к папке обязателен</li>
+                  <Spin size="small" />
+                  Сохранение...
                 </>
               ) : (
                 <>
-                  <li>Путь к файлу обязателен</li>
-                  <li>Необходимо выбрать тип мема</li>
-                  <li>Порядок должен быть положительным числом</li>
+                  <Save size={16} />
+                  {isEdit ? "Сохранить изменения" : "Создать"}
                 </>
               )}
-            </ul>
-          </Alert>
-        </Col>
-      </Row>
-    </Container>
+            </Button>
+          </Flex>
+        </Form>
+      </Card>
+
+      <Alert
+        type="info"
+        showIcon
+        message="Правила валидации"
+        description={
+          <ul style={{ marginBottom: 0 }}>
+            {isType ? (
+              <>
+                <li>
+                  Название типа обязательно и не может быть длиннее 50 символов
+                </li>
+                <li>Путь к папке обязателен</li>
+              </>
+            ) : (
+              <>
+                <li>Путь к файлу обязателен</li>
+                <li>Необходимо выбрать тип мема</li>
+                <li>Порядок должен быть положительным числом</li>
+              </>
+            )}
+          </ul>
+        }
+        style={{ marginTop: 16 }}
+      />
+    </div>
   );
 };
 

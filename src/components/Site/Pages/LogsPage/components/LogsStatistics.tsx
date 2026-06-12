@@ -1,5 +1,5 @@
+import { Spin } from "antd";
 import { BarChart3 } from "lucide-react";
-import { Spinner } from "react-bootstrap";
 
 import styles from "../LogsPage.module.scss";
 import { LogsStatisticsProps } from "../LogsPage.types";
@@ -12,9 +12,7 @@ const LogsStatistics: React.FC<LogsStatisticsProps> = ({
     return (
       <div className={styles.statsCard}>
         <div className={styles.loadingSpinner}>
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">Загрузка статистики...</span>
-          </Spinner>
+          <Spin tip="Загрузка статистики..." />
         </div>
       </div>
     );
@@ -40,14 +38,13 @@ const LogsStatistics: React.FC<LogsStatisticsProps> = ({
       day: "numeric",
       hour: "2-digit",
       minute: "2-digit",
-      timeZone: "UTC", // Отображаем время в UTC без добавления локального часового пояса
+      timeZone: "UTC",
     });
   };
 
   return (
     <div className={styles.statsCard}>
       <div className={styles.statsGrid}>
-        {/* Общее количество логов */}
         <div className={styles.statItem}>
           <div className={styles.statNumber}>
             {statistics.totalLogs.toLocaleString()}
@@ -55,7 +52,6 @@ const LogsStatistics: React.FC<LogsStatisticsProps> = ({
           <div className={styles.statLabel}>Всего логов</div>
         </div>
 
-        {/* Предупреждения */}
         <div className={styles.statItem}>
           <div className={styles.statNumber} style={{ color: "#ffc107" }}>
             {statistics.warningLogs.toLocaleString()}
@@ -63,7 +59,6 @@ const LogsStatistics: React.FC<LogsStatisticsProps> = ({
           <div className={styles.statLabel}>Предупреждения</div>
         </div>
 
-        {/* Ошибки */}
         <div className={styles.statItem}>
           <div className={styles.statNumber} style={{ color: "#dc3545" }}>
             {statistics.errorLogs.toLocaleString()}
@@ -71,7 +66,6 @@ const LogsStatistics: React.FC<LogsStatisticsProps> = ({
           <div className={styles.statLabel}>Ошибки</div>
         </div>
 
-        {/* Критические ошибки */}
         <div className={styles.statItem}>
           <div className={styles.statNumber} style={{ color: "#721c24" }}>
             {statistics.criticalLogs.toLocaleString()}
@@ -79,7 +73,6 @@ const LogsStatistics: React.FC<LogsStatisticsProps> = ({
           <div className={styles.statLabel}>Критические</div>
         </div>
 
-        {/* Самая старая запись */}
         <div className={styles.statItem}>
           <div className={styles.statNumber} style={{ fontSize: "1.2rem" }}>
             {formatDate(statistics.oldestLogDate)}
@@ -87,7 +80,6 @@ const LogsStatistics: React.FC<LogsStatisticsProps> = ({
           <div className={styles.statLabel}>Самая старая запись</div>
         </div>
 
-        {/* Самая новая запись */}
         <div className={styles.statItem}>
           <div className={styles.statNumber} style={{ fontSize: "1.2rem" }}>
             {formatDate(statistics.newestLogDate)}
@@ -96,10 +88,9 @@ const LogsStatistics: React.FC<LogsStatisticsProps> = ({
         </div>
       </div>
 
-      {/* Дополнительная информация */}
       {statistics.oldestLogDate && statistics.newestLogDate && (
         <div style={{ marginTop: "1rem", textAlign: "center" }}>
-          <small className="text-muted">
+          <small style={{ color: "#999" }}>
             Период: {formatDate(statistics.oldestLogDate)} -{" "}
             {formatDate(statistics.newestLogDate)}
           </small>

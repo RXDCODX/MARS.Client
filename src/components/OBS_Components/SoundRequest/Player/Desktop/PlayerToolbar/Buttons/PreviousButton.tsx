@@ -1,6 +1,6 @@
+import { Button } from "antd";
 import { SkipBack } from "lucide-react";
 import { memo, useCallback } from "react";
-import { Button } from "react-bootstrap";
 import { useShallow } from "zustand/react/shallow";
 
 import { usePlayerStore } from "../../../stores/usePlayerStore";
@@ -22,7 +22,7 @@ function PreviousButtonComponent() {
 
   return (
     <Button
-      variant="dark"
+      type="default"
       className={styles.tbBtn}
       onClick={handleClick}
       disabled={loading || !actions}

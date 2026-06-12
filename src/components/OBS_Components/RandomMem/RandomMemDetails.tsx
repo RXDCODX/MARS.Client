@@ -1,4 +1,4 @@
-import { Button } from "react-bootstrap";
+import { Button } from "antd";
 
 import { MediaDto, MediaFileInfoTypeEnum } from "@/shared/api";
 
@@ -92,7 +92,7 @@ export default function RandomMemDetails({
       )}
 
       <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-        <Button size="sm" variant="outline-secondary" onClick={onClose}>
+        <Button size="small" onClick={onClose}>
           Закрыть
         </Button>
       </div>

@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import { Col, Container, Row } from "react-bootstrap";
 
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
@@ -26,18 +25,18 @@ const EnvironmentVariablesPage: React.FC = () => {
   }, [loadVariables, showToast]);
 
   return (
-    <Container fluid className={styles.pageWrapper}>
+    <div className={styles.pageWrapper}>
       <EnvironmentVariablesHeader />
       <EnvironmentVariablesToolbar />
       <EnvironmentVariablesErrorAlert />
-      <Row className="g-4">
-        <Col lg={12}>
+      <div style={{ display: "flex", gap: "1rem", flexWrap: "wrap" }}>
+        <div style={{ flex: "0 0 100%", maxWidth: "100%" }}>
           <EnvironmentVariablesTable />
-        </Col>
-      </Row>
+        </div>
+      </div>
       <EnvironmentVariableForm />
       <EnvironmentVariableDeleteModal />
-    </Container>
+    </div>
   );
 };
 

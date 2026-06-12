@@ -146,7 +146,10 @@ export function ADHDController() {
           <ADHDPage />
           <div className={styles.timerOverlay} data-testid="adhd-timer">
             <div className={styles.timerContent}>
-              <span className={styles.timerValue} data-testid="text-adhd-timer-value">
+              <span
+                className={styles.timerValue}
+                data-testid="text-adhd-timer-value"
+              >
                 {formatTime(state.remainingTime)}
               </span>
             </div>

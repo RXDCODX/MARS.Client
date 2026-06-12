@@ -139,7 +139,9 @@
   display: inline-block;
   max-width: 360px;
   word-break: break-word;
-  transition: transform 0.12s ease, opacity 0.12s ease;
+  transition:
+    transform 0.12s ease,
+    opacity 0.12s ease;
 }
 
 .hotToastMessage {

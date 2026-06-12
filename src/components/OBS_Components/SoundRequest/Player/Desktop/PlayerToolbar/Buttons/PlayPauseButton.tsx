@@ -1,6 +1,6 @@
+import { Button } from "antd";
 import { Pause, Play } from "lucide-react";
 import { memo, useCallback } from "react";
-import { Button } from "react-bootstrap";
 import { useShallow } from "zustand/react/shallow";
 
 import { PlayerStateStateEnum } from "@/shared/api";
@@ -25,7 +25,8 @@ function PlayPauseButtonComponent() {
 
   return (
     <Button
-      variant={isPlaying ? "warning" : "primary"}
+      type={isPlaying ? "default" : "primary"}
+      danger={isPlaying}
       className={styles.tbBtn}
       onClick={handleClick}
       disabled={loading || !actions}

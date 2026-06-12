@@ -114,7 +114,10 @@ export default function PyroAlerts() {
           if (!(node instanceof HTMLElement)) continue;
 
           // Ищем первый элемент с id внутри добавленной ноды (media id ставится на element: img/video wrapper)
-          const elemWithId = (node.matches && node.matches("[id]")) ? node : node.querySelector("[id]");
+          const elemWithId =
+            node.matches && node.matches("[id]")
+              ? node
+              : node.querySelector("[id]");
           const id = elemWithId?.id;
           if (!id) continue;
 
@@ -130,7 +133,10 @@ export default function PyroAlerts() {
             }
 
             const style = window.getComputedStyle(el);
-            const isVisible = style.visibility !== "hidden" && el.getBoundingClientRect().width > 0 && el.getBoundingClientRect().height > 0;
+            const isVisible =
+              style.visibility !== "hidden" &&
+              el.getBoundingClientRect().width > 0 &&
+              el.getBoundingClientRect().height > 0;
             if (!isVisible) {
               SignalRContext.invoke(
                 "TwitchMsg",

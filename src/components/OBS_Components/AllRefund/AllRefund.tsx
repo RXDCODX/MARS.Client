@@ -183,8 +183,12 @@ function AllRefund({ user, onComplete }: AllRefundProps) {
           opacity: { duration: 0.2 },
         }}
       >
-        <div className={styles.timerCaption} data-testid="text-timer-caption">Возврат баллов канала</div>
-        <div className={styles.timerValue} data-testid="text-timer-value">{timerValue}</div>
+        <div className={styles.timerCaption} data-testid="text-timer-caption">
+          Возврат баллов канала
+        </div>
+        <div className={styles.timerValue} data-testid="text-timer-value">
+          {timerValue}
+        </div>
       </motion.div>
 
       <AnimatePresence initial={false} mode="wait">
@@ -203,7 +207,9 @@ function AllRefund({ user, onComplete }: AllRefundProps) {
             }}
             transition={{ duration: 0.55, ease: "easeOut" }}
           >
-            <div className={styles.heroLine} data-testid="text-hero-line">Алармагеддон</div>
+            <div className={styles.heroLine} data-testid="text-hero-line">
+              Алармагеддон
+            </div>
             <div className={styles.rewardLine}>
               активировал награду, которая через 10 секунд начнёт в течение 1
               минуты возвращать всем зрителям все потраченные баллы канала
@@ -222,7 +228,11 @@ function AllRefund({ user, onComplete }: AllRefundProps) {
 
               <div className={styles.userMeta}>
                 <div className={styles.userLabel}>Юзер</div>
-                <div className={styles.userName} style={{ color: userColor }} data-testid="text-user-name">
+                <div
+                  className={styles.userName}
+                  style={{ color: userColor }}
+                  data-testid="text-user-name"
+                >
                   {displayName}
                 </div>
               </div>

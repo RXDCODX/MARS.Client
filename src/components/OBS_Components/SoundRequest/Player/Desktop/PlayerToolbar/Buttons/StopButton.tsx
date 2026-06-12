@@ -1,6 +1,6 @@
+import { Button } from "antd";
 import { Square } from "lucide-react";
 import { memo, useCallback } from "react";
-import { Button } from "react-bootstrap";
 import { useShallow } from "zustand/react/shallow";
 
 import { PlayerStateStateEnum } from "@/shared/api";
@@ -25,7 +25,7 @@ function StopButtonComponent() {
 
   return (
     <Button
-      variant="secondary"
+      type="default"
       className={`${styles.tbBtn} ${isStopped ? styles.stopped : ""}`}
       onClick={handleClick}
       disabled={loading || !actions}

@@ -1,13 +1,11 @@
+import { Button, Input, Space, Spin } from "antd";
 import { Plus, RefreshCcw, Search } from "lucide-react";
 import { useCallback } from "react";
-import { Button, Form, InputGroup, Spinner } from "react-bootstrap";
 
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import styles from "../EnvironmentVariablesPage.module.scss";
 import { useEnvironmentVariablesStore } from "../store/useEnvironmentVariablesStore";
-
-const BootstrapButton = Button as any;
 
 const EnvironmentVariablesToolbar: React.FC = () => {
   const { showToast } = useToastModal();
@@ -54,59 +52,40 @@ const EnvironmentVariablesToolbar: React.FC = () => {
   return (
     <div className={styles.toolbar}>
       <div className={styles.toolbarLeft}>
-        <InputGroup className={styles.searchControl}>
-          <InputGroup.Text>
-            <Search size={16} />
-          </InputGroup.Text>
-          <Form.Control
+        <Space className={styles.searchControl}>
+          <Input
+            prefix={<Search size={16} />}
             placeholder="Поиск по ключу, описанию или значению..."
             value={searchQuery}
             onChange={event => setSearchQuery(event.target.value)}
+            allowClear
           />
-        </InputGroup>
-        <BootstrapButton
-          variant="outline-secondary"
-          size="sm"
-          onClick={clearSearch}
-          disabled={!searchQuery.trim()}
-        >
-          Очистить
-        </BootstrapButton>
+          <Button onClick={clearSearch} disabled={!searchQuery.trim()}>
+            Очистить
+          </Button>
+        </Space>
       </div>
       <div className={styles.toolbarRight}>
-        <BootstrapButton
-          variant="outline-primary"
-          size="sm"
-          onClick={toggleSortDirection}
-        >
+        <Button onClick={toggleSortDirection}>
           Сортировка: {sortDirection === "asc" ? "A → Я" : "Я → A"}
-        </BootstrapButton>
-        <BootstrapButton
-          variant="outline-secondary"
-          size="sm"
+        </Button>
+        <Button
           onClick={handleRefresh}
           disabled={isLoading}
+          icon={<RefreshCcw size={16} />}
         >
-          <RefreshCcw size={16} className="me-2" />
           Обновить список
-        </BootstrapButton>
-        <BootstrapButton
-          variant="outline-warning"
-          size="sm"
+        </Button>
+        <Button
           onClick={handleReload}
           disabled={isReloading}
+          icon={isReloading ? <Spin size="small" /> : <RefreshCcw size={16} />}
         >
-          {isReloading ? (
-            <Spinner animation="border" size="sm" className="me-2" />
-          ) : (
-            <RefreshCcw size={16} className="me-2" />
-          )}
           Перезагрузить с сервера
-        </BootstrapButton>
-        <BootstrapButton variant="primary" size="sm" onClick={startCreate}>
-          <Plus size={16} className="me-2" />
+        </Button>
+        <Button type="primary" onClick={startCreate} icon={<Plus size={16} />}>
           Новая переменная
-        </BootstrapButton>
+        </Button>
       </div>
     </div>
   );

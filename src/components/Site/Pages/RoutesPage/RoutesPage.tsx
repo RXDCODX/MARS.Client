@@ -2,7 +2,6 @@ import { Suspense, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { allRoutes, RouteConfig } from "@/routes/config";
-
 import { reactBitsBackgroundComponentRegistry } from "@/shared/components/ReactBitsBackgroundsLegacy/registry";
 
 const GridMotionBg = reactBitsBackgroundComponentRegistry.GridMotion;
@@ -33,34 +32,38 @@ const RoutesPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
 
   const types = useMemo(() => {
-    const uniqueTypes = [...new Set(allRoutes.map((r) => r.type))];
+    const uniqueTypes = [...new Set(allRoutes.map(r => r.type))];
     return ["all", ...uniqueTypes];
   }, []);
 
   const filteredRoutes = useMemo(() => {
     let routes = allRoutes;
     if (activeFilter !== "all") {
-      routes = routes.filter((r) => r.type === activeFilter);
+      routes = routes.filter(r => r.type === activeFilter);
     }
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
       routes = routes.filter(
-        (r) => r.name.toLowerCase().includes(query) || r.path.toLowerCase().includes(query)
+        r =>
+          r.name.toLowerCase().includes(query) ||
+          r.path.toLowerCase().includes(query)
       );
     }
     return routes;
   }, [activeFilter, searchQuery]);
 
-  const groupedFiltered = useMemo(() => {
-    return filteredRoutes.reduce(
-      (acc, route) => {
-        if (!acc[route.type]) acc[route.type] = [];
-        acc[route.type].push(route);
-        return acc;
-      },
-      {} as Record<string, RouteConfig[]>
-    );
-  }, [filteredRoutes]);
+  const groupedFiltered = useMemo(
+    () =>
+      filteredRoutes.reduce(
+        (acc, route) => {
+          if (!acc[route.type]) acc[route.type] = [];
+          acc[route.type].push(route);
+          return acc;
+        },
+        {} as Record<string, RouteConfig[]>
+      ),
+    [filteredRoutes]
+  );
 
   const typeCounts = useMemo(() => {
     const counts: Record<string, number> = {};
@@ -90,7 +93,7 @@ const RoutesPage: React.FC = () => {
 
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <div className="flex flex-wrap gap-1.5" data-testid="filter-tabs">
-            {types.map((type) => (
+            {types.map(type => (
               <button
                 key={type}
                 onClick={() => setActiveFilter(type)}
@@ -123,7 +126,7 @@ const RoutesPage: React.FC = () => {
               type="text"
               placeholder="Поиск маршрутов..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
               className="w-56 rounded-lg border border-[var(--site-border-primary)] bg-[var(--site-bg-tertiary)] px-3 py-1.5 pr-8 text-sm text-[var(--site-text-primary)] outline-none transition-all focus:border-[var(--site-border-accent)] focus:ring-2 focus:ring-[var(--site-focus-ring)]"
               data-testid="search-input"
             />
@@ -142,7 +145,9 @@ const RoutesPage: React.FC = () => {
         {filteredRoutes.length === 0 ? (
           <div className="flex flex-col items-center justify-center gap-3 py-16">
             <div className="text-4xl opacity-50">🔍</div>
-            <p className="text-[var(--site-text-secondary)]">Маршруты не найдены</p>
+            <p className="text-[var(--site-text-secondary)]">
+              Маршруты не найдены
+            </p>
           </div>
         ) : (
           <div className="flex flex-col gap-6">
@@ -193,7 +198,9 @@ const RoutesPage: React.FC = () => {
               <span className="text-xs text-[var(--site-text-secondary)] opacity-70">
                 {typeLabels[type] || type}
               </span>
-              <span className="text-sm font-bold text-[var(--site-text-primary)]">{count}</span>
+              <span className="text-sm font-bold text-[var(--site-text-primary)]">
+                {count}
+              </span>
             </div>
           ))}
         </div>

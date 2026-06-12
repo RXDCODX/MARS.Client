@@ -1,5 +1,5 @@
+import { Menu } from "antd";
 import React, { useState } from "react";
-import { Container, Nav, Navbar as BootstrapNavbar } from "react-bootstrap";
 
 import Dashboard from "../Dashboard/Dashboard";
 import styles from "./AdminPanel.module.scss";
@@ -55,29 +55,47 @@ const AdminPanel: React.FC<AdminPanelProps> = () => {
     }
   };
 
+  const menuItems = [
+    { key: "dashboard", label: "Дашборд" },
+    { key: "spotify", label: "🎵 Spotify" },
+    { key: "servers", label: "Серверы" },
+    { key: "logs", label: "Логи" },
+    { key: "users", label: "Пользователи" },
+    { key: "performance", label: "Производительность" },
+    { key: "settings", label: "Настройки" },
+  ];
+
   return (
     <div className={styles.adminPanel}>
-      <BootstrapNavbar bg="dark" variant="dark" expand="lg" className="mb-3">
-        <Container>
-          <BootstrapNavbar.Brand>Админ панель</BootstrapNavbar.Brand>
-          <BootstrapNavbar.Toggle aria-controls="admin-navbar-nav" />
-          <BootstrapNavbar.Collapse id="admin-navbar-nav">
-            <Nav
-              className="me-auto"
-              activeKey={activeTab}
-              onSelect={k => setActiveTab(k || "dashboard")}
-            >
-              <Nav.Link eventKey="dashboard">Дашборд</Nav.Link>
-              <Nav.Link eventKey="spotify">🎵 Spotify</Nav.Link>
-              <Nav.Link eventKey="servers">Серверы</Nav.Link>
-              <Nav.Link eventKey="logs">Логи</Nav.Link>
-              <Nav.Link eventKey="users">Пользователи</Nav.Link>
-              <Nav.Link eventKey="performance">Производительность</Nav.Link>
-              <Nav.Link eventKey="settings">Настройки</Nav.Link>
-            </Nav>
-          </BootstrapNavbar.Collapse>
-        </Container>
-      </BootstrapNavbar>
+      <div
+        style={{
+          background: "#001529",
+          padding: "0 24px",
+          marginBottom: 12,
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        <span
+          style={{
+            color: "#fff",
+            fontWeight: "bold",
+            fontSize: 16,
+            marginRight: 32,
+            whiteSpace: "nowrap",
+          }}
+        >
+          Админ панель
+        </span>
+        <Menu
+          theme="dark"
+          mode="horizontal"
+          selectedKeys={[activeTab]}
+          onClick={({ key }) => setActiveTab(key)}
+          items={menuItems}
+          style={{ flex: 1, borderBottom: "none", background: "transparent" }}
+        />
+      </div>
       <main className={styles.content}>{renderContent()}</main>
     </div>
   );

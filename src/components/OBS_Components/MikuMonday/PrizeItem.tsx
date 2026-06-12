@@ -19,7 +19,11 @@ function PrizeItemComponent({ prize }: PrizeItemProps) {
     : "Мику улыбается этому треку";
 
   return (
-    <article className={containerClass} data-roulette-card="true" data-testid="miku-prize-item">
+    <article
+      className={containerClass}
+      data-roulette-card="true"
+      data-testid="miku-prize-item"
+    >
       <div className={mediaClass}>
         {hasCover && (
           <img

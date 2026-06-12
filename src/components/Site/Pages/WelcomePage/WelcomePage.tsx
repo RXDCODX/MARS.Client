@@ -124,7 +124,9 @@ const WelcomePage: React.FC = () => {
         {loading && (
           <div className="flex flex-col items-center justify-center gap-4 py-16">
             <div className="h-10 w-10 animate-spin rounded-full border-4 border-[var(--site-border-primary)] border-t-[var(--site-text-accent)]" />
-            <p className="text-[var(--site-text-secondary)]">Загрузка статистики...</p>
+            <p className="text-[var(--site-text-secondary)]">
+              Загрузка статистики...
+            </p>
           </div>
         )}
 
@@ -202,7 +204,7 @@ const WelcomePage: React.FC = () => {
                     { to: "/logs", icon: "📋", label: "Логи" },
                     { to: "/services", icon: "🔌", label: "Сервисы" },
                     { to: "/routes", icon: "🗺️", label: "Маршруты" },
-                  ].map((link) => (
+                  ].map(link => (
                     <Link
                       key={link.to}
                       to={link.to}
@@ -250,8 +252,12 @@ const StatCard: React.FC<StatCardProps> = ({
         {title}
       </span>
     </div>
-    <div className="mb-0.5 text-2xl font-bold text-[var(--site-text-primary)]">{value}</div>
-    <div className="text-xs text-[var(--site-text-muted)] opacity-70">{subtitle}</div>
+    <div className="mb-0.5 text-2xl font-bold text-[var(--site-text-primary)]">
+      {value}
+    </div>
+    <div className="text-xs text-[var(--site-text-muted)] opacity-70">
+      {subtitle}
+    </div>
     {progress !== undefined && (
       <div className="mt-3 h-1 overflow-hidden rounded-full bg-[var(--site-bg-tertiary)]">
         <div

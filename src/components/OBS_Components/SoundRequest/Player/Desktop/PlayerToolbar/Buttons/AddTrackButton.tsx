@@ -1,6 +1,6 @@
+import { Button } from "antd";
 import { Plus } from "lucide-react";
 import { memo } from "react";
-import { Button } from "react-bootstrap";
 import { useShallow } from "zustand/react/shallow";
 
 import { usePlayerStore } from "../../../stores/usePlayerStore";
@@ -13,7 +13,7 @@ function AddTrackButtonComponent() {
 
   return (
     <Button
-      variant="success"
+      type="primary"
       className={styles.tbBtn}
       onClick={open}
       disabled={loading}

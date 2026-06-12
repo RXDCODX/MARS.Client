@@ -1,20 +1,11 @@
+import { Badge, Button, Input, Modal, Typography } from "antd";
 import { Save, Trash2 } from "lucide-react";
-import {
-  Badge,
-  Button,
-  CloseButton,
-  Form,
-  Modal,
-  Spinner,
-} from "react-bootstrap";
 
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import styles from "../EnvironmentVariablesPage.module.scss";
 import { useEnvironmentVariablesStore } from "../store/useEnvironmentVariablesStore";
 import { formatDateTime } from "../utils/formatDateTime";
-
-const BootstrapButton = Button as any;
 
 const EnvironmentVariableForm: React.FC = () => {
   const { showToast } = useToastModal();
@@ -56,100 +47,95 @@ const EnvironmentVariableForm: React.FC = () => {
 
   return (
     <Modal
-      show={showForm}
-      onHide={cancelForm}
+      open={showForm}
+      onCancel={cancelForm}
       centered
-      contentClassName={styles.formModal}
+      className={styles.formModal}
+      footer={
+        <div className={styles.formModalFooter}>
+          {formMode === "edit" && (
+            <div
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+            >
+              <Button
+                danger
+                size="small"
+                onClick={handleDelete}
+                icon={<Trash2 size={16} />}
+              >
+                Удалить
+              </Button>
+            </div>
+          )}
+
+          <div className={styles.formModalActions}>
+            <Button size="small" onClick={cancelForm}>
+              Закрыть
+            </Button>
+            <Button
+              type="primary"
+              size="small"
+              onClick={handleSubmit}
+              loading={isSubmitting}
+              icon={!isSubmitting ? <Save size={16} /> : undefined}
+            >
+              Сохранить
+            </Button>
+          </div>
+        </div>
+      }
     >
-      <Modal.Header className={styles.formModalHeader}>
+      <div className={styles.formModalHeader}>
         <div className={styles.formModalTitle}>
-          <Modal.Title as="h3">
+          <Typography.Title level={4} style={{ margin: 0 }}>
             {formMode === "create"
               ? "Создание переменной"
               : "Редактирование переменной"}
-          </Modal.Title>
+          </Typography.Title>
           {formMode === "edit" && selectedKey && selectedVariable && (
-            <Badge bg="secondary" className={styles.formModalBadge}>
-              Обновлено {formatDateTime(selectedVariable.updatedAt)}
-            </Badge>
+            <Badge
+              className={styles.formModalBadge}
+              count={`Обновлено ${formatDateTime(selectedVariable.updatedAt)}`}
+              showZero
+              style={{ backgroundColor: "#8c8c8c" }}
+            />
           )}
         </div>
-        <CloseButton onClick={cancelForm} className={styles.formModalClose} />
-      </Modal.Header>
+      </div>
 
-      <Modal.Body className={styles.formModalBody}>
+      <div className={styles.formModalBody}>
         <div className={styles.formFields}>
-          <Form.Group>
-            <Form.Label>Ключ</Form.Label>
-            <Form.Control
+          <div>
+            <Typography.Text>Ключ</Typography.Text>
+            <Input
               value={formValues.key}
               onChange={event => updateFormField("key", event.target.value)}
               placeholder="Например: Api:BaseUrl"
               disabled={formMode === "edit" && Boolean(selectedKey)}
             />
-          </Form.Group>
+          </div>
 
-          <Form.Group>
-            <Form.Label>Значение</Form.Label>
-            <Form.Control
-              as="textarea"
+          <div>
+            <Typography.Text>Значение</Typography.Text>
+            <Input.TextArea
               value={formValues.value}
               onChange={event => updateFormField("value", event.target.value)}
               placeholder="Введите значение переменной"
             />
-          </Form.Group>
+          </div>
 
-          <Form.Group>
-            <Form.Label>Описание</Form.Label>
-            <Form.Control
-              as="textarea"
+          <div>
+            <Typography.Text>Описание</Typography.Text>
+            <Input.TextArea
               value={formValues.description}
               onChange={event =>
                 updateFormField("description", event.target.value)
               }
               placeholder="Добавьте описание для удобства"
             />
-          </Form.Group>
-        </div>
-      </Modal.Body>
-
-      <Modal.Footer className={styles.formModalFooter}>
-        {formMode === "edit" && (
-          <div className="d-flex align-items-center gap-2">
-            <BootstrapButton
-              variant="outline-danger"
-              size="sm"
-              onClick={handleDelete}
-            >
-              <Trash2 size={16} className="me-2" />
-              Удалить
-            </BootstrapButton>
           </div>
-        )}
-
-        <div className={styles.formModalActions}>
-          <BootstrapButton
-            variant="outline-secondary"
-            size="sm"
-            onClick={cancelForm}
-          >
-            Закрыть
-          </BootstrapButton>
-          <BootstrapButton
-            variant="primary"
-            size="sm"
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-          >
-            {isSubmitting ? (
-              <Spinner animation="border" size="sm" className="me-2" />
-            ) : (
-              <Save size={16} className="me-2" />
-            )}
-            Сохранить
-          </BootstrapButton>
         </div>
-      </Modal.Footer>
+      </div>
     </Modal>
   );
 };

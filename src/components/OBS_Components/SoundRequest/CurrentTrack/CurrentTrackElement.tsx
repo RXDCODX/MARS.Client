@@ -12,7 +12,13 @@ interface Props {
 const CurrentTrackElementComponent = ({ track }: Props) => (
   <div className={styles.wrapper} data-testid="current-track-element">
     <div className={styles.cover}>
-      {track.cover && <img src={track.cover} alt="Album cover" data-testid="img-album-cover" />}
+      {track.cover && (
+        <img
+          src={track.cover}
+          alt="Album cover"
+          data-testid="img-album-cover"
+        />
+      )}
     </div>
     <div className={styles.container}>
       <div className={styles.trackinfo}>

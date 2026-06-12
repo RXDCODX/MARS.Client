@@ -1,6 +1,6 @@
+import { Alert, Button, Spin } from "antd";
 import { ArrowLeft } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Alert, Button, Container, Spinner } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { RandomMeme } from "@/shared/api";
@@ -22,7 +22,6 @@ const RandomMemeEditPage: React.FC = () => {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
 
-  // Загрузка данных
   const loadData = useCallback(async () => {
     if (!id) {
       setError("ID мема не указан");
@@ -34,7 +33,6 @@ const RandomMemeEditPage: React.FC = () => {
       setIsLoading(true);
       setError("");
 
-      // Загружаем заказ мема и типы параллельно
       const [orderResponse, typesResponse] = await Promise.all([
         api.randomMemeOrdersDetail(id),
         api.randomMemeTypesList(),
@@ -60,12 +58,10 @@ const RandomMemeEditPage: React.FC = () => {
     }
   }, [id, api, showToast]);
 
-  // Загрузка при монтировании
   useEffect(() => {
     loadData();
   }, [loadData]);
 
-  // Обработчики
   const handleBack = useCallback(() => {
     if (memeOrder) {
       navigate(`/random-meme/${memeOrder.id}`);
@@ -108,45 +104,49 @@ const RandomMemeEditPage: React.FC = () => {
     [memeOrder, api, showToast, navigate]
   );
 
-  // Отображение загрузки
   if (isLoading) {
     return (
-      <Container className={styles.randomMemePage}>
-        <div className="text-center py-5">
-          <Spinner animation="border" role="status" className="mb-3">
-            <span className="visually-hidden">Загрузка...</span>
-          </Spinner>
-          <h4>Загрузка данных для редактирования...</h4>
-          <p className="text-muted">Получаем информацию о меме</p>
+      <div className={styles.randomMemePage}>
+        <div style={{ textAlign: "center", padding: "40px 0" }}>
+          <Spin size="large" />
+          <h4 style={{ marginTop: 12 }}>
+            Загрузка данных для редактирования...
+          </h4>
+          <p style={{ color: "#8c8c8c" }}>Получаем информацию о меме</p>
         </div>
-      </Container>
+      </div>
     );
   }
 
-  // Отображение ошибки
   if (error || !memeOrder) {
     return (
-      <Container className={styles.randomMemePage}>
-        <Alert variant="danger">
-          <Alert.Heading>Ошибка загрузки</Alert.Heading>
-          <p className="mb-3">{error || "Мем не найден"}</p>
-          <div className="d-flex gap-2">
-            <Button variant="outline-primary" onClick={handleBack}>
-              <ArrowLeft size={16} className="me-2" />
-              Вернуться
-            </Button>
-            <Button variant="outline-secondary" onClick={loadData}>
-              Попробовать снова
-            </Button>
-          </div>
-        </Alert>
-      </Container>
+      <div className={styles.randomMemePage}>
+        <Alert
+          type="error"
+          showIcon
+          message="Ошибка загрузки"
+          description={
+            <div>
+              <p style={{ marginBottom: 12 }}>{error || "Мем не найден"}</p>
+              <div style={{ display: "flex", gap: 8 }}>
+                <Button
+                  onClick={handleBack}
+                  style={{ display: "flex", alignItems: "center", gap: 4 }}
+                >
+                  <ArrowLeft size={16} />
+                  Вернуться
+                </Button>
+                <Button onClick={loadData}>Попробовать снова</Button>
+              </div>
+            </div>
+          }
+        />
+      </div>
     );
   }
 
-  // Отображение формы редактирования
   return (
-    <Container className={styles.randomMemePage}>
+    <div className={styles.randomMemePage}>
       <RandomMemeForm
         memeOrder={memeOrder}
         memeTypes={memeTypes}
@@ -155,7 +155,7 @@ const RandomMemeEditPage: React.FC = () => {
         onSubmit={handleSubmit}
         onCancel={handleBack}
       />
-    </Container>
+    </div>
   );
 };
 

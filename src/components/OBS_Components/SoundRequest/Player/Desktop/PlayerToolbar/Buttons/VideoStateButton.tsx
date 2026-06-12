@@ -1,6 +1,6 @@
+import { Button } from "antd";
 import { Music, Video, VideoOff } from "lucide-react";
 import { memo, useCallback, useMemo } from "react";
-import { Button } from "react-bootstrap";
 import { useShallow } from "zustand/react/shallow";
 
 import { PlayerStateVideoStateEnum } from "@/shared/api";
@@ -24,7 +24,6 @@ function VideoStateButtonComponent() {
     }
   }, [actions]);
 
-  // Мемоизируем иконку в зависимости от videoState
   const videoIcon = useMemo(() => {
     switch (videoState) {
       case PlayerStateVideoStateEnum.Video:
@@ -38,7 +37,6 @@ function VideoStateButtonComponent() {
     }
   }, [videoState]);
 
-  // Мемоизируем подсказку в зависимости от videoState
   const videoTitle = useMemo(() => {
     switch (videoState) {
       case PlayerStateVideoStateEnum.Video:
@@ -54,7 +52,7 @@ function VideoStateButtonComponent() {
 
   return (
     <Button
-      variant="secondary"
+      type="default"
       className={`${styles.tbBtn} ${
         videoState === PlayerStateVideoStateEnum.Video
           ? styles.videoMode

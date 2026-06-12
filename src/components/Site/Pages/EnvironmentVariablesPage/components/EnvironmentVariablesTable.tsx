@@ -1,5 +1,5 @@
+import { Badge, Card, Spin, Table } from "antd";
 import { FileText, KeyRound } from "lucide-react";
-import { Badge, Card, Spinner, Table as BootstrapTable } from "react-bootstrap";
 
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
@@ -22,6 +22,50 @@ const EnvironmentVariablesTable: React.FC = () => {
     state => state.selectVariable
   );
 
+  const columns = [
+    {
+      title: "Ключ",
+      dataIndex: "key",
+      key: "key",
+      render: (key: string) => (
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <KeyRound size={16} />
+          <span>{key}</span>
+        </div>
+      ),
+    },
+    {
+      title: "Описание",
+      dataIndex: "description",
+      key: "description",
+      render: (description: string) => description || "—",
+    },
+    {
+      title: "Значение",
+      dataIndex: "value",
+      key: "value",
+      render: (value: string) => (
+        <span className={styles.valuePreview}>{value || "—"}</span>
+      ),
+    },
+    {
+      title: "Обновлено",
+      dataIndex: "updatedAt",
+      key: "updatedAt",
+      render: (updatedAt: string) => (
+        <span className={styles.timestamp}>{formatDateTime(updatedAt)}</span>
+      ),
+    },
+    {
+      title: "Создано",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      render: (createdAt: string) => (
+        <span className={styles.timestamp}>{formatDateTime(createdAt)}</span>
+      ),
+    },
+  ];
+
   return (
     <Card
       className={styles.tableCard}
@@ -38,14 +82,21 @@ const EnvironmentVariablesTable: React.FC = () => {
         }}
       >
         <h2>Список переменных</h2>
-        <Badge bg="primary">{filteredVariables.length}</Badge>
+        <Badge
+          count={filteredVariables.length}
+          style={{ backgroundColor: "#1677ff" }}
+        />
       </div>
       <div className={styles.tableWrapper}>
         {isLoading ? (
-          <div className="d-flex justify-content-center py-5">
-            <Spinner animation="border" role="status">
-              <span className="visually-hidden">Загрузка переменных...</span>
-            </Spinner>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              padding: "2rem 0",
+            }}
+          >
+            <Spin tip="Загрузка переменных..." />
           </div>
         ) : filteredVariables.length === 0 ? (
           <div className={styles.emptyState}>
@@ -58,53 +109,23 @@ const EnvironmentVariablesTable: React.FC = () => {
             </p>
           </div>
         ) : (
-          <BootstrapTable hover responsive className={styles.table}>
-            <thead>
-              <tr>
-                <th>Ключ</th>
-                <th>Описание</th>
-                <th>Значение</th>
-                <th>Обновлено</th>
-                <th>Создано</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredVariables.map(variable => (
-                <tr
-                  key={variable.key}
-                  className={
-                    selectedKey === variable.key
-                      ? styles.selectedRow
-                      : undefined
-                  }
-                  onClick={() => selectVariable(variable.key)}
-                >
-                  <td>
-                    <div className="d-flex align-items-center gap-2">
-                      <KeyRound size={16} />
-                      <span>{variable.key}</span>
-                    </div>
-                  </td>
-                  <td>{variable.description || "—"}</td>
-                  <td>
-                    <span className={styles.valuePreview}>
-                      {variable.value || "—"}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={styles.timestamp}>
-                      {formatDateTime(variable.updatedAt)}
-                    </span>
-                  </td>
-                  <td>
-                    <span className={styles.timestamp}>
-                      {formatDateTime(variable.createdAt)}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </BootstrapTable>
+          <Table
+            dataSource={filteredVariables.map(v => ({ ...v, id: v.key }))}
+            columns={columns}
+            rowKey="key"
+            pagination={false}
+            onRow={record => ({
+              onClick: () => selectVariable(record.key),
+              style: {
+                cursor: "pointer",
+                backgroundColor:
+                  selectedKey === record.key
+                    ? "var(--chakra-colors-blue-50, #e6f4ff)"
+                    : undefined,
+              },
+            })}
+            className={styles.table}
+          />
         )}
       </div>
     </Card>

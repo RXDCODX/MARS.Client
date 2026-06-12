@@ -1,6 +1,6 @@
+import { Button, Modal, Spin } from "antd";
 import { AlertTriangle, Trash2 } from "lucide-react";
 import React from "react";
-import { Button, Modal, Spinner } from "react-bootstrap";
 
 import { DeleteConfirmationModalProps } from "../RandomMemePage.types";
 
@@ -27,51 +27,30 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
     itemType === "type" ? "тип мема" : "заказ мема";
 
   return (
-    <Modal show={isOpen} onHide={onCancel} centered>
-      <Modal.Header closeButton>
-        <Modal.Title className="d-flex align-items-center gap-2">
-          <AlertTriangle size={20} className="text-warning" />
+    <Modal
+      open={isOpen}
+      onCancel={onCancel}
+      centered
+      title={
+        <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <AlertTriangle size={20} style={{ color: "#faad14" }} />
           Подтверждение удаления
-        </Modal.Title>
-      </Modal.Header>
-
-      <Modal.Body>
-        <div className="text-center mb-4">
-          <Trash2 size={48} className="text-danger mb-3" />
-          <h5 className="mb-3">Вы уверены?</h5>
-          <p className="text-muted mb-0">
-            Вы собираетесь удалить {getItemTypeText()}{" "}
-            <strong>"{itemName}"</strong>.
-            <br />
-            Это действие нельзя отменить.
-          </p>
-        </div>
-
-        {itemType === "type" && (
-          <div className="alert alert-warning">
-            <strong>Внимание!</strong> При удалении типа мема будут также
-            удалены все связанные с ним заказы.
-          </div>
-        )}
-
-        <div className="d-flex gap-2 justify-content-end">
-          <Button
-            variant="outline-secondary"
-            onClick={onCancel}
-            disabled={isDeleting}
-          >
+        </span>
+      }
+      footer={
+        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+          <Button onClick={onCancel} disabled={isDeleting}>
             Отмена
           </Button>
-
           <Button
-            variant="danger"
+            danger
             onClick={handleConfirm}
             disabled={isDeleting}
-            className="d-flex align-items-center gap-2"
+            style={{ display: "flex", alignItems: "center", gap: 8 }}
           >
             {isDeleting ? (
               <>
-                <Spinner animation="border" size="sm" />
+                <Spin size="small" />
                 Удаление...
               </>
             ) : (
@@ -82,7 +61,32 @@ const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
             )}
           </Button>
         </div>
-      </Modal.Body>
+      }
+    >
+      <div style={{ textAlign: "center", marginBottom: 32 }}>
+        <Trash2 size={48} style={{ color: "#ff4d4f", marginBottom: 12 }} />
+        <h5 style={{ marginBottom: 12 }}>Вы уверены?</h5>
+        <p style={{ color: "#8c8c8c", marginBottom: 0 }}>
+          Вы собираетесь удалить {getItemTypeText()}{" "}
+          <strong>"{itemName}"</strong>.
+          <br />
+          Это действие нельзя отменить.
+        </p>
+      </div>
+
+      {itemType === "type" && (
+        <div
+          style={{
+            padding: "8px 12px",
+            background: "#fffbe6",
+            border: "1px solid #ffe58f",
+            borderRadius: 4,
+          }}
+        >
+          <strong>Внимание!</strong> При удалении типа мема будут также удалены
+          все связанные с ним заказы.
+        </div>
+      )}
     </Modal>
   );
 };

@@ -1,5 +1,5 @@
+import { Input } from "antd";
 import { useEffect, useRef, useState } from "react";
-import { Form } from "react-bootstrap";
 
 import { useSiteColors } from "../../../../../shared/Utils/useSiteColors";
 import { Country, getFlagPath, searchCountries } from "./flagUtils";
@@ -28,7 +28,6 @@ const FlagSelector: React.FC<FlagSelectorProps> = ({
   const handleSelect = (countryCode: string) => {
     onFlagChange(countryCode);
     setIsOpen(false);
-    // Устанавливаем название страны в поисковый запрос для отображения в инпуте
     const selectedCountry = searchCountries(countryCode).find(
       c => c.code === countryCode
     );
@@ -42,8 +41,6 @@ const FlagSelector: React.FC<FlagSelectorProps> = ({
     setSearchQuery(value);
     setIsOpen(true);
 
-    // Если пользователь начал печатать и у нас есть выбранный флаг,
-    // сбрасываем его, так как пользователь ищет новую страну
     if (value && selectedFlag) {
       onFlagChange("");
     }
@@ -54,43 +51,44 @@ const FlagSelector: React.FC<FlagSelectorProps> = ({
   };
 
   const handleInputBlur = () => {
-    // Не закрываем сразу, чтобы можно было кликнуть на опцию
     setTimeout(() => setIsOpen(false), 200);
   };
 
-  // Получаем информацию о выбранной стране
   const selectedCountry = selectedFlag
     ? searchCountries(selectedFlag).find(c => c.code === selectedFlag)
     : null;
 
   return (
-    <div className="position-relative w-100">
-      <div className="position-relative">
-        <Form.Control
-          ref={inputRef}
-          type="text"
+    <div style={{ position: "relative", width: "100%" }}>
+      <div style={{ position: "relative" }}>
+        <Input
+          ref={inputRef as React.RefObject<import("antd").InputRef>}
           placeholder={selectedFlag ? "" : placeholder}
           value={searchQuery}
           onChange={handleInputChange}
           onFocus={handleInputFocus}
           onBlur={handleInputBlur}
-          size="sm"
-          className="border-info border-2 fw-bold rounded-3"
+          size="small"
           style={{
             backgroundColor: colors.background.card,
             color: colors.text.primary,
             borderColor: colors.border.primary,
-            paddingLeft: selectedFlag && !isOpen ? "40px" : "12px",
+            paddingLeft: selectedFlag && !isOpen ? 40 : 12,
+            fontWeight: 700,
+            borderRadius: 12,
           }}
         />
 
-        {/* Флаг в инпуте */}
         {selectedFlag && !isOpen && selectedCountry && (
           <div
-            className="position-absolute top-50 start-0 translate-middle-y d-flex ms-2 align-items-center"
             style={{
+              position: "absolute",
+              top: "50%",
+              left: 12,
+              transform: "translateY(-50%)",
+              display: "flex",
+              alignItems: "center",
               pointerEvents: "none",
-              left: "12px",
               zIndex: 1,
             }}
           >
@@ -98,10 +96,10 @@ const FlagSelector: React.FC<FlagSelectorProps> = ({
               src={getFlagPath(selectedFlag)}
               alt={selectedCountry.name}
               style={{
-                width: "20px",
-                height: "15px",
+                width: 20,
+                height: 15,
                 objectFit: "cover",
-                borderRadius: "2px",
+                borderRadius: 2,
                 border: `1px solid ${colors.border.primary}`,
               }}
               onError={e => {
@@ -114,22 +112,28 @@ const FlagSelector: React.FC<FlagSelectorProps> = ({
 
       {isOpen && (
         <div
-          className="position-absolute w-100 border border-info rounded-3 mt-1"
           style={{
-            maxHeight: "200px",
+            position: "absolute",
+            width: "100%",
+            maxHeight: 200,
             overflowY: "auto",
             zIndex: 1000,
             top: "100%",
+            marginTop: 4,
             backgroundColor: colors.background.card,
-            borderColor: colors.border.primary,
+            border: `1px solid ${colors.border.primary}`,
+            borderRadius: 12,
             boxShadow: colors.shadow.medium,
           }}
         >
           {filteredCountries.map(country => (
             <div
               key={country.code}
-              className="d-flex align-items-center gap-2 p-2 cursor-pointer"
               style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                padding: 8,
                 cursor: "pointer",
                 borderBottom: `1px solid ${colors.border.primary}`,
                 color: colors.text.primary,
@@ -148,26 +152,25 @@ const FlagSelector: React.FC<FlagSelectorProps> = ({
                 src={getFlagPath(country.code)}
                 alt={country.name}
                 style={{
-                  width: "20px",
-                  height: "15px",
+                  width: 20,
+                  height: 15,
                   objectFit: "cover",
                   flexShrink: 0,
-                  borderRadius: "2px",
+                  borderRadius: 2,
                   border: `1px solid ${colors.border.primary}`,
                 }}
                 onError={e => {
                   e.currentTarget.style.display = "none";
                 }}
               />
-              <span className="small" style={{ color: colors.text.primary }}>
+              <span style={{ fontSize: 12, color: colors.text.primary }}>
                 {country.name}
               </span>
             </div>
           ))}
           {filteredCountries.length === 0 && (
             <div
-              className="p-2 text-muted small"
-              style={{ color: colors.text.secondary }}
+              style={{ padding: 8, color: colors.text.secondary, fontSize: 12 }}
             >
               Страна не найдена
             </div>

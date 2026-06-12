@@ -1,3 +1,4 @@
+import { Spin } from "antd";
 import {
   CSSProperties,
   memo,
@@ -7,7 +8,6 @@ import {
   useMemo,
   useState,
 } from "react";
-import { Spinner } from "react-bootstrap";
 import { useShallow } from "zustand/react/shallow";
 
 import { PlayerStateStateEnum, SpotifyAuth } from "@/shared/api";
@@ -51,15 +51,10 @@ const parseProvider = (value?: string): ProviderName => {
   return PROVIDER_YOUTUBE;
 };
 
-/**
- * Тулбар плеера
- * Подписывается ТОЛЬКО на данные для прогресс-бара (не на volume, isMuted и т.д.)
- */
 function PlayerToolbarComponent() {
   const { showToast } = useToastModal();
   const spotifyAuthApi = useMemo(() => new SpotifyAuth(), []);
 
-  // Селективная подписка - ТОЛЬКО поля для прогресс-бара
   const { state, trackId, trackDuration, currentTrackProgress } =
     usePlayerStore(
       useShallow(storeState => ({
@@ -153,7 +148,6 @@ function PlayerToolbarComponent() {
     }
   }, [provider, showToast, spotifyAuthApi]);
 
-  // Вычисляем прогресс трека
   const isPlaying = state === PlayerStateStateEnum.Playing;
   const durationSec = parseDurationToSeconds(trackDuration);
   const progress = useTrackProgress({
@@ -183,7 +177,7 @@ function PlayerToolbarComponent() {
   if (isProviderButtonDisabled) {
     providerButtonContent = (
       <span className={styles.providerButtonContent}>
-        <Spinner size="sm" animation="border" />
+        <Spin size="small" />
         <span>{provider}</span>
       </span>
     );
@@ -202,7 +196,11 @@ function PlayerToolbarComponent() {
   }
 
   return (
-    <div className={styles.toolbar} style={progressStyle} data-testid="player-toolbar">
+    <div
+      className={styles.toolbar}
+      style={progressStyle}
+      data-testid="player-toolbar"
+    >
       <div className={styles.toolbarInner}>
         <div className={styles.leftSection}>
           <ViewModeToggle />
@@ -236,5 +234,4 @@ function PlayerToolbarComponent() {
   );
 }
 
-// Экспортируем мемоизированную версию для оптимизации
 export const PlayerToolbar = memo(PlayerToolbarComponent);

@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Button, ButtonGroup, Form, Spinner } from "react-bootstrap";
+import { Button, Input, Select, Space, Spin } from "antd";
 
 export interface LogViewerProps {
   logs: {
@@ -32,25 +32,21 @@ const LogViewer: React.FC<LogViewerProps> = ({
   const [search, setSearch] = useState("");
   const [level, setLevel] = useState("");
 
-  // Автоскролл к концу при новых логах
   useEffect(() => {
     if (autoScroll && containerRef.current) {
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     }
   }, [logs, autoScroll]);
 
-  // Скролл к началу
   const scrollToTop = () => {
     if (containerRef.current) containerRef.current.scrollTop = 0;
     setAutoScroll(false);
   };
-  // Скролл к концу
   const scrollToBottom = () => {
     if (containerRef.current)
       containerRef.current.scrollTop = containerRef.current.scrollHeight;
     setAutoScroll(true);
   };
-  // Отключать автоскролл если пользователь скроллит вверх
   const handleScroll = () => {
     if (!containerRef.current) return;
     const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
@@ -58,7 +54,6 @@ const LogViewer: React.FC<LogViewerProps> = ({
     else setAutoScroll(true);
   };
 
-  // Фильтрация логов
   const filteredLogs = useMemo(
     () =>
       logs.filter(
@@ -94,56 +89,51 @@ const LogViewer: React.FC<LogViewerProps> = ({
         }}
       >
         <b>Логи сервиса: {serviceName}</b>
-        <Button variant="secondary" size="sm" onClick={onClose}>
+        <Button size="small" onClick={onClose}>
           Закрыть
         </Button>
       </div>
       <div
         style={{ display: "flex", gap: 8, alignItems: "center", padding: 8 }}
       >
-        <Form.Control
-          size="sm"
+        <Input
+          size="small"
           placeholder="Поиск по сообщению или exception..."
           value={search}
           onChange={e => setSearch(e.target.value)}
           style={{ maxWidth: 220 }}
         />
-        <Form.Select
-          size="sm"
+        <Select
+          size="small"
           value={level}
-          onChange={e => setLevel(e.target.value)}
+          onChange={val => setLevel(val)}
+          options={levelOptions}
           style={{ maxWidth: 120 }}
-        >
-          {levelOptions.map(opt => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
-        </Form.Select>
+        />
       </div>
-      <ButtonGroup style={{ margin: 8 }}>
-        <Button size="sm" variant="outline-light" onClick={scrollToTop}>
+      <Space style={{ margin: 8 }}>
+        <Button size="small" onClick={scrollToTop}>
           В начало
         </Button>
-        <Button size="sm" variant="outline-light" onClick={scrollToBottom}>
+        <Button size="small" onClick={scrollToBottom}>
           В конец
         </Button>
         <Button
-          size="sm"
-          variant={autoScroll ? "success" : "outline-secondary"}
+          size="small"
+          type={autoScroll ? "primary" : "default"}
           onClick={() => setAutoScroll(v => !v)}
         >
           {autoScroll ? "Автоскролл" : "Без автоскролла"}
         </Button>
-      </ButtonGroup>
+      </Space>
       <div
         ref={containerRef}
         onScroll={handleScroll}
         style={{ flex: 1, overflowY: "auto", padding: 8, background: "#222" }}
       >
         {loading ? (
-          <div className="text-center my-4">
-            <Spinner animation="border" variant="light" /> Загрузка логов...
+          <div style={{ textAlign: "center", margin: "16px 0" }}>
+            <Spin /> Загрузка логов...
           </div>
         ) : filteredLogs.length === 0 ? (
           <div>Нет логов</div>

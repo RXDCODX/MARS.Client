@@ -1,3 +1,4 @@
+import { Alert, Button, Card, Flex, Input, Select, Spin } from "antd";
 import {
   Copy,
   Edit,
@@ -9,16 +10,6 @@ import {
   X,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import {
-  Alert,
-  Button,
-  Card,
-  Col,
-  Container,
-  Form,
-  Row,
-  Spinner,
-} from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 
 import { RandomMemeOrdersListProps } from "../RandomMemePage.types";
@@ -37,7 +28,6 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
 }) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Получаем начальные значения из URL параметров
   const getInitialTypeId = (): number | "all" | "no-type" => {
     const typeParam = searchParams.get("type");
     if (typeParam === "no-type") return "no-type";
@@ -53,7 +43,6 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
   const [searchTerm, setSearchTerm] = useState<string>(getInitialSearchTerm);
   const [searchInput, setSearchInput] = useState<string>(getInitialSearchTerm);
 
-  // Функции для обновления URL параметров
   const updateTypeFilter = (typeId: number | "all" | "no-type") => {
     setSelectedTypeId(typeId);
     const newSearchParams = new URLSearchParams(searchParams);
@@ -106,21 +95,18 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
     }
   };
 
-  // Проверяем, есть ли активные фильтры
   const hasActiveFilters = selectedTypeId !== "all" || searchTerm.trim() !== "";
 
-  // Debounce для поиска
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchInput !== searchTerm) {
         updateSearchFilter(searchInput);
       }
-    }, 500); // 500ms задержка
+    }, 500);
 
     return () => clearTimeout(timer);
   }, [searchInput]);
 
-  // Синхронизация с URL параметрами при изменении
   useEffect(() => {
     const typeParam = searchParams.get("type");
     const searchParam = searchParams.get("search");
@@ -148,26 +134,21 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
     }
   }, [searchParams, selectedTypeId, searchTerm]);
 
-  // Фильтрация заказов
   const filteredOrders = useMemo(() => {
     let filtered = memeOrders;
 
-    // Фильтр по типу
     if (selectedTypeId !== "all") {
       if (selectedTypeId === "no-type") {
-        // Фильтр для заказов без типа
         filtered = filtered.filter(
           order => !order.memeTypeId || order.memeTypeId === 0
         );
       } else {
-        // Фильтр по конкретному типу
         filtered = filtered.filter(
           order => order.memeTypeId === selectedTypeId
         );
       }
     }
 
-    // Фильтр по поиску
     if (searchTerm.trim()) {
       const search = searchTerm.toLowerCase();
       filtered = filtered.filter(
@@ -181,7 +162,6 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
     return filtered;
   }, [memeOrders, selectedTypeId, searchTerm]);
 
-  // Подсчет заказов без типа
   const ordersWithoutType = useMemo(
     () =>
       memeOrders.filter(order => !order.memeTypeId || order.memeTypeId === 0)
@@ -193,271 +173,278 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
     return parts[parts.length - 1] || filePath;
   };
 
+  const typeFilterOptions = [
+    { label: "Все типы", value: "all" },
+    {
+      label: `Без типа (${ordersWithoutType})`,
+      value: "no-type",
+    },
+    ...memeTypes.map(type => {
+      const typeCount = memeOrders.filter(
+        order => order.memeTypeId === type.id
+      ).length;
+      return { label: `${type.name} (${typeCount})`, value: type.id };
+    }),
+  ];
+
   if (isLoading && !memeOrders.length) {
     return (
-      <Container className="text-center py-5">
-        <Spinner animation="border" role="status" className="mb-3">
-          <span className="visually-hidden">Загрузка...</span>
-        </Spinner>
-        <h4>Загрузка очереди...</h4>
-      </Container>
+      <div style={{ textAlign: "center", padding: "40px 0" }}>
+        <Spin size="large" />
+        <h4 style={{ marginTop: 12 }}>Загрузка очереди...</h4>
+      </div>
     );
   }
 
   return (
-    <Container fluid className="py-4">
-      <Row className="mb-3">
-        <Col>
-          <div className="d-flex justify-content-between align-items-center">
-            <div>
-              <h1 className="mb-0">
-                Очередь заказов ({filteredOrders.length})
-              </h1>
-              {hasActiveFilters && (
-                <div className="mt-1">
-                  <small className="text-muted">
-                    <Filter size={14} className="me-1" />
-                    Фильтры активны
-                    {selectedTypeId !== "all" && (
-                      <span className="ms-2">
-                        Тип:{" "}
-                        {selectedTypeId === "no-type"
-                          ? "Без типа"
-                          : memeTypes.find(t => t.id === selectedTypeId)
-                              ?.name || selectedTypeId}
-                      </span>
-                    )}
-                    {searchTerm.trim() && (
-                      <span className="ms-2">Поиск: "{searchTerm}"</span>
-                    )}
-                  </small>
-                </div>
-              )}
+    <div style={{ padding: "16px 0" }}>
+      <Flex justify="space-between" align="center" style={{ marginBottom: 12 }}>
+        <div>
+          <h1 style={{ marginBottom: 0 }}>
+            Очередь заказов ({filteredOrders.length})
+          </h1>
+          {hasActiveFilters && (
+            <div style={{ marginTop: 4 }}>
+              <span style={{ color: "#8c8c8c", fontSize: 12 }}>
+                <Filter size={14} style={{ marginRight: 4 }} />
+                Фильтры активны
+                {selectedTypeId !== "all" && (
+                  <span style={{ marginLeft: 8 }}>
+                    Тип:{" "}
+                    {selectedTypeId === "no-type"
+                      ? "Без типа"
+                      : memeTypes.find(t => t.id === selectedTypeId)?.name ||
+                        selectedTypeId}
+                  </span>
+                )}
+                {searchTerm.trim() && (
+                  <span style={{ marginLeft: 8 }}>Поиск: "{searchTerm}"</span>
+                )}
+              </span>
             </div>
-            <div className="d-flex gap-2">
-              {hasActiveFilters && (
-                <Button
-                  variant="outline-info"
-                  size="sm"
-                  onClick={copyFilteredLink}
-                  className="d-flex align-items-center gap-2"
-                  title="Копировать ссылку с фильтрами"
-                >
-                  <Copy size={16} />
-                  Копировать ссылку
-                </Button>
-              )}
-              <Button
-                variant="outline-secondary"
-                size="sm"
-                onClick={onRefresh}
-                disabled={isLoading}
-                className="d-flex align-items-center gap-2"
-              >
-                <RefreshCw size={16} />
-                Обновить
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={onCreate}
-                className="d-flex align-items-center gap-2"
-              >
-                <Plus size={16} />
-                Добавить заказ
-              </Button>
-            </div>
-          </div>
-        </Col>
-      </Row>
+          )}
+        </div>
+        <Flex gap={8}>
+          {hasActiveFilters && (
+            <Button
+              size="small"
+              onClick={copyFilteredLink}
+              style={{ display: "flex", alignItems: "center", gap: 6 }}
+              title="Копировать ссылку с фильтрами"
+            >
+              <Copy size={16} />
+              Копировать ссылку
+            </Button>
+          )}
+          <Button
+            size="small"
+            onClick={onRefresh}
+            disabled={isLoading}
+            style={{ display: "flex", alignItems: "center", gap: 6 }}
+          >
+            <RefreshCw size={16} />
+            Обновить
+          </Button>
+          <Button
+            type="primary"
+            size="small"
+            onClick={onCreate}
+            style={{ display: "flex", alignItems: "center", gap: 6 }}
+          >
+            <Plus size={16} />
+            Добавить заказ
+          </Button>
+        </Flex>
+      </Flex>
 
-      {/* Фильтры */}
-      <Row className="mb-4">
-        <Col>
-          <Card>
-            <Card.Body>
-              <Row className="g-3">
-                <Col md={4}>
-                  <Form.Group>
-                    <Form.Label className="fw-bold">
-                      <Filter size={16} className="me-1" />
-                      Фильтр по типу
-                    </Form.Label>
-                    <Form.Select
-                      value={selectedTypeId}
-                      onChange={e => {
-                        const value = e.target.value;
-                        if (value === "all") {
-                          updateTypeFilter("all");
-                        } else if (value === "no-type") {
-                          updateTypeFilter("no-type");
-                        } else {
-                          updateTypeFilter(parseInt(value));
-                        }
-                      }}
-                    >
-                      <option value="all">Все типы</option>
-                      <option value="no-type">
-                        Без типа ({ordersWithoutType})
-                      </option>
-                      {memeTypes.map(type => {
-                        const typeCount = memeOrders.filter(
-                          order => order.memeTypeId === type.id
-                        ).length;
-                        return (
-                          <option key={type.id} value={type.id}>
-                            {type.name} ({typeCount})
-                          </option>
-                        );
-                      })}
-                    </Form.Select>
-                  </Form.Group>
-                </Col>
-                <Col md={6}>
-                  <Form.Group>
-                    <Form.Label className="fw-bold">Поиск</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Поиск по файлу, типу или номеру заказа..."
-                      value={searchInput}
-                      onChange={e => setSearchInput(e.target.value)}
-                    />
-                  </Form.Group>
-                </Col>
-                <Col md={2} className="d-flex align-items-end">
-                  <Button
-                    variant="outline-secondary"
-                    onClick={resetFilters}
-                    className="d-flex align-items-center gap-1"
-                    disabled={selectedTypeId === "all" && !searchInput.trim()}
-                  >
-                    <X size={16} />
-                    Сбросить
-                  </Button>
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
+      <Card style={{ marginBottom: 16 }}>
+        <Flex gap={12} align="end">
+          <div style={{ flex: "0 0 33.333%" }}>
+            <div style={{ fontWeight: 600, marginBottom: 4 }}>
+              <Filter size={16} style={{ marginRight: 4 }} />
+              Фильтр по типу
+            </div>
+            <Select
+              value={selectedTypeId}
+              onChange={value => {
+                if (value === "all") {
+                  updateTypeFilter("all");
+                } else if (value === "no-type") {
+                  updateTypeFilter("no-type");
+                } else {
+                  updateTypeFilter(value);
+                }
+              }}
+              options={typeFilterOptions}
+              style={{ width: "100%" }}
+            />
+          </div>
+          <div style={{ flex: "0 0 50%" }}>
+            <div style={{ fontWeight: 600, marginBottom: 4 }}>Поиск</div>
+            <Input
+              placeholder="Поиск по файлу, типу или номеру заказа..."
+              value={searchInput}
+              onChange={e => setSearchInput(e.target.value)}
+            />
+          </div>
+          <div style={{ flex: "0 0 16.666%" }}>
+            <Button
+              onClick={resetFilters}
+              style={{ display: "flex", alignItems: "center", gap: 4 }}
+              disabled={selectedTypeId === "all" && !searchInput.trim()}
+            >
+              <X size={16} />
+              Сбросить
+            </Button>
+          </div>
+        </Flex>
+      </Card>
 
       {error && (
-        <Alert variant="danger" className="mb-3">
-          <Alert.Heading>Ошибка загрузки</Alert.Heading>
-          <p className="mb-0">{error}</p>
-        </Alert>
+        <Alert
+          type="error"
+          showIcon
+          message="Ошибка загрузки"
+          description={error}
+          style={{ marginBottom: 12 }}
+        />
       )}
 
       {filteredOrders.length === 0 ? (
-        <Card className="text-center">
-          <Card.Body>
-            <h5 className="mb-1">
+        <Card style={{ textAlign: "center" }}>
+          <div>
+            <h5 style={{ marginBottom: 4 }}>
               {memeOrders.length === 0 ? "Очередь пуста" : "Ничего не найдено"}
             </h5>
-            <div className="text-muted">
+            <div style={{ color: "#8c8c8c" }}>
               {memeOrders.length === 0
                 ? "Нет элементов в очереди"
                 : "Попробуйте изменить фильтры или поисковый запрос"}
             </div>
             {memeOrders.length > 0 && (
               <Button
-                variant="outline-primary"
-                size="sm"
+                size="small"
                 onClick={resetFilters}
-                className="mt-2"
+                style={{ marginTop: 8 }}
               >
                 Сбросить фильтры
               </Button>
             )}
-          </Card.Body>
+          </div>
         </Card>
       ) : (
-        <Row xs={1} sm={2} lg={3} xl={4}>
+        <Flex wrap="wrap" gap={12}>
           {filteredOrders
             .slice()
             .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
             .map(order => (
-              <Col key={order.id} className="mb-3">
+              <div
+                key={order.id}
+                style={{
+                  flex: "0 0 calc(25% - 9px)",
+                  minWidth: 220,
+                }}
+              >
                 <Card
-                  className="h-100 cursor-pointer"
-                  style={{ cursor: "pointer" }}
+                  hoverable
+                  style={{ height: "100%" }}
                   onClick={() => onViewDetails(order)}
                 >
-                  <Card.Body>
-                    <div className="mb-2">
-                      <small className="text-muted d-block">Файл</small>
-                      <div
-                        className="fw-bold text-truncate"
-                        title={order.filePath}
-                      >
-                        {getFileName(order.filePath)}
-                      </div>
+                  <div style={{ marginBottom: 8 }}>
+                    <span
+                      style={{
+                        color: "#8c8c8c",
+                        fontSize: 12,
+                        display: "block",
+                      }}
+                    >
+                      Файл
+                    </span>
+                    <div
+                      style={{
+                        fontWeight: 600,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                      title={order.filePath}
+                    >
+                      {getFileName(order.filePath)}
                     </div>
-                    <div className="mb-2">
-                      <small className="text-muted d-block">Тип</small>
-                      <div className="fw-semibold">
-                        {order.type?.name ? (
-                          <span className="text-primary">
-                            {order.type.name}
-                          </span>
-                        ) : (
-                          <span className="text-muted fst-italic">
-                            Без типа
-                          </span>
-                        )}
-                      </div>
+                  </div>
+                  <div style={{ marginBottom: 8 }}>
+                    <span
+                      style={{
+                        color: "#8c8c8c",
+                        fontSize: 12,
+                        display: "block",
+                      }}
+                    >
+                      Тип
+                    </span>
+                    <div style={{ fontWeight: 500 }}>
+                      {order.type?.name ? (
+                        <span style={{ color: "#1677ff" }}>
+                          {order.type.name}
+                        </span>
+                      ) : (
+                        <span style={{ color: "#8c8c8c", fontStyle: "italic" }}>
+                          Без типа
+                        </span>
+                      )}
                     </div>
-                    <div className="mb-3">
-                      <small className="text-muted d-block">
-                        Номер в очереди
-                      </small>
-                      <div className="fw-semibold">#{order.order}</div>
-                    </div>
-                    <div className="d-flex gap-1">
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        onClick={e => {
-                          e.stopPropagation();
-                          onViewDetails(order);
-                        }}
-                        className="d-flex align-items-center justify-content-center"
-                        title="Просмотр"
-                      >
-                        <Eye size={14} />
-                      </Button>
-                      <Button
-                        variant="outline-warning"
-                        size="sm"
-                        onClick={e => {
-                          e.stopPropagation();
-                          onEdit(order);
-                        }}
-                        className="d-flex align-items-center justify-content-center"
-                        title="Редактировать"
-                      >
-                        <Edit size={14} />
-                      </Button>
-                      <Button
-                        variant="outline-danger"
-                        size="sm"
-                        onClick={e => {
-                          e.stopPropagation();
-                          onDelete(order);
-                        }}
-                        className="d-flex align-items-center justify-content-center"
-                        title="Удалить"
-                      >
-                        <Trash2 size={14} />
-                      </Button>
-                    </div>
-                  </Card.Body>
+                  </div>
+                  <div style={{ marginBottom: 12 }}>
+                    <span
+                      style={{
+                        color: "#8c8c8c",
+                        fontSize: 12,
+                        display: "block",
+                      }}
+                    >
+                      Номер в очереди
+                    </span>
+                    <div style={{ fontWeight: 500 }}>#{order.order}</div>
+                  </div>
+                  <Flex gap={4}>
+                    <Button
+                      size="small"
+                      onClick={e => {
+                        e.stopPropagation();
+                        onViewDetails(order);
+                      }}
+                      title="Просмотр"
+                    >
+                      <Eye size={14} />
+                    </Button>
+                    <Button
+                      size="small"
+                      onClick={e => {
+                        e.stopPropagation();
+                        onEdit(order);
+                      }}
+                      title="Редактировать"
+                    >
+                      <Edit size={14} />
+                    </Button>
+                    <Button
+                      danger
+                      size="small"
+                      onClick={e => {
+                        e.stopPropagation();
+                        onDelete(order);
+                      }}
+                      title="Удалить"
+                    >
+                      <Trash2 size={14} />
+                    </Button>
+                  </Flex>
                 </Card>
-              </Col>
+              </div>
             ))}
-        </Row>
+        </Flex>
       )}
-    </Container>
+    </div>
   );
 };
 

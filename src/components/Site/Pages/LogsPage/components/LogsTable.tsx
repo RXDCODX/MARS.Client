@@ -1,11 +1,9 @@
+import { Button, Modal, Spin, Table } from "antd";
 import { Download, Eye, List, Table as TableIcon } from "lucide-react";
 import { useState } from "react";
-import { Button, Modal, Spinner, Table } from "react-bootstrap";
 
 import styles from "../LogsPage.module.scss";
 import { Log, LogsTableProps } from "../LogsPage.types";
-
-const BootstrapButton = Button as any;
 
 const LogsTable: React.FC<LogsTableProps> = ({
   logs,
@@ -29,7 +27,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
       hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
-      timeZone: "UTC", // Отображаем время в UTC без добавления локального часового пояса
+      timeZone: "UTC",
     });
 
   const formatLogForText = (log: Log) => {
@@ -80,9 +78,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
     return (
       <div className={styles.logsTableCard}>
         <div className={styles.loadingSpinner}>
-          <Spinner animation="border" role="status">
-            <span className="visually-hidden">Загрузка логов...</span>
-          </Spinner>
+          <Spin tip="Загрузка логов..." />
         </div>
       </div>
     );
@@ -104,93 +100,122 @@ const LogsTable: React.FC<LogsTableProps> = ({
     <>
       <div className={styles.logsTableCard}>
         <div className={styles.tableHeader}>
-          <div className="d-flex justify-content-between align-items-center">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <h3>Логи приложения ({totalCount.toLocaleString()})</h3>
-            <div className="d-flex gap-2">
-              <BootstrapButton
-                variant={viewMode === "table" ? "primary" : "outline-primary"}
-                size="sm"
+            <div style={{ display: "flex", gap: 8 }}>
+              <Button
+                type={viewMode === "table" ? "primary" : "default"}
+                size="small"
                 onClick={() => setViewMode("table")}
-                className="d-flex align-items-center gap-1"
+                style={{ display: "flex", alignItems: "center", gap: 4 }}
               >
                 <TableIcon size={16} />
                 Таблица
-              </BootstrapButton>
-              <BootstrapButton
-                variant={viewMode === "text" ? "primary" : "outline-primary"}
-                size="sm"
+              </Button>
+              <Button
+                type={viewMode === "text" ? "primary" : "default"}
+                size="small"
                 onClick={() => setViewMode("text")}
-                className="d-flex align-items-center gap-1"
+                style={{ display: "flex", alignItems: "center", gap: 4 }}
               >
                 <List size={16} />
                 Текст
-              </BootstrapButton>
+              </Button>
             </div>
           </div>
         </div>
 
         {viewMode === "table" ? (
           <div style={{ overflowX: "auto" }}>
-            <Table className={styles.logsTable} responsive>
-              <thead>
-                <tr>
-                  <th>Время</th>
-                  <th>Уровень</th>
-                  <th>Сообщение</th>
-                  <th>Действия</th>
-                </tr>
-              </thead>
-              <tbody>
-                {logs.map(log => (
-                  <tr key={log.id}>
-                    <td className={styles.timestamp}>
-                      {formatTimestamp(log.whenLogged)}
-                    </td>
-                    <td>{getLogLevelBadge(log.logLevel)}</td>
-                    <td className={styles.message}>
+            <Table
+              className={styles.logsTable}
+              dataSource={logs}
+              rowKey="id"
+              pagination={false}
+              columns={[
+                {
+                  title: "Время",
+                  dataIndex: "whenLogged",
+                  key: "whenLogged",
+                  render: (val: string) => (
+                    <span className={styles.timestamp}>
+                      {formatTimestamp(val)}
+                    </span>
+                  ),
+                },
+                {
+                  title: "Уровень",
+                  dataIndex: "logLevel",
+                  key: "logLevel",
+                  render: (val: string) => getLogLevelBadge(val),
+                },
+                {
+                  title: "Сообщение",
+                  dataIndex: "message",
+                  key: "message",
+                  render: (_: string, record: Log) => (
+                    <div className={styles.message}>
                       <div style={{ maxWidth: "400px" }}>
-                        {log.message}
-                        {log.stackTrace && (
-                          <div className="mt-2">
-                            <small className="text-muted">
+                        {record.message}
+                        {record.stackTrace && (
+                          <div style={{ marginTop: 8 }}>
+                            <small style={{ color: "#999" }}>
                               Есть стек-трейс
                             </small>
                           </div>
                         )}
                       </div>
-                    </td>
-                    <td>
-                      <div className="d-flex gap-2">
-                        <BootstrapButton
-                          variant="outline-primary"
-                          size="sm"
-                          onClick={() => handleViewDetails(log)}
-                          title="Просмотреть детали"
-                          className="d-flex align-items-center gap-1"
-                        >
-                          <Eye size={14} />
-                          Детали
-                        </BootstrapButton>
+                    </div>
+                  ),
+                },
+                {
+                  title: "Действия",
+                  key: "actions",
+                  render: (_: unknown, record: Log) => (
+                    <div style={{ display: "flex", gap: 8 }}>
+                      <Button
+                        size="small"
+                        onClick={() => handleViewDetails(record)}
+                        title="Просмотреть детали"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 4,
+                        }}
+                      >
+                        <Eye size={14} />
+                        Детали
+                      </Button>
 
-                        <BootstrapButton
-                          variant="outline-success"
-                          size="sm"
-                          onClick={() => handleExportLog(log)}
-                          title="Экспортировать лог"
-                          className="d-flex align-items-center gap-1"
-                        >
-                          <Download size={14} />
-                          Экспорт
-                        </BootstrapButton>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
+                      <Button
+                        size="small"
+                        onClick={() => handleExportLog(record)}
+                        title="Экспортировать лог"
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 4,
+                          color: "#52c41a",
+                          borderColor: "#52c41a",
+                        }}
+                      >
+                        <Download size={14} />
+                        Экспорт
+                      </Button>
+                    </div>
+                  ),
+                },
+              ]}
+            />
           </div>
         ) : (
-          <div className="p-3">
+          <div style={{ padding: 12 }}>
             <textarea
               className="form-control"
               style={{
@@ -205,13 +230,19 @@ const LogsTable: React.FC<LogsTableProps> = ({
               readOnly
               placeholder="Логи будут отображены здесь..."
             />
-            <div className="mt-2 d-flex justify-content-between align-items-center">
-              <small className="text-muted">
+            <div
+              style={{
+                marginTop: 8,
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <small style={{ color: "#999" }}>
                 Показано {logs.length} из {totalCount.toLocaleString()} записей
               </small>
-              <BootstrapButton
-                variant="outline-success"
-                size="sm"
+              <Button
+                size="small"
                 onClick={() => {
                   const textContent = formatAllLogsAsText();
                   const blob = new Blob([textContent], { type: "text/plain" });
@@ -224,16 +255,21 @@ const LogsTable: React.FC<LogsTableProps> = ({
                   document.body.removeChild(a);
                   URL.revokeObjectURL(url);
                 }}
-                className="d-flex align-items-center gap-1"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 4,
+                  color: "#52c41a",
+                  borderColor: "#52c41a",
+                }}
               >
                 <Download size={14} />
                 Экспорт в TXT
-              </BootstrapButton>
+              </Button>
             </div>
           </div>
         )}
 
-        {/* Пагинация */}
         <div className={styles.paginationContainer}>
           <div className={styles.paginationInfo}>
             Показано {(currentPage - 1) * pageSize + 1} -{" "}
@@ -241,7 +277,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
             {totalCount.toLocaleString()} записей
           </div>
 
-          <div className="d-flex gap-2 align-items-center">
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
             <span>Страница:</span>
             <select
               value={currentPage}
@@ -259,7 +295,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
             <span>из {totalPages}</span>
           </div>
 
-          <div className="d-flex gap-2 align-items-center">
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
             <span>Записей на странице:</span>
             <select
               value={pageSize}
@@ -276,90 +312,91 @@ const LogsTable: React.FC<LogsTableProps> = ({
         </div>
       </div>
 
-      {/* Модальное окно с деталями лога */}
       <Modal
-        show={showDetailsModal}
-        onHide={handleCloseModal}
-        size="lg"
+        open={showDetailsModal}
+        onCancel={handleCloseModal}
+        width={800}
         centered
+        title="Детали лога"
+        footer={
+          <div style={{ display: "flex", gap: 8, justifyContent: "flex-end" }}>
+            <Button onClick={handleCloseModal}>Закрыть</Button>
+            {selectedLog && (
+              <Button
+                type="primary"
+                onClick={() => {
+                  handleExportLog(selectedLog);
+                  handleCloseModal();
+                }}
+                style={{ display: "flex", alignItems: "center", gap: 8 }}
+              >
+                <Download size={16} />
+                Экспортировать
+              </Button>
+            )}
+          </div>
+        }
       >
-        <Modal.Header closeButton>
-          <Modal.Title>Детали лога</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {selectedLog && (
-            <div>
-              <div className="row mb-3">
-                <div className="col-md-3">
-                  <strong>ID:</strong>
-                </div>
-                <div className="col-md-9">
-                  <code>{selectedLog.id}</code>
-                </div>
+        {selectedLog && (
+          <div>
+            <div style={{ marginBottom: 16, display: "flex" }}>
+              <div style={{ width: "25%", fontWeight: "bold" }}>
+                <strong>ID:</strong>
               </div>
-
-              <div className="row mb-3">
-                <div className="col-md-3">
-                  <strong>Время:</strong>
-                </div>
-                <div className="col-md-9">
-                  {formatTimestamp(selectedLog.whenLogged)}
-                </div>
+              <div style={{ width: "75%" }}>
+                <code>{selectedLog.id}</code>
               </div>
-
-              <div className="row mb-3">
-                <div className="col-md-3">
-                  <strong>Уровень:</strong>
-                </div>
-                <div className="col-md-9">
-                  {getLogLevelBadge(selectedLog.logLevel)}
-                </div>
-              </div>
-
-              <div className="row mb-3">
-                <div className="col-md-3">
-                  <strong>Сообщение:</strong>
-                </div>
-                <div className="col-md-9">
-                  <div className="p-3 site-bg-secondary rounded">
-                    {selectedLog.message}
-                  </div>
-                </div>
-              </div>
-
-              {selectedLog.stackTrace && (
-                <div className="row mb-3">
-                  <div className="col-md-3">
-                    <strong>Стек-трейс:</strong>
-                  </div>
-                  <div className="col-md-9">
-                    <pre className={styles.stackTrace}>
-                      {selectedLog.stackTrace}
-                    </pre>
-                  </div>
-                </div>
-              )}
             </div>
-          )}
-        </Modal.Body>
-        <Modal.Footer>
-          <BootstrapButton variant="secondary" onClick={handleCloseModal}>
-            Закрыть
-          </BootstrapButton>
-          {selectedLog && (
-            <BootstrapButton
-              variant="success"
-              onClick={() => {
-                handleExportLog(selectedLog);
-                handleCloseModal();
-              }}
-              className="d-flex align-items-center gap-2"
-            >
-              <Download size={16} />
-              Экспортировать
-            </BootstrapButton>
-          )}
-        </Modal.Footer>
+
+            <div style={{ marginBottom: 16, display: "flex" }}>
+              <div style={{ width: "25%", fontWeight: "bold" }}>
+                <strong>Время:</strong>
+              </div>
+              <div style={{ width: "75%" }}>
+                {formatTimestamp(selectedLog.whenLogged)}
+              </div>
+            </div>
+
+            <div style={{ marginBottom: 16, display: "flex" }}>
+              <div style={{ width: "25%", fontWeight: "bold" }}>
+                <strong>Уровень:</strong>
+              </div>
+              <div style={{ width: "75%" }}>
+                {getLogLevelBadge(selectedLog.logLevel)}
+              </div>
+            </div>
+
+            <div style={{ marginBottom: 16, display: "flex" }}>
+              <div style={{ width: "25%", fontWeight: "bold" }}>
+                <strong>Сообщение:</strong>
+              </div>
+              <div style={{ width: "75%" }}>
+                <div
+                  style={{
+                    padding: 12,
+                    backgroundColor: "var(--site-bg-secondary)",
+                    borderRadius: 4,
+                  }}
+                >
+                  {selectedLog.message}
+                </div>
+              </div>
+            </div>
+
+            {selectedLog.stackTrace && (
+              <div style={{ marginBottom: 16, display: "flex" }}>
+                <div style={{ width: "25%", fontWeight: "bold" }}>
+                  <strong>Стек-трейс:</strong>
+                </div>
+                <div style={{ width: "75%" }}>
+                  <pre className={styles.stackTrace}>
+                    {selectedLog.stackTrace}
+                  </pre>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </Modal>
     </>
   );

@@ -64,7 +64,7 @@ const Footer: React.FC = () => {
             </p>
           </div>
 
-          {linkSections.map((section) => (
+          {linkSections.map(section => (
             <div key={section.title}>
               <h4
                 className="mb-3 text-sm font-semibold uppercase tracking-wider"
@@ -73,7 +73,7 @@ const Footer: React.FC = () => {
                 {section.title}
               </h4>
               <ul className="flex flex-col gap-1.5">
-                {section.links.map((link) => (
+                {section.links.map(link => (
                   <li key={link.to}>
                     <Link
                       to={link.to}
@@ -89,16 +89,10 @@ const Footer: React.FC = () => {
           ))}
         </div>
 
-        <hr
-          className="my-6"
-          style={{ borderColor: colors.border.primary }}
-        />
+        <hr className="my-6" style={{ borderColor: colors.border.primary }} />
 
         <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
-          <p
-            className="text-sm"
-            style={colors.utils.getTextStyle("muted")}
-          >
+          <p className="text-sm" style={colors.utils.getTextStyle("muted")}>
             &copy; {currentYear} MARS Client. Все права защищены.
           </p>
           <div className="flex gap-3">
@@ -106,7 +100,7 @@ const Footer: React.FC = () => {
               { href: "#", label: "GitHub", icon: "🐙" },
               { href: "#", label: "Discord", icon: "💬" },
               { href: "#", label: "Twitter", icon: "🐦" },
-            ].map((social) => (
+            ].map(social => (
               <a
                 key={social.label}
                 href={social.href}

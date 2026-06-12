@@ -2,8 +2,8 @@
  * Компонент ToastModal для отображения уведомлений на основе OperationResult
  */
 
+import { Button, Modal } from "antd";
 import { useCallback } from "react";
-import { Modal } from "react-bootstrap";
 import toast, { Toaster } from "react-hot-toast";
 
 import { OperationResult } from "@/shared/types/OperationResult";
@@ -13,17 +13,11 @@ import styles from "./ToastModal.module.scss";
 import { ToastModalData } from "./ToastModal.types";
 
 interface ToastModalProps {
-  /** Данные для отображения */
   data: ToastModalData;
-  /** Callback при закрытии */
   onClose?: () => void;
-  /** Показывать ли модальное окно */
   show?: boolean;
 }
 
-/**
- * Модальное окно для отображения подробностей операции
- */
 const ToastModal: React.FC<ToastModalProps> = ({
   data,
   onClose,
@@ -35,7 +29,6 @@ const ToastModal: React.FC<ToastModalProps> = ({
     }
   }, [onClose]);
 
-  // Рендер данных из OperationResult.data
   const renderData = () => {
     if (!data.data) return null;
 
@@ -49,7 +42,6 @@ const ToastModal: React.FC<ToastModalProps> = ({
     );
   };
 
-  // Рендер информации об операции
   const renderOperationInfo = () => {
     const { operationResult } = data;
 
@@ -74,58 +66,41 @@ const ToastModal: React.FC<ToastModalProps> = ({
     );
   };
 
-  // Стили заголовка в зависимости от типа
   const getModalHeaderStyle = () =>
     data.type === "success"
       ? { backgroundColor: "#28a745", color: "white" }
       : { backgroundColor: "#dc3545", color: "white" };
 
   return (
-    <Modal show={show} onHide={handleClose} size="lg" centered>
-      <Modal.Header
-        closeButton
-        style={getModalHeaderStyle()}
-        className={styles.modalHeader}
-      >
-        <Modal.Title>
+    <Modal
+      open={show}
+      onCancel={handleClose}
+      width={800}
+      centered
+      title={
+        <span style={getModalHeaderStyle()}>
           {data.type === "success" ? "Успех" : "Ошибка"}
-        </Modal.Title>
-      </Modal.Header>
-
-      <Modal.Body className={styles.modalBody}>
+        </span>
+      }
+      footer={<Button onClick={handleClose}>Закрыть</Button>}
+    >
+      <div className={styles.modalBody}>
         <p className={styles.message}>{data.message}</p>
         {renderData()}
         {renderOperationInfo()}
-      </Modal.Body>
-
-      <Modal.Footer className={styles.modalFooter}>
-        <button
-          type="button"
-          className="btn btn-secondary"
-          onClick={handleClose}
-        >
-          Закрыть
-        </button>
-      </Modal.Footer>
+      </div>
     </Modal>
   );
 };
 
 /**
  * Провайдер для ToastModal
- * Оборачивает приложение и предоставляет функцию showToast
  */
 export const ToastModalProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const { modalData, showModal, openModal, closeModal } = useToastModalState();
 
-  /**
-   * Показать тост на основе OperationResult
-   * Автоматически определяет тип (success/error) на основе result.success
-   * result.message - отображается в тосте
-   * result.data - отображается в модальном окне при клике
-   */
   const showToast = useCallback(
     <TData = unknown,>(result: OperationResult<TData>) => {
       const type = result.success ? "success" : "error";
@@ -147,13 +122,11 @@ export const ToastModalProvider: React.FC<{ children: React.ReactNode }> = ({
         position: "bottom-right" as const,
       };
 
-      // Показываем кастомный тост с поддержкой клика для открытия модального окна
       toast.custom(
         t => (
           <div
             onClick={() => {
               openModal(toastData);
-              // закрываем тост после клика
               toast.dismiss(t.id);
             }}
             className={

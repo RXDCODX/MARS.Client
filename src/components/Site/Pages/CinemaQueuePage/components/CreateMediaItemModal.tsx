@@ -1,12 +1,10 @@
-import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { Button, DatePicker, Flex, Form, Input, Modal, Select } from "antd";
 
 import { CreateMediaItemRequest } from "@/shared/api";
 
-const BootstrapButton = Button as any;
-
 interface CreateMediaItemModalProps {
-  show: boolean;
-  onHide: () => void;
+  open: boolean;
+  onCancel: () => void;
   onSubmit: (e: React.FormEvent) => void;
   formData: CreateMediaItemRequest;
   onInputChange: (
@@ -16,138 +14,112 @@ interface CreateMediaItemModalProps {
 }
 
 const CreateMediaItemModal: React.FC<CreateMediaItemModalProps> = ({
-  show,
-  onHide,
+  open,
+  onCancel,
   onSubmit,
   formData,
   onInputChange,
-}) => {
-  const resetForm = () => {
-    onHide();
-  };
+}) => (
+  <Modal
+    open={open}
+    onCancel={onCancel}
+    width={720}
+    title="Add New Media Item"
+    footer={
+      <Flex gap={8}>
+        <Button type="primary" onClick={onSubmit as any}>
+          Create
+        </Button>
+        <Button onClick={onCancel}>Cancel</Button>
+      </Flex>
+    }
+  >
+    <Form layout="vertical" onFinish={onSubmit}>
+      <Form.Item label="Title">
+        <Input
+          value={formData.title || ""}
+          onChange={e => onInputChange("title", e.target.value)}
+          placeholder="Enter title"
+        />
+      </Form.Item>
 
-  return (
-    <Modal show={show} onHide={resetForm} size="lg">
-      <Modal.Header closeButton>
-        <Modal.Title>Add New Media Item</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form onSubmit={onSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Label>Title</Form.Label>
-            <Form.Control
-              type="text"
-              value={formData.title || ""}
-              onChange={e => onInputChange("title", e.target.value)}
-              placeholder="Enter title"
-            />
-          </Form.Group>
+      <Form.Item label="Description">
+        <Input.TextArea
+          rows={3}
+          value={formData.description || ""}
+          onChange={e => onInputChange("description", e.target.value)}
+          placeholder="Enter description"
+        />
+      </Form.Item>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              value={formData.description || ""}
-              onChange={e => onInputChange("description", e.target.value)}
-              placeholder="Enter description"
-            />
-          </Form.Group>
+      <Form.Item label="Media URL" required>
+        <Input
+          value={formData.mediaUrl}
+          onChange={e => onInputChange("mediaUrl", e.target.value)}
+          placeholder="Enter media URL"
+          required
+        />
+      </Form.Item>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Media URL *</Form.Label>
-            <Form.Control
-              type="url"
-              value={formData.mediaUrl}
-              onChange={e => onInputChange("mediaUrl", e.target.value)}
-              placeholder="Enter media URL"
-              required
-            />
-          </Form.Group>
+      <Flex gap={16}>
+        <Form.Item label="Priority" style={{ flex: 1 }}>
+          <Select
+            value={formData.priority}
+            onChange={value => onInputChange("priority", value)}
+            placeholder="Select priority"
+            options={[
+              { value: 1, label: "1 - Low" },
+              { value: 2, label: "2 - Normal" },
+              { value: 3, label: "3 - Medium" },
+              { value: 4, label: "4 - High" },
+              { value: 5, label: "5 - Critical" },
+            ]}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Scheduled For"
+          style={{ flex: 1 }}
+          help="Выберите дату и время для показа медиа элемента (опционально)"
+        >
+          <DatePicker
+            showTime
+            style={{ width: "100%" }}
+            value={
+              formData.scheduledFor ? (formData.scheduledFor as any) : undefined
+            }
+            onChange={(_date, dateString) =>
+              onInputChange("scheduledFor", dateString as string)
+            }
+          />
+        </Form.Item>
+      </Flex>
+      <Flex gap={16}>
+        <Form.Item label="Added By" style={{ flex: 1 }}>
+          <Input
+            value={formData.addedBy || ""}
+            onChange={e => onInputChange("addedBy", e.target.value)}
+            placeholder="Enter your name"
+          />
+        </Form.Item>
+        <Form.Item label="Twitch Username" style={{ flex: 1 }}>
+          <Input
+            value={formData.twitchUsername || ""}
+            onChange={e => onInputChange("twitchUsername", e.target.value)}
+            placeholder="Enter Twitch username"
+          />
+        </Form.Item>
+      </Flex>
 
-          <Row>
-            <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Priority</Form.Label>
-                <Form.Select
-                  value={formData.priority}
-                  onChange={e =>
-                    onInputChange("priority", parseInt(e.target.value))
-                  }
-                >
-                  <option value={1}>1 - Low</option>
-                  <option value={2}>2 - Normal</option>
-                  <option value={3}>3 - Medium</option>
-                  <option value={4}>4 - High</option>
-                  <option value={5}>5 - Critical</option>
-                </Form.Select>
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Scheduled For</Form.Label>
-                <Form.Control
-                  type="datetime-local"
-                  value={formData.scheduledFor || ""}
-                  onChange={e => onInputChange("scheduledFor", e.target.value)}
-                  placeholder="Select date and time"
-                />
-                <Form.Text className="text-muted">
-                  Выберите дату и время для показа медиа элемента (опционально)
-                </Form.Text>
-              </Form.Group>
-            </Col>
-          </Row>
-          <Row>
-            <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Added By</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={formData.addedBy || ""}
-                  onChange={e => onInputChange("addedBy", e.target.value)}
-                  placeholder="Enter your name"
-                />
-              </Form.Group>
-            </Col>
-            <Col md={6}>
-              <Form.Group className="mb-3">
-                <Form.Label>Twitch Username</Form.Label>
-                <Form.Control
-                  type="text"
-                  value={formData.twitchUsername || ""}
-                  onChange={e =>
-                    onInputChange("twitchUsername", e.target.value)
-                  }
-                  placeholder="Enter Twitch username"
-                />
-              </Form.Group>
-            </Col>
-          </Row>
-
-          <Form.Group className="mb-3">
-            <Form.Label>Notes</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={2}
-              value={formData.notes || ""}
-              onChange={e => onInputChange("notes", e.target.value)}
-              placeholder="Additional notes"
-            />
-          </Form.Group>
-
-          <div className="d-flex gap-2">
-            <BootstrapButton type="submit" variant="primary">
-              Create
-            </BootstrapButton>
-            <BootstrapButton variant="secondary" onClick={resetForm}>
-              Cancel
-            </BootstrapButton>
-          </div>
-        </Form>
-      </Modal.Body>
-    </Modal>
-  );
-};
+      <Form.Item label="Notes">
+        <Input.TextArea
+          rows={2}
+          value={formData.notes || ""}
+          onChange={e => onInputChange("notes", e.target.value)}
+          placeholder="Additional notes"
+        />
+      </Form.Item>
+    </Form>
+  </Modal>
+);
 
 export default CreateMediaItemModal;

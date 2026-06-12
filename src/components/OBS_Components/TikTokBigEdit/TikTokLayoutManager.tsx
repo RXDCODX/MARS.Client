@@ -117,7 +117,10 @@ export default function TikTokLayoutManager() {
           key={1}
         />
       )}
-      <div style={{ width: "100%", height: "100%" }} data-testid="obs-tiktok-layout">
+      <div
+        style={{ width: "100%", height: "100%" }}
+        data-testid="obs-tiktok-layout"
+      >
         {state.playing && state.current && state.current.content}
       </div>
     </>

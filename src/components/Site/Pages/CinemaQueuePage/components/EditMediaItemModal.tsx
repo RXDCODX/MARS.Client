@@ -1,12 +1,10 @@
-import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { Button, DatePicker, Flex, Form, Input, Modal, Select } from "antd";
 
 import { UpdateMediaItemRequest } from "@/shared/api";
 
-const BootstrapButton = Button as any;
-
 interface EditMediaItemModalProps {
-  show: boolean;
-  onHide: () => void;
+  open: boolean;
+  onCancel: () => void;
   onSubmit: (e: React.FormEvent) => void;
   editFormData: Partial<UpdateMediaItemRequest>;
   onInputChange: (
@@ -16,135 +14,123 @@ interface EditMediaItemModalProps {
 }
 
 const EditMediaItemModal: React.FC<EditMediaItemModalProps> = ({
-  show,
-  onHide,
+  open,
+  onCancel,
   onSubmit,
   editFormData,
   onInputChange,
 }) => (
-  <Modal show={show} onHide={onHide} size="lg">
-    <Modal.Header closeButton>
-      <Modal.Title>Edit Media Item</Modal.Title>
-    </Modal.Header>
-    <Modal.Body>
-      <Form onSubmit={onSubmit}>
-        <Form.Group className="mb-3">
-          <Form.Label>Title</Form.Label>
-          <Form.Control
-            type="text"
-            value={editFormData.title || ""}
-            onChange={e => onInputChange("title", e.target.value)}
-            placeholder="Enter title"
+  <Modal
+    open={open}
+    onCancel={onCancel}
+    width={720}
+    title="Edit Media Item"
+    footer={
+      <Flex gap={8}>
+        <Button type="primary" onClick={onSubmit as any}>
+          Update
+        </Button>
+        <Button onClick={onCancel}>Cancel</Button>
+      </Flex>
+    }
+  >
+    <Form layout="vertical" onFinish={onSubmit}>
+      <Form.Item label="Title">
+        <Input
+          value={editFormData.title || ""}
+          onChange={e => onInputChange("title", e.target.value)}
+          placeholder="Enter title"
+        />
+      </Form.Item>
+
+      <Form.Item label="Description">
+        <Input.TextArea
+          rows={3}
+          value={editFormData.description || ""}
+          onChange={e => onInputChange("description", e.target.value)}
+          placeholder="Enter description"
+        />
+      </Form.Item>
+
+      <Form.Item label="Media URL">
+        <Input
+          value={editFormData.mediaUrl || ""}
+          onChange={e => onInputChange("mediaUrl", e.target.value)}
+          placeholder="Enter media URL"
+        />
+      </Form.Item>
+
+      <Flex gap={16}>
+        <Form.Item label="Status" style={{ flex: 1 }}>
+          <Select
+            value={editFormData.status || undefined}
+            onChange={value => onInputChange("status", value)}
+            placeholder="Select status"
+            options={[
+              { value: "Pending", label: "Pending" },
+              { value: "InProgress", label: "In Progress" },
+              { value: "Completed", label: "Completed" },
+              { value: "Cancelled", label: "Cancelled" },
+              { value: "Postponed", label: "Postponed" },
+            ]}
           />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Description</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={3}
-            value={editFormData.description || ""}
-            onChange={e => onInputChange("description", e.target.value)}
-            placeholder="Enter description"
+        </Form.Item>
+        <Form.Item label="Priority" style={{ flex: 1 }}>
+          <Select
+            value={editFormData.priority || undefined}
+            onChange={value => onInputChange("priority", value)}
+            placeholder="Select priority"
+            options={[
+              { value: 1, label: "1 - Low" },
+              { value: 2, label: "2 - Normal" },
+              { value: 3, label: "3 - Medium" },
+              { value: 4, label: "4 - High" },
+              { value: 5, label: "5 - Critical" },
+            ]}
           />
-        </Form.Group>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Media URL</Form.Label>
-          <Form.Control
-            type="url"
-            value={editFormData.mediaUrl || ""}
-            onChange={e => onInputChange("mediaUrl", e.target.value)}
-            placeholder="Enter media URL"
+        </Form.Item>
+      </Flex>
+      <Flex gap={16}>
+        <Form.Item
+          label="Scheduled For"
+          style={{ flex: 1 }}
+          help="Выберите дату и время для показа медиа элемента"
+        >
+          <DatePicker
+            showTime
+            style={{ width: "100%" }}
+            value={
+              editFormData.scheduledFor
+                ? (editFormData.scheduledFor as any)
+                : undefined
+            }
+            onChange={(_date, dateString) =>
+              onInputChange("scheduledFor", dateString as string)
+            }
           />
-        </Form.Group>
-
-        <Row>
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Status</Form.Label>
-              <Form.Select
-                value={editFormData.status || ""}
-                onChange={e => onInputChange("status", e.target.value)}
-              >
-                <option value="Pending">Pending</option>
-                <option value="InProgress">In Progress</option>
-                <option value="Completed">Completed</option>
-                <option value="Cancelled">Cancelled</option>
-                <option value="Postponed">Postponed</option>
-              </Form.Select>
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Priority</Form.Label>
-              <Form.Select
-                value={editFormData.priority || ""}
-                onChange={e =>
-                  onInputChange("priority", parseInt(e.target.value))
-                }
-              >
-                <option value={1}>1 - Low</option>
-                <option value={2}>2 - Normal</option>
-                <option value={3}>3 - Medium</option>
-                <option value={4}>4 - High</option>
-                <option value={5}>5 - Critical</option>
-              </Form.Select>
-            </Form.Group>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Scheduled For</Form.Label>
-              <Form.Control
-                type="datetime-local"
-                value={editFormData.scheduledFor || ""}
-                onChange={e => onInputChange("scheduledFor", e.target.value)}
-                placeholder="Select date and time"
-              />
-              <Form.Text className="text-muted">
-                Выберите дату и время для показа медиа элемента
-              </Form.Text>
-            </Form.Group>
-          </Col>
-          <Col md={6}>
-            <Form.Group className="mb-3">
-              <Form.Label>Mark as Next</Form.Label>
-              <Form.Select
-                value={editFormData.isNext?.toString() || ""}
-                onChange={e =>
-                  onInputChange("isNext", e.target.value === "true")
-                }
-              >
-                <option value="true">Yes</option>
-                <option value="false">No</option>
-              </Form.Select>
-            </Form.Group>
-          </Col>
-        </Row>
-
-        <Form.Group className="mb-3">
-          <Form.Label>Notes</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows={2}
-            value={editFormData.notes || ""}
-            onChange={e => onInputChange("notes", e.target.value)}
-            placeholder="Additional notes"
+        </Form.Item>
+        <Form.Item label="Mark as Next" style={{ flex: 1 }}>
+          <Select
+            value={editFormData.isNext?.toString() || undefined}
+            onChange={value => onInputChange("isNext", value === "true")}
+            placeholder="Select"
+            options={[
+              { value: "true", label: "Yes" },
+              { value: "false", label: "No" },
+            ]}
           />
-        </Form.Group>
+        </Form.Item>
+      </Flex>
 
-        <div className="d-flex gap-2">
-          <BootstrapButton type="submit" variant="primary">
-            Update
-          </BootstrapButton>
-          <BootstrapButton variant="secondary" onClick={onHide}>
-            Cancel
-          </BootstrapButton>
-        </div>
-      </Form>
-    </Modal.Body>
+      <Form.Item label="Notes">
+        <Input.TextArea
+          rows={2}
+          value={editFormData.notes || ""}
+          onChange={e => onInputChange("notes", e.target.value)}
+          placeholder="Additional notes"
+        />
+      </Form.Item>
+    </Form>
   </Modal>
 );
 

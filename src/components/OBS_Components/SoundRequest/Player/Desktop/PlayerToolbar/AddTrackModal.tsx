@@ -1,15 +1,11 @@
+import { Button, Form, Input, Modal } from "antd";
 import { memo, useCallback, useState } from "react";
-import { Button, Form, Modal } from "react-bootstrap";
 import { useShallow } from "zustand/react/shallow";
 
 import styles from "./AddTrackModal.module.scss";
 import { useAddTrackModal } from "./hooks";
 import { useAddTrackModalStore } from "./stores/useAddTrackModalStore";
 
-/**
- * Модальное окно для добавления трека в очередь
- * Управляет своим состоянием через Zustand store
- */
 function AddTrackModalComponent() {
   const { isOpen, close } = useAddTrackModalStore(
     useShallow(state => ({
@@ -51,47 +47,47 @@ function AddTrackModalComponent() {
   }, [isSubmitting, close]);
 
   return (
-    <Modal show={isOpen} onHide={handleClose} centered data-testid="modal-add-track">
-      <Modal.Header closeButton>
-        <Modal.Title>Добавить трек</Modal.Title>
-      </Modal.Header>
-      <Form onSubmit={handleSubmit}>
-        <Modal.Body>
-          <Form.Group>
-            <Form.Label>Введите название трека или ссылку</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Например: Rick Astley - Never Gonna Give You Up"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              autoFocus
-              disabled={isSubmitting}
-              data-testid="input-add-track-query"
-            />
-          </Form.Group>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            className={`${styles.modalButton} ${styles.secondary}`}
-            onClick={handleClose}
+    <Modal
+      open={isOpen}
+      onCancel={handleClose}
+      title="Добавить трек"
+      footer={[
+        <Button
+          key="cancel"
+          className={`${styles.modalButton} ${styles.secondary}`}
+          onClick={handleClose}
+          disabled={isSubmitting}
+          data-testid="button-add-track-cancel"
+        >
+          Отмена
+        </Button>,
+        <Button
+          key="submit"
+          className={`${styles.modalButton} ${styles.primary}`}
+          type="primary"
+          onClick={handleSubmit}
+          disabled={!query.trim() || isSubmitting}
+          data-testid="button-add-track-submit"
+        >
+          {isSubmitting ? "Добавление..." : "Добавить"}
+        </Button>,
+      ]}
+      data-testid="modal-add-track"
+    >
+      <Form onSubmitCapture={handleSubmit}>
+        <Form.Item label="Введите название трека или ссылку">
+          <Input
+            placeholder="Например: Rick Astley - Never Gonna Give You Up"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            autoFocus
             disabled={isSubmitting}
-            data-testid="button-add-track-cancel"
-          >
-            Отмена
-          </Button>
-          <Button
-            className={`${styles.modalButton} ${styles.primary}`}
-            type="submit"
-            disabled={!query.trim() || isSubmitting}
-            data-testid="button-add-track-submit"
-          >
-            {isSubmitting ? "Добавление..." : "Добавить"}
-          </Button>
-        </Modal.Footer>
+            data-testid="input-add-track-query"
+          />
+        </Form.Item>
       </Form>
     </Modal>
   );
 }
 
-// Экспортируем мемоизированную версию для оптимизации
 export const AddTrackModal = memo(AddTrackModalComponent);

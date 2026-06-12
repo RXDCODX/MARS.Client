@@ -18,9 +18,11 @@ const matrixScreenLoader = () =>
 const MatrixScreen = lazy(matrixScreenLoader);
 
 const matrixConfiguratorLoader = () =>
-  import("@/components/OBS_Components/MatrixScreen/MatrixConfigurator").then(m => ({
-    default: m.default,
-  }));
+  import("@/components/OBS_Components/MatrixScreen/MatrixConfigurator").then(
+    m => ({
+      default: m.default,
+    })
+  );
 const MatrixConfigurator = lazy(matrixConfiguratorLoader);
 
 const chatHorizontalLoader = () =>

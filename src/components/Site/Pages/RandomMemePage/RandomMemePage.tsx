@@ -1,5 +1,5 @@
+import { Tabs } from "antd";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Container, Nav, Tab } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
 import { RandomMeme } from "@/shared/api";
@@ -26,7 +26,6 @@ const RandomMemePage: React.FC = () => {
   const { showToast } = useToastModal();
   const navigate = useNavigate();
 
-  // Состояние навигации
   const [navigation, setNavigation] = useState<NavigationState>({
     currentView: "list",
     selectedType: null,
@@ -35,12 +34,10 @@ const RandomMemePage: React.FC = () => {
     error: "",
   });
 
-  // Данные
   const [memeTypes, setMemeTypes] = useState<MemeTypeDto[]>([]);
   const [memeOrders, setMemeOrders] = useState<MemeOrderDto[]>([]);
   const [activeTab, setActiveTab] = useState<"types" | "orders">("orders");
 
-  // Состояние модального окна удаления
   const [deleteModal, setDeleteModal] = useState<{
     isOpen: boolean;
     itemType: "type" | "order";
@@ -53,10 +50,8 @@ const RandomMemePage: React.FC = () => {
     onConfirm: async () => {},
   });
 
-  // Состояние формы
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Загрузка типов мемов
   const loadTypes = useCallback(async () => {
     try {
       setNavigation(prev => ({ ...prev, isLoading: true, error: "" }));
@@ -76,7 +71,6 @@ const RandomMemePage: React.FC = () => {
     }
   }, [api, showToast]);
 
-  // Загрузка заказов мемов
   const loadOrders = useCallback(async () => {
     try {
       setNavigation(prev => ({ ...prev, isLoading: true, error: "" }));
@@ -96,13 +90,11 @@ const RandomMemePage: React.FC = () => {
     }
   }, [api, showToast]);
 
-  // Загрузка данных при монтировании
   useEffect(() => {
     loadTypes();
     loadOrders();
   }, [loadTypes, loadOrders]);
 
-  // Навигация
   const navigateTo = useCallback(
     (
       view: RandomMemeView,
@@ -130,7 +122,6 @@ const RandomMemePage: React.FC = () => {
     }));
   }, []);
 
-  // Обработчики для типов мемов
   const handleTypeViewDetails = useCallback(
     (memeType: MemeTypeDto) => {
       navigateTo("type-details", memeType);
@@ -174,7 +165,6 @@ const RandomMemePage: React.FC = () => {
     navigateTo("create-type");
   }, [navigateTo]);
 
-  // Обработчики для заказов мемов
   const handleOrderViewDetails = useCallback(
     (memeOrder: MemeOrderDto) => {
       navigate(`/random-meme/${memeOrder.id}`);
@@ -218,7 +208,6 @@ const RandomMemePage: React.FC = () => {
     navigateTo("create-order");
   }, [navigateTo]);
 
-  // Обработчик отправки формы
   const handleFormSubmit = useCallback(
     async (data: Record<string, unknown>) => {
       try {
@@ -266,56 +255,51 @@ const RandomMemePage: React.FC = () => {
     [navigation, api, loadTypes, loadOrders, navigateBack, showToast]
   );
 
-  // Рендер текущего представления
   const renderCurrentView = () => {
     switch (navigation.currentView) {
       case "list":
         return (
-          <Tab.Container
+          <Tabs
             activeKey={activeTab}
-            onSelect={k => setActiveTab(k as "types" | "orders")}
-          >
-            <Nav variant="tabs" className="mb-4">
-              <Nav.Item>
-                <Nav.Link eventKey="orders">
-                  Заказы мемов ({memeOrders.length})
-                </Nav.Link>
-              </Nav.Item>
-              <Nav.Item>
-                <Nav.Link eventKey="types">
-                  Типы мемов ({memeTypes.length})
-                </Nav.Link>
-              </Nav.Item>
-            </Nav>
-            <Tab.Content>
-              <Tab.Pane eventKey="orders">
-                <RandomMemeList
-                  memeOrders={memeOrders}
-                  memeTypes={memeTypes}
-                  isLoading={navigation.isLoading}
-                  error={navigation.error}
-                  onRefresh={loadOrders}
-                  onViewDetails={handleOrderViewDetails}
-                  onEdit={handleOrderEdit}
-                  onDelete={handleOrderDelete}
-                  onCreate={handleOrderCreate}
-                  showToast={showToast}
-                />
-              </Tab.Pane>
-              <Tab.Pane eventKey="types">
-                <RandomMemeTypesList
-                  memeTypes={memeTypes}
-                  isLoading={navigation.isLoading}
-                  error={navigation.error}
-                  onRefresh={loadTypes}
-                  onViewDetails={handleTypeViewDetails}
-                  onEdit={handleTypeEdit}
-                  onDelete={handleTypeDelete}
-                  onCreate={handleTypeCreate}
-                />
-              </Tab.Pane>
-            </Tab.Content>
-          </Tab.Container>
+            onChange={key => setActiveTab(key as "types" | "orders")}
+            style={{ marginBottom: 32 }}
+            items={[
+              {
+                key: "orders",
+                label: `Заказы мемов (${memeOrders.length})`,
+                children: (
+                  <RandomMemeList
+                    memeOrders={memeOrders}
+                    memeTypes={memeTypes}
+                    isLoading={navigation.isLoading}
+                    error={navigation.error}
+                    onRefresh={loadOrders}
+                    onViewDetails={handleOrderViewDetails}
+                    onEdit={handleOrderEdit}
+                    onDelete={handleOrderDelete}
+                    onCreate={handleOrderCreate}
+                    showToast={showToast}
+                  />
+                ),
+              },
+              {
+                key: "types",
+                label: `Типы мемов (${memeTypes.length})`,
+                children: (
+                  <RandomMemeTypesList
+                    memeTypes={memeTypes}
+                    isLoading={navigation.isLoading}
+                    error={navigation.error}
+                    onRefresh={loadTypes}
+                    onViewDetails={handleTypeViewDetails}
+                    onEdit={handleTypeEdit}
+                    onDelete={handleTypeDelete}
+                    onCreate={handleTypeCreate}
+                  />
+                ),
+              },
+            ]}
+          />
         );
 
       case "type-details":
@@ -361,7 +345,7 @@ const RandomMemePage: React.FC = () => {
   };
 
   return (
-    <Container className={styles.randomMemePage}>
+    <div className={styles.randomMemePage}>
       {renderCurrentView()}
 
       <DeleteConfirmationModal
@@ -372,7 +356,7 @@ const RandomMemePage: React.FC = () => {
         onConfirm={deleteModal.onConfirm}
         onCancel={() => setDeleteModal(prev => ({ ...prev, isOpen: false }))}
       />
-    </Container>
+    </div>
   );
 };
 

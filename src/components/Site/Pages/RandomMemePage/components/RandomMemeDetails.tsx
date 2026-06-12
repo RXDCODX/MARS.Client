@@ -1,3 +1,4 @@
+import { Alert, Button, Card, Flex, Spin } from "antd";
 import {
   ArrowLeft,
   Download,
@@ -10,15 +11,6 @@ import {
   Trash2,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  Alert,
-  Button,
-  Card,
-  Col,
-  Container,
-  Row,
-  Spinner,
-} from "react-bootstrap";
 
 import { RandomMeme } from "@/shared/api";
 
@@ -28,7 +20,6 @@ import {
   RandomMemeTypeDetailsProps,
 } from "../RandomMemePage.types";
 
-// Компонент для деталей типа мема
 const RandomMemeTypeDetails: React.FC<RandomMemeTypeDetailsProps> = ({
   memeType,
   isLoading,
@@ -37,153 +28,167 @@ const RandomMemeTypeDetails: React.FC<RandomMemeTypeDetailsProps> = ({
   onDelete,
   onRefresh,
 }) => (
-  <Container fluid className="py-4">
-    {/* Навигация */}
-    <Row className="mb-4">
-      <Col>
-        <div className="d-flex justify-content-between align-items-center">
-          <div className="d-flex align-items-center gap-3">
-            <Button
-              variant="outline-secondary"
-              size="sm"
-              onClick={onBack}
-              className="d-flex align-items-center gap-2"
-            >
-              <ArrowLeft size={16} />
-              Назад к списку
-            </Button>
-            <div>
-              <h1 className="d-flex align-items-center gap-3 mb-1">
-                <Folder size={32} />
-                Тип мема
-              </h1>
-              <p className="text-muted mb-0">{memeType.name}</p>
-            </div>
-          </div>
+  <div style={{ padding: "16px 0" }}>
+    <Flex justify="space-between" align="center" style={{ marginBottom: 16 }}>
+      <Flex align="center" gap={12}>
+        <Button
+          size="small"
+          onClick={onBack}
+          style={{ display: "flex", alignItems: "center", gap: 6 }}
+        >
+          <ArrowLeft size={16} />
+          Назад к списку
+        </Button>
+        <div>
+          <h1
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              marginBottom: 2,
+            }}
+          >
+            <Folder size={32} />
+            Тип мема
+          </h1>
+          <p style={{ color: "#8c8c8c", marginBottom: 0 }}>{memeType.name}</p>
+        </div>
+      </Flex>
 
-          <div className="d-flex gap-2">
-            <Button
-              variant="outline-primary"
-              size="sm"
-              onClick={onRefresh}
-              disabled={isLoading}
-              className="d-flex align-items-center gap-2"
-            >
-              <RefreshCw size={16} />
-              Обновить
-            </Button>
+      <Flex gap={8}>
+        <Button
+          onClick={onRefresh}
+          disabled={isLoading}
+          style={{ display: "flex", alignItems: "center", gap: 6 }}
+        >
+          <RefreshCw size={16} />
+          Обновить
+        </Button>
+        <Button
+          onClick={onEdit}
+          style={{ display: "flex", alignItems: "center", gap: 6 }}
+        >
+          <Edit size={16} />
+          Редактировать
+        </Button>
+        <Button
+          danger
+          onClick={onDelete}
+          style={{ display: "flex", alignItems: "center", gap: 6 }}
+        >
+          <Trash2 size={16} />
+          Удалить
+        </Button>
+      </Flex>
+    </Flex>
 
-            <Button
-              variant="outline-warning"
-              size="sm"
-              onClick={onEdit}
-              className="d-flex align-items-center gap-2"
+    <Card title="Основная информация" style={{ marginBottom: 16 }}>
+      <Flex gap={12} wrap="wrap">
+        <div style={{ flex: "0 0 calc(50% - 6px)", minWidth: 200 }}>
+          <div
+            style={{
+              border: "1px solid #f0f0f0",
+              borderRadius: 4,
+              padding: 12,
+            }}
+          >
+            <span
+              style={{
+                color: "#8c8c8c",
+                fontSize: 12,
+                display: "block",
+                marginBottom: 4,
+              }}
             >
-              <Edit size={16} />
-              Редактировать
-            </Button>
-
-            <Button
-              variant="outline-danger"
-              size="sm"
-              onClick={onDelete}
-              className="d-flex align-items-center gap-2"
-            >
-              <Trash2 size={16} />
-              Удалить
-            </Button>
+              ID
+            </span>
+            <div style={{ fontWeight: 600 }}>{memeType.id}</div>
           </div>
         </div>
-      </Col>
-    </Row>
+        <div style={{ flex: "0 0 calc(50% - 6px)", minWidth: 200 }}>
+          <div
+            style={{
+              border: "1px solid #f0f0f0",
+              borderRadius: 4,
+              padding: 12,
+            }}
+          >
+            <span
+              style={{
+                color: "#8c8c8c",
+                fontSize: 12,
+                display: "block",
+                marginBottom: 4,
+              }}
+            >
+              Название
+            </span>
+            <div style={{ fontWeight: 600 }}>{memeType.name}</div>
+          </div>
+        </div>
+        <div style={{ flex: "0 0 100%" }}>
+          <div
+            style={{
+              border: "1px solid #f0f0f0",
+              borderRadius: 4,
+              padding: 12,
+            }}
+          >
+            <span
+              style={{
+                color: "#8c8c8c",
+                fontSize: 12,
+                display: "block",
+                marginBottom: 4,
+              }}
+            >
+              Папка
+            </span>
+            <code
+              style={{
+                padding: "0.25rem 0.5rem",
+                borderRadius: "0.25rem",
+                backgroundColor: "var(--site-bg-secondary)",
+              }}
+            >
+              {memeType.folderPath}
+            </code>
+          </div>
+        </div>
+      </Flex>
+    </Card>
 
-    {/* Основная информация */}
-    <Row className="">
-      <Col>
-        <Card>
-          <Card.Header>
-            <h5 className="mb-0">Основная информация</h5>
-          </Card.Header>
-          <Card.Body>
-            <Row className="g-3">
-              <Col sm={6}>
-                <div className="border rounded p-3">
-                  <small className="text-muted d-block mb-1">ID</small>
-                  <div className="fw-bold">{memeType.id}</div>
-                </div>
-              </Col>
-
-              <Col sm={6}>
-                <div className="border rounded p-3">
-                  <small className="text-muted d-block mb-1">Название</small>
-                  <div className="fw-bold">{memeType.name}</div>
-                </div>
-              </Col>
-
-              <Col sm={12}>
-                <div className="border rounded p-3">
-                  <small className="text-muted d-block mb-1">Папка</small>
-                  <code
-                    className="px-2 py-1 rounded"
-                    style={{
-                      backgroundColor: "var(--site-bg-secondary)",
-                    }}
-                  >
-                    {memeType.folderPath}
-                  </code>
-                </div>
-              </Col>
-            </Row>
-          </Card.Body>
-        </Card>
-      </Col>
-    </Row>
-
-    {/* Действия */}
-    <Row className="mt-4">
-      <Col>
-        <Card>
-          <Card.Header>
-            <h5 className="mb-0">Действия</h5>
-          </Card.Header>
-          <Card.Body>
-            <div className="d-flex gap-2 flex-wrap">
-              <Button
-                variant="primary"
-                onClick={onEdit}
-                className="d-flex align-items-center gap-2"
-              >
-                <Edit size={16} />
-                Редактировать
-              </Button>
-
-              <Button
-                variant="outline-danger"
-                onClick={onDelete}
-                className="d-flex align-items-center gap-2"
-              >
-                <Trash2 size={16} />
-                Удалить тип
-              </Button>
-
-              <Button
-                variant="outline-secondary"
-                onClick={onRefresh}
-                disabled={isLoading}
-                className="d-flex align-items-center gap-2"
-              >
-                <RefreshCw size={16} />
-                Обновить данные
-              </Button>
-            </div>
-          </Card.Body>
-        </Card>
-      </Col>
-    </Row>
-  </Container>
+    <Card title="Действия">
+      <Flex gap={8} wrap="wrap">
+        <Button
+          type="primary"
+          onClick={onEdit}
+          style={{ display: "flex", alignItems: "center", gap: 6 }}
+        >
+          <Edit size={16} />
+          Редактировать
+        </Button>
+        <Button
+          danger
+          onClick={onDelete}
+          style={{ display: "flex", alignItems: "center", gap: 6 }}
+        >
+          <Trash2 size={16} />
+          Удалить тип
+        </Button>
+        <Button
+          onClick={onRefresh}
+          disabled={isLoading}
+          style={{ display: "flex", alignItems: "center", gap: 6 }}
+        >
+          <RefreshCw size={16} />
+          Обновить данные
+        </Button>
+      </Flex>
+    </Card>
+  </div>
 );
 
-// Компонент для деталей заказа мема
 const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
   memeOrder,
   isLoading,
@@ -199,7 +204,6 @@ const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
   const [imageError, setImageError] = useState<string | null>(null);
   const [showImage, setShowImage] = useState(true);
 
-  // Загрузка медиа файла мема
   const loadMemeMedia = useCallback(async () => {
     if (!memeOrder?.id) return;
 
@@ -207,10 +211,8 @@ const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
       setIsImageLoading(true);
       setImageError(null);
 
-      // Получаем файл мема через API
       await api.randomMemeFileDetail(memeOrder.id);
 
-      // Создаем URL для отображения медиа файла
       const mediaUrl = `/api/RandomMeme/file/${memeOrder.id}`;
       setMemeImageUrl(mediaUrl);
     } catch (error) {
@@ -223,7 +225,6 @@ const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
     }
   }, [api, memeOrder?.id]);
 
-  // Определение типа медиа файла по расширению
   const getMediaType = useCallback((filePath: string) => {
     const extension = filePath.split(".").pop()?.toLowerCase();
 
@@ -242,7 +243,6 @@ const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
     return "unknown";
   }, []);
 
-  // Загружаем медиа файл при изменении заказа
   useEffect(() => {
     if (memeOrder?.id) {
       loadMemeMedia();
@@ -252,463 +252,556 @@ const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
     }
   }, [memeOrder?.id, loadMemeMedia]);
 
-  // Отображение загрузки
   if (isLoading) {
     return (
-      <Container className="text-center py-5">
-        <Spinner animation="border" role="status" className="mb-3">
-          <span className="visually-hidden">Загрузка...</span>
-        </Spinner>
-        <h4>Загрузка деталей...</h4>
-        <p className="text-muted">Получаем информацию об элементе</p>
-      </Container>
+      <div style={{ textAlign: "center", padding: "40px 0" }}>
+        <Spin size="large" />
+        <h4 style={{ marginTop: 12 }}>Загрузка деталей...</h4>
+        <p style={{ color: "#8c8c8c" }}>Получаем информацию об элементе</p>
+      </div>
     );
   }
 
-  // Проверка наличия данных
   if (!memeOrder) {
     return (
-      <Container>
-        <Alert variant="warning">
-          <Alert.Heading>Элемент не найден</Alert.Heading>
-          <p>Запрашиваемый элемент не существует или был удален.</p>
-          <Button variant="outline-primary" onClick={onBack}>
-            <ArrowLeft size={16} className="me-2" />
-            Вернуться к списку
-          </Button>
-        </Alert>
-      </Container>
+      <div>
+        <Alert
+          type="warning"
+          showIcon
+          message="Элемент не найден"
+          description={
+            <div>
+              <p>Запрашиваемый элемент не существует или был удален.</p>
+              <Button
+                onClick={onBack}
+                style={{ display: "flex", alignItems: "center", gap: 4 }}
+              >
+                <ArrowLeft size={16} />
+                Вернуться к списку
+              </Button>
+            </div>
+          }
+        />
+      </div>
     );
   }
 
   return (
-    <Container fluid className="py-4">
-      {/* Навигация */}
-      <Row className="mb-4">
-        <Col>
-          <div className="d-flex justify-content-between align-items-center">
-            <div className="d-flex align-items-center gap-3">
-              <Button
-                variant="outline-secondary"
-                size="sm"
-                onClick={onBack}
-                className="d-flex align-items-center gap-2"
-              >
-                <ArrowLeft size={16} />
-                Назад к списку
-              </Button>
-              <div>
-                <h1 className="d-flex align-items-center gap-3 mb-1">
-                  <Image size={32} />
-                  Заказ мема
-                </h1>
-                <p className="text-muted mb-0">Заказ #{memeOrder.order}</p>
+    <div style={{ padding: "16px 0" }}>
+      <Flex justify="space-between" align="center" style={{ marginBottom: 16 }}>
+        <Flex align="center" gap={12}>
+          <Button
+            size="small"
+            onClick={onBack}
+            style={{ display: "flex", alignItems: "center", gap: 6 }}
+          >
+            <ArrowLeft size={16} />
+            Назад к списку
+          </Button>
+          <div>
+            <h1
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                marginBottom: 2,
+              }}
+            >
+              <Image size={32} />
+              Заказ мема
+            </h1>
+            <p style={{ color: "#8c8c8c", marginBottom: 0 }}>
+              Заказ #{memeOrder.order}
+            </p>
+          </div>
+        </Flex>
+
+        <Flex gap={8}>
+          <Button
+            onClick={onRefresh}
+            disabled={isLoading}
+            style={{ display: "flex", alignItems: "center", gap: 6 }}
+          >
+            <RefreshCw size={16} />
+            Обновить
+          </Button>
+          <Button
+            onClick={onEdit}
+            style={{ display: "flex", alignItems: "center", gap: 6 }}
+          >
+            <Edit size={16} />
+            Редактировать
+          </Button>
+          <Button
+            danger
+            onClick={onDelete}
+            style={{ display: "flex", alignItems: "center", gap: 6 }}
+          >
+            <Trash2 size={16} />
+            Удалить
+          </Button>
+        </Flex>
+      </Flex>
+
+      {memeOrder && (
+        <Card
+          className={styles.memeDisplayCard}
+          title={
+            <Flex justify="space-between" align="center">
+              <span>Просмотр медиа файла</span>
+              <Flex gap={8}>
+                <Button
+                  size="small"
+                  onClick={() => setShowImage(!showImage)}
+                  style={{ display: "flex", alignItems: "center", gap: 6 }}
+                >
+                  {showImage ? <EyeOff size={16} /> : <Eye size={16} />}
+                  {showImage ? "Скрыть" : "Показать"}
+                </Button>
+                <Button
+                  size="small"
+                  onClick={loadMemeMedia}
+                  disabled={isImageLoading}
+                  style={{ display: "flex", alignItems: "center", gap: 6 }}
+                >
+                  <RefreshCw
+                    size={16}
+                    className={isImageLoading ? styles.spin : ""}
+                  />
+                  Обновить
+                </Button>
+              </Flex>
+            </Flex>
+          }
+          style={{ marginBottom: 16 }}
+        >
+          {isImageLoading ? (
+            <div style={{ textAlign: "center", padding: "40px 0" }}>
+              <Spin />
+              <p style={{ color: "#8c8c8c", marginTop: 12 }}>
+                Загружаем медиа файл мема...
+              </p>
+            </div>
+          ) : imageError ? (
+            <Alert
+              type="error"
+              showIcon
+              message="Ошибка загрузки медиа файла"
+              description={
+                <div>
+                  <p>{imageError}</p>
+                  <Button size="small" onClick={loadMemeMedia}>
+                    Попробовать снова
+                  </Button>
+                </div>
+              }
+            />
+          ) : memeImageUrl && showImage ? (
+            <div style={{ textAlign: "center" }}>
+              <div style={{ marginBottom: 12 }}>
+                {(() => {
+                  const mediaType = getMediaType(memeOrder.filePath);
+
+                  switch (mediaType) {
+                    case "image":
+                      return (
+                        <img
+                          src={memeImageUrl}
+                          alt={`Мем #${memeOrder.order}`}
+                          style={{
+                            maxWidth: "100%",
+                            borderRadius: 4,
+                          }}
+                          className={styles.memeImage}
+                          onError={() => {
+                            setImageError("Не удалось загрузить изображение");
+                          }}
+                        />
+                      );
+
+                    case "video":
+                      return (
+                        <video
+                          src={memeImageUrl}
+                          controls
+                          style={{
+                            maxWidth: "100%",
+                            borderRadius: 4,
+                          }}
+                          className={styles.memeImage}
+                          onError={() => {
+                            setImageError("Не удалось загрузить видео");
+                          }}
+                        >
+                          Ваш браузер не поддерживает видео элемент.
+                        </video>
+                      );
+
+                    case "audio":
+                      return (
+                        <Flex vertical align="center">
+                          <div style={{ marginBottom: 12 }}>
+                            <Image size={64} style={{ color: "#8c8c8c" }} />
+                          </div>
+                          <audio
+                            src={memeImageUrl}
+                            controls
+                            style={{ width: "100%" }}
+                            onError={() => {
+                              setImageError("Не удалось загрузить аудио");
+                            }}
+                          >
+                            Ваш браузер не поддерживает аудио элемент.
+                          </audio>
+                        </Flex>
+                      );
+
+                    default:
+                      return (
+                        <Flex vertical align="center">
+                          <div style={{ marginBottom: 12 }}>
+                            <Image size={64} style={{ color: "#8c8c8c" }} />
+                          </div>
+                          <p style={{ color: "#8c8c8c" }}>
+                            Неподдерживаемый тип файла:{" "}
+                            {memeOrder.filePath.split(".").pop()}
+                          </p>
+                          <Button
+                            size="small"
+                            onClick={() => window.open(memeImageUrl, "_blank")}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 6,
+                            }}
+                          >
+                            <Eye size={16} />
+                            Открыть файл
+                          </Button>
+                        </Flex>
+                      );
+                  }
+                })()}
+              </div>
+              <div className={styles.memeActions}>
+                <Button
+                  size="small"
+                  onClick={() => window.open(memeImageUrl, "_blank")}
+                  style={{ display: "flex", alignItems: "center", gap: 6 }}
+                >
+                  <Eye size={16} />
+                  Открыть в новой вкладке
+                </Button>
+                <Button
+                  size="small"
+                  onClick={() => {
+                    const link = document.createElement("a");
+                    link.href = memeImageUrl;
+                    const extension =
+                      memeOrder.filePath.split(".").pop() || "file";
+                    link.download = `meme_${memeOrder.order}.${extension}`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }}
+                  style={{ display: "flex", alignItems: "center", gap: 6 }}
+                >
+                  <Download size={16} />
+                  Скачать
+                </Button>
               </div>
             </div>
-
-            <div className="d-flex gap-2">
+          ) : (
+            <div className={styles.memePlaceholder}>
+              <Image size={64} className="placeholder-icon" />
+              <p className="placeholder-text">Медиа файл скрыт</p>
               <Button
-                variant="outline-primary"
-                size="sm"
-                onClick={onRefresh}
-                disabled={isLoading}
-                className="d-flex align-items-center gap-2"
+                size="small"
+                onClick={() => setShowImage(true)}
+                style={{ display: "flex", alignItems: "center", gap: 6 }}
               >
-                <RefreshCw size={16} />
-                Обновить
+                <Eye size={16} />
+                Показать медиа файл
               </Button>
+            </div>
+          )}
+        </Card>
+      )}
 
-              <Button
-                variant="outline-warning"
-                size="sm"
-                onClick={onEdit}
-                className="d-flex align-items-center gap-2"
+      <Card title="Основная информация" style={{ marginBottom: 16 }}>
+        <Flex gap={12} wrap="wrap">
+          <div style={{ flex: "0 0 calc(50% - 6px)", minWidth: 200 }}>
+            <div
+              style={{
+                border: "1px solid #f0f0f0",
+                borderRadius: 4,
+                padding: 12,
+              }}
+            >
+              <span
+                style={{
+                  color: "#8c8c8c",
+                  fontSize: 12,
+                  display: "block",
+                  marginBottom: 4,
+                }}
               >
-                <Edit size={16} />
-                Редактировать
-              </Button>
-
-              <Button
-                variant="outline-danger"
-                size="sm"
-                onClick={onDelete}
-                className="d-flex align-items-center gap-2"
-              >
-                <Trash2 size={16} />
-                Удалить
-              </Button>
+                ID
+              </span>
+              <div style={{ fontWeight: 600 }}>
+                {memeOrder.id.slice(0, 8)}...
+              </div>
             </div>
           </div>
-        </Col>
-      </Row>
+          <div style={{ flex: "0 0 calc(50% - 6px)", minWidth: 200 }}>
+            <div
+              style={{
+                border: "1px solid #f0f0f0",
+                borderRadius: 4,
+                padding: 12,
+              }}
+            >
+              <span
+                style={{
+                  color: "#8c8c8c",
+                  fontSize: 12,
+                  display: "block",
+                  marginBottom: 4,
+                }}
+              >
+                Порядок
+              </span>
+              <div style={{ fontWeight: 600 }}>#{memeOrder.order}</div>
+            </div>
+          </div>
+          <div style={{ flex: "0 0 100%" }}>
+            <div
+              style={{
+                border: "1px solid #f0f0f0",
+                borderRadius: 4,
+                padding: 12,
+              }}
+            >
+              <span
+                style={{
+                  color: "#8c8c8c",
+                  fontSize: 12,
+                  display: "block",
+                  marginBottom: 4,
+                }}
+              >
+                Файл
+              </span>
+              <code
+                style={{
+                  display: "block",
+                  padding: "0.25rem 0.5rem",
+                  borderRadius: "0.25rem",
+                  backgroundColor: "var(--site-bg-secondary)",
+                }}
+              >
+                {memeOrder.filePath}
+              </code>
+            </div>
+          </div>
+        </Flex>
+      </Card>
 
-      {/* Отображение мема */}
-      {memeOrder && (
-        <Row className="mb-4">
-          <Col>
-            <Card className={styles.memeDisplayCard}>
-              <Card.Header>
-                <div className="d-flex justify-content-between align-items-center">
-                  <h5 className="mb-0">Просмотр медиа файла</h5>
-                  <div className="d-flex gap-2">
-                    <Button
-                      variant="outline-secondary"
-                      size="sm"
-                      onClick={() => setShowImage(!showImage)}
-                      className="d-flex align-items-center gap-2"
-                    >
-                      {showImage ? <EyeOff size={16} /> : <Eye size={16} />}
-                      {showImage ? "Скрыть" : "Показать"}
-                    </Button>
-                    <Button
-                      variant="outline-primary"
-                      size="sm"
-                      onClick={loadMemeMedia}
-                      disabled={isImageLoading}
-                      className="d-flex align-items-center gap-2"
-                    >
-                      <RefreshCw
-                        size={16}
-                        className={isImageLoading ? styles.spin : ""}
-                      />
-                      Обновить
-                    </Button>
-                  </div>
-                </div>
-              </Card.Header>
-              <Card.Body>
-                {isImageLoading ? (
-                  <div className="text-center py-5">
-                    <Spinner animation="border" role="status" className="mb-3">
-                      <span className="visually-hidden">
-                        Загрузка изображения...
-                      </span>
-                    </Spinner>
-                    <p className="text-muted">Загружаем медиа файл мема...</p>
-                  </div>
-                ) : imageError ? (
-                  <Alert variant="danger">
-                    <Alert.Heading>Ошибка загрузки медиа файла</Alert.Heading>
-                    <p>{imageError}</p>
-                    <Button
-                      variant="outline-danger"
-                      size="sm"
-                      onClick={loadMemeMedia}
-                    >
-                      Попробовать снова
-                    </Button>
-                  </Alert>
-                ) : memeImageUrl && showImage ? (
-                  <div className="text-center">
-                    <div className="mb-3">
-                      {(() => {
-                        const mediaType = getMediaType(memeOrder.filePath);
-
-                        switch (mediaType) {
-                          case "image":
-                            return (
-                              <img
-                                src={memeImageUrl}
-                                alt={`Мем #${memeOrder.order}`}
-                                className={`img-fluid rounded ${styles.memeImage}`}
-                                onError={() => {
-                                  setImageError(
-                                    "Не удалось загрузить изображение"
-                                  );
-                                }}
-                              />
-                            );
-
-                          case "video":
-                            return (
-                              <video
-                                src={memeImageUrl}
-                                controls
-                                className={`img-fluid rounded ${styles.memeImage}`}
-                                onError={() => {
-                                  setImageError("Не удалось загрузить видео");
-                                }}
-                              >
-                                Ваш браузер не поддерживает видео элемент.
-                              </video>
-                            );
-
-                          case "audio":
-                            return (
-                              <div className="d-flex flex-column align-items-center">
-                                <div className="mb-3">
-                                  <Image size={64} className="text-muted" />
-                                </div>
-                                <audio
-                                  src={memeImageUrl}
-                                  controls
-                                  className="w-100"
-                                  onError={() => {
-                                    setImageError("Не удалось загрузить аудио");
-                                  }}
-                                >
-                                  Ваш браузер не поддерживает аудио элемент.
-                                </audio>
-                              </div>
-                            );
-
-                          default:
-                            return (
-                              <div className="d-flex flex-column align-items-center">
-                                <div className="mb-3">
-                                  <Image size={64} className="text-muted" />
-                                </div>
-                                <p className="text-muted">
-                                  Неподдерживаемый тип файла:{" "}
-                                  {memeOrder.filePath.split(".").pop()}
-                                </p>
-                                <Button
-                                  variant="outline-primary"
-                                  size="sm"
-                                  onClick={() =>
-                                    window.open(memeImageUrl, "_blank")
-                                  }
-                                  className="d-flex align-items-center gap-2"
-                                >
-                                  <Eye size={16} />
-                                  Открыть файл
-                                </Button>
-                              </div>
-                            );
-                        }
-                      })()}
-                    </div>
-                    <div className={styles.memeActions}>
-                      <Button
-                        variant="outline-primary"
-                        size="sm"
-                        onClick={() => window.open(memeImageUrl, "_blank")}
-                        className="d-flex align-items-center gap-2"
-                      >
-                        <Eye size={16} />
-                        Открыть в новой вкладке
-                      </Button>
-                      <Button
-                        variant="outline-success"
-                        size="sm"
-                        onClick={() => {
-                          const link = document.createElement("a");
-                          link.href = memeImageUrl;
-                          const extension =
-                            memeOrder.filePath.split(".").pop() || "file";
-                          link.download = `meme_${memeOrder.order}.${extension}`;
-                          document.body.appendChild(link);
-                          link.click();
-                          document.body.removeChild(link);
-                        }}
-                        className="d-flex align-items-center gap-2"
-                      >
-                        <Download size={16} />
-                        Скачать
-                      </Button>
-                    </div>
-                  </div>
-                ) : (
-                  <div className={styles.memePlaceholder}>
-                    <Image size={64} className="placeholder-icon" />
-                    <p className="placeholder-text">Медиа файл скрыт</p>
-                    <Button
-                      variant="outline-primary"
-                      size="sm"
-                      onClick={() => setShowImage(true)}
-                    >
-                      <Eye size={16} className="me-2" />
-                      Показать медиа файл
-                    </Button>
-                  </div>
-                )}
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      )}
-
-      {/* Основная информация */}
-      <Row className="">
-        <Col>
-          <Card>
-            <Card.Header>
-              <h5 className="mb-0">Основная информация</h5>
-            </Card.Header>
-            <Card.Body>
-              <Row className="g-3">
-                <Col sm={6}>
-                  <div className="border rounded p-3">
-                    <small className="text-muted d-block mb-1">ID</small>
-                    <div className="fw-bold">{memeOrder.id.slice(0, 8)}...</div>
-                  </div>
-                </Col>
-
-                <Col sm={6}>
-                  <div className="border rounded p-3">
-                    <small className="text-muted d-block mb-1">Порядок</small>
-                    <div className="fw-bold">#{memeOrder.order}</div>
-                  </div>
-                </Col>
-                <Col md={12}>
-                  <div className="border rounded p-3">
-                    <small className="text-muted d-block mb-1">Файл</small>
-                    <code
-                      className="px-2 py-1 rounded d-block"
-                      style={{
-                        backgroundColor: "var(--site-bg-secondary)",
-                      }}
-                    >
-                      {memeOrder.filePath}
-                    </code>
-                  </div>
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
-      {/* Дополнительная информация */}
       {memeOrder.type && (
-        <Row className="mb-4">
-          <Col>
-            <Card>
-              <Card.Header>
-                <h5 className="mb-0">Информация о типе</h5>
-              </Card.Header>
-              <Card.Body>
-                <Row className="g-3">
-                  <Col md={6}>
-                    <div className="border rounded p-3">
-                      <small className="text-muted d-block mb-1">
-                        Название типа
-                      </small>
-                      <div className="fw-bold">{memeOrder.type.name}</div>
-                    </div>
-                  </Col>
-                  <Col md={6}>
-                    <div className="border rounded p-3">
-                      <small className="text-muted d-block mb-1">ID типа</small>
-                      <div className="fw-bold">{memeOrder.type.id}</div>
-                    </div>
-                  </Col>
-                  <Col md={12}>
-                    <div className="border rounded p-3">
-                      <small className="text-muted d-block mb-1">
-                        Папка типа
-                      </small>
-                      <code
-                        className="px-2 py-1 rounded"
-                        style={{ backgroundColor: "var(--site-bg-secondary)" }}
-                      >
-                        {memeOrder.type.folderPath}
-                      </code>
-                    </div>
-                  </Col>
-                </Row>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
+        <Card title="Информация о типе" style={{ marginBottom: 16 }}>
+          <Flex gap={12} wrap="wrap">
+            <div style={{ flex: "0 0 calc(50% - 6px)", minWidth: 200 }}>
+              <div
+                style={{
+                  border: "1px solid #f0f0f0",
+                  borderRadius: 4,
+                  padding: 12,
+                }}
+              >
+                <span
+                  style={{
+                    color: "#8c8c8c",
+                    fontSize: 12,
+                    display: "block",
+                    marginBottom: 4,
+                  }}
+                >
+                  Название типа
+                </span>
+                <div style={{ fontWeight: 600 }}>{memeOrder.type.name}</div>
+              </div>
+            </div>
+            <div style={{ flex: "0 0 calc(50% - 6px)", minWidth: 200 }}>
+              <div
+                style={{
+                  border: "1px solid #f0f0f0",
+                  borderRadius: 4,
+                  padding: 12,
+                }}
+              >
+                <span
+                  style={{
+                    color: "#8c8c8c",
+                    fontSize: 12,
+                    display: "block",
+                    marginBottom: 4,
+                  }}
+                >
+                  ID типа
+                </span>
+                <div style={{ fontWeight: 600 }}>{memeOrder.type.id}</div>
+              </div>
+            </div>
+            <div style={{ flex: "0 0 100%" }}>
+              <div
+                style={{
+                  border: "1px solid #f0f0f0",
+                  borderRadius: 4,
+                  padding: 12,
+                }}
+              >
+                <span
+                  style={{
+                    color: "#8c8c8c",
+                    fontSize: 12,
+                    display: "block",
+                    marginBottom: 4,
+                  }}
+                >
+                  Папка типа
+                </span>
+                <code
+                  style={{
+                    padding: "0.25rem 0.5rem",
+                    borderRadius: "0.25rem",
+                    backgroundColor: "var(--site-bg-secondary)",
+                  }}
+                >
+                  {memeOrder.type.folderPath}
+                </code>
+              </div>
+            </div>
+          </Flex>
+        </Card>
       )}
 
-      {/* Свойства файла */}
-      <Row className="mb-4">
-        <Col>
-          <Card>
-            <Card.Header>
-              <h5 className="mb-0">Свойства файла</h5>
-            </Card.Header>
-            <Card.Body>
-              <Row className="g-3">
-                <Col md={6}>
-                  <div className="border rounded p-3">
-                    <small className="text-muted d-block mb-1">
-                      Расширение
-                    </small>
-                    <div className="fw-bold">
-                      {memeOrder.filePath.split(".").pop()?.toUpperCase() ||
-                        "N/A"}
-                    </div>
-                  </div>
-                </Col>
-                <Col md={6}>
-                  <div className="border rounded p-3">
-                    <small className="text-muted d-block mb-1">
-                      Размер файла
-                    </small>
-                    <div className="fw-bold text-muted">Недоступно</div>
-                    <small className="text-muted">
-                      Информация о размере файла недоступна через API
-                    </small>
-                  </div>
-                </Col>
-                <Col md={12}>
-                  <div className="border rounded p-3">
-                    <small className="text-muted d-block mb-1">
-                      Полный путь
-                    </small>
-                    <code
-                      className="px-2 py-1 rounded d-block text-break"
-                      style={{ backgroundColor: "var(--site-bg-secondary)" }}
-                    >
-                      {memeOrder.filePath}
-                    </code>
-                  </div>
-                </Col>
-              </Row>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-
-      {/* Действия */}
-      <Row>
-        <Col>
-          <Card>
-            <Card.Header>
-              <h5 className="mb-0">Действия</h5>
-            </Card.Header>
-            <Card.Body>
-              <div className="d-flex gap-2 flex-wrap">
-                <Button
-                  variant="primary"
-                  onClick={onEdit}
-                  className="d-flex align-items-center gap-2"
-                >
-                  <Edit size={16} />
-                  Редактировать
-                </Button>
-
-                <Button
-                  variant="outline-danger"
-                  onClick={onDelete}
-                  className="d-flex align-items-center gap-2"
-                >
-                  <Trash2 size={16} />
-                  Удалить заказ
-                </Button>
-
-                <Button
-                  variant="outline-secondary"
-                  onClick={onRefresh}
-                  disabled={isLoading}
-                  className="d-flex align-items-center gap-2"
-                >
-                  <RefreshCw size={16} />
-                  Обновить данные
-                </Button>
+      <Card title="Свойства файла" style={{ marginBottom: 16 }}>
+        <Flex gap={12} wrap="wrap">
+          <div style={{ flex: "0 0 calc(50% - 6px)", minWidth: 200 }}>
+            <div
+              style={{
+                border: "1px solid #f0f0f0",
+                borderRadius: 4,
+                padding: 12,
+              }}
+            >
+              <span
+                style={{
+                  color: "#8c8c8c",
+                  fontSize: 12,
+                  display: "block",
+                  marginBottom: 4,
+                }}
+              >
+                Расширение
+              </span>
+              <div style={{ fontWeight: 600 }}>
+                {memeOrder.filePath.split(".").pop()?.toUpperCase() || "N/A"}
               </div>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+            </div>
+          </div>
+          <div style={{ flex: "0 0 calc(50% - 6px)", minWidth: 200 }}>
+            <div
+              style={{
+                border: "1px solid #f0f0f0",
+                borderRadius: 4,
+                padding: 12,
+              }}
+            >
+              <span
+                style={{
+                  color: "#8c8c8c",
+                  fontSize: 12,
+                  display: "block",
+                  marginBottom: 4,
+                }}
+              >
+                Размер файла
+              </span>
+              <div style={{ fontWeight: 600, color: "#8c8c8c" }}>
+                Недоступно
+              </div>
+              <span style={{ color: "#8c8c8c", fontSize: 12 }}>
+                Информация о размере файла недоступна через API
+              </span>
+            </div>
+          </div>
+          <div style={{ flex: "0 0 100%" }}>
+            <div
+              style={{
+                border: "1px solid #f0f0f0",
+                borderRadius: 4,
+                padding: 12,
+              }}
+            >
+              <span
+                style={{
+                  color: "#8c8c8c",
+                  fontSize: 12,
+                  display: "block",
+                  marginBottom: 4,
+                }}
+              >
+                Полный путь
+              </span>
+              <code
+                style={{
+                  display: "block",
+                  wordBreak: "break-all",
+                  padding: "0.25rem 0.5rem",
+                  borderRadius: "0.25rem",
+                  backgroundColor: "var(--site-bg-secondary)",
+                }}
+              >
+                {memeOrder.filePath}
+              </code>
+            </div>
+          </div>
+        </Flex>
+      </Card>
+
+      <Card title="Действия">
+        <Flex gap={8} wrap="wrap">
+          <Button
+            type="primary"
+            onClick={onEdit}
+            style={{ display: "flex", alignItems: "center", gap: 6 }}
+          >
+            <Edit size={16} />
+            Редактировать
+          </Button>
+          <Button
+            danger
+            onClick={onDelete}
+            style={{ display: "flex", alignItems: "center", gap: 6 }}
+          >
+            <Trash2 size={16} />
+            Удалить заказ
+          </Button>
+          <Button
+            onClick={onRefresh}
+            disabled={isLoading}
+            style={{ display: "flex", alignItems: "center", gap: 6 }}
+          >
+            <RefreshCw size={16} />
+            Обновить данные
+          </Button>
+        </Flex>
+      </Card>
+    </div>
   );
 };
 
-// Объединенный компонент для деталей
 const RandomMemeDetails: React.FC<
   RandomMemeTypeDetailsProps | RandomMemeOrderDetailsProps
 > = props => {

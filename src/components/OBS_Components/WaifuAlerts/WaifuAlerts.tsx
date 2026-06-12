@@ -245,7 +245,10 @@ export default function WaifuAlerts() {
         !currentMessage.waifu.isMerged &&
         rouletteIndex === -1 &&
         prizes.length === 0 && (
-          <div className={styles["roulette-name-text"]} data-testid="status-loading-roulette">
+          <div
+            className={styles["roulette-name-text"]}
+            data-testid="status-loading-roulette"
+          >
             <span>Загрузка рулетки...</span>
           </div>
         )}
@@ -373,7 +376,10 @@ export default function WaifuAlerts() {
               })}
             />
             {/** Images With text */}
-            <div className={styles["merge-container"]} data-testid="waifu-merge-container">
+            <div
+              className={styles["merge-container"]}
+              data-testid="waifu-merge-container"
+            >
               <div className={styles["merge-image"]}>
                 <img
                   src={currentMessage.waifuHusband?.twitchUser?.profileImageUrl}

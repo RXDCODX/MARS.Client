@@ -4,13 +4,16 @@ import {
   Badge,
   Button,
   Card,
+  Checkbox,
   Col,
-  Container,
-  Form,
-  InputGroup,
+  Flex,
+  Input,
+  InputNumber,
   Row,
-  Spinner,
-} from "react-bootstrap";
+  Select,
+  Space,
+  Spin,
+} from "antd";
 
 import {
   CreateCustomRewardsRequest,
@@ -141,7 +144,6 @@ const TwitchRewardsPage: React.FC = () => {
 
   const handleRecreate = async (reward: CustomReward) => {
     try {
-      // Простая стратегия "пересоздать через API": удалить по id и создать снова с теми же свойствами
       if (reward.id) {
         const deleteResult = await api.twitchRewardsDelete(reward.id);
         showToast(deleteResult.data);
@@ -201,318 +203,346 @@ const TwitchRewardsPage: React.FC = () => {
   }, [rewards, filter]);
 
   return (
-    <Container className={styles.page}>
-      <div className="d-flex justify-content-between align-items-center mb-3">
+    <div className={styles.page}>
+      <Flex
+        justify="space-between"
+        align="center"
+        style={{ marginBottom: 12 }}
+      >
         <h1>Твич награды</h1>
-        <div className="d-flex align-items-center gap-2">
-          <Form.Check
-            type="switch"
-            id="manageableSwitch"
-            label="Только управляемые"
-            checked={onlyManageable}
-            onChange={e => setOnlyManageable(e.target.checked)}
-          />
+        <Space>
+          <Space>
+            <Checkbox
+              checked={onlyManageable}
+              onChange={e => setOnlyManageable(e.target.checked)}
+            >
+              Только управляемые
+            </Checkbox>
+          </Space>
           <Button
-            variant="outline-secondary"
-            size="sm"
+            type="default"
+            size="small"
             onClick={loadRewards}
             disabled={loading}
           >
             {loading ? (
-              <Spinner as="span" size="sm" animation="border" />
+              <Spin size="small" />
             ) : (
               <i className="bi bi-arrow-clockwise" />
             )}
           </Button>
-        </div>
-      </div>
+        </Space>
+      </Flex>
 
       {!!error && (
-        <Alert variant="danger" className="mb-3">
-          {error}
-        </Alert>
+        <Alert type="error" message={error} style={{ marginBottom: 12 }} />
       )}
 
-      <Card className={`mb-4 ${styles.card}`}>
-        <Card.Header>
-          <h5 className="mb-0">Создать награду</h5>
-        </Card.Header>
-        <Card.Body>
-          <Form onSubmit={handleCreate}>
-            <Row className="g-3">
-              <Col md={8}>
-                <div className={styles.formGrid}>
-                  <Form.Control
-                    placeholder="Заголовок"
-                    value={form.title}
+      <Card className={styles.card} style={{ marginBottom: 16 }}>
+        <h5 style={{ marginBottom: 12 }}>Создать награду</h5>
+        <form onSubmit={handleCreate}>
+          <Row gutter={16}>
+            <Col md={16}>
+              <div className={styles.formGrid}>
+                <Input
+                  placeholder="Заголовок"
+                  value={form.title}
+                  onChange={e =>
+                    setForm(s => ({ ...s, title: e.target.value }))
+                  }
+                />
+                <Input
+                  placeholder="Описание (prompt)"
+                  value={form.prompt}
+                  onChange={e =>
+                    setForm(s => ({ ...s, prompt: e.target.value }))
+                  }
+                />
+                <InputNumber
+                  min={1}
+                  placeholder="Стоимость"
+                  value={form.cost}
+                  onChange={val =>
+                    setForm(s => ({ ...s, cost: val ?? 0 }))
+                  }
+                  style={{ width: "100%" }}
+                />
+                <Space.Compact style={{ width: "100%" }}>
+                  <span
+                    style={{
+                      padding: "4px 11px",
+                      background: "#f5f5f5",
+                      border: "1px solid #d9d9d9",
+                      borderRight: "none",
+                      borderRadius: "6px 0 0 6px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    Цвет
+                  </span>
+                  <Input
+                    placeholder="#9146FF"
+                    value={form.backgroundColor}
                     onChange={e =>
-                      setForm(s => ({ ...s, title: e.target.value }))
+                      setForm(s => ({
+                        ...s,
+                        backgroundColor: e.target.value,
+                      }))
                     }
-                    required
+                    style={{ borderRadius: "0 6px 6px 0" }}
                   />
-                  <Form.Control
-                    placeholder="Описание (prompt)"
-                    value={form.prompt}
-                    onChange={e =>
-                      setForm(s => ({ ...s, prompt: e.target.value }))
-                    }
-                  />
-                  <Form.Control
-                    type="number"
+                </Space.Compact>
+              </div>
+            </Col>
+            <Col md={8}>
+              <Flex vertical gap={8}>
+                <Checkbox
+                  checked={form.isEnabled}
+                  onChange={e =>
+                    setForm(s => ({ ...s, isEnabled: e.target.checked }))
+                  }
+                >
+                  Включена
+                </Checkbox>
+                <Checkbox
+                  checked={form.isUserInputRequired}
+                  onChange={e =>
+                    setForm(s => ({
+                      ...s,
+                      isUserInputRequired: e.target.checked,
+                    }))
+                  }
+                >
+                  Требует ввод пользователя
+                </Checkbox>
+                <Checkbox
+                  checked={form.isMaxPerStreamEnabled}
+                  onChange={e =>
+                    setForm(s => ({
+                      ...s,
+                      isMaxPerStreamEnabled: e.target.checked,
+                    }))
+                  }
+                >
+                  Лимит на стрим
+                </Checkbox>
+                {form.isMaxPerStreamEnabled && (
+                  <InputNumber
                     min={1}
-                    placeholder="Стоимость"
-                    value={form.cost}
-                    onChange={e =>
-                      setForm(s => ({ ...s, cost: Number(e.target.value) }))
-                    }
-                  />
-                  <InputGroup>
-                    <InputGroup.Text>Цвет</InputGroup.Text>
-                    <Form.Control
-                      type="text"
-                      placeholder="#9146FF"
-                      value={form.backgroundColor}
-                      onChange={e =>
-                        setForm(s => ({
-                          ...s,
-                          backgroundColor: e.target.value,
-                        }))
-                      }
-                    />
-                  </InputGroup>
-                </div>
-              </Col>
-              <Col md={4}>
-                <div className="d-flex flex-column gap-2">
-                  <Form.Check
-                    type="switch"
-                    label="Включена"
-                    checked={form.isEnabled}
-                    onChange={e =>
-                      setForm(s => ({ ...s, isEnabled: e.target.checked }))
-                    }
-                  />
-                  <Form.Check
-                    type="switch"
-                    label="Требует ввод пользователя"
-                    checked={form.isUserInputRequired}
-                    onChange={e =>
+                    placeholder="maxPerStream"
+                    value={form.maxPerStream ?? 1}
+                    onChange={val =>
                       setForm(s => ({
                         ...s,
-                        isUserInputRequired: e.target.checked,
+                        maxPerStream: val ?? undefined,
                       }))
                     }
+                    style={{ width: "100%" }}
                   />
-                  <Form.Check
-                    type="switch"
-                    label="Лимит на стрим"
-                    checked={form.isMaxPerStreamEnabled}
-                    onChange={e =>
-                      setForm(s => ({
-                        ...s,
-                        isMaxPerStreamEnabled: e.target.checked,
-                      }))
-                    }
-                  />
-                  {form.isMaxPerStreamEnabled && (
-                    <Form.Control
-                      type="number"
-                      min={1}
-                      placeholder="maxPerStream"
-                      value={form.maxPerStream ?? 1}
-                      onChange={e =>
-                        setForm(s => ({
-                          ...s,
-                          maxPerStream: Number(e.target.value),
-                        }))
-                      }
-                    />
-                  )}
-                  <Form.Check
-                    type="switch"
-                    label="Лимит на пользователя"
-                    checked={form.isMaxPerUserPerStreamEnabled}
-                    onChange={e =>
-                      setForm(s => ({
-                        ...s,
-                        isMaxPerUserPerStreamEnabled: e.target.checked,
-                      }))
-                    }
-                  />
-                  {form.isMaxPerUserPerStreamEnabled && (
-                    <Form.Control
-                      type="number"
-                      min={1}
-                      placeholder="maxPerUserPerStream"
-                      value={form.maxPerUserPerStream ?? 1}
-                      onChange={e =>
-                        setForm(s => ({
-                          ...s,
-                          maxPerUserPerStream: Number(e.target.value),
-                        }))
-                      }
-                    />
-                  )}
-                  <Form.Check
-                    type="switch"
-                    label="Глобальный кулдаун"
-                    checked={form.isGlobalCooldownEnabled}
-                    onChange={e =>
-                      setForm(s => ({
-                        ...s,
-                        isGlobalCooldownEnabled: e.target.checked,
-                      }))
-                    }
-                  />
-                  {form.isGlobalCooldownEnabled && (
-                    <Form.Control
-                      type="number"
-                      min={1}
-                      placeholder="cooldownSeconds"
-                      value={form.globalCooldownSeconds ?? 60}
-                      onChange={e =>
-                        setForm(s => ({
-                          ...s,
-                          globalCooldownSeconds: Number(e.target.value),
-                        }))
-                      }
-                    />
-                  )}
-                  <Form.Check
-                    type="switch"
-                    label="Пропуск очереди"
-                    checked={form.shouldRedemptionsSkipRequestQueue}
-                    onChange={e =>
-                      setForm(s => ({
-                        ...s,
-                        shouldRedemptionsSkipRequestQueue: e.target.checked,
-                      }))
-                    }
-                  />
-                </div>
-              </Col>
-            </Row>
-
-            <div className="d-flex justify-content-end mt-3">
-              <Button type="submit" disabled={creating}>
-                {creating ? (
-                  <>
-                    <Spinner
-                      as="span"
-                      animation="border"
-                      size="sm"
-                      className="me-2"
-                    />
-                    Создание...
-                  </>
-                ) : (
-                  "Создать"
                 )}
-              </Button>
-            </div>
-          </Form>
-        </Card.Body>
+                <Checkbox
+                  checked={form.isMaxPerUserPerStreamEnabled}
+                  onChange={e =>
+                    setForm(s => ({
+                      ...s,
+                      isMaxPerUserPerStreamEnabled: e.target.checked,
+                    }))
+                  }
+                >
+                  Лимит на пользователя
+                </Checkbox>
+                {form.isMaxPerUserPerStreamEnabled && (
+                  <InputNumber
+                    min={1}
+                    placeholder="maxPerUserPerStream"
+                    value={form.maxPerUserPerStream ?? 1}
+                    onChange={val =>
+                      setForm(s => ({
+                        ...s,
+                        maxPerUserPerStream: val ?? undefined,
+                      }))
+                    }
+                    style={{ width: "100%" }}
+                  />
+                )}
+                <Checkbox
+                  checked={form.isGlobalCooldownEnabled}
+                  onChange={e =>
+                    setForm(s => ({
+                      ...s,
+                      isGlobalCooldownEnabled: e.target.checked,
+                    }))
+                  }
+                >
+                  Глобальный кулдаун
+                </Checkbox>
+                {form.isGlobalCooldownEnabled && (
+                  <InputNumber
+                    min={1}
+                    placeholder="cooldownSeconds"
+                    value={form.globalCooldownSeconds ?? 60}
+                    onChange={val =>
+                      setForm(s => ({
+                        ...s,
+                        globalCooldownSeconds: val ?? undefined,
+                      }))
+                    }
+                    style={{ width: "100%" }}
+                  />
+                )}
+                <Checkbox
+                  checked={form.shouldRedemptionsSkipRequestQueue}
+                  onChange={e =>
+                    setForm(s => ({
+                      ...s,
+                      shouldRedemptionsSkipRequestQueue: e.target.checked,
+                    }))
+                  }
+                >
+                  Пропуск очереди
+                </Checkbox>
+              </Flex>
+            </Col>
+          </Row>
+
+          <div
+            style={{ display: "flex", justifyContent: "flex-end", marginTop: 12 }}
+          >
+            <Button type="primary" htmlType="submit" disabled={creating}>
+              {creating ? (
+                <>
+                  <Spin size="small" style={{ marginRight: 8 }} />
+                  Создание...
+                </>
+              ) : (
+                "Создать"
+              )}
+            </Button>
+          </div>
+        </form>
       </Card>
 
       <Card className={styles.card}>
-        <Card.Header>
-          <div className="d-flex justify-content-between align-items-center">
-            <h5 className="mb-0">Список наград</h5>
-            <Form.Control
-              className={styles.searchBar}
-              placeholder="Поиск по названию, описанию, id"
-              value={filter}
-              onChange={e => setFilter(e.target.value)}
-            />
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginBottom: 12,
+          }}
+        >
+          <h5 style={{ marginBottom: 0 }}>Список наград</h5>
+          <Input
+            className={styles.searchBar}
+            placeholder="Поиск по названию, описанию, id"
+            value={filter}
+            onChange={e => setFilter(e.target.value)}
+            style={{ width: 300 }}
+          />
+        </div>
+        {loading ? (
+          <div style={{ textAlign: "center", padding: "20px 0" }}>
+            <Spin />
+            <div style={{ marginTop: 8 }}>Загрузка...</div>
           </div>
-        </Card.Header>
-        <Card.Body>
-          {loading ? (
-            <div className="text-center py-5">
-              <Spinner animation="border" role="status">
-                <span className="visually-hidden">Загрузка...</span>
-              </Spinner>
-            </div>
-          ) : filteredRewards.length === 0 ? (
-            <Alert variant="info">Награды не найдены</Alert>
-          ) : (
-            <Row xs={1} sm={2} md={3} lg={4} className="g-3">
-              {filteredRewards.map(r => (
-                <Col key={r.id || r.title}>
-                  <Card className={styles.card}>
-                    <Card.Body>
-                      <div className="d-flex justify-content-between align-items-start">
-                        <div>
-                          <h6 className="mb-1">{r.title}</h6>
-                          <div className="text-muted small">{r.prompt}</div>
-                        </div>
-                        <Badge bg={r.isEnabled ? "success" : "secondary"}>
-                          {r.isEnabled ? "Включена" : "Выключена"}
+        ) : filteredRewards.length === 0 ? (
+          <Alert type="info" message="Награды не найдены" />
+        ) : (
+          <Row gutter={[16, 16]}>
+            {filteredRewards.map(r => (
+              <Col key={r.id || r.title} xs={24} sm={12} md={8} lg={6}>
+                <Card className={styles.card} size="small">
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                    }}
+                  >
+                    <div>
+                      <h6 style={{ marginBottom: 4 }}>{r.title}</h6>
+                      <div style={{ color: "#8c8c8c", fontSize: 12 }}>
+                        {r.prompt}
+                      </div>
+                    </div>
+                    <Badge color={r.isEnabled ? "green" : "default"}>
+                      {r.isEnabled ? "Включена" : "Выключена"}
+                    </Badge>
+                  </div>
+                  <div
+                    style={{
+                      marginTop: 8,
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <div className={styles.badgeRow}>
+                      <Badge color="blue">{r.cost} pts</Badge>
+                      {r.backgroundColor && (
+                        <Badge color="default">{r.backgroundColor}</Badge>
+                      )}
+                      {r.isUserInputRequired && (
+                        <Badge color="gold" style={{ color: "#000" }}>
+                          Требует ввод
                         </Badge>
-                      </div>
-                      <div className="mt-2 d-flex justify-content-between align-items-center">
-                        <div className={styles.badgeRow}>
-                          <Badge bg="primary">{r.cost} pts</Badge>
-                          {r.backgroundColor && (
-                            <Badge bg="dark">{r.backgroundColor}</Badge>
-                          )}
-                          {r.isUserInputRequired && (
-                            <Badge bg="warning" text="dark">
-                              Требует ввод
-                            </Badge>
-                          )}
-                          {r.maxPerStreamSetting?.isEnabled && (
-                            <Badge bg="info">
-                              max/stream: {r.maxPerStreamSetting.maxPerStream}
-                            </Badge>
-                          )}
-                          {r.maxPerUserPerStreamSetting?.isEnabled && (
-                            <Badge bg="info">
-                              max/user:{" "}
-                              {r.maxPerUserPerStreamSetting.maxPerUserPerStream}
-                            </Badge>
-                          )}
-                          {r.globalCooldownSetting?.isEnabled && (
-                            <Badge bg="secondary">
-                              cd:{" "}
-                              {r.globalCooldownSetting.globalCooldownSeconds}s
-                            </Badge>
-                          )}
-                        </div>
-                      </div>
-                      <div className={`mt-3 ${styles.actionsRow}`}>
-                        <Button
-                          size="sm"
-                          variant="outline-primary"
-                          onClick={() => handleRecreate(r)}
-                        >
-                          Пересоздать
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline-secondary"
-                          onClick={() => handleQuickDisable(r)}
-                          disabled={!r.isEnabled}
-                        >
-                          Выключить
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline-danger"
-                          onClick={() => handleDelete(r.id)}
-                        >
-                          Удалить
-                        </Button>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              ))}
-            </Row>
-          )}
-        </Card.Body>
+                      )}
+                      {r.maxPerStreamSetting?.isEnabled && (
+                        <Badge color="cyan">
+                          max/stream: {r.maxPerStreamSetting.maxPerStream}
+                        </Badge>
+                      )}
+                      {r.maxPerUserPerStreamSetting?.isEnabled && (
+                        <Badge color="cyan">
+                          max/user:{" "}
+                          {r.maxPerUserPerStreamSetting.maxPerUserPerStream}
+                        </Badge>
+                      )}
+                      {r.globalCooldownSetting?.isEnabled && (
+                        <Badge color="default">
+                          cd:{" "}
+                          {r.globalCooldownSetting.globalCooldownSeconds}s
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                  <div
+                    className={styles.actionsRow}
+                    style={{ marginTop: 12 }}
+                  >
+                    <Button
+                      size="small"
+                      type="primary"
+                      ghost
+                      onClick={() => handleRecreate(r)}
+                    >
+                      Пересоздать
+                    </Button>
+                    <Button
+                      size="small"
+                      type="default"
+                      onClick={() => handleQuickDisable(r)}
+                      disabled={!r.isEnabled}
+                    >
+                      Выключить
+                    </Button>
+                    <Button
+                      size="small"
+                      danger
+                      ghost
+                      onClick={() => handleDelete(r.id)}
+                    >
+                      Удалить
+                    </Button>
+                  </div>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+        )}
       </Card>
-    </Container>
+    </div>
   );
 };
 

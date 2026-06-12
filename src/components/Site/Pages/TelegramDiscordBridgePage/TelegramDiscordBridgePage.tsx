@@ -4,12 +4,14 @@ import {
   Badge,
   Button,
   Card,
-  Container,
-  Form,
+  Flex,
+  Input,
   Modal,
-  Spinner,
+  Select,
+  Space,
+  Spin,
   Table,
-} from "react-bootstrap";
+} from "antd";
 
 import type {
   DiscordChannelOptionDto,
@@ -283,19 +285,122 @@ const TelegramDiscordBridgePage: React.FC = () => {
         setError(message);
         showToast({ success: false, message });
       } finally {
-        setProcessingIds(prev => ({ ...prev, [binding.id]: false }));
+        setProcessingIds(prev => ({ ...prev, [binding.id!]: false }));
       }
     },
     [api, loadData, showToast]
   );
 
+  const bindingColumns = [
+    {
+      title: "Канал Telegram",
+      key: "telegram",
+      render: (_: unknown, record: TelegramDiscordBindingDto) => (
+        <>
+          {telegramChannelMap.get(record.telegramChannelId) ??
+            "Неизвестный канал"}{" "}
+          ({record.telegramChannelId})
+        </>
+      ),
+    },
+    {
+      title: "Канал Discord",
+      key: "discord",
+      render: (_: unknown, record: TelegramDiscordBindingDto) => (
+        <>
+          {discordChannelMap.get(String(record.discordChannelId)) ??
+            "Неизвестный канал"}{" "}
+          ({record.discordChannelId})
+        </>
+      ),
+    },
+    {
+      title: "Статус",
+      key: "status",
+      render: (_: unknown, record: TelegramDiscordBindingDto) => (
+        <Badge color={record.isEnabled ? "green" : "default"}>
+          {record.isEnabled ? "Включена" : "Выключена"}
+        </Badge>
+      ),
+    },
+    {
+      title: "Обновлено",
+      dataIndex: "updatedAtUtc",
+      key: "updatedAtUtc",
+      render: (text: string) => new Date(text).toLocaleString(),
+    },
+    {
+      title: "Действия",
+      key: "actions",
+      render: (_: unknown, record: TelegramDiscordBindingDto) => {
+        const isProcessing =
+          !!record.id && !!processingIds[record.id];
+        return (
+          <Space>
+            <Button
+              size="small"
+              type="primary"
+              ghost
+              disabled={isProcessing}
+              onClick={() => handleToggleEnabled(record)}
+            >
+              {record.isEnabled ? "Выключить" : "Включить"}
+            </Button>
+            <Button
+              size="small"
+              danger
+              ghost
+              disabled={isProcessing}
+              onClick={() => handleDelete(record.id)}
+            >
+              Удалить
+            </Button>
+          </Space>
+        );
+      },
+    },
+  ];
+
+  const stateColumns = [
+    {
+      title: "ID Telegram-канала",
+      dataIndex: "telegramChannelId",
+      key: "telegramChannelId",
+    },
+    {
+      title: "ID последнего обработанного сообщения",
+      dataIndex: "lastProcessedMessageId",
+      key: "lastProcessedMessageId",
+    },
+    {
+      title: "Последнее обновление",
+      dataIndex: "lastUpdatedUtc",
+      key: "lastUpdatedUtc",
+      render: (text: string) => new Date(text).toLocaleString(),
+    },
+  ];
+
+  const telegramOptions = telegramChannels.map(channel => ({
+    value: String(channel.id),
+    label: `${channel.title} (${channel.id})`,
+  }));
+
+  const discordOptions = discordChannels.map(channel => ({
+    value: String(channel.id),
+    label: `${channel.guildName} / #${channel.name} (${channel.id})`,
+  }));
+
   return (
-    <Container className={styles.page}>
-      <div className="d-flex justify-content-between align-items-center mb-3">
+    <div className={styles.page}>
+      <Flex
+        justify="space-between"
+        align="center"
+        style={{ marginBottom: 12 }}
+      >
         <h1>Мост Telegram ↔ Discord</h1>
-        <div className="d-flex align-items-center gap-2">
+        <Space>
           <Button
-            variant="primary"
+            type="primary"
             onClick={() => {
               setError("");
               setShowCreateModal(true);
@@ -304,253 +409,200 @@ const TelegramDiscordBridgePage: React.FC = () => {
             Создать мост
           </Button>
           <Button
-            variant="outline-secondary"
-            size="sm"
+            type="default"
+            size="small"
             onClick={loadData}
             disabled={loading}
           >
             {loading ? (
-              <Spinner as="span" size="sm" animation="border" />
+              <Spin size="small" />
             ) : (
               <i className="bi bi-arrow-clockwise" />
             )}
           </Button>
-        </div>
-      </div>
+        </Space>
+      </Flex>
 
       {!!error && (
-        <Alert variant="danger" className="mb-3">
-          {error}
-        </Alert>
+        <Alert type="error" message={error} style={{ marginBottom: 12 }} />
       )}
 
       <Modal
-        show={showCreateModal}
-        onHide={() => setShowCreateModal(false)}
+        open={showCreateModal}
+        onCancel={() => setShowCreateModal(false)}
+        title="Создать привязку"
+        footer={null}
         centered
       >
-        <Modal.Header closeButton>
-          <Modal.Title>Создать привязку</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          {loadingChannelOptions && (
-            <div className="d-flex align-items-center gap-2 mb-3">
-              <Spinner animation="border" size="sm" />
-              <span>Загрузка каналов...</span>
-            </div>
-          )}
+        {loadingChannelOptions && (
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+            <Spin size="small" />
+            <span>Загрузка каналов...</span>
+          </div>
+        )}
 
-          <Form onSubmit={handleCreateBinding}>
-            <div className={styles.grid}>
-              <Form.Select
-                value={form.telegramChannelId}
-                onChange={e =>
+        <form onSubmit={handleCreateBinding}>
+          <div className={styles.grid}>
+            <div style={{ marginBottom: 12 }}>
+              <label style={{ display: "block", marginBottom: 4 }}>
+                Telegram-канал
+              </label>
+              <Select
+                value={form.telegramChannelId || undefined}
+                onChange={val =>
                   setForm(previous => ({
                     ...previous,
-                    telegramChannelId: e.target.value,
+                    telegramChannelId: val,
                   }))
                 }
+                options={telegramOptions}
+                placeholder="Выберите Telegram-канал"
                 disabled={loadingChannelOptions || creating}
-                required
-              >
-                <option value="">Выберите Telegram-канал</option>
-                {telegramChannels.map(channel => (
-                  <option key={channel.id} value={String(channel.id)}>
-                    {channel.title} ({channel.id})
-                  </option>
-                ))}
-              </Form.Select>
+                style={{ width: "100%" }}
+              />
+            </div>
 
-              <Form.Select
-                value={form.discordChannelId}
-                onChange={e =>
+            <div style={{ marginBottom: 12 }}>
+              <label style={{ display: "block", marginBottom: 4 }}>
+                Discord-канал
+              </label>
+              <Select
+                value={form.discordChannelId || undefined}
+                onChange={val =>
                   setForm(previous => ({
                     ...previous,
-                    discordChannelId: e.target.value,
+                    discordChannelId: val,
                   }))
                 }
+                options={discordOptions}
+                placeholder="Выберите Discord-канал"
                 disabled={loadingChannelOptions || creating}
-                required
-              >
-                <option value="">Выберите Discord-канал</option>
-                {discordChannels.map(channel => (
-                  <option key={channel.id} value={String(channel.id)}>
-                    {channel.guildName} / #{channel.name} ({channel.id})
-                  </option>
-                ))}
-              </Form.Select>
+                style={{ width: "100%" }}
+              />
             </div>
+          </div>
 
-            <div className="d-flex justify-content-end mt-3 gap-2">
-              <Button
-                variant="outline-secondary"
-                onClick={() => setShowCreateModal(false)}
-                disabled={creating}
-              >
-                Отмена
-              </Button>
-              <Button type="submit" disabled={creating}>
-                {creating ? (
-                  <>
-                    <Spinner
-                      as="span"
-                      animation="border"
-                      size="sm"
-                      className="me-2"
-                    />
-                    Создание...
-                  </>
-                ) : (
-                  "Создать"
-                )}
-              </Button>
-            </div>
-          </Form>
-        </Modal.Body>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: 12,
+              gap: 8,
+            }}
+          >
+            <Button
+              type="default"
+              onClick={() => setShowCreateModal(false)}
+              disabled={creating}
+            >
+              Отмена
+            </Button>
+            <Button type="primary" htmlType="submit" disabled={creating}>
+              {creating ? (
+                <>
+                  <Spin size="small" style={{ marginRight: 8 }} />
+                  Создание...
+                </>
+              ) : (
+                "Создать"
+              )}
+            </Button>
+          </div>
+        </form>
       </Modal>
 
-      <Card className="mb-4">
-        <Card.Header>
-          <div className="d-flex justify-content-between align-items-center gap-2 flex-wrap">
-            <h5 className="mb-0">Привязки</h5>
-            <Form.Control
-              className={styles.searchBar}
-              placeholder="Поиск: ID, название Telegram, сервер/канал Discord"
-              value={filter}
-              onChange={e => setFilter(e.target.value)}
-            />
-          </div>
-        </Card.Header>
-        <Card.Body className={styles.tableWrap}>
+      <Card style={{ marginBottom: 16 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 8,
+            flexWrap: "wrap",
+            padding: "12px 16px",
+            borderBottom: "1px solid #f0f0f0",
+          }}
+        >
+          <h5 style={{ marginBottom: 0 }}>Привязки</h5>
+          <Input
+            className={styles.searchBar}
+            placeholder="Поиск: ID, название Telegram, сервер/канал Discord"
+            value={filter}
+            onChange={e => setFilter(e.target.value)}
+            style={{ width: 300 }}
+          />
+        </div>
+        <div className={styles.tableWrap} style={{ padding: "0 16px" }}>
           {loading ? (
-            <div className="text-center py-4">
-              <Spinner animation="border" role="status" />
+            <div style={{ textAlign: "center", padding: "16px 0" }}>
+              <Spin />
             </div>
           ) : filteredBindings.length === 0 ? (
-            <Alert variant="info" className="mb-0">
-              Привязки по фильтру не найдены
-            </Alert>
+            <Alert
+              type="info"
+              message="Привязки по фильтру не найдены"
+              style={{ marginBottom: 0, marginTop: 12 }}
+            />
           ) : (
             <Table
-              striped
+              columns={bindingColumns}
+              dataSource={filteredBindings}
+              rowKey="id"
               bordered
-              hover
-              responsive
-              className="mb-0 align-middle"
-            >
-              <thead>
-                <tr>
-                  <th>Канал Telegram</th>
-                  <th>Канал Discord</th>
-                  <th>Статус</th>
-                  <th>Обновлено</th>
-                  <th>Действия</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredBindings.map(binding => {
-                  const isProcessing =
-                    !!binding.id && !!processingIds[binding.id];
-                  return (
-                    <tr key={binding.id}>
-                      <td>
-                        {telegramChannelMap.get(binding.telegramChannelId) ??
-                          "Неизвестный канал"}{" "}
-                        ({binding.telegramChannelId})
-                      </td>
-                      <td>
-                        {discordChannelMap.get(
-                          String(binding.discordChannelId)
-                        ) ?? "Неизвестный канал"}{" "}
-                        ({binding.discordChannelId})
-                      </td>
-                      <td>
-                        <Badge bg={binding.isEnabled ? "success" : "secondary"}>
-                          {binding.isEnabled ? "Включена" : "Выключена"}
-                        </Badge>
-                      </td>
-                      <td>{new Date(binding.updatedAtUtc).toLocaleString()}</td>
-                      <td>
-                        <div className={styles.actions}>
-                          <Button
-                            size="sm"
-                            variant="outline-primary"
-                            disabled={isProcessing}
-                            onClick={() => handleToggleEnabled(binding)}
-                          >
-                            {binding.isEnabled ? "Выключить" : "Включить"}
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline-danger"
-                            disabled={isProcessing}
-                            onClick={() => handleDelete(binding.id)}
-                          >
-                            Удалить
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </Table>
+              pagination={false}
+              style={{ marginBottom: 0 }}
+            />
           )}
-        </Card.Body>
+        </div>
       </Card>
 
       <Card>
-        <Card.Header>
-          <div className="d-flex justify-content-between align-items-center gap-2 flex-wrap">
-            <h5 className="mb-0">Состояние каналов</h5>
-            <Form.Control
-              className={styles.searchBar}
-              placeholder="Поиск по ID Telegram-канала"
-              value={statesFilter}
-              onChange={e => setStatesFilter(e.target.value)}
-            />
-          </div>
-        </Card.Header>
-        <Card.Body className={styles.tableWrap}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 8,
+            flexWrap: "wrap",
+            padding: "12px 16px",
+            borderBottom: "1px solid #f0f0f0",
+          }}
+        >
+          <h5 style={{ marginBottom: 0 }}>Состояние каналов</h5>
+          <Input
+            className={styles.searchBar}
+            placeholder="Поиск по ID Telegram-канала"
+            value={statesFilter}
+            onChange={e => setStatesFilter(e.target.value)}
+            style={{ width: 300 }}
+          />
+        </div>
+        <div className={styles.tableWrap} style={{ padding: "0 16px" }}>
           {loading ? (
-            <div className="text-center py-4">
-              <Spinner animation="border" role="status" />
+            <div style={{ textAlign: "center", padding: "16px 0" }}>
+              <Spin />
             </div>
           ) : filteredStates.length === 0 ? (
-            <Alert variant="info" className="mb-0">
-              Состояния по фильтру не найдены
-            </Alert>
+            <Alert
+              type="info"
+              message="Состояния по фильтру не найдены"
+              style={{ marginBottom: 0, marginTop: 12 }}
+            />
           ) : (
             <Table
-              striped
+              columns={stateColumns}
+              dataSource={filteredStates}
+              rowKey={record =>
+                `${record.telegramChannelId}-${record.lastProcessedMessageId}`
+              }
               bordered
-              hover
-              responsive
-              className="mb-0 align-middle"
-            >
-              <thead>
-                <tr>
-                  <th>ID Telegram-канала</th>
-                  <th>ID последнего обработанного сообщения</th>
-                  <th>Последнее обновление</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredStates.map(state => (
-                  <tr
-                    key={`${state.telegramChannelId}-${state.lastProcessedMessageId}`}
-                  >
-                    <td>{state.telegramChannelId}</td>
-                    <td>{state.lastProcessedMessageId}</td>
-                    <td>{new Date(state.lastUpdatedUtc).toLocaleString()}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
+              pagination={false}
+              style={{ marginBottom: 0 }}
+            />
           )}
-        </Card.Body>
+        </div>
       </Card>
-    </Container>
+    </div>
   );
 };
 

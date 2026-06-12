@@ -1,5 +1,5 @@
+import { Button } from "antd";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Button } from "react-bootstrap";
 import { useSearchParams } from "react-router-dom";
 
 import { OperationResult } from "@/shared/types";
@@ -95,8 +95,6 @@ const TelegramClipboardCopyPage: React.FC = () => {
         return;
       }
 
-      // Браузеры не поддерживают копирование нескольких ClipboardItem одновременно
-      // Копируем изображения по очереди
       let successCount = 0;
       for (const item of items) {
         try {
@@ -190,23 +188,19 @@ const TelegramClipboardCopyPage: React.FC = () => {
 
           <div className={styles.actions}>
             <Button
+              type="primary"
               onClick={copyAllImages}
               disabled={isLoading || items.length === 0}
             >
               Скопировать все
             </Button>
             <Button
-              variant="outline-primary"
               onClick={copyLinks}
               disabled={isLoading || items.length === 0}
             >
               Скопировать ссылки
             </Button>
-            <Button
-              variant="outline-secondary"
-              onClick={loadFiles}
-              disabled={isLoading}
-            >
+            <Button onClick={loadFiles} disabled={isLoading}>
               Обновить
             </Button>
           </div>

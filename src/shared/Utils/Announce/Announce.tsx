@@ -24,7 +24,7 @@ export default function Announce({ title, callback }: Props) {
   // Цвет фиксируется на маунте
   const [backgroundColor] = useState(getRandomColor);
 
-    useInjectStyles(`
+  useInjectStyles(`
     #announce{
       text-shadow:
         rgb(0 0 0) 2px 0 0,
@@ -80,7 +80,6 @@ export default function Announce({ title, callback }: Props) {
     children: React.ReactNode;
     callback: () => void;
   }
-
 
   const FadeOut: React.FC<FadeOutProps> = ({
     duration,

@@ -24,13 +24,25 @@ const ChoosePath: React.FC = () => {
   if (path === "/sr") {
     return (
       <div className={styles["choose-path"]} data-testid="obs-choose-path">
-        <Link to="/sr/player" className={styles.column} data-testid="link-video-screen">
+        <Link
+          to="/sr/player"
+          className={styles.column}
+          data-testid="link-video-screen"
+        >
           <span className={styles.label}>VideoScreen</span>
         </Link>
-        <Link to="/sr/tracklist" className={styles.column} data-testid="link-tracklist">
+        <Link
+          to="/sr/tracklist"
+          className={styles.column}
+          data-testid="link-tracklist"
+        >
           <span className={styles.label}>TRACKLIST</span>
         </Link>
-        <Link to="/sr/currenttrack" className={styles.column} data-testid="link-current-track">
+        <Link
+          to="/sr/currenttrack"
+          className={styles.column}
+          data-testid="link-current-track"
+        >
           <span className={styles.label}>CurrentTrack</span>
         </Link>
       </div>
@@ -55,13 +67,25 @@ const ChoosePath: React.FC = () => {
   // Если путь не соответствует ни одному из известных - показываем страницу выбора
   return (
     <div className={styles["choose-path"]} data-testid="obs-choose-path">
-      <Link to="/sr/player" className={styles.column} data-testid="link-video-screen">
+      <Link
+        to="/sr/player"
+        className={styles.column}
+        data-testid="link-video-screen"
+      >
         <span className={styles.label}>VideoScreen</span>
       </Link>
-      <Link to="/sr/tracklist" className={styles.column} data-testid="link-tracklist">
+      <Link
+        to="/sr/tracklist"
+        className={styles.column}
+        data-testid="link-tracklist"
+      >
         <span className={styles.label}>TRACK LIST</span>
       </Link>
-      <Link to="/sr/currenttrack" className={styles.column} data-testid="link-current-track">
+      <Link
+        to="/sr/currenttrack"
+        className={styles.column}
+        data-testid="link-current-track"
+      >
         <span className={styles.label}>CurrentTrack</span>
       </Link>
     </div>

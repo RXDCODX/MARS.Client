@@ -1,6 +1,6 @@
+import { Button, Flex, Input } from "antd";
 import { Eye, EyeOff as EyeSlash } from "lucide-react";
 import { useState } from "react";
-import { Button, Form } from "react-bootstrap";
 
 type ColorPickerWithTransparencyProps = {
   value: string;
@@ -13,7 +13,6 @@ const ColorPickerWithTransparency: React.FC<
 > = ({ value, onChange, placeholder = "hex или rgba" }) => {
   const [isTransparent, setIsTransparent] = useState(false);
 
-  // Функция для проверки, является ли цвет прозрачным
   const isTransparentColor = (color: string) => {
     if (color.startsWith("rgba")) {
       const match = color.match(/rgba\([^)]+\)/);
@@ -28,13 +27,11 @@ const ColorPickerWithTransparency: React.FC<
     return false;
   };
 
-  // Функция для установки прозрачного цвета
   const setTransparent = () => {
     onChange("rgba(255, 255, 255, 0)");
     setIsTransparent(true);
   };
 
-  // Функция для установки непрозрачного цвета
   const setOpaque = () => {
     if (isTransparentColor(value)) {
       onChange("#ffffff");
@@ -42,57 +39,58 @@ const ColorPickerWithTransparency: React.FC<
     setIsTransparent(false);
   };
 
-  // Обработчик изменения цвета
   const handleColorChange = (newValue: string) => {
     onChange(newValue);
     setIsTransparent(isTransparentColor(newValue));
   };
 
-  // Обработчик изменения текстового поля
   const handleTextChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     handleColorChange(newValue);
   };
 
-  // Обработчик изменения color picker
   const handleColorPickerChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     handleColorChange(newValue);
   };
 
   return (
-    <div className="d-flex gap-2">
-      <Form.Control
+    <Flex gap={8}>
+      <input
         type="color"
         value={isTransparent ? "#ffffff" : value}
         onChange={handleColorPickerChange}
-        className="p-1"
-        style={{ width: 50, height: 38 }}
+        style={{
+          width: 50,
+          height: 38,
+          padding: 1,
+          borderRadius: 8,
+          border: "1px solid var(--site-border-primary)",
+        }}
       />
-      <Form.Control
-        type="text"
+      <Input
         value={value}
         onChange={handleTextChange}
         placeholder={placeholder}
-        className="text-white border-primary border-2 fw-bold rounded-3"
-        style={{ fontSize: 12 }}
+        style={{ fontSize: 12, fontWeight: 700, borderRadius: 12 }}
       />
       <Button
-        variant={isTransparent ? "success" : "outline-secondary"}
-        size="sm"
+        type={isTransparent ? "primary" : "default"}
+        size="small"
         onClick={isTransparent ? setOpaque : setTransparent}
-        className="d-flex align-items-center justify-content-center"
         style={{
           width: 38,
           height: 38,
           minWidth: 38,
-          fontSize: 12,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
         title={isTransparent ? "Сделать непрозрачным" : "Сделать прозрачным"}
       >
         {isTransparent ? <EyeSlash size={14} /> : <Eye size={14} />}
       </Button>
-    </div>
+    </Flex>
   );
 };
 

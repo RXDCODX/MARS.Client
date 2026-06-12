@@ -1,6 +1,6 @@
+import { Button, Card, Flex, Slider, Spin, Typography } from "antd";
 import { Clock, Eye, EyeOff as EyeSlash } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Button, Card, Form } from "react-bootstrap";
 
 import { useSiteColors } from "../../../../../shared/Utils/useSiteColors";
 import {
@@ -16,12 +16,11 @@ const VisibilityCard: React.FC = () => {
   const { setVisibility, setAnimationDuration } = useVisibilityActions();
 
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [isShowing, setIsShowing] = useState(false); // Новое состояние для отслеживания действия показа
+  const [isShowing, setIsShowing] = useState(false);
   const [pageOpenTime] = useState<number>(Date.now());
   const [lastUpdateTime, setLastUpdateTime] = useState<number>(Date.now());
-  const [currentTime, setCurrentTime] = useState<number>(Date.now()); // New state for current time
+  const [currentTime, setCurrentTime] = useState<number>(Date.now());
 
-  // Обновляем текущее время каждую секунду для корректного расчета времени открытия страницы
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(Date.now());
@@ -30,7 +29,6 @@ const VisibilityCard: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // Обновляем время последнего обновления при изменении видимости
   useEffect(() => {
     setLastUpdateTime(Date.now());
   }, [isVisible]);
@@ -38,33 +36,27 @@ const VisibilityCard: React.FC = () => {
   const handleVisibilityToggle = () => {
     const newVisibility = !isVisible;
 
-    // Блокируем кнопку на время любой анимации
     if (isTransitioning) return;
 
     if (newVisibility) {
-      // Показываем панель - блокируем кнопку на время анимации
       setIsTransitioning(true);
-      setIsShowing(true); // Устанавливаем флаг показа
+      setIsShowing(true);
       setVisibility(newVisibility);
       setTimeout(() => {
         setIsTransitioning(false);
-        setIsShowing(false); // Сбрасываем флаг показа
+        setIsShowing(false);
       }, animationDuration);
     } else {
-      // Скрываем панель - также блокируем кнопку на короткое время для предотвращения множественных кликов
       setIsTransitioning(true);
-      setIsShowing(false); // Устанавливаем флаг скрытия
+      setIsShowing(false);
       setVisibility(newVisibility);
       setTimeout(() => {
         setIsTransitioning(false);
-      }, 100); // Короткая блокировка для скрытия
+      }, 100);
     }
   };
 
-  const handleAnimationDurationChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    const value = parseInt(e.target.value);
+  const handleAnimationDurationChange = (value: number) => {
     if (!isNaN(value) && value >= 100 && value <= 99999) {
       setAnimationDuration(value);
     }
@@ -106,173 +98,135 @@ const VisibilityCard: React.FC = () => {
 
   return (
     <Card
-      className="shadow-lg p-3 mb-4"
       style={{
         backgroundColor: colors.background.card,
         borderRadius: 18,
         border: `2px solid ${colors.border.accent}`,
-        height: "100%", // Для выравнивания с MetaPanel
+        height: "100%",
+        boxShadow: "var(--site-shadow-heavy)",
       }}
     >
-      <Card.Body className="d-flex flex-column h-100">
-        <div className="d-flex flex-column align-items-center mb-3 gap-2 text-center">
-          {isVisible ? (
-            <Eye color={colors.text.accent} size={20} />
+      <Flex
+        vertical
+        align="center"
+        style={{ marginBottom: 12, gap: 8, textAlign: "center" }}
+      >
+        {isVisible ? (
+          <Eye color={colors.text.accent} size={20} />
+        ) : (
+          <EyeSlash color={colors.text.accent} size={20} />
+        )}
+        <Typography.Text
+          strong
+          style={{
+            color: colors.text.accent,
+            letterSpacing: 1,
+            fontSize: 14,
+            textTransform: "uppercase",
+          }}
+        >
+          Visibility Panel
+        </Typography.Text>
+      </Flex>
+
+      <Flex vertical gap={12} style={{ flex: 1 }}>
+        <Button
+          type={isVisible ? "primary" : "primary"}
+          danger={!isVisible}
+          size="large"
+          block
+          onClick={handleVisibilityToggle}
+          disabled={isTransitioning}
+          style={{
+            backgroundColor: isVisible
+              ? colors.background.success
+              : colors.background.danger,
+            borderColor: isVisible
+              ? colors.border.success
+              : colors.border.danger,
+            color: colors.text.light,
+            fontSize: 16,
+            letterSpacing: 1,
+            fontWeight: 700,
+          }}
+        >
+          {isTransitioning ? (
+            <Flex align="center" gap={8}>
+              <Spin size="small" />
+              {isShowing ? "Показываем..." : "Скрываем..."}
+            </Flex>
+          ) : isVisible ? (
+            <Flex align="center" gap={8}>
+              <Eye />
+              СКРЫТЬ
+            </Flex>
           ) : (
-            <EyeSlash color={colors.text.accent} size={20} />
+            <Flex align="center" gap={8}>
+              <EyeSlash />
+              ПОКАЗАТЬ
+            </Flex>
           )}
-          <span
-            className="fw-bold text-uppercase"
-            style={{
-              color: colors.text.accent,
-              letterSpacing: 1,
-              fontSize: 14,
-            }}
-          >
-            Visibility Panel
-          </span>
-        </div>
+        </Button>
 
-        <div className="d-flex flex-column gap-3 flex-grow-1">
-          {/* Кнопка переключения видимости */}
-          <Button
-            variant={isVisible ? "success" : "danger"}
-            size="lg"
-            className="fw-bold py-3"
-            onClick={handleVisibilityToggle}
-            disabled={isTransitioning}
-            style={{
-              backgroundColor: isVisible
-                ? colors.background.success
-                : colors.background.danger,
-              borderColor: isVisible
-                ? colors.border.success
-                : colors.border.danger,
-              color: colors.text.light,
-              fontSize: 16,
-              letterSpacing: 1,
-            }}
-          >
-            {isTransitioning ? (
-              <div className="d-flex align-items-center gap-2">
-                <div
-                  className="spinner-border spinner-border-sm"
-                  role="status"
-                  aria-hidden="true"
-                ></div>
-                {isShowing ? "Показываем..." : "Скрываем..."}
-              </div>
-            ) : isVisible ? (
-              <div className="d-flex align-items-center gap-2">
-                <Eye />
-                СКРЫТЬ
-              </div>
-            ) : (
-              <div className="d-flex align-items-center gap-2">
-                <EyeSlash />
-                ПОКАЗАТЬ
-              </div>
-            )}
-          </Button>
+        <Flex vertical gap={8}>
+          <Flex align="center" gap={8}>
+            <Clock color={colors.text.secondary} size={16} />
+            <Typography.Text
+              strong
+              style={{ fontSize: 12, color: colors.text.secondary }}
+            >
+              Время анимации: {animationDuration}мс
+            </Typography.Text>
+          </Flex>
+          <Flex align="center" gap={8}>
+            <Button size="small" onClick={handleDurationDecrease}>
+              -
+            </Button>
+            <Slider
+              min={100}
+              max={10000}
+              step={100}
+              value={animationDuration}
+              onChange={handleAnimationDurationChange}
+              style={{ flex: 1 }}
+            />
+            <Button size="small" onClick={handleDurationIncrease}>
+              +
+            </Button>
+          </Flex>
+        </Flex>
 
-          {/* Настройка времени анимации */}
-          <div className="d-flex flex-column gap-2">
-            <div className="d-flex align-items-center gap-2">
-              <Clock color={colors.text.secondary} size={16} />
-              <span
-                className="fw-bold"
-                style={{
-                  fontSize: 12,
-                  color: colors.text.secondary,
-                }}
-              >
-                Время анимации: {animationDuration}мс
-              </span>
-            </div>
-            <div className="d-flex align-items-center gap-2">
-              <Button
-                variant="outline-secondary"
-                size="sm"
-                onClick={handleDurationDecrease}
-                style={{
-                  backgroundColor: colors.background.card,
-                  borderColor: colors.border.secondary,
-                  color: colors.text.secondary,
-                }}
-              >
-                -
-              </Button>
-              <Form.Range
-                min="100"
-                max="10000"
-                step="100"
-                value={animationDuration}
-                onChange={handleAnimationDurationChange}
-                className="flex-grow-1"
-                style={{
-                  accentColor: colors.text.accent,
-                }}
-              />
-              <Button
-                variant="outline-secondary"
-                size="sm"
-                onClick={handleDurationIncrease}
-                style={{
-                  backgroundColor: colors.background.card,
-                  borderColor: colors.border.secondary,
-                  color: colors.text.secondary,
-                }}
-              >
-                +
-              </Button>
-            </div>
-          </div>
-
-          {/* Информация о времени */}
-          <div className="d-flex flex-column gap-1 mt-auto">
-            <div className="d-flex align-items-center justify-content-between">
-              <span
-                className="fw-bold"
-                style={{
-                  fontSize: 11,
-                  color: colors.text.secondary,
-                }}
-              >
-                Страница открыта:
-              </span>
-              <span
-                className="fw-bold"
-                style={{
-                  fontSize: 11,
-                  color: colors.text.accent,
-                }}
-              >
-                {formatPageOpenTime()}
-              </span>
-            </div>
-            <div className="d-flex align-items-center justify-content-between">
-              <span
-                className="fw-bold"
-                style={{
-                  fontSize: 11,
-                  color: colors.text.secondary,
-                }}
-              >
-                Последнее обновление:
-              </span>
-              <span
-                className="fw-bold"
-                style={{
-                  fontSize: 11,
-                  color: colors.text.accent,
-                }}
-              >
-                {formatLastUpdateTime()}
-              </span>
-            </div>
-          </div>
-        </div>
-      </Card.Body>
+        <Flex vertical gap={4} style={{ marginTop: "auto" }}>
+          <Flex justify="space-between" align="center">
+            <Typography.Text
+              strong
+              style={{ fontSize: 11, color: colors.text.secondary }}
+            >
+              Страница открыта:
+            </Typography.Text>
+            <Typography.Text
+              strong
+              style={{ fontSize: 11, color: colors.text.accent }}
+            >
+              {formatPageOpenTime()}
+            </Typography.Text>
+          </Flex>
+          <Flex justify="space-between" align="center">
+            <Typography.Text
+              strong
+              style={{ fontSize: 11, color: colors.text.secondary }}
+            >
+              Последнее обновление:
+            </Typography.Text>
+            <Typography.Text
+              strong
+              style={{ fontSize: 11, color: colors.text.accent }}
+            >
+              {formatLastUpdateTime()}
+            </Typography.Text>
+          </Flex>
+        </Flex>
+      </Flex>
     </Card>
   );
 };

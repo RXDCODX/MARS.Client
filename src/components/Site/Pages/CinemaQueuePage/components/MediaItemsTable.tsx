@@ -1,11 +1,10 @@
+import { Button, Card, Flex, Spin, Table, Tag } from "antd";
+import type { ColumnsType } from "antd/es/table";
 import { Edit as Pencil, PlayCircle, Trash2 as Trash } from "lucide-react";
-import { Badge, Button, Card, Table } from "react-bootstrap";
 
 import { CinemaMediaItemDto } from "@/shared/api";
 
 import styles from "../CinemaQueuePage.module.scss";
-
-const BootstrapButton = Button as any;
 
 interface MediaItemsTableProps {
   mediaItems: CinemaMediaItemDto[];
@@ -15,6 +14,14 @@ interface MediaItemsTableProps {
   onDelete: (id: string) => void;
 }
 
+const statusColorMap: Record<string, string> = {
+  Pending: "blue",
+  InProgress: "orange",
+  Completed: "green",
+  Cancelled: "red",
+  Postponed: "cyan",
+};
+
 const MediaItemsTable: React.FC<MediaItemsTableProps> = ({
   mediaItems,
   loading,
@@ -22,138 +29,123 @@ const MediaItemsTable: React.FC<MediaItemsTableProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Pending":
-        return "primary";
-      case "InProgress":
-        return "warning";
-      case "Completed":
-        return "success";
-      case "Cancelled":
-        return "danger";
-      case "Postponed":
-        return "info";
-      default:
-        return "secondary";
-    }
+  const getPriorityTag = (priority: number) => {
+    if (priority >= 5) return "red";
+    if (priority >= 3) return "orange";
+    return "green";
   };
 
-  const getPriorityColor = (priority: number) => {
-    if (priority >= 5) return "danger";
-    if (priority >= 3) return "warning";
-    return "success";
-  };
+  const columns: ColumnsType<CinemaMediaItemDto> = [
+    {
+      title: "Next",
+      dataIndex: "isNext",
+      key: "isNext",
+      width: 60,
+      render: (isNext: boolean) =>
+        isNext ? <Badge status="success" text="NEXT" /> : null,
+    },
+    {
+      title: "Title",
+      key: "title",
+      render: (_: any, record: CinemaMediaItemDto) => (
+        <div className={styles.titleCell}>
+          <div className={styles.titleText}>{record.title || "No title"}</div>
+          {record.description && (
+            <div className={styles.descriptionText}>{record.description}</div>
+          )}
+        </div>
+      ),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      width: 120,
+      render: (status: string) => (
+        <Tag color={statusColorMap[status] || "default"}>{status}</Tag>
+      ),
+    },
+    {
+      title: "Priority",
+      dataIndex: "priority",
+      key: "priority",
+      width: 80,
+      render: (priority: number) => (
+        <Tag color={getPriorityTag(priority)}>{priority}</Tag>
+      ),
+    },
+    {
+      title: "Added By",
+      key: "addedBy",
+      width: 120,
+      render: (_: any, record: CinemaMediaItemDto) => (
+        <div>
+          <div>{record.addedBy}</div>
+          {record.twitchUsername && (
+            <div className={styles.twitchUsername}>
+              @{record.twitchUsername}
+            </div>
+          )}
+        </div>
+      ),
+    },
+    {
+      title: "Scheduled For",
+      dataIndex: "scheduledFor",
+      key: "scheduledFor",
+      width: 200,
+      render: (val: string) =>
+        val ? new Date(val).toLocaleString() : "Not scheduled",
+    },
+    {
+      title: "Created",
+      dataIndex: "createdAt",
+      key: "createdAt",
+      width: 120,
+      render: (val: string) => new Date(val).toLocaleDateString(),
+    },
+    {
+      title: "Actions",
+      key: "actions",
+      width: 400,
+      render: (_: any, record: CinemaMediaItemDto) => (
+        <Flex gap={4}>
+          <Button
+            type="primary"
+            size="small"
+            onClick={() => onMarkAsNext(record.id)}
+            disabled={record.isNext}
+          >
+            <PlayCircle style={{ marginRight: 4 }} />
+            Mark Next
+          </Button>
+          <Button size="small" onClick={() => onEdit(record)}>
+            <Pencil style={{ marginRight: 4 }} />
+            Edit
+          </Button>
+          <Button danger size="small" onClick={() => onDelete(record.id)}>
+            <Trash style={{ marginRight: 4 }} />
+            Delete
+          </Button>
+        </Flex>
+      ),
+    },
+  ];
 
   return (
-    <Card className={styles.tableCard}>
-      <Card.Header>
-        <h5 className="mb-0">Queue Items</h5>
-      </Card.Header>
-      <Card.Body className="p-0">
-        <Table responsive striped hover>
-          <thead>
-            <tr>
-              <th style={{ width: "60px" }}>Next</th>
-              <th>Title</th>
-              <th style={{ width: "120px" }}>Status</th>
-              <th style={{ width: "80px" }}>Priority</th>
-              <th style={{ width: "120px" }}>Added By</th>
-              <th style={{ width: "200px" }}>Scheduled For</th>
-              <th style={{ width: "120px" }}>Created</th>
-              <th style={{ width: "400px" }}>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {mediaItems.map(item => (
-              <tr key={item.id} className={item.isNext ? styles.nextRow : ""}>
-                <td>
-                  {item.isNext && (
-                    <Badge bg="success">
-                      <PlayCircle className="me-1" />
-                      NEXT
-                    </Badge>
-                  )}
-                </td>
-                <td>
-                  <div className={styles.titleCell}>
-                    <div>
-                      <div className={styles.titleText}>
-                        {item.title || "No title"}
-                      </div>
-                      {item.description && (
-                        <div className={styles.descriptionText}>
-                          {item.description}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </td>
-                <td>
-                  <Badge bg={getStatusColor(item.status)}>{item.status}</Badge>
-                </td>
-                <td>
-                  <Badge bg={getPriorityColor(item.priority)}>
-                    {item.priority}
-                  </Badge>
-                </td>
-                <td>
-                  <div>
-                    <div>{item.addedBy}</div>
-                    {item.twitchUsername && (
-                      <div className={styles.twitchUsername}>
-                        @{item.twitchUsername}
-                      </div>
-                    )}
-                  </div>
-                </td>
-                <td>
-                  {item.scheduledFor
-                    ? new Date(item.scheduledFor).toLocaleString()
-                    : "Not scheduled"}
-                </td>
-                <td>{new Date(item.createdAt).toLocaleDateString()}</td>
-                <td>
-                  <div className="d-flex gap-1">
-                    <BootstrapButton
-                      variant="primary"
-                      size="sm"
-                      onClick={() => onMarkAsNext(item.id)}
-                      disabled={item.isNext}
-                    >
-                      <PlayCircle className="me-1" />
-                      Mark Next
-                    </BootstrapButton>
-                    <BootstrapButton
-                      variant="outline-secondary"
-                      size="sm"
-                      onClick={() => onEdit(item)}
-                    >
-                      <Pencil className="me-1" />
-                      Edit
-                    </BootstrapButton>
-                    <BootstrapButton
-                      variant="outline-danger"
-                      size="sm"
-                      onClick={() => onDelete(item.id)}
-                    >
-                      <Trash className="me-1" />
-                      Delete
-                    </BootstrapButton>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-        {loading && (
-          <div className="text-center p-4">
-            <div className="spinner-border" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          </div>
-        )}
-      </Card.Body>
+    <Card className={styles.tableCard} title="Queue Items">
+      <Spin spinning={loading}>
+        <Table
+          columns={columns}
+          dataSource={mediaItems}
+          rowKey="id"
+          rowClassName={(record: CinemaMediaItemDto) =>
+            record.isNext ? styles.nextRow : ""
+          }
+          pagination={false}
+          scroll={{ x: 1200 }}
+        />
+      </Spin>
     </Card>
   );
 };

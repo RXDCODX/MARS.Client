@@ -1,4 +1,4 @@
-import { Alert } from "react-bootstrap";
+import { Alert } from "antd";
 
 import { useEnvironmentVariablesStore } from "../store/useEnvironmentVariablesStore";
 
@@ -10,9 +10,12 @@ const EnvironmentVariablesErrorAlert: React.FC = () => {
   }
 
   return (
-    <Alert variant="danger" className="mb-3">
-      {error}
-    </Alert>
+    <Alert
+      message={error}
+      type="error"
+      showIcon
+      style={{ marginBottom: "0.75rem" }}
+    />
   );
 };
 

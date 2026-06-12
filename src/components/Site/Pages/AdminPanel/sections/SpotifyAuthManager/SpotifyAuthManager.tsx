@@ -1,5 +1,5 @@
+import { Alert, Button, Card, Input, Spin } from "antd";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { Alert, Button, Card, Form, Spinner } from "react-bootstrap";
 
 import { SpotifyAuth } from "@/shared/api";
 import {
@@ -12,7 +12,6 @@ import { useToastModal } from "@/shared/Utils/ToastModal";
 import styles from "./SpotifyAuthManager.module.scss";
 
 const SpotifyAuthManager: React.FC = () => {
-  const BootstrapButton = Button as any;
   const [clientId, setClientId] = useState("");
   const [clientSecret, setClientSecret] = useState("");
   const [status, setStatus] = useState<SpotifyAuthStatusResult | null>(null);
@@ -130,22 +129,24 @@ const SpotifyAuthManager: React.FC = () => {
   if (isCheckingStatus) {
     return (
       <Card className={styles.spotifyManager}>
-        <Card.Body className="text-center">
-          <Spinner animation="border" role="status" className="me-2" />
-          <span>Проверяю статус Spotify...</span>
-        </Card.Body>
+        <div style={{ textAlign: "center" }}>
+          <Spin />
+          <span style={{ marginLeft: 8 }}>Проверяю статус Spotify...</span>
+        </div>
       </Card>
     );
   }
 
   return (
     <Card className={styles.spotifyManager}>
-      <Card.Header className={styles.header}>
+      <div className={styles.header}>
         <h3>🎵 Spotify для SoundRequest</h3>
-      </Card.Header>
-      <Card.Body>
-        {status?.isLinked && (
-          <Alert variant="success" className={styles.statusAlert}>
+      </div>
+      {status?.isLinked && (
+        <Alert
+          type="success"
+          className={styles.statusAlert}
+          message={
             <div className={styles.statusContent}>
               <div className={styles.profileBlock}>
                 {status.avatarUrl && (
@@ -178,99 +179,121 @@ const SpotifyAuthManager: React.FC = () => {
                   )}
                 </div>
               </div>
-              <BootstrapButton
-                variant="danger"
+              <Button
+                danger
                 onClick={handleDisconnect}
                 disabled={isLoading}
                 className={styles.disconnectBtn}
               >
                 Отключить
-              </BootstrapButton>
+              </Button>
             </div>
-          </Alert>
-        )}
+          }
+        />
+      )}
 
-        {!status?.isLinked && (
-          <div className={styles.formContainer}>
-            <Form.Group className="mb-3">
-              <Form.Label>Spotify Client ID</Form.Label>
-              <Form.Control
-                type="text"
-                placeholder="Введите Client ID"
-                value={clientId}
-                onChange={e => setClientId(e.target.value)}
-                disabled={isLoading || status?.hasClientCredentials}
-              />
-              <Form.Text className="text-muted">
-                Получите на{" "}
-                <a
-                  href="https://developer.spotify.com/dashboard"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Spotify Developer Dashboard
-                </a>
-              </Form.Text>
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Label>Spotify Client Secret</Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="Введите Client Secret"
-                value={clientSecret}
-                onChange={e => setClientSecret(e.target.value)}
-                disabled={isLoading || status?.hasClientCredentials}
-              />
-              <Form.Text className="text-muted">
-                Никогда не делитесь этим ключом
-              </Form.Text>
-            </Form.Group>
-
-            <div className={styles.buttonGroup}>
-              <BootstrapButton
-                variant="success"
-                onClick={handleStartAuth}
-                disabled={isLoading || !clientId || !clientSecret}
-                className={styles.connectBtn}
+      {!status?.isLinked && (
+        <div className={styles.formContainer}>
+          <div style={{ marginBottom: 12 }}>
+            <label style={{ display: "block", marginBottom: 4 }}>
+              Spotify Client ID
+            </label>
+            <Input
+              type="text"
+              placeholder="Введите Client ID"
+              value={clientId}
+              onChange={e => setClientId(e.target.value)}
+              disabled={isLoading || status?.hasClientCredentials}
+            />
+            <span
+              style={{
+                display: "block",
+                marginTop: 4,
+                color: "#8c8c8c",
+                fontSize: 12,
+              }}
+            >
+              Получите на{" "}
+              <a
+                href="https://developer.spotify.com/dashboard"
+                target="_blank"
+                rel="noreferrer"
               >
-                {isLoading ? (
-                  <>
-                    <Spinner animation="border" size="sm" className="me-2" />
-                    Подключение...
-                  </>
-                ) : (
-                  "Подключить Spotify"
-                )}
-              </BootstrapButton>
-            </div>
-
-            {status?.hasClientCredentials && !status?.isLinked && (
-              <Alert variant="warning" className="mt-3">
-                ⚠️ Учетные данные сохранены, но аккаунт еще не подключен.
-                Нажмите кнопку выше для авторизации.
-              </Alert>
-            )}
+                Spotify Developer Dashboard
+              </a>
+            </span>
           </div>
-        )}
 
-        <div className={styles.info}>
-          <h5>ℹ️ Информация</h5>
-          <ul>
-            <li>
-              Spotify режим позволяет заказывать треки из Spotify вместо YouTube
-            </li>
-            <li>
-              После подключения приватные ключи хранятся безопасно только на
-              сервере
-            </li>
-            <li>
-              Управление соединением работает как Songify: берет активное
-              устройство Spotify
-            </li>
-          </ul>
+          <div style={{ marginBottom: 12 }}>
+            <label style={{ display: "block", marginBottom: 4 }}>
+              Spotify Client Secret
+            </label>
+            <Input.Password
+              placeholder="Введите Client Secret"
+              value={clientSecret}
+              onChange={e => setClientSecret(e.target.value)}
+              disabled={isLoading || status?.hasClientCredentials}
+            />
+            <span
+              style={{
+                display: "block",
+                marginTop: 4,
+                color: "#8c8c8c",
+                fontSize: 12,
+              }}
+            >
+              Никогда не делитесь этим ключом
+            </span>
+          </div>
+
+          <div className={styles.buttonGroup}>
+            <Button
+              type="primary"
+              onClick={handleStartAuth}
+              disabled={isLoading || !clientId || !clientSecret}
+              className={styles.connectBtn}
+              style={{
+                background: isLoading ? undefined : "#52c41a",
+                borderColor: isLoading ? undefined : "#52c41a",
+              }}
+            >
+              {isLoading ? (
+                <>
+                  <Spin size="small" style={{ marginRight: 8 }} />
+                  Подключение...
+                </>
+              ) : (
+                "Подключить Spotify"
+              )}
+            </Button>
+          </div>
+
+          {status?.hasClientCredentials && !status?.isLinked && (
+            <Alert
+              type="warning"
+              message="⚠️ Учетные данные сохранены, но аккаунт еще не подключен. Нажмите кнопку выше для авторизации."
+              style={{ marginTop: 12 }}
+            />
+          )}
         </div>
-      </Card.Body>
+      )}
+
+      <div className={styles.info}>
+        <h5>ℹ️ Информация</h5>
+        <ul>
+          <li>
+            Spotify режим позволяет заказывать треки из Spotify вместо YouTube
+          </li>
+          <li>
+            После подключения приватные ключи хранятся безопасно только на
+            сервере
+          </li>
+          <li>
+            Управление соединением работает как Songify: берет активное
+            устройство Spotify
+          </li>
+        </ul>
+      </div>
     </Card>
   );
 };

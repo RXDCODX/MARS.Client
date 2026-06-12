@@ -1,4 +1,4 @@
-import { Card, Col, Row } from "react-bootstrap";
+import { Card, Flex } from "antd";
 
 import { CinemaQueueStatistics } from "@/shared/api";
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
@@ -18,81 +18,65 @@ const StatisticsCards: React.FC<StatisticsCardsProps> = ({ statistics }) => {
     boxShadow: colors.shadow.light,
   };
 
+  const statCards = [
+    {
+      id: "stat-total",
+      value: statistics.totalItems,
+      color: "var(--site-text-primary)",
+      label: "Total Items",
+    },
+    {
+      id: "stat-pending",
+      value: statistics.pendingItems,
+      color: "var(--site-text-info)",
+      label: "Pending",
+    },
+    {
+      id: "stat-in-progress",
+      value: statistics.inProgressItems,
+      color: "var(--site-text-warning)",
+      label: "In Progress",
+    },
+    {
+      id: "stat-completed",
+      value: statistics.completedItems,
+      color: "var(--site-text-success)",
+      label: "Completed",
+    },
+    {
+      id: "stat-cancelled",
+      value: statistics.cancelledItems,
+      color: "var(--site-text-danger)",
+      label: "Cancelled",
+    },
+    {
+      id: "stat-postponed",
+      value: statistics.postponedItems,
+      color: "var(--site-text-accent)",
+      label: "Postponed",
+    },
+  ];
+
   return (
-    <Row className={styles.statisticsRow}>
-      <Col md={2}>
-        <Card style={cardStyles} id="stat-total">
-          <Card.Body className="text-center">
-            <h3 className="mb-1" style={{ color: "var(--site-text-primary)" }}>
-              {statistics.totalItems}
-            </h3>
-            <p className="mb-0" style={{ color: "var(--site-text-secondary)" }}>
-              Total Items
-            </p>
-          </Card.Body>
-        </Card>
-      </Col>
-      <Col md={2}>
-        <Card style={cardStyles} id="stat-pending">
-          <Card.Body className="text-center">
-            <h3 className="mb-1" style={{ color: "var(--site-text-info)" }}>
-              {statistics.pendingItems}
-            </h3>
-            <p className="mb-0" style={{ color: "var(--site-text-secondary)" }}>
-              Pending
-            </p>
-          </Card.Body>
-        </Card>
-      </Col>
-      <Col md={2}>
-        <Card style={cardStyles} id="stat-in-progress">
-          <Card.Body className="text-center">
-            <h3 className="mb-1" style={{ color: "var(--site-text-warning)" }}>
-              {statistics.inProgressItems}
-            </h3>
-            <p className="mb-0" style={{ color: "var(--site-text-secondary)" }}>
-              In Progress
-            </p>
-          </Card.Body>
-        </Card>
-      </Col>
-      <Col md={2}>
-        <Card style={cardStyles} id="stat-completed">
-          <Card.Body className="text-center">
-            <h3 className="mb-1" style={{ color: "var(--site-text-success)" }}>
-              {statistics.completedItems}
-            </h3>
-            <p className="mb-0" style={{ color: "var(--site-text-secondary)" }}>
-              Completed
-            </p>
-          </Card.Body>
-        </Card>
-      </Col>
-      <Col md={2}>
-        <Card style={cardStyles} id="stat-cancelled">
-          <Card.Body className="text-center">
-            <h3 className="mb-1" style={{ color: "var(--site-text-danger)" }}>
-              {statistics.cancelledItems}
-            </h3>
-            <p className="mb-0" style={{ color: "var(--site-text-secondary)" }}>
-              Cancelled
-            </p>
-          </Card.Body>
-        </Card>
-      </Col>
-      <Col md={2}>
-        <Card style={cardStyles} id="stat-postponed">
-          <Card.Body className="text-center">
-            <h3 className="mb-1" style={{ color: "var(--site-text-accent)" }}>
-              {statistics.postponedItems}
-            </h3>
-            <p className="mb-0" style={{ color: "var(--site-text-secondary)" }}>
-              Postponed
-            </p>
-          </Card.Body>
-        </Card>
-      </Col>
-    </Row>
+    <Flex className={styles.statisticsRow} gap={16} wrap="wrap">
+      {statCards.map(stat => (
+        <div
+          key={stat.id}
+          style={{ flex: "0 0 calc(16.666% - 14px)", minWidth: 120 }}
+        >
+          <Card style={cardStyles} id={stat.id}>
+            <div style={{ textAlign: "center" }}>
+              <h3 style={{ marginBottom: 4, color: stat.color }}>
+                {stat.value}
+              </h3>
+              <p style={{ margin: 0, color: "var(--site-text-secondary)" }}>
+                {stat.label}
+              </p>
+            </div>
+          </Card>
+        </div>
+      ))}
+    </Flex>
   );
 };
 

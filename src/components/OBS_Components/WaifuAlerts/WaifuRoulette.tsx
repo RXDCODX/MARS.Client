@@ -104,7 +104,11 @@ export default function WaifuRoulette({
             hideCenterDelimiter: true,
           }}
           prizeItemRenderFunction={prize => (
-            <WaifuRoulettePrizeItem image={prize.image} text={prize.text} wide={wide} />
+            <WaifuRoulettePrizeItem
+              image={prize.image}
+              text={prize.text}
+              wide={wide}
+            />
           )}
           onPrizeDefined={() => {
             setVisible(false);

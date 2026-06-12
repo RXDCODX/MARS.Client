@@ -1,4 +1,20 @@
 import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  Checkbox,
+  Col,
+  Flex,
+  Input,
+  InputNumber,
+  Row,
+  Space,
+  Spin,
+  Tabs,
+  Typography,
+} from "antd";
+import {
   ArrowLeft,
   CheckCircle,
   Grid3x3,
@@ -13,19 +29,6 @@ import {
   XCircle,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import {
-  Alert,
-  Badge,
-  Card,
-  Col,
-  Container,
-  Form,
-  InputGroup,
-  Row,
-  Spinner,
-  Tab,
-  Tabs,
-} from "react-bootstrap";
 
 import {
   CommandInfo,
@@ -40,7 +43,6 @@ import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
 import styles from "./CommandsPage.module.scss";
 
-// Типы для состояния компонента
 interface CommandsPageState {
   userCommands: CommandInfo[];
   adminCommands: CommandInfo[];
@@ -56,7 +58,6 @@ interface CommandsPageState {
   showParameters: boolean;
 }
 
-// Компонент для отображения команд в виде списка
 const ListView: React.FC<{
   commands: CommandInfo[];
   selectedCommand: CommandInfo | null;
@@ -67,8 +68,9 @@ const ListView: React.FC<{
   const renderCommandCard = (command: CommandInfo) => (
     <Card
       key={command.name}
-      className={`mb-3 ${styles.commandCard} ${selectedCommand?.name === command.name ? styles.selectedCommand : ""}`}
+      className={`${styles.commandCard} ${selectedCommand?.name === command.name ? styles.selectedCommand : ""}`}
       style={{
+        marginBottom: 12,
         backgroundColor:
           selectedCommand?.name === command.name
             ? colors.background.accent
@@ -77,66 +79,84 @@ const ListView: React.FC<{
         cursor: "pointer",
         transition: "all 0.2s ease-in-out",
       }}
+      styles={{ body: { padding: 16 } }}
       onClick={() => onCommandSelect(command)}
     >
-      <Card.Body className="p-4">
-        <div className="d-flex justify-content-between align-items-start">
-          <div className="flex-grow-1">
-            <div className="d-flex align-items-center mb-2">
-              <Terminal
-                size={20}
-                className="me-2"
-                style={{ color: colors.text.primary }}
-              />
-              <h6
-                className="mb-0 fw-bold"
-                style={colors.utils.getTextStyle("primary")}
-              >
-                /{command.name}
-              </h6>
-            </div>
-            <p
-              className="mb-2 text-muted"
-              style={colors.utils.getTextStyle("secondary")}
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "flex-start",
+        }}
+      >
+        <div style={{ flex: 1 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              marginBottom: 8,
+            }}
+          >
+            <Terminal size={20} style={{ color: colors.text.primary }} />
+            <h6
+              style={{
+                marginBottom: 0,
+                fontWeight: "bold",
+                ...colors.utils.getTextStyle("primary"),
+              }}
             >
-              {command.description}
-            </p>
-            <div className="d-flex align-items-center gap-2">
-              <Badge
-                bg={command.isAdminCommand ? "danger" : "primary"}
-                className="d-flex align-items-center gap-1"
-              >
-                {command.isAdminCommand ? (
-                  <Shield size={14} />
-                ) : (
-                  <User size={14} />
-                )}
-                {command.isAdminCommand ? "Админ" : "Пользователь"}
-              </Badge>
-              <Badge bg="secondary" className="d-flex align-items-center gap-1">
-                <Grid3x3 size={14} />
-                {command.availablePlatforms.length} платформ
-              </Badge>
-            </div>
+              /{command.name}
+            </h6>
           </div>
-          <div className="ms-3">
-            <button
-              type="button"
-              className="btn btn-outline-primary btn-sm d-flex align-items-center gap-1"
+          <p
+            style={{
+              marginBottom: 8,
+              color: "#8c8c8c",
+              ...colors.utils.getTextStyle("secondary"),
+            }}
+          >
+            {command.description}
+          </p>
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <Badge
+              color={command.isAdminCommand ? "red" : "blue"}
+              style={{ display: "flex", alignItems: "center", gap: 4 }}
             >
-              <Play size={16} />
-              Выполнить
-            </button>
+              {command.isAdminCommand ? (
+                <Shield size={14} />
+              ) : (
+                <User size={14} />
+              )}
+              {command.isAdminCommand ? "Админ" : "Пользователь"}
+            </Badge>
+            <Badge
+              color="default"
+              style={{ display: "flex", alignItems: "center", gap: 4 }}
+            >
+              <Grid3x3 size={14} />
+              {command.availablePlatforms.length} платформ
+            </Badge>
           </div>
         </div>
-      </Card.Body>
+        <div style={{ marginLeft: 12 }}>
+          <Button
+            size="small"
+            type="primary"
+            ghost
+            style={{ display: "flex", alignItems: "center", gap: 4 }}
+          >
+            <Play size={16} />
+            Выполнить
+          </Button>
+        </div>
+      </div>
     </Card>
   );
 
   return <div>{commands.map(renderCommandCard)}</div>;
 };
 
-// Компонент для отображения команд в виде сетки
 const GridView: React.FC<{
   commands: CommandInfo[];
   selectedCommand: CommandInfo | null;
@@ -147,8 +167,9 @@ const GridView: React.FC<{
   const renderCommandGridCard = (command: CommandInfo) => (
     <Card
       key={command.name}
-      className={`h-100 ${styles.commandCard} ${selectedCommand?.name === command.name ? styles.selectedCommand : ""}`}
+      className={`${styles.commandCard} ${selectedCommand?.name === command.name ? styles.selectedCommand : ""}`}
       style={{
+        height: "100%",
         backgroundColor:
           selectedCommand?.name === command.name
             ? colors.background.accent
@@ -157,58 +178,92 @@ const GridView: React.FC<{
         cursor: "pointer",
         transition: "all 0.2s ease-in-out",
       }}
+      styles={{
+        body: {
+          padding: 16,
+          display: "flex",
+          flexDirection: "column",
+          textAlign: "center",
+        },
+      }}
       onClick={() => onCommandSelect(command)}
     >
-      <Card.Body className="p-4 d-flex flex-column text-center">
-        <div className="mb-3">
-          <div className="d-flex justify-content-center mb-2">
-            <Terminal size={32} style={{ color: colors.text.primary }} />
-          </div>
-          <h6
-            className="mb-2 fw-bold"
-            style={colors.utils.getTextStyle("primary")}
-          >
-            /{command.name}
-          </h6>
-          {command.isAdminCommand && (
-            <Badge
-              bg="danger"
-              className="mb-2 d-flex align-items-center justify-content-center gap-1 mx-auto"
-            >
-              <Shield size={14} />
-              Админ
-            </Badge>
-          )}
-        </div>
-        <p
-          className="small text-muted flex-grow-1 mb-3"
-          style={colors.utils.getTextStyle("secondary")}
+      <div style={{ marginBottom: 12 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginBottom: 8,
+          }}
         >
-          {command.description}
-        </p>
-        <div className="mt-auto">
-          <Badge
-            bg="secondary"
-            className="d-flex align-items-center justify-content-center gap-1 mx-auto"
-          >
-            <Grid3x3 size={14} />
-            {command.availablePlatforms.length} платформ
-          </Badge>
+          <Terminal size={32} style={{ color: colors.text.primary }} />
         </div>
-      </Card.Body>
+        <h6
+          style={{
+            marginBottom: 8,
+            fontWeight: "bold",
+            ...colors.utils.getTextStyle("primary"),
+          }}
+        >
+          /{command.name}
+        </h6>
+        {command.isAdminCommand && (
+          <Badge
+            color="red"
+            style={{
+              marginBottom: 8,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 4,
+              margin: "0 auto 8px",
+            }}
+          >
+            <Shield size={14} />
+            Админ
+          </Badge>
+        )}
+      </div>
+      <p
+        style={{
+          fontSize: 12,
+          color: "#8c8c8c",
+          flex: 1,
+          marginBottom: 12,
+          ...colors.utils.getTextStyle("secondary"),
+        }}
+      >
+        {command.description}
+      </p>
+      <div style={{ marginTop: "auto" }}>
+        <Badge
+          color="default"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 4,
+            margin: "0 auto",
+          }}
+        >
+          <Grid3x3 size={14} />
+          {command.availablePlatforms.length} платформ
+        </Badge>
+      </div>
     </Card>
   );
 
   return (
-    <Row xs={1} sm={2} lg={3} className="g-3">
+    <Row gutter={[16, 16]}>
       {commands.map(command => (
-        <Col key={command.name}>{renderCommandGridCard(command)}</Col>
+        <Col key={command.name} xs={24} sm={12} lg={8}>
+          {renderCommandGridCard(command)}
+        </Col>
       ))}
     </Row>
   );
 };
 
-// Компонент для отображения параметров команды
 const CommandParameters: React.FC<{
   command: CommandInfo;
   parameters: CommandParameterInfo[];
@@ -235,49 +290,55 @@ const CommandParameters: React.FC<{
     switch (parameter.type.toLowerCase()) {
       case "bool":
         return (
-          <Form.Check
-            type="checkbox"
-            id={`param-${parameter.name}`}
-            label={parameter.description}
-            checked={value === "true"}
-            onChange={e =>
-              onParameterChange(parameter.name, e.target.checked.toString())
-            }
-            className="mt-2"
-          />
+          <div
+            style={{
+              marginTop: 8,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <Checkbox
+              checked={value === "true"}
+              onChange={e =>
+                onParameterChange(parameter.name, e.target.checked.toString())
+              }
+            />
+            <span>{parameter.description}</span>
+          </div>
         );
       case "int":
       case "long":
         return (
-          <Form.Control
-            type="number"
+          <InputNumber
             placeholder={parameter.description}
-            value={value}
-            onChange={e => onParameterChange(parameter.name, e.target.value)}
-            required={parameter.required}
+            value={value ? Number(value) : undefined}
+            onChange={val =>
+              onParameterChange(parameter.name, val?.toString() ?? "")
+            }
             className={styles.parameterInput}
+            style={{ width: "100%" }}
           />
         );
       case "double":
         return (
-          <Form.Control
-            type="number"
-            step="0.1"
+          <InputNumber
+            step={0.1}
             placeholder={parameter.description}
-            value={value}
-            onChange={e => onParameterChange(parameter.name, e.target.value)}
-            required={parameter.required}
+            value={value ? Number(value) : undefined}
+            onChange={val =>
+              onParameterChange(parameter.name, val?.toString() ?? "")
+            }
             className={styles.parameterInput}
+            style={{ width: "100%" }}
           />
         );
       default:
         return (
-          <Form.Control
-            type="text"
+          <Input
             placeholder={parameter.description}
             value={value}
             onChange={e => onParameterChange(parameter.name, e.target.value)}
-            required={parameter.required}
             className={styles.parameterInput}
           />
         );
@@ -289,20 +350,28 @@ const CommandParameters: React.FC<{
       style={{
         backgroundColor: colors.background.card,
         borderColor: colors.border.primary,
+        height: "100%",
       }}
-      className="h-100"
     >
-      <Card.Header
+      <div
         style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "12px 16px",
           backgroundColor: colors.background.secondary,
-          borderColor: colors.border.primary,
+          borderBottom: `1px solid ${colors.border.primary}`,
         }}
-        className="d-flex justify-content-between align-items-center"
       >
         <div>
           <h5
-            className="mb-0 d-flex align-items-center gap-2"
-            style={colors.utils.getTextStyle("primary")}
+            style={{
+              marginBottom: 0,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              ...colors.utils.getTextStyle("primary"),
+            }}
           >
             <Terminal size={20} />/{command.name}
           </h5>
@@ -310,61 +379,85 @@ const CommandParameters: React.FC<{
             {command.description}
           </small>
         </div>
-        <button
-          type="button"
-          className="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1"
+        <Button
+          size="small"
+          type="default"
+          style={{ display: "flex", alignItems: "center", gap: 4 }}
           onClick={onCancel}
         >
           <ArrowLeft size={16} />
           Назад
-        </button>
-      </Card.Header>
-      <Card.Body className="p-4">
+        </Button>
+      </div>
+      <div style={{ padding: 16 }}>
         {parameters.length > 0 ? (
-          <Form>
-            <div className="d-flex align-items-center gap-2 mb-4">
+          <>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                marginBottom: 16,
+              }}
+            >
               <Settings size={20} style={{ color: colors.text.primary }} />
-              <h6 className="mb-0" style={colors.utils.getTextStyle("primary")}>
+              <h6
+                style={{
+                  marginBottom: 0,
+                  ...colors.utils.getTextStyle("primary"),
+                }}
+              >
                 Параметры команды
               </h6>
             </div>
 
             {parameters.map(parameter => (
-              <Form.Group key={parameter.name} className="mb-4">
-                <Form.Label
-                  className="fw-semibold d-flex align-items-center gap-2"
-                  style={colors.utils.getTextStyle("primary")}
+              <div key={parameter.name} style={{ marginBottom: 16 }}>
+                <label
+                  style={{
+                    fontWeight: 600,
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    marginBottom: 4,
+                    ...colors.utils.getTextStyle("primary"),
+                  }}
                 >
                   {parameter.name}
-                  {parameter.required && (
-                    <Badge bg="danger" className="fs-6">
-                      *
-                    </Badge>
-                  )}
+                  {parameter.required && <Badge color="red" count="*" />}
                   {parameter.defaultValue && (
-                    <small className="text-muted ms-2">
+                    <small style={{ color: "#8c8c8c", marginLeft: 8 }}>
                       (по умолчанию: {parameter.defaultValue})
                     </small>
                   )}
-                </Form.Label>
+                </label>
                 {renderParameterInput(parameter)}
-                <Form.Text className="text-muted d-flex align-items-center gap-1 mt-1">
+                <Typography.Text
+                  type="secondary"
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 4,
+                    marginTop: 4,
+                  }}
+                >
                   <Info size={14} />
                   {parameter.description} (тип: {parameter.type})
-                </Form.Text>
-              </Form.Group>
+                </Typography.Text>
+              </div>
             ))}
 
-            <div className="d-flex gap-3 mt-4">
-              <button
-                type="button"
-                className={`btn btn-primary btn-sm ${styles.executeButton} d-flex align-items-center gap-2`}
+            <div style={{ display: "flex", gap: 12, marginTop: 16 }}>
+              <Button
+                type="primary"
+                className={styles.executeButton}
+                style={{ display: "flex", alignItems: "center", gap: 8 }}
                 onClick={onExecute}
                 disabled={isExecuting}
               >
                 {isExecuting ? (
                   <>
-                    <Spinner animation="border" size="sm" />
+                    <Spin size="small" />
                     Выполняется...
                   </>
                 ) : (
@@ -373,35 +466,45 @@ const CommandParameters: React.FC<{
                     Выполнить команду
                   </>
                 )}
-              </button>
+              </Button>
 
-              <button
-                type="button"
-                className={`btn btn-outline-secondary btn-lg ${styles.cancelButton}`}
+              <Button
+                type="default"
+                size="large"
+                className={styles.cancelButton}
                 onClick={onCancel}
               >
                 Отменить
-              </button>
+              </Button>
             </div>
-          </Form>
+          </>
         ) : (
-          <div className="text-center py-5">
-            <Settings size={48} className="text-muted mb-3" />
+          <div style={{ textAlign: "center", padding: "20px 0" }}>
+            <Settings
+              size={48}
+              style={{ color: "#8c8c8c", marginBottom: 12 }}
+            />
             <h6 style={colors.utils.getTextStyle("primary")}>
               У этой команды нет параметров
             </h6>
-            <p className="text-muted mb-4">
+            <p style={{ color: "#8c8c8c", marginBottom: 16 }}>
               Команда готова к выполнению без дополнительных настроек
             </p>
-            <button
-              type="button"
-              className="btn btn-primary btn-sm d-flex align-items-center gap-2 mx-auto"
+            <Button
+              type="primary"
+              size="small"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 8,
+                margin: "0 auto",
+              }}
               onClick={onExecute}
               disabled={isExecuting}
             >
               {isExecuting ? (
                 <>
-                  <Spinner animation="border" size="sm" />
+                  <Spin size="small" />
                   Выполняется...
                 </>
               ) : (
@@ -410,15 +513,14 @@ const CommandParameters: React.FC<{
                   Выполнить команду
                 </>
               )}
-            </button>
+            </Button>
           </div>
         )}
-      </Card.Body>
+      </div>
     </Card>
   );
 };
 
-// Компонент для поиска команд
 const CommandSearch: React.FC<{
   searchQuery: string;
   onSearchChange: (query: string) => void;
@@ -427,91 +529,84 @@ const CommandSearch: React.FC<{
   colors: ReturnType<typeof useSiteColors>;
 }> = ({ searchQuery, onSearchChange, onClear, resultCount, colors }) => (
   <Card
-    className="mb-4"
     style={{
+      marginBottom: 16,
       backgroundColor: colors.background.card,
       borderColor: colors.border.primary,
     }}
   >
-    <Card.Body className="p-4">
-      <div className="d-flex align-items-center gap-3">
-        <div className="flex-grow-1">
-          <InputGroup>
-            <InputGroup.Text
-              style={{
-                backgroundColor: colors.background.secondary,
-                borderColor: colors.border.primary,
-              }}
-            >
+    <div style={{ padding: 16 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+        <div style={{ flex: 1 }}>
+          <Input
+            prefix={
               <Search size={20} style={{ color: colors.text.secondary }} />
-            </InputGroup.Text>
-            <Form.Control
-              type="text"
-              placeholder="🔍 Поиск команд по названию или описанию..."
-              value={searchQuery}
-              onChange={e => onSearchChange(e.target.value)}
-              style={{
-                backgroundColor: colors.background.card,
-                borderColor: colors.border.primary,
-                color: colors.text.primary,
-              }}
-              className={styles.parameterInput}
-            />
-          </InputGroup>
+            }
+            placeholder="🔍 Поиск команд по названию или описанию..."
+            value={searchQuery}
+            onChange={e => onSearchChange(e.target.value)}
+            style={{
+              backgroundColor: colors.background.card,
+              borderColor: colors.border.primary,
+              color: colors.text.primary,
+            }}
+            className={styles.parameterInput}
+          />
         </div>
         {searchQuery && (
-          <button
-            type="button"
-            className="btn btn-outline-secondary btn-sm d-flex align-items-center gap-1"
+          <Button
+            size="small"
+            type="default"
+            style={{ display: "flex", alignItems: "center", gap: 4 }}
             onClick={onClear}
             title="Очистить поиск"
           >
             <XCircle size={16} />
             Очистить
-          </button>
+          </Button>
         )}
       </div>
       {searchQuery && (
-        <div className="mt-3">
+        <div style={{ marginTop: 12 }}>
           <small
-            style={colors.utils.getTextStyle("secondary")}
-            className="d-flex align-items-center gap-1"
+            style={{
+              ...colors.utils.getTextStyle("secondary"),
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+            }}
           >
             <CheckCircle size={14} />
             Найдено: {resultCount} команд
           </small>
         </div>
       )}
-    </Card.Body>
+    </div>
   </Card>
 );
 
-// Компонент для переключения режимов отображения
 const DisplayModeToggle: React.FC<{
   displayMode: "list" | "grid";
   onModeChange: (mode: "list" | "grid") => void;
 }> = ({ displayMode, onModeChange }) => (
-  <div
-    className={`btn-group btn-group-sm ${styles.displayModeToggle}`}
-    role="group"
-  >
-    <button
-      type="button"
-      className={`btn ${displayMode === "list" ? "btn-primary" : "btn-outline-primary"} d-flex align-items-center gap-2`}
+  <Space.Compact>
+    <Button
+      type={displayMode === "list" ? "primary" : "default"}
+      style={{ display: "flex", alignItems: "center", gap: 8 }}
       onClick={() => onModeChange("list")}
     >
       <List size={16} />
       Список
-    </button>
-    <button
-      type="button"
-      className={`btn ${displayMode === "grid" ? "btn-primary" : "btn-outline-primary"} d-flex align-items-center gap-2`}
+    </Button>
+    <Button
+      type={displayMode === "grid" ? "primary" : "default"}
+      style={{ display: "flex", alignItems: "center", gap: 8 }}
       onClick={() => onModeChange("grid")}
     >
       <Grid3x3 size={16} />
       Сетка
-    </button>
-  </div>
+    </Button>
+  </Space.Compact>
 );
 
 const CommandsPage: React.FC = () => {
@@ -520,7 +615,6 @@ const CommandsPage: React.FC = () => {
   const [commandsService] = useState(() => new Commands(defaultApiConfig));
   const parametersPanelRef = useRef<HTMLDivElement>(null);
 
-  // Состояние компонента
   const [state, setState] = useState<CommandsPageState>({
     userCommands: [],
     adminCommands: [],
@@ -536,12 +630,10 @@ const CommandsPage: React.FC = () => {
     showParameters: false,
   });
 
-  // Обновление состояния
   const updateState = useCallback((updates: Partial<CommandsPageState>) => {
     setState(prev => ({ ...prev, ...updates }));
   }, []);
 
-  // Загрузка команд
   const loadCommands = useCallback(async () => {
     try {
       updateState({ isLoading: true, error: "" });
@@ -569,12 +661,10 @@ const CommandsPage: React.FC = () => {
     }
   }, [commandsService, updateState]);
 
-  // Загрузка команд при монтировании компонента
   useEffect(() => {
     loadCommands();
   }, [loadCommands]);
 
-  // Фильтрация команд по поисковому запросу
   const filteredCommands = useMemo(() => {
     const allCommands =
       state.activeTab === "user" ? state.userCommands : state.adminCommands;
@@ -594,7 +684,6 @@ const CommandsPage: React.FC = () => {
     state.searchQuery,
   ]);
 
-  // Выбор команды
   const handleCommandSelect = async (command: CommandInfo) => {
     try {
       updateState({
@@ -604,28 +693,23 @@ const CommandsPage: React.FC = () => {
         showParameters: true,
       });
 
-      // Загружаем параметры команды
       const result = await commandsService.commandsParametersList(command.name);
       const parameters = result.data.data;
       updateState({ commandParameters: parameters });
 
-      // Автоматическая прокрутка к панели параметров после загрузки
       setTimeout(() => {
         if (parametersPanelRef.current) {
           const panelElement = parametersPanelRef.current;
           const panelRect = panelElement.getBoundingClientRect();
           const viewportHeight = window.innerHeight;
 
-          // Проверяем, помещается ли панель на экране
           if (panelRect.height > viewportHeight) {
-            // Если панель не помещается, прокручиваем к началу панели
             panelElement.scrollIntoView({
               behavior: "smooth",
               block: "start",
               inline: "nearest",
             });
           } else {
-            // Если панель помещается, центрируем её на экране
             panelElement.scrollIntoView({
               behavior: "smooth",
               block: "center",
@@ -633,7 +717,7 @@ const CommandsPage: React.FC = () => {
             });
           }
         }
-      }, 100); // Небольшая задержка для завершения рендеринга
+      }, 100);
     } catch (err) {
       updateState({
         error:
@@ -642,7 +726,6 @@ const CommandsPage: React.FC = () => {
     }
   };
 
-  // Изменение параметра
   const handleParameterChange = (parameterName: string, value: string) => {
     updateState({
       parameterValues: {
@@ -652,7 +735,6 @@ const CommandsPage: React.FC = () => {
     });
   };
 
-  // Построение входной строки команды
   const buildCommandInput = (): string => {
     if (!state.selectedCommand || state.commandParameters.length === 0) {
       return "";
@@ -670,7 +752,6 @@ const CommandsPage: React.FC = () => {
     return inputParts.join(" ");
   };
 
-  // Выполнение команды
   const executeCommand = async () => {
     if (!state.selectedCommand) return;
 
@@ -683,7 +764,6 @@ const CommandsPage: React.FC = () => {
         input
       );
 
-      // Показываем результат через toast
       showToast(result.data);
 
       updateState({ isExecuting: false });
@@ -691,7 +771,6 @@ const CommandsPage: React.FC = () => {
       const errorMessage =
         "Ошибка при выполнении команды: " + (err as Error).message;
 
-      // Показываем ошибку через toast
       showToast({ success: false, message: errorMessage });
 
       updateState({
@@ -701,7 +780,6 @@ const CommandsPage: React.FC = () => {
     }
   };
 
-  // Отмена выбора команды
   const handleCancelCommand = () => {
     updateState({
       selectedCommand: null,
@@ -711,205 +789,219 @@ const CommandsPage: React.FC = () => {
     });
   };
 
-  // Отображение загрузки
   if (state.isLoading) {
     return (
-      <Container className="text-center py-5">
-        <div className="d-flex flex-column align-items-center">
-          <Spinner animation="border" role="status" className="mb-4">
-            <span className="visually-hidden">Загрузка...</span>
-          </Spinner>
+      <div style={{ textAlign: "center", padding: "20px 0" }}>
+        <Flex vertical align="center" gap={16}>
+          <Spin size="large" />
           <h4 style={colors.utils.getTextStyle("primary")}>Загрузка команд</h4>
           <p style={colors.utils.getTextStyle("secondary")}>
             Получаем список доступных команд...
           </p>
-        </div>
-      </Container>
+        </Flex>
+      </div>
     );
   }
 
-  // Получаем отфильтрованные команды
   const currentCommands = filteredCommands;
 
+  const tabItems = [
+    {
+      key: "user",
+      label: (
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <User size={16} />
+          Пользовательские ({state.userCommands.length})
+        </div>
+      ),
+    },
+    {
+      key: "admin",
+      label: (
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <Shield size={16} />
+          Админские ({state.adminCommands.length})
+        </div>
+      ),
+    },
+  ];
+
   return (
-    <Container fluid className="py-4">
-      <Row>
-        <Col>
-          {/* Заголовок страницы */}
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <div>
-              <h1
-                className="d-flex align-items-center gap-3 mb-2"
-                style={colors.utils.getTextStyle("primary")}
-              >
-                <Terminal size={32} />
-                Выполнение команд
-              </h1>
-              <p className="text-muted mb-0">
-                Управляйте системой MARS через командный интерфейс
-              </p>
-            </div>
+    <div style={{ padding: "16px 0" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: 16,
+        }}
+      >
+        <div>
+          <h1
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 12,
+              marginBottom: 8,
+              ...colors.utils.getTextStyle("primary"),
+            }}
+          >
+            <Terminal size={32} />
+            Выполнение команд
+          </h1>
+          <p style={{ color: "#8c8c8c", marginBottom: 0 }}>
+            Управляйте системой MARS через командный интерфейс
+          </p>
+        </div>
 
-            <DisplayModeToggle
-              displayMode={state.displayMode}
-              onModeChange={mode => updateState({ displayMode: mode })}
-            />
-          </div>
+        <DisplayModeToggle
+          displayMode={state.displayMode}
+          onModeChange={mode => updateState({ displayMode: mode })}
+        />
+      </div>
 
-          {/* Ошибки */}
-          {state.error && (
-            <Alert
-              variant="danger"
-              className="mb-4 d-flex align-items-center gap-2"
-            >
+      {state.error && (
+        <Alert
+          type="error"
+          message={
+            <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <XCircle size={20} />
               {state.error}
-            </Alert>
-          )}
+            </span>
+          }
+          style={{ marginBottom: 16 }}
+        />
+      )}
 
-          <Row>
-            {/* Основная область с командами */}
-            <Col lg={state.showParameters ? 8 : 12}>
-              {/* Поиск команд */}
-              <CommandSearch
-                searchQuery={state.searchQuery}
-                onSearchChange={query => updateState({ searchQuery: query })}
-                onClear={() => updateState({ searchQuery: "" })}
-                resultCount={currentCommands.length}
-                colors={colors}
-              />
+      <Row gutter={16}>
+        <Col lg={state.showParameters ? 16 : 24}>
+          <CommandSearch
+            searchQuery={state.searchQuery}
+            onSearchChange={query => updateState({ searchQuery: query })}
+            onClear={() => updateState({ searchQuery: "" })}
+            resultCount={currentCommands.length}
+            colors={colors}
+          />
 
-              {/* Список команд */}
-              <Card
+          <Card
+            style={{
+              backgroundColor: colors.background.card,
+              borderColor: colors.border.primary,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: "12px 16px",
+                backgroundColor: colors.background.secondary,
+                borderBottom: `1px solid ${colors.border.primary}`,
+              }}
+            >
+              <div
                 style={{
-                  backgroundColor: colors.background.card,
-                  borderColor: colors.border.primary,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
                 }}
               >
-                <Card.Header
+                <span
                   style={{
-                    backgroundColor: colors.background.secondary,
-                    borderColor: colors.border.primary,
-                  }}
-                  className="d-flex justify-content-between align-items-center"
-                >
-                  <div className="d-flex align-items-center gap-2">
-                    <span
-                      style={colors.utils.getTextStyle("primary")}
-                      className="fw-semibold"
-                    >
-                      Доступные команды
-                    </span>
-                    <Badge bg="secondary" className="fs-6">
-                      {currentCommands.length}
-                    </Badge>
-                  </div>
-                </Card.Header>
-                <Card.Body className="p-4">
-                  {/* Переключатель типов команд */}
-                  <div className="mb-4">
-                    <Tabs
-                      activeKey={state.activeTab}
-                      onSelect={k =>
-                        updateState({ activeTab: k as "user" | "admin" })
-                      }
-                      className={styles.tabGroup}
-                    >
-                      <Tab
-                        eventKey="user"
-                        title={
-                          <div className="d-flex align-items-center gap-2">
-                            <User size={16} />
-                            Пользовательские ({state.userCommands.length})
-                          </div>
-                        }
-                      />
-                      <Tab
-                        eventKey="admin"
-                        title={
-                          <div className="d-flex align-items-center gap-2">
-                            <Shield size={16} />
-                            Админские ({state.adminCommands.length})
-                          </div>
-                        }
-                      />
-                    </Tabs>
-                  </div>
-
-                  {/* Отображение команд */}
-                  {currentCommands.length > 0 ? (
-                    state.displayMode === "list" ? (
-                      <ListView
-                        commands={currentCommands}
-                        selectedCommand={state.selectedCommand}
-                        onCommandSelect={handleCommandSelect}
-                        colors={colors}
-                        styles={styles}
-                      />
-                    ) : (
-                      <GridView
-                        commands={currentCommands}
-                        selectedCommand={state.selectedCommand}
-                        onCommandSelect={handleCommandSelect}
-                        colors={colors}
-                        styles={styles}
-                      />
-                    )
-                  ) : (
-                    <div className="text-center py-5">
-                      <div className={styles.emptyState}>
-                        <Terminal size={64} className="icon text-muted" />
-                        <h5 style={colors.utils.getTextStyle("primary")}>
-                          {state.searchQuery
-                            ? "Команды не найдены"
-                            : "Нет доступных команд"}
-                        </h5>
-                        <p style={colors.utils.getTextStyle("secondary")}>
-                          {state.searchQuery ? (
-                            <>
-                              По запросу <strong>"{state.searchQuery}"</strong>{" "}
-                              ничего не найдено.
-                              <br />
-                              Попробуйте изменить поисковый запрос.
-                            </>
-                          ) : (
-                            `В данный момент нет ${state.activeTab === "user" ? "пользовательских" : "админских"} команд для выполнения.`
-                          )}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </Card.Body>
-              </Card>
-            </Col>
-
-            {/* Панель параметров */}
-            {state.showParameters && state.selectedCommand && (
-              <Col lg={4}>
-                <div
-                  ref={parametersPanelRef}
-                  style={{
-                    position: "sticky",
-                    top: "87px",
+                    fontWeight: 600,
+                    ...colors.utils.getTextStyle("primary"),
                   }}
                 >
-                  <CommandParameters
-                    command={state.selectedCommand}
-                    parameters={state.commandParameters}
-                    parameterValues={state.parameterValues}
-                    onParameterChange={handleParameterChange}
-                    onExecute={executeCommand}
-                    onCancel={handleCancelCommand}
-                    isExecuting={state.isExecuting}
+                  Доступные команды
+                </span>
+                <Badge color="default" count={currentCommands.length} />
+              </div>
+            </div>
+            <div style={{ padding: 16 }}>
+              <div style={{ marginBottom: 16 }}>
+                <Tabs
+                  activeKey={state.activeTab}
+                  onChange={key =>
+                    updateState({ activeTab: key as "user" | "admin" })
+                  }
+                  className={styles.tabGroup}
+                  items={tabItems}
+                />
+              </div>
+
+              {currentCommands.length > 0 ? (
+                state.displayMode === "list" ? (
+                  <ListView
+                    commands={currentCommands}
+                    selectedCommand={state.selectedCommand}
+                    onCommandSelect={handleCommandSelect}
                     colors={colors}
+                    styles={styles}
                   />
+                ) : (
+                  <GridView
+                    commands={currentCommands}
+                    selectedCommand={state.selectedCommand}
+                    onCommandSelect={handleCommandSelect}
+                    colors={colors}
+                    styles={styles}
+                  />
+                )
+              ) : (
+                <div style={{ textAlign: "center", padding: "20px 0" }}>
+                  <div className={styles.emptyState}>
+                    <Terminal
+                      size={64}
+                      style={{ color: "#8c8c8c", marginBottom: 12 }}
+                    />
+                    <h5 style={colors.utils.getTextStyle("primary")}>
+                      {state.searchQuery
+                        ? "Команды не найдены"
+                        : "Нет доступных команд"}
+                    </h5>
+                    <p style={colors.utils.getTextStyle("secondary")}>
+                      {state.searchQuery ? (
+                        <>
+                          По запросу <strong>"{state.searchQuery}"</strong>{" "}
+                          ничего не найдено.
+                          <br />
+                          Попробуйте изменить поисковый запрос.
+                        </>
+                      ) : (
+                        `В данный момент нет ${state.activeTab === "user" ? "пользовательских" : "админских"} команд для выполнения.`
+                      )}
+                    </p>
+                  </div>
                 </div>
-              </Col>
-            )}
-          </Row>
+              )}
+            </div>
+          </Card>
         </Col>
+
+        {state.showParameters && state.selectedCommand && (
+          <Col lg={8}>
+            <div
+              ref={parametersPanelRef}
+              style={{
+                position: "sticky",
+                top: 87,
+              }}
+            >
+              <CommandParameters
+                command={state.selectedCommand}
+                parameters={state.commandParameters}
+                parameterValues={state.parameterValues}
+                onParameterChange={handleParameterChange}
+                onExecute={executeCommand}
+                onCancel={handleCancelCommand}
+                isExecuting={state.isExecuting}
+                colors={colors}
+              />
+            </div>
+          </Col>
+        )}
       </Row>
-    </Container>
+    </div>
   );
 };
 

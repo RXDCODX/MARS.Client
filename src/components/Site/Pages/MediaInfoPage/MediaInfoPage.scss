@@ -1,5 +1,9 @@
 .media-info-page {
-  --media-bg: linear-gradient(180deg, rgb(8 12 22 / 96%) 0%, rgb(12 17 29 / 94%) 100%);
+  --media-bg: linear-gradient(
+    180deg,
+    rgb(8 12 22 / 96%) 0%,
+    rgb(12 17 29 / 94%) 100%
+  );
   --media-card: rgb(14 20 34 / 88%);
   --media-card-soft: rgb(17 25 42 / 82%);
   --media-line: rgb(255 255 255 / 10%);
@@ -30,7 +34,11 @@
     width: 340px;
     height: 340px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgb(18 179 168 / 28%) 0%, rgb(18 179 168 / 0%) 70%);
+    background: radial-gradient(
+      circle,
+      rgb(18 179 168 / 28%) 0%,
+      rgb(18 179 168 / 0%) 70%
+    );
   }
 
   &::after {
@@ -39,7 +47,11 @@
     width: 360px;
     height: 360px;
     border-radius: 50%;
-    background: radial-gradient(circle, rgb(76 118 255 / 24%) 0%, rgb(76 118 255 / 0%) 72%);
+    background: radial-gradient(
+      circle,
+      rgb(76 118 255 / 24%) 0%,
+      rgb(76 118 255 / 0%) 72%
+    );
   }
 
   .media-info-hero,
@@ -58,8 +70,16 @@
     border: 1px solid var(--media-line);
     border-radius: 28px;
     background:
-      radial-gradient(circle at top right, rgb(18 179 168 / 16%) 0%, rgb(18 179 168 / 0%) 38%),
-      radial-gradient(circle at bottom left, rgb(76 118 255 / 12%) 0%, rgb(76 118 255 / 0%) 45%),
+      radial-gradient(
+        circle at top right,
+        rgb(18 179 168 / 16%) 0%,
+        rgb(18 179 168 / 0%) 38%
+      ),
+      radial-gradient(
+        circle at bottom left,
+        rgb(76 118 255 / 12%) 0%,
+        rgb(76 118 255 / 0%) 45%
+      ),
       var(--media-bg);
     box-shadow: 0 24px 80px rgb(0 0 0 / 28%);
 
@@ -135,12 +155,20 @@
   }
 
   .alert-danger {
-    background: linear-gradient(180deg, rgb(176 39 59 / 18%), rgb(176 39 59 / 12%));
+    background: linear-gradient(
+      180deg,
+      rgb(176 39 59 / 18%),
+      rgb(176 39 59 / 12%)
+    );
     color: #ffd9de;
   }
 
   .alert-success {
-    background: linear-gradient(180deg, rgb(25 156 124 / 18%), rgb(25 156 124 / 12%));
+    background: linear-gradient(
+      180deg,
+      rgb(25 156 124 / 18%),
+      rgb(25 156 124 / 12%)
+    );
     color: #d8fff3;
   }
 
@@ -193,7 +221,10 @@
       color: var(--media-text);
       padding: 14px 16px;
       outline: none;
-      transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+      transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        transform 0.18s ease;
 
       &:focus {
         border-color: color-mix(in srgb, var(--media-accent) 72%, white 28%);
@@ -298,7 +329,9 @@
     }
 
     tbody tr {
-      transition: background-color 0.18s ease, transform 0.18s ease;
+      transition:
+        background-color 0.18s ease,
+        transform 0.18s ease;
 
       &:hover {
         background: rgb(255 255 255 / 3%);
@@ -456,7 +489,11 @@
     border-radius: 22px;
     border: 1px solid var(--media-line);
     background:
-      radial-gradient(circle at top, rgb(255 255 255 / 8%) 0%, rgb(255 255 255 / 0%) 54%),
+      radial-gradient(
+        circle at top,
+        rgb(255 255 255 / 8%) 0%,
+        rgb(255 255 255 / 0%) 54%
+      ),
       rgb(4 8 16 / 52%);
     overflow: hidden;
     display: flex;
@@ -572,7 +609,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    
+
     &.reward-actions {
       margin-top: 12px;
     }
@@ -658,7 +695,11 @@
 
   .reward-card {
     background:
-      radial-gradient(circle at top right, rgb(18 179 168 / 10%) 0%, rgb(18 179 168 / 0%) 38%),
+      radial-gradient(
+        circle at top right,
+        rgb(18 179 168 / 10%) 0%,
+        rgb(18 179 168 / 0%) 38%
+      ),
       rgb(255 255 255 / 3%);
   }
 
@@ -706,7 +747,10 @@
   }
 
   .btn {
-    transition: transform 0.18s ease, box-shadow 0.18s ease, opacity 0.18s ease;
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease,
+      opacity 0.18s ease;
 
     &:hover {
       transform: translateY(-1px);
@@ -714,7 +758,11 @@
   }
 
   .btn-primary {
-    background: linear-gradient(135deg, var(--media-accent) 0%, var(--media-accent-2) 100%);
+    background: linear-gradient(
+      135deg,
+      var(--media-accent) 0%,
+      var(--media-accent-2) 100%
+    );
     border: 0;
     box-shadow: 0 12px 28px rgb(18 179 168 / 24%);
   }

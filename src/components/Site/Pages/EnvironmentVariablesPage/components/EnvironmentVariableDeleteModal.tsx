@@ -1,10 +1,8 @@
-import { Button, Modal, Spinner } from "react-bootstrap";
+import { Button, Modal, Typography } from "antd";
 
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import { useEnvironmentVariablesStore } from "../store/useEnvironmentVariablesStore";
-
-const BootstrapButton = Button as any;
 
 const EnvironmentVariableDeleteModal: React.FC = () => {
   const { showToast } = useToastModal();
@@ -27,29 +25,25 @@ const EnvironmentVariableDeleteModal: React.FC = () => {
   };
 
   return (
-    <Modal show={Boolean(confirmDeleteKey)} onHide={closeDeleteConfirm}>
-      <Modal.Header closeButton>
-        <Modal.Title>Удаление переменной</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
+    <Modal
+      open={Boolean(confirmDeleteKey)}
+      onCancel={closeDeleteConfirm}
+      title="Удаление переменной"
+      footer={
+        <div
+          style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem" }}
+        >
+          <Button onClick={closeDeleteConfirm}>Отмена</Button>
+          <Button danger onClick={handleDelete} loading={isDeleting}>
+            Удалить
+          </Button>
+        </div>
+      }
+    >
+      <Typography.Text>
         Вы уверены, что хотите удалить переменную{" "}
         <strong>{confirmDeleteKey}</strong>? Действие нельзя отменить.
-      </Modal.Body>
-      <Modal.Footer>
-        <BootstrapButton variant="secondary" onClick={closeDeleteConfirm}>
-          Отмена
-        </BootstrapButton>
-        <BootstrapButton
-          variant="danger"
-          onClick={handleDelete}
-          disabled={isDeleting}
-        >
-          {isDeleting ? (
-            <Spinner animation="border" size="sm" className="me-2" />
-          ) : null}
-          Удалить
-        </BootstrapButton>
-      </Modal.Footer>
+      </Typography.Text>
     </Modal>
   );
 };

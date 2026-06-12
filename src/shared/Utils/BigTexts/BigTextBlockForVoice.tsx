@@ -1,5 +1,4 @@
 import { useCallback, useState } from "react";
-import { Container, Row } from "react-bootstrap";
 import { Textfit } from "react-textfit";
 
 import { MediaDto } from "@/shared/api";
@@ -42,8 +41,8 @@ export function BigTextBlockForVoice({ mediaInfo, callback }: Props) {
         />
       )}
       {
-        <Container className={styles.container}>
-          <Row className={styles.block}>
+        <div className={styles.container}>
+          <div className={styles.block}>
             <Textfit
               forceSingleModeWidth
               style={{
@@ -61,11 +60,11 @@ export function BigTextBlockForVoice({ mediaInfo, callback }: Props) {
             >
               Стример, заткнись
             </Textfit>
-          </Row>
-          <Row className={styles.block_image}>
+          </div>
+          <div className={styles.block_image}>
             <img src={import.meta.env.VITE_BASE_PATH + "Alerts/mute.png"} />
-          </Row>
-          <Row className={styles.block}>
+          </div>
+          <div className={styles.block}>
             <Textfit
               forceSingleModeWidth
               style={{
@@ -83,8 +82,8 @@ export function BigTextBlockForVoice({ mediaInfo, callback }: Props) {
               Сейчас говорит <img className="emote" src={textInfo.text} />
               {metaInfo.displayName}
             </Textfit>
-          </Row>
-        </Container>
+          </div>
+        </div>
       }
     </>
   );

@@ -1,13 +1,5 @@
+import { Alert, Button, Card, Flex, Spin } from "antd";
 import { Edit, Eye, Folder, Plus, RefreshCw, Trash2 } from "lucide-react";
-import {
-  Alert,
-  Button,
-  Card,
-  Col,
-  Container,
-  Row,
-  Spinner,
-} from "react-bootstrap";
 
 import { RandomMemeTypesListProps } from "../RandomMemePage.types";
 
@@ -23,142 +15,144 @@ const RandomMemeTypesList: React.FC<RandomMemeTypesListProps> = ({
 }) => {
   if (isLoading && !memeTypes.length) {
     return (
-      <Container className="text-center py-5">
-        <Spinner animation="border" role="status" className="mb-3">
-          <span className="visually-hidden">Загрузка...</span>
-        </Spinner>
-        <h4>Загрузка типов мемов...</h4>
-      </Container>
+      <div style={{ textAlign: "center", padding: "40px 0" }}>
+        <Spin size="large" />
+        <h4 style={{ marginTop: 12 }}>Загрузка типов мемов...</h4>
+      </div>
     );
   }
 
   return (
-    <Container fluid className="py-4">
-      <Row className="mb-3">
-        <Col>
-          <div className="d-flex justify-content-between align-items-center">
-            <h1 className="mb-0">Типы мемов</h1>
-            <div className="d-flex gap-2">
-              <Button
-                variant="outline-secondary"
-                size="sm"
-                onClick={onRefresh}
-                disabled={isLoading}
-                className="d-flex align-items-center gap-2"
-              >
-                <RefreshCw size={16} />
-                Обновить
-              </Button>
-              <Button
-                variant="primary"
-                size="sm"
-                onClick={onCreate}
-                className="d-flex align-items-center gap-2"
-              >
-                <Plus size={16} />
-                Добавить тип
-              </Button>
-            </div>
-          </div>
-        </Col>
-      </Row>
+    <div style={{ padding: "16px 0" }}>
+      <Flex justify="space-between" align="center" style={{ marginBottom: 12 }}>
+        <h1 style={{ marginBottom: 0 }}>Типы мемов</h1>
+        <Flex gap={8}>
+          <Button
+            onClick={onRefresh}
+            disabled={isLoading}
+            style={{ display: "flex", alignItems: "center", gap: 6 }}
+          >
+            <RefreshCw size={16} />
+            Обновить
+          </Button>
+          <Button
+            type="primary"
+            onClick={onCreate}
+            style={{ display: "flex", alignItems: "center", gap: 6 }}
+          >
+            <Plus size={16} />
+            Добавить тип
+          </Button>
+        </Flex>
+      </Flex>
 
       {error && (
-        <Alert variant="danger" className="mb-3">
-          <Alert.Heading>Ошибка загрузки</Alert.Heading>
-          <p className="mb-0">{error}</p>
-        </Alert>
+        <Alert
+          type="error"
+          showIcon
+          message="Ошибка загрузки"
+          description={error}
+          style={{ marginBottom: 12 }}
+        />
       )}
 
       {memeTypes.length === 0 ? (
-        <Card className="text-center">
-          <Card.Body>
-            <Folder size={64} className="text-muted mb-3" />
-            <h5 className="mb-1">Типы мемов не найдены</h5>
-            <div className="text-muted">Создайте первый тип мема</div>
-          </Card.Body>
+        <Card style={{ textAlign: "center" }}>
+          <Folder size={64} style={{ color: "#8c8c8c", marginBottom: 12 }} />
+          <h5 style={{ marginBottom: 4 }}>Типы мемов не найдены</h5>
+          <div style={{ color: "#8c8c8c" }}>Создайте первый тип мема</div>
         </Card>
       ) : (
-        <Row xs={1} sm={2} lg={3} xl={4}>
+        <Flex wrap="wrap" gap={12}>
           {memeTypes.map(type => (
-            <Col key={type.id} className="mb-3">
+            <div
+              key={type.id}
+              style={{
+                flex: "0 0 calc(25% - 9px)",
+                minWidth: 220,
+              }}
+            >
               <Card
-                className="h-100 cursor-pointer"
-                style={{ cursor: "pointer" }}
+                hoverable
+                style={{ height: "100%", cursor: "pointer" }}
                 onClick={() => onViewDetails(type)}
               >
-                <Card.Body>
-                  <div className="d-flex align-items-center mb-3">
-                    <div className="me-3">
-                      <Folder size={32} className="text-primary" />
-                    </div>
-                    <div className="flex-grow-1">
-                      <h6 className="mb-1 fw-bold">{type.name}</h6>
-                      <small className="text-muted">ID: {type.id}</small>
-                    </div>
+                <Flex align="center" style={{ marginBottom: 12 }}>
+                  <div style={{ marginRight: 12 }}>
+                    <Folder size={32} style={{ color: "#1677ff" }} />
                   </div>
+                  <div style={{ flex: 1 }}>
+                    <h6 style={{ marginBottom: 2, fontWeight: 600 }}>
+                      {type.name}
+                    </h6>
+                    <span style={{ color: "#8c8c8c", fontSize: 12 }}>
+                      ID: {type.id}
+                    </span>
+                  </div>
+                </Flex>
 
-                  <div className="mb-3">
-                    <small className="text-muted d-block">Папка</small>
-                    <code
-                      className="d-block text-truncate"
-                      style={{
-                        backgroundColor: "var(--bs-light)",
-                        padding: "0.25rem 0.5rem",
-                        borderRadius: "0.25rem",
-                        fontSize: "0.8rem",
-                      }}
-                      title={type.folderPath}
-                    >
-                      {type.folderPath}
-                    </code>
-                  </div>
+                <div style={{ marginBottom: 12 }}>
+                  <span
+                    style={{ color: "#8c8c8c", fontSize: 12, display: "block" }}
+                  >
+                    Папка
+                  </span>
+                  <code
+                    style={{
+                      display: "block",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                      whiteSpace: "nowrap",
+                      backgroundColor: "var(--bs-light)",
+                      padding: "0.25rem 0.5rem",
+                      borderRadius: "0.25rem",
+                      fontSize: "0.8rem",
+                    }}
+                    title={type.folderPath}
+                  >
+                    {type.folderPath}
+                  </code>
+                </div>
 
-                  <div className="d-flex gap-1">
-                    <Button
-                      variant="outline-primary"
-                      size="sm"
-                      onClick={e => {
-                        e.stopPropagation();
-                        onViewDetails(type);
-                      }}
-                      className="d-flex align-items-center justify-content-center"
-                      title="Просмотр"
-                    >
-                      <Eye size={14} />
-                    </Button>
-                    <Button
-                      variant="outline-warning"
-                      size="sm"
-                      onClick={e => {
-                        e.stopPropagation();
-                        onEdit(type);
-                      }}
-                      className="d-flex align-items-center justify-content-center"
-                      title="Редактировать"
-                    >
-                      <Edit size={14} />
-                    </Button>
-                    <Button
-                      variant="outline-danger"
-                      size="sm"
-                      onClick={e => {
-                        e.stopPropagation();
-                        onDelete(type);
-                      }}
-                      className="d-flex align-items-center justify-content-center"
-                      title="Удалить"
-                    >
-                      <Trash2 size={14} />
-                    </Button>
-                  </div>
-                </Card.Body>
+                <Flex gap={4}>
+                  <Button
+                    size="small"
+                    onClick={e => {
+                      e.stopPropagation();
+                      onViewDetails(type);
+                    }}
+                    title="Просмотр"
+                  >
+                    <Eye size={14} />
+                  </Button>
+                  <Button
+                    size="small"
+                    onClick={e => {
+                      e.stopPropagation();
+                      onEdit(type);
+                    }}
+                    title="Редактировать"
+                  >
+                    <Edit size={14} />
+                  </Button>
+                  <Button
+                    danger
+                    size="small"
+                    onClick={e => {
+                      e.stopPropagation();
+                      onDelete(type);
+                    }}
+                    title="Удалить"
+                  >
+                    <Trash2 size={14} />
+                  </Button>
+                </Flex>
               </Card>
-            </Col>
+            </div>
           ))}
-        </Row>
+        </Flex>
       )}
-    </Container>
+    </div>
   );
 };
 

@@ -8,7 +8,9 @@ export const OBSComponentWrapper = ({
 }) => (
   <>
     <TelegramusHubSignalRHubWrapper>
-      <div className="obs-component" data-testid="obs-component-wrapper">{children}</div>
+      <div className="obs-component" data-testid="obs-component-wrapper">
+        {children}
+      </div>
     </TelegramusHubSignalRHubWrapper>
   </>
 );

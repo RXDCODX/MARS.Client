@@ -1,4 +1,4 @@
-import { Box, Flex, IconButton, Text } from "@chakra-ui/react";
+import { Button, Flex, Typography } from "antd";
 import { Music, Video, VideoOff, Volume2, VolumeX } from "lucide-react";
 import { memo, useCallback, useMemo } from "react";
 import { useShallow } from "zustand/react/shallow";
@@ -7,9 +7,6 @@ import { PlayerStateVideoStateEnum } from "@/shared/api";
 
 import { usePlayerStore } from "../../stores/usePlayerStore";
 
-/**
- * Управление громкостью и режимом отображения видео
- */
 function VolumeControlsComponent() {
   const { volume, isMuted, videoState, loading, actions } = usePlayerStore(
     useShallow(state => ({
@@ -43,7 +40,6 @@ function VolumeControlsComponent() {
     [actions]
   );
 
-  // Определяем иконку видео в зависимости от videoState
   const videoIcon = useMemo(() => {
     switch (videoState) {
       case PlayerStateVideoStateEnum.Video:
@@ -57,77 +53,51 @@ function VolumeControlsComponent() {
     }
   }, [videoState]);
 
-  // Определяем colorScheme для кнопки видео
-  const videoColorScheme = useMemo(() => {
+  const videoButtonType = useMemo(() => {
     switch (videoState) {
       case PlayerStateVideoStateEnum.Video:
-        return "blue";
+        return "primary";
       case PlayerStateVideoStateEnum.NoVideo:
-        return "orange";
+        return "default";
       case PlayerStateVideoStateEnum.AudioOnly:
-        return "cyan";
+        return "primary";
       default:
-        return "blue";
+        return "primary";
     }
   }, [videoState]);
 
   return (
     <Flex
       align="center"
-      gap={3}
-      p={3}
-      bg="gray.100"
-      borderRadius="md"
-      _dark={{
-        bg: "gray.700",
+      gap={12}
+      style={{
+        padding: 12,
+        borderRadius: 8,
+        backgroundColor: "var(--site-bg-secondary)",
       }}
       data-testid="volume-controls-mobile"
     >
-      <IconButton
+      <Button
         onClick={handleMute}
         disabled={loading || !actions}
-        colorScheme={isMuted ? "gray" : "blue"}
+        type={isMuted ? "default" : "primary"}
         aria-label={isMuted ? "Звук выкл." : "Звук вкл."}
         title={isMuted ? "Звук выкл." : "Звук вкл."}
-        size="md"
-        minW="45px"
-        h="45px"
-        borderRadius="md"
-        flexShrink={0}
-        _hover={{
-          transform: "translateY(-2px)",
-          shadow: "md",
-        }}
-        _active={{
-          transform: "translateY(0)",
-        }}
-        transition="all 0.2s ease"
+        style={{ width: 45, height: 45, flexShrink: 0 }}
       >
         {isMuted ? <VolumeX size={18} /> : <Volume2 size={18} />}
-      </IconButton>
-      <IconButton
+      </Button>
+      <Button
         onClick={handleToggleVideoState}
         disabled={loading || !actions}
-        colorScheme={videoColorScheme}
+        type={videoButtonType}
         aria-label="Переключить режим отображения"
         title="Переключить режим отображения"
-        size="md"
-        minW="45px"
-        h="45px"
-        borderRadius="md"
-        flexShrink={0}
-        _hover={{
-          transform: "translateY(-2px)",
-          shadow: "md",
-        }}
-        _active={{
-          transform: "translateY(0)",
-        }}
-        transition="all 0.2s ease"
+        style={{ width: 45, height: 45, flexShrink: 0 }}
       >
         {videoIcon}
-      </IconButton>
-      <Box flex={1} px={2}>
+      </Button>
+      <div style={{ flex: 1, padding: "0 8px" }}>
         <input
           type="range"
           aria-label="Громкость"
@@ -142,23 +112,22 @@ function VolumeControlsComponent() {
             borderRadius: "4px",
             outline: "none",
             WebkitAppearance: "none",
-            background: `linear-gradient(to right, #3182ce 0%, #3182ce ${volume}%, #cbd5e0 ${volume}%, #cbd5e0 100%)`,
+            background: `linear-gradient(to right, #52C41A 0%, #52C41A ${volume}%, #d9d9d9 ${volume}%, #d9d9d9 100%)`,
             cursor: loading || !actions ? "not-allowed" : "pointer",
           }}
         />
-      </Box>
-      <Text
-        minW="45px"
-        textAlign="right"
-        fontWeight="semibold"
-        color="blue.600"
-        fontSize="sm"
-        _dark={{
-          color: "blue.300",
+      </div>
+      <Typography.Text
+        style={{
+          minWidth: 45,
+          textAlign: "right",
+          fontWeight: 600,
+          color: "var(--site-text-accent)",
+          fontSize: 14,
         }}
       >
         {volume}%
-      </Text>
+      </Typography.Text>
     </Flex>
   );
 }

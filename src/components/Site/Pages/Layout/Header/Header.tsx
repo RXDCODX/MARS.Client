@@ -78,7 +78,11 @@ const Header: React.FC = () => {
     { label: "RootState", path: "/root-state", icon: "💾" },
     { label: "Твич награды", path: "/twitch-rewards", icon: "🎁" },
     { label: "Автосообщения", path: "/auto-messages", icon: "📨" },
-    { label: "Telegram ↔ Discord Bridge", path: "/telegram-discord-bridge", icon: "🔗" },
+    {
+      label: "Telegram ↔ Discord Bridge",
+      path: "/telegram-discord-bridge",
+      icon: "🔗",
+    },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -134,7 +138,9 @@ const Header: React.FC = () => {
                   : "text-[var(--site-text-primary)]"
               }`}
             >
-              {item.icon && <span className="w-5 text-center">{item.icon}</span>}
+              {item.icon && (
+                <span className="w-5 text-center">{item.icon}</span>
+              )}
               {item.label}
             </Link>
           ))}
@@ -165,13 +171,21 @@ const Header: React.FC = () => {
           onClick={() => setMobileOpen(!mobileOpen)}
           data-testid="nav-mobile-toggle"
         >
-          <span className={`block h-0.5 w-5 bg-[var(--site-text-primary)] transition-all ${mobileOpen ? "translate-y-1.5 rotate-45" : ""}`} />
-          <span className={`block h-0.5 w-5 bg-[var(--site-text-primary)] transition-all ${mobileOpen ? "opacity-0" : ""}`} />
-          <span className={`block h-0.5 w-5 bg-[var(--site-text-primary)] transition-all ${mobileOpen ? "-translate-y-1.5 -rotate-45" : ""}`} />
+          <span
+            className={`block h-0.5 w-5 bg-[var(--site-text-primary)] transition-all ${mobileOpen ? "translate-y-1.5 rotate-45" : ""}`}
+          />
+          <span
+            className={`block h-0.5 w-5 bg-[var(--site-text-primary)] transition-all ${mobileOpen ? "opacity-0" : ""}`}
+          />
+          <span
+            className={`block h-0.5 w-5 bg-[var(--site-text-primary)] transition-all ${mobileOpen ? "-translate-y-1.5 -rotate-45" : ""}`}
+          />
         </button>
 
         <div className={`hidden items-center gap-1 lg:flex`}>
-          {renderDropdown("site", "Страницы сайта", sitePages, (item) => isActive(item.path))}
+          {renderDropdown("site", "Страницы сайта", sitePages, item =>
+            isActive(item.path)
+          )}
 
           <div
             className="relative pb-2"
@@ -194,9 +208,7 @@ const Header: React.FC = () => {
               />
             </button>
             {activeDropdown === "obs" && (
-              <div
-                className="absolute left-0 top-full z-50 pt-2 min-w-[220px] origin-top rounded-xl border border-[var(--site-border-primary)] bg-[var(--site-bg-card)] p-1.5 shadow-[var(--site-shadow-heavy)] animate-dropdown-open"
-              >
+              <div className="absolute left-0 top-full z-50 pt-2 min-w-[220px] origin-top rounded-xl border border-[var(--site-border-primary)] bg-[var(--site-bg-card)] p-1.5 shadow-[var(--site-shadow-heavy)] animate-dropdown-open">
                 {obsComponents.map((group, gi) => (
                   <div key={gi} className="group/obs relative">
                     <div className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-[var(--site-text-primary)]">
@@ -227,11 +239,8 @@ const Header: React.FC = () => {
             )}
           </div>
 
-          {renderDropdown(
-            "control",
-            "Управление",
-            controlRoomPages,
-            (item) => isActive(item.path)
+          {renderDropdown("control", "Управление", controlRoomPages, item =>
+            isActive(item.path)
           )}
         </div>
 
@@ -311,16 +320,22 @@ const MobileNav: React.FC<MobileNavProps> = ({
 
   const sections = [
     { key: "site", label: "Страницы сайта", items: sitePages },
-    { key: "obs", label: "OBS Компоненты", items: obsComponents.flatMap((g) => g.children) },
+    {
+      key: "obs",
+      label: "OBS Компоненты",
+      items: obsComponents.flatMap(g => g.children),
+    },
     { key: "control", label: "Управление", items: controlRoomPages },
   ];
 
   return (
     <div className="flex flex-col gap-1">
-      {sections.map((section) => (
+      {sections.map(section => (
         <div key={section.key}>
           <button
-            onClick={() => setOpenSection(openSection === section.key ? null : section.key)}
+            onClick={() =>
+              setOpenSection(openSection === section.key ? null : section.key)
+            }
             className="flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-sm font-medium text-[var(--site-text-primary)] transition-all hover:bg-[var(--site-bg-tertiary)]"
           >
             {section.label}
