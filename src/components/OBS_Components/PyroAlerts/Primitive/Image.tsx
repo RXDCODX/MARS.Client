@@ -1,4 +1,4 @@
-import { CSSProperties, useEffect, useRef, useState } from "react";
+import { CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 import { Textfit } from "react-textfit";
 
 import { MediaDto } from "@/shared/api";
@@ -7,6 +7,7 @@ import { KeyWordText } from "@/shared/components/KeyWordText";
 import { getCoordinates, getRandomRotation } from "@/shared/Utils";
 
 import common from "../../OBSCommon.module.scss";
+import peelStyles from "../Animations/StickerPeel/StickerPeel.module.scss";
 import styles from "./Media.module.scss";
 import { getMediaFrameStyle } from "./mediaFrameStyle";
 
@@ -23,9 +24,32 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
   const textInfo = mediaInfo.textInfo;
   const positionInfo = mediaInfo.positionInfo;
 
+  const [isDisappearing, setIsDisappearing] = useState(false);
+
+  const handleDisappear = useCallback(() => {
+    setIsDisappearing(true);
+  }, []);
+
   useEffect(() => {
-    setTimeout(() => callBack(), metaInfo.duration * 1000);
-  }, [callBack, metaInfo.duration]);
+    const peelDuration = 700;
+    const displayDuration = metaInfo.duration * 1000 - peelDuration;
+    const timer = setTimeout(
+      () => {
+        handleDisappear();
+      },
+      Math.max(0, displayDuration)
+    );
+
+    return () => clearTimeout(timer);
+  }, [handleDisappear, metaInfo.duration]);
+
+  useEffect(() => {
+    if (!isDisappearing) {
+      return;
+    }
+    const timer = setTimeout(() => callBack(), 700);
+    return () => clearTimeout(timer);
+  }, [isDisappearing, callBack]);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -64,7 +88,12 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
   };
 
   return (
-    <div ref={ref} className={styles["imageContainer"]} style={containerStyle} data-testid="pyro-alert-image">
+    <div
+      ref={ref}
+      className={`${styles["imageContainer"]} ${isDisappearing ? peelStyles.peelOff : ""}`}
+      style={containerStyle}
+      data-testid="pyro-alert-image"
+    >
       {positionInfo.isProportion ? (
         <img
           id={id}
