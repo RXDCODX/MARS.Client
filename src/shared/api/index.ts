@@ -11,8 +11,6 @@ export { ChannelRewardsManager } from "./http-clients/ChannelRewardsManager";
 export { CinemaQueue } from "./http-clients/CinemaQueue";
 export { Commands } from "./http-clients/Commands";
 export { EnvironmentVariable } from "./http-clients/EnvironmentVariable";
-export { Framedata } from "./http-clients/Framedata";
-export { FramedataChanges } from "./http-clients/FramedataChanges";
 export { GooglePhotos } from "./http-clients/GooglePhotos";
 export { KeyboardHook } from "./http-clients/KeyboardHook";
 export { LoggerTest } from "./http-clients/LoggerTest";

@@ -124,8 +124,6 @@ import type {
   CommandsUserPlatformDetailParamsPlatformEnum,
   CommandsUserPlatformInfoListParamsEnum,
   CommandsUserPlatformInfoListParamsPlatformEnum,
-  FramedataSupplementCreate2ParamsEnum,
-  FramedataSupplementCreate2ParamsSourceEnum,
   LogsByLevelDetailParamsEnum,
   LogsByLevelDetailParamsLogLevelEnum,
   LogsListParamsLogLevelEnum,

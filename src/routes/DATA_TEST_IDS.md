@@ -21,9 +21,6 @@ This file contains the full list of route-level components where `data-test-id` 
 | `/contacts` | Контакты | `ContactsPage` |
 | `/commands` | Команды | `CommandsPage` |
 | `/routes` | Все маршруты | `RoutesPage` |
-| `/framedata` | Фреймдата | `FramedataPage` |
-| `/framedata/pending` | Ожидающие изменения | `PendingChangesPage` |
-| `/framedata/pending/:changeId` | Детали изменения | `ChangeDetailsPage` |
 | `/media-info` | Информация о медиа | `MediaInfoListPage` |
 | `/media-info/create` | Создание медиа | `MediaInfoCreatePage` |
 | `/media-info/edit/:id` | Редактирование медиа | `MediaInfoEditPage` |

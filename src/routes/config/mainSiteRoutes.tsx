@@ -31,22 +31,6 @@ const routesPageLoader = () =>
 const RoutesPage = lazy(routesPageLoader);
 
 // Тяжелые страницы - lazy loading для оптимизации производительности
-const framedataPageLoader = () =>
-  import("@/components/Site/Pages/FramedataPage/FramedataPage");
-const FramedataPage = lazy(framedataPageLoader);
-
-const pendingChangesPageLoader = () =>
-  import("@/components/Site/Pages/FramedataPage").then(m => ({
-    default: m.PendingChangesPage,
-  }));
-const PendingChangesPage = lazy(pendingChangesPageLoader);
-
-const changeDetailsPageLoader = () =>
-  import("@/components/Site/Pages/FramedataPage").then(m => ({
-    default: m.ChangeDetailsPage,
-  }));
-const ChangeDetailsPage = lazy(changeDetailsPageLoader);
-
 const randomMemePageLoader = () =>
   import("@/components/Site/Pages/RandomMemePage/RandomMemePage");
 const RandomMemePage = lazy(randomMemePageLoader);
@@ -107,9 +91,6 @@ registerPrefetchComponents([
   commandsPageLoader,
   routesPageLoader,
   // Тяжелые страницы
-  framedataPageLoader,
-  pendingChangesPageLoader,
-  changeDetailsPageLoader,
   randomMemePageLoader,
   randomMemeDetailsPageLoader,
   randomMemeEditPageLoader,
@@ -202,42 +183,6 @@ export const mainSiteRoutes: RouteConfig[] = [
       <Layout>
         <Suspense fallback={<PageLoader />}>
           <RoutesPage />
-        </Suspense>
-      </Layout>
-    ),
-  },
-  {
-    path: "/framedata",
-    name: "Фреймдата",
-    type: "site",
-    element: (
-      <Layout>
-        <Suspense fallback={<PageLoader />}>
-          <FramedataPage />
-        </Suspense>
-      </Layout>
-    ),
-  },
-  {
-    path: "/framedata/pending",
-    name: "Ожидающие изменения",
-    type: "site",
-    element: (
-      <Layout>
-        <Suspense fallback={<PageLoader />}>
-          <PendingChangesPage />
-        </Suspense>
-      </Layout>
-    ),
-  },
-  {
-    path: "/framedata/pending/:changeId",
-    name: "Детали изменения",
-    type: "site",
-    element: (
-      <Layout>
-        <Suspense fallback={<PageLoader />}>
-          <ChangeDetailsPage />
         </Suspense>
       </Layout>
     ),

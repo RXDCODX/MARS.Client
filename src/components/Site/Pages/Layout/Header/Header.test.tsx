@@ -51,7 +51,6 @@ describe("Header", () => {
     const { default: Header } = await import("./Header");
     const markup = renderToStaticMarkup(createElement(Header));
     expect(markup).toContain('data-testid="nav-dropdown-site"');
-    expect(markup).toContain('data-testid="nav-dropdown-framedata"');
     expect(markup).toContain('data-testid="nav-dropdown-obs"');
   });
 

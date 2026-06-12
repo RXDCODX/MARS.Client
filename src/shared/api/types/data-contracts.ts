@@ -1188,20 +1188,6 @@ export enum CommandsAdminPlatformInfoListParamsEnum {
   All = "All",
 }
 
-export enum FramedataSupplementCreate2ParamsSourceEnum {
-  None = "None",
-  Wavu = "Wavu",
-  Tekkendocs = "Tekkendocs",
-  Okizeme = "Okizeme",
-}
-
-export enum FramedataSupplementCreate2ParamsEnum {
-  None = "None",
-  Wavu = "Wavu",
-  Tekkendocs = "Tekkendocs",
-  Okizeme = "Okizeme",
-}
-
 export enum LogsListParamsLogLevelEnum {
   Trace = "Trace",
   Debug = "Debug",

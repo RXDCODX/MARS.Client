@@ -32,11 +32,6 @@ const Header: React.FC = () => {
     { label: "Все маршруты", path: "/routes", icon: "🗺️" },
   ];
 
-  const framedataPages: NavigationItem[] = [
-    { label: "Просмотр фреймдаты", path: "/framedata", icon: "📊" },
-    { label: "Изменения", path: "/framedata/pending", icon: "✏️" },
-  ];
-
   const obsComponents: NavigationGroup[] = [
     {
       label: "Чат",
@@ -177,9 +172,6 @@ const Header: React.FC = () => {
 
         <div className={`hidden items-center gap-1 lg:flex`}>
           {renderDropdown("site", "Страницы сайта", sitePages, (item) => isActive(item.path))}
-          {renderDropdown("framedata", "Фреймдата", framedataPages, (item) =>
-            isActive(item.path)
-          )}
 
           <div
             className="relative pb-2"
@@ -274,7 +266,6 @@ const Header: React.FC = () => {
         <div className="border-t border-[var(--site-border-primary)] bg-[var(--site-bg-secondary)] px-4 py-3 lg:hidden">
           <MobileNav
             sitePages={sitePages}
-            framedataPages={framedataPages}
             obsComponents={obsComponents}
             controlRoomPages={controlRoomPages}
             isActive={isActive}
@@ -303,7 +294,6 @@ const Header: React.FC = () => {
 
 interface MobileNavProps {
   sitePages: NavigationItem[];
-  framedataPages: NavigationItem[];
   obsComponents: NavigationGroup[];
   controlRoomPages: NavigationItem[];
   isActive: (path: string) => boolean;
@@ -312,7 +302,6 @@ interface MobileNavProps {
 
 const MobileNav: React.FC<MobileNavProps> = ({
   sitePages,
-  framedataPages,
   obsComponents,
   controlRoomPages,
   isActive,
@@ -322,7 +311,6 @@ const MobileNav: React.FC<MobileNavProps> = ({
 
   const sections = [
     { key: "site", label: "Страницы сайта", items: sitePages },
-    { key: "framedata", label: "Фреймдата", items: framedataPages },
     { key: "obs", label: "OBS Компоненты", items: obsComponents.flatMap((g) => g.children) },
     { key: "control", label: "Управление", items: controlRoomPages },
   ];
