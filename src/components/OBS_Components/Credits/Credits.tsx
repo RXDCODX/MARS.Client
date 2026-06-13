@@ -1,5 +1,3 @@
-import "./body.css";
-
 import { motion, useAnimationControls } from "framer-motion";
 import {
   lazy,

@@ -93,13 +93,13 @@ export default function PyroAlerts() {
     );
     const needsFreeze = highPriNeedsFreeze || normalNeedsFreeze;
 
-    if (needsFreeze && !isFrozen.current) {
-      SignalRContext.invoke("ObsFreeze");
-      isFrozen.current = true;
-    } else if (!needsFreeze && isFrozen.current) {
-      SignalRContext.invoke("ObsUnfreeze");
-      isFrozen.current = false;
-    }
+    // if (needsFreeze && !isFrozen.current) {
+    //   SignalRContext.invoke("ObsFreeze");
+    //   isFrozen.current = true;
+    // } else if (!needsFreeze && isFrozen.current) {
+    //   SignalRContext.invoke("ObsUnfreeze");
+    //   isFrozen.current = false;
+    // }
   }, [currentHighPriority, messages]);
 
   useInjectStyles(`
