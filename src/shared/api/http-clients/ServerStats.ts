@@ -125,27 +125,21 @@ import type {
   TestAlertsAlertByTypeCreateParamsTypeEnum,
 } from "../types/data-contracts";
 
-export class Twitch<
+export class ServerStats<
   SecurityDataType = unknown,
 > extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags Twitch
-   * @name TwitchUserAuthList
-   * @request GET:/TwitchUserAuth
-   * @response `200` `OperationResult<Object>` OK
+   * @tags ServerStats
+   * @name ServerStatsList
+   * @request GET:/api/ServerStats
+   * @response `200` `OperationResult<ServerStatsResponse>` OK
    */
-  twitchUserAuthList = (
-    query?: {
-      code: string;
-    },
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<Object>, any>({
-      path: `/TwitchUserAuth`,
+  serverStatsList = (params: RequestParams = {}) =>
+    this.request<OperationResult<ServerStatsResponse>, any>({
+      path: `/api/ServerStats`,
       method: "GET",
-      query: query,
       format: "json",
       ...params,
     });

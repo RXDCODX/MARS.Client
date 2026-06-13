@@ -283,6 +283,56 @@
         "responses": { }
       }
     },
+    "/hubs/telegramus/ObsFreeze": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/ObsPauseScene": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/ObsTogglePause": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "mode",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/ObsUnfreeze": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/ObsUnpauseScene": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/telegramus/OnConnectedAsync": {
       "post": {
         "tags": [
@@ -739,10 +789,10 @@
             }
           },
           {
-            "name": "displayName",
+            "name": "twitchUser",
             "in": "query",
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/TwitchUser"
             }
           },
           {
@@ -2065,6 +2115,7 @@
         "required": [
           "displayName",
           "duration",
+          "isFreezeRequired",
           "isLooped",
           "priority",
           "twitchPointsCost",
@@ -2089,6 +2140,9 @@
             "type": "string"
           },
           "isLooped": {
+            "type": "boolean"
+          },
+          "isFreezeRequired": {
             "type": "boolean"
           },
           "duration": {

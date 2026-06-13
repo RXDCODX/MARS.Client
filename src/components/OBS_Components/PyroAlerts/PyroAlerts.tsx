@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import {
@@ -81,6 +81,26 @@ export default function PyroAlerts() {
       return () => clearTimeout(timer);
     }
   }, [highPriorityQueue, currentHighPriority]);
+
+  // Freeze/unfreeze OBS при появлении/исчезновении алертов с isFreezeRequired
+  const isFrozen = useRef(false);
+
+  useEffect(() => {
+    const highPriNeedsFreeze =
+      currentHighPriority?.mediaInfo.metaInfo.isFreezeRequired ?? false;
+    const normalNeedsFreeze = messages.some(
+      m => m.mediaInfo.metaInfo.isFreezeRequired
+    );
+    const needsFreeze = highPriNeedsFreeze || normalNeedsFreeze;
+
+    if (needsFreeze && !isFrozen.current) {
+      SignalRContext.invoke("ObsFreeze");
+      isFrozen.current = true;
+    } else if (!needsFreeze && isFrozen.current) {
+      SignalRContext.invoke("ObsUnfreeze");
+      isFrozen.current = false;
+    }
+  }, [currentHighPriority, messages]);
 
   useInjectStyles(`
     body {

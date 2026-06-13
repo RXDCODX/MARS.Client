@@ -125,176 +125,146 @@ import type {
   TestAlertsAlertByTypeCreateParamsTypeEnum,
 } from "../types/data-contracts";
 
-export class SoundRequest<
+export class Obs<
   SecurityDataType = unknown,
 > extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags SoundRequest
-   * @name SoundRequestStateList
-   * @request GET:/api/SoundRequest/state
-   * @response `200` `OperationResult<PlayerState>` OK
+   * @tags Obs
+   * @name ObsStatusList
+   * @request GET:/api/Obs/status
+   * @response `200` `void` OK
    */
-  soundRequestStateList = (params: RequestParams = {}) =>
-    this.request<OperationResult<PlayerState>, any>({
-      path: `/api/SoundRequest/state`,
+  obsStatusList = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/Obs/status`,
       method: "GET",
-      format: "json",
       ...params,
     });
   /**
    * No description
    *
-   * @tags SoundRequest
-   * @name SoundRequestQueueList
-   * @request GET:/api/SoundRequest/queue
-   * @response `200` `OperationResult<QueueItem[]>` OK
+   * @tags Obs
+   * @name ObsConnectCreate
+   * @request POST:/api/Obs/connect
+   * @response `200` `void` OK
    */
-  soundRequestQueueList = (params: RequestParams = {}) =>
-    this.request<OperationResult<QueueItem[]>, any>({
-      path: `/api/SoundRequest/queue`,
-      method: "GET",
-      format: "json",
+  obsConnectCreate = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/Obs/connect`,
+      method: "POST",
       ...params,
     });
   /**
    * No description
    *
-   * @tags SoundRequest
-   * @name SoundRequestHistoryList
-   * @request GET:/api/SoundRequest/history
-   * @response `200` `OperationResult<BaseTrackInfo[]>` OK
+   * @tags Obs
+   * @name ObsDisconnectCreate
+   * @request POST:/api/Obs/disconnect
+   * @response `200` `void` OK
    */
-  soundRequestHistoryList = (
+  obsDisconnectCreate = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/Obs/disconnect`,
+      method: "POST",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Obs
+   * @name ObsScreenshotCreate
+   * @request POST:/api/Obs/screenshot
+   * @response `200` `void` OK
+   */
+  obsScreenshotCreate = (
     query?: {
-      /**
-       * @format int32
-       * @default 20
-       */
-      count: number;
+      sourceName: string;
     },
     params: RequestParams = {}
   ) =>
-    this.request<OperationResult<BaseTrackInfo[]>, any>({
-      path: `/api/SoundRequest/history`,
-      method: "GET",
+    this.request<void, any>({
+      path: `/api/Obs/screenshot`,
+      method: "POST",
       query: query,
-      format: "json",
       ...params,
     });
   /**
    * No description
    *
-   * @tags SoundRequest
-   * @name SoundRequestHistoryQueueItemsList
-   * @request GET:/api/SoundRequest/history/queue-items
-   * @response `200` `OperationResult<QueueItem[]>` OK
+   * @tags Obs
+   * @name ObsFreezeCreate
+   * @request POST:/api/Obs/freeze
+   * @response `200` `void` OK
    */
-  soundRequestHistoryQueueItemsList = (
+  obsFreezeCreate = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/Obs/freeze`,
+      method: "POST",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Obs
+   * @name ObsUnfreezeCreate
+   * @request POST:/api/Obs/unfreeze
+   * @response `200` `void` OK
+   */
+  obsUnfreezeCreate = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/Obs/unfreeze`,
+      method: "POST",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Obs
+   * @name ObsPauseSceneCreate
+   * @request POST:/api/Obs/pause-scene
+   * @response `200` `void` OK
+   */
+  obsPauseSceneCreate = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/Obs/pause-scene`,
+      method: "POST",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Obs
+   * @name ObsUnpauseSceneCreate
+   * @request POST:/api/Obs/unpause-scene
+   * @response `200` `void` OK
+   */
+  obsUnpauseSceneCreate = (params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/Obs/unpause-scene`,
+      method: "POST",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags Obs
+   * @name ObsToggleCreate
+   * @request POST:/api/Obs/toggle
+   * @response `200` `void` OK
+   */
+  obsToggleCreate = (
     query?: {
-      /**
-       * @format int32
-       * @default 20
-       */
-      count: number;
+      /** @default "FreezeFrame" */
+      mode: ObsToggleCreateParamsModeEnum;
     },
     params: RequestParams = {}
   ) =>
-    this.request<OperationResult<QueueItem[]>, any>({
-      path: `/api/SoundRequest/history/queue-items`,
-      method: "GET",
-      query: query,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestCurrentSongList
-   * @request GET:/api/SoundRequest/current-song
-   * @response `200` `OperationResult<String>` OK
-   */
-  soundRequestCurrentSongList = (params: RequestParams = {}) =>
-    this.request<OperationResult<String>, any>({
-      path: `/api/SoundRequest/current-song`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestQueueDelete
-   * @request DELETE:/api/SoundRequest/queue/{queueItemId}
-   * @response `200` `OperationResult` OK
-   */
-  soundRequestQueueDelete = (queueItemId: string, params: RequestParams = {}) =>
-    this.request<OperationResult, any>({
-      path: `/api/SoundRequest/queue/${queueItemId}`,
-      method: "DELETE",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestAddTrackCreate
-   * @request POST:/api/SoundRequest/add-track
-   * @response `200` `OperationResult<String>` OK
-   */
-  soundRequestAddTrackCreate = (
-    query?: {
-      query: string;
-    },
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<String>, any>({
-      path: `/api/SoundRequest/add-track`,
+    this.request<void, any>({
+      path: `/api/Obs/toggle`,
       method: "POST",
       query: query,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestPlayNowCreate
-   * @request POST:/api/SoundRequest/play-now/{queueItemId}
-   * @response `200` `OperationResult<String>` OK
-   */
-  soundRequestPlayNowCreate = (
-    queueItemId: string,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<String>, any>({
-      path: `/api/SoundRequest/play-now/${queueItemId}`,
-      method: "POST",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestQueueReorderCreate
-   * @request POST:/api/SoundRequest/queue/reorder
-   * @response `200` `OperationResult<String>` OK
-   */
-  soundRequestQueueReorderCreate = (
-    data: QueueReorderRequest,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<String>, any>({
-      path: `/api/SoundRequest/queue/reorder`,
-      method: "POST",
-      body: data,
-      type: ContentType.Json,
-      format: "json",
       ...params,
     });
 }

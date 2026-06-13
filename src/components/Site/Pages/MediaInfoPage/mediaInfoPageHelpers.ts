@@ -121,6 +121,7 @@ export function createDefaultMediaInfo(
     metaInfo: {
       displayName: "",
       duration: 15,
+      isFreezeRequired: false,
       isLooped: false,
       priority: MediaMetaInfoPriorityEnum.Normal,
       twitchGuid: undefined,

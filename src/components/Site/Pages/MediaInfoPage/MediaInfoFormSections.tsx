@@ -634,6 +634,18 @@ export const MediaInfoFormSections: React.FC<Props> = ({
           />
           <span>VIP</span>
         </label>
+
+        <label className="toggle-field">
+          <Switch
+            checked={formData.metaInfo.isFreezeRequired}
+            onChange={checked =>
+              onChange("metaInfo.isFreezeRequired", checked)
+            }
+            disabled={formData.metaInfo.priority !== MediaMetaInfoPriorityEnum.High}
+            data-testid="switch-freeze-required"
+          />
+          <span>Заморозить OBS</span>
+        </label>
       </div>
     </section>
 

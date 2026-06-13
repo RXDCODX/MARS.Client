@@ -161,6 +161,9 @@ export const MediaInfoCreatePage: React.FC = () => {
               <Tag color="cyan">
                 {formData.fileInfo.type}
               </Tag>
+              {formData.metaInfo.isFreezeRequired && (
+                <Tag color="orange">Freeze</Tag>
+              )}
             </div>
           </div>
 

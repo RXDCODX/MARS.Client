@@ -125,175 +125,102 @@ import type {
   TestAlertsAlertByTypeCreateParamsTypeEnum,
 } from "../types/data-contracts";
 
-export class SoundRequest<
+export class TestAlerts<
   SecurityDataType = unknown,
 > extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags SoundRequest
-   * @name SoundRequestStateList
-   * @request GET:/api/SoundRequest/state
-   * @response `200` `OperationResult<PlayerState>` OK
-   */
-  soundRequestStateList = (params: RequestParams = {}) =>
-    this.request<OperationResult<PlayerState>, any>({
-      path: `/api/SoundRequest/state`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestQueueList
-   * @request GET:/api/SoundRequest/queue
-   * @response `200` `OperationResult<QueueItem[]>` OK
-   */
-  soundRequestQueueList = (params: RequestParams = {}) =>
-    this.request<OperationResult<QueueItem[]>, any>({
-      path: `/api/SoundRequest/queue`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestHistoryList
-   * @request GET:/api/SoundRequest/history
-   * @response `200` `OperationResult<BaseTrackInfo[]>` OK
-   */
-  soundRequestHistoryList = (
-    query?: {
-      /**
-       * @format int32
-       * @default 20
-       */
-      count: number;
-    },
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<BaseTrackInfo[]>, any>({
-      path: `/api/SoundRequest/history`,
-      method: "GET",
-      query: query,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestHistoryQueueItemsList
-   * @request GET:/api/SoundRequest/history/queue-items
-   * @response `200` `OperationResult<QueueItem[]>` OK
-   */
-  soundRequestHistoryQueueItemsList = (
-    query?: {
-      /**
-       * @format int32
-       * @default 20
-       */
-      count: number;
-    },
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<QueueItem[]>, any>({
-      path: `/api/SoundRequest/history/queue-items`,
-      method: "GET",
-      query: query,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestCurrentSongList
-   * @request GET:/api/SoundRequest/current-song
-   * @response `200` `OperationResult<String>` OK
-   */
-  soundRequestCurrentSongList = (params: RequestParams = {}) =>
-    this.request<OperationResult<String>, any>({
-      path: `/api/SoundRequest/current-song`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestQueueDelete
-   * @request DELETE:/api/SoundRequest/queue/{queueItemId}
+   * @tags TestAlerts
+   * @name TestAlertsAlertCreate
+   * @request POST:/api/TestAlerts/alert
    * @response `200` `OperationResult` OK
    */
-  soundRequestQueueDelete = (queueItemId: string, params: RequestParams = {}) =>
+  testAlertsAlertCreate = (data: MediaDto, params: RequestParams = {}) =>
     this.request<OperationResult, any>({
-      path: `/api/SoundRequest/queue/${queueItemId}`,
-      method: "DELETE",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestAddTrackCreate
-   * @request POST:/api/SoundRequest/add-track
-   * @response `200` `OperationResult<String>` OK
-   */
-  soundRequestAddTrackCreate = (
-    query?: {
-      query: string;
-    },
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<String>, any>({
-      path: `/api/SoundRequest/add-track`,
-      method: "POST",
-      query: query,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestPlayNowCreate
-   * @request POST:/api/SoundRequest/play-now/{queueItemId}
-   * @response `200` `OperationResult<String>` OK
-   */
-  soundRequestPlayNowCreate = (
-    queueItemId: string,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<String>, any>({
-      path: `/api/SoundRequest/play-now/${queueItemId}`,
-      method: "POST",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags SoundRequest
-   * @name SoundRequestQueueReorderCreate
-   * @request POST:/api/SoundRequest/queue/reorder
-   * @response `200` `OperationResult<String>` OK
-   */
-  soundRequestQueueReorderCreate = (
-    data: QueueReorderRequest,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<String>, any>({
-      path: `/api/SoundRequest/queue/reorder`,
+      path: `/api/TestAlerts/alert`,
       method: "POST",
       body: data,
       type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags TestAlerts
+   * @name TestAlertsAlertsBatchCreate
+   * @request POST:/api/TestAlerts/alerts-batch
+   * @response `200` `OperationResult` OK
+   */
+  testAlertsAlertsBatchCreate = (
+    data: MediaDto[],
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult, any>({
+      path: `/api/TestAlerts/alerts-batch`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags TestAlerts
+   * @name TestAlertsAlertByTypeCreate
+   * @request POST:/api/TestAlerts/alert-by-type
+   * @response `200` `OperationResult<MediaDto>` OK
+   */
+  testAlertsAlertByTypeCreate = (
+    query?: {
+      type: TestAlertsAlertByTypeCreateParamsTypeEnum;
+      /** @default "Normal" */
+      priority: TestAlertsAlertByTypeCreateParamsPriorityEnum;
+      /**
+       * @format int32
+       * @default 5
+       */
+      duration: number;
+      text: string;
+    },
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<MediaDto>, any>({
+      path: `/api/TestAlerts/alert-by-type`,
+      method: "POST",
+      query: query,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags TestAlerts
+   * @name TestAlertsSettingsList
+   * @request GET:/api/TestAlerts/settings
+   * @response `200` `OperationResult<AlertSettingsEntry[]>` OK
+   */
+  testAlertsSettingsList = (params: RequestParams = {}) =>
+    this.request<OperationResult<AlertSettingsEntry[]>, any>({
+      path: `/api/TestAlerts/settings`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags TestAlerts
+   * @name TestAlertsAvailableFilesList
+   * @request GET:/api/TestAlerts/available-files
+   * @response `200` `OperationResult<MediaTypeStringArrayDictionary>` OK
+   */
+  testAlertsAvailableFilesList = (params: RequestParams = {}) =>
+    this.request<OperationResult<MediaTypeStringArrayDictionary>, any>({
+      path: `/api/TestAlerts/available-files`,
+      method: "GET",
       format: "json",
       ...params,
     });

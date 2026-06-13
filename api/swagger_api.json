@@ -1695,1287 +1695,6 @@
         }
       }
     },
-    "/api/Framedata/characters": {
-      "get": {
-        "tags": [
-          "Framedata"
-        ],
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 20
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterPagedResultOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterPagedResultOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterPagedResultOperationResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Framedata"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/TekkenCharacter"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/TekkenCharacter"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/TekkenCharacter"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Framedata/characters/{name}": {
-      "get": {
-        "tags": [
-          "Framedata"
-        ],
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Framedata"
-        ],
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/TekkenCharacter"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/TekkenCharacter"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/TekkenCharacter"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterOperationResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Framedata"
-        ],
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Framedata/characters/{characterName}/moves": {
-      "get": {
-        "tags": [
-          "Framedata"
-        ],
-        "parameters": [
-          {
-            "name": "characterName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 50
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/MovePagedResultOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MovePagedResultOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MovePagedResultOperationResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "Framedata"
-        ],
-        "parameters": [
-          {
-            "name": "characterName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/Move"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/Move"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/Move"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/MoveOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MoveOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MoveOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Framedata/characters/{characterName}/moves/{command}": {
-      "get": {
-        "tags": [
-          "Framedata"
-        ],
-        "parameters": [
-          {
-            "name": "characterName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "command",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/MoveOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MoveOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MoveOperationResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "Framedata"
-        ],
-        "parameters": [
-          {
-            "name": "characterName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "command",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/Move"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/Move"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/Move"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/MoveOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MoveOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MoveOperationResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "Framedata"
-        ],
-        "parameters": [
-          {
-            "name": "characterName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "command",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Framedata/moves/search": {
-      "get": {
-        "tags": [
-          "Framedata"
-        ],
-        "parameters": [
-          {
-            "name": "characterName",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "stanceCode",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "heatEngage",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "powerCrush",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "isThrow",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "homing",
-            "in": "query",
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 1
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 50
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/MovePagedResultOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MovePagedResultOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MovePagedResultOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Framedata/characters/{name}/image": {
-      "get": {
-        "tags": [
-          "Framedata"
-        ],
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Framedata/characters/{name}/avatar": {
-      "get": {
-        "tags": [
-          "Framedata"
-        ],
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Framedata/characters/{name}/fullbody": {
-      "get": {
-        "tags": [
-          "Framedata"
-        ],
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Framedata/parse": {
-      "post": {
-        "tags": [
-          "Framedata"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ParseRequest"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ParseRequest"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ParseRequest"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ParseResultOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ParseResultOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ParseResultOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Framedata/parse-characters-only": {
-      "post": {
-        "tags": [
-          "Framedata"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ParseRequest"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ParseRequest"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/ParseRequest"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ParseResultOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ParseResultOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ParseResultOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Framedata/supplement": {
-      "post": {
-        "tags": [
-          "Framedata"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/SupplementRequest"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/SupplementRequest"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/SupplementRequest"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ParseResultOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ParseResultOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ParseResultOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/Framedata/supplement/{source}": {
-      "post": {
-        "tags": [
-          "Framedata"
-        ],
-        "parameters": [
-          {
-            "name": "source",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "enum": [
-                "None",
-                "Wavu",
-                "Tekkendocs",
-                "Okizeme"
-              ],
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ParseResultOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ParseResultOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ParseResultOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/FramedataChanges/pending/characters": {
-      "get": {
-        "tags": [
-          "FramedataChanges"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterPendingDtoListOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterPendingDtoListOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TekkenCharacterPendingDtoListOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/FramedataChanges/pending/moves": {
-      "get": {
-        "tags": [
-          "FramedataChanges"
-        ],
-        "parameters": [
-          {
-            "name": "characterName",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/MovePendingDtoListOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MovePendingDtoListOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MovePendingDtoListOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/FramedataChanges/approve/character/{name}": {
-      "post": {
-        "tags": [
-          "FramedataChanges"
-        ],
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/FramedataChanges/reject/character/{name}": {
-      "post": {
-        "tags": [
-          "FramedataChanges"
-        ],
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/FramedataChanges/approve/move/{characterName}/{command}": {
-      "post": {
-        "tags": [
-          "FramedataChanges"
-        ],
-        "parameters": [
-          {
-            "name": "characterName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "command",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/FramedataChanges/reject/move/{characterName}/{command}": {
-      "post": {
-        "tags": [
-          "FramedataChanges"
-        ],
-        "parameters": [
-          {
-            "name": "characterName",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "command",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/FramedataChanges/approve/all": {
-      "post": {
-        "tags": [
-          "FramedataChanges"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/FramedataChanges/reject/all": {
-      "post": {
-        "tags": [
-          "FramedataChanges"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/FramedataChanges/scrape": {
-      "post": {
-        "tags": [
-          "FramedataChanges"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/FramedataChanges/stats": {
-      "get": {
-        "tags": [
-          "FramedataChanges"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/ObjectOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ObjectOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ObjectOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/GooglePhotos/authorize": {
       "post": {
         "tags": [
@@ -3735,6 +2454,137 @@
             "schema": {
               "type": "string",
               "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Obs/status": {
+      "get": {
+        "tags": [
+          "Obs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Obs/connect": {
+      "post": {
+        "tags": [
+          "Obs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Obs/disconnect": {
+      "post": {
+        "tags": [
+          "Obs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Obs/screenshot": {
+      "post": {
+        "tags": [
+          "Obs"
+        ],
+        "parameters": [
+          {
+            "name": "sourceName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Obs/freeze": {
+      "post": {
+        "tags": [
+          "Obs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Obs/unfreeze": {
+      "post": {
+        "tags": [
+          "Obs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Obs/pause-scene": {
+      "post": {
+        "tags": [
+          "Obs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Obs/unpause-scene": {
+      "post": {
+        "tags": [
+          "Obs"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Obs/toggle": {
+      "post": {
+        "tags": [
+          "Obs"
+        ],
+        "parameters": [
+          {
+            "name": "mode",
+            "in": "query",
+            "schema": {
+              "enum": [
+                "FreezeFrame",
+                "PauseScene"
+              ],
+              "type": "string",
+              "default": "FreezeFrame"
             }
           }
         ],
@@ -4864,6 +3714,35 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ServerStats": {
+      "get": {
+        "tags": [
+          "ServerStats"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerStatsResponseOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerStatsResponseOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServerStatsResponseOperationResult"
                 }
               }
             }
@@ -6475,6 +5354,257 @@
         }
       }
     },
+    "/api/TestAlerts/alert": {
+      "post": {
+        "tags": [
+          "TestAlerts"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MediaDto"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MediaDto"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/MediaDto"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/TestAlerts/alerts-batch": {
+      "post": {
+        "tags": [
+          "TestAlerts"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MediaDto"
+                }
+              }
+            },
+            "text/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MediaDto"
+                }
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/MediaDto"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/TestAlerts/alert-by-type": {
+      "post": {
+        "tags": [
+          "TestAlerts"
+        ],
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "enum": [
+                "None",
+                "Image",
+                "Audio",
+                "Video",
+                "TelegramSticker",
+                "Voice",
+                "Gif"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "priority",
+            "in": "query",
+            "schema": {
+              "enum": [
+                "Low",
+                "Normal",
+                "High"
+              ],
+              "type": "string",
+              "default": "Normal"
+            }
+          },
+          {
+            "name": "duration",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 5
+            }
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/TestAlerts/settings": {
+      "get": {
+        "tags": [
+          "TestAlerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertSettingsEntryListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertSettingsEntryListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AlertSettingsEntryListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/TestAlerts/available-files": {
+      "get": {
+        "tags": [
+          "TestAlerts"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaTypeStringArrayDictionaryOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaTypeStringArrayDictionaryOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MediaTypeStringArrayDictionaryOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/TestLogger/test-warning": {
       "post": {
         "tags": [
@@ -6972,6 +6102,111 @@
   },
   "components": {
     "schemas": {
+      "AlertSettingsEntry": {
+        "required": [
+          "duration",
+          "filePath",
+          "height",
+          "isBorder",
+          "isLooped",
+          "isProportion",
+          "isResizeRequires",
+          "isRotated",
+          "keyWordsColor",
+          "randomCoordinates",
+          "rotation",
+          "text",
+          "textColor",
+          "textPosition",
+          "twitchPointsCost",
+          "type",
+          "vip",
+          "width",
+          "xCoordinate",
+          "yCoordinate"
+        ],
+        "type": "object",
+        "properties": {
+          "twitchPointsCost": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "filePath": {
+            "type": "string"
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "randomCoordinates": {
+            "type": "boolean"
+          },
+          "xCoordinate": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "yCoordinate": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "textPosition": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "textColor": {
+            "type": "string"
+          },
+          "keyWordsColor": {
+            "type": "string"
+          },
+          "vip": {
+            "type": "boolean"
+          },
+          "isBorder": {
+            "type": "boolean"
+          },
+          "isProportion": {
+            "type": "boolean"
+          },
+          "isResizeRequires": {
+            "type": "boolean"
+          },
+          "width": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "height": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isRotated": {
+            "type": "boolean"
+          },
+          "rotation": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isLooped": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "AlertSettingsEntryListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
+      },
       "ApiMediaInfo": {
         "required": [
           "fileInfo",
@@ -8313,6 +7548,36 @@
         },
         "additionalProperties": false
       },
+      "MediaDto": {
+        "required": [
+          "mediaInfo",
+          "uploadStartTime"
+        ],
+        "type": "object",
+        "properties": {
+          "mediaInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaInfo"
+              }
+            ]
+          },
+          "uploadStartTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MediaDtoOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
+      },
       "MediaFileInfo": {
         "required": [
           "extension",
@@ -8354,10 +7619,64 @@
         },
         "additionalProperties": false
       },
+      "MediaInfo": {
+        "required": [
+          "fileInfo",
+          "id",
+          "metaInfo",
+          "positionInfo",
+          "stylesInfo",
+          "textInfo"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "textInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaTextInfo"
+              }
+            ]
+          },
+          "fileInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaFileInfo"
+              }
+            ]
+          },
+          "positionInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaPositionInfo"
+              }
+            ]
+          },
+          "metaInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaMetaInfo"
+              }
+            ]
+          },
+          "stylesInfo": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/MediaStylesInfo"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
       "MediaMetaInfo": {
         "required": [
           "displayName",
           "duration",
+          "isFreezeRequired",
           "isLooped",
           "priority",
           "twitchPointsCost",
@@ -8382,6 +7701,9 @@
             "type": "string"
           },
           "isLooped": {
+            "type": "boolean"
+          },
+          "isFreezeRequired": {
             "type": "boolean"
           },
           "duration": {
@@ -8539,6 +7861,15 @@
         },
         "additionalProperties": false
       },
+      "MediaTypeStringArrayDictionaryOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
+      },
       "MemeOrderDto": {
         "required": [
           "filePath",
@@ -8635,370 +7966,6 @@
         "description": "Результат операции с данными типа null",
         "x-generic-type-argument": "null"
       },
-      "Move": {
-        "required": [
-          "characterName",
-          "command",
-          "heatBurst",
-          "heatEngage",
-          "heatSmash",
-          "homing",
-          "isFromStance",
-          "powerCrush",
-          "requiresHeat",
-          "stanceCode",
-          "throw",
-          "tornado"
-        ],
-        "type": "object",
-        "properties": {
-          "characterName": {
-            "type": "string"
-          },
-          "command": {
-            "type": "string"
-          },
-          "isFromStance": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "stanceCode": {
-            "type": "string"
-          },
-          "stanceName": {
-            "type": "string",
-            "nullable": true
-          },
-          "heatEngage": {
-            "type": "boolean"
-          },
-          "heatSmash": {
-            "type": "boolean"
-          },
-          "powerCrush": {
-            "type": "boolean"
-          },
-          "throw": {
-            "type": "boolean"
-          },
-          "homing": {
-            "type": "boolean"
-          },
-          "tornado": {
-            "type": "boolean"
-          },
-          "heatBurst": {
-            "type": "boolean"
-          },
-          "requiresHeat": {
-            "type": "boolean"
-          },
-          "hitLevel": {
-            "type": "string",
-            "nullable": true
-          },
-          "damage": {
-            "type": "string",
-            "nullable": true
-          },
-          "startUpFrame": {
-            "type": "string",
-            "nullable": true
-          },
-          "blockFrame": {
-            "type": "string",
-            "nullable": true
-          },
-          "hitFrame": {
-            "type": "string",
-            "nullable": true
-          },
-          "counterHitFrame": {
-            "type": "string",
-            "nullable": true
-          },
-          "videoUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "notes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "MoveOperationResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/OperationResult"
-          }
-        ],
-        "description": "Результат операции с данными типа null",
-        "x-generic-type-argument": "null"
-      },
-      "MovePagedResult": {
-        "required": [
-          "hasNextPage",
-          "hasPreviousPage",
-          "items",
-          "page",
-          "pageSize",
-          "totalCount",
-          "totalPages"
-        ],
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Move"
-            }
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "hasNextPage": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "hasPreviousPage": {
-            "type": "boolean",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "MovePagedResultOperationResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/OperationResult"
-          }
-        ],
-        "description": "Результат операции с данными типа null",
-        "x-generic-type-argument": "null"
-      },
-      "MovePending": {
-        "required": [
-          "characterName",
-          "command",
-          "heatBurst",
-          "heatEngage",
-          "heatSmash",
-          "homing",
-          "isFromStance",
-          "powerCrush",
-          "requiresHeat",
-          "stanceCode",
-          "throw",
-          "tornado"
-        ],
-        "type": "object",
-        "properties": {
-          "characterName": {
-            "type": "string"
-          },
-          "command": {
-            "type": "string"
-          },
-          "isFromStance": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "stanceCode": {
-            "type": "string"
-          },
-          "stanceName": {
-            "type": "string",
-            "nullable": true
-          },
-          "heatEngage": {
-            "type": "boolean"
-          },
-          "heatSmash": {
-            "type": "boolean"
-          },
-          "powerCrush": {
-            "type": "boolean"
-          },
-          "throw": {
-            "type": "boolean"
-          },
-          "homing": {
-            "type": "boolean"
-          },
-          "tornado": {
-            "type": "boolean"
-          },
-          "heatBurst": {
-            "type": "boolean"
-          },
-          "requiresHeat": {
-            "type": "boolean"
-          },
-          "hitLevel": {
-            "type": "string",
-            "nullable": true
-          },
-          "damage": {
-            "type": "string",
-            "nullable": true
-          },
-          "startUpFrame": {
-            "type": "string",
-            "nullable": true
-          },
-          "blockFrame": {
-            "type": "string",
-            "nullable": true
-          },
-          "hitFrame": {
-            "type": "string",
-            "nullable": true
-          },
-          "counterHitFrame": {
-            "type": "string",
-            "nullable": true
-          },
-          "videoUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "notes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "MovePendingDto": {
-        "required": [
-          "characterName",
-          "command",
-          "heatBurst",
-          "heatEngage",
-          "heatSmash",
-          "homing",
-          "isFromStance",
-          "isNew",
-          "powerCrush",
-          "requiresHeat",
-          "stanceCode",
-          "throw",
-          "tornado"
-        ],
-        "type": "object",
-        "properties": {
-          "characterName": {
-            "type": "string"
-          },
-          "command": {
-            "type": "string"
-          },
-          "isFromStance": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "stanceCode": {
-            "type": "string"
-          },
-          "stanceName": {
-            "type": "string",
-            "nullable": true
-          },
-          "heatEngage": {
-            "type": "boolean"
-          },
-          "heatSmash": {
-            "type": "boolean"
-          },
-          "powerCrush": {
-            "type": "boolean"
-          },
-          "throw": {
-            "type": "boolean"
-          },
-          "homing": {
-            "type": "boolean"
-          },
-          "tornado": {
-            "type": "boolean"
-          },
-          "heatBurst": {
-            "type": "boolean"
-          },
-          "requiresHeat": {
-            "type": "boolean"
-          },
-          "hitLevel": {
-            "type": "string",
-            "nullable": true
-          },
-          "damage": {
-            "type": "string",
-            "nullable": true
-          },
-          "startUpFrame": {
-            "type": "string",
-            "nullable": true
-          },
-          "blockFrame": {
-            "type": "string",
-            "nullable": true
-          },
-          "hitFrame": {
-            "type": "string",
-            "nullable": true
-          },
-          "counterHitFrame": {
-            "type": "string",
-            "nullable": true
-          },
-          "videoUrl": {
-            "type": "string",
-            "nullable": true
-          },
-          "notes": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "isNew": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "MovePendingDtoListOperationResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/OperationResult"
-          }
-        ],
-        "description": "Результат операции с данными типа any",
-        "x-generic-type-argument": "any"
-      },
       "ObjectOperationResult": {
         "allOf": [
           {
@@ -9042,91 +8009,6 @@
           }
         },
         "additionalProperties": false
-      },
-      "ParseRequest": {
-        "required": [
-          "source"
-        ],
-        "type": "object",
-        "properties": {
-          "source": {
-            "enum": [
-              "None",
-              "Wavu",
-              "Tekkendocs",
-              "Okizeme"
-            ],
-            "type": "string"
-          },
-          "characterNames": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "requestDelaySeconds": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "characterDelaySeconds": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "useStagingService": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "parseMoves": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "maxRetries": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "httpTimeoutSeconds": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "ParseResult": {
-        "required": [
-          "message",
-          "parsedCharacters",
-          "success"
-        ],
-        "type": "object",
-        "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "parsedCharacters": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          "message": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "ParseResultOperationResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/OperationResult"
-          }
-        ],
-        "description": "Результат операции с данными типа null",
-        "x-generic-type-argument": "null"
       },
       "PlayerState": {
         "required": [
@@ -9491,6 +8373,85 @@
         "description": "Результат операции с данными типа null",
         "x-generic-type-argument": "null"
       },
+      "ServerStatsResponse": {
+        "required": [
+          "activeServicesCount",
+          "cpuUsagePercent",
+          "machineName",
+          "memoryGcHeapBytes",
+          "memoryPrivateBytes",
+          "memoryTotalBytes",
+          "memoryWorkingSetBytes",
+          "osVersion",
+          "processorCount",
+          "runtimeVersion",
+          "threadCount",
+          "totalServicesCount",
+          "uptimeSeconds"
+        ],
+        "type": "object",
+        "properties": {
+          "cpuUsagePercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "memoryWorkingSetBytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "memoryPrivateBytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "memoryGcHeapBytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "memoryTotalBytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "uptimeSeconds": {
+            "type": "number",
+            "format": "double"
+          },
+          "threadCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "activeServicesCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalServicesCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "osVersion": {
+            "type": "string"
+          },
+          "runtimeVersion": {
+            "type": "string"
+          },
+          "machineName": {
+            "type": "string"
+          },
+          "processorCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ServerStatsResponseOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
+      },
       "ServiceInfo": {
         "required": [
           "description",
@@ -9833,299 +8794,6 @@
         "x-generic-type-argument": "any"
       },
       "StringServiceStatusDictionaryOperationResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/OperationResult"
-          }
-        ],
-        "description": "Результат операции с данными типа any",
-        "x-generic-type-argument": "any"
-      },
-      "SupplementRequest": {
-        "required": [
-          "source"
-        ],
-        "type": "object",
-        "properties": {
-          "source": {
-            "enum": [
-              "None",
-              "Wavu",
-              "Tekkendocs",
-              "Okizeme"
-            ],
-            "type": "string"
-          },
-          "requestDelaySeconds": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "characterDelaySeconds": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "useStagingService": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "parseMoves": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "maxRetries": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "httpTimeoutSeconds": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "TekkenCharacter": {
-        "required": [
-          "displayName",
-          "lastUpdateTime",
-          "name",
-          "pageUrl"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "displayName": {
-            "type": "string",
-            "readOnly": true
-          },
-          "linkToImage": {
-            "maxLength": 300,
-            "type": "string",
-            "nullable": true
-          },
-          "pageUrl": {
-            "maxLength": 200,
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "byte",
-            "nullable": true
-          },
-          "imageExtension": {
-            "maxLength": 20,
-            "type": "string",
-            "nullable": true
-          },
-          "avatarImage": {
-            "type": "string",
-            "format": "byte",
-            "nullable": true
-          },
-          "avatarImageExtension": {
-            "maxLength": 20,
-            "type": "string",
-            "nullable": true
-          },
-          "fullBodyImage": {
-            "type": "string",
-            "format": "byte",
-            "nullable": true
-          },
-          "fullBodyImageExtension": {
-            "maxLength": 20,
-            "type": "string",
-            "nullable": true
-          },
-          "movelist": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Move"
-            },
-            "nullable": true
-          },
-          "lastUpdateTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "strengths": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "weaknesess": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "TekkenCharacterOperationResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/OperationResult"
-          }
-        ],
-        "description": "Результат операции с данными типа null",
-        "x-generic-type-argument": "null"
-      },
-      "TekkenCharacterPagedResult": {
-        "required": [
-          "hasNextPage",
-          "hasPreviousPage",
-          "items",
-          "page",
-          "pageSize",
-          "totalCount",
-          "totalPages"
-        ],
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TekkenCharacter"
-            }
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "hasNextPage": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "hasPreviousPage": {
-            "type": "boolean",
-            "readOnly": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "TekkenCharacterPagedResultOperationResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/OperationResult"
-          }
-        ],
-        "description": "Результат операции с данными типа null",
-        "x-generic-type-argument": "null"
-      },
-      "TekkenCharacterPendingDto": {
-        "required": [
-          "isNew",
-          "lastUpdateTime",
-          "name",
-          "pageUrl"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "linkToImage": {
-            "maxLength": 300,
-            "type": "string",
-            "nullable": true
-          },
-          "pageUrl": {
-            "maxLength": 200,
-            "type": "string"
-          },
-          "image": {
-            "type": "string",
-            "format": "byte",
-            "nullable": true
-          },
-          "imageExtension": {
-            "maxLength": 20,
-            "type": "string",
-            "nullable": true
-          },
-          "avatarImage": {
-            "type": "string",
-            "format": "byte",
-            "nullable": true
-          },
-          "avatarImageExtension": {
-            "maxLength": 20,
-            "type": "string",
-            "nullable": true
-          },
-          "fullBodyImage": {
-            "type": "string",
-            "format": "byte",
-            "nullable": true
-          },
-          "fullBodyImageExtension": {
-            "maxLength": 20,
-            "type": "string",
-            "nullable": true
-          },
-          "movelist": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/MovePending"
-            },
-            "nullable": true
-          },
-          "lastUpdateTime": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "strengths": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "weaknesess": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            },
-            "nullable": true
-          },
-          "isNew": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
-      "TekkenCharacterPendingDtoListOperationResult": {
         "allOf": [
           {
             "$ref": "#/components/schemas/OperationResult"
@@ -10676,12 +9344,6 @@
       "name": "EnvironmentVariable"
     },
     {
-      "name": "Framedata"
-    },
-    {
-      "name": "FramedataChanges"
-    },
-    {
       "name": "GooglePhotos"
     },
     {
@@ -10697,6 +9359,9 @@
       "name": "MediaInfoApi"
     },
     {
+      "name": "Obs"
+    },
+    {
       "name": "PyroAlerts"
     },
     {
@@ -10707,6 +9372,9 @@
     },
     {
       "name": "RxdcodxViewers"
+    },
+    {
+      "name": "ServerStats"
     },
     {
       "name": "ServiceManager"
@@ -10728,6 +9396,9 @@
     },
     {
       "name": "TelegramDiscordBridge"
+    },
+    {
+      "name": "TestAlerts"
     },
     {
       "name": "TestLogger"

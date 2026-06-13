@@ -23,6 +23,37 @@ export interface OperationResult<TData = any> {
   data?: TData;
 }
 
+export interface AlertSettingsEntry {
+  /** @format int32 */
+  twitchPointsCost: number;
+  filePath: string;
+  /** @format int32 */
+  duration: number;
+  randomCoordinates: boolean;
+  /** @format int32 */
+  xCoordinate: number;
+  /** @format int32 */
+  yCoordinate: number;
+  /** @format int32 */
+  type: number;
+  textPosition: string;
+  text: string;
+  textColor: string;
+  keyWordsColor: string;
+  vip: boolean;
+  isBorder: boolean;
+  isProportion: boolean;
+  isResizeRequires: boolean;
+  /** @format int32 */
+  width: number;
+  /** @format int32 */
+  height: number;
+  isRotated: boolean;
+  /** @format int32 */
+  rotation: number;
+  isLooped: boolean;
+}
+
 export interface ApiMediaInfo {
   /** @format uuid */
   id: string;
@@ -350,6 +381,12 @@ export interface MaxPerUserPerStreamSetting {
   maxPerUserPerStream: number;
 }
 
+export interface MediaDto {
+  mediaInfo: MediaInfo;
+  /** @format date-time */
+  uploadStartTime: string;
+}
+
 export interface MediaFileInfo {
   type: MediaFileInfoTypeEnum;
   filePath: string;
@@ -357,6 +394,16 @@ export interface MediaFileInfo {
   fileName: string;
   extension: string;
   isFileNotConvertable: boolean;
+}
+
+export interface MediaInfo {
+  /** @format uuid */
+  id: string;
+  textInfo: MediaTextInfo;
+  fileInfo: MediaFileInfo;
+  positionInfo: MediaPositionInfo;
+  metaInfo: MediaMetaInfo;
+  stylesInfo: MediaStylesInfo;
 }
 
 export interface MediaMetaInfo {
@@ -367,6 +414,7 @@ export interface MediaMetaInfo {
   vip: boolean;
   displayName: string;
   isLooped: boolean;
+  isFreezeRequired: boolean;
   /** @format int32 */
   duration: number;
   priority: MediaMetaInfoPriorityEnum;
@@ -438,116 +486,8 @@ export interface MemeTypeDto {
   folderPath: string;
 }
 
-export interface Move {
-  characterName: string;
-  command: string;
-  isFromStance: boolean;
-  stanceCode: string;
-  stanceName?: string;
-  heatEngage: boolean;
-  heatSmash: boolean;
-  powerCrush: boolean;
-  throw: boolean;
-  homing: boolean;
-  tornado: boolean;
-  heatBurst: boolean;
-  requiresHeat: boolean;
-  hitLevel?: string;
-  damage?: string;
-  startUpFrame?: string;
-  blockFrame?: string;
-  hitFrame?: string;
-  counterHitFrame?: string;
-  videoUrl?: string;
-  notes?: string[];
-}
-
-export interface MovePagedResult {
-  items: Move[];
-  /** @format int32 */
-  page: number;
-  /** @format int32 */
-  pageSize: number;
-  /** @format int32 */
-  totalCount: number;
-  /** @format int32 */
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-}
-
-export interface MovePending {
-  characterName: string;
-  command: string;
-  isFromStance: boolean;
-  stanceCode: string;
-  stanceName?: string;
-  heatEngage: boolean;
-  heatSmash: boolean;
-  powerCrush: boolean;
-  throw: boolean;
-  homing: boolean;
-  tornado: boolean;
-  heatBurst: boolean;
-  requiresHeat: boolean;
-  hitLevel?: string;
-  damage?: string;
-  startUpFrame?: string;
-  blockFrame?: string;
-  hitFrame?: string;
-  counterHitFrame?: string;
-  videoUrl?: string;
-  notes?: string[];
-}
-
-export interface MovePendingDto {
-  characterName: string;
-  command: string;
-  isFromStance: boolean;
-  stanceCode: string;
-  stanceName?: string;
-  heatEngage: boolean;
-  heatSmash: boolean;
-  powerCrush: boolean;
-  throw: boolean;
-  homing: boolean;
-  tornado: boolean;
-  heatBurst: boolean;
-  requiresHeat: boolean;
-  hitLevel?: string;
-  damage?: string;
-  startUpFrame?: string;
-  blockFrame?: string;
-  hitFrame?: string;
-  counterHitFrame?: string;
-  videoUrl?: string;
-  notes?: string[];
-  isNew: boolean;
-}
-
 export interface Pagination {
   cursor?: string;
-}
-
-export interface ParseRequest {
-  source: ParseRequestSourceEnum;
-  characterNames?: string[];
-  /** @format int32 */
-  requestDelaySeconds?: number;
-  /** @format int32 */
-  characterDelaySeconds?: number;
-  useStagingService?: boolean;
-  parseMoves?: boolean;
-  /** @format int32 */
-  maxRetries?: number;
-  /** @format int32 */
-  httpTimeoutSeconds?: number;
-}
-
-export interface ParseResult {
-  success: boolean;
-  parsedCharacters: string[];
-  message: string;
 }
 
 export interface PlayerState {
@@ -644,6 +584,32 @@ export interface RootState {
   typeDescription: string;
 }
 
+export interface ServerStatsResponse {
+  /** @format double */
+  cpuUsagePercent: number;
+  /** @format int64 */
+  memoryWorkingSetBytes: number;
+  /** @format int64 */
+  memoryPrivateBytes: number;
+  /** @format int64 */
+  memoryGcHeapBytes: number;
+  /** @format int64 */
+  memoryTotalBytes: number;
+  /** @format double */
+  uptimeSeconds: number;
+  /** @format int32 */
+  threadCount: number;
+  /** @format int32 */
+  activeServicesCount: number;
+  /** @format int32 */
+  totalServicesCount: number;
+  osVersion: string;
+  runtimeVersion: string;
+  machineName: string;
+  /** @format int32 */
+  processorCount: number;
+}
+
 export interface ServiceInfo {
   name: string;
   displayName: string;
@@ -714,90 +680,6 @@ export interface StreamArchiveConfig {
   folderPath: string;
   isConvertFile: boolean;
   fileConvertType: StreamArchiveConfigFileConvertTypeEnum;
-}
-
-export interface SupplementRequest {
-  source: SupplementRequestSourceEnum;
-  /** @format int32 */
-  requestDelaySeconds?: number;
-  /** @format int32 */
-  characterDelaySeconds?: number;
-  useStagingService?: boolean;
-  parseMoves?: boolean;
-  /** @format int32 */
-  maxRetries?: number;
-  /** @format int32 */
-  httpTimeoutSeconds?: number;
-}
-
-export interface TekkenCharacter {
-  /** @minLength 1 */
-  name: string;
-  displayName: string;
-  /** @maxLength 300 */
-  linkToImage?: string;
-  /** @maxLength 200 */
-  pageUrl: string;
-  /** @format byte */
-  image?: Blob;
-  /** @maxLength 20 */
-  imageExtension?: string;
-  /** @format byte */
-  avatarImage?: Blob;
-  /** @maxLength 20 */
-  avatarImageExtension?: string;
-  /** @format byte */
-  fullBodyImage?: Blob;
-  /** @maxLength 20 */
-  fullBodyImageExtension?: string;
-  movelist?: Move[];
-  /** @format date-time */
-  lastUpdateTime: string;
-  description?: string;
-  strengths?: string[];
-  weaknesess?: string[];
-}
-
-export interface TekkenCharacterPagedResult {
-  items: TekkenCharacter[];
-  /** @format int32 */
-  page: number;
-  /** @format int32 */
-  pageSize: number;
-  /** @format int32 */
-  totalCount: number;
-  /** @format int32 */
-  totalPages: number;
-  hasNextPage: boolean;
-  hasPreviousPage: boolean;
-}
-
-export interface TekkenCharacterPendingDto {
-  /** @minLength 1 */
-  name: string;
-  /** @maxLength 300 */
-  linkToImage?: string;
-  /** @maxLength 200 */
-  pageUrl: string;
-  /** @format byte */
-  image?: Blob;
-  /** @maxLength 20 */
-  imageExtension?: string;
-  /** @format byte */
-  avatarImage?: Blob;
-  /** @maxLength 20 */
-  avatarImageExtension?: string;
-  /** @format byte */
-  fullBodyImage?: Blob;
-  /** @maxLength 20 */
-  fullBodyImageExtension?: string;
-  movelist?: MovePending[];
-  /** @format date-time */
-  lastUpdateTime: string;
-  description?: string;
-  strengths?: string[];
-  weaknesess?: string[];
-  isNew: boolean;
 }
 
 export interface TelegramChannelOptionDto {
@@ -1026,13 +908,6 @@ export enum MediaMetaInfoPriorityEnum {
   High = "High",
 }
 
-export enum ParseRequestSourceEnum {
-  None = "None",
-  Wavu = "Wavu",
-  Tekkendocs = "Tekkendocs",
-  Okizeme = "Okizeme",
-}
-
 export enum PlayerStateStateEnum {
   Stopped = "Stopped",
   Playing = "Playing",
@@ -1069,13 +944,6 @@ export enum StreamArchiveConfigFileConvertTypeEnum {
   Mkv = "Mkv",
   Avi = "Avi",
   Mov = "Mov",
-}
-
-export enum SupplementRequestSourceEnum {
-  None = "None",
-  Wavu = "Wavu",
-  Tekkendocs = "Tekkendocs",
-  Okizeme = "Okizeme",
 }
 
 export enum UpdateCustomRewardRedemptionStatusRequestStatusEnum {
@@ -1216,6 +1084,29 @@ export enum LogsByLevelDetailParamsEnum {
   Error = "Error",
   Critical = "Critical",
   None = "None",
+}
+
+/** @default "FreezeFrame" */
+export enum ObsToggleCreateParamsModeEnum {
+  FreezeFrame = "FreezeFrame",
+  PauseScene = "PauseScene",
+}
+
+export enum TestAlertsAlertByTypeCreateParamsTypeEnum {
+  None = "None",
+  Image = "Image",
+  Audio = "Audio",
+  Video = "Video",
+  TelegramSticker = "TelegramSticker",
+  Voice = "Voice",
+  Gif = "Gif",
+}
+
+/** @default "Normal" */
+export enum TestAlertsAlertByTypeCreateParamsPriorityEnum {
+  Low = "Low",
+  Normal = "Normal",
+  High = "High",
 }
 // ========================================
 // SignalR-специфичные типы
@@ -1429,22 +1320,6 @@ export interface LogMessageDto {
   stackTrace?: string;
   /** @format date-time */
   timestamp: string;
-}
-
-export interface MediaDto {
-  mediaInfo: MediaInfo;
-  /** @format date-time */
-  uploadStartTime: string;
-}
-
-export interface MediaInfo {
-  fileInfo: MediaFileInfo;
-  /** @format uuid */
-  id: string;
-  metaInfo: MediaMetaInfo;
-  positionInfo: MediaPositionInfo;
-  stylesInfo: MediaStylesInfo;
-  textInfo: MediaTextInfo;
 }
 
 export interface MikuMondayDto {

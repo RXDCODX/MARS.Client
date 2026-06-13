@@ -414,6 +414,9 @@ export const MediaInfoListPage: React.FC = () => {
                 ? formatMediaRewardId(record.metaInfo.twitchGuid)
                 : "Награда не привязана"}
             </Tag>
+            {record.metaInfo.isFreezeRequired && (
+              <Tag color="orange">Freeze</Tag>
+            )}
           </div>
         ),
       },

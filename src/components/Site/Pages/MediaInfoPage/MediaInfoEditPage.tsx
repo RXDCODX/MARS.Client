@@ -73,6 +73,9 @@ const MediaInfoPreviewCard: React.FC<{
           <Tag color="cyan">
             {item.fileInfo.type}
           </Tag>
+          {item.metaInfo.isFreezeRequired && (
+            <Tag color="orange">Freeze</Tag>
+          )}
         </div>
       </div>
 
