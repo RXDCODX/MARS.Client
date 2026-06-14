@@ -53,17 +53,32 @@ export default function PyroAlerts() {
     );
   }, []);
 
-  const removeHighPrior = useCallback((message: MediaDto) => {
-    setHighPriorityQueue(prev =>
-      prev.filter(m => m.mediaInfo.id !== message.mediaInfo.id)
-    );
-  }, []);
+  const removeHighPrior = useCallback(
+    (message: MediaDto) => {
+      setHighPriorityQueue(prev => {
+        prev = prev.filter(m => m.mediaInfo.id !== message.mediaInfo.id);
+        const newPriority = prev.some(e => e) ? prev[0] : null;
+        setCurrentHighPriority(newPriority);
+        return prev;
+      });
+    },
+    [setHighPriorityQueue]
+  );
 
+  // Эффект для обработки очереди высокоприоритетных алертов
   useEffect(() => {
     if (highPriorityQueue.length > 0 && !currentHighPriority) {
-      setCurrentHighPriority(highPriorityQueue[0]);
-    } else if (highPriorityQueue.length === 0 && currentHighPriority) {
-      setCurrentHighPriority(null);
+      // Берем первый алерт из очереди
+      const nextAlert = highPriorityQueue[0];
+      setCurrentHighPriority(nextAlert);
+
+      // Удаляем его из очереди через 2 секунды (время показа)
+      const timer = setTimeout(() => {
+        setHighPriorityQueue(prev => prev.slice(1));
+        setCurrentHighPriority(null);
+      }, 2000);
+
+      return () => clearTimeout(timer);
     }
   }, [highPriorityQueue, currentHighPriority]);
 
