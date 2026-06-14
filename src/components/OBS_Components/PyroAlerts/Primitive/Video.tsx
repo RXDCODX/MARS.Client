@@ -254,6 +254,9 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
           textInfo: {} as MediaTextInfo,
           positionInfo: memoizedPositionInfoForFunctions,
         };
+
+        debugger;
+
         const newCords = getCoordinates(player.current, fakeMediaInfo);
         const randomRotation = getRandomRotation(fakeMediaInfo);
 
@@ -281,6 +284,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
     [
       memoizedPositionInfo.isUseOriginalWidthAndHeight,
       memoizedPositionInfoForFunctions,
+      muteAll,
     ]
   );
 

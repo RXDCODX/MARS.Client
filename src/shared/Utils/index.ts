@@ -17,8 +17,8 @@ export { FullText } from "./FullText/FullText";
 export * from "./faceUtils";
 
 // Экспорт утилит для цветовых переменных сайта
-export { useSiteColors } from "./useSiteColors";
 export type * from "./siteColors.types";
+export { useSiteColors } from "./useSiteColors";
 
 // Экспорт компонента ToastModal
 export * from "./ToastModal";
@@ -176,10 +176,19 @@ export function getCoordinates(
     };
     if (isInWindow) {
       // Проверяем, не выходит ли элемент за границы окна
+      const rightWidth =
+        window.innerWidth > info.positionInfo.width
+          ? info.positionInfo.width
+          : window.innerWidth;
+      const rightHeight =
+        window.innerHeight > info.positionInfo.height
+          ? info.positionInfo.height
+          : window.innerHeight;
+
       style = {
         ...style,
-        maxWidth: `${window.innerWidth}px`,
-        maxHeight: `${window.innerHeight}px`,
+        maxWidth: `${rightWidth}px`,
+        maxHeight: `${rightHeight}px`,
       };
     }
     return style;
