@@ -369,8 +369,8 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
         onCanPlayThrough={() => {
-          muteAll();
           freeze();
+          muteAll();
         }}
       />
       <Textfit
