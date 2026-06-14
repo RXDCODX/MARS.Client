@@ -14,7 +14,6 @@ import {
   faTimesCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useEffect, useMemo } from "react";
 import {
   Alert,
   Badge,
@@ -32,6 +31,7 @@ import {
   Table,
   Tooltip,
 } from "antd";
+import { useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useServiceStore } from "@/shared/serviceStore";
@@ -175,9 +175,7 @@ function ServerViewerUI() {
       title: "Время старта",
       key: "startTime",
       render: (_: unknown, record: (typeof services)[0]) =>
-        record.startTime
-          ? new Date(record.startTime).toLocaleString()
-          : "-",
+        record.startTime ? new Date(record.startTime).toLocaleString() : "-",
     },
     {
       title: "Последняя активность",
@@ -192,9 +190,7 @@ function ServerViewerUI() {
       key: "isEnabled",
       render: (_: unknown, record: (typeof services)[0]) => (
         <Tooltip
-          title={
-            record.isEnabled ? "Отключить сервис" : "Включить сервис"
-          }
+          title={record.isEnabled ? "Отключить сервис" : "Включить сервис"}
         >
           <Switch
             checked={record.isEnabled}
@@ -292,7 +288,11 @@ function ServerViewerUI() {
             <FontAwesomeIcon icon={faSyncAlt} spin={autoRefresh} />
             {autoRefresh ? " Автообновление" : " Вручную"}
           </Button>
-          <Button type="primary" onClick={fetchServices} title="Обновить сейчас">
+          <Button
+            type="primary"
+            onClick={fetchServices}
+            title="Обновить сейчас"
+          >
             <FontAwesomeIcon icon={faRefresh} /> Обновить
           </Button>
         </Space>
@@ -353,7 +353,8 @@ function ServerViewerUI() {
           pagination={false}
           style={{
             background: "#fff",
-            boxShadow: "0 1px 2px 0 rgba(0,0,0,0.03), 0 1px 6px -1px rgba(0,0,0,0.02), 0 2px 4px 0 rgba(0,0,0,0.02)",
+            boxShadow:
+              "0 1px 2px 0 rgba(0,0,0,0.03), 0 1px 6px -1px rgba(0,0,0,0.02), 0 2px 4px 0 rgba(0,0,0,0.02)",
           }}
         />
         {loading && (

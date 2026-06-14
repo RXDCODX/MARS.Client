@@ -420,6 +420,7 @@ export interface MediaMetaInfo {
   priority: MediaMetaInfoPriorityEnum;
   /** @format int32 */
   volume: number;
+  isEnabled: boolean;
 }
 
 export interface MediaMetadata {
@@ -1259,9 +1260,9 @@ export interface GaoAlertDto {
   twitchUser?: User;
 }
 
-export interface Host {
-  hostCoolDown: HostCoolDown;
-  hostGreetings: HostAutoHello;
+export interface Husband {
+  husbandCoolDown?: HusbandCoolDown;
+  husbandGreetings?: HusbandAutoHello;
   isPrivated: boolean;
   /** @format int32 */
   lastWeddingCongratulatedMonths?: number;
@@ -1277,20 +1278,20 @@ export interface Host {
   whenPrivated?: string;
 }
 
-export interface HostAutoHello {
+export interface HusbandAutoHello {
   /** @format uuid */
   guid: string;
-  host?: Host;
-  hostId: string;
+  husband?: Husband;
+  husbandId: string;
   /** @format date-time */
   time: string;
 }
 
-export interface HostCoolDown {
+export interface HusbandCoolDown {
   /** @format uuid */
   guid: string;
-  host?: Host;
-  hostId: string;
+  husband?: Husband;
+  husbandId: string;
   /** @format date-time */
   time: string;
 }

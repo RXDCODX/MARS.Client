@@ -1,7 +1,7 @@
-import { useMemo } from "react";
-import { theme } from "antd";
 import type { ConfigProviderProps } from "antd";
+import { theme } from "antd";
 import { createStyles } from "antd-style";
+import { useMemo } from "react";
 
 const useStyles = createStyles(({ css, cssVar }) => {
   const sharedBorder = {
@@ -46,10 +46,18 @@ export const useCartoonTheme = (isDark: boolean) => {
           controlHeight: 36,
         },
         components: {
-          Button: { primaryShadow: "none", dangerShadow: "none", defaultShadow: "none" },
+          Button: {
+            primaryShadow: "none",
+            dangerShadow: "none",
+            defaultShadow: "none",
+          },
           Modal: { boxShadow: "none" },
           Card: { colorBgContainer: isDark ? "#333333" : "#BBAA99" },
-          Tooltip: { borderRadius: 6, colorBorder: isDark ? "#66AAAA" : "#225555", algorithm: true },
+          Tooltip: {
+            borderRadius: 6,
+            colorBorder: isDark ? "#66AAAA" : "#225555",
+            algorithm: true,
+          },
           Select: { optionSelectedBg: isDark ? "#444444" : "#CBC4AF" },
         },
       },

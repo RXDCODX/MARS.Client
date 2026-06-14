@@ -1,7 +1,7 @@
-import { useMemo } from "react";
-import { theme } from "antd";
 import type { ConfigProviderProps } from "antd";
+import { theme } from "antd";
 import { createStyles } from "antd-style";
+import { useMemo } from "react";
 
 const useStyles = createStyles(({ css, cssVar }) => {
   const illustrationBorder = {
@@ -93,7 +93,12 @@ export const useIllustrationTheme = (isDark: boolean) => {
           fontWeightStrong: 600,
         },
         components: {
-          Button: { primaryShadow: "none", dangerShadow: "none", defaultShadow: "none", fontWeight: 600 },
+          Button: {
+            primaryShadow: "none",
+            dangerShadow: "none",
+            defaultShadow: "none",
+            fontWeight: 600,
+          },
           Modal: { boxShadow: "none" },
           Card: {
             boxShadow: isDark ? "4px 4px 0 #424242" : "4px 4px 0 #2C2C2C",
@@ -101,24 +106,53 @@ export const useIllustrationTheme = (isDark: boolean) => {
           },
           Tooltip: {
             colorBorder: isDark ? "#424242" : "#2C2C2C",
-            colorBgSpotlight: isDark ? "rgba(50, 50, 50, 0.95)" : "rgba(100, 100, 100, 0.95)",
+            colorBgSpotlight: isDark
+              ? "rgba(50, 50, 50, 0.95)"
+              : "rgba(100, 100, 100, 0.95)",
             borderRadius: 8,
           },
           Select: { optionSelectedBg: "transparent" },
-          Slider: { dotBorderColor: "#237804", dotActiveBorderColor: "#237804", colorPrimaryBorder: "#237804", colorPrimaryBorderHover: "#237804" },
+          Slider: {
+            dotBorderColor: "#237804",
+            dotActiveBorderColor: "#237804",
+            colorPrimaryBorder: "#237804",
+            colorPrimaryBorderHover: "#237804",
+          },
         },
       },
       button: { classNames: { root: styles.buttonRoot } },
       modal: { classNames: { container: styles.modalContainer } },
       alert: { className: styles.illustrationBorder },
-      colorPicker: { arrow: false, classNames: { root: styles.illustrationBox } },
+      colorPicker: {
+        arrow: false,
+        classNames: { root: styles.illustrationBox },
+      },
       popover: { classNames: { container: styles.illustrationBox } },
-      tooltip: { arrow: false, classNames: { root: styles.tooltipRoot, container: styles.illustrationBox } },
+      tooltip: {
+        arrow: false,
+        classNames: {
+          root: styles.tooltipRoot,
+          container: styles.illustrationBox,
+        },
+      },
       dropdown: { classNames: { root: styles.popupBox } },
-      select: { classNames: { root: styles.illustrationBox, popup: { root: styles.popupBox } } },
+      select: {
+        classNames: {
+          root: styles.illustrationBox,
+          popup: { root: styles.popupBox },
+        },
+      },
       input: { classNames: { root: styles.illustrationBox } },
-      inputNumber: { classNames: { root: styles.illustrationBox, actions: styles.inputNumberActions } },
-      progress: { classNames: { rail: styles.progressRail, track: styles.progressTrack }, styles: { rail: { height: 16 }, track: { height: 10 } } },
+      inputNumber: {
+        classNames: {
+          root: styles.illustrationBox,
+          actions: styles.inputNumberActions,
+        },
+      },
+      progress: {
+        classNames: { rail: styles.progressRail, track: styles.progressTrack },
+        styles: { rail: { height: 16 }, track: { height: 10 } },
+      },
     }),
     [isDark, styles]
   );

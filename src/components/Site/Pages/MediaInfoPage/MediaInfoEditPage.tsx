@@ -70,12 +70,8 @@ const MediaInfoPreviewCard: React.FC<{
           >
             {item.metaInfo.priority}
           </Tag>
-          <Tag color="cyan">
-            {item.fileInfo.type}
-          </Tag>
-          {item.metaInfo.isFreezeRequired && (
-            <Tag color="orange">Freeze</Tag>
-          )}
+          <Tag color="cyan">{item.fileInfo.type}</Tag>
+          {item.metaInfo.isFreezeRequired && <Tag color="orange">Freeze</Tag>}
         </div>
       </div>
 
@@ -338,7 +334,10 @@ export const MediaInfoEditPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="media-info-page media-info-edit-page" data-testid="media-info-edit-page">
+      <div
+        className="media-info-page media-info-edit-page"
+        data-testid="media-info-edit-page"
+      >
         <div className="state-block">
           <Spin size="large" data-testid="loading-spinner" />
           <p>Загружаем карточку алерта...</p>
@@ -349,7 +348,10 @@ export const MediaInfoEditPage: React.FC = () => {
 
   if (!alert) {
     return (
-      <div className="media-info-page media-info-edit-page" data-testid="media-info-edit-page">
+      <div
+        className="media-info-page media-info-edit-page"
+        data-testid="media-info-edit-page"
+      >
         <div className="state-block empty-state">
           <h2>Алерт не найден</h2>
           <p>Запрашиваемая запись отсутствует или была удалена.</p>
@@ -364,7 +366,10 @@ export const MediaInfoEditPage: React.FC = () => {
   }
 
   return (
-    <div className="media-info-page media-info-edit-page" data-testid="media-info-edit-page">
+    <div
+      className="media-info-page media-info-edit-page"
+      data-testid="media-info-edit-page"
+    >
       <section className="media-info-hero">
         <div className="hero-copy">
           <p className="eyebrow">Редактирование</p>
@@ -459,7 +464,12 @@ export const MediaInfoEditPage: React.FC = () => {
               previewUrl={previewUrl}
             />
 
-            <Flex gap={12} wrap="wrap" justify="flex-end" className="editor-footer-actions">
+            <Flex
+              gap={12}
+              wrap="wrap"
+              justify="flex-end"
+              className="editor-footer-actions"
+            >
               <Button
                 type="primary"
                 htmlType="submit"
@@ -468,10 +478,7 @@ export const MediaInfoEditPage: React.FC = () => {
               >
                 {saving ? "Сохраняем..." : "Сохранить изменения"}
               </Button>
-              <Button
-                onClick={handleCancel}
-                data-testid="button-cancel-edit"
-              >
+              <Button onClick={handleCancel} data-testid="button-cancel-edit">
                 К списку
               </Button>
             </Flex>

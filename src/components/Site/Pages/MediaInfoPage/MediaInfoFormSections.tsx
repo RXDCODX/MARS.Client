@@ -1,9 +1,10 @@
+import { Button, Flex, Form, Input, InputNumber, Select, Switch } from "antd";
+
 import {
   ApiMediaInfo,
   MediaFileInfoTypeEnum,
   MediaMetaInfoPriorityEnum,
 } from "@/shared/api";
-import { Button, Flex, Form, Input, InputNumber, Select, Switch } from "antd";
 
 import {
   mediaInfoFileTypes,
@@ -194,10 +195,7 @@ export const MediaInfoFormSections: React.FC<Props> = ({
         >
           Сгенерировать новый reward id
         </Button>
-        <Button
-          onClick={onClearRewardId}
-          data-testid="button-clear-reward"
-        >
+        <Button onClick={onClearRewardId} data-testid="button-clear-reward">
           Очистить привязку
         </Button>
       </Flex>
@@ -454,10 +452,7 @@ export const MediaInfoFormSections: React.FC<Props> = ({
           <Select
             value={formData.positionInfo.randomCoordinates ? "true" : "false"}
             onChange={value =>
-              onChange(
-                "positionInfo.randomCoordinates",
-                value === "true"
-              )
+              onChange("positionInfo.randomCoordinates", value === "true")
             }
             options={[
               { label: "Да", value: "true" },
@@ -475,10 +470,7 @@ export const MediaInfoFormSections: React.FC<Props> = ({
           <Select
             value={formData.positionInfo.isProportion ? "true" : "false"}
             onChange={value =>
-              onChange(
-                "positionInfo.isProportion",
-                value === "true"
-              )
+              onChange("positionInfo.isProportion", value === "true")
             }
             options={[
               { label: "Да", value: "true" },
@@ -493,9 +485,7 @@ export const MediaInfoFormSections: React.FC<Props> = ({
         <label className="toggle-field">
           <Switch
             checked={formData.positionInfo.isRotated}
-            onChange={checked =>
-              onChange("positionInfo.isRotated", checked)
-            }
+            onChange={checked => onChange("positionInfo.isRotated", checked)}
             data-testid="switch-rotated"
           />
           <span>Рандомный поворот</span>
@@ -538,10 +528,7 @@ export const MediaInfoFormSections: React.FC<Props> = ({
           <Switch
             checked={formData.positionInfo.isUseOriginalWidthAndHeight}
             onChange={checked =>
-              onChange(
-                "positionInfo.isUseOriginalWidthAndHeight",
-                checked
-              )
+              onChange("positionInfo.isUseOriginalWidthAndHeight", checked)
             }
             data-testid="switch-original-size"
           />
@@ -616,9 +603,7 @@ export const MediaInfoFormSections: React.FC<Props> = ({
         <label className="toggle-field">
           <Switch
             checked={formData.metaInfo.isLooped}
-            onChange={checked =>
-              onChange("metaInfo.isLooped", checked)
-            }
+            onChange={checked => onChange("metaInfo.isLooped", checked)}
             data-testid="switch-looped"
           />
           <span>Зациклить</span>
@@ -626,10 +611,17 @@ export const MediaInfoFormSections: React.FC<Props> = ({
 
         <label className="toggle-field">
           <Switch
+            checked={formData.metaInfo.isEnabled}
+            onChange={checked => onChange("metaInfo.isEnabled", checked)}
+            data-testid="switch-enabled"
+          />
+          <span>Включено</span>
+        </label>
+
+        <label className="toggle-field">
+          <Switch
             checked={formData.metaInfo.vip}
-            onChange={checked =>
-              onChange("metaInfo.vip", checked)
-            }
+            onChange={checked => onChange("metaInfo.vip", checked)}
             data-testid="switch-vip"
           />
           <span>VIP</span>
@@ -638,10 +630,10 @@ export const MediaInfoFormSections: React.FC<Props> = ({
         <label className="toggle-field">
           <Switch
             checked={formData.metaInfo.isFreezeRequired}
-            onChange={checked =>
-              onChange("metaInfo.isFreezeRequired", checked)
+            onChange={checked => onChange("metaInfo.isFreezeRequired", checked)}
+            disabled={
+              formData.metaInfo.priority !== MediaMetaInfoPriorityEnum.High
             }
-            disabled={formData.metaInfo.priority !== MediaMetaInfoPriorityEnum.High}
             data-testid="switch-freeze-required"
           />
           <span>Заморозить OBS</span>
@@ -659,9 +651,7 @@ export const MediaInfoFormSections: React.FC<Props> = ({
         <label className="toggle-field">
           <Switch
             checked={formData.stylesInfo.isBorder}
-            onChange={checked =>
-              onChange("stylesInfo.isBorder", checked)
-            }
+            onChange={checked => onChange("stylesInfo.isBorder", checked)}
             data-testid="switch-border"
           />
           <span>Рамка</span>

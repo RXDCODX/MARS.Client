@@ -7676,6 +7676,7 @@
         "required": [
           "displayName",
           "duration",
+          "isEnabled",
           "isFreezeRequired",
           "isLooped",
           "priority",
@@ -7721,6 +7722,9 @@
           "volume": {
             "type": "integer",
             "format": "int32"
+          },
+          "isEnabled": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

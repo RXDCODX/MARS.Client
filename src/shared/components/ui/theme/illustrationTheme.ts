@@ -80,11 +80,11 @@ const darkTokens = {
   colorBgLayout: "#0A0A0A",
 };
 
-const getAlgorithms = (
-  antdStyle: AntdStyle,
-  siteTheme: Theme
-): Algorithm[] => {
-  const isDark = antdStyle === "dark" || antdStyle === "dark-compact" || siteTheme === "dark";
+const getAlgorithms = (antdStyle: AntdStyle, siteTheme: Theme): Algorithm[] => {
+  const isDark =
+    antdStyle === "dark" ||
+    antdStyle === "dark-compact" ||
+    siteTheme === "dark";
   const isCompact = antdStyle === "compact" || antdStyle === "dark-compact";
 
   const algorithms: Algorithm[] = [];
@@ -142,9 +142,7 @@ const useIllustrationTheme = () => {
             boxShadow: "none",
           },
           Card: {
-            boxShadow: isDark
-              ? "4px 4px 0 #424242"
-              : "4px 4px 0 #2C2C2C",
+            boxShadow: isDark ? "4px 4px 0 #424242" : "4px 4px 0 #2C2C2C",
             colorBgContainer: isDark ? "#1F1F1F" : "#FFF0F6",
           },
           Tooltip: {

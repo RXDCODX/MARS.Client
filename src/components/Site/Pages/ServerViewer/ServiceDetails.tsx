@@ -1,5 +1,3 @@
-import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
 import {
   Alert,
   Badge,
@@ -13,6 +11,8 @@ import {
   Spin,
   Table,
 } from "antd";
+import axios from "axios";
+import { useCallback, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { useServiceStore } from "@/shared/serviceStore";
@@ -177,9 +177,7 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       >
         <div style={{ textAlign: "center" }}>
           <Spin size="small" />
-          <div style={{ marginTop: 12 }}>
-            Загрузка информации о сервисе...
-          </div>
+          <div style={{ marginTop: 12 }}>Загрузка информации о сервисе...</div>
           <div style={{ marginTop: 8, color: "#8c8c8c" }}>
             Параметр name: {searchParams.get("name") || "не указан"}
           </div>
@@ -324,11 +322,7 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           onClick={() => handleExecute(record.name)}
           disabled={execLoading === record.name}
         >
-          {execLoading === record.name ? (
-            <Spin size="small" />
-          ) : (
-            "▶ Выполнить"
-          )}
+          {execLoading === record.name ? <Spin size="small" /> : "▶ Выполнить"}
         </Button>
       ),
     },
@@ -353,12 +347,8 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         }}
       >
         <div>
-          <h2 style={{ marginBottom: 4 }}>
-            {info.displayName || info.name}
-          </h2>
-          <div
-            style={{ display: "flex", alignItems: "center", gap: 12 }}
-          >
+          <h2 style={{ marginBottom: 4 }}>{info.displayName || info.name}</h2>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
             <Badge
               color={info.isEnabled ? "green" : "default"}
               style={{
@@ -368,9 +358,7 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             >
               {info.status}
             </Badge>
-            <span>
-              {info.isEnabled ? "Активен" : "Неактивен"}
-            </span>
+            <span>{info.isEnabled ? "Активен" : "Неактивен"}</span>
           </div>
         </div>
         <Button type="default" size="large" onClick={onClose}>
@@ -380,10 +368,7 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 
       <Row gutter={[16, 16]} style={{ marginBottom: 16 }}>
         <Col md={16}>
-          <Card
-            title="Информация о сервисе"
-            style={{ height: "100%" }}
-          >
+          <Card title="Информация о сервисе" style={{ height: "100%" }}>
             <p style={{ color: "#8c8c8c", marginBottom: 16 }}>
               {info.description}
             </p>
@@ -574,8 +559,7 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                       index < filteredLogs.length - 1
                         ? "1px solid #e9ecef"
                         : "none",
-                    paddingBottom:
-                      index < filteredLogs.length - 1 ? 8 : 0,
+                    paddingBottom: index < filteredLogs.length - 1 ? 8 : 0,
                   }}
                 >
                   {log}

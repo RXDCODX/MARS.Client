@@ -1,6 +1,6 @@
+import { Button, Input, Select, Space, Spin } from "antd";
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Button, Input, Select, Space, Spin } from "antd";
 
 export interface LogViewerProps {
   logs: {

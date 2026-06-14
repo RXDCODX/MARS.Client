@@ -1,14 +1,10 @@
-import {
-  ApiOutlined,
-  AppstoreOutlined,
-  MenuOutlined,
-} from "@ant-design/icons";
+import { ApiOutlined, AppstoreOutlined, MenuOutlined } from "@ant-design/icons";
 import { Button, Dropdown, Flex, Space, Typography } from "antd";
 import { Suspense, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
-import ThemeToggle from "@/components/ThemeToggle";
 import StyleSelector from "@/components/StyleSelector/StyleSelector";
+import ThemeToggle from "@/components/ThemeToggle";
 
 interface NavigationItem {
   label: string;
@@ -92,9 +88,7 @@ const Header: React.FC = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const buildDropdownItems = (
-    items: (NavigationItem | NavigationGroup)[]
-  ) =>
+  const buildDropdownItems = (items: (NavigationItem | NavigationGroup)[]) =>
     items.map(item => {
       if ("children" in item) {
         return {
@@ -168,7 +162,8 @@ const Header: React.FC = () => {
             strong
             style={{
               fontSize: 18,
-              background: "linear-gradient(135deg, var(--site-text-primary), var(--site-text-accent))",
+              background:
+                "linear-gradient(135deg, var(--site-text-primary), var(--site-text-accent))",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
             }}
@@ -186,7 +181,12 @@ const Header: React.FC = () => {
           data-testid="nav-mobile-toggle"
         />
 
-        <Flex gap={4} align="center" className="desktop-nav" style={{ display: "flex" }}>
+        <Flex
+          gap={4}
+          align="center"
+          className="desktop-nav"
+          style={{ display: "flex" }}
+        >
           <Dropdown
             menu={{ items: buildDropdownItems(sitePages) }}
             trigger={["hover"]}
@@ -337,7 +337,8 @@ const MobileNav: React.FC<MobileNavProps> = ({
             {section.label}
             <span
               style={{
-                transform: openSection === section.key ? "rotate(180deg)" : "none",
+                transform:
+                  openSection === section.key ? "rotate(180deg)" : "none",
                 transition: "transform 0.2s",
               }}
             >
@@ -371,7 +372,9 @@ const MobileNav: React.FC<MobileNavProps> = ({
                       : "transparent",
                   }}
                 >
-                  {item.icon && <span style={{ marginRight: 8 }}>{item.icon}</span>}
+                  {item.icon && (
+                    <span style={{ marginRight: 8 }}>{item.icon}</span>
+                  )}
                   {item.label}
                 </Link>
               ))}

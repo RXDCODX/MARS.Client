@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Badge,
@@ -14,6 +13,7 @@ import {
   Space,
   Spin,
 } from "antd";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   CreateCustomRewardsRequest,
@@ -204,11 +204,7 @@ const TwitchRewardsPage: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <Flex
-        justify="space-between"
-        align="center"
-        style={{ marginBottom: 12 }}
-      >
+      <Flex justify="space-between" align="center" style={{ marginBottom: 12 }}>
         <h1>Твич награды</h1>
         <Space>
           <Space>
@@ -262,9 +258,7 @@ const TwitchRewardsPage: React.FC = () => {
                   min={1}
                   placeholder="Стоимость"
                   value={form.cost}
-                  onChange={val =>
-                    setForm(s => ({ ...s, cost: val ?? 0 }))
-                  }
+                  onChange={val => setForm(s => ({ ...s, cost: val ?? 0 }))}
                   style={{ width: "100%" }}
                 />
                 <Space.Compact style={{ width: "100%" }}>
@@ -407,7 +401,11 @@ const TwitchRewardsPage: React.FC = () => {
           </Row>
 
           <div
-            style={{ display: "flex", justifyContent: "flex-end", marginTop: 12 }}
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: 12,
+            }}
           >
             <Button type="primary" htmlType="submit" disabled={creating}>
               {creating ? (
@@ -501,16 +499,12 @@ const TwitchRewardsPage: React.FC = () => {
                       )}
                       {r.globalCooldownSetting?.isEnabled && (
                         <Badge color="default">
-                          cd:{" "}
-                          {r.globalCooldownSetting.globalCooldownSeconds}s
+                          cd: {r.globalCooldownSetting.globalCooldownSeconds}s
                         </Badge>
                       )}
                     </div>
                   </div>
-                  <div
-                    className={styles.actionsRow}
-                    style={{ marginTop: 12 }}
-                  >
+                  <div className={styles.actionsRow} style={{ marginTop: 12 }}>
                     <Button
                       size="small"
                       type="primary"

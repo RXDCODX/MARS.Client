@@ -84,7 +84,10 @@ const WelcomePage: React.FC = () => {
     : 0;
 
   return (
-    <div style={{ position: "relative", minHeight: "100vh" }} data-testid="page-welcome">
+    <div
+      style={{ position: "relative", minHeight: "100vh" }}
+      data-testid="page-welcome"
+    >
       <div style={{ position: "fixed", inset: 0, zIndex: -10 }}>
         <Suspense fallback={null}>
           <ParticlesBg
@@ -98,7 +101,13 @@ const WelcomePage: React.FC = () => {
       </div>
 
       <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 24px" }}>
-        <Flex justify="space-between" align="center" wrap="wrap" gap={16} style={{ marginBottom: 32 }}>
+        <Flex
+          justify="space-between"
+          align="center"
+          wrap="wrap"
+          gap={16}
+          style={{ marginBottom: 32 }}
+        >
           <Flex align="center" gap={12}>
             <Typography.Title level={2} style={{ margin: 0 }}>
               MARS Server Dashboard
@@ -112,13 +121,19 @@ const WelcomePage: React.FC = () => {
               <Typography.Text type="secondary" style={{ fontSize: 12 }}>
                 {stats.machineName}
               </Typography.Text>
-              <Typography.Text type="secondary" style={{ fontSize: 12, opacity: 0.4 }}>
+              <Typography.Text
+                type="secondary"
+                style={{ fontSize: 12, opacity: 0.4 }}
+              >
                 |
               </Typography.Text>
               <Typography.Text type="secondary" style={{ fontSize: 12 }}>
                 {stats.osVersion}
               </Typography.Text>
-              <Typography.Text type="secondary" style={{ fontSize: 12, opacity: 0.4 }}>
+              <Typography.Text
+                type="secondary"
+                style={{ fontSize: 12, opacity: 0.4 }}
+              >
                 |
               </Typography.Text>
               <Typography.Text type="secondary" style={{ fontSize: 12 }}>
@@ -129,14 +144,28 @@ const WelcomePage: React.FC = () => {
         </Flex>
 
         {loading && (
-          <Flex vertical align="center" justify="center" gap={16} style={{ padding: "64px 0" }}>
+          <Flex
+            vertical
+            align="center"
+            justify="center"
+            gap={16}
+            style={{ padding: "64px 0" }}
+          >
             <Spin size="large" />
-            <Typography.Text type="secondary">Загрузка статистики...</Typography.Text>
+            <Typography.Text type="secondary">
+              Загрузка статистики...
+            </Typography.Text>
           </Flex>
         )}
 
         {error && !stats && (
-          <Flex vertical align="center" justify="center" gap={16} style={{ padding: "64px 0" }}>
+          <Flex
+            vertical
+            align="center"
+            justify="center"
+            gap={16}
+            style={{ padding: "64px 0" }}
+          >
             <Typography.Text style={{ fontSize: 32 }}>⚠️</Typography.Text>
             <Typography.Text type="secondary">{error}</Typography.Text>
             <Button icon={<ReloadOutlined />} onClick={fetchStats}>
@@ -204,7 +233,13 @@ const WelcomePage: React.FC = () => {
               >
                 <Typography.Text
                   type="secondary"
-                  style={{ display: "block", marginBottom: 12, fontSize: 12, textTransform: "uppercase", letterSpacing: 1 }}
+                  style={{
+                    display: "block",
+                    marginBottom: 12,
+                    fontSize: 12,
+                    textTransform: "uppercase",
+                    letterSpacing: 1,
+                  }}
                 >
                   Быстрые ссылки
                 </Typography.Text>
@@ -275,7 +310,11 @@ const StatCard: React.FC<StatCardProps> = ({
         percent={Math.min(progress, 100)}
         showInfo={false}
         strokeColor={
-          progress > 80 ? "var(--site-text-danger)" : progress > 60 ? "var(--site-text-warning)" : "var(--site-text-success)"
+          progress > 80
+            ? "var(--site-text-danger)"
+            : progress > 60
+              ? "var(--site-text-warning)"
+              : "var(--site-text-success)"
         }
         size="small"
         style={{ marginTop: 8 }}

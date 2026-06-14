@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Alert,
   Badge,
@@ -12,6 +11,7 @@ import {
   Spin,
   Table,
 } from "antd";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type {
   DiscordChannelOptionDto,
@@ -333,8 +333,7 @@ const TelegramDiscordBridgePage: React.FC = () => {
       title: "Действия",
       key: "actions",
       render: (_: unknown, record: TelegramDiscordBindingDto) => {
-        const isProcessing =
-          !!record.id && !!processingIds[record.id];
+        const isProcessing = !!record.id && !!processingIds[record.id];
         return (
           <Space>
             <Button
@@ -392,11 +391,7 @@ const TelegramDiscordBridgePage: React.FC = () => {
 
   return (
     <div className={styles.page}>
-      <Flex
-        justify="space-between"
-        align="center"
-        style={{ marginBottom: 12 }}
-      >
+      <Flex justify="space-between" align="center" style={{ marginBottom: 12 }}>
         <h1>Мост Telegram ↔ Discord</h1>
         <Space>
           <Button
@@ -435,7 +430,14 @@ const TelegramDiscordBridgePage: React.FC = () => {
         centered
       >
         {loadingChannelOptions && (
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              marginBottom: 12,
+            }}
+          >
             <Spin size="small" />
             <span>Загрузка каналов...</span>
           </div>

@@ -914,10 +914,10 @@
             }
           },
           {
-            "name": "host",
+            "name": "husband",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Host"
+              "$ref": "#/components/schemas/Husband"
             }
           },
           {
@@ -1145,7 +1145,7 @@
             "name": "waifuHusband",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Host"
+              "$ref": "#/components/schemas/Husband"
             }
           },
           {
@@ -1765,10 +1765,10 @@
         },
         "additionalProperties": false
       },
-      "Host": {
+      "Husband": {
         "required": [
-          "hostCoolDown",
-          "hostGreetings",
+          "husbandCoolDown",
+          "husbandGreetings",
           "isPrivated",
           "orderCount",
           "twitchId",
@@ -1811,19 +1811,21 @@
             "format": "date-time",
             "nullable": true
           },
-          "hostGreetings": {
+          "husbandGreetings": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/HostAutoHello"
+                "$ref": "#/components/schemas/HusbandAutoHello"
               }
-            ]
+            ],
+            "nullable": true
           },
-          "hostCoolDown": {
+          "husbandCoolDown": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/HostCoolDown"
+                "$ref": "#/components/schemas/HusbandCoolDown"
               }
-            ]
+            ],
+            "nullable": true
           },
           "lastWeddingCongratulatedMonths": {
             "type": "integer",
@@ -1833,10 +1835,10 @@
         },
         "additionalProperties": false
       },
-      "HostAutoHello": {
+      "HusbandAutoHello": {
         "required": [
           "guid",
-          "hostId",
+          "husbandId",
           "time"
         ],
         "type": "object",
@@ -1845,13 +1847,13 @@
             "type": "string",
             "format": "uuid"
           },
-          "hostId": {
+          "husbandId": {
             "type": "string"
           },
-          "host": {
+          "husband": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/Host"
+                "$ref": "#/components/schemas/Husband"
               }
             ],
             "nullable": true
@@ -1863,10 +1865,10 @@
         },
         "additionalProperties": false
       },
-      "HostCoolDown": {
+      "HusbandCoolDown": {
         "required": [
           "guid",
-          "hostId",
+          "husbandId",
           "time"
         ],
         "type": "object",
@@ -1875,13 +1877,13 @@
             "type": "string",
             "format": "uuid"
           },
-          "hostId": {
+          "husbandId": {
             "type": "string"
           },
-          "host": {
+          "husband": {
             "allOf": [
               {
-                "$ref": "#/components/schemas/Host"
+                "$ref": "#/components/schemas/Husband"
               }
             ],
             "nullable": true
@@ -2115,6 +2117,7 @@
         "required": [
           "displayName",
           "duration",
+          "isEnabled",
           "isFreezeRequired",
           "isLooped",
           "priority",
@@ -2160,6 +2163,9 @@
           "volume": {
             "type": "integer",
             "format": "int32"
+          },
+          "isEnabled": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

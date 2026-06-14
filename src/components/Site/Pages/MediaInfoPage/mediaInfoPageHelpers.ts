@@ -121,6 +121,7 @@ export function createDefaultMediaInfo(
     metaInfo: {
       displayName: "",
       duration: 15,
+      isEnabled: true,
       isFreezeRequired: false,
       isLooped: false,
       priority: MediaMetaInfoPriorityEnum.Normal,

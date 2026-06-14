@@ -1,7 +1,7 @@
-import { useMemo } from "react";
-import { theme } from "antd";
 import type { ConfigProviderProps } from "antd";
+import { theme } from "antd";
 import { createStyles } from "antd-style";
+import { useMemo } from "react";
 
 const useStyles = createStyles(({ css, cssVar }) => {
   const lightBorder = {
@@ -11,7 +11,9 @@ const useStyles = createStyles(({ css, cssVar }) => {
 
   return {
     lightBorder,
-    app: css({ textShadow: `0 0 5px color-mix(in srgb, currentColor 50%, transparent)` }),
+    app: css({
+      textShadow: `0 0 5px color-mix(in srgb, currentColor 50%, transparent)`,
+    }),
     modalContainer: css({ ...lightBorder, padding: 0 }),
     modalHeader: css({
       padding: `${cssVar.padding} ${cssVar.paddingLG}`,
@@ -30,8 +32,16 @@ const useStyles = createStyles(({ css, cssVar }) => {
     }),
     modalBody: css({ padding: `${cssVar.padding} ${cssVar.paddingLG}` }),
     modalFooter: css({ padding: `${cssVar.padding} ${cssVar.paddingLG}` }),
-    buttonRoot: css({ ...lightBorder, borderWidth: cssVar.lineWidth, borderColor: cssVar.colorPrimary }),
-    buttonRootSolid: css({ color: cssVar.colorBgContainer, border: "none", fontWeight: "bolder" }),
+    buttonRoot: css({
+      ...lightBorder,
+      borderWidth: cssVar.lineWidth,
+      borderColor: cssVar.colorPrimary,
+    }),
+    buttonRootSolid: css({
+      color: cssVar.colorBgContainer,
+      border: "none",
+      fontWeight: "bolder",
+    }),
     buttonRootSolidDanger: css({ boxShadow: `0 0 5px ${cssVar.colorError}` }),
     tooltipRoot: css({ padding: cssVar.padding }),
     tooltipContainer: css({ ...lightBorder, color: cssVar.colorPrimary }),
@@ -65,7 +75,11 @@ export const useGeekTheme = (_isDark: boolean) => {
           controlHeight: 34,
         },
         components: {
-          Button: { primaryShadow: "none", dangerShadow: "none", defaultShadow: "none" },
+          Button: {
+            primaryShadow: "none",
+            dangerShadow: "none",
+            defaultShadow: "none",
+          },
           Modal: { boxShadow: "none" },
         },
       },
@@ -80,7 +94,11 @@ export const useGeekTheme = (_isDark: boolean) => {
       },
       button: {
         classNames: ({ props }) => ({
-          root: props.danger ? styles.buttonRootSolidDanger : props.type === "primary" ? styles.buttonRootSolid : styles.buttonRoot,
+          root: props.danger
+            ? styles.buttonRootSolidDanger
+            : props.type === "primary"
+              ? styles.buttonRootSolid
+              : styles.buttonRoot,
         }),
       },
       alert: { className: styles.lightBorder },
@@ -88,7 +106,13 @@ export const useGeekTheme = (_isDark: boolean) => {
       select: { classNames: { root: styles.lightBorder } },
       input: { classNames: { root: styles.lightBorder } },
       inputNumber: { classNames: { root: styles.lightBorder } },
-      tooltip: { arrow: false, classNames: { root: styles.tooltipRoot, container: styles.tooltipContainer } },
+      tooltip: {
+        arrow: false,
+        classNames: {
+          root: styles.tooltipRoot,
+          container: styles.tooltipContainer,
+        },
+      },
       progress: { classNames: { track: styles.progressTrack } },
     }),
     [styles]

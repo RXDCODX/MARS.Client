@@ -53,14 +53,11 @@ export default function PyroAlerts() {
     );
   }, []);
 
-  const removeHighPrior = useCallback(
-    (message: MediaDto) => {
-      setHighPriorityQueue(prev =>
-        prev.filter(m => m.mediaInfo.id !== message.mediaInfo.id)
-      );
-    },
-    []
-  );
+  const removeHighPrior = useCallback((message: MediaDto) => {
+    setHighPriorityQueue(prev =>
+      prev.filter(m => m.mediaInfo.id !== message.mediaInfo.id)
+    );
+  }, []);
 
   useEffect(() => {
     if (highPriorityQueue.length > 0 && !currentHighPriority) {

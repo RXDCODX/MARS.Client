@@ -5,7 +5,10 @@ import { useEffect, useRef, useState } from "react";
 import react from "react";
 import { Textfit } from "react-textfit";
 
-import { MediaDto, TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
+import {
+  MediaDto,
+  TelegramusHubSignalRContext as SignalRContext,
+} from "@/shared/api";
 import { KeyWordText } from "@/shared/components/KeyWordText";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import { getCoordinates, getRandomRotation } from "@/shared/Utils";

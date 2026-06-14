@@ -104,7 +104,10 @@ export const MediaInfoCreatePage: React.FC = () => {
     "Выбранный файл хранится в памяти клиента до сохранения. Укажи целевой путь внутри Alerts/uploaded_mems/ перед нажатием Создать.";
 
   return (
-    <div className="media-info-page media-info-create-page" data-testid="media-info-create-page">
+    <div
+      className="media-info-page media-info-create-page"
+      data-testid="media-info-create-page"
+    >
       <section className="media-info-hero">
         <div className="hero-copy">
           <p className="eyebrow">Новая запись</p>
@@ -158,9 +161,7 @@ export const MediaInfoCreatePage: React.FC = () => {
               >
                 {formData.metaInfo.priority}
               </Tag>
-              <Tag color="cyan">
-                {formData.fileInfo.type}
-              </Tag>
+              <Tag color="cyan">{formData.fileInfo.type}</Tag>
               {formData.metaInfo.isFreezeRequired && (
                 <Tag color="orange">Freeze</Tag>
               )}
@@ -282,7 +283,12 @@ export const MediaInfoCreatePage: React.FC = () => {
               previewUrl={previewUrl}
             />
 
-            <Flex gap={12} wrap="wrap" justify="flex-end" className="editor-footer-actions">
+            <Flex
+              gap={12}
+              wrap="wrap"
+              justify="flex-end"
+              className="editor-footer-actions"
+            >
               <Button
                 type="primary"
                 htmlType="submit"
@@ -292,9 +298,7 @@ export const MediaInfoCreatePage: React.FC = () => {
                 {loading ? "Создаём..." : "Создать"}
               </Button>
               <Link to="/media-info">
-                <Button data-testid="button-cancel-create">
-                  Отмена
-                </Button>
+                <Button data-testid="button-cancel-create">Отмена</Button>
               </Link>
             </Flex>
           </form>

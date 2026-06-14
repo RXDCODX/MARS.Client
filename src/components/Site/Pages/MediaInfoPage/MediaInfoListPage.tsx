@@ -1,15 +1,6 @@
 import "./MediaInfoPage.scss";
 
-import {
-  Alert,
-  Button,
-  Flex,
-  Input,
-  Select,
-  Spin,
-  Table,
-  Tag,
-} from "antd";
+import { Alert, Button, Flex, Input, Select, Spin, Table, Tag } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
@@ -183,22 +174,19 @@ export const MediaInfoListPage: React.FC = () => {
     return sorted;
   }, [filteredItems, sortDirection, sortField]);
 
-  const handleSort = useCallback(
-    (field: MediaInfoSortField) => {
-      setSortField(previousField => {
-        if (previousField === field) {
-          setSortDirection(previousDirection =>
-            previousDirection === "asc" ? "desc" : "asc"
-          );
-          return previousField;
-        }
+  const handleSort = useCallback((field: MediaInfoSortField) => {
+    setSortField(previousField => {
+      if (previousField === field) {
+        setSortDirection(previousDirection =>
+          previousDirection === "asc" ? "desc" : "asc"
+        );
+        return previousField;
+      }
 
-        setSortDirection("asc");
-        return field;
-      });
-    },
-    []
-  );
+      setSortDirection("asc");
+      return field;
+    });
+  }, []);
 
   const handleDelete = useCallback(
     async (item: ApiMediaInfo) => {
@@ -263,9 +251,7 @@ export const MediaInfoListPage: React.FC = () => {
         key: "displayName",
         render: (_: unknown, record: ApiMediaInfo) => (
           <div className="title-cell" data-testid={`cell-title-${record.id}`}>
-            <strong>
-              {record.metaInfo.displayName || "Без названия"}
-            </strong>
+            <strong>{record.metaInfo.displayName || "Без названия"}</strong>
             <span>{record.fileInfo.fileName || "Без файла"}</span>
             {record.textInfo.triggerWord ? (
               <span className="muted-line">
@@ -295,7 +281,10 @@ export const MediaInfoListPage: React.FC = () => {
         dataIndex: ["fileInfo", "filePath"],
         key: "filePath",
         render: (_: unknown, record: ApiMediaInfo) => (
-          <div className="muted-line path-cell" data-testid={`cell-path-${record.id}`}>
+          <div
+            className="muted-line path-cell"
+            data-testid={`cell-path-${record.id}`}
+          >
             {record.fileInfo.filePath || "—"}
           </div>
         ),
@@ -320,7 +309,10 @@ export const MediaInfoListPage: React.FC = () => {
         dataIndex: ["fileInfo", "type"],
         key: "type",
         render: (_: unknown, record: ApiMediaInfo) => (
-          <Tag color={typeTagColor[record.fileInfo.type] || "default"} data-testid={`tag-type-${record.id}`}>
+          <Tag
+            color={typeTagColor[record.fileInfo.type] || "default"}
+            data-testid={`tag-type-${record.id}`}
+          >
             {record.fileInfo.type}
           </Tag>
         ),
@@ -366,7 +358,10 @@ export const MediaInfoListPage: React.FC = () => {
         dataIndex: ["metaInfo", "priority"],
         key: "priority",
         render: (_: unknown, record: ApiMediaInfo) => (
-          <Tag color={priorityTagColor[record.metaInfo.priority] || "default"} data-testid={`tag-priority-${record.id}`}>
+          <Tag
+            color={priorityTagColor[record.metaInfo.priority] || "default"}
+            data-testid={`tag-priority-${record.id}`}
+          >
             {record.metaInfo.priority}
           </Tag>
         ),
@@ -395,21 +390,14 @@ export const MediaInfoListPage: React.FC = () => {
         title: "Состояние",
         key: "status",
         render: (_: unknown, record: ApiMediaInfo) => (
-          <div className="status-stack" data-testid={`cell-status-${record.id}`}>
-            <Tag
-              color={
-                record.fileInfo.isLocalFile ? "cyan" : "default"
-              }
-            >
-              {record.fileInfo.isLocalFile
-                ? "Локальный файл"
-                : "Внешний файл"}
+          <div
+            className="status-stack"
+            data-testid={`cell-status-${record.id}`}
+          >
+            <Tag color={record.fileInfo.isLocalFile ? "cyan" : "default"}>
+              {record.fileInfo.isLocalFile ? "Локальный файл" : "Внешний файл"}
             </Tag>
-            <Tag
-              color={
-                record.metaInfo.twitchGuid ? "green" : "default"
-              }
-            >
+            <Tag color={record.metaInfo.twitchGuid ? "green" : "default"}>
               {record.metaInfo.twitchGuid
                 ? formatMediaRewardId(record.metaInfo.twitchGuid)
                 : "Награда не привязана"}
@@ -446,7 +434,10 @@ export const MediaInfoListPage: React.FC = () => {
   );
 
   return (
-    <div className="media-info-page media-info-list-page" data-testid="media-info-list-page">
+    <div
+      className="media-info-page media-info-list-page"
+      data-testid="media-info-list-page"
+    >
       <section className="media-info-hero">
         <div className="hero-copy">
           <p className="eyebrow">Media info manager</p>
@@ -459,7 +450,11 @@ export const MediaInfoListPage: React.FC = () => {
 
         <div className="hero-actions">
           <Link to="/media-info/create">
-            <Button type="primary" className="hero-button" data-testid="button-create">
+            <Button
+              type="primary"
+              className="hero-button"
+              data-testid="button-create"
+            >
               Создать запись
             </Button>
           </Link>
@@ -474,7 +469,12 @@ export const MediaInfoListPage: React.FC = () => {
       </section>
 
       <section className="media-info-toolbar card-shell">
-        <Flex gap={14} align="flex-end" wrap="wrap" style={{ marginBottom: 18 }}>
+        <Flex
+          gap={14}
+          align="flex-end"
+          wrap="wrap"
+          style={{ marginBottom: 18 }}
+        >
           <div style={{ flex: 1, minWidth: 200 }}>
             <Input.Search
               value={filters.search}
@@ -490,10 +490,7 @@ export const MediaInfoListPage: React.FC = () => {
             />
           </div>
 
-          <Button
-            onClick={resetFilters}
-            data-testid="button-reset-filters"
-          >
+          <Button onClick={resetFilters} data-testid="button-reset-filters">
             Сбросить фильтры
           </Button>
         </Flex>

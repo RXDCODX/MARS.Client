@@ -76,7 +76,10 @@ const RoutesPage: React.FC = () => {
   }, []);
 
   return (
-    <div style={{ position: "relative", minHeight: "100vh" }} data-testid="routes-page">
+    <div
+      style={{ position: "relative", minHeight: "100vh" }}
+      data-testid="routes-page"
+    >
       <div style={{ position: "fixed", inset: 0, zIndex: -10, opacity: 0.3 }}>
         <Suspense fallback={null}>
           <GridMotionBg style={{ position: "absolute", inset: 0 }} />
@@ -91,7 +94,13 @@ const RoutesPage: React.FC = () => {
           <Tag color="purple">{allRoutes.length}</Tag>
         </Flex>
 
-        <Flex justify="space-between" align="center" wrap="wrap" gap={12} style={{ marginBottom: 24 }}>
+        <Flex
+          justify="space-between"
+          align="center"
+          wrap="wrap"
+          gap={12}
+          style={{ marginBottom: 24 }}
+        >
           <Flex gap={6} wrap="wrap" data-testid="filter-tabs">
             {types.map(type => (
               <Button
@@ -105,7 +114,9 @@ const RoutesPage: React.FC = () => {
                   "Все"
                 ) : (
                   <>
-                    <span style={{ marginRight: 4 }}>{typeIcons[type] || "📄"}</span>
+                    <span style={{ marginRight: 4 }}>
+                      {typeIcons[type] || "📄"}
+                    </span>
                     {typeLabels[type] || type}
                     <Tag
                       color={typeColors[type] || "default"}
@@ -131,37 +142,59 @@ const RoutesPage: React.FC = () => {
         </Flex>
 
         {filteredRoutes.length === 0 ? (
-          <Flex vertical align="center" justify="center" gap={12} style={{ padding: "64px 0" }}>
-            <Typography.Text style={{ fontSize: 32, opacity: 0.5 }}>🔍</Typography.Text>
-            <Typography.Text type="secondary">Маршруты не найдены</Typography.Text>
+          <Flex
+            vertical
+            align="center"
+            justify="center"
+            gap={12}
+            style={{ padding: "64px 0" }}
+          >
+            <Typography.Text style={{ fontSize: 32, opacity: 0.5 }}>
+              🔍
+            </Typography.Text>
+            <Typography.Text type="secondary">
+              Маршруты не найдены
+            </Typography.Text>
           </Flex>
         ) : (
           <Flex vertical gap={24}>
             {Object.entries(groupedFiltered).map(([type, routes]) => (
               <div key={type}>
                 <Flex align="center" gap={8} style={{ marginBottom: 12 }}>
-                  <span style={{ fontSize: 18 }}>{typeIcons[type] || "📄"}</span>
+                  <span style={{ fontSize: 18 }}>
+                    {typeIcons[type] || "📄"}
+                  </span>
                   <Typography.Title level={5} style={{ margin: 0 }}>
                     {typeLabels[type] || type}
                   </Typography.Title>
-                  <Tag color={typeColors[type] || "default"}>{routes.length}</Tag>
+                  <Tag color={typeColors[type] || "default"}>
+                    {routes.length}
+                  </Tag>
                 </Flex>
                 <Flex gap={8} wrap="wrap">
                   {routes.map((route, index) => (
                     <Link
                       key={index}
                       to={route.path}
-                      style={{ flex: "1 1 280px", maxWidth: "100%", textDecoration: "none" }}
+                      style={{
+                        flex: "1 1 280px",
+                        maxWidth: "100%",
+                        textDecoration: "none",
+                      }}
                       data-testid={`route-card-${route.path.replace(/\//g, "-").replace(/^-/, "")}`}
                     >
-                      <Card
-                        hoverable
-                        size="small"
-                        style={{ height: "100%" }}
-                      >
+                      <Card hoverable size="small" style={{ height: "100%" }}>
                         <Flex justify="space-between" align="center">
-                          <Flex vertical gap={2} style={{ minWidth: 0, flex: 1 }}>
-                            <Typography.Text strong style={{ fontSize: 14 }} ellipsis>
+                          <Flex
+                            vertical
+                            gap={2}
+                            style={{ minWidth: 0, flex: 1 }}
+                          >
+                            <Typography.Text
+                              strong
+                              style={{ fontSize: 14 }}
+                              ellipsis
+                            >
                               {route.name || route.path}
                             </Typography.Text>
                             <Typography.Text
@@ -173,7 +206,14 @@ const RoutesPage: React.FC = () => {
                               {route.path}
                             </Typography.Text>
                           </Flex>
-                          <Typography.Text type="secondary" style={{ marginLeft: 8, fontSize: 16, opacity: 0.3 }}>
+                          <Typography.Text
+                            type="secondary"
+                            style={{
+                              marginLeft: 8,
+                              fontSize: 16,
+                              opacity: 0.3,
+                            }}
+                          >
                             →
                           </Typography.Text>
                         </Flex>
