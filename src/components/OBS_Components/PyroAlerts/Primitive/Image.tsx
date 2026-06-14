@@ -47,9 +47,26 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
     if (!isDisappearing) {
       return;
     }
-    const timer = setTimeout(() => callBack(), 700);
+    const timer = setTimeout(() => {
+      unfreeze();
+      callBack();
+    }, 700);
     return () => clearTimeout(timer);
-  }, [isDisappearing, callBack]);
+  }, [isDisappearing, callBack, unfreeze]);
+
+  const isFreezeRequired = mediaInfo.metaInfo.isFreezeRequired;
+
+  const freeze = useCallback(() => {
+    if (isFreezeRequired) {
+      SignalRContext.invoke("ObsFreeze");
+    }
+  }, [isFreezeRequired]);
+
+  const unfreeze = useCallback(() => {
+    if (isFreezeRequired) {
+      SignalRContext.invoke("ObsUnfreeze");
+    }
+  }, [isFreezeRequired]);
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -114,6 +131,7 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
               ...size,
               visibility: "visible",
             }));
+            freeze();
           }}
           onError={e => {
             console.log(e);
@@ -167,6 +185,7 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
               ...size,
               visibility: "visible",
             }));
+            freeze();
           }}
         />
       )}

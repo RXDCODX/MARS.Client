@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
 import {
@@ -55,52 +55,20 @@ export default function PyroAlerts() {
 
   const removeHighPrior = useCallback(
     (message: MediaDto) => {
-      setHighPriorityQueue(prev => {
-        prev = prev.filter(m => m.mediaInfo.id !== message.mediaInfo.id);
-        const newPriority = prev.some(e => e) ? prev[0] : null;
-        setCurrentHighPriority(newPriority);
-        return prev;
-      });
+      setHighPriorityQueue(prev =>
+        prev.filter(m => m.mediaInfo.id !== message.mediaInfo.id)
+      );
     },
-    [setHighPriorityQueue]
+    []
   );
 
-  // Эффект для обработки очереди высокоприоритетных алертов
   useEffect(() => {
     if (highPriorityQueue.length > 0 && !currentHighPriority) {
-      // Берем первый алерт из очереди
-      const nextAlert = highPriorityQueue[0];
-      setCurrentHighPriority(nextAlert);
-
-      // Удаляем его из очереди через 2 секунды (время показа)
-      const timer = setTimeout(() => {
-        setHighPriorityQueue(prev => prev.slice(1));
-        setCurrentHighPriority(null);
-      }, 2000);
-
-      return () => clearTimeout(timer);
+      setCurrentHighPriority(highPriorityQueue[0]);
+    } else if (highPriorityQueue.length === 0 && currentHighPriority) {
+      setCurrentHighPriority(null);
     }
   }, [highPriorityQueue, currentHighPriority]);
-
-  // Freeze/unfreeze OBS при появлении/исчезновении алертов с isFreezeRequired
-  const isFrozen = useRef(false);
-
-  useEffect(() => {
-    const highPriNeedsFreeze =
-      currentHighPriority?.mediaInfo.metaInfo.isFreezeRequired ?? false;
-    const normalNeedsFreeze = messages.some(
-      m => m.mediaInfo.metaInfo.isFreezeRequired
-    );
-    const needsFreeze = highPriNeedsFreeze || normalNeedsFreeze;
-
-    // if (needsFreeze && !isFrozen.current) {
-    //   SignalRContext.invoke("ObsFreeze");
-    //   isFrozen.current = true;
-    // } else if (!needsFreeze && isFrozen.current) {
-    //   SignalRContext.invoke("ObsUnfreeze");
-    //   isFrozen.current = false;
-    // }
-  }, [currentHighPriority, messages]);
 
   useInjectStyles(`
     body {

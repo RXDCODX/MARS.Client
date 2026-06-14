@@ -39,6 +39,20 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
     }
   }, [isHighPrior]);
 
+  const isFreezeRequired = mediaInfo.mediaInfo.metaInfo.isFreezeRequired;
+
+  const freeze = useCallback(() => {
+    if (isFreezeRequired) {
+      SignalRContext.invoke("ObsFreeze");
+    }
+  }, [isFreezeRequired]);
+
+  const unfreeze = useCallback(() => {
+    if (isFreezeRequired) {
+      SignalRContext.invoke("ObsUnfreeze");
+    }
+  }, [isFreezeRequired]);
+
   const setupAudioContext = useCallback(() => {
     if (!audioRef.current) return;
 
@@ -79,9 +93,10 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
 
   const error = useCallback(() => {
     unmuteAll();
+    unfreeze();
     callback();
     throw Error("Failed to play audio");
-  }, [callback, unmuteAll]);
+  }, [callback, unfreeze, unmuteAll]);
 
   // Очистка ресурсов при размонтировании
   useEffect(
@@ -116,6 +131,7 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
         }}
         onEnded={() => {
           unmuteAll();
+          unfreeze();
           setTimeout(() => {
             callback();
           }, 1000);
@@ -128,7 +144,10 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
           event.currentTarget.volume = 1.0;
           event.currentTarget?.play();
         }}
-        onCanPlayThrough={() => muteAll()}
+        onCanPlayThrough={() => {
+          muteAll();
+          freeze();
+        }}
       >
         <source src={fileInfo.filePath} />
       </audio>

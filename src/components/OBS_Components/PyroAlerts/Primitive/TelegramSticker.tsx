@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import react from "react";
 import { Textfit } from "react-textfit";
 
-import { MediaDto } from "@/shared/api";
+import { MediaDto, TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
 import { KeyWordText } from "@/shared/components/KeyWordText";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import { getCoordinates, getRandomRotation } from "@/shared/Utils";
@@ -53,9 +53,23 @@ export default function TelegramSticker({ mediaInfo, callBack }: Props) {
 
   const elementRef = useRef<HTMLDivElement>(null);
 
+  const isFreezeRequired = metaInfo.isFreezeRequired;
+
   useEffect(() => {
-    setTimeout(() => callBack(), metaInfo.duration * 1000);
-  }, [callBack, metaInfo.duration]);
+    if (isFreezeRequired) {
+      SignalRContext.invoke("ObsFreeze");
+    }
+  }, [isFreezeRequired]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (isFreezeRequired) {
+        SignalRContext.invoke("ObsUnfreeze");
+      }
+      callBack();
+    }, metaInfo.duration * 1000);
+    return () => clearTimeout(timer);
+  }, [callBack, metaInfo.duration, isFreezeRequired]);
 
   useEffect(() => {
     if (elementRef.current) {

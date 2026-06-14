@@ -165,6 +165,20 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
     }
   }, [isHighPrior]);
 
+  const isFreezeRequired = MediaInfo.mediaInfo.metaInfo.isFreezeRequired;
+
+  const freeze = useCallback(() => {
+    if (isFreezeRequired) {
+      SignalRContext.invoke("ObsFreeze");
+    }
+  }, [isFreezeRequired]);
+
+  const unfreeze = useCallback(() => {
+    if (isFreezeRequired) {
+      SignalRContext.invoke("ObsUnfreeze");
+    }
+  }, [isFreezeRequired]);
+
   const setupAudioContext = useCallback(() => {
     if (!player.current) return;
 
@@ -219,10 +233,11 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
         (targetDuration && currentTime >= targetDuration - 0.1)
       ) {
         unmuteAll();
+        unfreeze();
         callback();
       }
     },
-    [memoizedMetaInfo, unmuteAll, callback]
+    [memoizedMetaInfo, unmuteAll, unfreeze, callback]
   );
 
   const handleLoadedMetadata = useCallback(
@@ -276,6 +291,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
       () => {
         if (videoProgress >= memoizedMetaInfo.duration - 0.5) {
           unmuteAll();
+          unfreeze();
           callback();
         }
       },
@@ -287,12 +303,13 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
     return () => {
       clearTimeout(timer);
     };
-  }, [videoProgress, memoizedMetaInfo, callback, unmuteAll]);
+  }, [videoProgress, memoizedMetaInfo, callback, unmuteAll, unfreeze]);
 
   useEffect(() => {
     const timer = setTimeout(
       () => {
         unmuteAll();
+        unfreeze();
         callback();
       },
       memoizedMetaInfo.duration * 1000 + 1000
@@ -301,7 +318,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
     return () => {
       clearTimeout(timer);
     };
-  }, [callback, memoizedMetaInfo, unmuteAll]);
+  }, [callback, memoizedMetaInfo, unmuteAll, unfreeze]);
 
   return (
     <div
@@ -342,11 +359,15 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
             `RandomMem: failed to play VIDEO id=${memoizedId} path=${memoizedMediaInfo.filePath}`
           );
           unmuteAll();
+          unfreeze();
           callback();
         }}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
-        onCanPlayThrough={muteAll}
+        onCanPlayThrough={() => {
+          muteAll();
+          freeze();
+        }}
       />
       <Textfit
         className={common.textStrokeShadow}

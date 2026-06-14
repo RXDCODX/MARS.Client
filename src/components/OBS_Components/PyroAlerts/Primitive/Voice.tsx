@@ -52,6 +52,20 @@ export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
     }
   }, [isHighPrior]);
 
+  const isFreezeRequired = mediaInfo.mediaInfo.metaInfo.isFreezeRequired;
+
+  const freeze = useCallback(() => {
+    if (isFreezeRequired) {
+      SignalRContext.invoke("ObsFreeze");
+    }
+  }, [isFreezeRequired]);
+
+  const unfreeze = useCallback(() => {
+    if (isFreezeRequired) {
+      SignalRContext.invoke("ObsUnfreeze");
+    }
+  }, [isFreezeRequired]);
+
   const setupBellAudioContext = useCallback(() => {
     if (!bellAudioRef.current) return;
 
@@ -176,7 +190,10 @@ export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
             );
             error();
           }}
-          onCanPlayThrough={muteAll}
+          onCanPlayThrough={() => {
+            muteAll();
+            freeze();
+          }}
         />
       )}
       {isBellPlayed && (
@@ -193,6 +210,7 @@ export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
           }}
           onEnded={() => {
             unmuteAll();
+            unfreeze();
             callback();
           }}
           onError={() => error()}
