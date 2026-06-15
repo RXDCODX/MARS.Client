@@ -119,10 +119,7 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
         ref={audioRef}
         controls={false}
         onError={e => {
-          console.log(
-            "%c" + e,
-            "color: #7289DA; -webkit-text-stroke: 2px black; font-size: 72px; font-weight: bold;"
-          );
+          console.error(e);
           SignalRContext.invoke(
             "TwitchMsg",
             `RandomMem: failed to play AUDIO id=${Id} path=${fileInfo.filePath}`
