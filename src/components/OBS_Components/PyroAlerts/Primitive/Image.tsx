@@ -1,8 +1,10 @@
 import { CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 import { Textfit } from "react-textfit";
 
-import { MediaDto } from "@/shared/api";
-import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
+import {
+  MediaDto,
+  TelegramusHubSignalRContext as SignalRContext,
+} from "@/shared/api";
 import { KeyWordText } from "@/shared/components/KeyWordText";
 import { getCoordinates, getRandomRotation } from "@/shared/Utils";
 
@@ -43,17 +45,6 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
     return () => clearTimeout(timer);
   }, [handleDisappear, metaInfo.duration]);
 
-  useEffect(() => {
-    if (!isDisappearing) {
-      return;
-    }
-    const timer = setTimeout(() => {
-      unfreeze();
-      callBack();
-    }, 700);
-    return () => clearTimeout(timer);
-  }, [isDisappearing, callBack, unfreeze]);
-
   const isFreezeRequired = mediaInfo.metaInfo.isFreezeRequired;
 
   const freeze = useCallback(() => {
@@ -67,6 +58,17 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
       SignalRContext.invoke("ObsUnfreeze");
     }
   }, [isFreezeRequired]);
+
+  useEffect(() => {
+    if (!isDisappearing) {
+      return;
+    }
+    const timer = setTimeout(() => {
+      unfreeze();
+      callBack();
+    }, 700);
+    return () => clearTimeout(timer);
+  }, [isDisappearing, callBack, unfreeze]);
 
   const ref = useRef<HTMLDivElement>(null);
 
