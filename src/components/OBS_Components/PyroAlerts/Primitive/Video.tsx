@@ -357,7 +357,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
             "color: #7289DA; -webkit-text-stroke: 2px black; font-size: 72px; font-weight: bold;"
           );
           SignalRContext.invoke(
-            "TwitchMsg",
+            "LogError",
             `RandomMem: failed to play VIDEO id=${memoizedId} path=${memoizedMediaInfo.filePath}`
           );
           unmuteAll();

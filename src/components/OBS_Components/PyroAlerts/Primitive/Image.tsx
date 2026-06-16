@@ -138,14 +138,14 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
           onError={e => {
             console.log(e);
             SignalRContext.invoke(
-              "TwitchMsg",
+              "LogError",
               `RandomMem: failed to load IMAGE id=${id} path=${fileInfo.filePath}`
             );
           }}
           onErrorCapture={e => {
             console.log(e);
             SignalRContext.invoke(
-              "TwitchMsg",
+              "LogError",
               `RandomMem: failed to load IMAGE id=${id} path=${fileInfo.filePath}`
             );
           }}
@@ -164,14 +164,14 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
               "color: #7289DA; -webkit-text-stroke: 2px black; font-size: 72px; font-weight: bold;"
             );
             SignalRContext.invoke(
-              "TwitchMsg",
+              "LogError",
               `RandomMem: failed to load IMAGE id=${id} path=${fileInfo.filePath}`
             );
           }}
           onErrorCapture={e => {
             console.log(e);
             SignalRContext.invoke(
-              "TwitchMsg",
+              "LogError",
               `RandomMem: failed to load IMAGE id=${id} path=${fileInfo.filePath}`
             );
           }}

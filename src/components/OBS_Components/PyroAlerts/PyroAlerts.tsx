@@ -70,6 +70,7 @@ export default function PyroAlerts() {
     if (highPriorityQueue.length > 0 && !currentHighPriority) {
       // Берем первый алерт из очереди
       const nextAlert = highPriorityQueue[0];
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setCurrentHighPriority(nextAlert);
 
       // Удаляем его из очереди через 2 секунды (время показа)

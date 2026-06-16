@@ -247,6 +247,23 @@
         "responses": { }
       }
     },
+    "/hubs/telegramus/LogError": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "errorMessage",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/telegramus/MikuMikuDeleteTwitchMessages": {
       "post": {
         "tags": [

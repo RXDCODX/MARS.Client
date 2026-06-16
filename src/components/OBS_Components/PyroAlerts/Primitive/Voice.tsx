@@ -178,14 +178,14 @@ export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
           onEnded={() => setIsBellPlayed(true)}
           onError={() => {
             SignalRContext.invoke(
-              "TwitchMsg",
+              "LogError",
               `RandomMem: failed to play VOICE path=${voiceSrc}`
             );
             error();
           }}
           onErrorCapture={() => {
             SignalRContext.invoke(
-              "TwitchMsg",
+              "LogError",
               `RandomMem: failed to play VOICE path=${voiceSrc}`
             );
             error();
