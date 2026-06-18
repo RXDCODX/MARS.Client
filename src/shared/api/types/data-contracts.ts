@@ -609,6 +609,15 @@ export interface ServerStatsResponse {
   machineName: string;
   /** @format int32 */
   processorCount: number;
+  isEventSubConnected: boolean;
+  isTwitchChatConnected: boolean;
+  isAudioControllerConnected: boolean;
+  isTtsConnected: boolean;
+  isPuntoSwitcherEnabled: boolean;
+  nearestWeddingAnniversaryName?: string;
+  /** @format date-time */
+  nearestWeddingAnniversaryDate?: string;
+  nearestWeddingAnniversaryUser?: string;
 }
 
 export interface ServiceInfo {

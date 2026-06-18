@@ -47,4 +47,6 @@ describe("WelcomePage", () => {
     const markup = renderToStaticMarkup(createElement(WelcomePage));
     expect(markup).toContain("Загрузка статистики...");
   });
+
+
 });

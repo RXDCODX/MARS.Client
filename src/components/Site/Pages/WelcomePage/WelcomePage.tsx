@@ -21,6 +21,14 @@ interface ServerStats {
   runtimeVersion: string;
   machineName: string;
   processorCount: number;
+  isEventSubConnected: boolean;
+  isTwitchChatConnected: boolean;
+  isAudioControllerConnected: boolean;
+  isTtsConnected: boolean;
+  isPuntoSwitcherEnabled: boolean;
+  nearestWeddingAnniversaryName?: string;
+  nearestWeddingAnniversaryDate?: string;
+  nearestWeddingAnniversaryUser?: string;
 }
 
 const formatBytes = (bytes: number): string => {
@@ -265,6 +273,80 @@ const WelcomePage: React.FC = () => {
                 </Flex>
               </Card>
             </Flex>
+
+            <Flex gap={12} wrap="wrap" style={{ marginTop: 12 }}>
+              <ConnectionCard
+                title="Twitch EventSub"
+                connected={stats.isEventSubConnected}
+                icon="🔌"
+                dataTestId="stat-eventsub"
+              />
+              <ConnectionCard
+                title="Twitch Chat"
+                connected={stats.isTwitchChatConnected}
+                icon="💬"
+                dataTestId="stat-twitch-chat"
+              />
+              <ConnectionCard
+                title="AudioController (SoundBar)"
+                connected={stats.isAudioControllerConnected}
+                icon="🔊"
+                dataTestId="stat-audio-soundbar"
+              />
+              <ConnectionCard
+                title="AudioController (TTS)"
+                connected={stats.isTtsConnected}
+                icon="🗣️"
+                dataTestId="stat-audio-tts"
+              />
+              <ConnectionCard
+                title="PuntoSwitcher"
+                connected={stats.isPuntoSwitcherEnabled}
+                icon="⌨️"
+                dataTestId="stat-punto-switcher"
+              />
+            </Flex>
+
+            {stats.nearestWeddingAnniversaryName && (
+              <Card
+                data-testid="card-wedding-anniversary"
+                style={{ marginTop: 12 }}
+              >
+                <Typography.Text
+                  type="secondary"
+                  style={{
+                    display: "block",
+                    marginBottom: 12,
+                    fontSize: 12,
+                    textTransform: "uppercase",
+                    letterSpacing: 1,
+                  }}
+                >
+                  Ближайшая годовщина свадьбы 💍
+                </Typography.Text>
+                <Typography.Text strong>
+                  @{stats.nearestWeddingAnniversaryUser}
+                </Typography.Text>
+                <Typography.Text> — </Typography.Text>
+                <Typography.Text>
+                  {stats.nearestWeddingAnniversaryName}
+                </Typography.Text>
+                <Typography.Text
+                  type="secondary"
+                  style={{ marginLeft: 8, fontSize: 12 }}
+                >
+                  {stats.nearestWeddingAnniversaryDate
+                    ? new Date(
+                        stats.nearestWeddingAnniversaryDate
+                      ).toLocaleDateString("ru-RU", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })
+                    : ""}
+                </Typography.Text>
+              </Card>
+            )}
           </>
         )}
       </div>
@@ -320,6 +402,55 @@ const StatCard: React.FC<StatCardProps> = ({
         style={{ marginTop: 8 }}
       />
     )}
+  </Card>
+);
+
+interface ConnectionCardProps {
+  title: string;
+  connected: boolean;
+  icon: string;
+  dataTestId: string;
+}
+
+const ConnectionCard: React.FC<ConnectionCardProps> = ({
+  title,
+  connected,
+  icon,
+  dataTestId,
+}) => (
+  <Card
+    data-testid={dataTestId}
+    style={{
+      flex: "1 1 180px",
+      minWidth: 180,
+      backgroundColor: connected
+        ? "var(--ant-color-success)"
+        : "var(--ant-color-error)",
+      borderColor: connected
+        ? "var(--ant-color-success-border)"
+        : "var(--ant-color-error-border)",
+    }}
+  >
+    <Flex align="center" gap={8} style={{ marginBottom: 8 }}>
+      <span style={{ fontSize: 18, color: "#fff" }}>{icon}</span>
+      <Typography.Text
+        style={{
+          fontSize: 12,
+          textTransform: "uppercase",
+          letterSpacing: 1,
+          color: "#fff",
+        }}
+      >
+        {title}
+      </Typography.Text>
+    </Flex>
+    <Flex align="center" gap={8}>
+      <Typography.Text
+        style={{ fontWeight: 600, color: "#fff" }}
+      >
+        {connected ? "Подключено" : "Отключено"}
+      </Typography.Text>
+    </Flex>
   </Card>
 );
 
