@@ -1,6 +1,6 @@
 import { ReloadOutlined } from "@ant-design/icons";
-import { Button, Card, Flex, Progress, Spin, Tag, Typography } from "antd";
-import { Suspense, useEffect, useRef, useState } from "react";
+import { Button, Card, Flex, Progress, Spin, Switch, Tag, Typography, message } from "antd";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { reactBitsBackgroundComponentRegistry } from "@/shared/components/ReactBitsBackgroundsLegacy/registry";
@@ -26,6 +26,7 @@ interface ServerStats {
   isAudioControllerConnected: boolean;
   isTtsConnected: boolean;
   isPuntoSwitcherEnabled: boolean;
+  isTtsFilterEnabled: boolean;
   nearestWeddingAnniversaryName?: string;
   nearestWeddingAnniversaryDate?: string;
   nearestWeddingAnniversaryUser?: string;
@@ -74,6 +75,25 @@ const WelcomePage: React.FC = () => {
       setLoading(false);
     }
   };
+
+  const handleTtsFilterToggle = useCallback(async () => {
+    try {
+      const response = await fetch("/api/ServerStats/toggle-tts-filter", {
+        method: "POST",
+      });
+      const data = await response.json();
+      if (data.success) {
+        setStats(prev =>
+          prev ? { ...prev, isTtsFilterEnabled: data.data } : prev,
+        );
+        message.success(data.message || "Фильтр TTS переключён");
+      } else {
+        message.error(data.message || "Ошибка переключения фильтра TTS");
+      }
+    } catch {
+      message.error("Сервер недоступен");
+    }
+  }, []);
 
   useEffect(() => {
     fetchStats();
@@ -305,6 +325,15 @@ const WelcomePage: React.FC = () => {
                 icon="⌨️"
                 dataTestId="stat-punto-switcher"
               />
+              <ConnectionCard
+                title="TTS Filter"
+                connected={stats.isTtsFilterEnabled}
+                icon="🔇"
+                dataTestId="stat-tts-filter"
+                onToggle={handleTtsFilterToggle}
+                connectedText="Включено"
+                disconnectedText="Выключено"
+              />
             </Flex>
 
             {stats.nearestWeddingAnniversaryName && (
@@ -410,6 +439,9 @@ interface ConnectionCardProps {
   connected: boolean;
   icon: string;
   dataTestId: string;
+  onToggle?: () => void;
+  connectedText?: string;
+  disconnectedText?: string;
 }
 
 const ConnectionCard: React.FC<ConnectionCardProps> = ({
@@ -417,6 +449,9 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
   connected,
   icon,
   dataTestId,
+  onToggle,
+  connectedText = "Подключено",
+  disconnectedText = "Отключено",
 }) => (
   <Card
     data-testid={dataTestId}
@@ -444,12 +479,20 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
         {title}
       </Typography.Text>
     </Flex>
-    <Flex align="center" gap={8}>
+    <Flex align="center" gap={8} justify="space-between">
       <Typography.Text
         style={{ fontWeight: 600, color: "#fff" }}
       >
-        {connected ? "Подключено" : "Отключено"}
+        {connected ? connectedText : disconnectedText}
       </Typography.Text>
+      {onToggle && (
+        <Switch
+          checked={connected}
+          onChange={onToggle}
+          size="small"
+          data-testid={`switch-${dataTestId}`}
+        />
+      )}
     </Flex>
   </Card>
 );
