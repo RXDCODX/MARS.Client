@@ -1,5 +1,15 @@
 import { ReloadOutlined } from "@ant-design/icons";
-import { Button, Card, Flex, Progress, Spin, Switch, Tag, Typography, message } from "antd";
+import {
+  Button,
+  Card,
+  Flex,
+  message,
+  Progress,
+  Spin,
+  Switch,
+  Tag,
+  Typography,
+} from "antd";
 import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -76,6 +86,25 @@ const WelcomePage: React.FC = () => {
     }
   };
 
+  const handlePuntoSwitcherToggle = useCallback(async () => {
+    try {
+      const response = await fetch("/api/ServerStats/toggle-punto-switcher", {
+        method: "POST",
+      });
+      const data = await response.json();
+      if (data.success) {
+        setStats(prev =>
+          prev ? { ...prev, isPuntoSwitcherEnabled: data.data } : prev
+        );
+        message.success(data.message || "PuntoSwitcher переключён");
+      } else {
+        message.error(data.message || "Ошибка переключения PuntoSwitcher");
+      }
+    } catch {
+      message.error("Сервер недоступен");
+    }
+  }, []);
+
   const handleTtsFilterToggle = useCallback(async () => {
     try {
       const response = await fetch("/api/ServerStats/toggle-tts-filter", {
@@ -84,7 +113,7 @@ const WelcomePage: React.FC = () => {
       const data = await response.json();
       if (data.success) {
         setStats(prev =>
-          prev ? { ...prev, isTtsFilterEnabled: data.data } : prev,
+          prev ? { ...prev, isTtsFilterEnabled: data.data } : prev
         );
         message.success(data.message || "Фильтр TTS переключён");
       } else {
@@ -324,6 +353,9 @@ const WelcomePage: React.FC = () => {
                 connected={stats.isPuntoSwitcherEnabled}
                 icon="⌨️"
                 dataTestId="stat-punto-switcher"
+                onToggle={handlePuntoSwitcherToggle}
+                connectedText="Включено"
+                disconnectedText="Выключено"
               />
               <ConnectionCard
                 title="TTS Filter"
@@ -480,9 +512,7 @@ const ConnectionCard: React.FC<ConnectionCardProps> = ({
       </Typography.Text>
     </Flex>
     <Flex align="center" gap={8} justify="space-between">
-      <Typography.Text
-        style={{ fontWeight: 600, color: "#fff" }}
-      >
+      <Typography.Text style={{ fontWeight: 600, color: "#fff" }}>
         {connected ? connectedText : disconnectedText}
       </Typography.Text>
       {onToggle && (
