@@ -1,6 +1,8 @@
 import { useCallback, useEffect } from "react";
 
-import { UnifiedPlayerView } from "./components/UnifiedPlayerView";
+import { PlayerStateVideoStateEnum } from "@/shared/api";
+
+import { CommandCarousel, InfoBar, UnifiedPlayerView } from "./components";
 import { useVideoScreenStore } from "./store/useVideoScreenStore";
 import styles from "./VideoScreen.module.scss";
 
@@ -12,9 +14,14 @@ interface Props {
 export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
   const isMainPlayer = groupName === "mainplayer";
 
-  const currentTrack = useVideoScreenStore(
-    state => state.playerState?.currentQueueItem?.track ?? null
+  const currentQueueItem = useVideoScreenStore(
+    state => state.playerState?.currentQueueItem ?? null
   );
+  const videoState = useVideoScreenStore(
+    state => state.playerState?.videoState
+  );
+  const isVideoMode = videoState === PlayerStateVideoStateEnum.Video;
+  const isAudioOnly = videoState === PlayerStateVideoStateEnum.AudioOnly;
   const hasUserInteracted = useVideoScreenStore(
     state => state.hasUserInteracted
   );
@@ -56,8 +63,42 @@ export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
     };
   }, [handleUserInteraction, hasUserInteracted]);
 
-  if (!currentTrack) {
-    return null;
+  if (!currentQueueItem) {
+    if (isAudioOnly) {
+      return (
+        <div
+          className={styles.container}
+          style={{ padding: 0 }}
+          data-testid="obs-video-screen-empty"
+        />
+      );
+    }
+
+    if (isVideoMode) {
+      return (
+        <div
+          className={styles.container}
+          style={{ padding: 0 }}
+          data-testid="obs-video-screen-commands"
+        >
+          <div className={styles.fullScreenCarousel}>
+            <CommandCarousel />
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div
+        className={styles.container}
+        style={{ padding: 0 }}
+        data-testid="obs-video-screen-empty"
+      >
+        <div className={styles.emptyState}>
+          <InfoBar />
+        </div>
+      </div>
+    );
   }
 
   const videoSectionClassName = [

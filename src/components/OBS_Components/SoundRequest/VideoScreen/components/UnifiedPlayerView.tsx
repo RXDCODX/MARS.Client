@@ -1,8 +1,7 @@
-import { memo } from "react";
-
-import { PlayerStateVideoStateEnum } from "@/shared/api";
+import { PlayerStateStateEnum, PlayerStateVideoStateEnum } from "@/shared/api";
 import { useInjectStyles } from "@/shared/hooks/useInjectStyles";
 
+import { CommandCarousel } from "./CommandCarousel";
 import { InfoBar } from "./InfoBar";
 import styles from "./UnifiedPlayerView.module.scss";
 import { useReactCustomPlayer } from "./useReactCustomPlayer";
@@ -59,6 +58,12 @@ function UnifiedPlayerViewComponent() {
   const isVideoMode = videoState === PlayerStateVideoStateEnum.Video;
   const isNoVideoMode = videoState === PlayerStateVideoStateEnum.NoVideo;
   const needsTransparentBackground = !isVideoMode;
+  const isNotPlaying =
+    playerState?.state != null &&
+    playerState.state !== PlayerStateStateEnum.Playing;
+
+  // In video mode, show command carousel in the player area when paused/stopped
+  const showCommandsInVideoArea = isVideoMode && isNotPlaying && currentTrack;
 
   useInjectStyles(
     needsTransparentBackground ? TRANSPARENT_BACKGROUND_STYLES : "",
@@ -77,9 +82,20 @@ function UnifiedPlayerViewComponent() {
 
   return (
     <div className={containerClassName}>
-      <div className={playerClassName} ref={playerContainerRef}>
+      <div
+        className={
+          showCommandsInVideoArea ? styles.hiddenPlayer : playerClassName
+        }
+        ref={playerContainerRef}
+      >
         {playerElement}
       </div>
+
+      {showCommandsInVideoArea && (
+        <div className={styles.videoPlayer}>
+          <CommandCarousel />
+        </div>
+      )}
 
       {showInfoBar && (
         <div className={isNoVideoMode ? styles.infoBarBottom : undefined}>
@@ -90,5 +106,4 @@ function UnifiedPlayerViewComponent() {
   );
 }
 
-// Экспортируем мемоизированную версию для оптимизации
-export const UnifiedPlayerView = memo(UnifiedPlayerViewComponent);
+export const UnifiedPlayerView = UnifiedPlayerViewComponent;

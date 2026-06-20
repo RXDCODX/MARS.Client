@@ -125,8 +125,8 @@ export default function PyroAlerts() {
           setTimeout(() => {
             const el = document.getElementById(id);
             if (!el) {
-SignalRContext.invoke(
-              "LogError",
+              SignalRContext.invoke(
+                "LogError",
                 `RandomMem: element with id=${id} was not found after mutation`
               );
               return;
@@ -138,8 +138,8 @@ SignalRContext.invoke(
               el.getBoundingClientRect().width > 0 &&
               el.getBoundingClientRect().height > 0;
             if (!isVisible) {
-SignalRContext.invoke(
-              "LogError",
+              SignalRContext.invoke(
+                "LogError",
                 `RandomMem: element id=${id} src = ${messageProps.mediaInfo.fileInfo.filePath} is not visible after mutation`
               );
             }
