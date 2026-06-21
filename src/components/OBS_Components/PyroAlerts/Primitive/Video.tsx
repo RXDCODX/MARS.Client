@@ -345,6 +345,9 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
           ...frameStyle,
         }}
         onCanPlay={e => {
+          freeze();
+          muteAll();
+
           // Настраиваем AudioContext и GainNode
           setupAudioContext();
 
@@ -366,10 +369,6 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
         }}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
-        onCanPlayThrough={() => {
-          freeze();
-          muteAll();
-        }}
       />
       <Textfit
         className={common.textStrokeShadow}
