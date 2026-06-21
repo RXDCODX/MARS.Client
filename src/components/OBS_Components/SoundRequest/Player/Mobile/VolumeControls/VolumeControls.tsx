@@ -6,6 +6,7 @@ import { useShallow } from "zustand/react/shallow";
 import { PlayerStateVideoStateEnum } from "@/shared/api";
 
 import { usePlayerStore } from "../../stores/usePlayerStore";
+import styles from "./VolumeControls.module.scss";
 
 function VolumeControlsComponent() {
   const { volume, isMuted, videoState, loading, actions } = usePlayerStore(
@@ -106,14 +107,9 @@ function VolumeControlsComponent() {
           value={volume}
           onChange={e => handleVolumeChange(Number(e.target.value))}
           disabled={loading || !actions}
+          className={styles.slider}
           style={{
-            width: "100%",
-            height: "8px",
-            borderRadius: "4px",
-            outline: "none",
-            WebkitAppearance: "none",
             background: `linear-gradient(to right, #52C41A 0%, #52C41A ${volume}%, #d9d9d9 ${volume}%, #d9d9d9 100%)`,
-            cursor: loading || !actions ? "not-allowed" : "pointer",
           }}
         />
       </div>

@@ -1,3 +1,4 @@
+import { Button } from "antd";
 import { memo, useCallback } from "react";
 
 import { QueueItem as QueueItemType } from "@/shared/api";
@@ -68,24 +69,24 @@ function QueueItemComponent({
           {formatDuration(item.track.duration)}
         </span>
         {showPlayButton && onPlay && (
-          <button
+          <Button
             onClick={handlePlay}
             disabled={isLoading}
-            className="btn btn-sm btn-success"
-            type="button"
+            type="primary"
+            size="small"
           >
             Играть
-          </button>
+          </Button>
         )}
         {showDeleteButton && onDelete && (
-          <button
-            className="btn btn-sm btn-danger"
+          <Button
             onClick={handleDelete}
             disabled={isLoading || isDeleting}
-            type="button"
+            danger
+            size="small"
           >
             {isDeleting ? "..." : "Удалить"}
-          </button>
+          </Button>
         )}
       </div>
     </div>

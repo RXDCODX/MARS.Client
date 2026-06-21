@@ -70,6 +70,22 @@ html:not([data-storybook]) {
   --text-shadow-light: 0 1px 2px rgb(0 0 0 / 10%);
   --text-shadow-medium: 0 2px 4px rgb(0 0 0 / 15%);
   --text-shadow-heavy: 0 4px 8px rgb(0 0 0 / 20%);
+
+  // Bootstrap CSS variable fallbacks (после миграции с react-bootstrap на antd)
+  --bs-primary: var(--site-bg-accent);
+  --bs-secondary: var(--site-text-secondary);
+  --bs-success: var(--site-text-success);
+  --bs-danger: var(--site-text-danger);
+  --bs-warning: var(--site-text-warning);
+  --bs-info: var(--site-text-info);
+  --bs-dark: #212529;
+  --bs-light: #f8f9fa;
+  --bs-border-color: var(--site-border-primary);
+  --bs-card-bg: var(--site-bg-card);
+  --bs-box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+  --bs-box-shadow-sm: 0 1px 3px rgb(0 0 0 / 10%);
+  --bs-box-shadow-lg: 0 10px 15px rgb(0 0 0 / 20%);
+  --bs-text-muted: var(--site-text-muted);
 }
 
 [data-theme="dark"] {
@@ -138,6 +154,22 @@ html:not([data-storybook]) {
   --text-shadow-light: 0 1px 2px rgb(0 0 0 / 30%);
   --text-shadow-medium: 0 2px 4px rgb(0 0 0 / 40%);
   --text-shadow-heavy: 0 4px 8px rgb(0 0 0 / 50%);
+
+  // Bootstrap CSS variable fallbacks (тёмная тема)
+  --bs-primary: var(--site-bg-accent);
+  --bs-secondary: var(--site-text-secondary);
+  --bs-success: var(--site-text-success);
+  --bs-danger: var(--site-text-danger);
+  --bs-warning: var(--site-text-warning);
+  --bs-info: var(--site-text-info);
+  --bs-dark: #f8f9fa;
+  --bs-light: #212529;
+  --bs-border-color: var(--site-border-primary);
+  --bs-card-bg: var(--site-bg-card);
+  --bs-box-shadow: 0 2px 8px rgb(0 0 0 / 40%);
+  --bs-box-shadow-sm: 0 1px 3px rgb(0 0 0 / 30%);
+  --bs-box-shadow-lg: 0 10px 15px rgb(0 0 0 / 50%);
+  --bs-text-muted: var(--site-text-muted);
 }
 
 body {

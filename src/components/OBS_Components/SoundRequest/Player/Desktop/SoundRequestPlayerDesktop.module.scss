@@ -208,14 +208,25 @@
 }
 
 .dragHandle {
-  width: 18px;
-  height: 18px;
+  width: 24px;
+  height: 24px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  background: transparent;
-  color: var(--bs-secondary);
+  background: rgb(255 255 255 / 5%);
+  color: rgb(255 255 255 / 50%);
+  cursor: grab;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgb(255 255 255 / 12%);
+    color: #fff;
+  }
+
+  &:active {
+    cursor: grabbing;
+  }
 }
 
 .insertIndicator {
@@ -649,14 +660,19 @@
   align-items: center;
   justify-content: center;
   border-radius: 0.5rem;
-  background: rgb(255 255 255 / 5%);
-  border: 1px solid rgb(255 255 255 / 10%);
+  background: rgb(255 255 255 / 10%);
+  border: 1px solid rgb(255 255 255 / 20%);
+  color: #fff;
   transition: all 0.2s ease;
   cursor: pointer;
 
+  svg {
+    color: #fff;
+  }
+
   &:hover {
-    background: rgb(255 255 255 / 12%);
-    border-color: rgb(255 255 255 / 20%);
+    background: rgb(255 255 255 / 18%);
+    border-color: rgb(255 255 255 / 35%);
     box-shadow: 0 4px 12px rgb(0 0 0 / 30%);
     transform: translateY(-2px);
   }
