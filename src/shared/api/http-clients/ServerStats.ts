@@ -23,6 +23,7 @@ import type {
   AutoMessageDto,
   BaseCommand,
   BaseTrackInfo,
+  Boolean,
   ChannelRewardDefinition,
   ChannelRewardRecord,
   CinemaMediaItemDto,
@@ -33,6 +34,7 @@ import type {
   CreateMediaItemRequest,
   CreateMemeOrderDto,
   CreateMemeTypeDto,
+  CreateTwitchUserRequest,
   CustomReward,
   DefaultImage,
   DiscordChannelOptionDto,
@@ -84,6 +86,7 @@ import type {
   TelegramDiscordBindingSetEnabledRequest,
   TelegramDiscordChannelStateDto,
   TwitchUser,
+  TwitchUserDto,
   UpdateAutoMessageRequest,
   UpdateCustomRewardDto,
   UpdateCustomRewardRedemptionStatusRequest,
@@ -91,6 +94,7 @@ import type {
   UpdateMediaItemRequest,
   UpdateMemeOrderDto,
   UpdateMemeTypeDto,
+  UpdateTwitchUserRequest,
   UpdateValueRequest,
   ValidateFolderRequest,
   ValidateFolderResponse,
@@ -140,6 +144,36 @@ export class ServerStats<
     this.request<OperationResult<ServerStatsResponse>, any>({
       path: `/api/ServerStats`,
       method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags ServerStats
+   * @name ServerStatsToggleTtsFilterCreate
+   * @request POST:/api/ServerStats/toggle-tts-filter
+   * @response `200` `OperationResult<Boolean>` OK
+   */
+  serverStatsToggleTtsFilterCreate = (params: RequestParams = {}) =>
+    this.request<OperationResult<Boolean>, any>({
+      path: `/api/ServerStats/toggle-tts-filter`,
+      method: "POST",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags ServerStats
+   * @name ServerStatsTogglePuntoSwitcherCreate
+   * @request POST:/api/ServerStats/toggle-punto-switcher
+   * @response `200` `OperationResult<Boolean>` OK
+   */
+  serverStatsTogglePuntoSwitcherCreate = (params: RequestParams = {}) =>
+    this.request<OperationResult<Boolean>, any>({
+      path: `/api/ServerStats/toggle-punto-switcher`,
+      method: "POST",
       format: "json",
       ...params,
     });

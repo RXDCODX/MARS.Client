@@ -129,51 +129,92 @@ import type {
   TestAlertsAlertByTypeCreateParamsTypeEnum,
 } from "../types/data-contracts";
 
-export class TestLogger<
+export class TwitchUsers<
   SecurityDataType = unknown,
 > extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags TestLogger
-   * @name TestLoggerTestWarningCreate
-   * @request POST:/api/TestLogger/test-warning
-   * @response `200` `OperationResult` OK
+   * @tags TwitchUsers
+   * @name TwitchUsersList
+   * @request GET:/api/TwitchUsers
+   * @response `200` `OperationResult<TwitchUserDto[]>` OK
    */
-  testLoggerTestWarningCreate = (params: RequestParams = {}) =>
-    this.request<OperationResult, any>({
-      path: `/api/TestLogger/test-warning`,
-      method: "POST",
+  twitchUsersList = (params: RequestParams = {}) =>
+    this.request<OperationResult<TwitchUserDto[]>, any>({
+      path: `/api/TwitchUsers`,
+      method: "GET",
       format: "json",
       ...params,
     });
   /**
    * No description
    *
-   * @tags TestLogger
-   * @name TestLoggerTestErrorCreate
-   * @request POST:/api/TestLogger/test-error
-   * @response `200` `OperationResult` OK
+   * @tags TwitchUsers
+   * @name TwitchUsersCreate
+   * @request POST:/api/TwitchUsers
+   * @response `200` `OperationResult<TwitchUserDto>` OK
    */
-  testLoggerTestErrorCreate = (params: RequestParams = {}) =>
-    this.request<OperationResult, any>({
-      path: `/api/TestLogger/test-error`,
+  twitchUsersCreate = (
+    data: CreateTwitchUserRequest,
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<TwitchUserDto>, any>({
+      path: `/api/TwitchUsers`,
       method: "POST",
+      body: data,
+      type: ContentType.Json,
       format: "json",
       ...params,
     });
   /**
    * No description
    *
-   * @tags TestLogger
-   * @name TestLoggerTestCriticalCreate
-   * @request POST:/api/TestLogger/test-critical
+   * @tags TwitchUsers
+   * @name TwitchUsersDetail
+   * @request GET:/api/TwitchUsers/{id}
+   * @response `200` `OperationResult<TwitchUserDto>` OK
+   */
+  twitchUsersDetail = (id: string, params: RequestParams = {}) =>
+    this.request<OperationResult<TwitchUserDto>, any>({
+      path: `/api/TwitchUsers/${id}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags TwitchUsers
+   * @name TwitchUsersUpdate
+   * @request PUT:/api/TwitchUsers/{id}
+   * @response `200` `OperationResult<TwitchUserDto>` OK
+   */
+  twitchUsersUpdate = (
+    id: string,
+    data: UpdateTwitchUserRequest,
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<TwitchUserDto>, any>({
+      path: `/api/TwitchUsers/${id}`,
+      method: "PUT",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags TwitchUsers
+   * @name TwitchUsersDelete
+   * @request DELETE:/api/TwitchUsers/{id}
    * @response `200` `OperationResult` OK
    */
-  testLoggerTestCriticalCreate = (params: RequestParams = {}) =>
+  twitchUsersDelete = (id: string, params: RequestParams = {}) =>
     this.request<OperationResult, any>({
-      path: `/api/TestLogger/test-critical`,
-      method: "POST",
+      path: `/api/TwitchUsers/${id}`,
+      method: "DELETE",
       format: "json",
       ...params,
     });

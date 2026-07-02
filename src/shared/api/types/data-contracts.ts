@@ -255,6 +255,18 @@ export interface CreateMemeTypeDto {
   folderPath: string;
 }
 
+export interface CreateTwitchUserRequest {
+  twitchId: string;
+  userLogin: string;
+  displayName: string;
+  profileImageUrl?: string;
+  chatColor?: string;
+  isModerator: boolean;
+  isVip: boolean;
+  isInBlockList: boolean;
+  aliasNickname?: string;
+}
+
 export interface CustomReward {
   broadcasterId?: string;
   broadcasterLogin?: string;
@@ -614,6 +626,7 @@ export interface ServerStatsResponse {
   isAudioControllerConnected: boolean;
   isTtsConnected: boolean;
   isPuntoSwitcherEnabled: boolean;
+  isTtsFilterEnabled: boolean;
   nearestWeddingAnniversaryName?: string;
   /** @format date-time */
   nearestWeddingAnniversaryDate?: string;
@@ -761,8 +774,29 @@ export interface TwitchUser {
   lastUpdated: string;
   /** @format date-time */
   createdAt: string;
+  /** @maxLength 100 */
+  aliasNickname?: string;
   isInBlockList: boolean;
   isSimpleUser: boolean;
+}
+
+export interface TwitchUserDto {
+  twitchId: string;
+  userLogin: string;
+  displayName: string;
+  profileImageUrl?: string;
+  chatColor?: string;
+  isModerator: boolean;
+  isVip: boolean;
+  isBroadcaster: boolean;
+  isInBlockList: boolean;
+  aliasNickname?: string;
+  /** @format date-time */
+  followedAt?: string;
+  /** @format date-time */
+  lastUpdated: string;
+  /** @format date-time */
+  createdAt: string;
 }
 
 export interface UpdateAutoMessageRequest {
@@ -848,6 +882,17 @@ export interface UpdateMemeTypeDto {
   name: string;
   /** @minLength 1 */
   folderPath: string;
+}
+
+export interface UpdateTwitchUserRequest {
+  userLogin?: string;
+  displayName?: string;
+  profileImageUrl?: string;
+  chatColor?: string;
+  isModerator?: boolean;
+  isVip?: boolean;
+  isInBlockList?: boolean;
+  aliasNickname?: string;
 }
 
 export interface UpdateValueRequest {

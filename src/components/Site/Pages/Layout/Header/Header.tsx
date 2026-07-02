@@ -78,6 +78,7 @@ const Header: React.FC = () => {
     { label: "Сервисы", path: "/services", icon: "🔌" },
     { label: "RootState", path: "/root-state", icon: "💾" },
     { label: "Твич награды", path: "/twitch-rewards", icon: "🎁" },
+    { label: "Пользователи Twitch", path: "/twitch-users", icon: "👤" },
     { label: "Автосообщения", path: "/auto-messages", icon: "📨" },
     {
       label: "Telegram ↔ Discord Bridge",

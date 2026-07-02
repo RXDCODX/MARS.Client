@@ -2885,6 +2885,11 @@
             "type": "string",
             "format": "date-time"
           },
+          "aliasNickname": {
+            "maxLength": 100,
+            "type": "string",
+            "nullable": true
+          },
           "isInBlockList": {
             "type": "boolean"
           },

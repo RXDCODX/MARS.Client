@@ -17,6 +17,10 @@ export { default as RootStatePage } from "./RootStatePage";
 export { default as ServerViewer } from "./ServerViewer/ServerViewer";
 export { default as TelegramDiscordBridgePage } from "./TelegramDiscordBridgePage";
 
+export { default as TwitchUsersPage } from "./TwitchUsersPage/TwitchUsersPage";
+export { default as TwitchUserCreatePage } from "./TwitchUsersPage/TwitchUserCreatePage";
+export { default as TwitchUserEditPage } from "./TwitchUsersPage/TwitchUserEditPage";
+
 // MediaInfo страницы
 export {
   MediaInfoCreatePage,

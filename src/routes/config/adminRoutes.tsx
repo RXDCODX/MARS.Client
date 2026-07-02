@@ -58,6 +58,24 @@ const spotifyAuthManagerLoader = () =>
   import("@/components/Site/Pages/AdminPanel/sections/SpotifyAuthManager");
 const SpotifyAuthManager = lazy(spotifyAuthManagerLoader);
 
+const twitchUsersPageLoader = () =>
+  import("@/components/Site/Pages").then(m => ({
+    default: m.TwitchUsersPage,
+  }));
+const TwitchUsersPage = lazy(twitchUsersPageLoader);
+
+const twitchUserCreatePageLoader = () =>
+  import("@/components/Site/Pages").then(m => ({
+    default: m.TwitchUserCreatePage,
+  }));
+const TwitchUserCreatePage = lazy(twitchUserCreatePageLoader);
+
+const twitchUserEditPageLoader = () =>
+  import("@/components/Site/Pages").then(m => ({
+    default: m.TwitchUserEditPage,
+  }));
+const TwitchUserEditPage = lazy(twitchUserEditPageLoader);
+
 // Регистрируем админ компоненты для фоновой загрузки
 registerPrefetchComponents([
   logsPageLoader,
@@ -71,6 +89,9 @@ registerPrefetchComponents([
   commandsPageLoader,
   cinemaQueuePageLoader,
   spotifyAuthManagerLoader,
+  twitchUsersPageLoader,
+  twitchUserCreatePageLoader,
+  twitchUserEditPageLoader,
 ]);
 
 // Массив панелей управления (с Layout)
@@ -203,6 +224,42 @@ export const adminRoutes: RouteConfig[] = [
       <Layout>
         <Suspense fallback={<PageLoader />}>
           <TelegramDiscordBridgePage />
+        </Suspense>
+      </Layout>
+    ),
+  },
+  {
+    path: "/twitch-users",
+    name: "Пользователи Twitch",
+    type: "control panel",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <TwitchUsersPage />
+        </Suspense>
+      </Layout>
+    ),
+  },
+  {
+    path: "/twitch-users/create",
+    name: "Создание пользователя Twitch",
+    type: "control panel",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <TwitchUserCreatePage />
+        </Suspense>
+      </Layout>
+    ),
+  },
+  {
+    path: "/twitch-users/:id/edit",
+    name: "Редактирование пользователя Twitch",
+    type: "control panel",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <TwitchUserEditPage />
         </Suspense>
       </Layout>
     ),

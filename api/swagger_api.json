@@ -3750,6 +3750,64 @@
         }
       }
     },
+    "/api/ServerStats/toggle-tts-filter": {
+      "post": {
+        "tags": [
+          "ServerStats"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/ServerStats/toggle-punto-switcher": {
+      "post": {
+        "tags": [
+          "ServerStats"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooleanOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/ServiceManager/status": {
       "get": {
         "tags": [
@@ -6075,6 +6133,237 @@
         }
       }
     },
+    "/api/TwitchUsers": {
+      "get": {
+        "tags": [
+          "TwitchUsers"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwitchUserDtoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwitchUserDtoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwitchUserDtoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "TwitchUsers"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateTwitchUserRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateTwitchUserRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateTwitchUserRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwitchUserDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwitchUserDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwitchUserDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/TwitchUsers/{id}": {
+      "get": {
+        "tags": [
+          "TwitchUsers"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwitchUserDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwitchUserDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwitchUserDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "TwitchUsers"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateTwitchUserRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateTwitchUserRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateTwitchUserRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwitchUserDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwitchUserDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TwitchUserDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "TwitchUsers"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/WTelegram/relogin": {
       "post": {
         "tags": [
@@ -6491,6 +6780,15 @@
         ],
         "description": "Результат операции с данными типа any",
         "x-generic-type-argument": "any"
+      },
+      "BooleanOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа boolean",
+        "x-generic-type-argument": "boolean"
       },
       "ChannelRewardDefinition": {
         "required": [
@@ -6990,6 +7288,50 @@
           "folderPath": {
             "minLength": 1,
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTwitchUserRequest": {
+        "required": [
+          "displayName",
+          "isInBlockList",
+          "isModerator",
+          "isVip",
+          "twitchId",
+          "userLogin"
+        ],
+        "type": "object",
+        "properties": {
+          "twitchId": {
+            "type": "string"
+          },
+          "userLogin": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "profileImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "chatColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "isModerator": {
+            "type": "boolean"
+          },
+          "isVip": {
+            "type": "boolean"
+          },
+          "isInBlockList": {
+            "type": "boolean"
+          },
+          "aliasNickname": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -8381,6 +8723,12 @@
         "required": [
           "activeServicesCount",
           "cpuUsagePercent",
+          "isAudioControllerConnected",
+          "isEventSubConnected",
+          "isPuntoSwitcherEnabled",
+          "isTtsConnected",
+          "isTtsFilterEnabled",
+          "isTwitchChatConnected",
           "machineName",
           "memoryGcHeapBytes",
           "memoryPrivateBytes",
@@ -8443,6 +8791,37 @@
           "processorCount": {
             "type": "integer",
             "format": "int32"
+          },
+          "isEventSubConnected": {
+            "type": "boolean"
+          },
+          "isTwitchChatConnected": {
+            "type": "boolean"
+          },
+          "isAudioControllerConnected": {
+            "type": "boolean"
+          },
+          "isTtsConnected": {
+            "type": "boolean"
+          },
+          "isPuntoSwitcherEnabled": {
+            "type": "boolean"
+          },
+          "isTtsFilterEnabled": {
+            "type": "boolean"
+          },
+          "nearestWeddingAnniversaryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "nearestWeddingAnniversaryDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "nearestWeddingAnniversaryUser": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -9012,6 +9391,11 @@
             "type": "string",
             "format": "date-time"
           },
+          "aliasNickname": {
+            "maxLength": 100,
+            "type": "string",
+            "nullable": true
+          },
           "isInBlockList": {
             "type": "boolean"
           },
@@ -9021,6 +9405,87 @@
           }
         },
         "additionalProperties": false
+      },
+      "TwitchUserDto": {
+        "required": [
+          "createdAt",
+          "displayName",
+          "isBroadcaster",
+          "isInBlockList",
+          "isModerator",
+          "isVip",
+          "lastUpdated",
+          "twitchId",
+          "userLogin"
+        ],
+        "type": "object",
+        "properties": {
+          "twitchId": {
+            "type": "string"
+          },
+          "userLogin": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "profileImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "chatColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "isModerator": {
+            "type": "boolean"
+          },
+          "isVip": {
+            "type": "boolean"
+          },
+          "isBroadcaster": {
+            "type": "boolean"
+          },
+          "isInBlockList": {
+            "type": "boolean"
+          },
+          "aliasNickname": {
+            "type": "string",
+            "nullable": true
+          },
+          "followedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TwitchUserDtoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
+      },
+      "TwitchUserDtoOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "UpdateAutoMessageRequest": {
         "type": "object",
@@ -9268,6 +9733,44 @@
         },
         "additionalProperties": false
       },
+      "UpdateTwitchUserRequest": {
+        "type": "object",
+        "properties": {
+          "userLogin": {
+            "type": "string",
+            "nullable": true
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "profileImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "chatColor": {
+            "type": "string",
+            "nullable": true
+          },
+          "isModerator": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isVip": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isInBlockList": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "aliasNickname": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "UpdateValueRequest": {
         "required": [
           "value"
@@ -9412,6 +9915,9 @@
     },
     {
       "name": "TwitchRewards"
+    },
+    {
+      "name": "TwitchUsers"
     },
     {
       "name": "WTelegram"
