@@ -3,40 +3,38 @@ import { useState } from "react";
 import { ChatMessage } from "@/shared/api";
 import { createTestMessageSet } from "@/shared/Utils/testMessageUtils";
 
-interface MessageManagerProps {
+interface MessageManagerProperties {
   children: (
     messages: ChatMessage[],
     removeMessage: (id: string) => void
   ) => React.ReactNode;
 }
 
-export function MessageManager({ children }: MessageManagerProps) {
+export function MessageManager({ children }: MessageManagerProperties) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [messageCount, setMessageCount] = useState(0);
 
   const generateMessages = () => {
     const newMessages = createTestMessageSet("demo", messageCount);
 
-    newMessages.forEach((msg, index) => {
+    newMessages.forEach((message, index) => {
       setTimeout(() => {
-        setMessages(prev => {
-          while (prev.length >= 50) {
-            prev.pop();
+        setMessages(previous => {
+          while (previous.length >= 50) {
+            previous.pop();
           }
-          if (prev.find(m => m.id === msg.id)) {
-            return prev;
-          } else {
-            return [msg, ...prev];
-          }
+          return previous.find(m => m.id === message.id)
+            ? previous
+            : [message, ...previous];
         });
       }, index * 200);
     });
 
-    setMessageCount(prev => prev + newMessages.length);
+    setMessageCount(previous => previous + newMessages.length);
   };
 
   const removeMessage = (id: string) => {
-    setMessages(prev => prev.filter(m => m.id !== id));
+    setMessages(previous => previous.filter(m => m.id !== id));
   };
 
   return (

@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import { useEffect } from "react";
 
-interface AnimatedGradientBackgroundProps {
+interface AnimatedGradientBackgroundProperties {
   children: React.ReactNode;
   colors?: string[];
   duration?: number;
@@ -14,7 +14,7 @@ export default function AnimatedGradientBackground({
   colors = ["#ee7752", "#e73c7e", "#23a6d5", "#23d5ab"],
   duration = 15,
   gradientAngle = -45,
-}: AnimatedGradientBackgroundProps) {
+}: AnimatedGradientBackgroundProperties) {
   // Добавляем глобальные стили для анимации градиента
   useEffect(() => {
     const style = document.createElement("style");

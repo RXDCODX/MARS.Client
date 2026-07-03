@@ -21,8 +21,8 @@ const ContactsPage: React.FC = () => {
     >
   ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
+    setFormData(previous => ({
+      ...previous,
       [name]: value,
     }));
   };

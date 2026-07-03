@@ -122,9 +122,9 @@ const TwitchUserCreatePage: React.FC = () => {
             <Avatar
               src={hasAvatar ? profileImageUrl : undefined}
               size={80}
-              icon={!hasAvatar ? <User size={40} /> : undefined}
+              icon={hasAvatar ? undefined : <User size={40} />}
               style={{
-                backgroundColor: !hasAvatar ? "#8c8c8c" : undefined,
+                backgroundColor: hasAvatar ? undefined : "#8c8c8c",
               }}
               data-testid="avatar-preview"
             >

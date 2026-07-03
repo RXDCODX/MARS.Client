@@ -40,10 +40,12 @@ function AddTrackModalComponent() {
   );
 
   const handleClose = useCallback(() => {
-    if (!isSubmitting) {
-      setQuery("");
-      close();
+    if (isSubmitting) {
+      return;
     }
+
+    setQuery("");
+    close();
   }, [isSubmitting, close]);
 
   return (

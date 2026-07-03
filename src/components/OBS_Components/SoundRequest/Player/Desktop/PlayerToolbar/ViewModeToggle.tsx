@@ -22,42 +22,54 @@ function ViewModeToggleComponent() {
   // Мемоизируем иконку
   const icon = useMemo(() => {
     switch (viewMode) {
-      case TrackListViewMode.Default:
+      case TrackListViewMode.Default: {
         return <List size={24} />;
-      case TrackListViewMode.WithHistory:
+      }
+      case TrackListViewMode.WithHistory: {
         return <Clock size={24} />;
-      case TrackListViewMode.Reversed:
+      }
+      case TrackListViewMode.Reversed: {
         return <ArrowDownUp size={24} />;
-      default:
+      }
+      default: {
         return <List size={24} />;
+      }
     }
   }, [viewMode]);
 
   // Мемоизируем лейбл
   const label = useMemo(() => {
     switch (viewMode) {
-      case TrackListViewMode.Default:
+      case TrackListViewMode.Default: {
         return "Обычный";
-      case TrackListViewMode.WithHistory:
+      }
+      case TrackListViewMode.WithHistory: {
         return "Общий";
-      case TrackListViewMode.Reversed:
+      }
+      case TrackListViewMode.Reversed: {
         return "История↓";
-      default:
+      }
+      default: {
         return "Режим";
+      }
     }
   }, [viewMode]);
 
   // Мемоизируем title
   const title = useMemo(() => {
     switch (viewMode) {
-      case TrackListViewMode.Default:
+      case TrackListViewMode.Default: {
         return "Обычный режим: текущий трек + очередь";
-      case TrackListViewMode.WithHistory:
+      }
+      case TrackListViewMode.WithHistory: {
         return "Общий режим: история → текущий трек → очередь";
-      case TrackListViewMode.Reversed:
+      }
+      case TrackListViewMode.Reversed: {
         return "Обратный режим: история + текущий трек снизу";
-      default:
+      }
+      default: {
         return "Переключить режим отображения";
+      }
     }
   }, [viewMode]);
 

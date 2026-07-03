@@ -7,9 +7,9 @@ type NormalizedRGB = [number, number, number];
 
 const hexToNormalizedRGB = (hex: string): NormalizedRGB => {
   const clean = hex.replace("#", "");
-  const r = parseInt(clean.slice(0, 2), 16) / 255;
-  const g = parseInt(clean.slice(2, 4), 16) / 255;
-  const b = parseInt(clean.slice(4, 6), 16) / 255;
+  const r = Number.parseInt(clean.slice(0, 2), 16) / 255;
+  const g = Number.parseInt(clean.slice(2, 4), 16) / 255;
+  const b = Number.parseInt(clean.slice(4, 6), 16) / 255;
   return [r, g, b];
 };
 
@@ -84,41 +84,43 @@ void main() {
 }
 `;
 
-interface SilkPlaneProps {
+interface SilkPlaneProperties {
   uniforms: SilkUniforms;
 }
 
-const SilkPlane = forwardRef<Mesh, SilkPlaneProps>(({ uniforms }, ref) => {
-  const { viewport } = useThree();
+const SilkPlane = forwardRef<Mesh, SilkPlaneProperties>(
+  ({ uniforms }, reference) => {
+    const { viewport } = useThree();
 
-  useLayoutEffect(() => {
-    const mesh = ref as React.MutableRefObject<Mesh | null>;
-    if (mesh.current) {
-      mesh.current.scale.set(viewport.width, viewport.height, 1);
-    }
-  }, [ref, viewport]);
+    useLayoutEffect(() => {
+      const mesh = reference as React.MutableRefObject<Mesh | null>;
+      if (mesh.current) {
+        mesh.current.scale.set(viewport.width, viewport.height, 1);
+      }
+    }, [reference, viewport]);
 
-  useFrame((_state: RootState, delta: number) => {
-    const mesh = ref as React.MutableRefObject<Mesh | null>;
-    if (mesh.current) {
-      const material = mesh.current.material as ShaderMaterial & {
-        uniforms: SilkUniforms;
-      };
-      material.uniforms.uTime.value += 0.1 * delta;
-    }
-  });
+    useFrame((_state: RootState, delta: number) => {
+      const mesh = reference as React.MutableRefObject<Mesh | null>;
+      if (mesh.current) {
+        const material = mesh.current.material as ShaderMaterial & {
+          uniforms: SilkUniforms;
+        };
+        material.uniforms.uTime.value += 0.1 * delta;
+      }
+    });
 
-  return (
-    <mesh ref={ref}>
-      <planeGeometry args={[1, 1, 1, 1]} />
-      <shaderMaterial
-        uniforms={uniforms}
-        vertexShader={vertexShader}
-        fragmentShader={fragmentShader}
-      />
-    </mesh>
-  );
-});
+    return (
+      <mesh ref={reference}>
+        <planeGeometry args={[1, 1, 1, 1]} />
+        <shaderMaterial
+          uniforms={uniforms}
+          vertexShader={vertexShader}
+          fragmentShader={fragmentShader}
+        />
+      </mesh>
+    );
+  }
+);
 SilkPlane.displayName = "SilkPlane";
 
 export interface SilkProps {
@@ -136,7 +138,7 @@ const Silk: React.FC<SilkProps> = ({
   noiseIntensity = 1.5,
   rotation = 0,
 }) => {
-  const meshRef = useRef<Mesh>(null);
+  const meshReference = useRef<Mesh>(null);
 
   const uniforms = useMemo<SilkUniforms>(
     () => ({
@@ -152,7 +154,7 @@ const Silk: React.FC<SilkProps> = ({
 
   return (
     <Canvas dpr={[1, 2]} frameloop="always">
-      <SilkPlane ref={meshRef} uniforms={uniforms} />
+      <SilkPlane ref={meshReference} uniforms={uniforms} />
     </Canvas>
   );
 };

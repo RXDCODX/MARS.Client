@@ -94,7 +94,7 @@ export const WithMockData: Story = {
     // Отправляем mock данные через SignalR эмуляцию
     setTimeout(() => {
       const event = new CustomEvent("MikuMonday", { detail: mockData });
-      window.dispatchEvent(event);
+      globalThis.dispatchEvent(event);
     }, 1000);
   },
 };

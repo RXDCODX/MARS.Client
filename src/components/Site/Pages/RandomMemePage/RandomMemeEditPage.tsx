@@ -44,10 +44,10 @@ const RandomMemeEditPage: React.FC = () => {
       if (!orderResponse.data.data) {
         setError("Мем с указанным ID не найден");
       }
-    } catch (e) {
-      console.error("Ошибка загрузки данных:", e);
+    } catch (error_) {
+      console.error("Ошибка загрузки данных:", error_);
       const errorMessage =
-        e instanceof Error ? e.message : "Неизвестная ошибка";
+        error_ instanceof Error ? error_.message : "Неизвестная ошибка";
       setError(errorMessage);
       showToast({
         success: false,
@@ -91,8 +91,8 @@ const RandomMemeEditPage: React.FC = () => {
         showToast(result.data);
 
         navigate(`/random-meme/${memeOrder.id}`);
-      } catch (e) {
-        console.error("Ошибка сохранения:", e);
+      } catch (error_) {
+        console.error("Ошибка сохранения:", error_);
         showToast({
           success: false,
           message: "Ошибка сохранения данных",

@@ -5,14 +5,14 @@ import { describe, expect, it, test, vi } from "vitest";
 vi.mock("@react-three/fiber", () => ({
   Canvas: ({ children }: { children?: ReactNode }) =>
     createElement("div", { "data-testid": "mock-r3f-canvas" }, children),
-  useFrame: () => undefined,
+  useFrame: () => {},
   useThree: () => ({
     viewport: { width: 1, height: 1 },
     camera: {},
     scene: {},
     gl: {},
   }),
-  extend: () => undefined,
+  extend: () => {},
   createPortal: (children: unknown) => children,
 }));
 
@@ -56,17 +56,17 @@ const moduleLoaders = import.meta.glob("./**/*.tsx");
 
 const backgroundModuleEntries = Object.entries(moduleLoaders).filter(
   ([modulePath]) => {
-    const normalizedPath = modulePath.replace(/\\/g, "/");
+    const normalizedPath = modulePath.replaceAll("\\", "/");
     const parts = normalizedPath.split("/");
-    const folderName = parts[parts.length - 2];
-    const fileName = parts[parts.length - 1]?.replace(".tsx", "");
+    const folderName = parts.at(-2);
+    const fileName = parts.at(-1)?.replace(".tsx", "");
 
     // Берем только основной компонент папки, например Aurora/Aurora.tsx
     return folderName === fileName;
   }
 );
 
-const renderPropsByBackground: Partial<
+const renderPropertiesByBackground: Partial<
   Record<ReactBitsBackgroundName, object>
 > = {
   GridDistortion: {
@@ -75,9 +75,9 @@ const renderPropsByBackground: Partial<
 };
 
 const toBackgroundName = (modulePath: string): ReactBitsBackgroundName => {
-  const normalizedPath = modulePath.replace(/\\/g, "/");
+  const normalizedPath = modulePath.replaceAll("\\", "/");
   const parts = normalizedPath.split("/");
-  const folderName = parts[parts.length - 2] as ReactBitsBackgroundName;
+  const folderName = parts.at(-2) as ReactBitsBackgroundName;
   return folderName;
 };
 
@@ -102,8 +102,10 @@ describe("ReactBitsBackgroundsLegacy SSR smoke", () => {
 
       expect(component).toBeDefined();
 
-      const props = renderPropsByBackground[componentName] ?? {};
-      const markup = renderToStaticMarkup(createElement(component!, props));
+      const properties = renderPropertiesByBackground[componentName] ?? {};
+      const markup = renderToStaticMarkup(
+        createElement(component!, properties)
+      );
 
       expect(markup).toBeTruthy();
       expect(markup.length).toBeGreaterThan(0);

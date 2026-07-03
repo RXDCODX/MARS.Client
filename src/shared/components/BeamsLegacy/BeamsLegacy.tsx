@@ -2,7 +2,7 @@ import { CSSProperties, useMemo } from "react";
 
 import styles from "./BeamsLegacy.module.scss";
 
-type BeamsLegacyProps = {
+type BeamsLegacyProperties = {
   beamWidth?: number;
   beamHeight?: number;
   beamNumber?: number;
@@ -13,7 +13,7 @@ type BeamsLegacyProps = {
   rotation?: number;
 };
 
-const BeamsLegacy: React.FC<BeamsLegacyProps> = ({
+const BeamsLegacy: React.FC<BeamsLegacyProperties> = ({
   beamWidth = 2,
   beamHeight = 15,
   beamNumber = 12,

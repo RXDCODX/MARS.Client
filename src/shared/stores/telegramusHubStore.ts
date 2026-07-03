@@ -1,5 +1,4 @@
 import { HubConnection } from "@microsoft/signalr";
-import type {} from "@redux-devtools/extension";
 import { PrizeType } from "react-roulette-pro";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
@@ -14,7 +13,7 @@ import useWaifuPrizesStore from "@/shared/stores/waifuPrizesStore";
 interface TelegramusHubActions {
   start: () => Promise<void>;
   stop: () => Promise<void>;
-  invoke: (methodName: string, ...args: unknown[]) => Promise<unknown>;
+  invoke: (methodName: string, ...arguments_: unknown[]) => Promise<unknown>;
 
   dequeueCurrent: () => void;
   dequeueFumoCurrent: () => void;
@@ -186,12 +185,12 @@ export const useTelegramusHubStore = create<
         }
       },
 
-      invoke: async (methodName: string, ...args: unknown[]) => {
+      invoke: async (methodName: string, ...arguments_: unknown[]) => {
         const { connection, isConnected } = get();
         if (!connection || !isConnected) {
           await get().start();
         }
-        return await get().connection!.invoke(methodName, ...args);
+        return await get().connection!.invoke(methodName, ...arguments_);
       },
 
       dequeueCurrent: () => {

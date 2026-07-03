@@ -61,11 +61,11 @@ const variants: confetti.Options[] = [
   },
 ];
 
-interface Props {
+interface Properties {
   callback: () => void;
 }
 
-export function Confettyv1({}: Props) {
+export function Confettyv1({}: Properties) {
   const randomVariant = variants[Math.floor(Math.random() * variants.length)];
 
   return (
@@ -78,8 +78,8 @@ export function Confettyv1({}: Props) {
   );
 }
 
-export function Confettyv2({ callback }: Props) {
-  const duration = 10000;
+export function Confettyv2({ callback }: Properties) {
+  const duration = 10_000;
 
   useEffect(() => {
     setTimeout(() => callback(), duration);

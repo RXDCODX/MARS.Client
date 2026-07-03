@@ -5,20 +5,20 @@ import { MediaDto } from "@/shared/api";
 
 import styles from "./aa.module.scss";
 
-interface Props {
+interface Properties {
   mediaInfo: MediaDto;
   callback: () => void;
 }
 
-export function BigTextBlockForVoice({ mediaInfo, callback }: Props) {
+export function BigTextBlockForVoice({ mediaInfo, callback }: Properties) {
   const { metaInfo, fileInfo, textInfo } = mediaInfo.mediaInfo;
-  const bellSrc = import.meta.env.VITE_BASE_PATH + "Alerts/bell.wav";
-  const voiceSrc = import.meta.env.VITE_BASE_PATH + fileInfo.filePath;
+  const bellSource = import.meta.env.VITE_BASE_PATH + "Alerts/bell.wav";
+  const voiceSource = import.meta.env.VITE_BASE_PATH + fileInfo.filePath;
 
   const [isBellPlayed, setIsBellPlayed] = useState(false);
 
   const error = useCallback(() => {
-    throw Error("Failed to play audio");
+    throw new Error("Failed to play audio");
     callback();
   }, [callback]);
 
@@ -26,7 +26,7 @@ export function BigTextBlockForVoice({ mediaInfo, callback }: Props) {
     <>
       {!isBellPlayed && (
         <audio
-          src={bellSrc}
+          src={bellSource}
           onEnded={() => setIsBellPlayed(true)}
           onError={() => error()}
           onErrorCapture={() => error()}
@@ -34,7 +34,7 @@ export function BigTextBlockForVoice({ mediaInfo, callback }: Props) {
       )}
       {isBellPlayed && (
         <audio
-          src={voiceSrc}
+          src={voiceSource}
           onEnded={() => callback()}
           onError={() => error()}
           onErrorCapture={() => error()}

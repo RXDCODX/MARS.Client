@@ -3,7 +3,7 @@ import "./LiquidChrome.css";
 import { Mesh, Program, Renderer, Triangle } from "ogl";
 import React, { useEffect, useRef } from "react";
 
-interface LiquidChromeProps extends React.HTMLAttributes<HTMLDivElement> {
+interface LiquidChromeProperties extends React.HTMLAttributes<HTMLDivElement> {
   baseColor?: [number, number, number];
   speed?: number;
   amplitude?: number;
@@ -12,21 +12,21 @@ interface LiquidChromeProps extends React.HTMLAttributes<HTMLDivElement> {
   interactive?: boolean;
 }
 
-export const LiquidChrome: React.FC<LiquidChromeProps> = ({
+export const LiquidChrome: React.FC<LiquidChromeProperties> = ({
   baseColor = [0.1, 0.1, 0.1],
   speed = 0.2,
   amplitude = 0.5,
   frequencyX = 3,
   frequencyY = 2,
   interactive = true,
-  ...props
+  ...properties
 }) => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const containerReference = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerReference.current) return;
 
-    const container = containerRef.current;
+    const container = containerReference.current;
     const renderer = new Renderer({ antialias: true });
     const gl = renderer.gl;
     gl.clearColor(1, 1, 1, 1);
@@ -131,15 +131,17 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
     }
 
     function handleTouchMove(event: TouchEvent) {
-      if (event.touches.length > 0) {
-        const touch = event.touches[0];
-        const rect = container.getBoundingClientRect();
-        const x = (touch.clientX - rect.left) / rect.width;
-        const y = 1 - (touch.clientY - rect.top) / rect.height;
-        const mouseUniform = program.uniforms.uMouse.value as Float32Array;
-        mouseUniform[0] = x;
-        mouseUniform[1] = y;
+      if (event.touches.length === 0) {
+        return;
       }
+
+      const touch = event.touches[0];
+      const rect = container.getBoundingClientRect();
+      const x = (touch.clientX - rect.left) / rect.width;
+      const y = 1 - (touch.clientY - rect.top) / rect.height;
+      const mouseUniform = program.uniforms.uMouse.value as Float32Array;
+      mouseUniform[0] = x;
+      mouseUniform[1] = y;
     }
 
     if (interactive) {
@@ -155,7 +157,7 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
     }
     animationId = requestAnimationFrame(update);
 
-    container.appendChild(gl.canvas);
+    container.append(gl.canvas);
 
     return () => {
       cancelAnimationFrame(animationId);
@@ -165,14 +167,18 @@ export const LiquidChrome: React.FC<LiquidChromeProps> = ({
         container.removeEventListener("touchmove", handleTouchMove);
       }
       if (gl.canvas.parentElement) {
-        gl.canvas.parentElement.removeChild(gl.canvas);
+        gl.canvas.remove();
       }
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, [baseColor, speed, amplitude, frequencyX, frequencyY, interactive]);
 
   return (
-    <div ref={containerRef} className="liquidChrome-container" {...props} />
+    <div
+      ref={containerReference}
+      className="liquidChrome-container"
+      {...properties}
+    />
   );
 };
 

@@ -7,18 +7,18 @@ vi.mock("@/components/ThemeToggle", () => ({
 }));
 
 vi.mock("react-router-dom", () => ({
-  Link: ({ children, to, ...props }: any) =>
-    createElement("a", { href: to, ...props }, children),
+  Link: ({ children, to, ...properties }: any) =>
+    createElement("a", { href: to, ...properties }, children),
   useLocation: () => ({ pathname: "/" }),
 }));
 
 vi.mock("lucide-react", () => ({
-  ChevronDown: ({ size, className, ...props }: any) =>
-    createElement("svg", { width: size, className, ...props }),
-  Monitor: ({ size, className, ...props }: any) =>
-    createElement("svg", { width: size, className, ...props }),
-  FolderOpen: ({ size, className, ...props }: any) =>
-    createElement("svg", { width: size, className, ...props }),
+  ChevronDown: ({ size, className, ...properties }: any) =>
+    createElement("svg", { width: size, className, ...properties }),
+  Monitor: ({ size, className, ...properties }: any) =>
+    createElement("svg", { width: size, className, ...properties }),
+  FolderOpen: ({ size, className, ...properties }: any) =>
+    createElement("svg", { width: size, className, ...properties }),
 }));
 
 describe("Header", () => {

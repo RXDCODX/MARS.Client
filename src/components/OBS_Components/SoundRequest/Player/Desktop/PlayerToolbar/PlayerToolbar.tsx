@@ -174,26 +174,22 @@ function PlayerToolbarComponent() {
   ].join(" ");
 
   let providerButtonContent: ReactNode;
-  if (isProviderButtonDisabled) {
-    providerButtonContent = (
-      <span className={styles.providerButtonContent}>
-        <Spin size="small" />
-        <span>{provider}</span>
-      </span>
-    );
-  } else {
-    providerButtonContent = (
-      <span className={styles.providerButtonContent}>
-        <img
-          src={providerIconUrl}
-          alt={`${provider} icon`}
-          className={styles.providerIcon}
-          loading="lazy"
-        />
-        <span>{provider}</span>
-      </span>
-    );
-  }
+  providerButtonContent = isProviderButtonDisabled ? (
+    <span className={styles.providerButtonContent}>
+      <Spin size="small" />
+      <span>{provider}</span>
+    </span>
+  ) : (
+    <span className={styles.providerButtonContent}>
+      <img
+        src={providerIconUrl}
+        alt={`${provider} icon`}
+        className={styles.providerIcon}
+        loading="lazy"
+      />
+      <span>{provider}</span>
+    </span>
+  );
 
   return (
     <div

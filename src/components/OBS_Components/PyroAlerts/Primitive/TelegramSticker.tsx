@@ -24,12 +24,12 @@ const Player = createComponent({
   displayName: "tgs-player",
 });
 
-interface Props {
+interface Properties {
   callBack: () => void;
   mediaInfo: MediaDto;
 }
 
-export default function TelegramSticker({ mediaInfo, callBack }: Props) {
+export default function TelegramSticker({ mediaInfo, callBack }: Properties) {
   const {
     id: Id,
     metaInfo,
@@ -54,7 +54,7 @@ export default function TelegramSticker({ mediaInfo, callBack }: Props) {
         }
   );
 
-  const elementRef = useRef<HTMLDivElement>(null);
+  const elementReference = useRef<HTMLDivElement>(null);
 
   const isFreezeRequired = metaInfo.isFreezeRequired;
 
@@ -75,16 +75,18 @@ export default function TelegramSticker({ mediaInfo, callBack }: Props) {
   }, [callBack, metaInfo.duration, isFreezeRequired]);
 
   useEffect(() => {
-    if (elementRef.current) {
-      const cords = getCoordinates(elementRef.current, mediaInfo.mediaInfo);
-      const rotation = getRandomRotation(mediaInfo.mediaInfo);
-      setStyle(prev => ({
-        ...prev,
-        ...cords,
-        ...rotation,
-        visibility: "visible",
-      }));
+    if (!elementReference.current) {
+      return;
     }
+
+    const cords = getCoordinates(elementReference.current, mediaInfo.mediaInfo);
+    const rotation = getRandomRotation(mediaInfo.mediaInfo);
+    setStyle(previous => ({
+      ...previous,
+      ...cords,
+      ...rotation,
+      visibility: "visible",
+    }));
   }, [mediaInfo.mediaInfo]);
 
   if (!parser || !parserToLInk) {
@@ -97,7 +99,7 @@ export default function TelegramSticker({ mediaInfo, callBack }: Props) {
       key={Id}
       className={styles.media}
       style={style}
-      ref={elementRef}
+      ref={elementReference}
       data-testid="pyro-alert-sticker"
     >
       <Player

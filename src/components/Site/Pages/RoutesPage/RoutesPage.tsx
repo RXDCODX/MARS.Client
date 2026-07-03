@@ -57,10 +57,10 @@ const RoutesPage: React.FC = () => {
   const groupedFiltered = useMemo(
     () =>
       filteredRoutes.reduce(
-        (acc, route) => {
-          if (!acc[route.type]) acc[route.type] = [];
-          acc[route.type].push(route);
-          return acc;
+        (accumulator, route) => {
+          if (!accumulator[route.type]) accumulator[route.type] = [];
+          accumulator[route.type].push(route);
+          return accumulator;
         },
         {} as Record<string, RouteConfig[]>
       ),
@@ -181,7 +181,7 @@ const RoutesPage: React.FC = () => {
                         maxWidth: "100%",
                         textDecoration: "none",
                       }}
-                      data-testid={`route-card-${route.path.replace(/\//g, "-").replace(/^-/, "")}`}
+                      data-testid={`route-card-${route.path.replaceAll("/", "-").replace(/^-/, "")}`}
                     >
                       <Card hoverable size="small" style={{ height: "100%" }}>
                         <Flex justify="space-between" align="center">

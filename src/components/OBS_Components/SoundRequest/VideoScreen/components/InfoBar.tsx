@@ -36,11 +36,13 @@ function InfoBarComponent() {
         <div className={styles.infoBarContent}>
           <div className={styles.commandsMarqueeContainer}>
             <CustomMarquee speed={60} trailingGapCount={5}>
-              {displayCommands.map((cmd, index) => (
+              {displayCommands.map((command, index) => (
                 <span key={index} className={styles.commandItem}>
-                  <span className={styles.commandName}>{cmd.command}</span>
+                  <span className={styles.commandName}>{command.command}</span>
                   <span className={styles.commandSep}>—</span>
-                  <span className={styles.commandDesc}>{cmd.description}</span>
+                  <span className={styles.commandDesc}>
+                    {command.description}
+                  </span>
                 </span>
               ))}
             </CustomMarquee>

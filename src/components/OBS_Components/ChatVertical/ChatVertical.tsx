@@ -14,7 +14,7 @@ import { Message } from "./Message";
 
 type ChatMessageWithPending = ChatMessage & { _pendingRemove?: boolean };
 
-interface ChatVerticalProps {
+interface ChatVerticalProperties {
   messages?: ChatMessage[];
   onRemoveMessage?: (id: string) => void;
 }
@@ -22,31 +22,31 @@ interface ChatVerticalProps {
 export default function ChatVertical({
   messages: externalMessages,
   onRemoveMessage,
-}: ChatVerticalProps) {
+}: ChatVerticalProperties) {
   const [internalMessages, setInternalMessages] = useState<ChatMessage[]>([]);
   const [announced, setAnnounced] = useState(false);
 
   // Используем внешние сообщения или внутренние
   const messages =
-    externalMessages !== undefined ? externalMessages : internalMessages;
+    externalMessages === undefined ? internalMessages : externalMessages;
   const handleRemove = useCallback(
     (id: string) => {
       if (onRemoveMessage) {
         onRemoveMessage(id);
       } else {
-        setInternalMessages(prev => prev.filter(m => m.id !== id));
+        setInternalMessages(previous => previous.filter(m => m.id !== id));
       }
     },
     [onRemoveMessage]
   );
 
   // ScrollToBottom после появления нового сообщения (и анимации)
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollReference = useRef<HTMLDivElement>(null);
   useEffect(() => {
     // Ждём завершения всех анимаций (время берется из animationTimings.ts)
     const timeout = setTimeout(() => {
-      if (scrollRef.current) {
-        scrollRef.current.scrollIntoView(SCROLL_CONFIG);
+      if (scrollReference.current) {
+        scrollReference.current.scrollIntoView(SCROLL_CONFIG);
       }
     }, SCROLL_TIMEOUT);
     return () => clearTimeout(timeout);
@@ -61,15 +61,13 @@ export default function ChatVertical({
         return null;
       }
       message.id ??= id;
-      setInternalMessages(prev => {
-        while (prev.length >= 15) {
-          prev.pop();
+      setInternalMessages(previous => {
+        while (previous.length >= 15) {
+          previous.pop();
         }
-        if (prev.find(m => m.id === message.id)) {
-          return prev;
-        } else {
-          return [message, ...prev];
-        }
+        return previous.find(m => m.id === message.id)
+          ? previous
+          : [message, ...previous];
       });
     },
     []
@@ -79,7 +77,7 @@ export default function ChatVertical({
     "deletemessage",
     (id: string) => {
       // Удаляем сообщение, framer-motion проиграет exit-анимацию
-      setInternalMessages(prev => prev.filter(m => m.id !== id));
+      setInternalMessages(previous => previous.filter(m => m.id !== id));
     },
     []
   );
@@ -132,7 +130,7 @@ export default function ChatVertical({
           ))}
         </AnimatePresence>
       </div>
-      <div ref={scrollRef} />
+      <div ref={scrollReference} />
     </>
   );
 }

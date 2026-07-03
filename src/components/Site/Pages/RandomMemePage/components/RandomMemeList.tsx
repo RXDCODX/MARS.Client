@@ -12,9 +12,9 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { RandomMemeOrdersListProps } from "../RandomMemePage.types";
+import { RandomMemeOrdersListProps as RandomMemeOrdersListProperties } from "../RandomMemePage.types";
 
-const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
+const RandomMemeList: React.FC<RandomMemeOrdersListProperties> = ({
   memeOrders,
   memeTypes,
   isLoading,
@@ -26,16 +26,18 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
   onCreate,
   showToast,
 }) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParameters, setSearchParameters] = useSearchParams();
 
   const getInitialTypeId = (): number | "all" | "no-type" => {
-    const typeParam = searchParams.get("type");
-    if (typeParam === "no-type") return "no-type";
-    if (typeParam && !isNaN(Number(typeParam))) return Number(typeParam);
+    const typeParameter = searchParameters.get("type");
+    if (typeParameter === "no-type") return "no-type";
+    if (typeParameter && !Number.isNaN(Number(typeParameter)))
+      return Number(typeParameter);
     return "all";
   };
 
-  const getInitialSearchTerm = (): string => searchParams.get("search") || "";
+  const getInitialSearchTerm = (): string =>
+    searchParameters.get("search") || "";
 
   const [selectedTypeId, setSelectedTypeId] = useState<
     number | "all" | "no-type"
@@ -45,49 +47,49 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
 
   const updateTypeFilter = (typeId: number | "all" | "no-type") => {
     setSelectedTypeId(typeId);
-    const newSearchParams = new URLSearchParams(searchParams);
+    const newSearchParameters = new URLSearchParams(searchParameters);
 
     if (typeId === "all") {
-      newSearchParams.delete("type");
+      newSearchParameters.delete("type");
     } else if (typeId === "no-type") {
-      newSearchParams.set("type", "no-type");
+      newSearchParameters.set("type", "no-type");
     } else {
-      newSearchParams.set("type", typeId.toString());
+      newSearchParameters.set("type", typeId.toString());
     }
 
-    setSearchParams(newSearchParams, { replace: true });
+    setSearchParameters(newSearchParameters, { replace: true });
   };
 
   const updateSearchFilter = (search: string) => {
     setSearchTerm(search);
-    const newSearchParams = new URLSearchParams(searchParams);
+    const newSearchParameters = new URLSearchParams(searchParameters);
 
     if (search.trim()) {
-      newSearchParams.set("search", search.trim());
+      newSearchParameters.set("search", search.trim());
     } else {
-      newSearchParams.delete("search");
+      newSearchParameters.delete("search");
     }
 
-    setSearchParams(newSearchParams, { replace: true });
+    setSearchParameters(newSearchParameters, { replace: true });
   };
 
   const resetFilters = () => {
     setSelectedTypeId("all");
     setSearchTerm("");
     setSearchInput("");
-    setSearchParams({}, { replace: true });
+    setSearchParameters({}, { replace: true });
   };
 
   const copyFilteredLink = async () => {
-    const currentUrl = window.location.href;
+    const currentUrl = location.href;
     try {
       await navigator.clipboard.writeText(currentUrl);
       showToast?.({
         success: true,
         message: "Ссылка с примененными фильтрами скопирована в буфер обмена",
       });
-    } catch (err) {
-      console.error("Ошибка копирования ссылки:", err);
+    } catch (error_) {
+      console.error("Ошибка копирования ссылки:", error_);
       showToast?.({
         success: false,
         message: "Не удалось скопировать ссылку в буфер обмена",
@@ -108,16 +110,16 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
   }, [searchInput]);
 
   useEffect(() => {
-    const typeParam = searchParams.get("type");
-    const searchParam = searchParams.get("search");
+    const typeParameter = searchParameters.get("type");
+    const searchParameter = searchParameters.get("search");
 
-    if (typeParam !== null) {
+    if (typeParameter !== null) {
       const newTypeId =
-        typeParam === "no-type"
+        typeParameter === "no-type"
           ? "no-type"
-          : !isNaN(Number(typeParam))
-            ? Number(typeParam)
-            : "all";
+          : Number.isNaN(Number(typeParameter))
+            ? "all"
+            : Number(typeParameter);
       if (newTypeId !== selectedTypeId) {
         setSelectedTypeId(newTypeId);
       }
@@ -125,28 +127,25 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
       setSelectedTypeId("all");
     }
 
-    if (searchParam !== null && searchParam !== searchTerm) {
-      setSearchTerm(searchParam);
-      setSearchInput(searchParam);
-    } else if (searchParam === null && searchTerm !== "") {
+    if (searchParameter !== null && searchParameter !== searchTerm) {
+      setSearchTerm(searchParameter);
+      setSearchInput(searchParameter);
+    } else if (searchParameter === null && searchTerm !== "") {
       setSearchTerm("");
       setSearchInput("");
     }
-  }, [searchParams, selectedTypeId, searchTerm]);
+  }, [searchParameters, selectedTypeId, searchTerm]);
 
   const filteredOrders = useMemo(() => {
     let filtered = memeOrders;
 
     if (selectedTypeId !== "all") {
-      if (selectedTypeId === "no-type") {
-        filtered = filtered.filter(
-          order => !order.memeTypeId || order.memeTypeId === 0
-        );
-      } else {
-        filtered = filtered.filter(
-          order => order.memeTypeId === selectedTypeId
-        );
-      }
+      filtered =
+        selectedTypeId === "no-type"
+          ? filtered.filter(
+              order => !order.memeTypeId || order.memeTypeId === 0
+            )
+          : filtered.filter(order => order.memeTypeId === selectedTypeId);
     }
 
     if (searchTerm.trim()) {
@@ -170,7 +169,7 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
   );
   const getFileName = (filePath: string) => {
     const parts = filePath.split(/[/\\]/);
-    return parts[parts.length - 1] || filePath;
+    return parts.at(-1) || filePath;
   };
 
   const typeFilterOptions = [
@@ -187,7 +186,7 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
     }),
   ];
 
-  if (isLoading && !memeOrders.length) {
+  if (isLoading && memeOrders.length === 0) {
     return (
       <div style={{ textAlign: "center", padding: "40px 0" }}>
         <Spin size="large" />
@@ -334,8 +333,7 @@ const RandomMemeList: React.FC<RandomMemeOrdersListProps> = ({
         </Card>
       ) : (
         <Flex wrap="wrap" gap={12}>
-          {filteredOrders
-            .slice()
+          {[...filteredOrders]
             .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
             .map(order => (
               <div

@@ -14,7 +14,7 @@ interface ClipboardImageItem {
 }
 
 const TelegramClipboardCopyPage: React.FC = () => {
-  const [searchParams] = useSearchParams();
+  const [searchParameters] = useSearchParams();
   const [items, setItems] = useState<ClipboardImageItem[]>([]);
   const [statusText, setStatusText] = useState(
     "Загружаю список изображений..."
@@ -22,7 +22,10 @@ const TelegramClipboardCopyPage: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { showToast } = useToastModal();
 
-  const requestId = useMemo(() => searchParams.get("id") ?? "", [searchParams]);
+  const requestId = useMemo(
+    () => searchParameters.get("id") ?? "",
+    [searchParameters]
+  );
 
   const loadFiles = useCallback(async () => {
     let status = "ID не указан в параметре запроса";
@@ -148,7 +151,7 @@ const TelegramClipboardCopyPage: React.FC = () => {
 
     try {
       const absoluteUrls = items.map(
-        item => new URL(item.sourceUrl, window.location.href).href
+        item => new URL(item.sourceUrl, location.href).href
       );
       await navigator.clipboard.writeText(absoluteUrls.join("\n"));
 

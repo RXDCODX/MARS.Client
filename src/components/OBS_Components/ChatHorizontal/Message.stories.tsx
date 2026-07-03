@@ -101,7 +101,7 @@ export const Default: Story = {
     expect(text).toHaveTextContent("Привет всем! 👋");
 
     // Проверяем стили анимации
-    const computedStyle = window.getComputedStyle(messageElement!);
+    const computedStyle = globalThis.getComputedStyle(messageElement!);
     expect(computedStyle.position).toBe("absolute");
     expect(computedStyle.fontSize).toBeDefined();
   },
@@ -131,7 +131,7 @@ export const VIPUser: Story = {
     expect(nickname).toHaveTextContent("VIPUser:");
 
     // Проверяем цвет VIP пользователя
-    const nicknameStyle = window.getComputedStyle(nickname!);
+    const nicknameStyle = globalThis.getComputedStyle(nickname!);
     expect(nicknameStyle.color).toBe("rgb(0, 255, 0)");
 
     // Проверяем текст VIP сообщения
@@ -139,7 +139,7 @@ export const VIPUser: Story = {
     expect(text).toHaveTextContent("VIP сообщение! 💎");
 
     // Проверяем фон для VIP пользователя
-    const messageStyle = window.getComputedStyle(messageElement!);
+    const messageStyle = globalThis.getComputedStyle(messageElement!);
     expect(messageStyle.background).toContain("linear-gradient");
   },
 };
@@ -168,7 +168,7 @@ export const Moderator: Story = {
     expect(nickname).toHaveTextContent("Moderator:");
 
     // Проверяем цвет модератора
-    const nicknameStyle = window.getComputedStyle(nickname!);
+    const nicknameStyle = globalThis.getComputedStyle(nickname!);
     expect(nicknameStyle.color).toBe("rgb(0, 0, 255)");
 
     // Проверяем текст модераторского сообщения
@@ -176,7 +176,7 @@ export const Moderator: Story = {
     expect(text).toHaveTextContent("Модераторское сообщение! 🛡️");
 
     // Проверяем фон для модератора
-    const messageStyle = window.getComputedStyle(messageElement!);
+    const messageStyle = globalThis.getComputedStyle(messageElement!);
     expect(messageStyle.background).toContain("linear-gradient");
   },
 };
@@ -205,7 +205,7 @@ export const Broadcaster: Story = {
     expect(nickname).toHaveTextContent("Broadcaster:");
 
     // Проверяем цвет стримера
-    const nicknameStyle = window.getComputedStyle(nickname!);
+    const nicknameStyle = globalThis.getComputedStyle(nickname!);
     expect(nicknameStyle.color).toBe("rgb(255, 255, 0)");
 
     // Проверяем текст сообщения стримера
@@ -213,7 +213,7 @@ export const Broadcaster: Story = {
     expect(text).toHaveTextContent("Сообщение от стримера! 🎮");
 
     // Проверяем фон для стримера
-    const messageStyle = window.getComputedStyle(messageElement!);
+    const messageStyle = globalThis.getComputedStyle(messageElement!);
     expect(messageStyle.background).toContain("linear-gradient");
   },
 };

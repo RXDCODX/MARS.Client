@@ -6,17 +6,17 @@ export const VoiceRecognitionHubSignalRContext = signalR.createSignalRContext(
   {}
 );
 
-interface VoiceRecognitionHubProps {
+interface VoiceRecognitionHubProperties {
   children: React.ReactNode;
 }
 
 export function VoiceRecognitionHubSignalRHubWrapper({
   children,
-}: VoiceRecognitionHubProps) {
+}: VoiceRecognitionHubProperties) {
   return (
     <VoiceRecognitionHubSignalRContext.Provider
       automaticReconnect={true}
-      onError={error => new Promise(resolve => resolve(console.log(error)))}
+      onError={error => Promise.try(() => console.log(error))}
       onClosed={event => console.log(event)}
       onOpen={event => console.log(event)}
       logger={logger}

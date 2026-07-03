@@ -50,7 +50,7 @@ export function useReactCustomPlayer({
   playerView,
 }: UseReactCustomPlayerParams): UseReactCustomPlayerResult {
   const playerKey = queueItemId || track.url;
-  const signalRIsTrackPlaying =
+  const isSignalRIsTrackPlaying =
     playerState.state === PlayerStateStateEnum.Playing;
   const [localPlaybackOverrideState, setLocalPlaybackOverrideState] = useState<{
     key: string;
@@ -61,21 +61,21 @@ export function useReactCustomPlayer({
       ? localPlaybackOverrideState.value
       : null;
   const effectiveLocalPlaybackOverride =
-    localPlaybackOverride === signalRIsTrackPlaying
+    localPlaybackOverride === isSignalRIsTrackPlaying
       ? null
       : localPlaybackOverride;
 
   const isTrackPlaying =
     effectiveLocalPlaybackOverride === null
-      ? signalRIsTrackPlaying
+      ? isSignalRIsTrackPlaying
       : effectiveLocalPlaybackOverride;
 
-  const playerRef = useRef<HTMLVideoElement>(null);
-  const playerContainerRef = useRef<HTMLDivElement>(null);
-  const progressAppliedRef = useRef<boolean>(false);
-  const ignorePauseUntilRef = useRef<number>(0);
-  const isBufferingRef = useRef<boolean>(false);
-  const volumeTrackingCleanupRef = useRef<(() => void) | null>(null);
+  const playerReference = useRef<HTMLVideoElement>(null);
+  const playerContainerReference = useRef<HTMLDivElement>(null);
+  const progressAppliedReference = useRef<boolean>(false);
+  const ignorePauseUntilReference = useRef<number>(0);
+  const isBufferingReference = useRef<boolean>(false);
+  const volumeTrackingCleanupReference = useRef<(() => void) | null>(null);
 
   const shouldMute = !hasUserInteracted || playerState.isMuted;
   const maxTrackTimeSeconds = useMemo(
@@ -85,49 +85,53 @@ export function useReactCustomPlayer({
   const [currentSecondProgress, setCurrentSecondProgress] = useState<number>(0);
 
   const [lastSignalRState, setLastSignalRState] = useState(
-    signalRIsTrackPlaying
+    isSignalRIsTrackPlaying
   );
-  if (lastSignalRState !== signalRIsTrackPlaying) {
-    setLastSignalRState(signalRIsTrackPlaying);
+  if (lastSignalRState !== isSignalRIsTrackPlaying) {
+    setLastSignalRState(isSignalRIsTrackPlaying);
     setLocalPlaybackOverrideState({ key: playerKey, value: null });
   }
 
   useEffect(() => {
-    progressAppliedRef.current = false;
+    progressAppliedReference.current = false;
   }, [playerKey]);
 
   useEffect(() => {
-    if (isMainPlayer) {
-      useVideoScreenStore.getState().registerTimeGetter(() => {
-        const player = playerRef.current;
-        if (player && typeof player.currentTime === "number") {
-          return player.currentTime;
-        }
-        return 0;
-      });
-
-      return () => {
-        useVideoScreenStore.getState().registerTimeGetter(null);
-      };
+    if (!isMainPlayer) {
+      return;
     }
+
+    useVideoScreenStore.getState().registerTimeGetter(() => {
+      const player = playerReference.current;
+      if (player && typeof player.currentTime === "number") {
+        return player.currentTime;
+      }
+      return 0;
+    });
+
+    return () => {
+      useVideoScreenStore.getState().registerTimeGetter(null);
+    };
   }, [isMainPlayer]);
 
   useEffect(
     () => () => {
-      if (volumeTrackingCleanupRef.current) {
-        volumeTrackingCleanupRef.current();
-        volumeTrackingCleanupRef.current = null;
+      if (!volumeTrackingCleanupReference.current) {
+        return;
       }
+
+      volumeTrackingCleanupReference.current();
+      volumeTrackingCleanupReference.current = null;
     },
     [playerKey]
   );
 
   const resolveMediaElement = useCallback((): HTMLMediaElement | null => {
-    const playerInstance = playerRef.current as
+    const playerInstance = playerReference.current as
+      | HTMLMediaElement
       | {
           getInternalPlayer?: () => unknown;
         }
-      | HTMLMediaElement
       | null;
 
     if (!playerInstance) {
@@ -146,7 +150,7 @@ export function useReactCustomPlayer({
     }
 
     const mediaFromDom =
-      playerContainerRef.current?.querySelector("video, audio");
+      playerContainerReference.current?.querySelector("video, audio");
 
     if (mediaFromDom instanceof HTMLMediaElement) {
       return mediaFromDom;
@@ -156,9 +160,9 @@ export function useReactCustomPlayer({
   }, []);
 
   const setupVolumeTracking = useCallback(() => {
-    if (volumeTrackingCleanupRef.current) {
-      volumeTrackingCleanupRef.current();
-      volumeTrackingCleanupRef.current = null;
+    if (volumeTrackingCleanupReference.current) {
+      volumeTrackingCleanupReference.current();
+      volumeTrackingCleanupReference.current = null;
     }
 
     const mediaElement = resolveMediaElement();
@@ -175,7 +179,7 @@ export function useReactCustomPlayer({
 
     mediaElement.addEventListener("volumechange", handleVolumeChange);
 
-    volumeTrackingCleanupRef.current = () => {
+    volumeTrackingCleanupReference.current = () => {
       mediaElement.removeEventListener("volumechange", handleVolumeChange);
     };
   }, [resolveMediaElement]);
@@ -185,12 +189,12 @@ export function useReactCustomPlayer({
       playerState.currentTrackProgress
     );
 
-    if (savedProgressSeconds > 0 && !progressAppliedRef.current) {
+    if (savedProgressSeconds > 0 && !progressAppliedReference.current) {
       const mediaElement = resolveMediaElement();
 
       if (mediaElement) {
         mediaElement.currentTime = savedProgressSeconds;
-        progressAppliedRef.current = true;
+        progressAppliedReference.current = true;
       }
     }
 
@@ -234,7 +238,7 @@ export function useReactCustomPlayer({
   );
 
   const handlePlay = useCallback(() => {
-    ignorePauseUntilRef.current = Date.now() + pauseSuppressionMs;
+    ignorePauseUntilReference.current = Date.now() + pauseSuppressionMs;
     setLocalPlaybackOverrideState({ key: playerKey, value: true });
 
     if (isMainPlayer) {
@@ -245,8 +249,8 @@ export function useReactCustomPlayer({
   }, [isMainPlayer, pauseSuppressionMs, playerKey]);
 
   const handlePlaying = useCallback(() => {
-    isBufferingRef.current = false;
-    ignorePauseUntilRef.current = Date.now() + pauseSuppressionMs;
+    isBufferingReference.current = false;
+    ignorePauseUntilReference.current = Date.now() + pauseSuppressionMs;
     setLocalPlaybackOverrideState({ key: playerKey, value: true });
 
     if (isMainPlayer) {
@@ -257,17 +261,17 @@ export function useReactCustomPlayer({
   }, [isMainPlayer, pauseSuppressionMs, playerKey]);
 
   const handleWaiting = useCallback(() => {
-    isBufferingRef.current = true;
+    isBufferingReference.current = true;
   }, []);
 
   const handlePause = useCallback(() => {
-    if (isBufferingRef.current) {
+    if (isBufferingReference.current) {
       return;
     }
 
     setLocalPlaybackOverrideState({ key: playerKey, value: false });
 
-    if (Date.now() < ignorePauseUntilRef.current) {
+    if (Date.now() < ignorePauseUntilReference.current) {
       return;
     }
 
@@ -278,7 +282,7 @@ export function useReactCustomPlayer({
     }
   }, [isMainPlayer, playerKey]);
 
-  const playerProps = useMemo(
+  const playerProperties = useMemo(
     () => ({
       playing: isTrackPlaying,
       volume: localVolume / 100,
@@ -313,10 +317,10 @@ export function useReactCustomPlayer({
   const playerElement = useMemo(
     () => (
       <ReactPlayer
-        ref={playerRef}
+        ref={playerReference}
         key={playerKey}
         src={track.url}
-        {...playerProps}
+        {...playerProperties}
         width={playerView.width}
         height={playerView.height}
         controls={playerView.controls}
@@ -325,7 +329,7 @@ export function useReactCustomPlayer({
     ),
     [
       playerKey,
-      playerProps,
+      playerProperties,
       playerView.controls,
       playerView.height,
       playerView.style,
@@ -335,7 +339,7 @@ export function useReactCustomPlayer({
   );
 
   return {
-    playerContainerRef,
+    playerContainerRef: playerContainerReference,
     playerElement,
     playbackInfo: {
       isTrackPlaying,

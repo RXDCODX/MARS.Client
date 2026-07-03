@@ -8,7 +8,7 @@ import AnimationControl from "./AnimationControl";
 import { CurrentTrackElement } from "./CurrentTrackElement";
 import { ProgressBar } from "./ProgressBar";
 
-interface Props {
+interface Properties {
   oldTrack: TunaMusicData;
   track: TunaMusicData;
   swap: boolean;
@@ -33,7 +33,7 @@ function CurrentTrackComponent({
   swap,
   swapChange,
   shouldAnimate = true,
-}: Props) {
+}: Properties) {
   useEffect(() => {
     if (shouldAnimate) {
       console.log(oldTrack, track, swap, shouldAnimate);

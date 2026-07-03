@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 
 import ActiveUsers from "./ActiveUsers/ActiveUsers";
 import styles from "./Dashboard.module.scss";
-import { DashboardProps } from "./Dashboard.types";
+import { DashboardProps as DashboardProperties } from "./Dashboard.types";
 import MetricCard from "./MetricCard/MetricCard";
-import { MetricCardProps } from "./MetricCard/MetricCard.types";
+import { MetricCardProps as MetricCardProperties } from "./MetricCard/MetricCard.types";
 import PerformanceChart from "./PerformanceChart/PerformanceChart";
 import RecentLogs from "./RecentLogs/RecentLogs";
 import SystemStatus from "./SystemStatus/SystemStatus";
 
-const Dashboard: React.FC<DashboardProps> = () => {
+const Dashboard: React.FC<DashboardProperties> = () => {
   const [metrics, setMetrics] = useState({
     cpuUsage: 0,
     memoryUsage: 0,
@@ -35,7 +35,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
         activeConnections: Math.floor(Math.random() * 1000),
         requestsPerSecond: Math.floor(Math.random() * 500),
         errorRate: Math.random() * 5,
-        uptime: Math.floor(Math.random() * 86400), // секунды
+        uptime: Math.floor(Math.random() * 86_400), // секунды
       });
 
       setIsLoading(false);
@@ -44,7 +44,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
     loadMetrics();
 
     // Обновление метрик каждые 30 секунд
-    const interval = setInterval(loadMetrics, 30000);
+    const interval = setInterval(loadMetrics, 30_000);
 
     return () => clearInterval(interval);
   }, []);
@@ -55,7 +55,7 @@ const Dashboard: React.FC<DashboardProps> = () => {
     return `${hours}ч ${minutes}м`;
   };
 
-  const metricCards: MetricCardProps[] = [
+  const metricCards: MetricCardProperties[] = [
     {
       title: "Использование CPU",
       value: `${metrics.cpuUsage.toFixed(1)}%`,

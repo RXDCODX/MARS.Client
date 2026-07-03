@@ -3,7 +3,7 @@ import "./Threads.css";
 import { Color, Mesh, Program, Renderer, Triangle } from "ogl";
 import React, { useEffect, useRef } from "react";
 
-interface ThreadsProps {
+interface ThreadsProperties {
   color?: [number, number, number];
   amplitude?: number;
   distance?: number;
@@ -127,26 +127,26 @@ void main() {
 }
 `;
 
-const Threads: React.FC<ThreadsProps> = ({
+const Threads: React.FC<ThreadsProperties> = ({
   color = [1, 1, 1],
   amplitude = 1,
   distance = 0,
   enableMouseInteraction = false,
   ...rest
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerReference = useRef<HTMLDivElement>(null);
   const animationFrameId = useRef<number>(0);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-    const container = containerRef.current;
+    if (!containerReference.current) return;
+    const container = containerReference.current;
 
     const renderer = new Renderer({ alpha: true });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
-    container.appendChild(gl.canvas);
+    container.append(gl.canvas);
 
     const geometry = new Triangle(gl);
     const program = new Program(gl, {
@@ -186,7 +186,7 @@ const Threads: React.FC<ThreadsProps> = ({
     function handleMouseMove(e: MouseEvent) {
       const rect = container.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
-      const y = 1.0 - (e.clientY - rect.top) / rect.height;
+      const y = 1 - (e.clientY - rect.top) / rect.height;
       targetMouse = [x, y];
     }
     function handleMouseLeave() {
@@ -224,12 +224,14 @@ const Threads: React.FC<ThreadsProps> = ({
         container.removeEventListener("mousemove", handleMouseMove);
         container.removeEventListener("mouseleave", handleMouseLeave);
       }
-      if (container.contains(gl.canvas)) container.removeChild(gl.canvas);
+      if (container.contains(gl.canvas)) gl.canvas.remove();
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, [color, amplitude, distance, enableMouseInteraction]);
 
-  return <div ref={containerRef} className="threads-container" {...rest} />;
+  return (
+    <div ref={containerReference} className="threads-container" {...rest} />
+  );
 };
 
 export default Threads;

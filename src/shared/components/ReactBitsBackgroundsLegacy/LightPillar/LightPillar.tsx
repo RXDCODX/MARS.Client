@@ -3,7 +3,7 @@ import "./LightPillar.css";
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
-interface LightPillarProps {
+interface LightPillarProperties {
   topColor?: string;
   bottomColor?: string;
   intensity?: number;
@@ -19,31 +19,31 @@ interface LightPillarProps {
   quality?: "low" | "medium" | "high";
 }
 
-const LightPillar: React.FC<LightPillarProps> = ({
+const LightPillar: React.FC<LightPillarProperties> = ({
   topColor = "#5227FF",
   bottomColor = "#FF9FFC",
-  intensity = 1.0,
+  intensity = 1,
   rotationSpeed = 0.3,
   interactive = false,
   className = "",
   glowAmount = 0.005,
-  pillarWidth = 3.0,
+  pillarWidth = 3,
   pillarHeight = 0.4,
   noiseIntensity = 0.5,
   mixBlendMode = "screen",
   pillarRotation = 0,
   quality = "high",
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const rafRef = useRef<number | null>(null);
-  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-  const materialRef = useRef<THREE.ShaderMaterial | null>(null);
-  const sceneRef = useRef<THREE.Scene | null>(null);
-  const cameraRef = useRef<THREE.OrthographicCamera | null>(null);
-  const geometryRef = useRef<THREE.PlaneGeometry | null>(null);
-  const mouseRef = useRef<THREE.Vector2>(new THREE.Vector2(0, 0));
-  const timeRef = useRef(0);
-  const rotationSpeedRef = useRef(rotationSpeed);
+  const containerReference = useRef<HTMLDivElement>(null);
+  const rafReference = useRef<number | null>(null);
+  const rendererReference = useRef<THREE.WebGLRenderer | null>(null);
+  const materialReference = useRef<THREE.ShaderMaterial | null>(null);
+  const sceneReference = useRef<THREE.Scene | null>(null);
+  const cameraReference = useRef<THREE.OrthographicCamera | null>(null);
+  const geometryReference = useRef<THREE.PlaneGeometry | null>(null);
+  const mouseReference = useRef<THREE.Vector2>(new THREE.Vector2(0, 0));
+  const timeReference = useRef(0);
+  const rotationSpeedReference = useRef(rotationSpeed);
   const [webGLSupported, setWebGLSupported] = useState<boolean>(true);
 
   // Check WebGL support
@@ -57,9 +57,9 @@ const LightPillar: React.FC<LightPillarProps> = ({
   }, []);
 
   useEffect(() => {
-    if (!containerRef.current || !webGLSupported) return;
+    if (!containerReference.current || !webGLSupported) return;
 
-    const container = containerRef.current;
+    const container = containerReference.current;
     const width = container.clientWidth;
     const height = container.clientHeight;
 
@@ -95,7 +95,7 @@ const LightPillar: React.FC<LightPillarProps> = ({
         waveIterations: 4,
         pixelRatio: Math.min(window.devicePixelRatio, 2),
         precision: "highp",
-        stepMultiplier: 1.0,
+        stepMultiplier: 1,
       },
     };
 
@@ -103,9 +103,9 @@ const LightPillar: React.FC<LightPillarProps> = ({
       qualitySettings[effectiveQuality] || qualitySettings.medium;
 
     const scene = new THREE.Scene();
-    sceneRef.current = scene;
+    sceneReference.current = scene;
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-    cameraRef.current = camera;
+    cameraReference.current = camera;
 
     let renderer: THREE.WebGLRenderer;
     try {
@@ -118,15 +118,15 @@ const LightPillar: React.FC<LightPillarProps> = ({
         stencil: false,
         depth: false,
       });
-    } catch (error) {
+    } catch {
       setWebGLSupported(false);
       return;
     }
 
     renderer.setSize(width, height);
     renderer.setPixelRatio(settings.pixelRatio);
-    container.appendChild(renderer.domElement);
-    rendererRef.current = renderer;
+    container.append(renderer.domElement);
+    rendererReference.current = renderer;
 
     const parseColor = (hex: string): THREE.Vector3 => {
       const color = new THREE.Color(hex);
@@ -234,7 +234,7 @@ const LightPillar: React.FC<LightPillarProps> = ({
       uniforms: {
         uTime: { value: 0 },
         uResolution: { value: new THREE.Vector2(width, height) },
-        uMouse: { value: mouseRef.current },
+        uMouse: { value: mouseReference.current },
         uTopColor: { value: parseColor(topColor) },
         uBottomColor: { value: parseColor(bottomColor) },
         uIntensity: { value: intensity },
@@ -243,8 +243,8 @@ const LightPillar: React.FC<LightPillarProps> = ({
         uPillarWidth: { value: pillarWidth },
         uPillarHeight: { value: pillarHeight },
         uNoiseIntensity: { value: noiseIntensity },
-        uRotCos: { value: 1.0 },
-        uRotSin: { value: 0.0 },
+        uRotCos: { value: 1 },
+        uRotSin: { value: 0 },
         uPillarRotCos: { value: Math.cos(pillarRotRad) },
         uPillarRotSin: { value: Math.sin(pillarRotRad) },
         uWaveSin: { value: waveSin },
@@ -254,10 +254,10 @@ const LightPillar: React.FC<LightPillarProps> = ({
       depthWrite: false,
       depthTest: false,
     });
-    materialRef.current = material;
+    materialReference.current = material;
 
     const geometry = new THREE.PlaneGeometry(2, 2);
-    geometryRef.current = geometry;
+    geometryReference.current = geometry;
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
@@ -267,14 +267,14 @@ const LightPillar: React.FC<LightPillarProps> = ({
 
       if (mouseMoveTimeout) return;
 
-      mouseMoveTimeout = window.setTimeout(() => {
+      mouseMoveTimeout = globalThis.setTimeout(() => {
         mouseMoveTimeout = null;
       }, 16);
 
       const rect = container.getBoundingClientRect();
       const x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
       const y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-      mouseRef.current.set(x, y);
+      mouseReference.current.set(x, y);
     };
 
     if (interactive) {
@@ -289,28 +289,31 @@ const LightPillar: React.FC<LightPillarProps> = ({
 
     const animate = (currentTime: number) => {
       if (
-        !materialRef.current ||
-        !rendererRef.current ||
-        !sceneRef.current ||
-        !cameraRef.current
+        !materialReference.current ||
+        !rendererReference.current ||
+        !sceneReference.current ||
+        !cameraReference.current
       )
         return;
 
       const deltaTime = currentTime - lastTime;
 
       if (deltaTime >= frameTime) {
-        timeRef.current += 0.016 * rotationSpeedRef.current;
-        const t = timeRef.current;
-        materialRef.current.uniforms.uTime.value = t;
-        materialRef.current.uniforms.uRotCos.value = Math.cos(t * 0.3);
-        materialRef.current.uniforms.uRotSin.value = Math.sin(t * 0.3);
-        rendererRef.current.render(sceneRef.current, cameraRef.current);
+        timeReference.current += 0.016 * rotationSpeedReference.current;
+        const t = timeReference.current;
+        materialReference.current.uniforms.uTime.value = t;
+        materialReference.current.uniforms.uRotCos.value = Math.cos(t * 0.3);
+        materialReference.current.uniforms.uRotSin.value = Math.sin(t * 0.3);
+        rendererReference.current.render(
+          sceneReference.current,
+          cameraReference.current
+        );
         lastTime = currentTime - (deltaTime % frameTime);
       }
 
-      rafRef.current = requestAnimationFrame(animate);
+      rafReference.current = requestAnimationFrame(animate);
     };
-    rafRef.current = requestAnimationFrame(animate);
+    rafReference.current = requestAnimationFrame(animate);
 
     let resizeTimeout: number | null = null;
     const handleResize = () => {
@@ -318,17 +321,20 @@ const LightPillar: React.FC<LightPillarProps> = ({
         clearTimeout(resizeTimeout);
       }
 
-      resizeTimeout = window.setTimeout(() => {
+      resizeTimeout = globalThis.setTimeout(() => {
         if (
-          !rendererRef.current ||
-          !materialRef.current ||
-          !containerRef.current
+          !rendererReference.current ||
+          !materialReference.current ||
+          !containerReference.current
         )
           return;
-        const newWidth = containerRef.current.clientWidth;
-        const newHeight = containerRef.current.clientHeight;
-        rendererRef.current.setSize(newWidth, newHeight);
-        materialRef.current.uniforms.uResolution.value.set(newWidth, newHeight);
+        const newWidth = containerReference.current.clientWidth;
+        const newHeight = containerReference.current.clientHeight;
+        rendererReference.current.setSize(newWidth, newHeight);
+        materialReference.current.uniforms.uResolution.value.set(
+          newWidth,
+          newHeight
+        );
       }, 150);
     };
 
@@ -339,89 +345,92 @@ const LightPillar: React.FC<LightPillarProps> = ({
       if (interactive) {
         container.removeEventListener("mousemove", handleMouseMove);
       }
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
+      if (rafReference.current) {
+        cancelAnimationFrame(rafReference.current);
       }
-      if (rendererRef.current) {
-        rendererRef.current.dispose();
-        rendererRef.current.forceContextLoss();
-        if (container.contains(rendererRef.current.domElement)) {
-          container.removeChild(rendererRef.current.domElement);
+      if (rendererReference.current) {
+        rendererReference.current.dispose();
+        rendererReference.current.forceContextLoss();
+        if (container.contains(rendererReference.current.domElement)) {
+          rendererReference.current.domElement.remove();
         }
       }
-      if (materialRef.current) {
-        materialRef.current.dispose();
+      if (materialReference.current) {
+        materialReference.current.dispose();
       }
-      if (geometryRef.current) {
-        geometryRef.current.dispose();
+      if (geometryReference.current) {
+        geometryReference.current.dispose();
       }
 
-      rendererRef.current = null;
-      materialRef.current = null;
-      sceneRef.current = null;
-      cameraRef.current = null;
-      geometryRef.current = null;
-      rafRef.current = null;
+      rendererReference.current = null;
+      materialReference.current = null;
+      sceneReference.current = null;
+      cameraReference.current = null;
+      geometryReference.current = null;
+      rafReference.current = null;
     };
   }, [webGLSupported, quality]);
 
   useEffect(() => {
-    rotationSpeedRef.current = rotationSpeed;
+    rotationSpeedReference.current = rotationSpeed;
   }, [rotationSpeed]);
 
   useEffect(() => {
-    if (!materialRef.current) return;
+    if (!materialReference.current) return;
     const parseColor = (hex: string) => {
       const color = new THREE.Color(hex);
       return new THREE.Vector3(color.r, color.g, color.b);
     };
-    materialRef.current.uniforms.uTopColor.value = parseColor(topColor);
+    materialReference.current.uniforms.uTopColor.value = parseColor(topColor);
   }, [topColor]);
 
   useEffect(() => {
-    if (!materialRef.current) return;
+    if (!materialReference.current) return;
     const parseColor = (hex: string) => {
       const color = new THREE.Color(hex);
       return new THREE.Vector3(color.r, color.g, color.b);
     };
-    materialRef.current.uniforms.uBottomColor.value = parseColor(bottomColor);
+    materialReference.current.uniforms.uBottomColor.value =
+      parseColor(bottomColor);
   }, [bottomColor]);
 
   useEffect(() => {
-    if (!materialRef.current) return;
-    materialRef.current.uniforms.uIntensity.value = intensity;
+    if (!materialReference.current) return;
+    materialReference.current.uniforms.uIntensity.value = intensity;
   }, [intensity]);
 
   useEffect(() => {
-    if (!materialRef.current) return;
-    materialRef.current.uniforms.uInteractive.value = interactive;
+    if (!materialReference.current) return;
+    materialReference.current.uniforms.uInteractive.value = interactive;
   }, [interactive]);
 
   useEffect(() => {
-    if (!materialRef.current) return;
-    materialRef.current.uniforms.uGlowAmount.value = glowAmount;
+    if (!materialReference.current) return;
+    materialReference.current.uniforms.uGlowAmount.value = glowAmount;
   }, [glowAmount]);
 
   useEffect(() => {
-    if (!materialRef.current) return;
-    materialRef.current.uniforms.uPillarWidth.value = pillarWidth;
+    if (!materialReference.current) return;
+    materialReference.current.uniforms.uPillarWidth.value = pillarWidth;
   }, [pillarWidth]);
 
   useEffect(() => {
-    if (!materialRef.current) return;
-    materialRef.current.uniforms.uPillarHeight.value = pillarHeight;
+    if (!materialReference.current) return;
+    materialReference.current.uniforms.uPillarHeight.value = pillarHeight;
   }, [pillarHeight]);
 
   useEffect(() => {
-    if (!materialRef.current) return;
-    materialRef.current.uniforms.uNoiseIntensity.value = noiseIntensity;
+    if (!materialReference.current) return;
+    materialReference.current.uniforms.uNoiseIntensity.value = noiseIntensity;
   }, [noiseIntensity]);
 
   useEffect(() => {
-    if (!materialRef.current) return;
+    if (!materialReference.current) return;
     const pillarRotRad = (pillarRotation * Math.PI) / 180;
-    materialRef.current.uniforms.uPillarRotCos.value = Math.cos(pillarRotRad);
-    materialRef.current.uniforms.uPillarRotSin.value = Math.sin(pillarRotRad);
+    materialReference.current.uniforms.uPillarRotCos.value =
+      Math.cos(pillarRotRad);
+    materialReference.current.uniforms.uPillarRotSin.value =
+      Math.sin(pillarRotRad);
   }, [pillarRotation]);
 
   if (!webGLSupported) {
@@ -437,7 +446,7 @@ const LightPillar: React.FC<LightPillarProps> = ({
 
   return (
     <div
-      ref={containerRef}
+      ref={containerReference}
       className={`light-pillar-container ${className}`}
       style={{ mixBlendMode }}
     />

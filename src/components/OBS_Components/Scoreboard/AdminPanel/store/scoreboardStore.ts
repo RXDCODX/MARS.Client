@@ -146,13 +146,13 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
       pendingCommand => pendingCommand.method === method
     );
 
-    if (existingCommandIndex >= 0) {
-      pendingServerCommands[existingCommandIndex] = nextCommand;
-    } else {
+    if (existingCommandIndex === -1) {
       pendingServerCommands.push(nextCommand);
       if (pendingServerCommands.length > MAX_PENDING_SERVER_COMMANDS) {
         pendingServerCommands.shift();
       }
+    } else {
+      pendingServerCommands[existingCommandIndex] = nextCommand;
     }
   };
 
@@ -194,8 +194,8 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
     .then(() => {
       void flushPendingServerCommands();
     })
-    .catch(err => {
-      console.error("Error starting SignalR connection:", err);
+    .catch(error => {
+      console.error("Error starting SignalR connection:", error);
     });
 
   return {
@@ -396,7 +396,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
 
     // Внутренние действия
     _sendToServer: async (method, data) => {
-      let result = false;
+      let isResult = false;
 
       try {
         if (!connection || connection.state !== HubConnectionState.Connected) {
@@ -408,7 +408,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
           console.log(`Sending ${method}:`, data);
           await connection.invoke(method, data);
           console.log(`Successfully sent ${method}`);
-          result = true;
+          isResult = true;
         }
       } catch (error) {
         queueServerCommand(method, data);
@@ -418,7 +418,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
         );
       }
 
-      return result;
+      return isResult;
     },
 
     _createServerState: (
@@ -452,7 +452,7 @@ export const useScoreboardStore = create<ScoreboardStore>((set, get) => {
         colors: convertColorPresetToDto(updatedColor ?? state.color),
         layout: updatedLayout ?? state.layout,
         isVisible:
-          updatedVisibility !== undefined ? updatedVisibility : state.isVisible,
+          updatedVisibility === undefined ? state.isVisible : updatedVisibility,
         animationDuration: updatedAnimationDuration ?? state.animationDuration,
       };
     },

@@ -12,7 +12,7 @@ import styles from "./ElasticSlider.module.scss";
 
 const MAX_OVERFLOW = 50;
 
-interface ElasticSliderProps {
+interface ElasticSliderProperties {
   value: number;
   onChange: (value: number) => void;
   min?: number;
@@ -39,9 +39,9 @@ export function ElasticSlider({
   max = 100,
   step = 1,
   disabled = false,
-}: ElasticSliderProps) {
+}: ElasticSliderProperties) {
   const [localValue, setLocalValue] = useState(value);
-  const sliderRef = useRef<HTMLDivElement>(null);
+  const sliderReference = useRef<HTMLDivElement>(null);
   const [region, setRegion] = useState<"left" | "middle" | "right">("middle");
   const clientX = useMotionValue(0);
   const overflow = useMotionValue(0);
@@ -52,31 +52,33 @@ export function ElasticSlider({
   }, [value]);
 
   useMotionValueEvent(clientX, "change", latest => {
-    if (sliderRef.current) {
-      const { left, right } = sliderRef.current.getBoundingClientRect();
-      let newValue: number;
-
-      if (latest < left) {
-        setRegion("left");
-        newValue = left - latest;
-      } else if (latest > right) {
-        setRegion("right");
-        newValue = latest - right;
-      } else {
-        setRegion("middle");
-        newValue = 0;
-      }
-
-      overflow.jump(decay(newValue, MAX_OVERFLOW));
+    if (!sliderReference.current) {
+      return;
     }
+
+    const { left, right } = sliderReference.current.getBoundingClientRect();
+    let newValue: number;
+
+    if (latest < left) {
+      setRegion("left");
+      newValue = left - latest;
+    } else if (latest > right) {
+      setRegion("right");
+      newValue = latest - right;
+    } else {
+      setRegion("middle");
+      newValue = 0;
+    }
+
+    overflow.jump(decay(newValue, MAX_OVERFLOW));
   });
 
   const handlePointerMove = useCallback(
     (e: React.PointerEvent<HTMLDivElement>) => {
       if (disabled) return;
 
-      if (e.buttons > 0 && sliderRef.current) {
-        const { left, width } = sliderRef.current.getBoundingClientRect();
+      if (e.buttons > 0 && sliderReference.current) {
+        const { left, width } = sliderReference.current.getBoundingClientRect();
         let newValue = min + ((e.clientX - left) / width) * (max - min);
 
         if (step > 0) {
@@ -144,7 +146,7 @@ export function ElasticSlider({
         </motion.div>
 
         <div
-          ref={sliderRef}
+          ref={sliderReference}
           className={styles.sliderRoot}
           onPointerMove={handlePointerMove}
           onPointerDown={handlePointerDown}
@@ -154,17 +156,18 @@ export function ElasticSlider({
           <motion.div
             style={{
               scaleX: useTransform(() => {
-                if (sliderRef.current) {
-                  const { width } = sliderRef.current.getBoundingClientRect();
+                if (sliderReference.current) {
+                  const { width } =
+                    sliderReference.current.getBoundingClientRect();
                   return 1 + overflow.get() / width;
                 }
                 return 1;
               }),
               scaleY: useTransform(overflow, [0, MAX_OVERFLOW], [1, 0.8]),
               transformOrigin: useTransform(() => {
-                if (sliderRef.current) {
+                if (sliderReference.current) {
                   const { left, width } =
-                    sliderRef.current.getBoundingClientRect();
+                    sliderReference.current.getBoundingClientRect();
                   return clientX.get() < left + width / 2 ? "right" : "left";
                 }
                 return "center";

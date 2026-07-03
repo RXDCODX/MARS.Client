@@ -3,7 +3,7 @@ import ServiceDetails from "@/components/Site/Pages/ServerViewer/ServiceDetails"
 // Компонент-обертка для страницы деталей сервиса
 const ServiceDetailsPage = () => (
   <div style={{ padding: "20px" }}>
-    <ServiceDetails onClose={() => window.history.back()} />
+    <ServiceDetails onClose={() => history.back()} />
   </div>
 );
 

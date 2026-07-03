@@ -147,11 +147,7 @@ export const MediaInfoListPage: React.FC = () => {
         return false;
       }
 
-      if (filters.rewardState === "unlinked" && rewardId) {
-        return false;
-      }
-
-      return true;
+      return !(filters.rewardState === "unlinked" && rewardId);
     });
   }, [filters, items]);
 
@@ -190,7 +186,7 @@ export const MediaInfoListPage: React.FC = () => {
 
   const handleDelete = useCallback(
     async (item: ApiMediaInfo) => {
-      const confirmDelete = window.confirm(
+      const confirmDelete = globalThis.confirm(
         `Удалить медиа «${item.metaInfo.displayName || item.fileInfo.fileName}»?`
       );
 
@@ -649,18 +645,24 @@ function getSortValue(
   field: MediaInfoSortField
 ): string | number {
   switch (field) {
-    case "fileInfo.filePath":
+    case "fileInfo.filePath": {
       return item.fileInfo.filePath || "";
-    case "fileInfo.type":
+    }
+    case "fileInfo.type": {
       return item.fileInfo.type || "";
-    case "metaInfo.duration":
+    }
+    case "metaInfo.duration": {
       return item.metaInfo.duration;
-    case "metaInfo.priority":
+    }
+    case "metaInfo.priority": {
       return item.metaInfo.priority || "";
-    case "metaInfo.twitchPointsCost":
+    }
+    case "metaInfo.twitchPointsCost": {
       return item.metaInfo.twitchPointsCost ?? 0;
+    }
     case "metaInfo.displayName":
-    default:
+    default: {
       return item.metaInfo.displayName || "";
+    }
   }
 }

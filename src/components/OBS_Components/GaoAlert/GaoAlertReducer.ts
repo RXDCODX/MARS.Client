@@ -28,7 +28,7 @@ export function gaoAlertReducer(
   console.warn(state, action);
 
   switch (action.type) {
-    case StateStatus.add:
+    case StateStatus.add: {
       if (!action.payload) {
         return state;
       }
@@ -51,8 +51,9 @@ export function gaoAlertReducer(
       }
 
       return { ...state, queue: [...state.queue, action.payload] };
+    }
 
-    case StateStatus.remove:
+    case StateStatus.remove: {
       if (action.payload === undefined) {
         return { ...state };
       }
@@ -87,8 +88,10 @@ export function gaoAlertReducer(
         current: null,
         isProcessing: false,
       };
+    }
 
-    default:
+    default: {
       return state;
+    }
   }
 }

@@ -55,8 +55,9 @@ function reducer(state: State, action: Action): State {
     case "STOP_PLAY": {
       return { ...state, playing: false, current: null };
     }
-    default:
+    default: {
       return state;
+    }
   }
 }
 

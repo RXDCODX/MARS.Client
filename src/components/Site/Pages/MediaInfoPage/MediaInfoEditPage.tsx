@@ -300,7 +300,7 @@ export const MediaInfoEditPage: React.FC = () => {
       return;
     }
 
-    const confirmDelete = window.confirm(
+    const confirmDelete = globalThis.confirm(
       `Удалить медиа «${alert.metaInfo.displayName || alert.fileInfo.fileName}»?`
     );
 

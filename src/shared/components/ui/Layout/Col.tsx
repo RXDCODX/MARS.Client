@@ -1,4 +1,4 @@
-interface ColProps {
+interface ColProperties {
   children: React.ReactNode;
   className?: string;
   md?: number;
@@ -7,7 +7,7 @@ interface ColProps {
   xs?: number;
 }
 
-const Col = ({ children, className, md, sm, lg, xs }: ColProps) => {
+const Col = ({ children, className, md, sm, lg, xs }: ColProperties) => {
   const span = md ?? sm ?? lg ?? xs ?? 6;
   const flex = `${(span / 12) * 100}%`;
 

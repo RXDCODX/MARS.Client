@@ -5,7 +5,7 @@ import { Textfit } from "react-textfit";
 
 import { useInjectStyles } from "@/shared/hooks";
 
-interface Props {
+interface Properties {
   title: string;
   callback?: () => void;
 }
@@ -13,14 +13,14 @@ interface Props {
 const getRandomColor = (): string => {
   const letters = "0123456789ABCDEF";
   let color = "#";
-  for (let i = 0; i < 6; i++) {
+  for (let index = 0; index < 6; index++) {
     color += letters[Math.floor(Math.random() * 16)];
   }
   return color;
 };
 
-export default function Announce({ title, callback }: Props) {
-  const nodeRef = useRef(null);
+export default function Announce({ title, callback }: Properties) {
+  const nodeReference = useRef(null);
   // Цвет фиксируется на маунте
   const [backgroundColor] = useState(getRandomColor);
 
@@ -74,39 +74,41 @@ export default function Announce({ title, callback }: Props) {
     backgroundColor: backgroundColor,
   };
 
-  interface FadeOutProps {
+  interface FadeOutProperties {
     duration: number;
     delay: number;
     children: React.ReactNode;
     callback: () => void;
   }
 
-  const FadeOut: React.FC<FadeOutProps> = ({
+  const FadeOut: React.FC<FadeOutProperties> = ({
     duration,
     delay,
     children,
     callback,
   }) => {
-    const elementRef = useRef<HTMLDivElement>(null);
+    const elementReference = useRef<HTMLDivElement>(null);
     const [isVisible, setIsVisible] = useState(true);
 
     useEffect(() => {
-      const element = elementRef.current;
+      const element = elementReference.current;
       if (element) {
         const delayTimer = setTimeout(() => {
-          if (element) {
-            element.style.transition = `opacity ${duration}ms`;
-            element.style.opacity = "0";
-
-            const fadeOutTimer = setTimeout(() => {
-              setIsVisible(false);
-              callback();
-            }, duration);
-
-            return () => {
-              clearTimeout(fadeOutTimer);
-            };
+          if (!element) {
+            return;
           }
+
+          element.style.transition = `opacity ${duration}ms`;
+          element.style.opacity = "0";
+
+          const fadeOutTimer = setTimeout(() => {
+            setIsVisible(false);
+            callback();
+          }, duration);
+
+          return () => {
+            clearTimeout(fadeOutTimer);
+          };
         }, delay);
 
         return () => {
@@ -115,7 +117,7 @@ export default function Announce({ title, callback }: Props) {
       }
     }, [duration, delay, callback]);
 
-    return isVisible ? <div ref={elementRef}>{children}</div> : null;
+    return isVisible ? <div ref={elementReference}>{children}</div> : null;
   };
 
   return (
@@ -129,7 +131,7 @@ export default function Announce({ title, callback }: Props) {
           }
         }}
       >
-        <div ref={nodeRef} style={defaultStyle} className="announce">
+        <div ref={nodeReference} style={defaultStyle} className="announce">
           <Textfit
             id="announce"
             forceSingleModeWidth

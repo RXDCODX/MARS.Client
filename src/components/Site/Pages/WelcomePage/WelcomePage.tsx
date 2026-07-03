@@ -46,13 +46,13 @@ const formatBytes = (bytes: number): string => {
   if (bytes === 0) return "0 B";
   const k = 1024;
   const sizes = ["B", "KB", "MB", "GB", "TB"];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+  const index = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${Number.parseFloat((bytes / Math.pow(k, index)).toFixed(2))} ${sizes[index]}`;
 };
 
 const formatUptime = (seconds: number): string => {
-  const days = Math.floor(seconds / 86400);
-  const hours = Math.floor((seconds % 86400) / 3600);
+  const days = Math.floor(seconds / 86_400);
+  const hours = Math.floor((seconds % 86_400) / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const secs = Math.floor(seconds % 60);
   const parts: string[] = [];
@@ -67,7 +67,7 @@ const WelcomePage: React.FC = () => {
   const [stats, setStats] = useState<ServerStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const intervalReference = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const fetchStats = async () => {
     try {
@@ -93,8 +93,10 @@ const WelcomePage: React.FC = () => {
       });
       const data = await response.json();
       if (data.success) {
-        setStats(prev =>
-          prev ? { ...prev, isPuntoSwitcherEnabled: data.data } : prev
+        setStats(previous =>
+          previous
+            ? { ...previous, isPuntoSwitcherEnabled: data.data }
+            : previous
         );
         message.success(data.message || "PuntoSwitcher переключён");
       } else {
@@ -112,8 +114,8 @@ const WelcomePage: React.FC = () => {
       });
       const data = await response.json();
       if (data.success) {
-        setStats(prev =>
-          prev ? { ...prev, isTtsFilterEnabled: data.data } : prev
+        setStats(previous =>
+          previous ? { ...previous, isTtsFilterEnabled: data.data } : previous
         );
         message.success(data.message || "Фильтр TTS переключён");
       } else {
@@ -126,9 +128,9 @@ const WelcomePage: React.FC = () => {
 
   useEffect(() => {
     fetchStats();
-    intervalRef.current = setInterval(fetchStats, 3000);
+    intervalReference.current = setInterval(fetchStats, 3000);
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
+      if (intervalReference.current) clearInterval(intervalReference.current);
     };
   }, []);
 
@@ -311,7 +313,7 @@ const WelcomePage: React.FC = () => {
                       key={link.to}
                       to={link.to}
                       style={{ textDecoration: "none" }}
-                      data-testid={`link-${link.label.toLowerCase().replace(/\s/g, "-")}`}
+                      data-testid={`link-${link.label.toLowerCase().replaceAll(/\s/g, "-")}`}
                     >
                       <Button size="small" style={{ width: "100%" }}>
                         <span style={{ marginRight: 6 }}>{link.icon}</span>
@@ -415,7 +417,7 @@ const WelcomePage: React.FC = () => {
   );
 };
 
-interface StatCardProps {
+interface StatCardProperties {
   title: string;
   value: string;
   subtitle: string;
@@ -424,7 +426,7 @@ interface StatCardProps {
   dataTestId: string;
 }
 
-const StatCard: React.FC<StatCardProps> = ({
+const StatCard: React.FC<StatCardProperties> = ({
   title,
   value,
   subtitle,
@@ -466,7 +468,7 @@ const StatCard: React.FC<StatCardProps> = ({
   </Card>
 );
 
-interface ConnectionCardProps {
+interface ConnectionCardProperties {
   title: string;
   connected: boolean;
   icon: string;
@@ -476,7 +478,7 @@ interface ConnectionCardProps {
   disconnectedText?: string;
 }
 
-const ConnectionCard: React.FC<ConnectionCardProps> = ({
+const ConnectionCard: React.FC<ConnectionCardProperties> = ({
   title,
   connected,
   icon,

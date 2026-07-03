@@ -69,16 +69,16 @@ const getRandomUniqueColors = (count: number) => {
 const getRandomColor = () => colors[Math.floor(Math.random() * colors.length)];
 
 export function DVDLogos() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number | undefined>(undefined);
-  const logosRef = useRef<DVDLogo[]>([]);
+  const canvasReference = useRef<HTMLCanvasElement>(null);
+  const animationReference = useRef<number | undefined>(undefined);
+  const logosReference = useRef<DVDLogo[]>([]);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = canvasReference.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const context = canvas.getContext("2d");
+    if (!context) return;
 
     // Устанавливаем размер canvas равным размеру окна
     const resizeCanvas = () => {
@@ -93,7 +93,7 @@ export function DVDLogos() {
     const initialColors = getRandomUniqueColors(DVD_COUNT);
 
     // Инициализация DVD логотипов
-    logosRef.current = Array.from({ length: DVD_COUNT }, (_, index) => ({
+    logosReference.current = Array.from({ length: DVD_COUNT }, (_, index) => ({
       id: index + 1,
       x: 100 + index * 100,
       y: 100 + index * 50,
@@ -114,15 +114,15 @@ export function DVDLogos() {
     </svg>`;
 
     const parser = new DOMParser();
-    const svgDoc = parser.parseFromString(svgString, "image/svg+xml");
-    const svg = svgDoc.documentElement;
+    const svgDocument = parser.parseFromString(svgString, "image/svg+xml");
+    const svg = svgDocument.documentElement;
 
     const animate = () => {
       // Очищаем canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      context.clearRect(0, 0, canvas.width, canvas.height);
 
       // Обновляем позиции и отрисовываем логотипы
-      logosRef.current.forEach(logo => {
+      logosReference.current.forEach(logo => {
         // Обновляем позицию
         const newX = logo.x + logo.vx;
         const newY = logo.y + logo.vy;
@@ -142,65 +142,65 @@ export function DVDLogos() {
         logo.y = newY;
 
         // Рисуем DVD логотип
-        drawDVDLogo(ctx, logo, svg);
+        drawDVDLogo(context, logo, svg);
       });
 
-      animationRef.current = requestAnimationFrame(animate);
+      animationReference.current = requestAnimationFrame(animate);
     };
 
-    animationRef.current = requestAnimationFrame(animate);
+    animationReference.current = requestAnimationFrame(animate);
 
     return () => {
       window.removeEventListener("resize", resizeCanvas);
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
+      if (animationReference.current) {
+        cancelAnimationFrame(animationReference.current);
       }
     };
   }, []);
 
   // Функция для отрисовки DVD логотипа (как в примере)
   const drawDVDLogo = (
-    ctx: CanvasRenderingContext2D,
+    context: CanvasRenderingContext2D,
     logo: DVDLogo,
     svg: Element
   ) => {
     const scale = 2;
 
-    ctx.save();
-    ctx.translate(logo.x, logo.y);
-    ctx.scale(scale, scale);
+    context.save();
+    context.translate(logo.x, logo.y);
+    context.scale(scale, scale);
 
     // Парсим SVG и рисуем по частям (как в примере)
-    const descendants = svg.getElementsByTagName("*");
+    const descendants = svg.querySelectorAll(":scope *");
 
-    for (let i = 0; i < descendants.length; i++) {
-      const el = descendants[i] as SVGElement;
+    for (const descendant of descendants) {
+      const element = descendant as SVGElement;
 
-      if (el.nodeName === "path") {
-        const path = new Path2D(el.getAttribute("d") || "");
-        const fill = el.getAttribute("fill");
-        ctx.fillStyle = fill === "#fff" ? "#000000" : logo.color;
-        ctx.fill(path);
-      } else if (el.nodeName === "ellipse") {
-        ctx.beginPath();
-        const cx = parseFloat(el.getAttribute("cx") || "0");
-        const cy = parseFloat(el.getAttribute("cy") || "0");
-        const rx = parseFloat(el.getAttribute("rx") || "0");
-        const ry = parseFloat(el.getAttribute("ry") || "0");
-        ctx.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
-        ctx.closePath();
-        const fill = el.getAttribute("fill");
-        ctx.fillStyle = fill === "#fff" ? "#000000" : logo.color;
-        ctx.fill();
+      if (element.nodeName === "path") {
+        const path = new Path2D(element.getAttribute("d") || "");
+        const fill = element.getAttribute("fill");
+        context.fillStyle = fill === "#fff" ? "#000000" : logo.color;
+        context.fill(path);
+      } else if (element.nodeName === "ellipse") {
+        context.beginPath();
+        const cx = Number(element.getAttribute("cx") || "0");
+        const cy = Number(element.getAttribute("cy") || "0");
+        const rx = Number(element.getAttribute("rx") || "0");
+        const ry = Number(element.getAttribute("ry") || "0");
+        context.ellipse(cx, cy, rx, ry, 0, 0, Math.PI * 2);
+        context.closePath();
+        const fill = element.getAttribute("fill");
+        context.fillStyle = fill === "#fff" ? "#000000" : logo.color;
+        context.fill();
       }
     }
 
-    ctx.restore();
+    context.restore();
   };
 
   return (
     <canvas
-      ref={canvasRef}
+      ref={canvasReference}
       style={{
         position: "absolute",
         top: 0,

@@ -57,7 +57,7 @@ const SpotifyAuthManager: React.FC = () => {
       const response = await apiClient.spotifyAuthStartCreate({
         clientId: clientId.trim(),
         clientSecret: clientSecret.trim(),
-        redirectUri: `${window.location.origin}/api/SpotifyAuth/callback`,
+        redirectUri: `${location.origin}/api/SpotifyAuth/callback`,
       });
       const result = response.data as OperationResult<SpotifyAuthStartResult>;
 
@@ -89,7 +89,7 @@ const SpotifyAuthManager: React.FC = () => {
   };
 
   const handleDisconnect = async () => {
-    if (!window.confirm("Вы уверены, что хотите отключить Spotify?")) {
+    if (!globalThis.confirm("Вы уверены, что хотите отключить Spotify?")) {
       return;
     }
 

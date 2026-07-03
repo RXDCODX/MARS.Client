@@ -8,7 +8,7 @@ import { BaseTrackInfo } from "@/shared/api";
 import { formatDuration } from "../../utils";
 import styles from "../SoundRequestPlayerDesktop.module.scss";
 
-interface TrackItemProps {
+interface TrackItemProperties {
   track: BaseTrackInfo;
   queueItemId?: string;
   isCurrent?: boolean;
@@ -43,14 +43,14 @@ function TrackItemComponent({
   onMoveDown,
   onNativeDragOver,
   showInsertAbove = false,
-}: TrackItemProps) {
+}: TrackItemProperties) {
   const showPlayingIndicator = isCurrent && isPlaying;
 
   const aa = useSortable({ id: queueItemId! });
 
   // dnd-kit sortable
   const sortable = queueItemId ? aa : null;
-  const setNodeRef = sortable ? sortable.setNodeRef : undefined;
+  const setNodeReference = sortable ? sortable.setNodeRef : undefined;
   const transform = sortable ? sortable.transform : undefined;
   const transition = sortable ? sortable.transition : undefined;
   const isDragging = sortable ? sortable.isDragging : false;
@@ -106,7 +106,7 @@ function TrackItemComponent({
 
   return (
     <div
-      ref={setNodeRef}
+      ref={setNodeReference}
       className={`${styles.item} ${isCurrent ? `${styles.sticky} ${styles.current}` : ""} ${isHistory ? styles.historyItem : ""} ${isDragging ? "dragging" : ""}`}
       data-track-id={track.id}
       data-testid={`track-item-${track.id}`}

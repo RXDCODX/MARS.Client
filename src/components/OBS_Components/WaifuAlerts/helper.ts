@@ -3,9 +3,12 @@ import { getRandomInt } from "@/shared/Utils";
 
 export function shuffleArray<T>(array: T[]): T[] {
   const shuffledArray = [...array];
-  for (let i = shuffledArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  for (let index = shuffledArray.length - 1; index > 0; index--) {
+    const index_ = Math.floor(Math.random() * (index + 1));
+    [shuffledArray[index], shuffledArray[index_]] = [
+      shuffledArray[index_],
+      shuffledArray[index],
+    ];
   }
   return shuffledArray;
 }
@@ -23,11 +26,9 @@ export function getText(message: WaifuAlertProps) {
 }
 
 export function getTitle(message: WaifuAlertProps) {
-  if (message.waifu.anime) {
-    return `из аниме ${message.waifu.anime}`;
-  } else {
-    return `из манги ${message.waifu.manga}`;
-  }
+  return message.waifu.anime
+    ? `из аниме ${message.waifu.anime}`
+    : `из манги ${message.waifu.manga}`;
 }
 
 const startWords: string[] = [

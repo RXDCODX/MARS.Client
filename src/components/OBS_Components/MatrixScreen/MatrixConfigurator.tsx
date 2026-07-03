@@ -4,13 +4,13 @@ import MatrixScreen, { MatrixOptions } from "./MatrixScreen";
 
 // Функция для получения параметров из URL
 function getOptionsFromUrl(): MatrixOptions {
-  const params = new URLSearchParams(window.location.search);
+  const parameters = new URLSearchParams(location.search);
   const options: MatrixOptions = {};
 
-  const paramMap: { [key: string]: string | number | boolean | null } = {};
+  const parameterMap: { [key: string]: string | number | boolean | null } = {};
 
   // Строковые параметры
-  const stringParams = [
+  const stringParameters = [
     "version",
     "font",
     "effect",
@@ -18,13 +18,13 @@ function getOptionsFromUrl(): MatrixOptions {
     "stripeColors",
     "url",
   ];
-  stringParams.forEach(param => {
-    const value = params.get(param);
-    if (value) paramMap[param] = value;
-  });
+  for (const parameter of stringParameters) {
+    const value = parameters.get(parameter);
+    if (value) parameterMap[parameter] = value;
+  }
 
   // Булевы параметры
-  const booleanParams = [
+  const booleanParameters = [
     "skipIntro",
     "glyphFlip",
     "volumetric",
@@ -32,13 +32,13 @@ function getOptionsFromUrl(): MatrixOptions {
     "loops",
     "suppressWarnings",
   ];
-  booleanParams.forEach(param => {
-    const value = params.get(param);
-    if (value !== null) paramMap[param] = value === "true";
-  });
+  for (const parameter of booleanParameters) {
+    const value = parameters.get(parameter);
+    if (value !== null) parameterMap[parameter] = value === "true";
+  }
 
   // Числовые параметры
-  const numberParams = [
+  const numberParameters = [
     "numColumns",
     "glyphRotation",
     "slant",
@@ -56,21 +56,21 @@ function getOptionsFromUrl(): MatrixOptions {
     "cursorIntensity",
     "glintIntensity",
   ];
-  numberParams.forEach(param => {
-    const value = params.get(param);
+  for (const parameter of numberParameters) {
+    const value = parameters.get(parameter);
     if (value) {
-      const numValue = parseFloat(value);
-      if (!isNaN(numValue)) paramMap[param] = numValue;
+      const numberValue = Number.parseFloat(value);
+      if (!isNaN(numberValue)) parameterMap[parameter] = numberValue;
     }
-  });
+  }
 
-  return paramMap as MatrixOptions;
+  return parameterMap as MatrixOptions;
 }
 
 // Функция для обновления URL с текущими параметрами
 function updateUrlWithOptions(options: MatrixOptions) {
-  const params = new URLSearchParams();
-  const colorParams: { key: string; value: string }[] = [];
+  const parameters = new URLSearchParams();
+  const colorParameters: { key: string; value: string }[] = [];
 
   Object.entries(options).forEach(([key, value]) => {
     if (value === undefined || value === null || value === "") {
@@ -87,33 +87,33 @@ function updateUrlWithOptions(options: MatrixOptions) {
       key === "stripeColors" ||
       key === "palette"
     ) {
-      colorParams.push({ key, value: stringValue });
+      colorParameters.push({ key, value: stringValue });
     } else if (typeof value === "boolean") {
-      params.set(key, stringValue);
+      parameters.set(key, stringValue);
     } else {
-      params.set(key, stringValue);
+      parameters.set(key, stringValue);
     }
   });
 
   // Собираем URL без кодирования цветов
   const parts: string[] = [];
-  params.forEach((value, key) => {
+  parameters.forEach((value, key) => {
     parts.push(`${key}=${value}`);
   });
 
   // Добавляем цветовые параметры без кодирования
-  colorParams.forEach(({ key, value }) => {
+  for (const { key, value } of colorParameters) {
     parts.push(`${key}=${value}`);
-  });
+  }
 
   // Обновляем URL без перезагрузки страницы
-  const newUrl = `${window.location.pathname}${parts.length > 0 ? "?" + parts.join("&") : ""}`;
-  window.history.replaceState({}, "", newUrl);
+  const newUrl = `${location.pathname}${parts.length > 0 ? "?" + parts.join("&") : ""}`;
+  history.replaceState({}, "", newUrl);
 }
 
 // Функция для удаления параметров из URL
 function clearUrlOptions() {
-  window.history.replaceState({}, "", window.location.pathname);
+  history.replaceState({}, "", location.pathname);
 }
 
 // Типы для UI элементов
@@ -364,7 +364,7 @@ function parseValue(
     return value === "true";
   }
   if (type === "number") {
-    return parseFloat(value) || 0;
+    return Number.parseFloat(value) || 0;
   }
   return value;
 }
@@ -386,13 +386,15 @@ export default function MatrixConfigurator({
 
   // Загрузка параметров из URL при монтировании (если нет initialOptions)
   useEffect(() => {
-    if (!isInitialized && Object.keys(initialOptions).length === 0) {
-      const urlOptions = getOptionsFromUrl();
-      if (Object.keys(urlOptions).length > 0) {
-        setOptions(urlOptions);
-      }
-      setIsInitialized(true);
+    if (isInitialized || Object.keys(initialOptions).length > 0) {
+      return;
     }
+
+    const urlOptions = getOptionsFromUrl();
+    if (Object.keys(urlOptions).length > 0) {
+      setOptions(urlOptions);
+    }
+    setIsInitialized(true);
   }, []);
 
   // Обновление URL при изменении параметров
@@ -405,8 +407,8 @@ export default function MatrixConfigurator({
   const handleValueChange = (key: string, value: string, type: ControlType) => {
     const parsedValue = parseValue(value, type);
 
-    setOptions(prev => {
-      const newOptions = { ...prev, [key]: parsedValue };
+    setOptions(previous => {
+      const newOptions = { ...previous, [key]: parsedValue };
       return newOptions;
     });
   };

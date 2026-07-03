@@ -6,10 +6,10 @@ const vec2 = glMatrix.vec2;
 //*****************************************************************************
 
 class Transform {
-  position = vec3.fromValues(0.0, 0.0, 0.0);
-  pivot = vec3.fromValues(0.0, 0.0, 0.0);
-  in_scale = vec2.fromValues(1.0, 1.0);
-  angle = 0.0;
+  position = vec3.fromValues(0, 0, 0);
+  pivot = vec3.fromValues(0, 0, 0);
+  in_scale = vec2.fromValues(1, 1);
+  angle = 0;
   model;
   is_need_update = false;
 
@@ -40,7 +40,7 @@ class Transform {
     this.position[1] += y;
     this.position[2] += z;
 
-    if (x != 0.0 || y != 0.0 || z != 0.0) {
+    if (x != 0 || y != 0 || z != 0) {
       this.is_need_update = true;
     }
   }
@@ -70,7 +70,7 @@ class Transform {
   rotate(angle) {
     this.angle += angle;
 
-    if (angle != 0.0) {
+    if (angle != 0) {
       this.is_need_update = true;
     }
   }
@@ -88,7 +88,7 @@ class Transform {
     this.in_scale[0] += x;
     this.in_scale[1] += y;
 
-    if (x != 0.0 || y != 0.0) {
+    if (x != 0 || y != 0) {
       this.is_need_update = true;
     }
   }
@@ -109,7 +109,7 @@ class Transform {
       mat4.scale(
         this.model,
         this.model,
-        vec3.fromValues(this.in_scale[0], this.in_scale[1], 1.0)
+        vec3.fromValues(this.in_scale[0], this.in_scale[1], 1)
       );
       mat4.translate(this.model, this.model, to_pivot);
 
@@ -152,12 +152,12 @@ class Render_vertex_pack {
       this.resize(diff - storage_diff);
     }
 
-    for (let i = start_index; i < vertices_count; i += 2) {
-      this.#positions[i] = positions[i];
-      this.#positions[i + 1] = positions[i + 1];
+    for (let index = start_index; index < vertices_count; index += 2) {
+      this.#positions[index] = positions[index];
+      this.#positions[index + 1] = positions[index + 1];
 
-      this.#tex_coords[i] = tex_coords[i];
-      this.#tex_coords[i + 1] = tex_coords[i + 1];
+      this.#tex_coords[index] = tex_coords[index];
+      this.#tex_coords[index + 1] = tex_coords[index + 1];
     }
 
     this.#update_buffers(this.#gl);
@@ -165,19 +165,19 @@ class Render_vertex_pack {
 
   resize(count) {
     if (count > this.#vertices_count) {
-      let tmp_positions = new Float32Array(count);
-      let tmp_tex_coords = new Float32Array(count);
+      let temporary_positions = new Float32Array(count);
+      let temporary_tex_coords = new Float32Array(count);
 
-      for (let i = 0; i < this.#vertices_count; i += 2) {
-        tmp_positions[i] = this.#positions[i];
-        tmp_positions[i + 1] = this.#positions[i + 1];
+      for (let index = 0; index < this.#vertices_count; index += 2) {
+        temporary_positions[index] = this.#positions[index];
+        temporary_positions[index + 1] = this.#positions[index + 1];
 
-        tmp_tex_coords[i] = this.#tex_coords[i];
-        tmp_tex_coords[i + 1] = this.#tex_coords[i + 1];
+        temporary_tex_coords[index] = this.#tex_coords[index];
+        temporary_tex_coords[index + 1] = this.#tex_coords[index + 1];
       }
 
-      this.#positions = tmp_positions;
-      this.#tex_coords = tmp_tex_coords;
+      this.#positions = temporary_positions;
+      this.#tex_coords = temporary_tex_coords;
 
       this.#storage_vertices_count = count;
     }
@@ -228,19 +228,26 @@ class Render_vertex_pack {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.#vbo_position);
     gl.bufferData(gl.ARRAY_BUFFER, this.#positions, gl.DYNAMIC_DRAW);
 
-    const position_attr_location = 0;
+    const position_attribute_location = 0;
 
-    gl.enableVertexAttribArray(position_attr_location);
-    gl.vertexAttribPointer(position_attr_location, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(position_attribute_location);
+    gl.vertexAttribPointer(
+      position_attribute_location,
+      2,
+      gl.FLOAT,
+      false,
+      0,
+      0
+    );
 
     this.#vbo_tex_coords = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.#vbo_tex_coords);
     gl.bufferData(gl.ARRAY_BUFFER, this.#tex_coords, gl.DYNAMIC_DRAW);
 
-    const tex_attr_location = 1;
+    const tex_attribute_location = 1;
 
-    gl.enableVertexAttribArray(tex_attr_location);
-    gl.vertexAttribPointer(tex_attr_location, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(tex_attribute_location);
+    gl.vertexAttribPointer(tex_attribute_location, 2, gl.FLOAT, false, 0, 0);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
     gl.bindVertexArray(null);
@@ -325,23 +332,23 @@ class Sprite {
       this.#tex_coords = new Float32Array(this.#vertices_count);
     }
 
-    this.#positions[0] = 0.0;
-    this.#positions[1] = 0.0;
-    this.#positions[2] = 0.0;
+    this.#positions[0] = 0;
+    this.#positions[1] = 0;
+    this.#positions[2] = 0;
     this.#positions[3] = this.#height;
     this.#positions[4] = this.#width;
-    this.#positions[5] = 0.0;
+    this.#positions[5] = 0;
     this.#positions[6] = this.#width;
     this.#positions[7] = this.#height;
 
-    this.#tex_coords[0] = 0.0;
-    this.#tex_coords[1] = 0.0;
-    this.#tex_coords[2] = 0.0;
-    this.#tex_coords[3] = 1.0;
-    this.#tex_coords[4] = 1.0;
-    this.#tex_coords[5] = 0.0;
-    this.#tex_coords[6] = 1.0;
-    this.#tex_coords[7] = 1.0;
+    this.#tex_coords[0] = 0;
+    this.#tex_coords[1] = 0;
+    this.#tex_coords[2] = 0;
+    this.#tex_coords[3] = 1;
+    this.#tex_coords[4] = 1;
+    this.#tex_coords[5] = 0;
+    this.#tex_coords[6] = 1;
+    this.#tex_coords[7] = 1;
   }
 
   #init_buffers(gl) {
@@ -352,19 +359,26 @@ class Sprite {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.#vbo_position);
     gl.bufferData(gl.ARRAY_BUFFER, this.#positions, gl.DYNAMIC_DRAW);
 
-    const position_attr_location = 0;
+    const position_attribute_location = 0;
 
-    gl.enableVertexAttribArray(position_attr_location);
-    gl.vertexAttribPointer(position_attr_location, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(position_attribute_location);
+    gl.vertexAttribPointer(
+      position_attribute_location,
+      2,
+      gl.FLOAT,
+      false,
+      0,
+      0
+    );
 
     this.#vbo_tex_coords = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.#vbo_tex_coords);
     gl.bufferData(gl.ARRAY_BUFFER, this.#tex_coords, gl.DYNAMIC_DRAW);
 
-    const tex_attr_location = 1;
+    const tex_attribute_location = 1;
 
-    gl.enableVertexAttribArray(tex_attr_location);
-    gl.vertexAttribPointer(tex_attr_location, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(tex_attribute_location);
+    gl.vertexAttribPointer(tex_attribute_location, 2, gl.FLOAT, false, 0, 0);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
     gl.bindVertexArray(null);
@@ -390,12 +404,12 @@ class Rect_with_hole {
   #vbo_tex_coords = null;
   #vao = null;
   #vertices_count = 0;
-  #width = 0.0;
-  #height = 0.0;
-  #radius = 0.0;
+  #width = 0;
+  #height = 0;
+  #radius = 0;
   #segments = 0;
-  #start_angle = 0.0;
-  #end_angle = 0.0;
+  #start_angle = 0;
+  #end_angle = 0;
   #gl = null;
   model = new Transform([0, 0, 0]);
 
@@ -404,8 +418,8 @@ class Rect_with_hole {
     width,
     height,
     radius,
-    start_angle = 0.0,
-    end_angle = 0.0,
+    start_angle = 0,
+    end_angle = 0,
     segments = 60
   ) {
     this.#gl = gl;
@@ -482,7 +496,7 @@ class Rect_with_hole {
   }
 
   #update_vertices() {
-    let circle_center = [this.#width / 2.0, this.#height / 2.0];
+    let circle_center = [this.#width / 2, this.#height / 2];
     let hole_positions = create_arc(
       circle_center,
       this.#radius,
@@ -491,10 +505,10 @@ class Rect_with_hole {
       this.#end_angle
     );
 
-    let ld_rect = [0.0, 0.0];
-    let lu_rect = [0.0, this.#height];
+    let ld_rect = [0, 0];
+    let lu_rect = [0, this.#height];
     let ru_rect = [this.#width, this.#height];
-    let rd_rect = [this.#width, 0.0];
+    let rd_rect = [this.#width, 0];
 
     let m_ld_rect = [
       circle_center[0] - this.#radius,
@@ -519,10 +533,14 @@ class Rect_with_hole {
     let middle_vertices = [];
     let middle_tex_coords = [];
 
-    for (let i = 0; i < hole_positions["positions"].length; i += 2) {
+    for (
+      let index = 0;
+      index < hole_positions["positions"].length;
+      index += 2
+    ) {
       let circle_pos = [
-        hole_positions["positions"][i],
-        hole_positions["positions"][i + 1],
+        hole_positions["positions"][index],
+        hole_positions["positions"][index + 1],
       ];
 
       let direction = [
@@ -586,62 +604,62 @@ class Rect_with_hole {
       if (up_pos && m_up_pos) {
         down_vertices.push(up_pos[0], up_pos[1]);
         middle_vertices.push(m_up_pos[0], m_up_pos[1]);
-        down_tex_coords.push(hole_positions["tex_coords"][i], 0.0);
-        middle_tex_coords.push(hole_positions["tex_coords"][i], 0.9);
+        down_tex_coords.push(hole_positions["tex_coords"][index], 0);
+        middle_tex_coords.push(hole_positions["tex_coords"][index], 0.9);
       }
 
       if (right_pos && m_right_pos) {
         down_vertices.push(right_pos[0], right_pos[1]);
         middle_vertices.push(m_right_pos[0], m_right_pos[1]);
-        down_tex_coords.push(hole_positions["tex_coords"][i], 0.0);
-        middle_tex_coords.push(hole_positions["tex_coords"][i], 0.9);
+        down_tex_coords.push(hole_positions["tex_coords"][index], 0);
+        middle_tex_coords.push(hole_positions["tex_coords"][index], 0.9);
       }
 
       if (down_pos && m_down_pos) {
         down_vertices.push(down_pos[0], down_pos[1]);
         middle_vertices.push(m_down_pos[0], m_down_pos[1]);
-        down_tex_coords.push(hole_positions["tex_coords"][i], 0.0);
-        middle_tex_coords.push(hole_positions["tex_coords"][i], 0.9);
+        down_tex_coords.push(hole_positions["tex_coords"][index], 0);
+        middle_tex_coords.push(hole_positions["tex_coords"][index], 0.9);
       }
 
       if (left_pos && m_left_pos) {
         down_vertices.push(left_pos[0], left_pos[1]);
         middle_vertices.push(m_left_pos[0], m_left_pos[1]);
-        down_tex_coords.push(hole_positions["tex_coords"][i], 0.0);
-        middle_tex_coords.push(hole_positions["tex_coords"][i], 0.9);
+        down_tex_coords.push(hole_positions["tex_coords"][index], 0);
+        middle_tex_coords.push(hole_positions["tex_coords"][index], 0.9);
       }
     }
 
     let rect_vertices = [];
     let rect_tex_coords = [];
 
-    for (let i = 0; i < down_vertices.length / 2; i++) {
-      let idx = 2 * i;
-      let idx_1 = 2 * i + 1;
-      let idx_2 = 2 * i + 2;
-      let idx_3 = 2 * i + 3;
+    for (let index = 0; index < down_vertices.length / 2; index++) {
+      let index_ = 2 * index;
+      let index_1 = 2 * index + 1;
+      let index_2 = 2 * index + 2;
+      let index_3 = 2 * index + 3;
 
       let lu_pos = [
-        hole_positions["positions"][idx],
-        hole_positions["positions"][idx_1],
+        hole_positions["positions"][index_],
+        hole_positions["positions"][index_1],
       ];
       let ru_pos = [
-        hole_positions["positions"][idx_2],
-        hole_positions["positions"][idx_3],
+        hole_positions["positions"][index_2],
+        hole_positions["positions"][index_3],
       ];
-      let ld_pos = [middle_vertices[idx], middle_vertices[idx_1]];
-      let rd_pos = [middle_vertices[idx_2], middle_vertices[idx_3]];
+      let ld_pos = [middle_vertices[index_], middle_vertices[index_1]];
+      let rd_pos = [middle_vertices[index_2], middle_vertices[index_3]];
 
       let lu_tex_pos = [
-        hole_positions["tex_coords"][idx],
-        hole_positions["tex_coords"][idx_1],
+        hole_positions["tex_coords"][index_],
+        hole_positions["tex_coords"][index_1],
       ];
       let ru_tex_pos = [
-        hole_positions["tex_coords"][idx_2],
-        hole_positions["tex_coords"][idx_3],
+        hole_positions["tex_coords"][index_2],
+        hole_positions["tex_coords"][index_3],
       ];
-      let ld_tex_pos = [middle_tex_coords[idx], middle_tex_coords[idx_1]];
-      let rd_tex_pos = [middle_tex_coords[idx_2], middle_tex_coords[idx_3]];
+      let ld_tex_pos = [middle_tex_coords[index_], middle_tex_coords[index_1]];
+      let rd_tex_pos = [middle_tex_coords[index_2], middle_tex_coords[index_3]];
 
       rect_vertices.push(
         lu_pos[0],
@@ -676,21 +694,21 @@ class Rect_with_hole {
       );
     }
 
-    for (let i = 0; i < down_vertices.length / 2; i++) {
-      let idx = 2 * i;
-      let idx_1 = 2 * i + 1;
-      let idx_2 = 2 * i + 2;
-      let idx_3 = 2 * i + 3;
+    for (let index = 0; index < down_vertices.length / 2; index++) {
+      let index_ = 2 * index;
+      let index_1 = 2 * index + 1;
+      let index_2 = 2 * index + 2;
+      let index_3 = 2 * index + 3;
 
-      let lu_pos = [middle_vertices[idx], middle_vertices[idx_1]];
-      let ru_pos = [middle_vertices[idx_2], middle_vertices[idx_3]];
-      let ld_pos = [down_vertices[idx], down_vertices[idx_1]];
-      let rd_pos = [down_vertices[idx_2], down_vertices[idx_3]];
+      let lu_pos = [middle_vertices[index_], middle_vertices[index_1]];
+      let ru_pos = [middle_vertices[index_2], middle_vertices[index_3]];
+      let ld_pos = [down_vertices[index_], down_vertices[index_1]];
+      let rd_pos = [down_vertices[index_2], down_vertices[index_3]];
 
-      let lu_tex_pos = [middle_tex_coords[idx], middle_tex_coords[idx_1]];
-      let ru_tex_pos = [middle_tex_coords[idx_2], middle_tex_coords[idx_3]];
-      let ld_tex_pos = [down_tex_coords[idx], down_tex_coords[idx_1]];
-      let rd_tex_pos = [down_tex_coords[idx_2], down_tex_coords[idx_3]];
+      let lu_tex_pos = [middle_tex_coords[index_], middle_tex_coords[index_1]];
+      let ru_tex_pos = [middle_tex_coords[index_2], middle_tex_coords[index_3]];
+      let ld_tex_pos = [down_tex_coords[index_], down_tex_coords[index_1]];
+      let rd_tex_pos = [down_tex_coords[index_2], down_tex_coords[index_3]];
 
       rect_vertices.push(
         lu_pos[0],
@@ -726,12 +744,12 @@ class Rect_with_hole {
     }
 
     if (this.#vertices_count > 0) {
-      for (let i = 0; i < this.#vertices_count; i += 2) {
-        this.#positions[i] = rect_vertices[i];
-        this.#positions[i + 1] = rect_vertices[i + 1];
+      for (let index = 0; index < this.#vertices_count; index += 2) {
+        this.#positions[index] = rect_vertices[index];
+        this.#positions[index + 1] = rect_vertices[index + 1];
 
-        this.#tex_coords[i] = rect_tex_coords[i];
-        this.#tex_coords[i + 1] = rect_tex_coords[i + 1];
+        this.#tex_coords[index] = rect_tex_coords[index];
+        this.#tex_coords[index + 1] = rect_tex_coords[index + 1];
       }
     } else {
       this.#positions = new Float32Array(rect_vertices);
@@ -748,19 +766,26 @@ class Rect_with_hole {
     gl.bindBuffer(gl.ARRAY_BUFFER, this.#vbo_position);
     gl.bufferData(gl.ARRAY_BUFFER, this.#positions, gl.DYNAMIC_DRAW);
 
-    const position_attr_location = 0;
+    const position_attribute_location = 0;
 
-    gl.enableVertexAttribArray(position_attr_location);
-    gl.vertexAttribPointer(position_attr_location, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(position_attribute_location);
+    gl.vertexAttribPointer(
+      position_attribute_location,
+      2,
+      gl.FLOAT,
+      false,
+      0,
+      0
+    );
 
     this.#vbo_tex_coords = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, this.#vbo_tex_coords);
     gl.bufferData(gl.ARRAY_BUFFER, this.#tex_coords, gl.DYNAMIC_DRAW);
 
-    const tex_attr_location = 1;
+    const tex_attribute_location = 1;
 
-    gl.enableVertexAttribArray(tex_attr_location);
-    gl.vertexAttribPointer(tex_attr_location, 2, gl.FLOAT, false, 0, 0);
+    gl.enableVertexAttribArray(tex_attribute_location);
+    gl.vertexAttribPointer(tex_attribute_location, 2, gl.FLOAT, false, 0, 0);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, null);
     gl.bindVertexArray(null);
@@ -822,8 +847,8 @@ class Uniform_binder {
         uniform_type = "uniform" + values[0].length + "f";
       }
 
-      const tmp_values = values[0];
-      values = tmp_values;
+      const temporary_values = values[0];
+      values = temporary_values;
     } else if (is_matrix(values[0], 2, 2) && convert_array_to_matrix) {
       uniform_type = "uniformMatrix2fv";
     } else if (is_matrix(values[0], 3, 3) && convert_array_to_matrix) {
@@ -835,7 +860,7 @@ class Uniform_binder {
     const uniform_functor = this.#uniform_functors.get(uniform_type);
 
     if (uniform_functor === null) {
-      console.error("Unknow uniform type: ", uniform_type);
+      console.error("Unknow uniform type:", uniform_type);
       return;
     }
 
@@ -961,7 +986,7 @@ class Shader {
 
     if (values.length === 0) {
       console.error(
-        `Shader [${this.#shader_program}]` + `does not accept zero arguments`
+        `Shader [${this.#shader_program}]does not accept zero arguments`
       );
 
       return;
@@ -1043,12 +1068,12 @@ class Shader {
       return false;
     }
 
-    for (let i = 0; i < shaders.length; i += 2) {
-      const shader = shaders[i];
-      const shader_error_text = shaders[i + 1];
+    for (let index = 0; index < shaders.length; index += 2) {
+      const shader = shaders[index];
+      const shader_error_text = shaders[index + 1];
 
       if (!shader) {
-        console.error("Error in ", shader_error_text);
+        console.error("Error in", shader_error_text);
 
         return false;
       }
@@ -1160,19 +1185,19 @@ class Texture_loader {
 
     const level = 0;
     const internal_format = this.#gl.RGBA;
-    const tmp_width = 1;
-    const tmp_height = 1;
+    const temporary_width = 1;
+    const temporary_height = 1;
     const border = 0;
-    const src_format = this.#gl.RGBA;
-    const src_type = this.#gl.UNSIGNED_BYTE;
+    const source_format = this.#gl.RGBA;
+    const source_type = this.#gl.UNSIGNED_BYTE;
     const pixel = new Uint8Array([0, 0, 255, 255]);
 
     const texture = this.#gl.createTexture();
     let result = new Texture(
       texture,
-      tmp_width,
-      tmp_height,
-      tmp_width * tmp_height * 4
+      temporary_width,
+      temporary_height,
+      temporary_width * temporary_height * 4
     );
 
     bind_texture(this.#gl, result);
@@ -1181,11 +1206,11 @@ class Texture_loader {
       this.#gl.TEXTURE_2D,
       level,
       internal_format,
-      tmp_width,
-      tmp_height,
+      temporary_width,
+      temporary_height,
       border,
-      src_format,
-      src_type,
+      source_format,
+      source_type,
       pixel
     );
 
@@ -1286,7 +1311,7 @@ class Texture_loader {
   ) {
     const image = new Image();
 
-    image.onload = () => {
+    image.addEventListener("load", () => {
       this.#load_texture_from_image(
         image,
         texture,
@@ -1296,7 +1321,7 @@ class Texture_loader {
         mag_filter,
         on_load
       );
-    };
+    });
 
     image.src = data;
   }
@@ -1336,8 +1361,8 @@ class Texture_loader {
   ) {
     const level = 0;
     const internal_format = this.#gl.RGBA;
-    const src_format = this.#gl.RGBA;
-    const src_type = this.#gl.UNSIGNED_BYTE;
+    const source_format = this.#gl.RGBA;
+    const source_type = this.#gl.UNSIGNED_BYTE;
 
     bind_texture(this.#gl, texture);
 
@@ -1348,8 +1373,8 @@ class Texture_loader {
       width,
       height,
       0,
-      src_format,
-      src_type,
+      source_format,
+      source_type,
       data
     );
 
@@ -1393,7 +1418,7 @@ class Texture_loader {
   ) {
     const image = new Image();
 
-    image.onload = () => {
+    image.addEventListener("load", () => {
       this.#update_texture_from_image(
         texture,
         image,
@@ -1402,7 +1427,7 @@ class Texture_loader {
         x_offset,
         y_offset
       );
-    };
+    });
 
     image.src = data;
   }
@@ -1442,9 +1467,30 @@ class Texture_loader {
 
     if (!width || width <= 0 || !height || height <= 0) return;
 
-    if (!is_need_use_new_size) {
-      width = width < texture.width ? width : texture.width;
-      height = height < texture.height ? height : texture.height;
+    if (is_need_use_new_size) {
+      const level = 0;
+      const internal_format = this.#gl.RGBA;
+      const source_format = this.#gl.RGBA;
+      const source_type = this.#gl.UNSIGNED_BYTE;
+
+      this.#gl.texImage2D(
+        this.#gl.TEXTURE_2D,
+        level,
+        internal_format,
+        width,
+        height,
+        0,
+        source_format,
+        source_type,
+        data
+      );
+
+      texture.width = width;
+      texture.height = height;
+      texture.byte_size = width * height * 4;
+    } else {
+      width = Math.min(width, texture.width);
+      height = Math.min(height, texture.height);
 
       this.#gl.texSubImage2D(
         this.#gl.TEXTURE_2D,
@@ -1457,27 +1503,6 @@ class Texture_loader {
         this.#gl.UNSIGNED_BYTE,
         data
       );
-    } else {
-      const level = 0;
-      const internal_format = this.#gl.RGBA;
-      const src_format = this.#gl.RGBA;
-      const src_type = this.#gl.UNSIGNED_BYTE;
-
-      this.#gl.texImage2D(
-        this.#gl.TEXTURE_2D,
-        level,
-        internal_format,
-        width,
-        height,
-        0,
-        src_format,
-        src_type,
-        data
-      );
-
-      texture.width = width;
-      texture.height = height;
-      texture.byte_size = width * height * 4;
     }
 
     if (on_update) {

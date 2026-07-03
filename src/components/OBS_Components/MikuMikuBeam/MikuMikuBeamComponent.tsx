@@ -4,7 +4,7 @@ import { TelegramusHubSignalRContext, TwitchUser } from "@/shared/api";
 import Announce from "@/shared/Utils/Announce/Announce";
 
 import styles from "./MikuMikuBeam.module.scss";
-import videoSrc from "./video/miku_miku_beam.webm";
+import videoSource from "./video/miku_miku_beam.webm";
 
 interface VideoState {
   isActive: boolean;
@@ -21,7 +21,7 @@ const MikuMikuBeamComponent = () => {
   });
   const [showTickers, setShowTickers] = useState(false);
   const [announced, setAnnounced] = useState(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoReference = useRef<HTMLVideoElement>(null);
 
   const preloadImages = useCallback((users: TwitchUser[]) => {
     // Запускаем предзагрузку в фоне без блокировки
@@ -32,7 +32,7 @@ const MikuMikuBeamComponent = () => {
           // Загрузка изображения
           new Promise<void>(resolve => {
             const img = new Image();
-            img.onload = () => resolve();
+            img.addEventListener("load", () => resolve());
             img.onerror = () => resolve();
             img.src = user.profileImageUrl!;
           }),
@@ -75,9 +75,9 @@ const MikuMikuBeamComponent = () => {
 
   // Обработчик прогресса воспроизведения видео
   const handleTimeUpdate = useCallback(() => {
-    if (!videoRef.current) return;
+    if (!videoReference.current) return;
 
-    const currentTime = videoRef.current.currentTime;
+    const currentTime = videoReference.current.currentTime;
 
     // Показываем бегущие строки в нужный временной интервал
     if (currentTime >= TICKER_START_TIME && currentTime <= TICKER_END_TIME) {
@@ -122,7 +122,7 @@ const MikuMikuBeamComponent = () => {
 
   // Создаем массив пользователей для бегущих строк (дублируем для непрерывности)
   // Дублируем достаточное количество раз, чтобы заполнить экран даже с малым количеством пользователей
-  const tickerUsers = Array(12).fill(videoState.users).flat();
+  const tickerUsers = Array.from({ length: 12 }).fill(videoState.users).flat();
 
   return (
     <>
@@ -137,8 +137,8 @@ const MikuMikuBeamComponent = () => {
           <>
             {/* Видео на весь экран */}
             <video
-              ref={videoRef}
-              src={videoSrc}
+              ref={videoReference}
+              src={videoSource}
               className={styles.video}
               autoPlay
               playsInline

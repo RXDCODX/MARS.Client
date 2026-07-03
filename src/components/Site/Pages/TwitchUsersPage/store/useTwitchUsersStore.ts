@@ -80,17 +80,21 @@ const filterAndSortUsers = (
     let cmp: number;
 
     switch (sortField) {
-      case "displayName":
+      case "displayName": {
         cmp = a.displayName.localeCompare(b.displayName);
         break;
-      case "userLogin":
+      }
+      case "userLogin": {
         cmp = a.userLogin.localeCompare(b.userLogin);
         break;
-      case "role":
+      }
+      case "role": {
         cmp = roleWeight(b) - roleWeight(a);
         break;
-      default:
+      }
+      default: {
         cmp = 0;
+      }
     }
 
     return sortDirection === "asc" ? cmp : -cmp;

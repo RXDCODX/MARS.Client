@@ -6,7 +6,7 @@ import { replaceEmotes } from "@/shared/Utils";
 
 import common from "../OBSCommon.module.scss";
 
-interface Props {
+interface Properties {
   message: string;
   onComplete: () => void;
 }
@@ -30,8 +30,8 @@ const gradientColors = [
   ["#d299c2", "#fef9d7"], // Сиренево-кремовый
 ];
 
-export default function AutoMessageAlert({ message, onComplete }: Props) {
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+export default function AutoMessageAlert({ message, onComplete }: Properties) {
+  const timeoutReference = useRef<NodeJS.Timeout | null>(null);
 
   // Получаем парсеры для эмодзи
   const parser = useTwitchStore(state => state.parser);
@@ -46,13 +46,13 @@ export default function AutoMessageAlert({ message, onComplete }: Props) {
 
   useEffect(() => {
     // Через 8 секунд вызываем onComplete для исчезновения
-    timeoutRef.current = setTimeout(() => {
+    timeoutReference.current = setTimeout(() => {
       onComplete();
     }, 8000);
 
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+      if (timeoutReference.current) {
+        clearTimeout(timeoutReference.current);
       }
     };
   }, [onComplete]);

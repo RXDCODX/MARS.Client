@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@lit/react", () => ({
   createComponent: vi.fn(
-    () => (props: any) => null // Mock компонент
+    () => (properties: any) => null // Mock компонент
   ),
 }));
 
@@ -99,7 +99,7 @@ describe("TelegramSticker Data Structure", () => {
 
   it("supports custom text colors for sticker", () => {
     const colors = ["#FF0000", "#FFFFFF", "#000000"];
-    colors.forEach(color => {
+    for (const color of colors) {
       const media = createMockMediaDto({
         mediaInfo: {
           ...createMockMediaDto().mediaInfo,
@@ -113,7 +113,7 @@ describe("TelegramSticker Data Structure", () => {
         },
       });
       expect(media.mediaInfo.textInfo.textColor).toBe(color);
-    });
+    }
   });
 
   it("supports sticker border styling", () => {
@@ -281,7 +281,7 @@ describe("Audio/Voice Type Data Structure", () => {
 
   it("audio duration can be variable", () => {
     const durations = [5, 10, 30, 120];
-    durations.forEach(duration => {
+    for (const duration of durations) {
       const media = createAudioMediaDto({
         mediaInfo: {
           ...createAudioMediaDto().mediaInfo,
@@ -292,7 +292,7 @@ describe("Audio/Voice Type Data Structure", () => {
         },
       });
       expect(media.mediaInfo.metaInfo.duration).toBe(duration);
-    });
+    }
   });
 });
 
@@ -370,7 +370,7 @@ describe("Video Type Data Structure", () => {
 
   it("supports video text coloring", () => {
     const colors = ["#FFFF00", "#FF00FF", "#00FFFF"];
-    colors.forEach(color => {
+    for (const color of colors) {
       const media = createVideoMediaDto({
         mediaInfo: {
           ...createVideoMediaDto().mediaInfo,
@@ -384,7 +384,7 @@ describe("Video Type Data Structure", () => {
         },
       });
       expect(media.mediaInfo.textInfo.textColor).toBe(color);
-    });
+    }
   });
 
   it("supports video with border", () => {

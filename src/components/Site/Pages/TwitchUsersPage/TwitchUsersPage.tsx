@@ -57,9 +57,9 @@ const UserCard: React.FC<{
         <Avatar
           src={user.profileImageUrl}
           size={64}
-          icon={!user.profileImageUrl ? <User size={32} /> : undefined}
+          icon={user.profileImageUrl ? undefined : <User size={32} />}
           style={{
-            backgroundColor: !user.profileImageUrl ? "#8c8c8c" : undefined,
+            backgroundColor: user.profileImageUrl ? undefined : "#8c8c8c",
           }}
           data-testid={`avatar-user-${user.twitchId}`}
         />

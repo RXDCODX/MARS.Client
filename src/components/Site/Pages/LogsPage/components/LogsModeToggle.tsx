@@ -1,13 +1,13 @@
 import { Button } from "antd";
 import { RadioTower } from "lucide-react";
 
-interface LogsModeToggleProps {
+interface LogsModeToggleProperties {
   isRealtime: boolean;
   onModeChange: (isRealtime: boolean) => void;
   disabled?: boolean;
 }
 
-const LogsModeToggle: React.FC<LogsModeToggleProps> = ({
+const LogsModeToggle: React.FC<LogsModeToggleProperties> = ({
   isRealtime,
   onModeChange,
   disabled = false,
@@ -18,13 +18,11 @@ const LogsModeToggle: React.FC<LogsModeToggleProps> = ({
         display: "flex",
         alignItems: "center",
         gap: 8,
-        ...(isRealtime
-          ? {
-              backgroundColor: "#52c41a",
-              color: "white",
-              borderColor: "#52c41a",
-            }
-          : {}),
+        ...(isRealtime && {
+          backgroundColor: "#52c41a",
+          color: "white",
+          borderColor: "#52c41a",
+        }),
       }}
       onClick={() => onModeChange(true)}
       disabled={true}

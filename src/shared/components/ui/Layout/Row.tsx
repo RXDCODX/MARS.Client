@@ -1,12 +1,12 @@
 import { Flex } from "antd";
 
-interface RowProps {
+interface RowProperties {
   children: React.ReactNode;
   className?: string;
   gap?: number;
 }
 
-const Row = ({ children, className, gap = 16 }: RowProps) => (
+const Row = ({ children, className, gap = 16 }: RowProperties) => (
   <Flex gap={gap} wrap="wrap" className={className}>
     {children}
   </Flex>

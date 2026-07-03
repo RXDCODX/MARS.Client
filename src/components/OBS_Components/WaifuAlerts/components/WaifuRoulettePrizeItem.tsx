@@ -1,6 +1,6 @@
 import styles from "./WaifuRoulettePrizeItem.module.scss";
 
-interface WaifuRoulettePrizeItemProps {
+interface WaifuRoulettePrizeItemProperties {
   image: string;
   text?: string;
   wide?: boolean;
@@ -14,7 +14,7 @@ export default function WaifuRoulettePrizeItem({
   image,
   text,
   wide,
-}: WaifuRoulettePrizeItemProps) {
+}: WaifuRoulettePrizeItemProperties) {
   if (image) {
     const normalizedText = text?.trim();
     const width = wide ? PRIZE_ITEM_WIDE_WIDTH : PRIZE_ITEM_WIDTH;

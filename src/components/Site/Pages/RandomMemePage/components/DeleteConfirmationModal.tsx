@@ -2,9 +2,9 @@ import { Button, Modal, Spin } from "antd";
 import { AlertTriangle, Trash2 } from "lucide-react";
 import React from "react";
 
-import { DeleteConfirmationModalProps } from "../RandomMemePage.types";
+import { DeleteConfirmationModalProps as DeleteConfirmationModalProperties } from "../RandomMemePage.types";
 
-const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProps> = ({
+const DeleteConfirmationModal: React.FC<DeleteConfirmationModalProperties> = ({
   isOpen,
   itemType,
   itemName,

@@ -109,7 +109,7 @@ void main() {
 }
 `;
 
-interface AuroraProps {
+interface AuroraProperties {
   colorStops?: string[];
   amplitude?: number;
   blend?: number;
@@ -117,14 +117,14 @@ interface AuroraProps {
   speed?: number;
 }
 
-export default function Aurora(props: AuroraProps) {
+export default function Aurora(properties: AuroraProperties) {
   const {
     colorStops = ["#5227FF", "#7cff67", "#5227FF"],
-    amplitude = 1.0,
+    amplitude = 1,
     blend = 0.5,
-  } = props;
-  const propsRef = useRef<AuroraProps>(props);
-  propsRef.current = props;
+  } = properties;
+  const propertiesReference = useRef<AuroraProperties>(properties);
+  propertiesReference.current = properties;
 
   const ctnDom = useRef<HTMLDivElement>(null);
 
@@ -179,17 +179,19 @@ export default function Aurora(props: AuroraProps) {
     });
 
     const mesh = new Mesh(gl, { geometry, program });
-    ctn.appendChild(gl.canvas);
+    ctn.append(gl.canvas);
 
     let animateId = 0;
     const update = (t: number) => {
       animateId = requestAnimationFrame(update);
-      const { time = t * 0.01, speed = 1.0 } = propsRef.current;
+      const { time = t * 0.01, speed = 1 } = propertiesReference.current;
       if (program) {
         program.uniforms.uTime.value = time * speed * 0.1;
-        program.uniforms.uAmplitude.value = propsRef.current.amplitude ?? 1.0;
-        program.uniforms.uBlend.value = propsRef.current.blend ?? blend;
-        const stops = propsRef.current.colorStops ?? colorStops;
+        program.uniforms.uAmplitude.value =
+          propertiesReference.current.amplitude ?? 1;
+        program.uniforms.uBlend.value =
+          propertiesReference.current.blend ?? blend;
+        const stops = propertiesReference.current.colorStops ?? colorStops;
         program.uniforms.uColorStops.value = stops.map((hex: string) => {
           const c = new Color(hex);
           return [c.r, c.g, c.b];
@@ -205,7 +207,7 @@ export default function Aurora(props: AuroraProps) {
       cancelAnimationFrame(animateId);
       window.removeEventListener("resize", resize);
       if (ctn && gl.canvas.parentNode === ctn) {
-        ctn.removeChild(gl.canvas);
+        gl.canvas.remove();
       }
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };

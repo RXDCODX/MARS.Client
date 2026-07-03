@@ -15,7 +15,7 @@ interface ShadowConfig {
 
 type SpeedPreset = "very-slow" | "slow" | "normal" | "fast" | "very-fast";
 
-interface GradientTextProps {
+interface GradientTextProperties {
   text?: string; // теперь опционально
   children?: React.ReactNode; // новый способ
   colors?: string[];
@@ -26,7 +26,7 @@ interface GradientTextProps {
   shadow?: ShadowConfig;
 }
 
-const GradientText: React.FC<GradientTextProps> = ({
+const GradientText: React.FC<GradientTextProperties> = ({
   text,
   children,
   colors = [

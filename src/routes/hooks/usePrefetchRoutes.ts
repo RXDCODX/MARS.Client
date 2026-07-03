@@ -16,7 +16,7 @@ export const usePrefetchRoutes = (): PrefetchStatus => {
   });
 
   useEffect(() => {
-    setStatus(prev => ({ ...prev, isLoading: true }));
+    setStatus(previous => ({ ...previous, isLoading: true }));
 
     prefetchNonCriticalComponents()
       .then(result => {
@@ -40,10 +40,10 @@ export const usePrefetchRoutes = (): PrefetchStatus => {
       })
       .catch(error => {
         console.error("Prefetch failed:", error);
-        setStatus(prev => ({
-          ...prev,
+        setStatus(previous => ({
+          ...previous,
           isLoading: false,
-          errors: [...prev.errors, error],
+          errors: [...previous.errors, error],
         }));
       });
   }, []);

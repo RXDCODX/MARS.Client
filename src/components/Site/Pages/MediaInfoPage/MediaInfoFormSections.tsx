@@ -11,7 +11,7 @@ import {
   mediaInfoPriorities,
 } from "./mediaInfoPageHelpers";
 
-type Props = {
+type Properties = {
   formData: ApiMediaInfo;
   onChange: (path: string, value: unknown) => void;
   onGenerateRewardId: () => void;
@@ -21,7 +21,7 @@ type Props = {
   previewUrl?: string | null;
 };
 
-export const MediaInfoFormSections: React.FC<Props> = ({
+export const MediaInfoFormSections: React.FC<Properties> = ({
   formData,
   onChange,
   onGenerateRewardId,
@@ -271,10 +271,14 @@ export const MediaInfoFormSections: React.FC<Props> = ({
           <span>Предпросмотр</span>
           <div>
             {(() => {
-              const ext = (formData.fileInfo.extension || "").toLowerCase();
+              const extension = (
+                formData.fileInfo.extension || ""
+              ).toLowerCase();
               const fp = previewUrl || formData.fileInfo.filePath;
               if (
-                [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"].includes(ext)
+                [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"].includes(
+                  extension
+                )
               ) {
                 return (
                   <img
@@ -284,10 +288,10 @@ export const MediaInfoFormSections: React.FC<Props> = ({
                   />
                 );
               }
-              if ([".mp3", ".wav", ".ogg"].includes(ext)) {
+              if ([".mp3", ".wav", ".ogg"].includes(extension)) {
                 return <audio controls src={fp} />;
               }
-              if ([".mp4", ".webm", ".mov", ".avi"].includes(ext)) {
+              if ([".mp4", ".webm", ".mov", ".avi"].includes(extension)) {
                 return <video controls src={fp} style={{ maxWidth: "100%" }} />;
               }
 

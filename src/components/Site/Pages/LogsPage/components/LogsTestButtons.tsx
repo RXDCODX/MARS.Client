@@ -1,11 +1,11 @@
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
-interface LogsTestButtonsProps {
+interface LogsTestButtonsProperties {
   onLogsRefresh: () => void;
   disabled?: boolean;
 }
 
-const LogsTestButtons: React.FC<LogsTestButtonsProps> = ({
+const LogsTestButtons: React.FC<LogsTestButtonsProperties> = ({
   onLogsRefresh,
   disabled = false,
 }) => {

@@ -27,29 +27,32 @@ const LogViewer: React.FC<LogViewerProps> = ({
   onClose,
   serviceName,
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerReference = useRef<HTMLDivElement>(null);
   const [autoScroll, setAutoScroll] = useState(true);
   const [search, setSearch] = useState("");
   const [level, setLevel] = useState("");
 
   useEffect(() => {
-    if (autoScroll && containerRef.current) {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    if (autoScroll && containerReference.current) {
+      containerReference.current.scrollTop =
+        containerReference.current.scrollHeight;
     }
   }, [logs, autoScroll]);
 
   const scrollToTop = () => {
-    if (containerRef.current) containerRef.current.scrollTop = 0;
+    if (containerReference.current) containerReference.current.scrollTop = 0;
     setAutoScroll(false);
   };
   const scrollToBottom = () => {
-    if (containerRef.current)
-      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    if (containerReference.current)
+      containerReference.current.scrollTop =
+        containerReference.current.scrollHeight;
     setAutoScroll(true);
   };
   const handleScroll = () => {
-    if (!containerRef.current) return;
-    const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
+    if (!containerReference.current) return;
+    const { scrollTop, scrollHeight, clientHeight } =
+      containerReference.current;
     if (scrollHeight - scrollTop - clientHeight > 50) setAutoScroll(false);
     else setAutoScroll(true);
   };
@@ -106,7 +109,7 @@ const LogViewer: React.FC<LogViewerProps> = ({
         <Select
           size="small"
           value={level}
-          onChange={val => setLevel(val)}
+          onChange={value => setLevel(value)}
           options={levelOptions}
           style={{ maxWidth: 120 }}
         />
@@ -127,7 +130,7 @@ const LogViewer: React.FC<LogViewerProps> = ({
         </Button>
       </Space>
       <div
-        ref={containerRef}
+        ref={containerReference}
         onScroll={handleScroll}
         style={{ flex: 1, overflowY: "auto", padding: 8, background: "#222" }}
       >
@@ -138,9 +141,9 @@ const LogViewer: React.FC<LogViewerProps> = ({
         ) : filteredLogs.length === 0 ? (
           <div>Нет логов</div>
         ) : (
-          filteredLogs.map((log, idx) => (
+          filteredLogs.map((log, index) => (
             <motion.div
-              key={idx}
+              key={index}
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -30 }}

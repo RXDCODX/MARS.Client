@@ -57,16 +57,16 @@ function UnifiedPlayerViewComponent() {
 
   const isVideoMode = videoState === PlayerStateVideoStateEnum.Video;
   const isNoVideoMode = videoState === PlayerStateVideoStateEnum.NoVideo;
-  const needsTransparentBackground = !isVideoMode;
+  const isNeedsTransparentBackground = !isVideoMode;
   const isNotPlaying =
-    playerState?.state != null &&
+    playerState?.state != undefined &&
     playerState.state !== PlayerStateStateEnum.Playing;
 
   // In video mode, show command carousel in the player area when paused/stopped
   const showCommandsInVideoArea = isVideoMode && isNotPlaying && currentTrack;
 
   useInjectStyles(
-    needsTransparentBackground ? TRANSPARENT_BACKGROUND_STYLES : "",
+    isNeedsTransparentBackground ? TRANSPARENT_BACKGROUND_STYLES : "",
     "video-screen-transparent-bg"
   );
 

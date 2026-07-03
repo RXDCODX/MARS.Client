@@ -8,20 +8,20 @@ import notGaoImage from "./images/notgao.png";
 import gaoVoice from "./voices/gao.ogg";
 import neGaoVoice from "./voices/ne gao.ogg";
 
-interface GaoAlertProps {
+interface GaoAlertProperties {
   dto: GaoAlertDto;
   onComplete: () => void;
 }
 
-export function GaoAlert({ dto, onComplete }: GaoAlertProps) {
+export function GaoAlert({ dto, onComplete }: GaoAlertProperties) {
   const [overlayVisible, setOverlayVisible] = useState<boolean>(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioReference = useRef<HTMLAudioElement | null>(null);
 
   const isTextOnly = dto.isJustText;
 
   const variant = useMemo(() => (Math.random() < 0.5 ? "gao" : "notgao"), []);
   const overlayImage = variant === "gao" ? gaoImage : notGaoImage;
-  const voiceSrc = variant === "gao" ? gaoVoice : neGaoVoice;
+  const voiceSource = variant === "gao" ? gaoVoice : neGaoVoice;
 
   const avatarUrl = dto.twitchUser?.profileImageUrl ?? "";
 
@@ -31,11 +31,11 @@ export function GaoAlert({ dto, onComplete }: GaoAlertProps) {
   }, []);
 
   useEffect(() => {
-    if (audioRef.current) {
+    if (audioReference.current) {
       try {
         // Autoplay; volume gentle
-        audioRef.current.volume = 0.9;
-        const playPromise = audioRef.current.play();
+        audioReference.current.volume = 0.9;
+        const playPromise = audioReference.current.play();
         if (playPromise && typeof playPromise.then === "function") {
           playPromise.catch(() => onComplete());
         }
@@ -81,7 +81,12 @@ export function GaoAlert({ dto, onComplete }: GaoAlertProps) {
         data-testid="img-gao-overlay"
       />
 
-      <audio ref={audioRef} src={voiceSrc} autoPlay onError={onComplete} />
+      <audio
+        ref={audioReference}
+        src={voiceSource}
+        autoPlay
+        onError={onComplete}
+      />
     </div>
   );
 }

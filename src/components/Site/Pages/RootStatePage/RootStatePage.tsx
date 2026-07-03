@@ -25,10 +25,7 @@ const defaultForm: RootStateForm = {
 
 const RootStatePage: React.FC = () => {
   const { showToast } = useToastModal();
-  const appConfigurationService = useMemo(
-    () => new RootState(defaultApiConfig),
-    []
-  );
+  const appConfigService = useMemo(() => new RootState(defaultApiConfig), []);
 
   const [items, setItems] = useState<RootStateDto[]>([]);
   const [loading, setLoading] = useState(true);
@@ -43,7 +40,7 @@ const RootStatePage: React.FC = () => {
     setError("");
 
     try {
-      const response = await appConfigurationService!.rootStateList();
+      const response = await appConfigService!.rootStateList();
       const operation = response.data;
 
       if (operation.success) {
@@ -54,16 +51,18 @@ const RootStatePage: React.FC = () => {
         setError(message);
         showToast(operation);
       }
-    } catch (e) {
+    } catch (error_) {
       const message =
-        e instanceof Error ? e.message : "Ошибка при загрузке RootState";
+        error_ instanceof Error
+          ? error_.message
+          : "Ошибка при загрузке RootState";
       setItems([]);
       setError(message);
       showToast({ success: false, message });
     } finally {
       setLoading(false);
     }
-  }, [appConfigurationService, showToast]);
+  }, [appConfigService, showToast]);
 
   useEffect(() => {
     void loadItems();
@@ -104,16 +103,15 @@ const RootStatePage: React.FC = () => {
       let operation: OperationResult;
 
       if (editingName) {
-        const response =
-          await appConfigurationService!.rootStateValuePartialUpdate(
-            editingName,
-            {
-              value: form.value,
-            }
-          );
+        const response = await appConfigService!.rootStateValuePartialUpdate(
+          editingName,
+          {
+            value: form.value,
+          }
+        );
         operation = response.data;
       } else {
-        const response = await appConfigurationService!.rootStateCreate({
+        const response = await appConfigService!.rootStateCreate({
           name: trimmedName,
           value: form.value,
           description: form.description,
@@ -128,10 +126,10 @@ const RootStatePage: React.FC = () => {
         resetForm();
         await loadItems();
       }
-    } catch (e) {
+    } catch (error_) {
       const message =
-        e instanceof Error
-          ? e.message
+        error_ instanceof Error
+          ? error_.message
           : editingName
             ? "Не удалось обновить значение RootState"
             : "Не удалось создать RootState";
@@ -143,7 +141,7 @@ const RootStatePage: React.FC = () => {
   };
 
   const handleDelete = async (name: string) => {
-    if (!window.confirm(`Удалить RootState '${name}'?`)) {
+    if (!globalThis.confirm(`Удалить RootState '${name}'?`)) {
       return;
     }
 
@@ -151,7 +149,7 @@ const RootStatePage: React.FC = () => {
     setError("");
 
     try {
-      const response = await appConfigurationService!.rootStateDelete(name);
+      const response = await appConfigService!.rootStateDelete(name);
       const operation = response.data;
       showToast(operation);
 
@@ -161,9 +159,11 @@ const RootStatePage: React.FC = () => {
         }
         await loadItems();
       }
-    } catch (e) {
+    } catch (error_) {
       const message =
-        e instanceof Error ? e.message : "Не удалось удалить RootState";
+        error_ instanceof Error
+          ? error_.message
+          : "Не удалось удалить RootState";
       setError(message);
       showToast({ success: false, message });
     } finally {

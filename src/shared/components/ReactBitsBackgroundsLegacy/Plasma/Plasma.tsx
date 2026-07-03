@@ -3,7 +3,7 @@ import "./Plasma.css";
 import { Mesh, Program, Renderer, Triangle } from "ogl";
 import React, { useEffect, useRef } from "react";
 
-interface PlasmaProps {
+interface PlasmaProperties {
   color?: string;
   speed?: number;
   direction?: "forward" | "reverse" | "pingpong";
@@ -16,9 +16,9 @@ const hexToRgb = (hex: string): [number, number, number] => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   if (!result) return [1, 0.5, 0.2];
   return [
-    parseInt(result[1], 16) / 255,
-    parseInt(result[2], 16) / 255,
-    parseInt(result[3], 16) / 255,
+    Number.parseInt(result[1], 16) / 255,
+    Number.parseInt(result[2], 16) / 255,
+    Number.parseInt(result[3], 16) / 255,
   ];
 };
 
@@ -94,7 +94,7 @@ void main() {
   fragColor = vec4(finalColor, alpha);
 }`;
 
-export const Plasma: React.FC<PlasmaProps> = ({
+export const Plasma: React.FC<PlasmaProperties> = ({
   color = "#ffffff",
   speed = 1,
   direction = "forward",
@@ -102,16 +102,16 @@ export const Plasma: React.FC<PlasmaProps> = ({
   opacity = 1,
   mouseInteractive = true,
 }) => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const containerReference = useRef<HTMLDivElement | null>(null);
   const mousePos = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerReference.current) return;
 
-    const useCustomColor = color ? 1.0 : 0.0;
+    const useCustomColor = color ? 1 : 0;
     const customColorRgb = color ? hexToRgb(color) : [1, 1, 1];
 
-    const directionMultiplier = direction === "reverse" ? -1.0 : 1.0;
+    const directionMultiplier = direction === "reverse" ? -1 : 1;
 
     const renderer = new Renderer({
       webgl: 2,
@@ -124,7 +124,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
     canvas.style.display = "block";
     canvas.style.width = "100%";
     canvas.style.height = "100%";
-    containerRef.current.appendChild(canvas);
+    containerReference.current.append(canvas);
 
     const geometry = new Triangle(gl);
 
@@ -141,7 +141,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
         uScale: { value: scale },
         uOpacity: { value: opacity },
         uMouse: { value: new Float32Array([0, 0]) },
-        uMouseInteractive: { value: mouseInteractive ? 1.0 : 0.0 },
+        uMouseInteractive: { value: mouseInteractive ? 1 : 0 },
       },
     });
 
@@ -149,7 +149,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
 
     const handleMouseMove = (e: MouseEvent) => {
       if (!mouseInteractive) return;
-      const rect = containerRef.current!.getBoundingClientRect();
+      const rect = containerReference.current!.getBoundingClientRect();
       mousePos.current.x = e.clientX - rect.left;
       mousePos.current.y = e.clientY - rect.top;
       const mouseUniform = program.uniforms.uMouse.value as Float32Array;
@@ -158,11 +158,11 @@ export const Plasma: React.FC<PlasmaProps> = ({
     };
 
     if (mouseInteractive) {
-      containerRef.current.addEventListener("mousemove", handleMouseMove);
+      containerReference.current.addEventListener("mousemove", handleMouseMove);
     }
 
     const setSize = () => {
-      const rect = containerRef.current!.getBoundingClientRect();
+      const rect = containerReference.current!.getBoundingClientRect();
       const width = Math.max(1, Math.floor(rect.width));
       const height = Math.max(1, Math.floor(rect.height));
       renderer.setSize(width, height);
@@ -172,7 +172,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
     };
 
     const ro = new ResizeObserver(setSize);
-    ro.observe(containerRef.current);
+    ro.observe(containerReference.current);
     setSize();
 
     let raf = 0;
@@ -188,7 +188,7 @@ export const Plasma: React.FC<PlasmaProps> = ({
         const pingpongTime = isForward
           ? smooth * pingpongDuration
           : (1 - smooth) * pingpongDuration;
-        (program.uniforms.uDirection as any).value = 1.0;
+        (program.uniforms.uDirection as any).value = 1;
         (program.uniforms.iTime as any).value = pingpongTime;
       } else {
         (program.uniforms.iTime as any).value = timeValue;
@@ -201,16 +201,19 @@ export const Plasma: React.FC<PlasmaProps> = ({
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
-      if (mouseInteractive && containerRef.current) {
-        containerRef.current.removeEventListener("mousemove", handleMouseMove);
+      if (mouseInteractive && containerReference.current) {
+        containerReference.current.removeEventListener(
+          "mousemove",
+          handleMouseMove
+        );
       }
       try {
-        containerRef.current?.removeChild(canvas);
+        containerReference.current?.removeChild(canvas);
       } catch {}
     };
   }, [color, speed, direction, scale, opacity, mouseInteractive]);
 
-  return <div ref={containerRef} className="plasma-container" />;
+  return <div ref={containerReference} className="plasma-container" />;
 };
 
 export default Plasma;

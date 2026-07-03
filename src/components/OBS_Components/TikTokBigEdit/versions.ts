@@ -1,9 +1,12 @@
 import { getAudioPath } from "./mediaAssets";
-import { FirstPartProps, Props } from "./template/AlertTemplate";
+import {
+  FirstPartProps as FirstPartProperties,
+  Props as Properties,
+} from "./template/AlertTemplate";
 
 interface AlertVersion {
   id: number;
-  Variant: FirstPartProps;
+  Variant: FirstPartProperties;
 }
 
 const versions: AlertVersion[] = [
@@ -25,7 +28,7 @@ const versions: AlertVersion[] = [
     id: 3,
     Variant: {
       audioSrc: getAudioPath("track3"),
-      durationMs: 16023,
+      durationMs: 16_023,
     },
   },
   {
@@ -53,14 +56,14 @@ const versions: AlertVersion[] = [
     id: 7,
     Variant: {
       audioSrc: getAudioPath("track7"),
-      durationMs: 15478,
+      durationMs: 15_478,
     },
   },
   {
     id: 8,
     Variant: {
       audioSrc: getAudioPath("track8"),
-      durationMs: 13414,
+      durationMs: 13_414,
     },
   },
 ];
@@ -68,7 +71,7 @@ const versions: AlertVersion[] = [
 export const getRandomVersion = (
   text: string,
   callback: () => void
-): { id: number; Variant: Props } => {
+): { id: number; Variant: Properties } => {
   const baza = versions[Math.floor(Math.random() * versions.length)];
   return {
     id: baza.id,

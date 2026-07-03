@@ -1,3 +1,1 @@
-import TikTokLayoutManager from "./TikTokLayoutManager";
-
-export default TikTokLayoutManager;
+export { default } from "./TikTokLayoutManager";

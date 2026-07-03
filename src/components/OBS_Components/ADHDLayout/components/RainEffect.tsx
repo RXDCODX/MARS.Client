@@ -10,15 +10,15 @@ interface RainDrop {
 }
 
 export const RainEffect = (): React.ReactElement => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationRef = useRef<number>(0);
+  const canvasReference = useRef<HTMLCanvasElement>(null);
+  const animationReference = useRef<number>(0);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = canvasReference.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    const context = canvas.getContext("2d");
+    if (!context) return;
 
     // Устанавливаем размер canvas на весь экран
     const resizeCanvas = () => {
@@ -33,7 +33,7 @@ export const RainEffect = (): React.ReactElement => {
     const raindrops: RainDrop[] = [];
     const maxDrops = 400; // Увеличил с 200 до 400
 
-    for (let i = 0; i < maxDrops; i++) {
+    for (let index = 0; index < maxDrops; index++) {
       raindrops.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height - canvas.height,
@@ -46,20 +46,20 @@ export const RainEffect = (): React.ReactElement => {
 
     // Анимация дождя
     const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      context.clearRect(0, 0, canvas.width, canvas.height);
 
       // Более яркий и заметный цвет дождя
-      ctx.strokeStyle = "#4fc3f7"; // Яркий голубой цвет
-      ctx.lineCap = "round";
+      context.strokeStyle = "#4fc3f7"; // Яркий голубой цвет
+      context.lineCap = "round";
 
-      raindrops.forEach(drop => {
-        ctx.globalAlpha = drop.opacity;
-        ctx.lineWidth = drop.thickness; // Используем толщину для каждой капли
+      for (const drop of raindrops) {
+        context.globalAlpha = drop.opacity;
+        context.lineWidth = drop.thickness; // Используем толщину для каждой капли
 
-        ctx.beginPath();
-        ctx.moveTo(drop.x, drop.y);
-        ctx.lineTo(drop.x, drop.y + drop.length);
-        ctx.stroke();
+        context.beginPath();
+        context.moveTo(drop.x, drop.y);
+        context.lineTo(drop.x, drop.y + drop.length);
+        context.stroke();
 
         // Обновляем позицию капли
         drop.y += drop.speed;
@@ -69,17 +69,17 @@ export const RainEffect = (): React.ReactElement => {
           drop.y = -drop.length;
           drop.x = Math.random() * canvas.width;
         }
-      });
+      }
 
-      ctx.globalAlpha = 1;
-      animationRef.current = requestAnimationFrame(animate);
+      context.globalAlpha = 1;
+      animationReference.current = requestAnimationFrame(animate);
     };
 
     animate();
 
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
+      if (animationReference.current) {
+        cancelAnimationFrame(animationReference.current);
       }
       window.removeEventListener("resize", resizeCanvas);
     };
@@ -87,7 +87,7 @@ export const RainEffect = (): React.ReactElement => {
 
   return (
     <canvas
-      ref={canvasRef}
+      ref={canvasReference}
       style={{
         position: "fixed",
         top: 0,

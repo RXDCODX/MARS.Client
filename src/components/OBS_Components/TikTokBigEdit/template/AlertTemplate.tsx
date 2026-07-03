@@ -10,13 +10,13 @@ export interface FirstPartProps {
   durationMs: number;
 }
 
-interface SecondPartProps {
+interface SecondPartProperties {
   message: string;
 }
 
 export interface Props {
   firstPart: FirstPartProps;
-  secondPart: SecondPartProps;
+  secondPart: SecondPartProperties;
   callback: () => void;
 }
 
@@ -27,11 +27,11 @@ export default function AlertTemplate({
 }: Props) {
   const { audioSrc, durationMs } = firstPart;
   const { message } = secondPart;
-  const imageSrc = getRandomImage();
+  const imageSource = getRandomImage();
 
   const [isSecondPartVisible, setIsSecondPartVisible] = useState(false);
 
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const audioReference = useRef<HTMLAudioElement | null>(null);
 
   // Используем событие loadedmetadata для чтения длительности аудио
   // и выставления видимости второй части асинхронно (в обработчике),
@@ -41,7 +41,7 @@ export default function AlertTemplate({
     <>
       {/* Невидимый audio элемент в дереве для управления через реф */}
       <audio
-        ref={audioRef}
+        ref={audioReference}
         autoPlay
         onLoadedMetadata={event => {
           const durationSeconds = event.currentTarget.duration;
@@ -60,7 +60,7 @@ export default function AlertTemplate({
         <div className={styles.container}>
           <BigTextBlockForAudio content={message} />
           <div>
-            <img className={styles.image} src={imageSrc} alt="Alert Image" />
+            <img className={styles.image} src={imageSource} alt="Alert Image" />
           </div>
         </div>
       )}

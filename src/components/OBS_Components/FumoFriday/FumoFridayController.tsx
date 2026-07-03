@@ -32,25 +32,27 @@ export function FumoFridayController() {
 
   const handleAddEvent = useCallback(
     (message: Message) => {
-      setMessages(prevMessages => {
+      setMessages(previousMessages => {
         if (!currentMessage) {
           setCurrentMessage(message);
-          return prevMessages;
+          return previousMessages;
         }
-        return [...prevMessages, message];
+        return [...previousMessages, message];
       });
     },
     [currentMessage]
   );
 
   const changeSwitcher = useCallback(() => {
-    setSwitcher(prevSwitcher => !prevSwitcher);
+    setSwitcher(previousSwitcher => !previousSwitcher);
   }, []);
 
   const handleRemoveEvent = useCallback(
     (message: Message) => {
-      setMessages(prevMessages => {
-        const newMessages = prevMessages.filter(msg => msg.id !== message.id);
+      setMessages(previousMessages => {
+        const newMessages = previousMessages.filter(
+          message_ => message_.id !== message.id
+        );
         setCurrentMessage(newMessages[0]);
         return newMessages;
       });
@@ -70,11 +72,12 @@ export function FumoFridayController() {
   }, [handleAddEvent]);
 
   // Делаем функцию play доступной глобально для тестирования
-  (window as unknown as { testFumoFriday: typeof play }).testFumoFriday = play;
+  (globalThis as unknown as { testFumoFriday: typeof play }).testFumoFriday =
+    play;
 
   return (
     <>
-      {window?.location?.hostname === "localhost" &&
+      {globalThis?.location?.hostname === "localhost" &&
         window?.parent?.location?.pathname?.includes("iframe.html") && (
           <div className={styles.testControls}>
             <button

@@ -43,31 +43,41 @@ const RecentLogs: React.FC = () => {
 
   const getLevelIcon = (level: string) => {
     switch (level) {
-      case "info":
+      case "info": {
         return "ℹ️";
-      case "warning":
+      }
+      case "warning": {
         return "⚠️";
-      case "error":
+      }
+      case "error": {
         return "❌";
-      case "debug":
+      }
+      case "debug": {
         return "🐛";
-      default:
+      }
+      default: {
         return "📝";
+      }
     }
   };
 
   const getLevelColor = (level: string) => {
     switch (level) {
-      case "info":
+      case "info": {
         return styles.info;
-      case "warning":
+      }
+      case "warning": {
         return styles.warning;
-      case "error":
+      }
+      case "error": {
         return styles.error;
-      case "debug":
+      }
+      case "debug": {
         return styles.debug;
-      default:
+      }
+      default: {
         return styles.info;
+      }
     }
   };
 

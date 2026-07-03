@@ -54,39 +54,39 @@ const RandomMemePage: React.FC = () => {
 
   const loadTypes = useCallback(async () => {
     try {
-      setNavigation(prev => ({ ...prev, isLoading: true, error: "" }));
+      setNavigation(previous => ({ ...previous, isLoading: true, error: "" }));
       const response = await api.randomMemeTypesList();
       setMemeTypes(response.data.data ?? []);
-    } catch (e) {
-      console.error("Ошибка загрузки типов:", e);
+    } catch (error) {
+      console.error("Ошибка загрузки типов:", error);
       const errorMessage =
-        e instanceof Error ? e.message : "Неизвестная ошибка";
-      setNavigation(prev => ({ ...prev, error: errorMessage }));
+        error instanceof Error ? error.message : "Неизвестная ошибка";
+      setNavigation(previous => ({ ...previous, error: errorMessage }));
       showToast({
         success: false,
         message: errorMessage,
       });
     } finally {
-      setNavigation(prev => ({ ...prev, isLoading: false }));
+      setNavigation(previous => ({ ...previous, isLoading: false }));
     }
   }, [api, showToast]);
 
   const loadOrders = useCallback(async () => {
     try {
-      setNavigation(prev => ({ ...prev, isLoading: true, error: "" }));
+      setNavigation(previous => ({ ...previous, isLoading: true, error: "" }));
       const response = await api.randomMemeOrdersList();
       setMemeOrders(response.data.data ?? []);
-    } catch (e) {
-      console.error("Ошибка загрузки заказов:", e);
+    } catch (error) {
+      console.error("Ошибка загрузки заказов:", error);
       const errorMessage =
-        e instanceof Error ? e.message : "Неизвестная ошибка";
-      setNavigation(prev => ({ ...prev, error: errorMessage }));
+        error instanceof Error ? error.message : "Неизвестная ошибка";
+      setNavigation(previous => ({ ...previous, error: errorMessage }));
       showToast({
         success: false,
         message: errorMessage,
       });
     } finally {
-      setNavigation(prev => ({ ...prev, isLoading: false }));
+      setNavigation(previous => ({ ...previous, isLoading: false }));
     }
   }, [api, showToast]);
 
@@ -101,8 +101,8 @@ const RandomMemePage: React.FC = () => {
       selectedType?: MemeTypeDto,
       selectedOrder?: MemeOrderDto
     ) => {
-      setNavigation(prev => ({
-        ...prev,
+      setNavigation(previous => ({
+        ...previous,
         currentView: view,
         selectedType: selectedType || null,
         selectedOrder: selectedOrder || null,
@@ -113,8 +113,8 @@ const RandomMemePage: React.FC = () => {
   );
 
   const navigateBack = useCallback(() => {
-    setNavigation(prev => ({
-      ...prev,
+    setNavigation(previous => ({
+      ...previous,
       currentView: "list",
       selectedType: null,
       selectedOrder: null,
@@ -147,9 +147,9 @@ const RandomMemePage: React.FC = () => {
             const result = await api.randomMemeTypesDelete(memeType.id);
             showToast(result.data);
             await loadTypes();
-            setDeleteModal(prev => ({ ...prev, isOpen: false }));
-          } catch (e) {
-            console.error("Ошибка удаления типа:", e);
+            setDeleteModal(previous => ({ ...previous, isOpen: false }));
+          } catch (error) {
+            console.error("Ошибка удаления типа:", error);
             showToast({
               success: false,
               message: "Ошибка удаления типа мема",
@@ -190,9 +190,9 @@ const RandomMemePage: React.FC = () => {
             const result = await api.randomMemeOrdersDelete(memeOrder.id);
             showToast(result.data);
             await loadOrders();
-            setDeleteModal(prev => ({ ...prev, isOpen: false }));
-          } catch (e) {
-            console.error("Ошибка удаления заказа:", e);
+            setDeleteModal(previous => ({ ...previous, isOpen: false }));
+          } catch (error) {
+            console.error("Ошибка удаления заказа:", error);
             showToast({
               success: false,
               message: "Ошибка удаления заказа мема",
@@ -242,8 +242,8 @@ const RandomMemePage: React.FC = () => {
         }
 
         navigateBack();
-      } catch (e) {
-        console.error("Ошибка сохранения:", e);
+      } catch (error) {
+        console.error("Ошибка сохранения:", error);
         showToast({
           success: false,
           message: "Ошибка сохранения данных",
@@ -257,7 +257,7 @@ const RandomMemePage: React.FC = () => {
 
   const renderCurrentView = () => {
     switch (navigation.currentView) {
-      case "list":
+      case "list": {
         return (
           <Tabs
             activeKey={activeTab}
@@ -301,8 +301,9 @@ const RandomMemePage: React.FC = () => {
             ]}
           />
         );
+      }
 
-      case "type-details":
+      case "type-details": {
         return navigation.selectedType ? (
           <RandomMemeDetails
             memeType={navigation.selectedType}
@@ -313,9 +314,10 @@ const RandomMemePage: React.FC = () => {
             onRefresh={loadTypes}
           />
         ) : null;
+      }
 
       case "create-type":
-      case "edit-type":
+      case "edit-type": {
         return (
           <RandomMemeForm
             memeType={navigation.selectedType}
@@ -326,8 +328,9 @@ const RandomMemePage: React.FC = () => {
             onCancel={navigateBack}
           />
         );
+      }
 
-      case "create-order":
+      case "create-order": {
         return (
           <RandomMemeForm
             memeOrder={navigation.selectedOrder}
@@ -338,9 +341,11 @@ const RandomMemePage: React.FC = () => {
             onCancel={navigateBack}
           />
         );
+      }
 
-      default:
+      default: {
         return null;
+      }
     }
   };
 
@@ -354,7 +359,9 @@ const RandomMemePage: React.FC = () => {
         itemName={deleteModal.itemName}
         isDeleting={isSubmitting}
         onConfirm={deleteModal.onConfirm}
-        onCancel={() => setDeleteModal(prev => ({ ...prev, isOpen: false }))}
+        onCancel={() =>
+          setDeleteModal(previous => ({ ...previous, isOpen: false }))
+        }
       />
     </div>
   );

@@ -76,11 +76,13 @@ const TwitchRewardsPage: React.FC = () => {
       const result = await api.twitchRewardsList({ onlyManageable });
       const data = Array.isArray(result.data.data) ? result.data.data : [];
       setRewards(data);
-    } catch (e) {
-      const msg =
-        e instanceof Error ? e.message : "Не удалось загрузить награды";
-      setError(msg);
-      showToast({ success: false, message: msg });
+    } catch (error_) {
+      const message =
+        error_ instanceof Error
+          ? error_.message
+          : "Не удалось загрузить награды";
+      setError(message);
+      showToast({ success: false, message: message });
     } finally {
       setLoading(false);
     }
@@ -120,10 +122,11 @@ const TwitchRewardsPage: React.FC = () => {
       showToast(result.data);
       setForm({ ...defaultForm });
       await loadRewards();
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : "Не удалось создать награду";
-      showToast({ success: false, message: msg });
-      setError(msg);
+    } catch (error_) {
+      const message =
+        error_ instanceof Error ? error_.message : "Не удалось создать награду";
+      showToast({ success: false, message: message });
+      setError(message);
     } finally {
       setCreating(false);
     }
@@ -135,10 +138,11 @@ const TwitchRewardsPage: React.FC = () => {
       const result = await api.twitchRewardsDelete(rewardId);
       showToast(result.data);
       await loadRewards();
-    } catch (e) {
-      const msg = e instanceof Error ? e.message : "Не удалось удалить награду";
-      showToast({ success: false, message: msg });
-      setError(msg);
+    } catch (error_) {
+      const message =
+        error_ instanceof Error ? error_.message : "Не удалось удалить награду";
+      showToast({ success: false, message: message });
+      setError(message);
     }
   };
 
@@ -171,11 +175,13 @@ const TwitchRewardsPage: React.FC = () => {
       const result = await api.twitchRewardsCreate(recreatePayload);
       showToast(result.data);
       await loadRewards();
-    } catch (e) {
-      const msg =
-        e instanceof Error ? e.message : "Не удалось пересоздать награду";
-      showToast({ success: false, message: msg });
-      setError(msg);
+    } catch (error_) {
+      const message =
+        error_ instanceof Error
+          ? error_.message
+          : "Не удалось пересоздать награду";
+      showToast({ success: false, message: message });
+      setError(message);
     }
   };
 
@@ -186,11 +192,13 @@ const TwitchRewardsPage: React.FC = () => {
       const result = await api.twitchRewardsPartialUpdate(reward.id, payload);
       showToast(result.data);
       await loadRewards();
-    } catch (e) {
-      const msg =
-        e instanceof Error ? e.message : "Не удалось обновить награду";
-      showToast({ success: false, message: msg });
-      setError(msg);
+    } catch (error_) {
+      const message =
+        error_ instanceof Error
+          ? error_.message
+          : "Не удалось обновить награду";
+      showToast({ success: false, message: message });
+      setError(message);
     }
   };
 
@@ -258,7 +266,7 @@ const TwitchRewardsPage: React.FC = () => {
                   min={1}
                   placeholder="Стоимость"
                   value={form.cost}
-                  onChange={val => setForm(s => ({ ...s, cost: val ?? 0 }))}
+                  onChange={value => setForm(s => ({ ...s, cost: value ?? 0 }))}
                   style={{ width: "100%" }}
                 />
                 <Space.Compact style={{ width: "100%" }}>
@@ -326,10 +334,10 @@ const TwitchRewardsPage: React.FC = () => {
                     min={1}
                     placeholder="maxPerStream"
                     value={form.maxPerStream ?? 1}
-                    onChange={val =>
+                    onChange={value =>
                       setForm(s => ({
                         ...s,
-                        maxPerStream: val ?? undefined,
+                        maxPerStream: value ?? undefined,
                       }))
                     }
                     style={{ width: "100%" }}
@@ -351,10 +359,10 @@ const TwitchRewardsPage: React.FC = () => {
                     min={1}
                     placeholder="maxPerUserPerStream"
                     value={form.maxPerUserPerStream ?? 1}
-                    onChange={val =>
+                    onChange={value =>
                       setForm(s => ({
                         ...s,
-                        maxPerUserPerStream: val ?? undefined,
+                        maxPerUserPerStream: value ?? undefined,
                       }))
                     }
                     style={{ width: "100%" }}
@@ -376,10 +384,10 @@ const TwitchRewardsPage: React.FC = () => {
                     min={1}
                     placeholder="cooldownSeconds"
                     value={form.globalCooldownSeconds ?? 60}
-                    onChange={val =>
+                    onChange={value =>
                       setForm(s => ({
                         ...s,
-                        globalCooldownSeconds: val ?? undefined,
+                        globalCooldownSeconds: value ?? undefined,
                       }))
                     }
                     style={{ width: "100%" }}

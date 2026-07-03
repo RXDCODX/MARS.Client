@@ -12,13 +12,13 @@ import { ToastModalContext, useToastModalState } from "./ToastModal.hooks";
 import styles from "./ToastModal.module.scss";
 import { ToastModalData } from "./ToastModal.types";
 
-interface ToastModalProps {
+interface ToastModalProperties {
   data: ToastModalData;
   onClose?: () => void;
   show?: boolean;
 }
 
-const ToastModal: React.FC<ToastModalProps> = ({
+const ToastModal: React.FC<ToastModalProperties> = ({
   data,
   onClose,
   show = false,

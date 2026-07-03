@@ -8,12 +8,12 @@ import { Message } from "./FumoFridayController";
 import styles from "./Styles.module.scss";
 import { getVideoPath } from "./videoAssets";
 
-interface Props {
+interface Properties {
   displayName: Message;
   callback: () => void;
 }
 
-export function Cirno({ callback, displayName }: Props) {
+export function Cirno({ callback, displayName }: Properties) {
   const [show, setShow] = useState<boolean>(true);
 
   return (

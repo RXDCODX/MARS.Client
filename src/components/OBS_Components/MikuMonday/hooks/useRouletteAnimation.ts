@@ -14,7 +14,7 @@ import type { RouletteGroup } from "../types";
 
 type ShowToast = (result: OperationResult<unknown>) => void;
 
-interface UseRouletteAnimationParams {
+interface UseRouletteAnimationParameters {
   rouletteGroups: RouletteGroup[];
   shouldSkipAvailableTracksUpdate: boolean;
   decrementAvailableTrack: () => Promise<void>;
@@ -22,7 +22,7 @@ interface UseRouletteAnimationParams {
   onComplete: () => void;
 }
 
-const ROULETTE_FADE_TIMEOUT = 15000;
+const ROULETTE_FADE_TIMEOUT = 15_000;
 const WINNER_FADE_DELAY = 1200;
 const ROULETTE_START_DELAY = 0;
 
@@ -32,15 +32,15 @@ export function useRouletteAnimation({
   decrementAvailableTrack,
   showToast,
   onComplete,
-}: UseRouletteAnimationParams) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const groupsRef = useRef<HTMLDivElement>(null);
-  const completionNotifiedRef = useRef(false);
-  const othersFadedRef = useRef(false);
-  const fadeTimersRef = useRef<{
+}: UseRouletteAnimationParameters) {
+  const containerReference = useRef<HTMLDivElement>(null);
+  const groupsReference = useRef<HTMLDivElement>(null);
+  const completionNotifiedReference = useRef(false);
+  const othersFadedReference = useRef(false);
+  const fadeTimersReference = useRef<{
     fadeOthers?: number;
   }>({});
-  const startTimerRef = useRef<number | undefined>(undefined);
+  const startTimerReference = useRef<number | undefined>(undefined);
 
   const [baseStyle] = useState<CSSProperties>({
     width: "100%",
@@ -59,7 +59,7 @@ export function useRouletteAnimation({
   const [_, setCompletedRoulettes] = useState(0);
 
   const initialOpacities = useMemo(
-    () => new Array(rouletteGroups.length).fill(1),
+    () => Array.from({ length: rouletteGroups.length }).fill(1),
     [rouletteGroups.length]
   );
 
@@ -71,27 +71,27 @@ export function useRouletteAnimation({
       return;
     }
 
-    const fadeOthersTimer = window.setTimeout(() => {
+    const fadeOthersTimer = globalThis.setTimeout(() => {
       const nextOpacities = rouletteGroups.map(group =>
         group.hasWinner ? 1 : 0
       );
       setFadedOpacities(nextOpacities);
     }, ROULETTE_FADE_TIMEOUT);
 
-    fadeTimersRef.current.fadeOthers = fadeOthersTimer;
+    fadeTimersReference.current.fadeOthers = fadeOthersTimer;
 
     return () => {
-      const { fadeOthers } = fadeTimersRef.current;
+      const { fadeOthers } = fadeTimersReference.current;
       if (fadeOthers) {
-        window.clearTimeout(fadeOthers);
+        globalThis.clearTimeout(fadeOthers);
       }
-      fadeTimersRef.current = {};
+      fadeTimersReference.current = {};
       setFadedOpacities([]);
     };
   }, [rouletteStart, rouletteGroups]);
 
   useEffect(() => {
-    const groupsElement = groupsRef.current;
+    const groupsElement = groupsReference.current;
     if (!groupsElement) {
       return;
     }
@@ -117,22 +117,22 @@ export function useRouletteAnimation({
       };
     }
 
-    const fallbackInterval = window.setInterval(updatePointer, 250);
+    const fallbackInterval = globalThis.setInterval(updatePointer, 250);
     return () => {
-      window.clearInterval(fallbackInterval);
+      globalThis.clearInterval(fallbackInterval);
     };
   }, [rouletteGroups.length]);
 
   const handleContainerAnimationEnd = useCallback(() => {
-    startTimerRef.current = window.setTimeout(() => {
+    startTimerReference.current = globalThis.setTimeout(() => {
       setRouletteStart(true);
     }, ROULETTE_START_DELAY);
   }, []);
 
   useEffect(
     () => () => {
-      if (startTimerRef.current) {
-        window.clearTimeout(startTimerRef.current);
+      if (startTimerReference.current) {
+        globalThis.clearTimeout(startTimerReference.current);
       }
     },
     []
@@ -140,23 +140,23 @@ export function useRouletteAnimation({
 
   useEffect(
     () => () => {
-      const { fadeOthers } = fadeTimersRef.current;
+      const { fadeOthers } = fadeTimersReference.current;
       if (fadeOthers) {
-        window.clearTimeout(fadeOthers);
+        globalThis.clearTimeout(fadeOthers);
       }
     },
     []
   );
 
   const handleOthersFaded = useCallback(() => {
-    if (othersFadedRef.current) return;
-    othersFadedRef.current = true;
+    if (othersFadedReference.current) return;
+    othersFadedReference.current = true;
 
     console.log(
       "[useRouletteAnimation] Другие рулетки исчезли, определяем победителя",
       {
-        rouletteGroups: rouletteGroups.map((g, idx) => ({
-          index: idx,
+        rouletteGroups: rouletteGroups.map((g, index) => ({
+          index: index,
           hasWinner: g.hasWinner,
           prizeIndex: g.prizeIndex,
           winningPrizeId: g.prizes[g.prizeIndex]?.id,
@@ -173,8 +173,8 @@ export function useRouletteAnimation({
   }, [rouletteGroups]);
 
   const handleWinnerFaded = useCallback(async () => {
-    if (completionNotifiedRef.current) return;
-    completionNotifiedRef.current = true;
+    if (completionNotifiedReference.current) return;
+    completionNotifiedReference.current = true;
 
     console.log(
       "[useRouletteAnimation] Рулетка завершена, уведомляем родителя",
@@ -202,8 +202,8 @@ export function useRouletteAnimation({
   ]);
 
   const handleSingleRouletteComplete = useCallback(() => {
-    setCompletedRoulettes(prev => {
-      const newCount = prev + 1;
+    setCompletedRoulettes(previous => {
+      const newCount = previous + 1;
       console.log(
         `✅ Рулетка завершена. Всего: ${newCount}/${rouletteGroups.length}`
       );
@@ -214,8 +214,8 @@ export function useRouletteAnimation({
   }, [rouletteGroups.length]);
 
   return {
-    containerRef,
-    groupsRef,
+    containerRef: containerReference,
+    groupsRef: groupsReference,
     baseStyle,
     rouletteStart,
     visible: pointerVisible,

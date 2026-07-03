@@ -24,22 +24,22 @@ declare global {
   }
 }
 
-interface Props {
+interface Properties {
   callback: () => void;
   MediaInfo: MediaDto;
   isHighPrior?: boolean;
 }
 
-export function Video({ MediaInfo, callback, isHighPrior }: Props) {
+export function Video({ MediaInfo, callback, isHighPrior }: Properties) {
   const { fileInfo, id, positionInfo, textInfo, metaInfo } =
     MediaInfo.mediaInfo;
   const frameStyle = getMediaFrameStyle(MediaInfo);
   const player = useRef<HTMLVideoElement>(null);
   const [, setBackupTimer] = useState<NodeJS.Timeout>();
   const [videoProgress, setVideoProgress] = useState(0);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const gainNodeRef = useRef<GainNode | null>(null);
-  const sourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const audioContextReference = useRef<AudioContext | null>(null);
+  const gainNodeReference = useRef<GainNode | null>(null);
+  const sourceNodeReference = useRef<MediaElementAudioSourceNode | null>(null);
 
   // Мемоизируем positionInfo для стабильности зависимостей
   const memoizedPositionInfo = useMemo<MediaPositionInfo>(
@@ -146,8 +146,8 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
   // Очистка ресурсов при размонтировании
   useEffect(
     () => () => {
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
+      if (audioContextReference.current) {
+        audioContextReference.current.close();
       }
     },
     []
@@ -184,34 +184,38 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
 
     try {
       // Создаем AudioContext если его еще нет
-      if (!audioContextRef.current) {
+      if (!audioContextReference.current) {
         const AudioContextClass =
-          window.AudioContext || window.webkitAudioContext;
+          globalThis.AudioContext || globalThis.webkitAudioContext;
         if (AudioContextClass) {
-          audioContextRef.current = new AudioContextClass();
+          audioContextReference.current = new AudioContextClass();
         } else {
           throw new Error("AudioContext is not supported in this browser");
         }
       }
 
       // Создаем источник из video элемента
-      if (!sourceNodeRef.current) {
-        sourceNodeRef.current =
-          audioContextRef.current.createMediaElementSource(player.current);
+      if (!sourceNodeReference.current) {
+        sourceNodeReference.current =
+          audioContextReference.current.createMediaElementSource(
+            player.current
+          );
       }
 
       // Создаем GainNode если его еще нет
-      if (!gainNodeRef.current) {
-        gainNodeRef.current = audioContextRef.current.createGain();
+      if (!gainNodeReference.current) {
+        gainNodeReference.current = audioContextReference.current.createGain();
       }
 
       // Подключаем цепочку: источник -> GainNode -> выход
-      sourceNodeRef.current.connect(gainNodeRef.current);
-      gainNodeRef.current.connect(audioContextRef.current.destination);
+      sourceNodeReference.current.connect(gainNodeReference.current);
+      gainNodeReference.current.connect(
+        audioContextReference.current.destination
+      );
 
       // Устанавливаем громкость (поддерживаем значения больше 100%)
       const volume = metaInfo.volume / 100;
-      gainNodeRef.current.gain.value = volume;
+      gainNodeReference.current.gain.value = volume;
     } catch (error) {
       console.warn("Failed to setup AudioContext for video:", error);
     }
@@ -259,15 +263,15 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
         const randomRotation = getRandomRotation(fakeMediaInfo);
 
         if (memoizedPositionInfo.isUseOriginalWidthAndHeight) {
-          setBaseStyles(prev => ({
-            ...prev,
+          setBaseStyles(previous => ({
+            ...previous,
             width: video.videoWidth + "px",
             height: video.videoHeight + "px",
           }));
         }
 
-        setBaseStyles(prev => ({
-          ...prev,
+        setBaseStyles(previous => ({
+          ...previous,
           ...newCords,
           ...randomRotation,
         }));
@@ -291,11 +295,13 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
 
     const timer = setTimeout(
       () => {
-        if (videoProgress >= memoizedMetaInfo.duration - 0.5) {
-          unmuteAll();
-          unfreeze();
-          callback();
+        if (!(videoProgress >= memoizedMetaInfo.duration - 0.5)) {
+          return;
         }
+
+        unmuteAll();
+        unfreeze();
+        callback();
       },
       memoizedMetaInfo.duration * 1000 + 200
     ); // Длительность + 2 сек буфера
@@ -352,7 +358,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Props) {
           setupAudioContext();
 
           // Устанавливаем базовую громкость на 1.0, так как реальная громкость контролируется GainNode
-          e.currentTarget.volume = 1.0;
+          e.currentTarget.volume = 1;
         }}
         onError={e => {
           console.log(

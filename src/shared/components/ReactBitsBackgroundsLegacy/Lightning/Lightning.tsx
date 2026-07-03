@@ -2,7 +2,7 @@ import "./Lightning.css";
 
 import React, { useEffect, useRef } from "react";
 
-interface LightningProps {
+interface LightningProperties {
   hue?: number;
   xOffset?: number;
   speed?: number;
@@ -10,17 +10,17 @@ interface LightningProps {
   size?: number;
 }
 
-const Lightning: React.FC<LightningProps> = ({
+const Lightning: React.FC<LightningProperties> = ({
   hue = 230,
   xOffset = 0,
   speed = 1,
   intensity = 1,
   size = 1,
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasReference = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = canvasReference.current;
     if (!canvas) return;
 
     const resizeCanvas = () => {
@@ -168,8 +168,11 @@ const Lightning: React.FC<LightningProps> = ({
     gl.enableVertexAttribArray(aPosition);
     gl.vertexAttribPointer(aPosition, 2, gl.FLOAT, false, 0, 0);
 
-    const iResolutionLocation = gl.getUniformLocation(program, "iResolution");
-    const iTimeLocation = gl.getUniformLocation(program, "iTime");
+    const indexResolutionLocation = gl.getUniformLocation(
+      program,
+      "iResolution"
+    );
+    const indexTimeLocation = gl.getUniformLocation(program, "iTime");
     const uHueLocation = gl.getUniformLocation(program, "uHue");
     const uXOffsetLocation = gl.getUniformLocation(program, "uXOffset");
     const uSpeedLocation = gl.getUniformLocation(program, "uSpeed");
@@ -180,9 +183,9 @@ const Lightning: React.FC<LightningProps> = ({
     const render = () => {
       resizeCanvas();
       gl.viewport(0, 0, canvas.width, canvas.height);
-      gl.uniform2f(iResolutionLocation, canvas.width, canvas.height);
+      gl.uniform2f(indexResolutionLocation, canvas.width, canvas.height);
       const currentTime = performance.now();
-      gl.uniform1f(iTimeLocation, (currentTime - startTime) / 1000.0);
+      gl.uniform1f(indexTimeLocation, (currentTime - startTime) / 1000);
       gl.uniform1f(uHueLocation, hue);
       gl.uniform1f(uXOffsetLocation, xOffset);
       gl.uniform1f(uSpeedLocation, speed);
@@ -198,7 +201,7 @@ const Lightning: React.FC<LightningProps> = ({
     };
   }, [hue, xOffset, speed, intensity, size]);
 
-  return <canvas ref={canvasRef} className="lightning-container" />;
+  return <canvas ref={canvasReference} className="lightning-container" />;
 };
 
 export default Lightning;

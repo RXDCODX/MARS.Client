@@ -10,13 +10,13 @@ interface ImportMeta {
 }
 
 declare module "*.webm" {
-  const src: string;
-  export default src;
+  const source: string;
+  export default source;
 }
 
 declare module "*.mp4" {
-  const src: string;
-  export default src;
+  const source: string;
+  export default source;
 }
 
 declare module "*.module.scss" {

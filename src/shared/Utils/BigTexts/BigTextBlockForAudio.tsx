@@ -7,11 +7,11 @@ import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import { replaceEmotes } from "..";
 import styles from "./BigTextStyles.module.scss";
 
-interface Props {
+interface Properties {
   content: MediaDto | string;
 }
 
-export function BigTextBlockForAudio({ content: mediaInfo }: Props) {
+export function BigTextBlockForAudio({ content: mediaInfo }: Properties) {
   const parser = useTwitchStore(state => state.parser);
   const parserToLink = useTwitchStore(state => state.parseToLink);
   const text =
@@ -20,11 +20,11 @@ export function BigTextBlockForAudio({ content: mediaInfo }: Props) {
       : mediaInfo.mediaInfo.textInfo.text;
 
   if (text === null && text === "") {
-    return undefined;
+    return;
   }
 
   if (!parser || !parserToLink) {
-    return undefined;
+    return;
   }
 
   const splits = text?.split("=");
@@ -33,22 +33,23 @@ export function BigTextBlockForAudio({ content: mediaInfo }: Props) {
 
   if (!length) {
     return null;
-  } else if (length && length > 2) {
+  }
+  if (length && length > 2) {
     console.error("Дохуя разделителей в тексте алерта");
     return null;
   }
 
   const emotesSplits: Array<string | JSX.Element | JSX.Element[]> = [];
-  for (let i = 0; i < splits.length; i++) {
-    splits[i] = splits[i].trim();
-    if (splits[i]) {
+  for (let index = 0; index < splits.length; index++) {
+    splits[index] = splits[index].trim();
+    if (splits[index]) {
       const result = replaceEmotes({
-        text: splits[i],
+        text: splits[index],
         parser,
         newParser: parserToLink,
       });
       if (result) {
-        emotesSplits[i] = result;
+        emotesSplits[index] = result;
       }
     }
   }

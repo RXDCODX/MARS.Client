@@ -56,28 +56,28 @@ function tryParseJson(input: any) {
 
     if (typeof input !== "string") return null;
 
-    const str = input.trim();
+    const string_ = input.trim();
 
     // Пробуем парсить как есть
     try {
-      return JSON.parse(str);
+      return JSON.parse(string_);
     } catch {
       // Игнорируем и пробуем искать JSON внутри строки
     }
 
     // Ищем ближайший JSON-объект или массив внутри строки
-    const firstBrace = str.indexOf("{");
-    const firstBracket = str.indexOf("[");
+    const firstBrace = string_.indexOf("{");
+    const firstBracket = string_.indexOf("[");
     const start =
-      firstBrace >= 0 && (firstBrace < firstBracket || firstBracket === -1)
+      firstBrace !== -1 && (firstBrace < firstBracket || firstBracket === -1)
         ? firstBrace
         : firstBracket;
     if (start >= 0) {
-      const lastBrace = str.lastIndexOf("}");
-      const lastBracket = str.lastIndexOf("]");
+      const lastBrace = string_.lastIndexOf("}");
+      const lastBracket = string_.lastIndexOf("]");
       const end = Math.max(lastBrace, lastBracket);
       if (end > start) {
-        const candidate = str.substring(start, end + 1);
+        const candidate = string_.substring(start, end + 1);
         try {
           return JSON.parse(candidate);
         } catch {
@@ -94,19 +94,26 @@ function tryParseJson(input: any) {
 
 function getLevelColor(level: number): string {
   switch (level) {
-    case 0:
+    case 0: {
       return "#9E9E9E"; // Trace - серый
-    case 1:
+    }
+    case 1: {
       return "#4CAF50"; // Debug - зеленый
-    case 2:
+    }
+    case 2: {
       return "#2196F3"; // Info - синий
-    case 3:
+    }
+    case 3: {
       return "#FFC107"; // Warning - желтый
-    case 4:
+    }
+    case 4: {
       return "#F44336"; // Error - красный
-    case 5:
+    }
+    case 5: {
       return "#9C27B0"; // Critical - фиолетовый
-    default:
+    }
+    default: {
       return "#34aeeb";
+    }
   }
 }

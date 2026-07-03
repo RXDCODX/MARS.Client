@@ -12,7 +12,7 @@ const meta: Meta<typeof PNGTuber> = {
   tags: ["autodocs"],
   args: {
     size: 220,
-    mediaStream: typeof MediaStream !== "undefined" ? new MediaStream() : null,
+    mediaStream: typeof MediaStream === "undefined" ? null : new MediaStream(),
   },
 };
 

@@ -20,7 +20,7 @@ import { useServiceStore } from "@/shared/serviceStore";
 const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { selectedService, services, setSelectedService, fetchServices } =
     useServiceStore();
-  const [searchParams] = useSearchParams();
+  const [searchParameters] = useSearchParams();
   const [commands, setCommands] = useState<
     { name: string; description: string }[]
   >([]);
@@ -41,25 +41,27 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   console.log("ServiceDetails render:", {
     selectedService,
     servicesCount: services.length,
-    searchParams: searchParams.get("name"),
+    searchParams: searchParameters.get("name"),
     loading,
     error,
   });
 
   useEffect(() => {
-    const name = searchParams.get("name");
+    const name = searchParameters.get("name");
     console.log("ServiceDetails useEffect - name from params:", name);
     if (name && name !== selectedService) {
       console.log("Setting selected service:", name);
       setSelectedService(name);
     }
-  }, [searchParams, selectedService, setSelectedService]);
+  }, [searchParameters, selectedService, setSelectedService]);
 
   useEffect(() => {
-    if (services.length === 0) {
-      console.log("Fetching services...");
-      fetchServices();
+    if (services.length > 0) {
+      return;
     }
+
+    console.log("Fetching services...");
+    fetchServices();
   }, [services.length, fetchServices]);
 
   const info = services.find(s => s.name === selectedService) || null;
@@ -78,29 +80,29 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         setCommands(cmdRes.data);
         setConfig(cfgRes.data);
       })
-      .catch(e => {
-        console.error("Error loading service details:", e);
-        setError(e.message || "Ошибка загрузки данных");
+      .catch(error_ => {
+        console.error("Error loading service details:", error_);
+        setError(error_.message || "Ошибка загрузки данных");
       })
       .finally(() => setLoading(false));
   }, [selectedService]);
 
-  const handleExecute = async (cmd: string) => {
+  const handleExecute = async (command: string) => {
     if (!selectedService) return;
-    setExecLoading(cmd);
+    setExecLoading(command);
     setExecResult(null);
     try {
       const res = await axios.post(
         `/api/ServiceManager/service/${selectedService}/execute`,
-        { command: cmd }
+        { command: command }
       );
       setExecResult(
         res.data === true
-          ? `Команда '${cmd}' выполнена успешно`
-          : `Ошибка выполнения команды '${cmd}'`
+          ? `Команда '${command}' выполнена успешно`
+          : `Ошибка выполнения команды '${command}'`
       );
     } catch {
-      setExecResult(`Ошибка выполнения команды '${cmd}'`);
+      setExecResult(`Ошибка выполнения команды '${command}'`);
     } finally {
       setExecLoading(null);
     }
@@ -132,12 +134,12 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     setLogsLoading(true);
     setLogsError(null);
     try {
-      const params = new URLSearchParams();
+      const parameters = new URLSearchParams();
       if (logLevel !== "all") {
-        params.append("level", logLevel);
+        parameters.append("level", logLevel);
       }
       const res = await axios.get(
-        `/api/ServiceManager/service/${selectedService}/logs?${params}`
+        `/api/ServiceManager/service/${selectedService}/logs?${parameters}`
       );
       setLogs(Array.isArray(res.data) ? res.data : []);
     } catch (error) {
@@ -179,7 +181,7 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
           <Spin size="small" />
           <div style={{ marginTop: 12 }}>Загрузка информации о сервисе...</div>
           <div style={{ marginTop: 8, color: "#8c8c8c" }}>
-            Параметр name: {searchParams.get("name") || "не указан"}
+            Параметр name: {searchParameters.get("name") || "не указан"}
           </div>
         </div>
       </div>
@@ -497,7 +499,7 @@ const ServiceDetails: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               <Select
                 size="small"
                 value={logLevel}
-                onChange={val => setLogLevel(val)}
+                onChange={value => setLogLevel(value)}
                 options={logLevelOptions}
                 style={{ width: 120 }}
               />

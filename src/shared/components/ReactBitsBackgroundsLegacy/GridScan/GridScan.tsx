@@ -11,7 +11,7 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 
-type GridScanProps = {
+type GridScanProperties = {
   enableWebcam?: boolean;
   showPreview?: boolean;
   modelsPath?: string;
@@ -311,7 +311,7 @@ void main(){
 }
 `;
 
-export const GridScan: React.FC<GridScanProps> = ({
+export const GridScan: React.FC<GridScanProperties> = ({
   enableWebcam = false,
   showPreview = false,
   modelsPath = "https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@0.22.2/weights",
@@ -333,23 +333,23 @@ export const GridScan: React.FC<GridScanProps> = ({
   scanGlow = 0.5,
   scanSoftness = 2,
   scanPhaseTaper = 0.9,
-  scanDuration = 2.0,
-  scanDelay = 2.0,
+  scanDuration = 2,
+  scanDelay = 2,
   enableGyro = false,
   scanOnClick = false,
   snapBackDelay = 250,
   className,
   style,
 }) => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const containerReference = useRef<HTMLDivElement | null>(null);
+  const videoReference = useRef<HTMLVideoElement | null>(null);
 
-  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
-  const materialRef = useRef<THREE.ShaderMaterial | null>(null);
-  const composerRef = useRef<EffectComposer | null>(null);
-  const bloomRef = useRef<BloomEffect | null>(null);
-  const chromaRef = useRef<ChromaticAberrationEffect | null>(null);
-  const rafRef = useRef<number | null>(null);
+  const rendererReference = useRef<THREE.WebGLRenderer | null>(null);
+  const materialReference = useRef<THREE.ShaderMaterial | null>(null);
+  const composerReference = useRef<EffectComposer | null>(null);
+  const bloomReference = useRef<BloomEffect | null>(null);
+  const chromaReference = useRef<ChromaticAberrationEffect | null>(null);
+  const rafReference = useRef<number | null>(null);
 
   const [modelsReady, setModelsReady] = useState(false);
   const [uiFaceActive, setUiFaceActive] = useState(false);
@@ -366,26 +366,27 @@ export const GridScan: React.FC<GridScanProps> = ({
   const yawVel = useRef(0);
 
   const MAX_SCANS = 8;
-  const scanStartsRef = useRef<number[]>([]);
+  const scanStartsReference = useRef<number[]>([]);
 
   const pushScan = (t: number) => {
-    const arr = scanStartsRef.current.slice();
-    if (arr.length >= MAX_SCANS) arr.shift();
-    arr.push(t);
-    scanStartsRef.current = arr;
-    if (materialRef.current) {
-      const u = materialRef.current.uniforms;
-      const buf = new Array(MAX_SCANS).fill(0);
-      for (let i = 0; i < arr.length && i < MAX_SCANS; i++) buf[i] = arr[i];
-      u.uScanStarts.value = buf;
-      u.uScanCount.value = arr.length;
+    const array = [...scanStartsReference.current];
+    if (array.length >= MAX_SCANS) array.shift();
+    array.push(t);
+    scanStartsReference.current = array;
+    if (materialReference.current) {
+      const u = materialReference.current.uniforms;
+      const buffer = Array.from({ length: MAX_SCANS }).fill(0);
+      for (let index = 0; index < array.length && index < MAX_SCANS; index++)
+        buffer[index] = array[index];
+      u.uScanStarts.value = buffer;
+      u.uScanCount.value = array.length;
     }
   };
 
-  const bufX = useRef<number[]>([]);
-  const bufY = useRef<number[]>([]);
-  const bufT = useRef<number[]>([]);
-  const bufYaw = useRef<number[]>([]);
+  const bufferX = useRef<number[]>([]);
+  const bufferY = useRef<number[]>([]);
+  const bufferT = useRef<number[]>([]);
+  const bufferYaw = useRef<number[]>([]);
 
   const s = THREE.MathUtils.clamp(sensitivity, 0, 1);
   const skewScale = THREE.MathUtils.lerp(0.06, 0.2, s);
@@ -398,8 +399,8 @@ export const GridScan: React.FC<GridScanProps> = ({
   const yBoost = THREE.MathUtils.lerp(1.2, 1.6, s);
 
   useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
+    const element = containerReference.current;
+    if (!element) return;
     let leaveTimer: number | null = null;
     const onMove = (e: MouseEvent) => {
       if (uiFaceActive) return;
@@ -407,7 +408,7 @@ export const GridScan: React.FC<GridScanProps> = ({
         clearTimeout(leaveTimer);
         leaveTimer = null;
       }
-      const rect = el.getBoundingClientRect();
+      const rect = element.getBoundingClientRect();
       const nx = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       const ny = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
       lookTarget.current.set(nx, ny);
@@ -418,7 +419,7 @@ export const GridScan: React.FC<GridScanProps> = ({
       if (
         enableGyro &&
         typeof window !== "undefined" &&
-        (window as any).DeviceOrientationEvent &&
+        (globalThis as any).DeviceOrientationEvent &&
         (DeviceOrientationEvent as any).requestPermission
       ) {
         try {
@@ -427,15 +428,17 @@ export const GridScan: React.FC<GridScanProps> = ({
       }
     };
     const onEnter = () => {
-      if (leaveTimer) {
-        clearTimeout(leaveTimer);
-        leaveTimer = null;
+      if (!leaveTimer) {
+        return;
       }
+
+      clearTimeout(leaveTimer);
+      leaveTimer = null;
     };
     const onLeave = () => {
       if (uiFaceActive) return;
       if (leaveTimer) clearTimeout(leaveTimer);
-      leaveTimer = window.setTimeout(
+      leaveTimer = globalThis.setTimeout(
         () => {
           lookTarget.current.set(0, 0);
           tiltTarget.current = 0;
@@ -444,32 +447,32 @@ export const GridScan: React.FC<GridScanProps> = ({
         Math.max(0, snapBackDelay || 0)
       );
     };
-    el.addEventListener("mousemove", onMove);
-    el.addEventListener("mouseenter", onEnter);
-    if (scanOnClick) el.addEventListener("click", onClick);
-    el.addEventListener("mouseleave", onLeave);
+    element.addEventListener("mousemove", onMove);
+    element.addEventListener("mouseenter", onEnter);
+    if (scanOnClick) element.addEventListener("click", onClick);
+    element.addEventListener("mouseleave", onLeave);
     return () => {
-      el.removeEventListener("mousemove", onMove);
-      el.removeEventListener("mouseenter", onEnter);
-      el.removeEventListener("mouseleave", onLeave);
-      if (scanOnClick) el.removeEventListener("click", onClick);
+      element.removeEventListener("mousemove", onMove);
+      element.removeEventListener("mouseenter", onEnter);
+      element.removeEventListener("mouseleave", onLeave);
+      if (scanOnClick) element.removeEventListener("click", onClick);
       if (leaveTimer) clearTimeout(leaveTimer);
     };
   }, [uiFaceActive, snapBackDelay, scanOnClick, enableGyro]);
 
   useEffect(() => {
-    const container = containerRef.current;
+    const container = containerReference.current;
     if (!container) return;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    rendererRef.current = renderer;
+    rendererReference.current = renderer;
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.NoToneMapping;
     renderer.autoClear = false;
-    renderer.setClearColor(0x000000, 0);
-    container.appendChild(renderer.domElement);
+    renderer.setClearColor(0x00_00_00, 0);
+    container.append(renderer.domElement);
 
     const uniforms = {
       iResolution: {
@@ -507,7 +510,7 @@ export const GridScan: React.FC<GridScanProps> = ({
               ? 2
               : 0,
       },
-      uScanStarts: { value: new Array(MAX_SCANS).fill(0) },
+      uScanStarts: { value: Array.from({ length: MAX_SCANS }).fill(0) },
       uScanCount: { value: 0 },
     };
 
@@ -519,7 +522,7 @@ export const GridScan: React.FC<GridScanProps> = ({
       depthWrite: false,
       depthTest: false,
     });
-    materialRef.current = material;
+    materialReference.current = material;
 
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
@@ -529,24 +532,24 @@ export const GridScan: React.FC<GridScanProps> = ({
     let composer: EffectComposer | null = null;
     if (enablePost) {
       composer = new EffectComposer(renderer);
-      composerRef.current = composer;
+      composerReference.current = composer;
       const renderPass = new RenderPass(scene, camera);
       composer.addPass(renderPass);
 
       const bloom = new BloomEffect({
-        intensity: 1.0,
+        intensity: 1,
         luminanceThreshold: bloomThreshold,
         luminanceSmoothing: bloomSmoothing,
       });
       bloom.blendMode.opacity.value = Math.max(0, bloomIntensity);
-      bloomRef.current = bloom;
+      bloomReference.current = bloom;
 
       const chroma = new ChromaticAberrationEffect({
         offset: new THREE.Vector2(chromaticAberration, chromaticAberration),
         radialModulation: true,
-        modulationOffset: 0.0,
+        modulationOffset: 0,
       });
-      chromaRef.current = chroma;
+      chromaReference.current = chroma;
 
       const effectPass = new EffectPass(camera, bloom, chroma);
       effectPass.renderToScreen = true;
@@ -560,8 +563,8 @@ export const GridScan: React.FC<GridScanProps> = ({
         container.clientHeight,
         renderer.getPixelRatio()
       );
-      if (composerRef.current)
-        composerRef.current.setSize(
+      if (composerReference.current)
+        composerReference.current.setSize(
           container.clientWidth,
           container.clientHeight
         );
@@ -621,27 +624,27 @@ export const GridScan: React.FC<GridScanProps> = ({
 
       material.uniforms.iTime.value = now / 1000;
       renderer.clear(true, true, true);
-      if (composerRef.current) {
-        composerRef.current.render(dt);
+      if (composerReference.current) {
+        composerReference.current.render(dt);
       } else {
         renderer.render(scene, camera);
       }
-      rafRef.current = requestAnimationFrame(tick);
+      rafReference.current = requestAnimationFrame(tick);
     };
-    rafRef.current = requestAnimationFrame(tick);
+    rafReference.current = requestAnimationFrame(tick);
 
     return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (rafReference.current) cancelAnimationFrame(rafReference.current);
       window.removeEventListener("resize", onResize);
       material.dispose();
       (quad.geometry as THREE.BufferGeometry).dispose();
-      if (composerRef.current) {
-        composerRef.current.dispose();
-        composerRef.current = null;
+      if (composerReference.current) {
+        composerReference.current.dispose();
+        composerReference.current = null;
       }
       renderer.dispose();
       renderer.forceContextLoss();
-      container.removeChild(renderer.domElement);
+      renderer.domElement.remove();
     };
   }, [
     sensitivity,
@@ -657,7 +660,7 @@ export const GridScan: React.FC<GridScanProps> = ({
   ]);
 
   useEffect(() => {
-    const m = materialRef.current;
+    const m = materialReference.current;
     if (m) {
       const u = m.uniforms;
       u.uLineThickness.value = lineThickness;
@@ -676,15 +679,23 @@ export const GridScan: React.FC<GridScanProps> = ({
       u.uScanSoftness.value = scanSoftness;
       u.uPhaseTaper.value = scanPhaseTaper;
       u.uScanDuration.value = Math.max(0.05, scanDuration);
-      u.uScanDelay.value = Math.max(0.0, scanDelay);
+      u.uScanDelay.value = Math.max(0, scanDelay);
     }
-    if (bloomRef.current) {
-      bloomRef.current.blendMode.opacity.value = Math.max(0, bloomIntensity);
-      (bloomRef.current as any).luminanceMaterial.threshold = bloomThreshold;
-      (bloomRef.current as any).luminanceMaterial.smoothing = bloomSmoothing;
+    if (bloomReference.current) {
+      bloomReference.current.blendMode.opacity.value = Math.max(
+        0,
+        bloomIntensity
+      );
+      (bloomReference.current as any).luminanceMaterial.threshold =
+        bloomThreshold;
+      (bloomReference.current as any).luminanceMaterial.smoothing =
+        bloomSmoothing;
     }
-    if (chromaRef.current) {
-      chromaRef.current.offset.set(chromaticAberration, chromaticAberration);
+    if (chromaReference.current) {
+      chromaReference.current.offset.set(
+        chromaticAberration,
+        chromaticAberration
+      );
     }
   }, [
     lineThickness,
@@ -718,38 +729,38 @@ export const GridScan: React.FC<GridScanProps> = ({
       lookTarget.current.set(nx, ny);
       tiltTarget.current = THREE.MathUtils.degToRad(gamma) * 0.4;
     };
-    window.addEventListener("deviceorientation", handler);
+    globalThis.addEventListener("deviceorientation", handler);
     return () => {
-      window.removeEventListener("deviceorientation", handler);
+      globalThis.removeEventListener("deviceorientation", handler);
     };
   }, [enableGyro, uiFaceActive]);
 
   useEffect(() => {
-    let canceled = false;
+    let isCanceled = false;
     const load = async () => {
       try {
         await Promise.all([
           faceapi.nets.tinyFaceDetector.loadFromUri(modelsPath),
           faceapi.nets.faceLandmark68TinyNet.loadFromUri(modelsPath),
         ]);
-        if (!canceled) setModelsReady(true);
+        if (!isCanceled) setModelsReady(true);
       } catch {
-        if (!canceled) setModelsReady(false);
+        if (!isCanceled) setModelsReady(false);
       }
     };
     load();
     return () => {
-      canceled = true;
+      isCanceled = true;
     };
   }, [modelsPath]);
 
   useEffect(() => {
-    let stop = false;
+    let isStop = false;
     let lastDetect = 0;
 
     const start = async () => {
       if (!enableWebcam || !modelsReady) return;
-      const video = videoRef.current;
+      const video = videoReference.current;
       if (!video) return;
 
       try {
@@ -767,19 +778,19 @@ export const GridScan: React.FC<GridScanProps> = ({
         return;
       }
 
-      const opts = new faceapi.TinyFaceDetectorOptions({
+      const options = new faceapi.TinyFaceDetectorOptions({
         inputSize: 320,
         scoreThreshold: 0.5,
       });
 
       const detect = async (ts: number) => {
-        if (stop) return;
+        if (isStop) return;
 
         if (ts - lastDetect >= 33) {
           lastDetect = ts;
           try {
             const res = await faceapi
-              .detectSingleFace(video, opts)
+              .detectSingleFace(video, options)
               .withFaceLandmarks(true);
             if (res && res.detection) {
               const det = res.detection;
@@ -791,10 +802,10 @@ export const GridScan: React.FC<GridScanProps> = ({
               const cy = box.y + box.height * 0.5;
               const nx = (cx / vw) * 2 - 1;
               const ny = (cy / vh) * 2 - 1;
-              medianPush(bufX.current, nx, 5);
-              medianPush(bufY.current, ny, 5);
-              const nxm = median(bufX.current);
-              const nym = median(bufY.current);
+              medianPush(bufferX.current, nx, 5);
+              medianPush(bufferY.current, ny, 5);
+              const nxm = median(bufferX.current);
+              const nym = median(bufferY.current);
 
               const look = new THREE.Vector2(Math.tanh(nxm), Math.tanh(nym));
 
@@ -810,26 +821,26 @@ export const GridScan: React.FC<GridScanProps> = ({
               const lc = centroid(leftEye);
               const rc = centroid(rightEye);
               const tilt = Math.atan2(rc.y - lc.y, rc.x - lc.x);
-              medianPush(bufT.current, tilt, 5);
-              tiltTarget.current = median(bufT.current);
+              medianPush(bufferT.current, tilt, 5);
+              tiltTarget.current = median(bufferT.current);
 
               const nose = res.landmarks.getNose();
-              const tip =
-                nose[nose.length - 1] || nose[Math.floor(nose.length / 2)];
+              const tip = nose.at(-1) || nose[Math.floor(nose.length / 2)];
               const jaw = res.landmarks.getJawOutline();
               const leftCheek = jaw[3] || jaw[2];
               const rightCheek = jaw[13] || jaw[14];
-              const dL = dist2(tip, leftCheek);
-              const dR = dist2(tip, rightCheek);
-              const eyeDist = Math.hypot(rc.x - lc.x, rc.y - lc.y) + 1e-6;
+              const dL = distribution2(tip, leftCheek);
+              const dR = distribution2(tip, rightCheek);
+              const eyeDistribution =
+                Math.hypot(rc.x - lc.x, rc.y - lc.y) + 1e-6;
               let yawSignal = THREE.MathUtils.clamp(
-                (dR - dL) / (eyeDist * 1.6),
+                (dR - dL) / (eyeDistribution * 1.6),
                 -1,
                 1
               );
               yawSignal = Math.tanh(yawSignal);
-              medianPush(bufYaw.current, yawSignal, 5);
-              yawTarget.current = median(bufYaw.current);
+              medianPush(bufferYaw.current, yawSignal, 5);
+              yawTarget.current = median(bufferYaw.current);
 
               setUiFaceActive(true);
             } else {
@@ -855,8 +866,8 @@ export const GridScan: React.FC<GridScanProps> = ({
     start();
 
     return () => {
-      stop = true;
-      const video = videoRef.current;
+      isStop = true;
+      const video = videoReference.current;
       if (video) {
         const stream = video.srcObject as MediaStream | null;
         if (stream) stream.getTracks().forEach(t => t.stop());
@@ -868,14 +879,14 @@ export const GridScan: React.FC<GridScanProps> = ({
 
   return (
     <div
-      ref={containerRef}
+      ref={containerReference}
       className={`gridscan${className ? ` ${className}` : ""}`}
       style={style}
     >
       {showPreview && (
         <div className="gridscan__preview">
           <video
-            ref={videoRef}
+            ref={videoReference}
             muted
             playsInline
             autoPlay
@@ -922,14 +933,14 @@ function smoothDampVec2(
   if (change.length() > maxChange) change.setLength(maxChange);
 
   target = current.clone().sub(change);
-  const temp = currentVelocity
+  const temporary = currentVelocity
     .clone()
     .addScaledVector(change, omega)
     .multiplyScalar(deltaTime);
-  currentVelocity.sub(temp.clone().multiplyScalar(omega));
+  currentVelocity.sub(temporary.clone().multiplyScalar(omega));
   currentVelocity.multiplyScalar(exp);
 
-  out.copy(target.clone().add(change.add(temp).multiplyScalar(exp)));
+  out.copy(target.clone().add(change.add(temporary).multiplyScalar(exp)));
 
   const origMinusCurrent = originalTo.clone().sub(current);
   const outMinusOrig = out.clone().sub(originalTo);
@@ -943,7 +954,7 @@ function smoothDampVec2(
 function smoothDampFloat(
   current: number,
   target: number,
-  velRef: { v: number },
+  velReference: { v: number },
   smoothTime: number,
   maxSpeed: number,
   deltaTime: number
@@ -960,28 +971,28 @@ function smoothDampFloat(
   change = Math.sign(change) * Math.min(Math.abs(change), maxChange);
 
   target = current - change;
-  const temp = (velRef.v + omega * change) * deltaTime;
-  velRef.v = (velRef.v - omega * temp) * exp;
+  const temporary = (velReference.v + omega * change) * deltaTime;
+  velReference.v = (velReference.v - omega * temporary) * exp;
 
-  let out = target + (change + temp) * exp;
+  let out = target + (change + temporary) * exp;
 
   const origMinusCurrent = originalTo - current;
   const outMinusOrig = out - originalTo;
   if (origMinusCurrent * outMinusOrig > 0) {
     out = originalTo;
-    velRef.v = 0;
+    velReference.v = 0;
   }
-  return { value: out, v: velRef.v };
+  return { value: out, v: velReference.v };
 }
 
-function medianPush(buf: number[], v: number, maxLen: number) {
-  buf.push(v);
-  if (buf.length > maxLen) buf.shift();
+function medianPush(buffer: number[], v: number, maxLength: number) {
+  buffer.push(v);
+  if (buffer.length > maxLength) buffer.shift();
 }
 
-function median(buf: number[]) {
-  if (buf.length === 0) return 0;
-  const a = [...buf].sort((x, y) => x - y);
+function median(buffer: number[]) {
+  if (buffer.length === 0) return 0;
+  const a = [...buffer].sort((x, y) => x - y);
   const mid = Math.floor(a.length / 2);
   return a.length % 2 ? a[mid] : (a[mid - 1] + a[mid]) * 0.5;
 }
@@ -997,6 +1008,9 @@ function centroid(points: { x: number; y: number }[]) {
   return { x: x / n, y: y / n };
 }
 
-function dist2(a: { x: number; y: number }, b: { x: number; y: number }) {
+function distribution2(
+  a: { x: number; y: number },
+  b: { x: number; y: number }
+) {
   return Math.hypot(a.x - b.x, a.y - b.y);
 }

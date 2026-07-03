@@ -17,7 +17,7 @@ const AFKScreenDemo: React.FC = () => {
   const [isPlaying, setIsPlaying] = useState(false);
 
   const handleConfigChange = (key: string, value: any) => {
-    setConfig(prev => ({ ...prev, [key]: value }));
+    setConfig(previous => ({ ...previous, [key]: value }));
   };
 
   const togglePlay = () => {

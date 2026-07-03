@@ -16,10 +16,10 @@ import {
   MemeFormData,
   MemeOrderFormData,
   MemeTypeFormData,
-  RandomMemeFormProps,
+  RandomMemeFormProps as RandomMemeFormProperties,
 } from "../RandomMemePage.types";
 
-const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
+const RandomMemeForm: React.FC<RandomMemeFormProperties> = ({
   memeType,
   memeOrder,
   memeTypes = [],
@@ -63,14 +63,14 @@ const RandomMemeForm: React.FC<RandomMemeFormProps> = ({
   }, [memeType, memeOrder, isType]);
 
   const handleInputChange = (field: string, value: string | number) => {
-    setFormData(prev => ({
-      ...prev,
+    setFormData(previous => ({
+      ...previous,
       [field]: value,
     }));
 
     if (errors[field]) {
-      setErrors(prev => ({
-        ...prev,
+      setErrors(previous => ({
+        ...previous,
         [field]: "",
       }));
     }

@@ -46,7 +46,7 @@ describe("Face Utils", () => {
 
     it("should return different faces on multiple calls", () => {
       const faces = new Set();
-      for (let i = 0; i < 10; i++) {
+      for (let index = 0; index < 10; index++) {
         faces.add(getRandomFace().name);
       }
       // В идеале должны быть разные лица, но это не гарантировано

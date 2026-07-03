@@ -4,7 +4,7 @@ import { FireOutlineCanvas } from "./FireShader";
 export const AvatarWithFireSvg = () => {
   const size = 512;
   const radius = Math.floor(size * 0.5);
-  const intensity = 3.0;
+  const intensity = 3;
   const speed = 1.35;
 
   // Простой SVG-силуэт (блоб) на прозрачном фоне

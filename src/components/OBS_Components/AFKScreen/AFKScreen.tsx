@@ -18,8 +18,8 @@ const PLAYLISTS = [
 ];
 
 const AFKScreen = () => {
-  const playerRef = useRef<HTMLDivElement>(null);
-  const playerInstanceRef = useRef<any>(null);
+  const playerReference = useRef<HTMLDivElement>(null);
+  const playerInstanceReference = useRef<any>(null);
   const [isMuted, setIsMuted] = useState(true);
   const [hasError, setHasError] = useState(false);
   const [_, setCurrentPlaylist] = useState<string>("");
@@ -32,18 +32,18 @@ const AFKScreen = () => {
 
   useEffect(() => {
     const initPlayer = async () => {
-      if (playerRef.current && !playerInstanceRef.current) {
+      if (playerReference.current && !playerInstanceReference.current) {
         try {
           // Загружаем YouTube IFrame API
-          if (!window.YT) {
+          if (!globalThis.YT) {
             const tag = document.createElement("script");
             tag.src = "https://www.youtube.com/iframe_api";
-            const firstScriptTag = document.getElementsByTagName("script")[0];
+            const firstScriptTag = document.querySelector("script");
             firstScriptTag.parentNode?.insertBefore(tag, firstScriptTag);
 
             // Ждем загрузки API
             await new Promise<void>(resolve => {
-              window.onYouTubeIframeAPIReady = () => resolve();
+              globalThis.onYouTubeIframeAPIReady = () => resolve();
             });
           }
 
@@ -51,53 +51,58 @@ const AFKScreen = () => {
           setCurrentPlaylist(playlistId);
 
           // Создаем плеер
-          playerInstanceRef.current = new window.YT.Player(playerRef.current, {
-            height: "100%",
-            width: "100%",
-            playerVars: {
-              autoplay: 1,
-              controls: 1,
-              playsinline: 1,
-              mute: isMuted ? 1 : 0,
-            },
-            events: {
-              onReady: (event: any) => {
-                console.log("YouTube player is ready");
-                setHasError(false);
-
-                // Загружаем плейлист с случайным индексом и позицией
-                const randomIndex = Math.floor(Math.random() * 200);
-                const randomStartSeconds = Math.floor(Math.random() * 60);
-
-                event.target.loadPlaylist({
-                  listType: "playlist",
-                  list: playlistId,
-                  index: randomIndex,
-                  startSeconds: randomStartSeconds,
-                });
-
-                // Включаем перемешивание плейлиста для большей случайности
-                event.target.setShuffle(true);
+          playerInstanceReference.current = new globalThis.YT.Player(
+            playerReference.current,
+            {
+              height: "100%",
+              width: "100%",
+              playerVars: {
+                autoplay: 1,
+                controls: 1,
+                playsinline: 1,
+                mute: isMuted ? 1 : 0,
               },
-              onStateChange: (event: any) => {
-                console.log("Player state changed:", event.data);
-                // Если видео закончилось, переходим к следующему
-                if (event.data === window.YT.PlayerState.ENDED) {
-                  event.target.nextVideo();
-                }
-              },
-              onError: (event: any) => {
-                console.error("YouTube player error:", event.data);
-                setHasError(true);
-                // Пытаемся перезапустить с другим плейлистом
-                setTimeout(() => {
-                  if (playerInstanceRef.current) {
+              events: {
+                onReady: (event: any) => {
+                  console.log("YouTube player is ready");
+                  setHasError(false);
+
+                  // Загружаем плейлист с случайным индексом и позицией
+                  const randomIndex = Math.floor(Math.random() * 200);
+                  const randomStartSeconds = Math.floor(Math.random() * 60);
+
+                  event.target.loadPlaylist({
+                    listType: "playlist",
+                    list: playlistId,
+                    index: randomIndex,
+                    startSeconds: randomStartSeconds,
+                  });
+
+                  // Включаем перемешивание плейлиста для большей случайности
+                  event.target.setShuffle(true);
+                },
+                onStateChange: (event: any) => {
+                  console.log("Player state changed:", event.data);
+                  // Если видео закончилось, переходим к следующему
+                  if (event.data === globalThis.YT.PlayerState.ENDED) {
+                    event.target.nextVideo();
+                  }
+                },
+                onError: (event: any) => {
+                  console.error("YouTube player error:", event.data);
+                  setHasError(true);
+                  // Пытаемся перезапустить с другим плейлистом
+                  setTimeout(() => {
+                    if (!playerInstanceReference.current) {
+                      return;
+                    }
+
                     const newPlaylistId = getRandomPlaylist();
                     setCurrentPlaylist(newPlaylistId);
                     const randomIndex = Math.floor(Math.random() * 200);
                     const randomStartSeconds = Math.floor(Math.random() * 60);
 
-                    playerInstanceRef.current.loadPlaylist({
+                    playerInstanceReference.current.loadPlaylist({
                       listType: "playlist",
                       list: newPlaylistId,
                       index: randomIndex,
@@ -106,15 +111,15 @@ const AFKScreen = () => {
 
                     // Включаем перемешивание для нового плейлиста
                     setTimeout(() => {
-                      if (playerInstanceRef.current) {
-                        playerInstanceRef.current.setShuffle(true);
+                      if (playerInstanceReference.current) {
+                        playerInstanceReference.current.setShuffle(true);
                       }
                     }, 1000);
-                  }
-                }, 2000);
+                  }, 2000);
+                },
               },
-            },
-          });
+            }
+          );
         } catch (error) {
           console.error("Error initializing player:", error);
           setHasError(true);
@@ -125,29 +130,33 @@ const AFKScreen = () => {
     initPlayer();
 
     return () => {
-      if (playerInstanceRef.current) {
-        playerInstanceRef.current.destroy();
-        playerInstanceRef.current = null;
+      if (!playerInstanceReference.current) {
+        return;
       }
+
+      playerInstanceReference.current.destroy();
+      playerInstanceReference.current = null;
     };
   }, [getRandomPlaylist, isMuted]);
 
   const handleUserInteraction = useCallback(() => {
-    if (isMuted && playerInstanceRef.current) {
-      setIsMuted(false);
-      playerInstanceRef.current.unMute();
+    if (!(isMuted && playerInstanceReference.current)) {
+      return;
     }
+
+    setIsMuted(false);
+    playerInstanceReference.current.unMute();
   }, [isMuted]);
 
   const handleRetry = useCallback(() => {
     setHasError(false);
-    if (playerInstanceRef.current) {
+    if (playerInstanceReference.current) {
       const newPlaylistId = getRandomPlaylist();
       setCurrentPlaylist(newPlaylistId);
       const randomIndex = Math.floor(Math.random() * 200);
       const randomStartSeconds = Math.floor(Math.random() * 60);
 
-      playerInstanceRef.current.loadPlaylist({
+      playerInstanceReference.current.loadPlaylist({
         listType: "playlist",
         list: newPlaylistId,
         index: randomIndex,
@@ -156,8 +165,8 @@ const AFKScreen = () => {
 
       // Включаем перемешивание для нового плейлиста
       setTimeout(() => {
-        if (playerInstanceRef.current) {
-          playerInstanceRef.current.setShuffle(true);
+        if (playerInstanceReference.current) {
+          playerInstanceReference.current.setShuffle(true);
         }
       }, 1000);
     }
@@ -181,7 +190,7 @@ const AFKScreen = () => {
           </button>
         </div>
       )}
-      <div ref={playerRef} className="youtube-player" />
+      <div ref={playerReference} className="youtube-player" />
     </div>
   );
 };

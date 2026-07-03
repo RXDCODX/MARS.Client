@@ -16,7 +16,7 @@ interface PlayerActions {
 
 const PlayerActionsContext = createContext<PlayerActions | null>(null);
 
-interface PlayerActionsProviderProps {
+interface PlayerActionsProviderProperties {
   children: ReactNode;
   actions: PlayerActions;
 }
@@ -24,7 +24,7 @@ interface PlayerActionsProviderProps {
 export function PlayerActionsProvider({
   children,
   actions,
-}: PlayerActionsProviderProps) {
+}: PlayerActionsProviderProperties) {
   return (
     <PlayerActionsContext.Provider value={actions}>
       {children}

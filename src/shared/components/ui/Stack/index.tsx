@@ -1,6 +1,6 @@
 import { Flex } from "antd";
 
-interface StackProps {
+interface StackProperties {
   children: React.ReactNode;
   direction?: "horizontal" | "vertical";
   gap?: number;
@@ -12,7 +12,7 @@ const Stack = ({
   direction = "horizontal",
   gap = 8,
   className,
-}: StackProps) => (
+}: StackProperties) => (
   <Flex
     vertical={direction === "vertical"}
     gap={gap}

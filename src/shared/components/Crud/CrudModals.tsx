@@ -9,7 +9,7 @@ import {
 import FormFieldRenderer from "./FormFieldRenderer";
 import { FormSchema } from "./types";
 
-interface EditCreateModalProps<T> {
+interface EditCreateModalProperties<T> {
   title: string;
   show: boolean;
   onClose: () => void;
@@ -25,7 +25,7 @@ export function EditCreateModal<T>({
   onSubmit,
   schema,
   initialValues,
-}: EditCreateModalProps<T>) {
+}: EditCreateModalProperties<T>) {
   const { showToast } = useToastModal();
   const [values, setValues] = useState<Record<string, unknown>>(
     initialValues ?? {}
@@ -38,7 +38,7 @@ export function EditCreateModal<T>({
   }, [initialValues]);
 
   const handleChange = (name: string, value: unknown) => {
-    setValues(prev => ({ ...prev, [name]: value }));
+    setValues(previous => ({ ...previous, [name]: value }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -49,10 +49,10 @@ export function EditCreateModal<T>({
       await onSubmit(values);
       showToast(createSuccessToast("Сохранено"));
       onClose();
-    } catch (err: unknown) {
+    } catch (error: unknown) {
       const errorMessage =
-        err instanceof Error ? err.message : "Ошибка сохранения";
-      showToast(createErrorToast(errorMessage, err));
+        error instanceof Error ? error.message : "Ошибка сохранения";
+      showToast(createErrorToast(errorMessage, error));
     } finally {
       setSubmitting(false);
     }
@@ -116,7 +116,7 @@ export function EditCreateModal<T>({
   );
 }
 
-interface ConfirmDeleteModalProps {
+interface ConfirmDeleteModalProperties {
   title?: string;
   show: boolean;
   onClose: () => void;
@@ -130,7 +130,7 @@ export function ConfirmDeleteModal({
   onClose,
   onConfirm,
   text,
-}: ConfirmDeleteModalProps) {
+}: ConfirmDeleteModalProperties) {
   const { showToast } = useToastModal();
   const [submitting, setSubmitting] = useState(false);
 
@@ -142,10 +142,10 @@ export function ConfirmDeleteModal({
       await onConfirm();
       showToast(createSuccessToast("Удалено"));
       onClose();
-    } catch (err: unknown) {
+    } catch (error: unknown) {
       const errorMessage =
-        err instanceof Error ? err.message : "Ошибка удаления";
-      showToast(createErrorToast(errorMessage, err));
+        error instanceof Error ? error.message : "Ошибка удаления";
+      showToast(createErrorToast(errorMessage, error));
     } finally {
       setSubmitting(false);
     }

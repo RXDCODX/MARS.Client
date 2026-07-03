@@ -201,20 +201,20 @@ const hexToRgb01 = (hex: string): [number, number, number] => {
       b = h[2];
     h = r + r + g + g + b + b;
   }
-  const intVal = parseInt(h, 16);
-  if (isNaN(intVal) || (h.length !== 6 && h.length !== 8)) return [1, 1, 1];
-  const r = ((intVal >> 16) & 255) / 255;
-  const g = ((intVal >> 8) & 255) / 255;
-  const b = (intVal & 255) / 255;
+  const intValue = Number.parseInt(h, 16);
+  if (isNaN(intValue) || (h.length !== 6 && h.length !== 8)) return [1, 1, 1];
+  const r = ((intValue >> 16) & 255) / 255;
+  const g = ((intValue >> 8) & 255) / 255;
+  const b = (intValue & 255) / 255;
   return [r, g, b];
 };
 
 const toPx = (v: number | string | undefined): number => {
-  if (v == null) return 0;
+  if (v == undefined) return 0;
   if (typeof v === "number") return v;
   const s = String(v).trim();
-  const num = parseFloat(s.replace("px", ""));
-  return isNaN(num) ? 0 : num;
+  const number_ = Number.parseFloat(s.replace("px", ""));
+  return isNaN(number_) ? 0 : number_;
 };
 
 const PrismaticBurst = ({
@@ -229,32 +229,32 @@ const PrismaticBurst = ({
   rayCount,
   mixBlendMode = "lighten",
 }: PrismaticBurstProps) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const programRef = useRef<Program | null>(null);
-  const rendererRef = useRef<Renderer | null>(null);
-  const mouseTargetRef = useRef<[number, number]>([0.5, 0.5]);
-  const mouseSmoothRef = useRef<[number, number]>([0.5, 0.5]);
-  const pausedRef = useRef<boolean>(paused);
-  const gradTexRef = useRef<Texture | null>(null);
-  const hoverDampRef = useRef<number>(hoverDampness);
-  const isVisibleRef = useRef<boolean>(true);
-  const meshRef = useRef<Mesh | null>(null);
-  const triRef = useRef<Triangle | null>(null);
+  const containerReference = useRef<HTMLDivElement>(null);
+  const programReference = useRef<Program | null>(null);
+  const rendererReference = useRef<Renderer | null>(null);
+  const mouseTargetReference = useRef<[number, number]>([0.5, 0.5]);
+  const mouseSmoothReference = useRef<[number, number]>([0.5, 0.5]);
+  const pausedReference = useRef<boolean>(paused);
+  const gradTexReference = useRef<Texture | null>(null);
+  const hoverDampReference = useRef<number>(hoverDampness);
+  const isVisibleReference = useRef<boolean>(true);
+  const meshReference = useRef<Mesh | null>(null);
+  const triReference = useRef<Triangle | null>(null);
 
   useEffect(() => {
-    pausedRef.current = paused;
+    pausedReference.current = paused;
   }, [paused]);
   useEffect(() => {
-    hoverDampRef.current = hoverDampness;
+    hoverDampReference.current = hoverDampness;
   }, [hoverDampness]);
 
   useEffect(() => {
-    const container = containerRef.current;
+    const container = containerReference.current;
     if (!container) return;
 
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const renderer = new Renderer({ dpr, alpha: false, antialias: false });
-    rendererRef.current = renderer;
+    rendererReference.current = renderer;
 
     const gl = renderer.gl;
     gl.canvas.style.position = "absolute";
@@ -263,7 +263,7 @@ const PrismaticBurst = ({
     gl.canvas.style.height = "100%";
     gl.canvas.style.mixBlendMode =
       mixBlendMode && mixBlendMode !== "none" ? mixBlendMode : "";
-    container.appendChild(gl.canvas);
+    container.append(gl.canvas);
 
     const white = new Uint8Array([255, 255, 255, 255]);
     const gradientTex = new Texture(gl, {
@@ -278,7 +278,7 @@ const PrismaticBurst = ({
     gradientTex.magFilter = gl.LINEAR;
     gradientTex.wrapS = gl.CLAMP_TO_EDGE;
     gradientTex.wrapT = gl.CLAMP_TO_EDGE;
-    gradTexRef.current = gradientTex;
+    gradTexReference.current = gradientTex;
 
     const program = new Program(gl, {
       vertex: vertexShader,
@@ -300,12 +300,12 @@ const PrismaticBurst = ({
       },
     });
 
-    programRef.current = program;
+    programReference.current = program;
 
     const triangle = new Triangle(gl);
     const mesh = new Mesh(gl, { geometry: triangle, program });
-    triRef.current = triangle;
-    meshRef.current = mesh;
+    triReference.current = triangle;
+    meshReference.current = mesh;
 
     const resize = () => {
       const w = container.clientWidth || 1;
@@ -318,11 +318,11 @@ const PrismaticBurst = ({
     };
 
     let ro: ResizeObserver | null = null;
-    if ("ResizeObserver" in window) {
+    if ("ResizeObserver" in globalThis) {
       ro = new ResizeObserver(resize);
       ro.observe(container);
     } else {
-      (window as Window).addEventListener("resize", resize);
+      (globalThis as Window).addEventListener("resize", resize);
     }
     resize();
 
@@ -330,7 +330,7 @@ const PrismaticBurst = ({
       const rect = container.getBoundingClientRect();
       const x = (e.clientX - rect.left) / Math.max(rect.width, 1);
       const y = (e.clientY - rect.top) / Math.max(rect.height, 1);
-      mouseTargetRef.current = [
+      mouseTargetReference.current = [
         Math.min(Math.max(x, 0), 1),
         Math.min(Math.max(y, 0), 1),
       ];
@@ -338,10 +338,11 @@ const PrismaticBurst = ({
     container.addEventListener("pointermove", onPointer, { passive: true });
 
     let io: IntersectionObserver | null = null;
-    if ("IntersectionObserver" in window) {
+    if ("IntersectionObserver" in globalThis) {
       io = new IntersectionObserver(
         entries => {
-          if (entries[0]) isVisibleRef.current = entries[0].isIntersecting;
+          if (entries[0])
+            isVisibleReference.current = entries[0].isIntersecting;
         },
         { root: null, threshold: 0.01 }
       );
@@ -357,21 +358,22 @@ const PrismaticBurst = ({
     const update = (now: number) => {
       const dt = Math.max(0, now - last) * 0.001;
       last = now;
-      const visible = isVisibleRef.current && !document.hidden;
-      if (!pausedRef.current) accumTime += dt;
+      const visible = isVisibleReference.current && !document.hidden;
+      if (!pausedReference.current) accumTime += dt;
       if (!visible) {
         raf = requestAnimationFrame(update);
         return;
       }
-      const tau = 0.02 + Math.max(0, Math.min(1, hoverDampRef.current)) * 0.5;
+      const tau =
+        0.02 + Math.max(0, Math.min(1, hoverDampReference.current)) * 0.5;
       const alpha = 1 - Math.exp(-dt / tau);
-      const tgt = mouseTargetRef.current;
-      const sm = mouseSmoothRef.current;
+      const tgt = mouseTargetReference.current;
+      const sm = mouseSmoothReference.current;
       sm[0] += (tgt[0] - sm[0]) * alpha;
       sm[1] += (tgt[1] - sm[1]) * alpha;
       program.uniforms.uMouse.value = sm as any;
       program.uniforms.uTime.value = accumTime;
-      renderer.render({ scene: meshRef.current! });
+      renderer.render({ scene: meshReference.current! });
       raf = requestAnimationFrame(update);
     };
     raf = requestAnimationFrame(update);
@@ -384,30 +386,30 @@ const PrismaticBurst = ({
       io?.disconnect();
       document.removeEventListener("visibilitychange", onVis);
       try {
-        container.removeChild(gl.canvas);
-      } catch (e) {
-        void e;
+        gl.canvas.remove();
+      } catch (error) {
+        void error;
       }
-      meshRef.current = null;
-      triRef.current = null;
-      programRef.current = null;
+      meshReference.current = null;
+      triReference.current = null;
+      programReference.current = null;
       try {
-        const glCtx = rendererRef.current?.gl;
-        if (glCtx && gradTexRef.current?.texture)
-          glCtx.deleteTexture(gradTexRef.current.texture);
-      } catch (e) {
-        void e;
+        const glContext = rendererReference.current?.gl;
+        if (glContext && gradTexReference.current?.texture)
+          glContext.deleteTexture(gradTexReference.current.texture);
+      } catch (error) {
+        void error;
       }
-      programRef.current = null;
-      rendererRef.current = null;
-      gradTexRef.current = null;
-      meshRef.current = null;
-      triRef.current = null;
+      programReference.current = null;
+      rendererReference.current = null;
+      gradTexReference.current = null;
+      meshReference.current = null;
+      triReference.current = null;
     };
   }, []);
 
   useEffect(() => {
-    const canvas = rendererRef.current?.gl?.canvas as
+    const canvas = rendererReference.current?.gl?.canvas as
       | HTMLCanvasElement
       | undefined;
     if (canvas) {
@@ -417,9 +419,9 @@ const PrismaticBurst = ({
   }, [mixBlendMode]);
 
   useEffect(() => {
-    const program = programRef.current;
-    const renderer = rendererRef.current;
-    const gradTex = gradTexRef.current;
+    const program = programReference.current;
+    const renderer = rendererReference.current;
+    const gradTex = gradTexReference.current;
     if (!program || !renderer || !gradTex) return;
 
     program.uniforms.uIntensity.value = intensity ?? 1;
@@ -445,12 +447,12 @@ const PrismaticBurst = ({
       const capped = colors.slice(0, 64);
       count = capped.length;
       const data = new Uint8Array(count * 4);
-      for (let i = 0; i < count; i++) {
-        const [r, g, b] = hexToRgb01(capped[i]);
-        data[i * 4 + 0] = Math.round(r * 255);
-        data[i * 4 + 1] = Math.round(g * 255);
-        data[i * 4 + 2] = Math.round(b * 255);
-        data[i * 4 + 3] = 255;
+      for (let index = 0; index < count; index++) {
+        const [r, g, b] = hexToRgb01(capped[index]);
+        data[index * 4 + 0] = Math.round(r * 255);
+        data[index * 4 + 1] = Math.round(g * 255);
+        data[index * 4 + 2] = Math.round(b * 255);
+        data[index * 4 + 3] = 255;
       }
       gradTex.image = data;
       gradTex.width = count;
@@ -470,7 +472,7 @@ const PrismaticBurst = ({
     program.uniforms.uColorCount.value = count;
   }, [intensity, speed, animationType, colors, distort, offset, rayCount]);
 
-  return <div className="prismatic-burst-container" ref={containerRef} />;
+  return <div className="prismatic-burst-container" ref={containerReference} />;
 };
 
 export default PrismaticBurst;

@@ -34,14 +34,14 @@ const VisibilityCard: React.FC = () => {
   }, [isVisible]);
 
   const handleVisibilityToggle = () => {
-    const newVisibility = !isVisible;
+    const isNewVisibility = !isVisible;
 
     if (isTransitioning) return;
 
-    if (newVisibility) {
+    if (isNewVisibility) {
       setIsTransitioning(true);
       setIsShowing(true);
-      setVisibility(newVisibility);
+      setVisibility(isNewVisibility);
       setTimeout(() => {
         setIsTransitioning(false);
         setIsShowing(false);
@@ -49,7 +49,7 @@ const VisibilityCard: React.FC = () => {
     } else {
       setIsTransitioning(true);
       setIsShowing(false);
-      setVisibility(newVisibility);
+      setVisibility(isNewVisibility);
       setTimeout(() => {
         setIsTransitioning(false);
       }, 100);
@@ -57,13 +57,13 @@ const VisibilityCard: React.FC = () => {
   };
 
   const handleAnimationDurationChange = (value: number) => {
-    if (!isNaN(value) && value >= 100 && value <= 99999) {
+    if (!Number.isNaN(value) && value >= 100 && value <= 99_999) {
       setAnimationDuration(value);
     }
   };
 
   const handleDurationIncrease = () => {
-    const newValue = Math.min(animationDuration + 500, 10000);
+    const newValue = Math.min(animationDuration + 500, 10_000);
     setAnimationDuration(newValue);
   };
 
@@ -86,7 +86,8 @@ const VisibilityCard: React.FC = () => {
     const elapsed = Math.floor((currentTime - lastUpdateTime) / 1000);
     if (elapsed < 60) {
       return `${elapsed}с назад`;
-    } else if (elapsed < 3600) {
+    }
+    if (elapsed < 3600) {
       const minutes = Math.floor(elapsed / 60);
       return `${minutes}м ${elapsed % 60}с назад`;
     } else {
@@ -184,7 +185,7 @@ const VisibilityCard: React.FC = () => {
             </Button>
             <Slider
               min={100}
-              max={10000}
+              max={10_000}
               step={100}
               value={animationDuration}
               onChange={handleAnimationDurationChange}

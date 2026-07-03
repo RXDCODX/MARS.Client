@@ -20,31 +20,36 @@ type ADHDAction =
 
 const adhdReducer = (state: ADHDState, action: ADHDAction): ADHDState => {
   switch (action.type) {
-    case "SHOW":
+    case "SHOW": {
       return {
         isVisible: true,
         duration: action.payload.duration,
         remainingTime: action.payload.duration,
       };
-    case "HIDE":
+    }
+    case "HIDE": {
       return {
         ...state,
         isVisible: false,
         remainingTime: 0,
       };
-    case "TICK":
+    }
+    case "TICK": {
       return {
         ...state,
         remainingTime: state.remainingTime - 1,
       };
-    case "EXTEND":
+    }
+    case "EXTEND": {
       return {
         ...state,
         duration: state.duration + action.payload.duration,
         remainingTime: state.remainingTime + action.payload.duration,
       };
-    default:
+    }
+    default: {
       return state;
+    }
   }
 };
 
@@ -58,7 +63,7 @@ export function ADHDController() {
   const [announced, setAnnounced] = useState<boolean>(false);
   const [state, dispatch] = useReducer(adhdReducer, initialState);
   const [pendingExtensions, setPendingExtensions] = useState<number[]>([]);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalReference = useRef<NodeJS.Timeout | null>(null);
 
   // Функция форматирования времени в формат MM:SS
   const formatTime = (seconds: number): string => {
@@ -75,7 +80,7 @@ export function ADHDController() {
       dispatch({ type: "EXTEND", payload: { duration } });
     } else if (state.isVisible && state.remainingTime === 0) {
       // Если показывается, но время истекло (идет взрыв), добавляем в очередь продлений
-      setPendingExtensions(prev => [...prev, duration]);
+      setPendingExtensions(previous => [...previous, duration]);
     } else {
       // Если не показывается, начинаем показ
       dispatch({ type: "SHOW", payload: { duration } });
@@ -91,7 +96,7 @@ export function ADHDController() {
 
   useEffect(() => {
     if (state.isVisible && state.remainingTime > 0) {
-      intervalRef.current = setInterval(() => {
+      intervalReference.current = setInterval(() => {
         dispatch({ type: "TICK" });
       }, 1000);
     } else if (state.isVisible && state.remainingTime === 0) {
@@ -99,41 +104,45 @@ export function ADHDController() {
       SignalRContext.invoke("ExplosionGo");
       // Не скрываем сразу, ждем 2 секунды
     } else {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
+      if (intervalReference.current) {
+        clearInterval(intervalReference.current);
+        intervalReference.current = null;
       }
     }
 
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-        intervalRef.current = null;
+      if (!intervalReference.current) {
+        return;
       }
+
+      clearInterval(intervalReference.current);
+      intervalReference.current = null;
     };
   }, [state.isVisible, state.remainingTime]);
 
   // Обработка скрытия через 2 секунды после взрыва и очереди продлений
   useEffect(() => {
-    if (state.isVisible && state.remainingTime === 0) {
-      const hideTimer = setTimeout(() => {
-        dispatch({ type: "HIDE" });
-
-        // Проверяем очередь продлений
-        if (pendingExtensions.length > 0) {
-          const totalExtension = pendingExtensions.reduce(
-            (sum, ext) => sum + ext,
-            0
-          );
-          setPendingExtensions([]);
-          dispatch({ type: "SHOW", payload: { duration: totalExtension } });
-        }
-      }, 2000);
-
-      return () => {
-        clearTimeout(hideTimer);
-      };
+    if (!(state.isVisible && state.remainingTime === 0)) {
+      return;
     }
+
+    const hideTimer = setTimeout(() => {
+      dispatch({ type: "HIDE" });
+
+      // Проверяем очередь продлений
+      if (pendingExtensions.length > 0) {
+        const totalExtension = pendingExtensions.reduce(
+          (sum, extension) => sum + extension,
+          0
+        );
+        setPendingExtensions([]);
+        dispatch({ type: "SHOW", payload: { duration: totalExtension } });
+      }
+    }, 2000);
+
+    return () => {
+      clearTimeout(hideTimer);
+    };
   }, [state.isVisible, state.remainingTime, pendingExtensions]);
 
   return (

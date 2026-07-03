@@ -2,7 +2,7 @@ import { memo, ReactNode } from "react";
 
 import { useSoundRequestPlayer } from "./hooks";
 
-interface Props {
+interface Properties {
   children: ReactNode;
 }
 
@@ -20,7 +20,7 @@ function PlayerInitializer() {
  * Инициализирует SignalR, регистрирует actions в store и синхронизирует данные
  * Используется как wrapper для всех версий плеера (Desktop/Mobile)
  */
-function SoundRequestPlayerInitializerComponent({ children }: Props) {
+function SoundRequestPlayerInitializerComponent({ children }: Properties) {
   return (
     <>
       <PlayerInitializer />

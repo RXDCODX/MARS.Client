@@ -17,7 +17,7 @@ function normalize(value, min, max) {
 //*****************************************************************************
 
 function to_radians(angle) {
-  return (angle * Math.PI) / 180.0;
+  return (angle * Math.PI) / 180;
 }
 
 //*****************************************************************************
@@ -212,9 +212,8 @@ function is_intersect_ray_segment(
     let intersectionX = A[0] + t * d[0];
     let intersectionY = A[1] + t * d[1];
     return [intersectionX, intersectionY];
-  } else {
-    return null; // Нет пересечения или пересечение за пределами отрезка
   }
+  return null; // Нет пересечения или пересечение за пределами отрезка
 }
 
 //*****************************************************************************
@@ -234,7 +233,7 @@ function create_arc(
 
   if (angle == TAU) {
     positions.push(center[0], center[1]);
-    tex_coords.push(0.0, 0.0);
+    tex_coords.push(0, 0);
   }
 
   const segments = Math.round((segments_count * angle) / TAU);
@@ -242,11 +241,11 @@ function create_arc(
   let x0 = center[0];
   let y0 = center[1];
 
-  for (let i = 0; i <= segments; i++) {
-    const i_angle = start_angle + (angle * i) / segments;
+  for (let index = 0; index <= segments; index++) {
+    const index_angle = start_angle + (angle * index) / segments;
 
-    const cos_angle = Math.cos(i_angle);
-    const sin_angle = Math.sin(i_angle);
+    const cos_angle = Math.cos(index_angle);
+    const sin_angle = Math.sin(index_angle);
 
     const x1 = x0 + radius * cos_angle;
     const y1 = y0 + radius * sin_angle;
@@ -254,10 +253,10 @@ function create_arc(
     positions.push(x1, y1);
 
     // Нормализуем угол в диапазон от 0 до 1
-    const norm_angle = (i_angle - start_angle) / angle;
+    const norm_angle = (index_angle - start_angle) / angle;
 
     const tx_1 = norm_angle;
-    const ty_1 = 1.0;
+    const ty_1 = 1;
 
     tex_coords.push(tx_1, ty_1);
   }
@@ -271,22 +270,20 @@ function pack_vertices(gl, type, ...objects) {
   let vertices = [];
   let res_tex_coords = [];
 
-  for (const obj of objects) {
-    const model = obj.model.get_transform();
-    const positions = obj.get_positions();
-    const tex_coords = obj.get_tex_coords();
-    const vertices_count = obj.get_vertices_count();
+  for (const object of objects) {
+    const model = object.model.get_transform();
+    const positions = object.get_positions();
+    const tex_coords = object.get_tex_coords();
+    const vertices_count = object.get_vertices_count();
 
-    for (let i = 0; i < vertices_count; i += 2) {
-      let pos = vec2.fromValues(positions[i], positions[i + 1]);
+    for (let index = 0; index < vertices_count; index += 2) {
+      let pos = vec2.fromValues(positions[index], positions[index + 1]);
 
       vec2.transformMat4(pos, pos, model);
 
-      vertices.push(pos[0]);
-      vertices.push(pos[1]);
+      vertices.push(pos[0], pos[1]);
 
-      res_tex_coords.push(tex_coords[i]);
-      res_tex_coords.push(tex_coords[i + 1]);
+      res_tex_coords.push(tex_coords[index], tex_coords[index + 1]);
     }
   }
 
@@ -307,22 +304,20 @@ function update_vertex_pack(pack, ...objects) {
   let vertices = [];
   let res_tex_coords = [];
 
-  for (const obj of objects) {
-    const model = obj.model.get_transform();
-    const positions = obj.get_positions();
-    const tex_coords = obj.get_tex_coords();
-    const vertices_count = obj.get_vertices_count();
+  for (const object of objects) {
+    const model = object.model.get_transform();
+    const positions = object.get_positions();
+    const tex_coords = object.get_tex_coords();
+    const vertices_count = object.get_vertices_count();
 
-    for (let i = 0; i < vertices_count; i += 2) {
-      let pos = vec2.fromValues(positions[i], positions[i + 1]);
+    for (let index = 0; index < vertices_count; index += 2) {
+      let pos = vec2.fromValues(positions[index], positions[index + 1]);
 
       vec2.transformMat4(pos, pos, model);
 
-      vertices.push(pos[0]);
-      vertices.push(pos[1]);
+      vertices.push(pos[0], pos[1]);
 
-      res_tex_coords.push(tex_coords[i]);
-      res_tex_coords.push(tex_coords[i + 1]);
+      res_tex_coords.push(tex_coords[index], tex_coords[index + 1]);
     }
   }
 
@@ -331,16 +326,16 @@ function update_vertex_pack(pack, ...objects) {
 
 //*****************************************************************************
 
-function log_print(...args) {
+function log_print(...arguments_) {
   if (!shader_settings.is_debug_version) return;
 
-  console.log(...args);
+  console.log(...arguments_);
 }
 
 //*****************************************************************************
 
-function error_print(...args) {
-  console.error(...args);
+function error_print(...arguments_) {
+  console.error(...arguments_);
 }
 
 //*****************************************************************************

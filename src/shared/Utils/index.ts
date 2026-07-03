@@ -33,27 +33,25 @@ export function replaceEmotes({
   newParser: emoticons.EmoteParser;
 }) {
   if (!text) {
-    return undefined;
+    return;
   }
 
   let resultText: string = "";
 
   if (typeof text === "string") {
-    resultText = text.replace(/[\u{E0000}-\u{E007F}]/gu, "");
-    if (text) {
-      if (parser) {
-        resultText = parser.parse(text, 1);
-        // text = text.replaceAll(new RegExp("https", "g"), "http");
-      }
+    resultText = text.replaceAll(/[\u{E0000}-\u{E007F}]/gu, "");
+    if (text && parser) {
+      resultText = parser.parse(text, 1);
+      // text = text.replaceAll(new RegExp("https", "g"), "http");
     }
   } else if ("message" in text && typeof text.message === "string") {
     const message = text as ChatMessage;
 
     if (message.message === undefined) {
-      return undefined;
+      return;
     }
 
-    resultText = message.message.replace(/[\u{E0000}-\u{E007F}]/gu, "");
+    resultText = message.message.replaceAll(/[\u{E0000}-\u{E007F}]/gu, "");
 
     message.emoteSet?.emotes?.forEach(emote => {
       if (
@@ -61,7 +59,7 @@ export function replaceEmotes({
         emote.imageUrl === undefined ||
         message.message === undefined
       ) {
-        return undefined;
+        return;
       }
 
       resultText = resultText.replaceAll(
@@ -74,7 +72,7 @@ export function replaceEmotes({
     });
 
     function escapeRegExp(string: string) {
-      return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      return string.replaceAll(/[.*+?^${}()|[\]\\]/g, String.raw`\$&`);
     }
 
     const parsedText = newParser.parse(resultText);
@@ -84,7 +82,7 @@ export function replaceEmotes({
   }
 
   if (!text) {
-    return undefined;
+    return;
   }
 
   const result = parse(resultText);
@@ -119,19 +117,19 @@ export function getRandomInt(min: number, max: number): number {
 
   // Создаем буфер для одного 32-битного беззнакового целого числа
   const buffer = new Uint32Array(1);
-  window.crypto.getRandomValues(buffer);
-  const randomNumber = buffer[0] / (0xffffffff + 1); // Преобразовываем в число от 0 до 1 (включительно)
+  crypto.getRandomValues(buffer);
+  const randomNumber = buffer[0] / (0xff_ff_ff_ff + 1); // Преобразовываем в число от 0 до 1 (включительно)
 
   // Преобразуем в число в заданном диапазоне
   return Math.floor(randomNumber * (max - min + 1)) + min;
 }
 
 export function getCoordinates(
-  ref: HTMLImageElement | HTMLVideoElement | HTMLDivElement,
+  reference: HTMLImageElement | HTMLVideoElement | HTMLDivElement,
   info: MediaInfo,
   isInWindow: boolean = true
 ): React.CSSProperties {
-  const returnObj: React.CSSProperties = {};
+  const returnObject: React.CSSProperties = {};
   const { positionInfo } = info;
 
   // Получаем размеры элемента в зависимости от его типа
@@ -139,8 +137,8 @@ export function getCoordinates(
   let elementHeight: number;
 
   // Для div и других элементов используем offsetWidth/offsetHeight
-  elementWidth = ref.offsetWidth || positionInfo.width || 0;
-  elementHeight = ref.offsetHeight || positionInfo.height || 0;
+  elementWidth = reference.offsetWidth || positionInfo.width || 0;
+  elementHeight = reference.offsetHeight || positionInfo.height || 0;
 
   // Если размеры не определены, устанавливаем из positionInfo
   if (!elementWidth && positionInfo.width) {
@@ -160,10 +158,10 @@ export function getCoordinates(
       left = getRandomInt(0, window.innerWidth);
       top = getRandomInt(0, window.innerHeight);
     }
-    returnObj.left = `${left}px`;
-    returnObj.top = `${top}px`;
-    returnObj.position = "absolute";
-    return returnObj;
+    returnObject.left = `${left}px`;
+    returnObject.top = `${top}px`;
+    returnObject.position = "absolute";
+    return returnObject;
   }
 
   // Центрирование
@@ -176,14 +174,11 @@ export function getCoordinates(
     };
     if (isInWindow) {
       // Проверяем, не выходит ли элемент за границы окна
-      const rightWidth =
-        window.innerWidth > info.positionInfo.width
-          ? info.positionInfo.width
-          : window.innerWidth;
-      const rightHeight =
-        window.innerHeight > info.positionInfo.height
-          ? info.positionInfo.height
-          : window.innerHeight;
+      const rightWidth = Math.min(window.innerWidth, info.positionInfo.width);
+      const rightHeight = Math.min(
+        window.innerHeight,
+        info.positionInfo.height
+      );
 
       style = {
         ...style,
@@ -196,7 +191,7 @@ export function getCoordinates(
 
   if (positionInfo.isHorizontalCenter) {
     let top =
-      positionInfo.yCoordinate !== undefined ? positionInfo.yCoordinate : 0;
+      positionInfo.yCoordinate === undefined ? 0 : positionInfo.yCoordinate;
     // Если явно задан yCoordinate, не учитываем isInWindow
     if (positionInfo.yCoordinate === undefined && isInWindow) {
       // Корректируем top, чтобы элемент не выходил за границы
@@ -207,16 +202,16 @@ export function getCoordinates(
         top = elementHeight / 2;
       }
     }
-    returnObj.position = "absolute";
-    returnObj.left = "50%";
-    returnObj.transform = "translateX(-50%)";
-    returnObj.top = `${top}px`;
-    return returnObj;
+    returnObject.position = "absolute";
+    returnObject.left = "50%";
+    returnObject.transform = "translateX(-50%)";
+    returnObject.top = `${top}px`;
+    return returnObject;
   }
 
   if (positionInfo.isVerticallCenter) {
     let left =
-      positionInfo.xCoordinate !== undefined ? positionInfo.xCoordinate : 0;
+      positionInfo.xCoordinate === undefined ? 0 : positionInfo.xCoordinate;
     // Если явно задан xCoordinate, не учитываем isInWindow
     if (positionInfo.xCoordinate === undefined && isInWindow) {
       // Корректируем left, чтобы элемент не выходил за границы
@@ -227,11 +222,11 @@ export function getCoordinates(
         left = elementWidth / 2;
       }
     }
-    returnObj.position = "absolute";
-    returnObj.top = "50%";
-    returnObj.transform = "translateY(-50%)";
-    returnObj.left = `${left}px`;
-    return returnObj;
+    returnObject.position = "absolute";
+    returnObject.top = "50%";
+    returnObject.transform = "translateY(-50%)";
+    returnObject.left = `${left}px`;
+    return returnObject;
   }
 
   // Явное задание координат (без центрирования)
@@ -243,8 +238,8 @@ export function getCoordinates(
       }
       if (left < 0) left = 0;
     }
-    returnObj.left = `${left}px`;
-    returnObj.position = "absolute";
+    returnObject.left = `${left}px`;
+    returnObject.position = "absolute";
   }
   if (positionInfo.yCoordinate !== undefined) {
     let top = positionInfo.yCoordinate;
@@ -254,34 +249,32 @@ export function getCoordinates(
       }
       if (top < 0) top = 0;
     }
-    returnObj.top = `${top}px`;
-    returnObj.position = "absolute";
+    returnObject.top = `${top}px`;
+    returnObject.position = "absolute";
   }
 
   // Если координаты заданы (явно или через центрирование) - добавляем absolute
-  if (returnObj.left !== undefined || returnObj.top !== undefined) {
-    returnObj.position = "absolute";
+  if (returnObject.left !== undefined || returnObject.top !== undefined) {
+    returnObject.position = "absolute";
   }
 
-  return returnObj;
+  return returnObject;
 }
 
 export function getFileExtensionWithoutDot(extension: string | null) {
-  const result = extension?.startsWith(".")
-    ? extension.substring(1)
-    : extension;
+  const result = extension?.startsWith(".") ? extension.slice(1) : extension;
 
   return result;
 }
 
 export function getRandomRotation(mediaInfo: MediaInfo) {
-  const returnObj: React.CSSProperties = {};
+  const returnObject: React.CSSProperties = {};
 
   if (mediaInfo?.positionInfo.isRotated) {
-    returnObj.transform = `rotate(${getRandomInt(mediaInfo.positionInfo.rotation * -1, mediaInfo.positionInfo.rotation)}deg)`;
+    returnObject.transform = `rotate(${getRandomInt(-mediaInfo.positionInfo.rotation, mediaInfo.positionInfo.rotation)}deg)`;
   }
 
-  return returnObj;
+  return returnObject;
 }
 
 export const getRandomColor = (opacity: number = 1): string => {
@@ -309,11 +302,11 @@ export function replaceBadges(
       const lastVersion = set?.versions.find(e => e.id == v);
 
       if (!lastVersion) {
-        return undefined;
+        return;
       }
 
       const link = lastVersion.getImageUrl(4);
-      sub = sub + `<img class="badge_pa" src="${link}" type="image/png">\n`;
+      sub += `<img class="badge_pa" src="${link}" type="image/png">\n`;
     });
   } else if (chatMessage.badges !== undefined) {
     text = chatMessage.message;
@@ -323,22 +316,22 @@ export function replaceBadges(
       const lastVersion = set?.versions?.find(e => e.id == b.value);
 
       if (!lastVersion) {
-        return undefined;
+        return;
       }
 
       const link = lastVersion.getImageUrl(4);
-      sub = sub + `<img class="badge_pa" src="${link}" type="image/png">\n`;
+      sub += `<img class="badge_pa" src="${link}" type="image/png">\n`;
     });
   }
 
   if (!text) {
-    return undefined;
+    return;
   }
 
   const result = parse(sub);
 
   if (typeof result === "string") {
-    return undefined;
+    return;
   }
 
   return result;
@@ -350,11 +343,12 @@ export function getEmojisSrcFromText(
   newParser: emoticons.EmoteParser
 ) {
   if (typeof text === "string") {
-    text = text.replace(/[\u{E0000}-\u{E007F}]/gu, "");
+    text = text.replaceAll(/[\u{E0000}-\u{E007F}]/gu, "");
     const messages: string[] = text.split(" ");
     const result = messages.map(message => client.parse(message, 1));
     return result;
-  } else if ("message" in text && typeof text.message === "string") {
+  }
+  if ("message" in text && typeof text.message === "string") {
     const message = text as ChatMessage;
 
     if (
@@ -362,10 +356,10 @@ export function getEmojisSrcFromText(
       message.emoteSet === undefined ||
       message.emoteSet.emotes === undefined
     ) {
-      return undefined;
+      return;
     }
 
-    message.message = message.message.replace(/[\u{E0000}-\u{E007F}]/gu, "");
+    message.message = message.message.replaceAll(/[\u{E0000}-\u{E007F}]/gu, "");
 
     const urls = message.emoteSet.emotes.map(emote => {
       if (emote.name !== undefined) {
@@ -381,9 +375,8 @@ export function getEmojisSrcFromText(
     });
 
     return urls.filter(url => url !== undefined);
-  } else {
-    throw new Error("text must be string or ChatMessage");
   }
+  throw new Error("text must be string or ChatMessage");
 }
 
 export const isWhiteColor = (color: string) => {
@@ -430,14 +423,14 @@ export const hexToRgba = (hex: string, opacity: number = 1): string => {
 
   if (hex.length === 3) {
     // Если hex в сокращенном формате (например, "#F53")
-    r = parseInt(hex[0] + hex[0], 16);
-    g = parseInt(hex[1] + hex[1], 16);
-    b = parseInt(hex[2] + hex[2], 16);
+    r = Number.parseInt(hex[0] + hex[0], 16);
+    g = Number.parseInt(hex[1] + hex[1], 16);
+    b = Number.parseInt(hex[2] + hex[2], 16);
   } else if (hex.length === 6) {
     // Если hex в полном формате (например, "#FF5733")
-    r = parseInt(hex.substring(0, 2), 16);
-    g = parseInt(hex.substring(2, 4), 16);
-    b = parseInt(hex.substring(4, 6), 16);
+    r = Number.parseInt(hex.slice(0, 2), 16);
+    g = Number.parseInt(hex.slice(2, 4), 16);
+    b = Number.parseInt(hex.slice(4, 6), 16);
   } else {
     throw new Error('Неверный формат hex. Используйте "#FFF" или "#FFFFFF".');
   }
@@ -463,7 +456,7 @@ export function parseContent(text?: string): ContentPart[] | undefined {
 
   // Улучшенное разбиение с очисткой невидимых символов
   const parts = text
-    .replace(/[\u{E0000}-\u{E007F}]/gu, "")
+    .replaceAll(/[\u{E0000}-\u{E007F}]/gu, "")
     .split(/\s+/)
     .filter(part => part.trim().length > 0);
 
@@ -537,36 +530,36 @@ export function parseContent(text?: string): ContentPart[] | undefined {
 }
 
 export function arrayExcept<T>(
-  arr1: T[],
-  arr2: T[],
+  array1: T[],
+  array2: T[],
   comparer?: (a: T, b: T) => boolean
 ): T[] {
   // Если есть функция сравнения
   if (comparer) {
-    const inArr1Only = arr1.filter(
-      item1 => !arr2.some(item2 => comparer(item1, item2))
+    const inArray1Only = array1.filter(item1 =>
+      array2.every(item2 => !comparer(item1, item2))
     );
-    const inArr2Only = arr2.filter(
-      item2 => !arr1.some(item1 => comparer(item1, item2))
+    const inArray2Only = array2.filter(item2 =>
+      array1.every(item1 => !comparer(item1, item2))
     );
-    return [...inArr1Only, ...inArr2Only];
+    return [...inArray1Only, ...inArray2Only];
   }
 
   // Оптимизация с использованием Set для простого сравнения
-  const set1 = new Set(arr1);
-  const set2 = new Set(arr2);
+  const set1 = new Set(array1);
+  const set2 = new Set(array2);
 
   const result: T[] = [];
 
   // Добавляем элементы из arr1, которых нет в arr2
-  for (const item of arr1) {
+  for (const item of array1) {
     if (!set2.has(item)) {
       result.push(item);
     }
   }
 
   // Добавляем элементы из arr2, которых нет в arr1
-  for (const item of arr2) {
+  for (const item of array2) {
     if (!set1.has(item)) {
       result.push(item);
     }

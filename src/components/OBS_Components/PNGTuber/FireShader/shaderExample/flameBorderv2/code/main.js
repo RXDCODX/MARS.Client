@@ -1,6 +1,6 @@
 let flame_height_controller = {
-  height: 0.0,
-  speed: 0.0,
+  height: 0,
+  speed: 0,
   is_need_update: false,
 };
 
@@ -81,22 +81,20 @@ function update_flame_height(dt, shader_settings, height) {
 
 //*****************************************************************************
 
-function push_vertices(out_vertices, out_tex_coords, obj) {
-  const model = obj.model.get_transform();
-  const positions = obj.get_positions();
-  const tex_coords = obj.get_tex_coords();
-  const vertices_count = obj.get_vertices_count();
+function push_vertices(out_vertices, out_tex_coords, object) {
+  const model = object.model.get_transform();
+  const positions = object.get_positions();
+  const tex_coords = object.get_tex_coords();
+  const vertices_count = object.get_vertices_count();
 
-  for (let i = 0; i < vertices_count; i += 2) {
-    let pos = vec2.fromValues(positions[i], positions[i + 1]);
+  for (let index = 0; index < vertices_count; index += 2) {
+    let pos = vec2.fromValues(positions[index], positions[index + 1]);
 
     vec2.transformMat4(pos, pos, model);
 
-    out_vertices.push(pos[0]);
-    out_vertices.push(pos[1]);
+    out_vertices.push(pos[0], pos[1]);
 
-    out_tex_coords.push(tex_coords[i]);
-    out_tex_coords.push(tex_coords[i + 1]);
+    out_tex_coords.push(tex_coords[index], tex_coords[index + 1]);
   }
 }
 
@@ -107,13 +105,13 @@ function pack_corners(gl, corner_sprite, resolution_size) {
   let tex_coords = [];
 
   {
-    corner_sprite.model.set_position(0.0, 0.0);
+    corner_sprite.model.set_position(0, 0);
     corner_sprite.model.set_rotation(0);
     push_vertices(vertices, tex_coords, corner_sprite);
   }
 
   {
-    corner_sprite.model.set_position(0.0, resolution_size[1]);
+    corner_sprite.model.set_position(0, resolution_size[1]);
     corner_sprite.model.set_rotation(-90);
     push_vertices(vertices, tex_coords, corner_sprite);
   }
@@ -125,7 +123,7 @@ function pack_corners(gl, corner_sprite, resolution_size) {
   }
 
   {
-    corner_sprite.model.set_position(resolution_size[0], 0.0);
+    corner_sprite.model.set_position(resolution_size[0], 0);
     corner_sprite.model.set_rotation(90);
     push_vertices(vertices, tex_coords, corner_sprite);
   }
@@ -146,13 +144,13 @@ function update_corners_pack(pack, corner_sprite, resolution_size) {
   let tex_coords = [];
 
   {
-    corner_sprite.model.set_position(0.0, 0.0);
+    corner_sprite.model.set_position(0, 0);
     corner_sprite.model.set_rotation(0);
     push_vertices(vertices, tex_coords, corner_sprite);
   }
 
   {
-    corner_sprite.model.set_position(0.0, resolution_size[1]);
+    corner_sprite.model.set_position(0, resolution_size[1]);
     corner_sprite.model.set_rotation(-90);
     push_vertices(vertices, tex_coords, corner_sprite);
   }
@@ -164,7 +162,7 @@ function update_corners_pack(pack, corner_sprite, resolution_size) {
   }
 
   {
-    corner_sprite.model.set_position(resolution_size[0], 0.0);
+    corner_sprite.model.set_position(resolution_size[0], 0);
     corner_sprite.model.set_rotation(90);
     push_vertices(vertices, tex_coords, corner_sprite);
   }
@@ -176,14 +174,14 @@ function update_corners_pack(pack, corner_sprite, resolution_size) {
 
 //*****************************************************************************
 
-let g_is_loaded_settings = false;
+let isG_is_loaded_settings = false;
 
 //*****************************************************************************
 //                                  MAIN
 //*****************************************************************************
 
 function main() {
-  const canvas = document.getElementById("glCanvas");
+  const canvas = document.querySelector("#glCanvas");
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 
@@ -207,7 +205,7 @@ function main() {
     return;
   }
 
-  let main_status = false;
+  let isMain_status = false;
   let resolution_size = [gl.canvas.width, gl.canvas.height];
   let screen_texture_size = resolution_size;
 
@@ -256,7 +254,7 @@ function main() {
           shader_settings
         );
 
-        main_status = textures.is_has("noise texture");
+        isMain_status = textures.is_has("noise texture");
       }
     )
   );
@@ -270,7 +268,7 @@ function main() {
 
   let noise_texture = textures.get("noise texture");
 
-  const corner_sprite_size = shader_settings.flame_max_height * 2.0;
+  const corner_sprite_size = shader_settings.flame_max_height * 2;
   const corner_sprite_radius =
     shader_settings.corner_radius === 0 ? 0.01 : shader_settings.corner_radius;
   const corner_sprite_segments = 120;
@@ -288,7 +286,7 @@ function main() {
     corner_sprite_segments
   );
 
-  const border_sprite_height = shader_settings.flame_max_height * 1.0;
+  const border_sprite_height = shader_settings.flame_max_height * 1;
   const border_sprite_long_width =
     resolution_size[0] - 2 * border_sprite_height;
   const border_sprite_short_width =
@@ -333,10 +331,10 @@ function main() {
 
   let flame_height = shader_settings.flame_height;
 
-  let last_time = 0.0;
-  let dt = 0.0;
-  let interval_fps = 1.0 / shader_settings.max_fps;
-  let need_render = false;
+  let last_time = 0;
+  let dt = 0;
+  let interval_fps = 1 / shader_settings.max_fps;
+  let isNeed_render = false;
 
   const settings_handler = {
     set(target, property, value) {
@@ -351,36 +349,53 @@ function main() {
         shader_settings
       );
 
-      if (property === "flame_max_height") {
-        if (value < shader_settings.flame_height) {
-          shader_settings.flame_max_height = shader_settings.flame_height;
-        } else {
-          const corner_size = [value * 2.0, value * 2.0];
+      switch (property) {
+        case "flame_max_height": {
+          if (value < shader_settings.flame_height) {
+            shader_settings.flame_max_height = shader_settings.flame_height;
+          } else {
+            const corner_size = [value * 2, value * 2];
 
-          const long_size = [resolution_size[0] - corner_size[0], value];
-          border_long_sprite.set_size(long_size[0], long_size[1]);
+            const long_size = [resolution_size[0] - corner_size[0], value];
+            border_long_sprite.set_size(long_size[0], long_size[1]);
 
-          const short_size = [resolution_size[1] - corner_size[1], value];
-          border_short_sprite.set_size(short_size[0], short_size[1]);
+            const short_size = [resolution_size[1] - corner_size[1], value];
+            border_short_sprite.set_size(short_size[0], short_size[1]);
 
-          corner_sprite.set_size(corner_size[0], corner_size[1]);
+            corner_sprite.set_size(corner_size[0], corner_size[1]);
+
+            update_corners_pack(corner_pack, corner_sprite, resolution_size);
+          }
+
+          break;
+        }
+        case "corner_radius": {
+          corner_sprite.set_radius(value);
 
           update_corners_pack(corner_pack, corner_sprite, resolution_size);
-        }
-      } else if (property === "corner_radius") {
-        corner_sprite.set_radius(value);
 
-        update_corners_pack(corner_pack, corner_sprite, resolution_size);
-      } else if (property === "flame_height") {
-        if (shader_settings.flame_height > shader_settings.flame_max_height) {
-          shader_settings.flame_height = shader_settings.flame_max_height;
+          break;
         }
+        case "flame_height": {
+          if (shader_settings.flame_height > shader_settings.flame_max_height) {
+            shader_settings.flame_height = shader_settings.flame_max_height;
+          }
 
-        flame_height = shader_settings.flame_height;
-      } else if (property === "max_fps") {
-        interval_fps = 1.0 / value;
-      } else if (property === "linear_flame_animation_speed") {
-        flame_height_controller.speed = value;
+          flame_height = shader_settings.flame_height;
+
+          break;
+        }
+        case "max_fps": {
+          interval_fps = 1 / value;
+
+          break;
+        }
+        case "linear_flame_animation_speed": {
+          flame_height_controller.speed = value;
+
+          break;
+        }
+        // No default
       }
 
       return true;
@@ -392,7 +407,7 @@ function main() {
   function render(time) {
     requestAnimationFrame(render);
 
-    if (g_is_loaded_settings) {
+    if (isG_is_loaded_settings) {
       setup_flame_shader(
         flame_shader,
         projection_matrix,
@@ -401,7 +416,7 @@ function main() {
       );
 
       const value = shader_settings.flame_max_height;
-      const corner_size = [value * 2.0, value * 2.0];
+      const corner_size = [value * 2, value * 2];
 
       const long_size = [resolution_size[0] - corner_size[0], value];
       border_long_sprite.set_size(long_size[0], long_size[1]);
@@ -414,25 +429,25 @@ function main() {
 
       update_corners_pack(corner_pack, corner_sprite, resolution_size);
 
-      g_is_loaded_settings = false;
+      isG_is_loaded_settings = false;
     }
 
-    let tmp_time = to_seconds(time);
+    let temporary_time = to_seconds(time);
 
-    dt = tmp_time - last_time;
+    dt = temporary_time - last_time;
 
-    if (!main_status) return;
+    if (!isMain_status) return;
 
     if (dt >= interval_fps) {
-      last_time = tmp_time;
+      last_time = temporary_time;
 
-      need_render = true;
+      isNeed_render = true;
     }
 
-    if (!need_render) return;
+    if (!isNeed_render) return;
 
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-    gl.clearColor(0.0, 0.0, 0.0, 0.0); // Устанавливаем черный фон
+    gl.clearColor(0, 0, 0, 0); // Устанавливаем черный фон
 
     if (shader_settings.is_listen_microphone) {
       flame_height = update_flame_height(dt, shader_settings, flame_height);
@@ -443,14 +458,14 @@ function main() {
 
     bind_texture_unit(gl, noise_texture, 0);
 
-    flame_shader.set_uniform_float("iTime", tmp_time);
+    flame_shader.set_uniform_float("iTime", temporary_time);
     flame_shader.set_uniform_int("is_reflected", shader_settings.is_reflected);
     let size = border_long_sprite.get_size();
     flame_shader.set_uniform_float("object_size", size);
     flame_shader.set_uniform_float("flame_width", size[0]);
     flame_shader.set_uniform_float("flame_height", flame_height);
 
-    border_long_sprite.model.set_position(size[1], 0.0);
+    border_long_sprite.model.set_position(size[1], 0);
     border_long_sprite.model.set_rotation(0);
     border_long_sprite.draw(flame_shader);
 
@@ -466,7 +481,7 @@ function main() {
     flame_shader.set_uniform_float("flame_width", size[0]);
     flame_shader.set_uniform_float("flame_height", flame_height);
 
-    border_short_sprite.model.set_position(0.0, resolution_size[1] - size[1]);
+    border_short_sprite.model.set_position(0, resolution_size[1] - size[1]);
     border_short_sprite.model.set_rotation(-90);
     border_short_sprite.draw(flame_shader);
 
@@ -482,7 +497,7 @@ function main() {
     size = corner_sprite.get_size();
     flame_shader.set_uniform_float("object_size", size);
     flame_shader.set_uniform_float("flame_width", size[0] * 0.5);
-    flame_shader.set_uniform_float("flame_height", flame_height * 2.0);
+    flame_shader.set_uniform_float("flame_height", flame_height * 2);
 
     corner_pack.draw(flame_shader);
 
@@ -495,13 +510,13 @@ function main() {
 
     screen_sprite.draw(texture_shader);
 
-    fps = 1.0 / dt;
+    fps = 1 / dt;
 
     if (shader_settings.is_show_fps) {
       log_print("FPS: ", fps.toFixed(0));
     }
 
-    need_render = false;
+    isNeed_render = false;
   }
 
   requestAnimationFrame(render);
@@ -543,28 +558,28 @@ navigator.mediaDevices
       }
     };
   })
-  .catch(err => {
+  .catch(error => {
     /* handle the error */
-    console.error(err);
+    console.error(error);
   });
 
 //*****************************************************************************
 
 function save_settings() {
-  const jsonStr = JSON.stringify(shader_settings, null, 2);
+  const jsonString = JSON.stringify(shader_settings, null, 2);
 
-  const blob = new Blob([jsonStr], { type: "application/json" });
+  const blob = new Blob([jsonString], { type: "application/json" });
 
   const url = URL.createObjectURL(blob);
 
   const a = document.createElement("a");
   a.href = url;
   a.download = "shader_settings.json";
-  document.body.appendChild(a);
+  document.body.append(a);
 
   a.click();
 
-  document.body.removeChild(a);
+  a.remove();
   URL.revokeObjectURL(url);
 }
 
@@ -580,11 +595,11 @@ function load_settings() {
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = function (e) {
+    reader.addEventListener("load", e => {
       try {
         const json = JSON.parse(e.target.result);
         shader_settings = { ...shader_settings, ...json };
-        g_is_loaded_settings = true;
+        isG_is_loaded_settings = true;
         log_print("Настройки загружены:", shader_settings);
       } catch (error) {
         error_print("Ошибка при загрузке файла:", error);
@@ -592,7 +607,7 @@ function load_settings() {
           "Ошибка: файл должен быть в формате JSON и содержать валидные настройки."
         );
       }
-    };
+    });
     reader.readAsText(file);
   });
 

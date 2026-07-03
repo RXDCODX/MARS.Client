@@ -3,7 +3,7 @@ export function parseDurationToSeconds(duration?: string): number {
     const parts = duration.split(":");
 
     if (parts.length === 3) {
-      const [hours, minutes, seconds] = parts.map(part => Number(part));
+      const [hours, minutes, seconds] = parts.map(Number);
       if (
         Number.isFinite(hours) &&
         Number.isFinite(minutes) &&
@@ -14,7 +14,7 @@ export function parseDurationToSeconds(duration?: string): number {
     }
 
     if (parts.length === 2) {
-      const [minutes, seconds] = parts.map(part => Number(part));
+      const [minutes, seconds] = parts.map(Number);
       if (Number.isFinite(minutes) && Number.isFinite(seconds)) {
         return minutes * 60 + seconds;
       }

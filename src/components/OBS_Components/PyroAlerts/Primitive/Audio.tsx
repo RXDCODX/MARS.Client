@@ -15,20 +15,20 @@ declare global {
   }
 }
 
-interface Props {
+interface Properties {
   callback: () => void;
   mediaInfo: MediaDto;
   isHighPrior?: boolean;
 }
 
-export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
+export function Audio({ mediaInfo, callback, isHighPrior }: Properties) {
   const { fileInfo, id: Id, metaInfo } = mediaInfo.mediaInfo;
 
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const divRef = useRef<HTMLDivElement>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const gainNodeRef = useRef<GainNode | null>(null);
-  const sourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const audioReference = useRef<HTMLAudioElement>(null);
+  const divReference = useRef<HTMLDivElement>(null);
+  const audioContextReference = useRef<AudioContext | null>(null);
+  const gainNodeReference = useRef<GainNode | null>(null);
+  const sourceNodeReference = useRef<MediaElementAudioSourceNode | null>(null);
 
   const [blobUrl, setBlobUrl] = useState<string | null>(
     () => blobUrlCache.get(fileInfo.filePath) ?? null
@@ -61,9 +61,9 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
         blobUrlCache.set(fileInfo.filePath, url);
         setBlobUrl(url);
       })
-      .catch(err => {
+      .catch(error_ => {
         if (!controller.signal.aborted) {
-          console.warn("Failed to fetch audio blob:", err);
+          console.warn("Failed to fetch audio blob:", error_);
         }
       });
 
@@ -104,38 +104,42 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
   }, [isFreezeRequired]);
 
   const setupAudioContext = useCallback(() => {
-    if (!audioRef.current) return;
+    if (!audioReference.current) return;
 
     try {
       // Создаем AudioContext если его еще нет
-      if (!audioContextRef.current) {
+      if (!audioContextReference.current) {
         const AudioContextClass =
-          window.AudioContext || window.webkitAudioContext;
+          globalThis.AudioContext || globalThis.webkitAudioContext;
         if (AudioContextClass) {
-          audioContextRef.current = new AudioContextClass();
+          audioContextReference.current = new AudioContextClass();
         } else {
           throw new Error("AudioContext is not supported in this browser");
         }
       }
 
       // Создаем источник из audio элемента
-      if (!sourceNodeRef.current) {
-        sourceNodeRef.current =
-          audioContextRef.current.createMediaElementSource(audioRef.current);
+      if (!sourceNodeReference.current) {
+        sourceNodeReference.current =
+          audioContextReference.current.createMediaElementSource(
+            audioReference.current
+          );
       }
 
       // Создаем GainNode если его еще нет
-      if (!gainNodeRef.current) {
-        gainNodeRef.current = audioContextRef.current.createGain();
+      if (!gainNodeReference.current) {
+        gainNodeReference.current = audioContextReference.current.createGain();
       }
 
       // Подключаем цепочку: источник -> GainNode -> выход
-      sourceNodeRef.current.connect(gainNodeRef.current);
-      gainNodeRef.current.connect(audioContextRef.current.destination);
+      sourceNodeReference.current.connect(gainNodeReference.current);
+      gainNodeReference.current.connect(
+        audioContextReference.current.destination
+      );
 
       // Устанавливаем громкость (поддерживаем значения больше 100%)
       const volume = metaInfo.volume / 100;
-      gainNodeRef.current.gain.value = volume;
+      gainNodeReference.current.gain.value = volume;
     } catch (error) {
       console.warn("Failed to setup AudioContext:", error);
     }
@@ -145,21 +149,25 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
     unmuteAll();
     unfreeze();
     callback();
-    throw Error("Failed to play audio");
+    throw new Error("Failed to play audio");
   }, [callback, unfreeze, unmuteAll]);
 
   // Очистка ресурсов при размонтировании
   useEffect(
     () => () => {
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
+      if (audioContextReference.current) {
+        audioContextReference.current.close();
       }
     },
     []
   );
 
   return (
-    <div ref={divRef} style={{ width: "100%" }} data-testid="pyro-alert-audio">
+    <div
+      ref={divReference}
+      style={{ width: "100%" }}
+      data-testid="pyro-alert-audio"
+    >
       {mediaInfo.mediaInfo.stylesInfo.isShowLetterbox && (
         <BigTextBlockForAudio content={mediaInfo} />
       )}
@@ -167,7 +175,7 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
         <audio
           id={Id}
           key={Id}
-          ref={audioRef}
+          ref={audioReference}
           controls={false}
           src={blobUrl}
           onError={e => {
@@ -187,7 +195,7 @@ export function Audio({ mediaInfo, callback, isHighPrior }: Props) {
           }}
           onCanPlay={event => {
             setupAudioContext();
-            event.currentTarget.volume = 1.0;
+            event.currentTarget.volume = 1;
             event.currentTarget?.play();
           }}
           onCanPlayThrough={() => {

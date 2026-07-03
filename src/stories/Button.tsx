@@ -19,7 +19,7 @@ export const Button = ({
   size = "medium",
   backgroundColor,
   label,
-  ...props
+  ...properties
 }: ButtonProps) => {
   const mode = primary
     ? "storybook-button--primary"
@@ -31,7 +31,7 @@ export const Button = ({
         " "
       )}
       style={{ backgroundColor }}
-      {...props}
+      {...properties}
     >
       {label}
     </button>

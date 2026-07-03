@@ -17,13 +17,13 @@ import {
   usePlayerActions,
 } from "../store/scoreboardStore";
 
-type PlayerCardProps = {
+type PlayerCardProperties = {
   playerIndex: 1 | 2;
   label: string;
   accent: string;
 };
 
-const PlayerCard: React.FC<PlayerCardProps> = ({
+const PlayerCard: React.FC<PlayerCardProperties> = ({
   playerIndex,
   label,
   accent,
@@ -146,8 +146,8 @@ const PlayerCard: React.FC<PlayerCardProps> = ({
                 : "") + player.name
           }
           onChange={e => {
-            const val = e.target.value.replace(/^\[W\] |^\[L\] /, "");
-            handleNameChange(val);
+            const value = e.target.value.replace(/^\[W\] |^\[L\] /, "");
+            handleNameChange(value);
           }}
           size="small"
           style={{

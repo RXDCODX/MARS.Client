@@ -10,33 +10,33 @@ import { UserColumn } from "./UserColumn";
  * Чистый UI компонент - инициализация и фон управляются на уровне выше
  */
 function SoundRequestPlayerDesktopComponent() {
-  const trackScrollListRef = useRef<HTMLDivElement>(null);
-  const userScrollListRef = useRef<HTMLDivElement>(null);
-  const scrollSyncSourceRef = useRef<"track" | "user" | null>(null);
+  const trackScrollListReference = useRef<HTMLDivElement>(null);
+  const userScrollListReference = useRef<HTMLDivElement>(null);
+  const scrollSyncSourceReference = useRef<"track" | "user" | null>(null);
 
   const handleTrackScroll = useCallback((event: UIEvent<HTMLDivElement>) => {
-    if (scrollSyncSourceRef.current === "user") {
-      scrollSyncSourceRef.current = null;
+    if (scrollSyncSourceReference.current === "user") {
+      scrollSyncSourceReference.current = null;
     } else {
       const nextScrollTop = event.currentTarget.scrollTop;
-      const userScrollList = userScrollListRef.current;
+      const userScrollList = userScrollListReference.current;
 
       if (userScrollList && userScrollList.scrollTop !== nextScrollTop) {
-        scrollSyncSourceRef.current = "track";
+        scrollSyncSourceReference.current = "track";
         userScrollList.scrollTop = nextScrollTop;
       }
     }
   }, []);
 
   const handleUserScroll = useCallback((event: UIEvent<HTMLDivElement>) => {
-    if (scrollSyncSourceRef.current === "track") {
-      scrollSyncSourceRef.current = null;
+    if (scrollSyncSourceReference.current === "track") {
+      scrollSyncSourceReference.current = null;
     } else {
       const nextScrollTop = event.currentTarget.scrollTop;
-      const trackScrollList = trackScrollListRef.current;
+      const trackScrollList = trackScrollListReference.current;
 
       if (trackScrollList && trackScrollList.scrollTop !== nextScrollTop) {
-        scrollSyncSourceRef.current = "user";
+        scrollSyncSourceReference.current = "user";
         trackScrollList.scrollTop = nextScrollTop;
       }
     }
@@ -48,11 +48,11 @@ function SoundRequestPlayerDesktopComponent() {
         {/* Верхний блок 9 частей высоты: 7:3 по ширине */}
         <div className={styles.topSplit}>
           <TrackColumn
-            scrollListRef={trackScrollListRef}
+            scrollListRef={trackScrollListReference}
             onScroll={handleTrackScroll}
           />
           <UserColumn
-            scrollListRef={userScrollListRef}
+            scrollListRef={userScrollListReference}
             onScroll={handleUserScroll}
           />
         </div>

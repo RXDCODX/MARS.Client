@@ -3,7 +3,7 @@ import "./RippleGrid.css";
 import { Mesh, Program, Renderer, Triangle } from "ogl";
 import { useEffect, useRef } from "react";
 
-type Props = {
+type Properties = {
   enableRainbow?: boolean;
   gridColor?: string;
   rippleIntensity?: number;
@@ -18,36 +18,36 @@ type Props = {
   mouseInteractionRadius?: number;
 };
 
-const RippleGrid: React.FC<Props> = ({
+const RippleGrid: React.FC<Properties> = ({
   enableRainbow = false,
   gridColor = "#ffffff",
   rippleIntensity = 0.05,
-  gridSize = 10.0,
-  gridThickness = 15.0,
+  gridSize = 10,
+  gridThickness = 15,
   fadeDistance = 1.5,
-  vignetteStrength = 2.0,
+  vignetteStrength = 2,
   glowIntensity = 0.1,
-  opacity = 1.0,
+  opacity = 1,
   gridRotation = 0,
   mouseInteraction = true,
   mouseInteractionRadius = 1,
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const mousePositionRef = useRef({ x: 0.5, y: 0.5 });
-  const targetMouseRef = useRef({ x: 0.5, y: 0.5 });
-  const mouseInfluenceRef = useRef(0);
-  const uniformsRef = useRef<any>(null);
+  const containerReference = useRef<HTMLDivElement>(null);
+  const mousePositionReference = useRef({ x: 0.5, y: 0.5 });
+  const targetMouseReference = useRef({ x: 0.5, y: 0.5 });
+  const mouseInfluenceReference = useRef(0);
+  const uniformsReference = useRef<any>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerReference.current) return;
 
     const hexToRgb = (hex: string): [number, number, number] => {
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
       return result
         ? [
-            parseInt(result[1], 16) / 255,
-            parseInt(result[2], 16) / 255,
-            parseInt(result[3], 16) / 255,
+            Number.parseInt(result[1], 16) / 255,
+            Number.parseInt(result[2], 16) / 255,
+            Number.parseInt(result[3], 16) / 255,
           ]
         : [1, 1, 1];
     };
@@ -61,7 +61,7 @@ const RippleGrid: React.FC<Props> = ({
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     gl.canvas.style.width = "100%";
     gl.canvas.style.height = "100%";
-    containerRef.current.appendChild(gl.canvas);
+    containerReference.current.append(gl.canvas);
 
     const vert = `
 attribute vec2 position;
@@ -183,41 +183,47 @@ void main() {
       mouseInteractionRadius: { value: mouseInteractionRadius },
     };
 
-    uniformsRef.current = uniforms;
+    uniformsReference.current = uniforms;
 
     const geometry = new Triangle(gl);
     const program = new Program(gl, { vertex: vert, fragment: frag, uniforms });
     const mesh = new Mesh(gl, { geometry, program });
 
     const resize = () => {
-      const { clientWidth: w, clientHeight: h } = containerRef.current!;
+      const { clientWidth: w, clientHeight: h } = containerReference.current!;
       renderer.setSize(w, h);
       uniforms.iResolution.value = [w, h];
     };
 
     const handleMouseMove = (e: MouseEvent) => {
-      if (!mouseInteraction || !containerRef.current) return;
-      const rect = containerRef.current.getBoundingClientRect();
+      if (!mouseInteraction || !containerReference.current) return;
+      const rect = containerReference.current.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
-      const y = 1.0 - (e.clientY - rect.top) / rect.height;
-      targetMouseRef.current = { x, y };
+      const y = 1 - (e.clientY - rect.top) / rect.height;
+      targetMouseReference.current = { x, y };
     };
 
     const handleMouseEnter = () => {
       if (!mouseInteraction) return;
-      mouseInfluenceRef.current = 1.0;
+      mouseInfluenceReference.current = 1;
     };
 
     const handleMouseLeave = () => {
       if (!mouseInteraction) return;
-      mouseInfluenceRef.current = 0.0;
+      mouseInfluenceReference.current = 0;
     };
 
     window.addEventListener("resize", resize);
     if (mouseInteraction) {
-      containerRef.current.addEventListener("mousemove", handleMouseMove);
-      containerRef.current.addEventListener("mouseenter", handleMouseEnter);
-      containerRef.current.addEventListener("mouseleave", handleMouseLeave);
+      containerReference.current.addEventListener("mousemove", handleMouseMove);
+      containerReference.current.addEventListener(
+        "mouseenter",
+        handleMouseEnter
+      );
+      containerReference.current.addEventListener(
+        "mouseleave",
+        handleMouseLeave
+      );
     }
     resize();
 
@@ -225,19 +231,21 @@ void main() {
       uniforms.iTime.value = t * 0.001;
 
       const lerpFactor = 0.1;
-      mousePositionRef.current.x +=
-        (targetMouseRef.current.x - mousePositionRef.current.x) * lerpFactor;
-      mousePositionRef.current.y +=
-        (targetMouseRef.current.y - mousePositionRef.current.y) * lerpFactor;
+      mousePositionReference.current.x +=
+        (targetMouseReference.current.x - mousePositionReference.current.x) *
+        lerpFactor;
+      mousePositionReference.current.y +=
+        (targetMouseReference.current.y - mousePositionReference.current.y) *
+        lerpFactor;
 
       const currentInfluence = uniforms.mouseInfluence.value;
-      const targetInfluence = mouseInfluenceRef.current;
+      const targetInfluence = mouseInfluenceReference.current;
       uniforms.mouseInfluence.value +=
         (targetInfluence - currentInfluence) * 0.05;
 
       uniforms.mousePosition.value = [
-        mousePositionRef.current.x,
-        mousePositionRef.current.y,
+        mousePositionReference.current.x,
+        mousePositionReference.current.y,
       ];
 
       renderer.render({ scene: mesh });
@@ -248,48 +256,52 @@ void main() {
 
     return () => {
       window.removeEventListener("resize", resize);
-      if (mouseInteraction && containerRef.current) {
-        containerRef.current.removeEventListener("mousemove", handleMouseMove);
-        containerRef.current.removeEventListener(
+      if (mouseInteraction && containerReference.current) {
+        containerReference.current.removeEventListener(
+          "mousemove",
+          handleMouseMove
+        );
+        containerReference.current.removeEventListener(
           "mouseenter",
           handleMouseEnter
         );
-        containerRef.current.removeEventListener(
+        containerReference.current.removeEventListener(
           "mouseleave",
           handleMouseLeave
         );
       }
       renderer.gl.getExtension("WEBGL_lose_context")?.loseContext();
-      containerRef.current?.removeChild(gl.canvas);
+      containerReference.current?.removeChild(gl.canvas);
     };
   }, []);
 
   useEffect(() => {
-    if (!uniformsRef.current) return;
+    if (!uniformsReference.current) return;
 
     const hexToRgb = (hex: string): [number, number, number] => {
       const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
       return result
         ? [
-            parseInt(result[1], 16) / 255,
-            parseInt(result[2], 16) / 255,
-            parseInt(result[3], 16) / 255,
+            Number.parseInt(result[1], 16) / 255,
+            Number.parseInt(result[2], 16) / 255,
+            Number.parseInt(result[3], 16) / 255,
           ]
         : [1, 1, 1];
     };
 
-    uniformsRef.current.enableRainbow.value = enableRainbow;
-    uniformsRef.current.gridColor.value = hexToRgb(gridColor);
-    uniformsRef.current.rippleIntensity.value = rippleIntensity;
-    uniformsRef.current.gridSize.value = gridSize;
-    uniformsRef.current.gridThickness.value = gridThickness;
-    uniformsRef.current.fadeDistance.value = fadeDistance;
-    uniformsRef.current.vignetteStrength.value = vignetteStrength;
-    uniformsRef.current.glowIntensity.value = glowIntensity;
-    uniformsRef.current.opacity.value = opacity;
-    uniformsRef.current.gridRotation.value = gridRotation;
-    uniformsRef.current.mouseInteraction.value = mouseInteraction;
-    uniformsRef.current.mouseInteractionRadius.value = mouseInteractionRadius;
+    uniformsReference.current.enableRainbow.value = enableRainbow;
+    uniformsReference.current.gridColor.value = hexToRgb(gridColor);
+    uniformsReference.current.rippleIntensity.value = rippleIntensity;
+    uniformsReference.current.gridSize.value = gridSize;
+    uniformsReference.current.gridThickness.value = gridThickness;
+    uniformsReference.current.fadeDistance.value = fadeDistance;
+    uniformsReference.current.vignetteStrength.value = vignetteStrength;
+    uniformsReference.current.glowIntensity.value = glowIntensity;
+    uniformsReference.current.opacity.value = opacity;
+    uniformsReference.current.gridRotation.value = gridRotation;
+    uniformsReference.current.mouseInteraction.value = mouseInteraction;
+    uniformsReference.current.mouseInteractionRadius.value =
+      mouseInteractionRadius;
   }, [
     enableRainbow,
     gridColor,
@@ -305,7 +317,7 @@ void main() {
     mouseInteractionRadius,
   ]);
 
-  return <div ref={containerRef} className="ripple-grid-container" />;
+  return <div ref={containerReference} className="ripple-grid-container" />;
 };
 
 export default RippleGrid;

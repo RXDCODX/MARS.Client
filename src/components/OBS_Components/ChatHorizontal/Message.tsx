@@ -16,15 +16,15 @@ import GradientText from "@/shared/Utils/Animations/GradientText";
 import commonStyles from "../OBSCommon.module.scss";
 import styles from "./Message.module.scss";
 
-interface Props {
+interface Properties {
   message: ChatMessage;
   callback?: () => void;
   slotTop?: number; // добавлен prop для вертикального позиционирования
 }
 
-export const Message = ({ message, callback, slotTop }: Props) => {
+export const Message = ({ message, callback, slotTop }: Properties) => {
   const [handler, setHandler] = useState(true);
-  const divRef = useRef<HTMLDivElement>(null);
+  const divReference = useRef<HTMLDivElement>(null);
   const parser = useTwitchStore(state => state.parser);
   const parserToLink = useTwitchStore(state => state.parseToLink);
   const isVip = message.userDetail?.isVip ?? false;
@@ -48,7 +48,7 @@ export const Message = ({ message, callback, slotTop }: Props) => {
     position: "absolute",
     background: isVip || isModerator || message.isBroadcaster ? bg : undefined,
     margin: fontSize / 10 + "px",
-    top: slotTop !== undefined ? slotTop + "px" : undefined, // если slotTop передан — используем его
+    top: slotTop === undefined ? undefined : slotTop + "px", // если slotTop передан — используем его
   });
   const [divOffset, setDivOffset] = useState(0);
   const { play, style } = useAnimate({
@@ -59,7 +59,7 @@ export const Message = ({ message, callback, slotTop }: Props) => {
     },
     end: {
       ...baseStyles,
-      left: divOffset * -1 - 100 + "px",
+      left: -divOffset - 100 + "px",
     },
     onComplete: () => {
       setHandler(false);
@@ -67,25 +67,25 @@ export const Message = ({ message, callback, slotTop }: Props) => {
   });
 
   useEffect(() => {
-    const elem = divRef.current!;
+    const element = divReference.current!;
     const randPosY = Math.floor(
-      Math.random() * (window.innerHeight - elem.offsetHeight)
+      Math.random() * (window.innerHeight - element.offsetHeight)
     );
 
     setBaseStyles({
       ...baseStyles,
-      top: slotTop !== undefined ? slotTop + "px" : randPosY + "px",
+      top: slotTop === undefined ? randPosY + "px" : slotTop + "px",
       visibility: "visible",
       left: window.outerWidth + "px",
     });
   }, [message.id, baseStyles, slotTop]);
 
   useEffect(() => {
-    if (divRef.current && divRef.current.offsetWidth) {
-      setDivOffset(divRef.current.offsetWidth);
+    if (divReference.current && divReference.current.offsetWidth) {
+      setDivOffset(divReference.current.offsetWidth);
 
-      setBaseStyles(prev => ({
-        ...prev,
+      setBaseStyles(previous => ({
+        ...previous,
         left: window.outerWidth + divOffset + "px",
       }));
     }
@@ -93,7 +93,7 @@ export const Message = ({ message, callback, slotTop }: Props) => {
     if (divOffset !== 0) {
       play(true);
     }
-  }, [divRef.current?.offsetWidth, divOffset, play]);
+  }, [divReference.current?.offsetWidth, divOffset, play]);
 
   // Проверяем parser после определения всех переменных
   if (!parser || !parserToLink) {
@@ -101,7 +101,7 @@ export const Message = ({ message, callback, slotTop }: Props) => {
     return (
       handler && (
         <div
-          ref={divRef}
+          ref={divReference}
           key={message.id}
           style={style}
           className={styles.message + " " + animateStyles.animated}
@@ -128,7 +128,7 @@ export const Message = ({ message, callback, slotTop }: Props) => {
   return (
     handler && (
       <div
-        ref={divRef}
+        ref={divReference}
         key={message.id}
         style={style}
         className={styles.message + " " + animateStyles.animated}
@@ -145,10 +145,10 @@ export const Message = ({ message, callback, slotTop }: Props) => {
           className={styles.text}
           style={{ color: "white", marginLeft: "10px" }}
         >
-          {text?.map((part, idx) => {
+          {text?.map((part, index) => {
             if (message.isBroadcaster || isVip || isModerator) {
               return (
-                <span key={idx} className={commonStyles.textStrokeShadow}>
+                <span key={index} className={commonStyles.textStrokeShadow}>
                   <GradientText
                     text={
                       typeof part.content === "string"
@@ -162,7 +162,7 @@ export const Message = ({ message, callback, slotTop }: Props) => {
               );
             }
             switch (part.type) {
-              case "text":
+              case "text": {
                 return (
                   <span className={commonStyles.textStrokeShadow}>
                     {replaceEmotes({
@@ -172,24 +172,28 @@ export const Message = ({ message, callback, slotTop }: Props) => {
                     })}
                   </span>
                 );
-              case "image":
+              }
+              case "image": {
                 return (
-                  <span key={idx} className={commonStyles.textStrokeShadow}>
+                  <span key={index} className={commonStyles.textStrokeShadow}>
                     Ссылка
                   </span>
                 );
-              case "link":
+              }
+              case "link": {
                 return (
-                  <span key={idx} className={commonStyles.textStrokeShadow}>
+                  <span key={index} className={commonStyles.textStrokeShadow}>
                     Ссылка
                   </span>
                 );
-              case "video":
+              }
+              case "video": {
                 return (
-                  <span key={idx} className={commonStyles.textStrokeShadow}>
+                  <span key={index} className={commonStyles.textStrokeShadow}>
                     Ссылка
                   </span>
                 );
+              }
             }
           })}
         </div>

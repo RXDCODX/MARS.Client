@@ -25,22 +25,22 @@ export interface GradientBlindsProps {
 const MAX_COLORS = 8;
 const hexToRGB = (hex: string): [number, number, number] => {
   const c = hex.replace("#", "").padEnd(6, "0");
-  const r = parseInt(c.slice(0, 2), 16) / 255;
-  const g = parseInt(c.slice(2, 4), 16) / 255;
-  const b = parseInt(c.slice(4, 6), 16) / 255;
+  const r = Number.parseInt(c.slice(0, 2), 16) / 255;
+  const g = Number.parseInt(c.slice(2, 4), 16) / 255;
+  const b = Number.parseInt(c.slice(4, 6), 16) / 255;
   return [r, g, b];
 };
 const prepStops = (stops?: string[]) => {
-  const base = (stops && stops.length ? stops : ["#FF9FFC", "#5227FF"]).slice(
-    0,
-    MAX_COLORS
-  );
+  const base = (
+    stops && stops.length > 0 ? stops : ["#FF9FFC", "#5227FF"]
+  ).slice(0, MAX_COLORS);
   if (base.length === 1) base.push(base[0]);
-  while (base.length < MAX_COLORS) base.push(base[base.length - 1]);
-  const arr: [number, number, number][] = [];
-  for (let i = 0; i < MAX_COLORS; i++) arr.push(hexToRGB(base[i]));
+  while (base.length < MAX_COLORS) base.push(base.at(-1));
+  const array: [number, number, number][] = [];
+  for (let index = 0; index < MAX_COLORS; index++)
+    array.push(hexToRGB(base[index]));
   const count = Math.max(2, Math.min(MAX_COLORS, stops?.length ?? 2));
-  return { arr, count };
+  return { arr: array, count };
 };
 
 const GradientBlinds: React.FC<GradientBlindsProps> = ({
@@ -61,35 +61,35 @@ const GradientBlinds: React.FC<GradientBlindsProps> = ({
   shineDirection = "left",
   mixBlendMode = "lighten",
 }) => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const rafRef = useRef<number | null>(null);
-  const programRef = useRef<Program | null>(null);
-  const meshRef = useRef<Mesh<Triangle> | null>(null);
-  const geometryRef = useRef<Triangle | null>(null);
-  const rendererRef = useRef<Renderer | null>(null);
-  const mouseTargetRef = useRef<[number, number]>([0, 0]);
-  const lastTimeRef = useRef<number>(0);
-  const firstResizeRef = useRef<boolean>(true);
+  const containerReference = useRef<HTMLDivElement | null>(null);
+  const rafReference = useRef<number | null>(null);
+  const programReference = useRef<Program | null>(null);
+  const meshReference = useRef<Mesh<Triangle> | null>(null);
+  const geometryReference = useRef<Triangle | null>(null);
+  const rendererReference = useRef<Renderer | null>(null);
+  const mouseTargetReference = useRef<[number, number]>([0, 0]);
+  const lastTimeReference = useRef<number>(0);
+  const firstResizeReference = useRef<boolean>(true);
 
   useEffect(() => {
-    const container = containerRef.current;
+    const container = containerReference.current;
     if (!container) return;
 
     const renderer = new Renderer({
       dpr:
         dpr ??
-        (typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1),
+        (typeof window === "undefined" ? 1 : window.devicePixelRatio || 1),
       alpha: true,
       antialias: true,
     });
-    rendererRef.current = renderer;
+    rendererReference.current = renderer;
     const gl = renderer.gl;
     const canvas = gl.canvas as HTMLCanvasElement;
 
     canvas.style.width = "100%";
     canvas.style.height = "100%";
     canvas.style.display = "block";
-    container.appendChild(canvas);
+    container.append(canvas);
 
     const vertex = `
 attribute vec2 position;
@@ -214,7 +214,7 @@ void main() {
 }
 `;
 
-    const { arr: colorArr, count: colorCount } = prepStops(gradientColors);
+    const { arr: colorArray, count: colorCount } = prepStops(gradientColors);
     const uniforms: {
       iResolution: { value: [number, number, number] };
       iMouse: { value: [number, number] };
@@ -252,14 +252,14 @@ void main() {
       uMirror: { value: mirrorGradient ? 1 : 0 },
       uDistort: { value: distortAmount },
       uShineFlip: { value: shineDirection === "right" ? 1 : 0 },
-      uColor0: { value: colorArr[0] },
-      uColor1: { value: colorArr[1] },
-      uColor2: { value: colorArr[2] },
-      uColor3: { value: colorArr[3] },
-      uColor4: { value: colorArr[4] },
-      uColor5: { value: colorArr[5] },
-      uColor6: { value: colorArr[6] },
-      uColor7: { value: colorArr[7] },
+      uColor0: { value: colorArray[0] },
+      uColor1: { value: colorArray[1] },
+      uColor2: { value: colorArray[2] },
+      uColor3: { value: colorArray[3] },
+      uColor4: { value: colorArray[4] },
+      uColor5: { value: colorArray[5] },
+      uColor6: { value: colorArray[6] },
+      uColor7: { value: colorArray[7] },
       uColorCount: { value: colorCount },
     };
 
@@ -268,12 +268,12 @@ void main() {
       fragment,
       uniforms,
     });
-    programRef.current = program;
+    programReference.current = program;
 
     const geometry = new Triangle(gl);
-    geometryRef.current = geometry;
+    geometryReference.current = geometry;
     const mesh = new Mesh(gl, { geometry, program });
-    meshRef.current = mesh;
+    meshReference.current = mesh;
 
     const resize = () => {
       const rect = container.getBoundingClientRect();
@@ -298,12 +298,12 @@ void main() {
         uniforms.uBlindCount.value = Math.max(1, blindCount);
       }
 
-      if (firstResizeRef.current) {
-        firstResizeRef.current = false;
+      if (firstResizeReference.current) {
+        firstResizeReference.current = false;
         const cx = gl.drawingBufferWidth / 2;
         const cy = gl.drawingBufferHeight / 2;
         uniforms.iMouse.value = [cx, cy];
-        mouseTargetRef.current = [cx, cy];
+        mouseTargetReference.current = [cx, cy];
       }
     };
 
@@ -316,7 +316,7 @@ void main() {
       const scale = (renderer as unknown as { dpr?: number }).dpr || 1;
       const x = (e.clientX - rect.left) * scale;
       const y = (rect.height - (e.clientY - rect.top)) * scale;
-      mouseTargetRef.current = [x, y];
+      mouseTargetReference.current = [x, y];
       if (mouseDampening <= 0) {
         uniforms.iMouse.value = [x, y];
       }
@@ -324,58 +324,61 @@ void main() {
     canvas.addEventListener("pointermove", onPointerMove);
 
     const loop = (t: number) => {
-      rafRef.current = requestAnimationFrame(loop);
+      rafReference.current = requestAnimationFrame(loop);
       uniforms.iTime.value = t * 0.001;
       if (mouseDampening > 0) {
-        if (!lastTimeRef.current) lastTimeRef.current = t;
-        const dt = (t - lastTimeRef.current) / 1000;
-        lastTimeRef.current = t;
+        if (!lastTimeReference.current) lastTimeReference.current = t;
+        const dt = (t - lastTimeReference.current) / 1000;
+        lastTimeReference.current = t;
         const tau = Math.max(1e-4, mouseDampening);
         let factor = 1 - Math.exp(-dt / tau);
         if (factor > 1) factor = 1;
-        const target = mouseTargetRef.current;
-        const cur = uniforms.iMouse.value;
-        cur[0] += (target[0] - cur[0]) * factor;
-        cur[1] += (target[1] - cur[1]) * factor;
+        const target = mouseTargetReference.current;
+        const current = uniforms.iMouse.value;
+        current[0] += (target[0] - current[0]) * factor;
+        current[1] += (target[1] - current[1]) * factor;
       } else {
-        lastTimeRef.current = t;
+        lastTimeReference.current = t;
       }
-      if (!paused && programRef.current && meshRef.current) {
+      if (!paused && programReference.current && meshReference.current) {
         try {
-          renderer.render({ scene: meshRef.current });
-        } catch (e) {
-          console.error(e);
+          renderer.render({ scene: meshReference.current });
+        } catch (error) {
+          console.error(error);
         }
       }
     };
-    rafRef.current = requestAnimationFrame(loop);
+    rafReference.current = requestAnimationFrame(loop);
 
     return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (rafReference.current) cancelAnimationFrame(rafReference.current);
       canvas.removeEventListener("pointermove", onPointerMove);
       ro.disconnect();
       if (canvas.parentElement === container) {
-        container.removeChild(canvas);
+        canvas.remove();
       }
-      const callIfFn = <T extends object, K extends keyof T>(
-        obj: T | null,
+      const callIfFunction = <T extends object, K extends keyof T>(
+        object: T | null,
         key: K
       ) => {
-        if (obj && typeof obj[key] === "function") {
-          (obj[key] as unknown as () => void).call(obj);
+        if (object && typeof object[key] === "function") {
+          (object[key] as unknown as () => void).call(object);
         }
       };
-      callIfFn(programRef.current, "remove");
-      callIfFn(geometryRef.current, "remove");
-      callIfFn(meshRef.current as unknown as { remove?: () => void }, "remove");
-      callIfFn(
-        rendererRef.current as unknown as { destroy?: () => void },
+      callIfFunction(programReference.current, "remove");
+      callIfFunction(geometryReference.current, "remove");
+      callIfFunction(
+        meshReference.current as unknown as { remove?: () => void },
+        "remove"
+      );
+      callIfFunction(
+        rendererReference.current as unknown as { destroy?: () => void },
         "destroy"
       );
-      programRef.current = null;
-      geometryRef.current = null;
-      meshRef.current = null;
-      rendererRef.current = null;
+      programReference.current = null;
+      geometryReference.current = null;
+      meshReference.current = null;
+      rendererReference.current = null;
     };
   }, [
     dpr,
@@ -396,7 +399,7 @@ void main() {
 
   return (
     <div
-      ref={containerRef}
+      ref={containerReference}
       className={`gradient-blinds-container ${className}`}
       style={{
         ...(mixBlendMode && {

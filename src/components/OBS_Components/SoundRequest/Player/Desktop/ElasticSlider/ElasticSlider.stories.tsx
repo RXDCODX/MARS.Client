@@ -44,18 +44,18 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // Обертка для использования состояния
-function ElasticSliderWithState(args: {
+function ElasticSliderWithState(arguments_: {
   value: number;
   min?: number;
   max?: number;
   step?: number;
   disabled?: boolean;
 }) {
-  const [value, setValue] = useState(args.value);
+  const [value, setValue] = useState(arguments_.value);
 
   return (
     <div style={{ width: "400px", padding: "2rem" }}>
-      <ElasticSlider {...args} value={value} onChange={setValue} />
+      <ElasticSlider {...arguments_} value={value} onChange={setValue} />
     </div>
   );
 }
@@ -68,7 +68,7 @@ export const Default: Story = {
     step: 1,
     disabled: false,
   },
-  render: args => <ElasticSliderWithState {...args} />,
+  render: arguments_ => <ElasticSliderWithState {...arguments_} />,
 };
 
 export const LowVolume: Story = {
@@ -79,7 +79,7 @@ export const LowVolume: Story = {
     step: 1,
     disabled: false,
   },
-  render: args => <ElasticSliderWithState {...args} />,
+  render: arguments_ => <ElasticSliderWithState {...arguments_} />,
 };
 
 export const HighVolume: Story = {
@@ -90,7 +90,7 @@ export const HighVolume: Story = {
     step: 1,
     disabled: false,
   },
-  render: args => <ElasticSliderWithState {...args} />,
+  render: arguments_ => <ElasticSliderWithState {...arguments_} />,
 };
 
 export const Disabled: Story = {
@@ -101,7 +101,7 @@ export const Disabled: Story = {
     step: 1,
     disabled: true,
   },
-  render: args => <ElasticSliderWithState {...args} />,
+  render: arguments_ => <ElasticSliderWithState {...arguments_} />,
 };
 
 export const CustomRange: Story = {
@@ -112,5 +112,5 @@ export const CustomRange: Story = {
     step: 5,
     disabled: false,
   },
-  render: args => <ElasticSliderWithState {...args} />,
+  render: arguments_ => <ElasticSliderWithState {...arguments_} />,
 };

@@ -3,7 +3,7 @@ import "./SoftAurora.css";
 import { Mesh, Program, Renderer, Triangle } from "ogl";
 import { useEffect, useRef } from "react";
 
-interface SoftAuroraProps {
+interface SoftAuroraProperties {
   speed?: number;
   scale?: number;
   brightness?: number;
@@ -23,9 +23,9 @@ interface SoftAuroraProps {
 function hexToVec3(hex: string): [number, number, number] {
   const h = hex.replace("#", "");
   return [
-    parseInt(h.slice(0, 2), 16) / 255,
-    parseInt(h.slice(2, 4), 16) / 255,
-    parseInt(h.slice(4, 6), 16) / 255,
+    Number.parseInt(h.slice(0, 2), 16) / 255,
+    Number.parseInt(h.slice(2, 4), 16) / 255,
+    Number.parseInt(h.slice(4, 6), 16) / 255,
   ];
 }
 
@@ -165,24 +165,24 @@ void main() {
 export default function SoftAurora({
   speed = 0.6,
   scale = 1.5,
-  brightness = 1.0,
+  brightness = 1,
   color1 = "#f7f7f7",
   color2 = "#e100ff",
   noiseFrequency = 2.5,
-  noiseAmplitude = 1.0,
+  noiseAmplitude = 1,
   bandHeight = 0.5,
-  bandSpread = 1.0,
+  bandSpread = 1,
   octaveDecay = 0.1,
   layerOffset = 0,
-  colorSpeed = 1.0,
+  colorSpeed = 1,
   enableMouseInteraction = true,
   mouseInfluence = 0.25,
-}: SoftAuroraProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+}: SoftAuroraProperties) {
+  const containerReference = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-    const container = containerRef.current;
+    if (!containerReference.current) return;
+    const container = containerReference.current;
     const renderer = new Renderer({ alpha: true, premultipliedAlpha: false });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
@@ -195,7 +195,7 @@ export default function SoftAurora({
       const rect = gl.canvas.getBoundingClientRect();
       targetMouse = [
         (e.clientX - rect.left) / rect.width,
-        1.0 - (e.clientY - rect.top) / rect.height,
+        1 - (e.clientY - rect.top) / rect.height,
       ];
     }
 
@@ -248,7 +248,7 @@ export default function SoftAurora({
     });
 
     const mesh = new Mesh(gl, { geometry, program });
-    container.appendChild(gl.canvas);
+    container.append(gl.canvas);
 
     if (enableMouseInteraction) {
       gl.canvas.addEventListener("mousemove", handleMouseMove);
@@ -282,7 +282,7 @@ export default function SoftAurora({
         gl.canvas.removeEventListener("mousemove", handleMouseMove);
         gl.canvas.removeEventListener("mouseleave", handleMouseLeave);
       }
-      container.removeChild(gl.canvas);
+      gl.canvas.remove();
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, [
@@ -302,5 +302,5 @@ export default function SoftAurora({
     mouseInfluence,
   ]);
 
-  return <div ref={containerRef} className="soft-aurora-container" />;
+  return <div ref={containerReference} className="soft-aurora-container" />;
 }

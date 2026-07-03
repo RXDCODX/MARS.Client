@@ -46,7 +46,7 @@ void main() {
 }
 `;
 
-interface IridescenceProps {
+interface IridescenceProperties {
   color?: [number, number, number];
   speed?: number;
   amplitude?: number;
@@ -55,11 +55,11 @@ interface IridescenceProps {
 
 export default function Iridescence({
   color = [1, 1, 1],
-  speed = 1.0,
+  speed = 1,
   amplitude = 0.1,
   mouseReact = true,
   ...rest
-}: IridescenceProps) {
+}: IridescenceProperties) {
   const ctnDom = useRef<HTMLDivElement>(null);
   const mousePos = useRef({ x: 0.5, y: 0.5 });
 
@@ -83,7 +83,7 @@ export default function Iridescence({
         );
       }
     }
-    window.addEventListener("resize", resize, false);
+    window.addEventListener("resize", resize, { capture: false });
     resize();
 
     const geometry = new Triangle(gl);
@@ -117,12 +117,12 @@ export default function Iridescence({
       renderer.render({ scene: mesh });
     }
     animateId = requestAnimationFrame(update);
-    ctn.appendChild(gl.canvas);
+    ctn.append(gl.canvas);
 
     function handleMouseMove(e: MouseEvent) {
       const rect = ctn.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
-      const y = 1.0 - (e.clientY - rect.top) / rect.height;
+      const y = 1 - (e.clientY - rect.top) / rect.height;
       mousePos.current = { x, y };
       program.uniforms.uMouse.value[0] = x;
       program.uniforms.uMouse.value[1] = y;
@@ -137,7 +137,7 @@ export default function Iridescence({
       if (mouseReact) {
         ctn.removeEventListener("mousemove", handleMouseMove);
       }
-      ctn.removeChild(gl.canvas);
+      gl.canvas.remove();
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, [color, speed, amplitude, mouseReact]);

@@ -24,16 +24,16 @@ const AdminPanelContent = () => {
   const { swapPlayers } = usePlayerActions();
   const { handleReceiveState, reset } = useGeneralActions();
 
-  const lastUpdateRef = useRef<number>(0);
+  const lastUpdateReference = useRef<number>(0);
 
   const handleReceiveStateCallback = useCallback(
     (state: ScoreboardDto) => {
       const now = Date.now();
-      if (now - lastUpdateRef.current < 100) {
+      if (now - lastUpdateReference.current < 100) {
         console.log("Ignoring too frequent update");
         return;
       }
-      lastUpdateRef.current = now;
+      lastUpdateReference.current = now;
       handleReceiveState(state);
     },
     [handleReceiveState]

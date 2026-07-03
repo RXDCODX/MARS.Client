@@ -12,7 +12,7 @@ import { gaoAlertReducer, initialState } from "./GaoAlertReducer";
 export default function GaoAlertController() {
   const [state, dispatch] = useReducer(gaoAlertReducer, initialState);
   const [isAnounced, setAnounced] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const timeoutReference = useRef<NodeJS.Timeout | null>(null);
 
   const onGaoAlert = useCallback((dto: GaoAlertDto) => {
     dispatch({ type: 0, payload: dto }); // StateStatus.add
@@ -23,28 +23,32 @@ export default function GaoAlertController() {
       dispatch({ type: 1, payload: state.current }); // StateStatus.remove
     }
 
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
+    if (timeoutReference.current) {
+      clearTimeout(timeoutReference.current);
+      timeoutReference.current = null;
     }
 
     // Автоматически обрабатываем следующий алерт через 1.2 секунды
-    timeoutRef.current = setTimeout(() => {
-      if (state.queue.length > 0 && !state.isProcessing) {
-        // Логика обработки следующего алерта встроена в reducer
-        const nextAlert = state.queue[0];
-        dispatch({ type: 0, payload: nextAlert }); // StateStatus.add для следующего
+    timeoutReference.current = setTimeout(() => {
+      if (state.queue.length === 0 || state.isProcessing) {
+        return;
       }
+
+      // Логика обработки следующего алерта встроена в reducer
+      const nextAlert = state.queue[0];
+      dispatch({ type: 0, payload: nextAlert }); // StateStatus.add для следующего
     }, 1200);
   }, [state]);
 
   // Обработка очереди
   useEffect(() => {
-    if (!state.current && state.queue.length > 0 && !state.isProcessing) {
-      // Логика обработки следующего алерта встроена в reducer
-      const nextAlert = state.queue[0];
-      dispatch({ type: 0, payload: nextAlert }); // StateStatus.add для следующего
+    if (state.current || state.queue.length === 0 || state.isProcessing) {
+      return;
     }
+
+    // Логика обработки следующего алерта встроена в reducer
+    const nextAlert = state.queue[0];
+    dispatch({ type: 0, payload: nextAlert }); // StateStatus.add для следующего
   }, [state, dispatch]);
 
   // Подписка на SignalR события
@@ -53,8 +57,8 @@ export default function GaoAlertController() {
   // Очистка таймаутов при размонтировании
   useEffect(
     () => () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+      if (timeoutReference.current) {
+        clearTimeout(timeoutReference.current);
       }
     },
     []

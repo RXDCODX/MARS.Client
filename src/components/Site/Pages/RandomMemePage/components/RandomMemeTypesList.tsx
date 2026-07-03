@@ -1,9 +1,9 @@
 import { Alert, Button, Card, Flex, Spin } from "antd";
 import { Edit, Eye, Folder, Plus, RefreshCw, Trash2 } from "lucide-react";
 
-import { RandomMemeTypesListProps } from "../RandomMemePage.types";
+import { RandomMemeTypesListProps as RandomMemeTypesListProperties } from "../RandomMemePage.types";
 
-const RandomMemeTypesList: React.FC<RandomMemeTypesListProps> = ({
+const RandomMemeTypesList: React.FC<RandomMemeTypesListProperties> = ({
   memeTypes,
   isLoading,
   error,
@@ -13,7 +13,7 @@ const RandomMemeTypesList: React.FC<RandomMemeTypesListProps> = ({
   onDelete,
   onCreate,
 }) => {
-  if (isLoading && !memeTypes.length) {
+  if (isLoading && memeTypes.length === 0) {
     return (
       <div style={{ textAlign: "center", padding: "40px 0" }}>
         <Spin size="large" />

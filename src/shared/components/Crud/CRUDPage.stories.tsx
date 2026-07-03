@@ -11,12 +11,12 @@ type User = {
   role: "admin" | "user";
 };
 
-const inMemory: User[] = Array.from({ length: 57 }).map((_, i) => ({
-  id: i + 1,
-  name: `User ${i + 1}`,
-  age: 18 + ((i * 7) % 40),
-  active: i % 3 === 0,
-  role: i % 5 === 0 ? "admin" : "user",
+const inMemory: User[] = Array.from({ length: 57 }).map((_, index) => ({
+  id: index + 1,
+  name: `User ${index + 1}`,
+  age: 18 + ((index * 7) % 40),
+  active: index % 3 === 0,
+  role: index % 5 === 0 ? "admin" : "user",
 }));
 
 const sleep = (ms: number) => new Promise(res => setTimeout(res, ms));
@@ -44,8 +44,8 @@ const dataSource: DataSource<User, Partial<User>, Partial<User>> = {
   },
   async getById(id: string | number) {
     await sleep(80);
-    const numId = typeof id === "string" ? parseInt(id, 10) : id;
-    const found = inMemory.find(x => x.id === numId)!;
+    const numberId = typeof id === "string" ? parseInt(id, 10) : id;
+    const found = inMemory.find(x => x.id === numberId)!;
     return { ...found };
   },
   async create(payload) {
@@ -63,14 +63,14 @@ const dataSource: DataSource<User, Partial<User>, Partial<User>> = {
   },
   async update(id, payload) {
     await sleep(150);
-    const idx = inMemory.findIndex(x => x.id === id);
-    inMemory[idx] = { ...inMemory[idx], ...(payload as Partial<User>) };
-    return { ...inMemory[idx] };
+    const index = inMemory.findIndex(x => x.id === id);
+    inMemory[index] = { ...inMemory[index], ...(payload as Partial<User>) };
+    return { ...inMemory[index] };
   },
   async remove(id) {
     await sleep(120);
-    const idx = inMemory.findIndex(x => x.id === id);
-    if (idx >= 0) inMemory.splice(idx, 1);
+    const index = inMemory.findIndex(x => x.id === id);
+    if (index !== -1) inMemory.splice(index, 1);
   },
 };
 

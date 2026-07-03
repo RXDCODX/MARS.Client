@@ -55,7 +55,7 @@ export const Default: Story = {
     expect(textElement).toHaveTextContent("Gradient Text! ✨");
 
     // Проверяем стили
-    const computedStyle = window.getComputedStyle(textElement!);
+    const computedStyle = globalThis.getComputedStyle(textElement!);
     expect(computedStyle.fontWeight).toBe("600");
   },
 };
@@ -80,7 +80,7 @@ export const SlowSpeed: Story = {
     expect(textElement).toBeInTheDocument();
 
     // Проверяем стили для медленной анимации
-    const computedStyle = window.getComputedStyle(textElement!);
+    const computedStyle = globalThis.getComputedStyle(textElement!);
     expect(computedStyle.fontWeight).toBe("400");
   },
 };
@@ -106,7 +106,7 @@ export const FastSpeed: Story = {
     expect(textElement).toBeInTheDocument();
 
     // Проверяем стили для быстрой анимации
-    const computedStyle = window.getComputedStyle(textElement!);
+    const computedStyle = globalThis.getComputedStyle(textElement!);
     expect(computedStyle.fontWeight).toBe("700");
   },
 };
@@ -134,7 +134,7 @@ export const LongText: Story = {
     expect(textElement).toHaveTextContent("This is a very long gradient text");
 
     // Проверяем стили для очень медленной анимации
-    const computedStyle = window.getComputedStyle(textElement!);
+    const computedStyle = globalThis.getComputedStyle(textElement!);
     expect(computedStyle.fontWeight).toBe("500");
   },
 };

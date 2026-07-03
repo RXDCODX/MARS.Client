@@ -8,7 +8,7 @@ import styles from "./ADHDLayout.module.scss";
 export function ExplosionVideo() {
   const [announced, setAnnounced] = useState<boolean>(false);
   const [isExploding, setIsExploding] = useState(false);
-  const explosionRef = useRef<HTMLVideoElement | null>(null);
+  const explosionReference = useRef<HTMLVideoElement | null>(null);
 
   // Подписка на SignalR событие "explosion"
   SignalRContext.useSignalREffect(
@@ -20,23 +20,25 @@ export function ExplosionVideo() {
   );
 
   useEffect(() => {
-    if (isExploding && explosionRef.current) {
-      const videoElement = explosionRef.current;
-      videoElement.play();
-
-      // Сброс состояния после окончания видео
-      const handleVideoEnd = () => {
-        setIsExploding(false);
-        videoElement.pause();
-        videoElement.currentTime = 0;
-      };
-
-      videoElement.addEventListener("ended", handleVideoEnd);
-
-      return () => {
-        videoElement.removeEventListener("ended", handleVideoEnd);
-      };
+    if (!(isExploding && explosionReference.current)) {
+      return;
     }
+
+    const videoElement = explosionReference.current;
+    videoElement.play();
+
+    // Сброс состояния после окончания видео
+    const handleVideoEnd = () => {
+      setIsExploding(false);
+      videoElement.pause();
+      videoElement.currentTime = 0;
+    };
+
+    videoElement.addEventListener("ended", handleVideoEnd);
+
+    return () => {
+      videoElement.removeEventListener("ended", handleVideoEnd);
+    };
   }, [isExploding]);
 
   return (
@@ -46,7 +48,7 @@ export function ExplosionVideo() {
       )}
       {isExploding && (
         <video
-          ref={explosionRef}
+          ref={explosionReference}
           className={styles.explosionVideo}
           src={video}
           muted

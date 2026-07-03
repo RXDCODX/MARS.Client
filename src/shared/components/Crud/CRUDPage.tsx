@@ -3,7 +3,11 @@ import { useCallback, useEffect, useState } from "react";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import { ConfirmDeleteModal, EditCreateModal } from "./CrudModals";
-import { CrudPageProps, ListParams, SortDirection } from "./types";
+import {
+  CrudPageProps as CrudPageProperties,
+  ListParams as ListParameters,
+  SortDirection,
+} from "./types";
 
 interface RowWithId {
   id?: string | number;
@@ -34,7 +38,7 @@ export default function CRUDPage<
   onCreated,
   onUpdated,
   onDeleted,
-}: CrudPageProps<T, TCreate, TUpdate, TFilter>) {
+}: CrudPageProperties<T, TCreate, TUpdate, TFilter>) {
   const { showToast } = useToastModal();
   const getId = useCallback(
     (row: T): string | number => {
@@ -64,15 +68,15 @@ export default function CRUDPage<
   const [deleteTarget, setDeleteTarget] = useState<T | null>(null);
 
   const load = useCallback(
-    async (currentParams: ListParams<TFilter>) => {
+    async (currentParameters: ListParameters<TFilter>) => {
       setLoading(true);
       try {
-        const res = await dataSource.list(currentParams);
+        const res = await dataSource.list(currentParameters);
         setItems(res.items);
         setTotal(res.total);
-      } catch (err) {
+      } catch (error) {
         const errorMessage =
-          err instanceof Error ? err.message : "Ошибка загрузки";
+          error instanceof Error ? error.message : "Ошибка загрузки";
         showToast({
           success: false,
           message: errorMessage,
@@ -85,7 +89,7 @@ export default function CRUDPage<
   );
 
   useEffect(() => {
-    const params: ListParams<TFilter> = {
+    const parameters: ListParameters<TFilter> = {
       page,
       pageSize,
       sortBy,
@@ -93,13 +97,13 @@ export default function CRUDPage<
       search: enableSearch ? search : undefined,
       filters,
     };
-    load(params);
+    load(parameters);
   }, [load, page, pageSize, sortBy, sortDir, search, filters, enableSearch]);
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
 
   const handleCreate = async (values: Record<string, unknown>) => {
-    const params: ListParams<TFilter> = {
+    const parameters: ListParameters<TFilter> = {
       page,
       pageSize,
       sortBy,
@@ -109,12 +113,12 @@ export default function CRUDPage<
     };
     const created = await dataSource.create(values as TCreate);
     onCreated?.(created);
-    await load(params);
+    await load(parameters);
   };
 
   const handleUpdate = async (values: Record<string, unknown>) => {
     if (!editTarget) return;
-    const params: ListParams<TFilter> = {
+    const parameters: ListParameters<TFilter> = {
       page,
       pageSize,
       sortBy,
@@ -125,12 +129,12 @@ export default function CRUDPage<
     const id = getId(editTarget);
     const updated = await dataSource.update(id, values as TUpdate);
     onUpdated?.(updated);
-    await load(params);
+    await load(parameters);
   };
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
-    const params: ListParams<TFilter> = {
+    const parameters: ListParameters<TFilter> = {
       page,
       pageSize,
       sortBy,
@@ -141,7 +145,7 @@ export default function CRUDPage<
     const id = getId(deleteTarget);
     await dataSource.remove(id);
     onDeleted?.(id);
-    await load(params);
+    await load(parameters);
   };
 
   const renderHeaderCell = (
@@ -157,11 +161,11 @@ export default function CRUDPage<
         type="button"
         className="btn btn-link p-0 text-decoration-none"
         onClick={() => {
-          if (!isActive) {
+          if (isActive) {
+            setSortDir(dir === "asc" ? "desc" : "asc");
+          } else {
             setSortBy(columnId);
             setSortDir("asc");
-          } else {
-            setSortDir(dir === "asc" ? "desc" : "asc");
           }
         }}
       >

@@ -24,7 +24,7 @@ export interface DataSource<
   TUpdate = Partial<T>,
   TFilter extends Record<string, unknown> = Record<string, unknown>,
 > {
-  list: (params: ListParams<TFilter>) => Promise<ListResult<T>>;
+  list: (parameters: ListParams<TFilter>) => Promise<ListResult<T>>;
   getById: (id: string | number) => Promise<T>;
   create: (payload: TCreate) => Promise<T>;
   update: (id: string | number, payload: TUpdate) => Promise<T>;

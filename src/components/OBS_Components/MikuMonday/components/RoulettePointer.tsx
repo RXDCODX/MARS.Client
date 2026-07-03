@@ -1,6 +1,6 @@
 import styles from "../MikuMonday.module.scss";
 
-interface RoulettePointerProps {
+interface RoulettePointerProperties {
   visible: boolean;
   pointerHeight: number;
 }
@@ -8,7 +8,7 @@ interface RoulettePointerProps {
 export default function RoulettePointer({
   visible,
   pointerHeight,
-}: RoulettePointerProps) {
+}: RoulettePointerProperties) {
   if (!visible) {
     return null;
   }

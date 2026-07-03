@@ -1,2 +1,1 @@
-import { KeyWordedText } from "./KeyWordedText";
-export { KeyWordedText as KeyWordText };
+export { KeyWordedText as KeyWordText } from "./KeyWordedText";

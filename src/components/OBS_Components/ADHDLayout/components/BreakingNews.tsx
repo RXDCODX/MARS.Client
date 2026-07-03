@@ -9,8 +9,8 @@ export function BreakingNews() {
       <div className={styles.breakingNewsContent}>
         <div className={styles.breakingBadge}>BREAKING</div>
         <div className={styles.breakingNewsText}>
-          {text.map((element, idx) => (
-            <span key={idx}>
+          {text.map((element, index) => (
+            <span key={index}>
               {element}
               {"ㅤ"}•{"ㅤ"}
             </span>

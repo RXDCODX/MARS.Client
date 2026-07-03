@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-interface UseTrackProgressProps {
+interface UseTrackProgressProperties {
   durationSec: number;
   isPlaying: boolean;
   trackId?: string;
@@ -19,9 +19,9 @@ function parseDurationToSeconds(duration?: string): number {
     );
     if (!match) return 0;
 
-    const hours = parseFloat(match[1] || "0");
-    const minutes = parseFloat(match[2] || "0");
-    const seconds = parseFloat(match[3] || "0");
+    const hours = Number.parseFloat(match[1] || "0");
+    const minutes = Number.parseFloat(match[2] || "0");
+    const seconds = Number.parseFloat(match[3] || "0");
 
     return hours * 3600 + minutes * 60 + seconds;
   } catch {
@@ -34,33 +34,33 @@ export function useTrackProgress({
   isPlaying,
   trackId,
   initialProgress,
-}: UseTrackProgressProps) {
+}: UseTrackProgressProperties) {
   const [progress, setProgress] = useState(0);
-  const startTimeRef = useRef<number>(0);
-  const pausedAtRef = useRef<number>(0);
-  const wasPausedRef = useRef<boolean>(false);
-  const rafRef = useRef<number | null>(null);
-  const lastExternalProgressRef = useRef<number>(0);
-  const lastTrackKeyRef = useRef<string>("");
+  const startTimeReference = useRef<number>(0);
+  const pausedAtReference = useRef<number>(0);
+  const wasPausedReference = useRef<boolean>(false);
+  const rafReference = useRef<number | null>(null);
+  const lastExternalProgressReference = useRef<number>(0);
+  const lastTrackKeyReference = useRef<string>("");
 
   // Reset/start progress when track changes
   useEffect(() => {
     if (!trackId || !durationSec) {
       setProgress(0);
-      lastExternalProgressRef.current = 0;
+      lastExternalProgressReference.current = 0;
       return;
     }
 
     // Если это новый трек, сбрасываем все состояния
-    if (lastTrackKeyRef.current !== trackId) {
+    if (lastTrackKeyReference.current !== trackId) {
       console.log("🟠 [useTrackProgress] NEW TRACK DETECTED:", {
-        oldTrackKey: lastTrackKeyRef.current,
+        oldTrackKey: lastTrackKeyReference.current,
         newTrackKey: trackId,
         initialProgress,
         durationSec,
       });
 
-      lastTrackKeyRef.current = trackId;
+      lastTrackKeyReference.current = trackId;
 
       // Парсим начальный прогресс (если есть)
       const initialProgressSec = parseDurationToSeconds(initialProgress);
@@ -68,13 +68,13 @@ export function useTrackProgress({
         durationSec > 0 ? initialProgressSec / durationSec : 0;
 
       setProgress(initialProgressRatio);
-      lastExternalProgressRef.current = initialProgressRatio;
+      lastExternalProgressReference.current = initialProgressRatio;
 
       // Устанавливаем startTime с учетом начального прогресса
-      startTimeRef.current = Date.now() - initialProgressSec * 1000;
+      startTimeReference.current = Date.now() - initialProgressSec * 1000;
 
-      wasPausedRef.current = false;
-      pausedAtRef.current = 0;
+      wasPausedReference.current = false;
+      pausedAtReference.current = 0;
 
       if (initialProgressSec > 0) {
         console.log(
@@ -92,7 +92,7 @@ export function useTrackProgress({
     const externalProgressSeconds = parseDurationToSeconds(initialProgress);
     const externalProgress =
       durationSec > 0 ? externalProgressSeconds / durationSec : 0;
-    const lastProgress = lastExternalProgressRef.current;
+    const lastProgress = lastExternalProgressReference.current;
     const progressDiff = externalProgress - lastProgress;
 
     // Проверяем значительные изменения вперед (перемотка вперед на 3+ секунд)
@@ -149,17 +149,18 @@ export function useTrackProgress({
         fromSeconds: progress * durationSec,
         toSeconds: externalProgressSeconds,
       });
-      lastExternalProgressRef.current = externalProgress;
+      lastExternalProgressReference.current = externalProgress;
       setProgress(externalProgress);
 
       // Пересчитываем время начала для корректного продолжения анимации
       if (isPlaying) {
-        startTimeRef.current = Date.now() - externalProgressSeconds * 1000;
+        startTimeReference.current =
+          Date.now() - externalProgressSeconds * 1000;
       }
     } else if (Math.abs(progressDiff) > 0.01) {
       // Если изменение незначительное, просто обновляем отслеживаемое значение
       // но не синхронизируемся, чтобы избежать дрожания
-      lastExternalProgressRef.current = externalProgress;
+      lastExternalProgressReference.current = externalProgress;
     }
   }, [initialProgress, durationSec, isPlaying, progress, trackId]);
 
@@ -169,7 +170,7 @@ export function useTrackProgress({
 
     const loop = () => {
       const currentTime = Date.now();
-      const elapsedSec = (currentTime - startTimeRef.current) / 1000;
+      const elapsedSec = (currentTime - startTimeReference.current) / 1000;
       const pr = Math.min(elapsedSec / durationSec, 1);
 
       // Логируем изменения прогресса в анимации (только значительные)
@@ -182,7 +183,7 @@ export function useTrackProgress({
           elapsed: elapsedSec,
           durationSec,
           isPlaying,
-          startTime: startTimeRef.current,
+          startTime: startTimeReference.current,
           currentTime,
         });
       }
@@ -190,40 +191,40 @@ export function useTrackProgress({
       setProgress(pr);
 
       if (pr < 1 && isPlaying) {
-        rafRef.current = requestAnimationFrame(loop);
+        rafReference.current = requestAnimationFrame(loop);
       }
     };
 
     if (isPlaying) {
-      if (wasPausedRef.current) {
-        const pauseDelta = Date.now() - pausedAtRef.current;
+      if (wasPausedReference.current) {
+        const pauseDelta = Date.now() - pausedAtReference.current;
         console.log("▶️ [useTrackProgress] TRACK RESUMED after pause:", {
           pauseDuration: pauseDelta,
         });
-        startTimeRef.current += pauseDelta;
-        wasPausedRef.current = false;
+        startTimeReference.current += pauseDelta;
+        wasPausedReference.current = false;
       }
-      rafRef.current = requestAnimationFrame(loop);
+      rafReference.current = requestAnimationFrame(loop);
     } else {
-      if (!wasPausedRef.current && progress > 0) {
+      if (!wasPausedReference.current && progress > 0) {
         console.log("⏸️ [useTrackProgress] TRACK PAUSED");
-        wasPausedRef.current = true;
-        pausedAtRef.current = Date.now();
+        wasPausedReference.current = true;
+        pausedAtReference.current = Date.now();
       }
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      if (rafReference.current) cancelAnimationFrame(rafReference.current);
     }
 
     return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      rafRef.current = null;
+      if (rafReference.current) cancelAnimationFrame(rafReference.current);
+      rafReference.current = null;
     };
   }, [isPlaying, trackId, durationSec, progress]);
 
   // Очищаем анимацию при размонтировании
   useEffect(
     () => () => {
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
+      if (rafReference.current) {
+        cancelAnimationFrame(rafReference.current);
       }
     },
     []
@@ -243,13 +244,13 @@ export function useTrackProgress({
           durationSec > 0
             ? parseDurationToSeconds(initialProgress) / durationSec
             : 0,
-        lastExternalProgress: lastExternalProgressRef.current,
-        isPaused: wasPausedRef.current,
-        startTime: startTimeRef.current,
+        lastExternalProgress: lastExternalProgressReference.current,
+        isPaused: wasPausedReference.current,
+        startTime: startTimeReference.current,
         currentTime: Date.now(),
-        elapsed: (Date.now() - startTimeRef.current) / 1000,
+        elapsed: (Date.now() - startTimeReference.current) / 1000,
         trackId,
-        lastTrackKey: lastTrackKeyRef.current,
+        lastTrackKey: lastTrackKeyReference.current,
       });
     }
   }, [progress, isPlaying, durationSec, initialProgress, trackId]);

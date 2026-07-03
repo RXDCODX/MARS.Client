@@ -3,9 +3,9 @@ import { Download, Eye, List, Table as TableIcon } from "lucide-react";
 import { useState } from "react";
 
 import styles from "../LogsPage.module.scss";
-import { Log, LogsTableProps } from "../LogsPage.types";
+import { Log, LogsTableProps as LogsTableProperties } from "../LogsPage.types";
 
-const LogsTable: React.FC<LogsTableProps> = ({
+const LogsTable: React.FC<LogsTableProperties> = ({
   logs,
   isLoading,
   currentPage,
@@ -68,9 +68,9 @@ const LogsTable: React.FC<LogsTableProps> = ({
     const a = document.createElement("a");
     a.href = url;
     a.download = `log-${log.id}.json`;
-    document.body.appendChild(a);
+    document.body.append(a);
     a.click();
-    document.body.removeChild(a);
+    a.remove();
     URL.revokeObjectURL(url);
   };
 
@@ -143,9 +143,9 @@ const LogsTable: React.FC<LogsTableProps> = ({
                   title: "Время",
                   dataIndex: "whenLogged",
                   key: "whenLogged",
-                  render: (val: string) => (
+                  render: (value: string) => (
                     <span className={styles.timestamp}>
-                      {formatTimestamp(val)}
+                      {formatTimestamp(value)}
                     </span>
                   ),
                 },
@@ -153,7 +153,7 @@ const LogsTable: React.FC<LogsTableProps> = ({
                   title: "Уровень",
                   dataIndex: "logLevel",
                   key: "logLevel",
-                  render: (val: string) => getLogLevelBadge(val),
+                  render: (value: string) => getLogLevelBadge(value),
                 },
                 {
                   title: "Сообщение",
@@ -250,9 +250,9 @@ const LogsTable: React.FC<LogsTableProps> = ({
                   const a = document.createElement("a");
                   a.href = url;
                   a.download = `logs-${new Date().toISOString().slice(0, 10)}.txt`;
-                  document.body.appendChild(a);
+                  document.body.append(a);
                   a.click();
-                  document.body.removeChild(a);
+                  a.remove();
                   URL.revokeObjectURL(url);
                 }}
                 style={{
@@ -285,11 +285,13 @@ const LogsTable: React.FC<LogsTableProps> = ({
               className="form-select form-select-sm"
               style={{ width: "auto" }}
             >
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                <option key={page} value={page}>
-                  {page}
-                </option>
-              ))}
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                page => (
+                  <option key={page} value={page}>
+                    {page}
+                  </option>
+                )
+              )}
             </select>
 
             <span>из {totalPages}</span>

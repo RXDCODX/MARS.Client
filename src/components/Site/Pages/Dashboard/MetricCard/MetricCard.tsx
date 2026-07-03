@@ -1,7 +1,7 @@
 import styles from "./MetricCard.module.scss";
-import { MetricCardProps } from "./MetricCard.types";
+import { MetricCardProps as MetricCardProperties } from "./MetricCard.types";
 
-const MetricCard: React.FC<MetricCardProps> = ({
+const MetricCard: React.FC<MetricCardProperties> = ({
   title,
   value,
   icon,
@@ -11,27 +11,35 @@ const MetricCard: React.FC<MetricCardProps> = ({
 }) => {
   const getTrendIcon = () => {
     switch (trendDirection) {
-      case "up":
+      case "up": {
         return "↗️";
-      case "down":
+      }
+      case "down": {
         return "↘️";
-      case "stable":
+      }
+      case "stable": {
         return "→";
-      default:
+      }
+      default: {
         return "→";
+      }
     }
   };
 
   const getTrendColor = () => {
     switch (trendDirection) {
-      case "up":
+      case "up": {
         return styles.trendUp;
-      case "down":
+      }
+      case "down": {
         return styles.trendDown;
-      case "stable":
+      }
+      case "stable": {
         return styles.trendStable;
-      default:
+      }
+      default: {
         return styles.trendStable;
+      }
     }
   };
 

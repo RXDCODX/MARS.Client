@@ -4,11 +4,11 @@ import { Textfit } from "react-textfit";
 import styles from "./MikuMonday.module.scss";
 import type { RoulettePrize } from "./types";
 
-interface PrizeItemProps {
+interface PrizeItemProperties {
   prize: RoulettePrize;
 }
 
-function PrizeItemComponent({ prize }: PrizeItemProps) {
+function PrizeItemComponent({ prize }: PrizeItemProperties) {
   const isPlaceholder = prize.isPlaceholder === true;
   const hasCover = !isPlaceholder && Boolean(prize.image);
   const containerClass = `${styles["custom-prize"]} ${isPlaceholder ? styles["custom-prize-placeholder"] : ""}`;

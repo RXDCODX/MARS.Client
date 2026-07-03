@@ -3,12 +3,14 @@ import { Button } from "antd";
 
 import { useTheme } from "@/contexts/Theme";
 
-interface ThemeToggleProps {
+interface ThemeToggleProperties {
   variant?: "default" | "admin";
   size?: "sm" | "md" | "lg";
 }
 
-const ThemeToggle: React.FC<ThemeToggleProps> = ({ variant = "default" }) => {
+const ThemeToggle: React.FC<ThemeToggleProperties> = ({
+  variant = "default",
+}) => {
   const { theme, toggleTheme } = useTheme();
 
   return (

@@ -31,8 +31,8 @@ type ShaderWithDefines = THREE.ShaderLibShader & {
 };
 
 function extendMaterial<T extends THREE.Material = THREE.Material>(
-  BaseMaterial: new (params?: THREE.MaterialParameters) => T,
-  cfg: ExtendMaterialConfig
+  BaseMaterial: new (parameters?: THREE.MaterialParameters) => T,
+  config: ExtendMaterialConfig
 ): THREE.ShaderMaterial {
   const physical = THREE.ShaderLib.physical as ShaderWithDefines;
   const {
@@ -45,7 +45,7 @@ function extendMaterial<T extends THREE.Material = THREE.Material>(
   const uniforms: Record<string, THREE.IUniform> =
     THREE.UniformsUtils.clone(baseUniforms);
 
-  const defaults = new BaseMaterial(cfg.material || {}) as T & {
+  const defaults = new BaseMaterial(config.material || {}) as T & {
     color?: THREE.Color;
     roughness?: number;
     metalness?: number;
@@ -60,20 +60,20 @@ function extendMaterial<T extends THREE.Material = THREE.Material>(
   if ("envMapIntensity" in defaults)
     uniforms.envMapIntensity.value = defaults.envMapIntensity;
 
-  Object.entries(cfg.uniforms ?? {}).forEach(([key, u]) => {
+  Object.entries(config.uniforms ?? {}).forEach(([key, u]) => {
     uniforms[key] =
       u !== null && typeof u === "object" && "value" in u
         ? (u as THREE.IUniform<unknown>)
         : ({ value: u } as THREE.IUniform<unknown>);
   });
 
-  let vert = `${cfg.header}\n${cfg.vertexHeader ?? ""}\n${baseVert}`;
-  let frag = `${cfg.header}\n${cfg.fragmentHeader ?? ""}\n${baseFrag}`;
+  let vert = `${config.header}\n${config.vertexHeader ?? ""}\n${baseVert}`;
+  let frag = `${config.header}\n${config.fragmentHeader ?? ""}\n${baseFrag}`;
 
-  for (const [inc, code] of Object.entries(cfg.vertex ?? {})) {
+  for (const [inc, code] of Object.entries(config.vertex ?? {})) {
     vert = vert.replace(inc, `${inc}\n${code}`);
   }
-  for (const [inc, code] of Object.entries(cfg.fragment ?? {})) {
+  for (const [inc, code] of Object.entries(config.fragment ?? {})) {
     frag = frag.replace(inc, `${inc}\n${code}`);
   }
 
@@ -83,7 +83,7 @@ function extendMaterial<T extends THREE.Material = THREE.Material>(
     vertexShader: vert,
     fragmentShader: frag,
     lights: true,
-    fog: !!cfg.material?.fog,
+    fog: !!config.material?.fog,
   });
 
   return mat;
@@ -97,9 +97,9 @@ const CanvasWrapper: FC<{ children: ReactNode }> = ({ children }) => (
 
 const hexToNormalizedRGB = (hex: string): [number, number, number] => {
   const clean = hex.replace("#", "");
-  const r = parseInt(clean.substring(0, 2), 16);
-  const g = parseInt(clean.substring(2, 4), 16);
-  const b = parseInt(clean.substring(4, 6), 16);
+  const r = Number.parseInt(clean.slice(0, 2), 16);
+  const g = Number.parseInt(clean.slice(2, 4), 16);
+  const b = Number.parseInt(clean.slice(4, 6), 16);
   return [r / 255, g / 255, b / 255];
 };
 
@@ -180,7 +180,7 @@ float cnoise(vec3 P){
 }
 `;
 
-interface BeamsProps {
+interface BeamsProperties {
   beamWidth?: number;
   beamHeight?: number;
   beamNumber?: number;
@@ -191,7 +191,7 @@ interface BeamsProps {
   rotation?: number;
 }
 
-const Beams: FC<BeamsProps> = ({
+const Beams: FC<BeamsProperties> = ({
   beamWidth = 2,
   beamHeight = 15,
   beamNumber = 12,
@@ -201,7 +201,7 @@ const Beams: FC<BeamsProps> = ({
   scale = 0.2,
   rotation = 0,
 }) => {
-  const meshRef = useRef<
+  const meshReference = useRef<
     THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>
   >(null!);
 
@@ -266,7 +266,7 @@ const Beams: FC<BeamsProps> = ({
     <CanvasWrapper>
       <group rotation={[0, 0, degToRad(rotation)]}>
         <PlaneNoise
-          ref={meshRef}
+          ref={meshReference}
           material={beamMaterial}
           count={beamNumber}
           width={beamWidth}
@@ -289,11 +289,11 @@ function createStackedPlanesBufferGeometry(
   heightSegments: number
 ): THREE.BufferGeometry {
   const geometry = new THREE.BufferGeometry();
-  const numVertices = n * (heightSegments + 1) * 2;
-  const numFaces = n * heightSegments * 2;
-  const positions = new Float32Array(numVertices * 3);
-  const indices = new Uint32Array(numFaces * 3);
-  const uvs = new Float32Array(numVertices * 2);
+  const numberVertices = n * (heightSegments + 1) * 2;
+  const numberFaces = n * heightSegments * 2;
+  const positions = new Float32Array(numberVertices * 3);
+  const indices = new Uint32Array(numberFaces * 3);
+  const uvs = new Float32Array(numberVertices * 2);
 
   let vertexOffset = 0;
   let indexOffset = 0;
@@ -301,24 +301,24 @@ function createStackedPlanesBufferGeometry(
   const totalWidth = n * width + (n - 1) * spacing;
   const xOffsetBase = -totalWidth / 2;
 
-  for (let i = 0; i < n; i++) {
-    const xOffset = xOffsetBase + i * (width + spacing);
+  for (let index = 0; index < n; index++) {
+    const xOffset = xOffsetBase + index * (width + spacing);
     const uvXOffset = Math.random() * 300;
     const uvYOffset = Math.random() * 300;
 
-    for (let j = 0; j <= heightSegments; j++) {
-      const y = height * (j / heightSegments - 0.5);
+    for (let index = 0; index <= heightSegments; index++) {
+      const y = height * (index / heightSegments - 0.5);
       const v0 = [xOffset, y, 0];
       const v1 = [xOffset + width, y, 0];
       positions.set([...v0, ...v1], vertexOffset * 3);
 
-      const uvY = j / heightSegments;
+      const uvY = index / heightSegments;
       uvs.set(
         [uvXOffset, uvY + uvYOffset, uvXOffset + 1, uvY + uvYOffset],
         uvOffset
       );
 
-      if (j < heightSegments) {
+      if (index < heightSegments) {
         const a = vertexOffset,
           b = vertexOffset + 1,
           c = vertexOffset + 2,
@@ -346,11 +346,11 @@ const MergedPlanes = forwardRef<
     count: number;
     height: number;
   }
->(({ material, width, count, height }, ref) => {
+>(({ material, width, count, height }, reference) => {
   const mesh = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>>(
     null!
   );
-  useImperativeHandle(ref, () => mesh.current);
+  useImperativeHandle(reference, () => mesh.current);
   const geometry = useMemo(
     () => createStackedPlanesBufferGeometry(count, width, height, 0, 100),
     [count, width, height]
@@ -370,13 +370,13 @@ const PlaneNoise = forwardRef<
     count: number;
     height: number;
   }
->((props, ref) => (
+>((properties, reference) => (
   <MergedPlanes
-    ref={ref}
-    material={props.material}
-    width={props.width}
-    count={props.count}
-    height={props.height}
+    ref={reference}
+    material={properties.material}
+    width={properties.width}
+    count={properties.count}
+    height={properties.height}
   />
 ));
 PlaneNoise.displayName = "PlaneNoise";

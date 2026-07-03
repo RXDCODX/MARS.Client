@@ -1,7 +1,7 @@
 import type { MenuProps } from "antd";
 import { Menu } from "antd";
 
-interface NavbarProps {
+interface NavbarProperties {
   bg?: string;
   variant?: string;
   expand?: string;
@@ -9,27 +9,34 @@ interface NavbarProps {
   children?: React.ReactNode;
 }
 
-const Navbar = ({ className, children }: NavbarProps) => (
+const Navbar = ({ className, children }: NavbarProperties) => (
   <nav className={className}>{children}</nav>
 );
 
-interface NavProps {
+interface NavProperties {
   className?: string;
   activeKey?: string;
   onSelect?: (key: string | null) => void;
   children?: React.ReactNode;
 }
 
-const NavLinks = ({ className, activeKey, onSelect, children }: NavProps) => {
+const NavLinks = ({
+  className,
+  activeKey,
+  onSelect,
+  children,
+}: NavProperties) => {
   const items: MenuProps["items"] = [];
 
   const processChildren = (child: React.ReactNode) => {
     if (!child) return;
     React.Children.forEach(child, c => {
-      if (React.isValidElement(c) && c.type === NavItem) {
-        const { eventKey, children: label } = c.props as NavItemProps;
-        items?.push({ key: eventKey, label });
+      if (!(React.isValidElement(c) && c.type === NavItem)) {
+        return;
       }
+
+      const { eventKey, children: label } = c.props as NavItemProperties;
+      items?.push({ key: eventKey, label });
     });
   };
 
@@ -46,14 +53,14 @@ const NavLinks = ({ className, activeKey, onSelect, children }: NavProps) => {
   );
 };
 
-interface NavItemProps {
+interface NavItemProperties {
   eventKey?: string;
   children?: React.ReactNode;
 }
 
-const NavItem = (_props: NavItemProps): null => null;
+const NavItem = (_properties: NavItemProperties): null => null;
 
-interface NavTabsProps {
+interface NavTabsProperties {
   activeKey?: string;
   onSelect?: (key: string) => void;
   className?: string;
@@ -65,16 +72,18 @@ const NavTabs = ({
   onSelect,
   className,
   children,
-}: NavTabsProps) => {
+}: NavTabsProperties) => {
   const items: MenuProps["items"] = [];
 
   const processChildren = (child: React.ReactNode) => {
     if (!child) return;
     React.Children.forEach(child, c => {
-      if (React.isValidElement(c) && c.type === NavItem) {
-        const { eventKey, children: label } = c.props as NavItemProps;
-        items?.push({ key: eventKey, label });
+      if (!(React.isValidElement(c) && c.type === NavItem)) {
+        return;
       }
+
+      const { eventKey, children: label } = c.props as NavItemProperties;
+      items?.push({ key: eventKey, label });
     });
   };
 

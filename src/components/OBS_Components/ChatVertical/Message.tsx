@@ -11,7 +11,7 @@ import commonStyles from "../OBSCommon.module.scss";
 import { ANIMATION_TIMINGS } from "./animationTimings";
 import styles from "./Message.module.scss";
 
-interface Props {
+interface Properties {
   message: ChatMessage;
   onRemove?: () => void;
 }
@@ -28,15 +28,15 @@ const messageLifetime = import.meta.env.DEV
   ? ANIMATION_TIMINGS.MESSAGE_LIFETIME.DEV
   : ANIMATION_TIMINGS.MESSAGE_LIFETIME.PRODUCTION;
 
-export function Message({ message, onRemove }: Props) {
+export function Message({ message, onRemove }: Properties) {
   const badges = useTwitchStore(state => state.badges);
   const parser = useTwitchStore(state => state.parser);
   const parserToLink = useTwitchStore(state => state.parseToLink);
   const [parts] = useState(() => parseContent(message.message));
   const [isMultilineMessage, setIsMultilineMessage] = useState(false);
   const roleColor = getRoleColor(message);
-  const msgRef = useRef<HTMLDivElement>(null);
-  const messageContentRef = useRef<HTMLDivElement>(null);
+  const messageReference = useRef<HTMLDivElement>(null);
+  const messageContentReference = useRef<HTMLDivElement>(null);
 
   // Появление/исчезновение управляется фреймером (в родителе)
 
@@ -52,13 +52,13 @@ export function Message({ message, onRemove }: Props) {
   }, [onRemove, message.id]);
 
   useEffect(() => {
-    const messageElement = messageContentRef.current;
+    const messageElement = messageContentReference.current;
     if (!messageElement) {
       return;
     }
 
     const updateMultilineState = () => {
-      const computedStyles = window.getComputedStyle(messageElement);
+      const computedStyles = globalThis.getComputedStyle(messageElement);
       const parsedLineHeight = Number.parseFloat(computedStyles.lineHeight);
       const parsedFontSize = Number.parseFloat(computedStyles.fontSize);
       const lineHeight = Number.isFinite(parsedLineHeight)
@@ -91,7 +91,7 @@ export function Message({ message, onRemove }: Props) {
         >
           <div style={{ display: "block", padding: "3px 15px" }}>
             <div
-              ref={msgRef}
+              ref={messageReference}
               className={`${styles.container} ${isMultilineMessage ? styles.containerLargeMessage : ""}`}
             >
               <div
@@ -111,7 +111,7 @@ export function Message({ message, onRemove }: Props) {
                 </div>
               </div>
               <div
-                ref={messageContentRef}
+                ref={messageContentReference}
                 className={`${styles.message} ${isMultilineMessage ? styles.messageLargeMessage : ""}`}
               >
                 {isCatisa ? (
@@ -262,7 +262,6 @@ export function Message({ message, onRemove }: Props) {
                           </span>
                         );
                       }
-                      return null;
                     } else {
                       // Обычные пользователи (включая VIP и модераторов) — белый текст, но с поддержкой смайлов
                       if (part.type === "text") {
@@ -296,8 +295,8 @@ export function Message({ message, onRemove }: Props) {
                           </span>
                         );
                       }
-                      return null;
                     }
+                    return null;
                   })
                 )}
               </div>

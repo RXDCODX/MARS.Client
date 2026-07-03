@@ -18,8 +18,8 @@ vi.mock("@/shared/api", () => ({
     Low: "Low",
   },
   TelegramusHubSignalRContext: {
-    useSignalREffect: () => undefined,
-    invoke: () => undefined,
+    useSignalREffect: () => {},
+    invoke: () => {},
   },
 }));
 
@@ -206,7 +206,7 @@ describe("Alert Type Variants", () => {
 describe("Media Styling Properties", () => {
   it("should apply textColor from textInfo", () => {
     const colorVariants = ["#FF0000", "#00FF00", "#0000FF", "#FFFFFF"];
-    colorVariants.forEach(color => {
+    for (const color of colorVariants) {
       const media = {
         ...mockMediaDto,
         mediaInfo: {
@@ -218,7 +218,7 @@ describe("Media Styling Properties", () => {
         },
       };
       expect(media.mediaInfo.textInfo.textColor).toBe(color);
-    });
+    }
   });
 
   it("should support border styling", () => {
@@ -323,11 +323,11 @@ describe("Text Information", () => {
 
   it("should support custom text colors", () => {
     const colors = ["#FF0000", "#00FF00", "#0000FF", "#FFFF00", "#FF00FF"];
-    colors.forEach(color => {
+    for (const color of colors) {
       const media = { ...mockMediaDto };
       media.mediaInfo.textInfo.textColor = color;
       expect(media.mediaInfo.textInfo.textColor).toBe(color);
-    });
+    }
   });
 
   it("should support keyword highlighting colors", () => {

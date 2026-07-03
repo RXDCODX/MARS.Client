@@ -43,14 +43,14 @@ async function invokeConnection(
   connection: HubConnection | null,
   methodName: string,
   errorMessage: string,
-  ...args: unknown[]
+  ...arguments_: unknown[]
 ): Promise<boolean> {
   if (!connection) {
     return false;
   }
 
   try {
-    await connection.invoke(methodName, ...args);
+    await connection.invoke(methodName, ...arguments_);
     return true;
   } catch (error) {
     console.error(errorMessage, error);
@@ -86,7 +86,7 @@ export const useVideoScreenStore = create<VideoScreenStoreState>(
       });
 
       if (currentState.connection) {
-        await currentState.connection.stop().catch(() => undefined);
+        await currentState.connection.stop().catch(() => {});
       }
 
       const connection = SoundRequestHubSignalRConnectionBuilder.build();
@@ -106,11 +106,10 @@ export const useVideoScreenStore = create<VideoScreenStoreState>(
         set({
           playerState,
           currentProgressSeconds:
-            shouldResetProgress && newProgressSeconds >= 0
+            (shouldResetProgress && newProgressSeconds >= 0) ||
+            newProgressSeconds > 0
               ? newProgressSeconds
-              : newProgressSeconds > 0
-                ? newProgressSeconds
-                : state.currentProgressSeconds,
+              : state.currentProgressSeconds,
           localVolume: state.isVolumeManuallyChanged
             ? state.localVolume
             : playerState.volume,
@@ -131,7 +130,7 @@ export const useVideoScreenStore = create<VideoScreenStoreState>(
     dispose: async () => {
       const { connection } = get();
       if (connection) {
-        await connection.stop().catch(() => undefined);
+        await connection.stop().catch(() => {});
       }
 
       set({

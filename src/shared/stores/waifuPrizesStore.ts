@@ -1,4 +1,3 @@
-import type {} from "@redux-devtools/extension";
 import { PrizeType } from "react-roulette-pro";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
@@ -34,9 +33,8 @@ export const useWaifuPrizesStore = create<State & Actions>()(
         const currentPrizes = get().prizes;
 
         // Фильтруем только те призы, которых еще нет в текущем массиве
-        const prizesToAdd = newPrizes.filter(
-          newPrize =>
-            !currentPrizes.some(existing => existing.id === newPrize.id)
+        const prizesToAdd = newPrizes.filter(newPrize =>
+          currentPrizes.every(existing => existing.id !== newPrize.id)
         );
 
         console.log("🔄 Добавление призов в store:", {
@@ -55,10 +53,12 @@ export const useWaifuPrizesStore = create<State & Actions>()(
 
         // Предзагрузка изображений для новых призов
         prizesToAdd.forEach(prize => {
-          if (prize.image) {
-            const img = new Image();
-            img.src = prize.image;
+          if (!prize.image) {
+            return;
           }
+
+          const img = new Image();
+          img.src = prize.image;
         });
 
         debugger; // eslint-disable-line no-debugger
@@ -93,12 +93,14 @@ export const useWaifuPrizesStore = create<State & Actions>()(
        * Предзагружает изображения призов
        */
       preloadImages: (prizes: PrizeType[]) => {
-        prizes.forEach(prize => {
-          if (prize.image) {
-            const img = new Image();
-            img.src = prize.image;
+        for (const prize of prizes) {
+          if (!prize.image) {
+            continue;
           }
-        });
+
+          const img = new Image();
+          img.src = prize.image;
+        }
       },
     }),
     { name: "WaifuPrizesStore" }

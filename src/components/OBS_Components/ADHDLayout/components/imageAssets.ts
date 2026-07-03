@@ -79,13 +79,17 @@ export const getAssetPath = (
   type: "data" | "image" | "video"
 ): string | OwlQuestion[] => {
   switch (type) {
-    case "data":
+    case "data": {
       return getDataPath(assetName as keyof typeof dataAssets);
-    case "image":
+    }
+    case "image": {
       return getImagePath(assetName as keyof typeof imageAssets);
-    case "video":
+    }
+    case "video": {
       return getVideoPath(assetName as keyof typeof videoAssets);
-    default:
+    }
+    default: {
       return `../content/${assetName}`;
+    }
   }
 };

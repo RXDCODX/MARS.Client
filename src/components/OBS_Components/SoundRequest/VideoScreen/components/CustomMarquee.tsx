@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import styles from "./CustomMarquee.module.scss";
 
-interface CustomMarqueeProps {
+interface CustomMarqueeProperties {
   children: ReactNode;
   speed?: number; // пиксели в секунду (по умолчанию 60)
   gap?: number; // зазор между циклами в пиксельх (по умолчанию 240)
@@ -21,8 +21,8 @@ export function CustomMarquee({
   gap = 240,
   trailingGapCount = 0,
   pauseOnHover = false,
-}: CustomMarqueeProps) {
-  const contentRef = useRef<HTMLDivElement>(null);
+}: CustomMarqueeProperties) {
+  const contentReference = useRef<HTMLDivElement>(null);
   const [contentWidth, setContentWidth] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const trailingGapElements = useMemo(
@@ -36,10 +36,10 @@ export function CustomMarquee({
   );
 
   useEffect(() => {
-    if (!contentRef.current) return;
+    if (!contentReference.current) return;
 
     const updateWidth = () => {
-      const width = contentRef.current?.scrollWidth || 0;
+      const width = contentReference.current?.scrollWidth || 0;
       setContentWidth(width);
     };
 
@@ -63,7 +63,7 @@ export function CustomMarquee({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className={styles.customMarqueeContent} ref={contentRef}>
+        <div className={styles.customMarqueeContent} ref={contentReference}>
           {children}
           {trailingGapElements}
         </div>
@@ -88,7 +88,7 @@ export function CustomMarquee({
         } as CSSProperties
       }
     >
-      <div className={styles.customMarqueeContent} ref={contentRef}>
+      <div className={styles.customMarqueeContent} ref={contentReference}>
         {children}
         {trailingGapElements}
       </div>

@@ -3,8 +3,8 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 
 vi.mock("react-router-dom", () => ({
-  Link: ({ children, to, ...props }: any) =>
-    createElement("a", { href: to, ...props }, children),
+  Link: ({ children, to, ...properties }: any) =>
+    createElement("a", { href: to, ...properties }, children),
 }));
 
 vi.mock("@/shared/components/ReactBitsBackgroundsLegacy/registry", () => ({

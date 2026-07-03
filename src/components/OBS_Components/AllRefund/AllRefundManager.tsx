@@ -54,8 +54,9 @@ function reducer(state: State, action: Action): State {
         current: next,
       };
     }
-    default:
+    default: {
       return state;
+    }
   }
 }
 

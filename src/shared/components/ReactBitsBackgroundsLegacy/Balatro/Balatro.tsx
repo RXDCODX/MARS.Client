@@ -3,7 +3,7 @@ import "./Balatro.css";
 import { Mesh, Program, Renderer, Triangle } from "ogl";
 import { useEffect, useRef } from "react";
 
-interface BalatroProps {
+interface BalatroProperties {
   spinRotation?: number;
   spinSpeed?: number;
   offset?: [number, number];
@@ -20,20 +20,20 @@ interface BalatroProps {
 }
 
 function hexToVec4(hex: string): [number, number, number, number] {
-  const hexStr = hex.replace("#", "");
+  const hexString = hex.replace("#", "");
   let r = 0,
     g = 0,
     b = 0,
     a = 1;
-  if (hexStr.length === 6) {
-    r = parseInt(hexStr.slice(0, 2), 16) / 255;
-    g = parseInt(hexStr.slice(2, 4), 16) / 255;
-    b = parseInt(hexStr.slice(4, 6), 16) / 255;
-  } else if (hexStr.length === 8) {
-    r = parseInt(hexStr.slice(0, 2), 16) / 255;
-    g = parseInt(hexStr.slice(2, 4), 16) / 255;
-    b = parseInt(hexStr.slice(4, 6), 16) / 255;
-    a = parseInt(hexStr.slice(6, 8), 16) / 255;
+  if (hexString.length === 6) {
+    r = Number.parseInt(hexString.slice(0, 2), 16) / 255;
+    g = Number.parseInt(hexString.slice(2, 4), 16) / 255;
+    b = Number.parseInt(hexString.slice(4, 6), 16) / 255;
+  } else if (hexString.length === 8) {
+    r = Number.parseInt(hexString.slice(0, 2), 16) / 255;
+    g = Number.parseInt(hexString.slice(2, 4), 16) / 255;
+    b = Number.parseInt(hexString.slice(4, 6), 16) / 255;
+    a = Number.parseInt(hexString.slice(6, 8), 16) / 255;
   }
   return [r, g, b, a];
 }
@@ -121,25 +121,25 @@ void main() {
 `;
 
 export default function Balatro({
-  spinRotation = -2.0,
-  spinSpeed = 7.0,
-  offset = [0.0, 0.0],
+  spinRotation = -2,
+  spinSpeed = 7,
+  offset = [0, 0],
   color1 = "#DE443B",
   color2 = "#006BB4",
   color3 = "#162325",
   contrast = 3.5,
   lighting = 0.4,
   spinAmount = 0.25,
-  pixelFilter = 745.0,
-  spinEase = 1.0,
+  pixelFilter = 745,
+  spinEase = 1,
   isRotate = false,
   mouseInteraction = true,
-}: BalatroProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+}: BalatroProperties) {
+  const containerReference = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-    const container = containerRef.current;
+    if (!containerReference.current) return;
+    const container = containerReference.current;
     const renderer = new Renderer();
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 1);
@@ -197,13 +197,13 @@ export default function Balatro({
       renderer.render({ scene: mesh });
     }
     animationFrameId = requestAnimationFrame(update);
-    container.appendChild(gl.canvas);
+    container.append(gl.canvas);
 
     function handleMouseMove(e: MouseEvent) {
       if (!mouseInteraction) return;
       const rect = container.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width;
-      const y = 1.0 - (e.clientY - rect.top) / rect.height;
+      const y = 1 - (e.clientY - rect.top) / rect.height;
       program.uniforms.uMouse.value = [x, y];
     }
     container.addEventListener("mousemove", handleMouseMove);
@@ -212,7 +212,7 @@ export default function Balatro({
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", resize);
       container.removeEventListener("mousemove", handleMouseMove);
-      container.removeChild(gl.canvas);
+      gl.canvas.remove();
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, [
@@ -231,5 +231,5 @@ export default function Balatro({
     mouseInteraction,
   ]);
 
-  return <div ref={containerRef} className="balatro-container" />;
+  return <div ref={containerReference} className="balatro-container" />;
 }

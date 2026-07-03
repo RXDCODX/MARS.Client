@@ -43,27 +43,35 @@ const ActiveUsers: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "online":
+      case "online": {
         return styles.online;
-      case "away":
+      }
+      case "away": {
         return styles.away;
-      case "offline":
+      }
+      case "offline": {
         return styles.offline;
-      default:
+      }
+      default: {
         return styles.offline;
+      }
     }
   };
 
   const getStatusText = (status: string) => {
     switch (status) {
-      case "online":
+      case "online": {
         return "В сети";
-      case "away":
+      }
+      case "away": {
         return "Отошел";
-      case "offline":
+      }
+      case "offline": {
         return "Не в сети";
-      default:
+      }
+      default: {
         return "Неизвестно";
+      }
     }
   };
 

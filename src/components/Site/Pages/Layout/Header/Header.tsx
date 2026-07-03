@@ -296,7 +296,7 @@ const Header: React.FC = () => {
   );
 };
 
-interface MobileNavProps {
+interface MobileNavProperties {
   sitePages: NavigationItem[];
   obsComponents: NavigationGroup[];
   controlRoomPages: NavigationItem[];
@@ -304,7 +304,7 @@ interface MobileNavProps {
   onLinkClick: () => void;
 }
 
-const MobileNav: React.FC<MobileNavProps> = ({
+const MobileNav: React.FC<MobileNavProperties> = ({
   sitePages,
   obsComponents,
   controlRoomPages,
@@ -354,9 +354,9 @@ const MobileNav: React.FC<MobileNavProps> = ({
                 paddingLeft: 12,
               }}
             >
-              {section.items.map((item, i) => (
+              {section.items.map((item, index) => (
                 <Link
-                  key={i}
+                  key={index}
                   to={item.path}
                   onClick={onLinkClick}
                   style={{

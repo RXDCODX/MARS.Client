@@ -94,7 +94,7 @@ describe("Image Primitive Component Data Structure", () => {
 
   it("image supports custom text colors", () => {
     const colors = ["#FF0000", "#00FF00", "#0000FF", "#FFFFFF"];
-    colors.forEach(color => {
+    for (const color of colors) {
       const mediaDto = createMockMediaDto({
         mediaInfo: {
           ...createMockMediaDto().mediaInfo,
@@ -108,7 +108,7 @@ describe("Image Primitive Component Data Structure", () => {
         },
       });
       expect(mediaDto.mediaInfo.textInfo.textColor).toBe(color);
-    });
+    }
   });
 
   it("image border style can be enabled", () => {

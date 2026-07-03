@@ -1,11 +1,11 @@
 import { Input } from "antd";
 
-interface InputGroupProps {
+interface InputGroupProperties {
   children: React.ReactNode;
   className?: string;
 }
 
-const InputGroup = ({ children, className }: InputGroupProps) => (
+const InputGroup = ({ children, className }: InputGroupProperties) => (
   <Input.Group compact className={className}>
     {children}
   </Input.Group>

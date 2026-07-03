@@ -5,7 +5,7 @@ import type PrizeType from "react-roulette-pro/dist/types/PrizeType";
 import styles from "../MikuMonday.module.scss";
 import type { RouletteGroup } from "../types";
 
-interface RouletteGroupListProps {
+interface RouletteGroupListProperties {
   groups: RouletteGroup[];
   rouletteStart: boolean;
   rouletteOpacities: number[];
@@ -16,7 +16,10 @@ interface RouletteGroupListProps {
   onWinnerFaded?: () => void;
 }
 
-const RouletteGroupList = forwardRef<HTMLDivElement, RouletteGroupListProps>(
+const RouletteGroupList = forwardRef<
+  HTMLDivElement,
+  RouletteGroupListProperties
+>(
   (
     {
       groups,
@@ -28,7 +31,7 @@ const RouletteGroupList = forwardRef<HTMLDivElement, RouletteGroupListProps>(
       onOthersFaded,
       onWinnerFaded,
     },
-    ref
+    reference
   ) => {
     const handleTransitionEnd = (index: number) => {
       const group = groups[index];
@@ -47,7 +50,7 @@ const RouletteGroupList = forwardRef<HTMLDivElement, RouletteGroupListProps>(
         } else {
           // Проверяем, все ли проигравшие затухли
           const allOthersFaded = groups.every(
-            (g, i) => g.hasWinner || rouletteOpacities[i] === 0
+            (g, index_) => g.hasWinner || rouletteOpacities[index_] === 0
           );
           if (allOthersFaded) {
             console.log(
@@ -60,7 +63,7 @@ const RouletteGroupList = forwardRef<HTMLDivElement, RouletteGroupListProps>(
     };
 
     return (
-      <div ref={ref} className={styles["roulette-container"]}>
+      <div ref={reference} className={styles["roulette-container"]}>
         {pointer}
         {groups.map((group, index) => (
           <div

@@ -9,10 +9,10 @@ import styles from "./AllRefund.module.scss";
 
 const TOTAL_DURATION_SECONDS = 72;
 const INTRO_DURATION_MS = 10_000;
-const COMPACT_MODE_THRESHOLD_MS = 9_000;
+const COMPACT_MODE_THRESHOLD_MS = 9000;
 const TICK_INTERVAL_MS = 100;
 
-interface AllRefundProps {
+interface AllRefundProperties {
   user: TwitchUser;
   onComplete: () => void;
 }
@@ -28,11 +28,11 @@ function formatClock(totalSeconds: number) {
   return `${minutes}:${seconds}`;
 }
 
-function AllRefund({ user, onComplete }: AllRefundProps) {
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const audioStartedRef = useRef(false);
-  const finishTriggeredRef = useRef(false);
-  const startTimeRef = useRef<number>(0);
+function AllRefund({ user, onComplete }: AllRefundProperties) {
+  const audioReference = useRef<HTMLAudioElement | null>(null);
+  const audioStartedReference = useRef(false);
+  const finishTriggeredReference = useRef(false);
+  const startTimeReference = useRef<number>(0);
 
   const [remainingSeconds, setRemainingSeconds] = useState(
     TOTAL_DURATION_SECONDS
@@ -56,12 +56,12 @@ function AllRefund({ user, onComplete }: AllRefundProps) {
   const userInitial = displayName.trim().slice(0, 1).toUpperCase() || "?";
 
   useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio || audioStartedRef.current) {
+    const audio = audioReference.current;
+    if (!audio || audioStartedReference.current) {
       return;
     }
 
-    audioStartedRef.current = true;
+    audioStartedReference.current = true;
     audio.currentTime = 0;
     audio.volume = 0.55;
     audio.loop = false;
@@ -73,9 +73,9 @@ function AllRefund({ user, onComplete }: AllRefundProps) {
         audio
           .play()
           .then(() => {
-            window.setTimeout(() => {
-              if (audioRef.current) {
-                audioRef.current.muted = false;
+            globalThis.setTimeout(() => {
+              if (audioReference.current) {
+                audioReference.current.muted = false;
               }
             }, 200);
           })
@@ -91,10 +91,10 @@ function AllRefund({ user, onComplete }: AllRefundProps) {
   }, []);
 
   useEffect(() => {
-    startTimeRef.current = Date.now();
+    startTimeReference.current = Date.now();
 
     const updateState = () => {
-      const elapsedMs = Date.now() - startTimeRef.current;
+      const elapsedMs = Date.now() - startTimeReference.current;
       const nextRemainingSeconds = Math.max(
         0,
         Math.ceil((TOTAL_DURATION_SECONDS * 1000 - elapsedMs) / 1000)
@@ -119,26 +119,26 @@ function AllRefund({ user, onComplete }: AllRefundProps) {
         setShowIntro(false);
       }
 
-      if (nextRemainingSeconds <= 0 && !finishTriggeredRef.current) {
-        finishTriggeredRef.current = true;
+      if (nextRemainingSeconds <= 0 && !finishTriggeredReference.current) {
+        finishTriggeredReference.current = true;
         onComplete();
       }
     };
 
     updateState();
 
-    const intervalId = window.setInterval(updateState, TICK_INTERVAL_MS);
-    const introTimeoutId = window.setTimeout(() => {
+    const intervalId = globalThis.setInterval(updateState, TICK_INTERVAL_MS);
+    const introTimeoutId = globalThis.setTimeout(() => {
       setShowIntro(false);
     }, INTRO_DURATION_MS);
-    const compactTimeoutId = window.setTimeout(() => {
+    const compactTimeoutId = globalThis.setTimeout(() => {
       setCompactMode(true);
     }, COMPACT_MODE_THRESHOLD_MS);
 
     return () => {
-      window.clearInterval(intervalId);
-      window.clearTimeout(introTimeoutId);
-      window.clearTimeout(compactTimeoutId);
+      globalThis.clearInterval(intervalId);
+      globalThis.clearTimeout(introTimeoutId);
+      globalThis.clearTimeout(compactTimeoutId);
     };
   }, [onComplete]);
 
@@ -245,7 +245,7 @@ function AllRefund({ user, onComplete }: AllRefundProps) {
         )}
       </AnimatePresence>
 
-      <audio ref={audioRef} src={militaryAlarmAudio} preload="auto" />
+      <audio ref={audioReference} src={militaryAlarmAudio} preload="auto" />
     </div>
   );
 }

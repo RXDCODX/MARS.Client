@@ -33,8 +33,8 @@ interface Colors {
 }
 
 interface HyperspeedOptions {
-  onSpeedUp?: (ev: MouseEvent | TouchEvent) => void;
-  onSlowDown?: (ev: MouseEvent | TouchEvent) => void;
+  onSpeedUp?: (event_: MouseEvent | TouchEvent) => void;
+  onSlowDown?: (event_: MouseEvent | TouchEvent) => void;
   distortion?: string | Distortion;
   length: number;
   roadWidth: number;
@@ -62,7 +62,7 @@ interface HyperspeedOptions {
   isHyper?: boolean;
 }
 
-interface HyperspeedProps {
+interface HyperspeedProperties {
   effectOptions?: Partial<HyperspeedOptions>;
 }
 
@@ -93,19 +93,19 @@ const defaultOptions: HyperspeedOptions = {
   carShiftX: [-0.8, 0.8],
   carFloorSeparation: [0, 5],
   colors: {
-    roadColor: 0x080808,
-    islandColor: 0x0a0a0a,
-    background: 0x000000,
-    shoulderLines: 0xffffff,
-    brokenLines: 0xffffff,
-    leftCars: [0xd856bf, 0x6750a2, 0xc247ac],
-    rightCars: [0x03b3c3, 0x0e5ea5, 0x324555],
-    sticks: 0x03b3c3,
+    roadColor: 0x08_08_08,
+    islandColor: 0x0a_0a_0a,
+    background: 0x00_00_00,
+    shoulderLines: 0xff_ff_ff,
+    brokenLines: 0xff_ff_ff,
+    leftCars: [0xd8_56_bf, 0x67_50_a2, 0xc2_47_ac],
+    rightCars: [0x03_b3_c3, 0x0e_5e_a5, 0x32_45_55],
+    sticks: 0x03_b3_c3,
   },
 };
 
-function nsin(val: number) {
-  return Math.sin(val) * 0.5 + 0.5;
+function nsin(value: number) {
+  return Math.sin(value) * 0.5 + 0.5;
 }
 
 const mountainUniforms = {
@@ -434,11 +434,11 @@ function random(base: number | [number, number]): number {
   return Math.random() * base;
 }
 
-function pickRandom<T>(arr: T | T[]): T {
-  if (Array.isArray(arr)) {
-    return arr[Math.floor(Math.random() * arr.length)];
+function pickRandom<T>(array: T | T[]): T {
+  if (Array.isArray(array)) {
+    return array[Math.floor(Math.random() * array.length)];
   }
-  return arr;
+  return array;
 }
 
 function lerp(
@@ -496,18 +496,16 @@ class CarLights {
     const aColor: number[] = [];
 
     let colorArray: THREE.Color[];
-    if (Array.isArray(this.colors)) {
-      colorArray = this.colors.map(c => new THREE.Color(c));
-    } else {
-      colorArray = [new THREE.Color(this.colors)];
-    }
+    colorArray = Array.isArray(this.colors)
+      ? this.colors.map(c => new THREE.Color(c))
+      : [new THREE.Color(this.colors)];
 
-    for (let i = 0; i < options.lightPairsPerRoadWay; i++) {
+    for (let index = 0; index < options.lightPairsPerRoadWay; index++) {
       const radius = random(options.carLightsRadius);
       const length = random(options.carLightsLength);
       const spd = random(this.speed);
 
-      const carLane = i % options.lanesPerRoad;
+      const carLane = index % options.lanesPerRoad;
       let laneX = carLane * laneWidth - options.roadWidth / 2 + laneWidth / 2;
 
       const carWidth = random(options.carWidthPercentage) * laneWidth;
@@ -517,30 +515,19 @@ class CarLights {
       const offsetY = random(options.carFloorSeparation) + radius * 1.3;
       const offsetZ = -random(options.length);
 
-      aOffset.push(laneX - carWidth / 2);
-      aOffset.push(offsetY);
-      aOffset.push(offsetZ);
+      aOffset.push(
+        laneX - carWidth / 2,
+        offsetY,
+        offsetZ,
+        laneX + carWidth / 2,
+        offsetY,
+        offsetZ
+      );
 
-      aOffset.push(laneX + carWidth / 2);
-      aOffset.push(offsetY);
-      aOffset.push(offsetZ);
-
-      aMetrics.push(radius);
-      aMetrics.push(length);
-      aMetrics.push(spd);
-
-      aMetrics.push(radius);
-      aMetrics.push(length);
-      aMetrics.push(spd);
+      aMetrics.push(radius, length, spd, radius, length, spd);
 
       const color = pickRandom<THREE.Color>(colorArray);
-      aColor.push(color.r);
-      aColor.push(color.g);
-      aColor.push(color.b);
-
-      aColor.push(color.r);
-      aColor.push(color.g);
-      aColor.push(color.b);
+      aColor.push(color.r, color.g, color.b, color.r, color.g, color.b);
     }
 
     instanced.setAttribute(
@@ -669,24 +656,19 @@ class LightsSticks {
     const aMetrics: number[] = [];
 
     let colorArray: THREE.Color[];
-    if (Array.isArray(options.colors.sticks)) {
-      colorArray = options.colors.sticks.map(c => new THREE.Color(c));
-    } else {
-      colorArray = [new THREE.Color(options.colors.sticks)];
-    }
+    colorArray = Array.isArray(options.colors.sticks)
+      ? options.colors.sticks.map(c => new THREE.Color(c))
+      : [new THREE.Color(options.colors.sticks)];
 
-    for (let i = 0; i < totalSticks; i++) {
+    for (let index = 0; index < totalSticks; index++) {
       const width = random(options.lightStickWidth);
       const height = random(options.lightStickHeight);
-      aOffset.push((i - 1) * stickoffset * 2 + stickoffset * Math.random());
+      aOffset.push((index - 1) * stickoffset * 2 + stickoffset * Math.random());
 
       const color = pickRandom<THREE.Color>(colorArray);
-      aColor.push(color.r);
-      aColor.push(color.g);
-      aColor.push(color.b);
+      aColor.push(color.r, color.g, color.b);
 
-      aMetrics.push(width);
-      aMetrics.push(height);
+      aMetrics.push(width, height);
     }
 
     instanced.setAttribute(
@@ -910,7 +892,7 @@ const islandFragment = roadBaseFragment
   .replace("#include <roadMarkings_fragment>", "")
   .replace("#include <roadMarkings_vars>", "");
 
-const roadMarkings_vars = `
+const roadMarkings_variables = `
   uniform float uLanes;
   uniform vec3 uBrokenLinesColor;
   uniform vec3 uShoulderLinesColor;
@@ -941,7 +923,7 @@ const roadMarkings_fragment = `
 
 const roadFragment = roadBaseFragment
   .replace("#include <roadMarkings_fragment>", roadMarkings_fragment)
-  .replace("#include <roadMarkings_vars>", roadMarkings_vars);
+  .replace("#include <roadMarkings_vars>", roadMarkings_variables);
 
 const roadVertex = `
   #define USE_FOG;
@@ -972,11 +954,11 @@ function resizeRendererToDisplaySize(
   const width = canvas.clientWidth;
   const height = canvas.clientHeight;
   if (width <= 0 || height <= 0) return false;
-  const needResize = canvas.width !== width || canvas.height !== height;
-  if (needResize) {
+  const isNeedResize = canvas.width !== width || canvas.height !== height;
+  if (isNeedResize) {
     setSize(width, height, false);
   }
-  return needResize;
+  return isNeedResize;
 }
 
 class App {
@@ -1024,13 +1006,13 @@ class App {
     this.renderer.setPixelRatio(window.devicePixelRatio);
 
     this.composer = new EffectComposer(this.renderer);
-    container.appendChild(this.renderer.domElement);
+    container.append(this.renderer.domElement);
 
     this.camera = new THREE.PerspectiveCamera(
       options.fov,
       initW / initH,
       0.1,
-      10000
+      10_000
     );
     this.camera.position.z = -5;
     this.camera.position.y = 8;
@@ -1202,32 +1184,32 @@ class App {
     this.tick();
   }
 
-  onMouseDown(ev: MouseEvent) {
-    if (this.options.onSpeedUp) this.options.onSpeedUp(ev);
+  onMouseDown(event_: MouseEvent) {
+    if (this.options.onSpeedUp) this.options.onSpeedUp(event_);
     this.fovTarget = this.options.fovSpeedUp;
     this.speedUpTarget = this.options.speedUp;
   }
 
-  onMouseUp(ev: MouseEvent) {
-    if (this.options.onSlowDown) this.options.onSlowDown(ev);
+  onMouseUp(event_: MouseEvent) {
+    if (this.options.onSlowDown) this.options.onSlowDown(event_);
     this.fovTarget = this.options.fov;
     this.speedUpTarget = 0;
   }
 
-  onTouchStart(ev: TouchEvent) {
-    if (this.options.onSpeedUp) this.options.onSpeedUp(ev);
+  onTouchStart(event_: TouchEvent) {
+    if (this.options.onSpeedUp) this.options.onSpeedUp(event_);
     this.fovTarget = this.options.fovSpeedUp;
     this.speedUpTarget = this.options.speedUp;
   }
 
-  onTouchEnd(ev: TouchEvent) {
-    if (this.options.onSlowDown) this.options.onSlowDown(ev);
+  onTouchEnd(event_: TouchEvent) {
+    if (this.options.onSlowDown) this.options.onSlowDown(event_);
     this.fovTarget = this.options.fov;
     this.speedUpTarget = 0;
   }
 
-  onContextMenu(ev: MouseEvent) {
-    ev.preventDefault();
+  onContextMenu(event_: MouseEvent) {
+    event_.preventDefault();
   }
 
   update(delta: number) {
@@ -1246,11 +1228,11 @@ class App {
     this.leftSticks.update(time);
     this.road.update(time);
 
-    let updateCamera = false;
+    let isUpdateCamera = false;
     const fovChange = lerp(this.camera.fov, this.fovTarget, lerpPercentage);
     if (fovChange !== 0) {
       this.camera.fov += fovChange * delta * 6;
-      updateCamera = true;
+      isUpdateCamera = true;
     }
 
     if (
@@ -1265,10 +1247,10 @@ class App {
           this.camera.position.z + distortion.z
         )
       );
-      updateCamera = true;
+      isUpdateCamera = true;
     }
 
-    if (updateCamera) {
+    if (isUpdateCamera) {
       this.camera.updateProjectionMatrix();
     }
   }
@@ -1282,16 +1264,16 @@ class App {
 
     if (this.scene) {
       this.scene.traverse(object => {
-        const obj = object as unknown as THREE.Mesh;
-        if (!obj.isMesh) return;
+        const object_ = object as unknown as THREE.Mesh;
+        if (!object_.isMesh) return;
 
-        if (obj.geometry) obj.geometry.dispose();
+        if (object_.geometry) object_.geometry.dispose();
 
-        if (obj.material) {
-          if (Array.isArray(obj.material)) {
-            obj.material.forEach(material => material.dispose());
+        if (object_.material) {
+          if (Array.isArray(object_.material)) {
+            object_.material.forEach(material => material.dispose());
           } else {
-            obj.material.dispose();
+            object_.material.dispose();
           }
         }
       });
@@ -1302,9 +1284,7 @@ class App {
       this.renderer.dispose();
       this.renderer.forceContextLoss();
       if (this.renderer.domElement && this.renderer.domElement.parentNode) {
-        this.renderer.domElement.parentNode.removeChild(
-          this.renderer.domElement
-        );
+        this.renderer.domElement.remove();
       }
     }
     if (this.composer) {
@@ -1366,21 +1346,19 @@ class App {
 
 const DEFAULT_EFFECT_OPTIONS: Partial<HyperspeedOptions> = {};
 
-const Hyperspeed: FC<HyperspeedProps> = ({
+const Hyperspeed: FC<HyperspeedProperties> = ({
   effectOptions = DEFAULT_EFFECT_OPTIONS,
 }) => {
   const hyperspeed = useRef<HTMLDivElement>(null);
-  const appRef = useRef<App | null>(null);
+  const appReference = useRef<App | null>(null);
 
   useEffect(() => {
-    if (appRef.current) {
-      appRef.current.dispose();
-      appRef.current = null;
+    if (appReference.current) {
+      appReference.current.dispose();
+      appReference.current = null;
       const container = hyperspeed.current;
       if (container) {
-        while (container.firstChild) {
-          container.removeChild(container.firstChild);
-        }
+        container.replaceChildren();
       }
     }
 
@@ -1397,12 +1375,12 @@ const Hyperspeed: FC<HyperspeedProps> = ({
     }
 
     const myApp = new App(container, options);
-    appRef.current = myApp;
+    appReference.current = myApp;
     myApp.loadAssets().then(myApp.init);
 
     return () => {
-      if (appRef.current) {
-        appRef.current.dispose();
+      if (appReference.current) {
+        appReference.current.dispose();
       }
     };
   }, [effectOptions]);

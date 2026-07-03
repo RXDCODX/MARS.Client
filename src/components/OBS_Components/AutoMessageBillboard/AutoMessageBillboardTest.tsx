@@ -17,7 +17,7 @@ export default function AutoMessageBillboardTest() {
 
   const addMessage = () => {
     const newMessage = `Тестовое сообщение ${Date.now()}`;
-    setMessages(prev => [...prev, newMessage]);
+    setMessages(previous => [...previous, newMessage]);
   };
 
   const clearMessages = () => {
@@ -28,13 +28,13 @@ export default function AutoMessageBillboardTest() {
     // Симуляция получения сообщений через SignalR
     const interval = setInterval(() => {
       const newMessage = `SignalR сообщение ${Date.now()}`;
-      setMessages(prev => [...prev, newMessage]);
+      setMessages(previous => [...previous, newMessage]);
     }, 5000);
 
     // Останавливаем через 30 секунд
     setTimeout(() => {
       clearInterval(interval);
-    }, 30000);
+    }, 30_000);
   };
 
   return (
@@ -83,9 +83,9 @@ export default function AutoMessageBillboardTest() {
           Сообщений в очереди: {messages.length}
         </h3>
         <div className={styles.messageList}>
-          {messages.map((msg, index) => (
+          {messages.map((message, index) => (
             <div key={index} className={styles.messageItem}>
-              {index + 1}. {msg}
+              {index + 1}. {message}
             </div>
           ))}
         </div>

@@ -55,19 +55,21 @@ class Noise {
       184, 84, 204, 176, 115, 121, 50, 45, 127, 4, 150, 254, 138, 236, 205, 93,
       222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180,
     ];
-    this.perm = new Array(512);
-    this.gradP = new Array(512);
+    this.perm = Array.from({ length: 512 });
+    this.gradP = Array.from({ length: 512 });
     this.seed(seed);
   }
   seed(seed: number) {
-    if (seed > 0 && seed < 1) seed *= 65536;
+    if (seed > 0 && seed < 1) seed *= 65_536;
     seed = Math.floor(seed);
     if (seed < 256) seed |= seed << 8;
-    for (let i = 0; i < 256; i++) {
+    for (let index = 0; index < 256; index++) {
       const v =
-        i & 1 ? this.p[i] ^ (seed & 255) : this.p[i] ^ ((seed >> 8) & 255);
-      this.perm[i] = this.perm[i + 256] = v;
-      this.gradP[i] = this.gradP[i + 256] = this.grad3[v % 12];
+        index & 1
+          ? this.p[index] ^ (seed & 255)
+          : this.p[index] ^ ((seed >> 8) & 255);
+      this.perm[index] = this.perm[index + 256] = v;
+      this.gradP[index] = this.gradP[index + 256] = this.grad3[v % 12];
     }
   }
   fade(t: number): number {
@@ -129,7 +131,7 @@ interface Config {
   yGap: number;
 }
 
-interface WavesProps {
+interface WavesProperties {
   lineColor?: string;
   backgroundColor?: string;
   waveSpeedX?: number;
@@ -145,7 +147,7 @@ interface WavesProps {
   className?: string;
 }
 
-const Waves: React.FC<WavesProps> = ({
+const Waves: React.FC<WavesProperties> = ({
   lineColor = "black",
   backgroundColor = "transparent",
   waveSpeedX = 0.0125,
@@ -160,10 +162,10 @@ const Waves: React.FC<WavesProps> = ({
   style = {},
   className = "",
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
-  const boundingRef = useRef<{
+  const containerReference = useRef<HTMLDivElement>(null);
+  const canvasReference = useRef<HTMLCanvasElement>(null);
+  const contextReference = useRef<CanvasRenderingContext2D | null>(null);
+  const boundingReference = useRef<{
     width: number;
     height: number;
     left: number;
@@ -174,9 +176,9 @@ const Waves: React.FC<WavesProps> = ({
     left: 0,
     top: 0,
   });
-  const noiseRef = useRef(new Noise(Math.random()));
-  const linesRef = useRef<Point[][]>([]);
-  const mouseRef = useRef<Mouse>({
+  const noiseReference = useRef(new Noise(Math.random()));
+  const linesReference = useRef<Point[][]>([]);
+  const mouseReference = useRef<Mouse>({
     x: -10,
     y: 0,
     lx: 0,
@@ -188,7 +190,7 @@ const Waves: React.FC<WavesProps> = ({
     a: 0,
     set: false,
   });
-  const configRef = useRef<Config>({
+  const configReference = useRef<Config>({
     lineColor,
     waveSpeedX,
     waveSpeedY,
@@ -200,10 +202,10 @@ const Waves: React.FC<WavesProps> = ({
     xGap,
     yGap,
   });
-  const frameIdRef = useRef<number | null>(null);
+  const frameIdReference = useRef<number | null>(null);
 
   useEffect(() => {
-    configRef.current = {
+    configReference.current = {
       lineColor,
       waveSpeedX,
       waveSpeedY,
@@ -229,15 +231,15 @@ const Waves: React.FC<WavesProps> = ({
   ]);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    const container = containerRef.current;
+    const canvas = canvasReference.current;
+    const container = containerReference.current;
     if (!canvas || !container) return;
-    ctxRef.current = canvas.getContext("2d");
+    contextReference.current = canvas.getContext("2d");
 
     function setSize() {
       if (!container || !canvas) return;
       const rect = container.getBoundingClientRect();
-      boundingRef.current = {
+      boundingReference.current = {
         width: rect.width,
         height: rect.height,
         left: rect.left,
@@ -248,33 +250,33 @@ const Waves: React.FC<WavesProps> = ({
     }
 
     function setLines() {
-      const { width, height } = boundingRef.current;
-      linesRef.current = [];
+      const { width, height } = boundingReference.current;
+      linesReference.current = [];
       const oWidth = width + 200,
         oHeight = height + 30;
-      const { xGap, yGap } = configRef.current;
+      const { xGap, yGap } = configReference.current;
       const totalLines = Math.ceil(oWidth / xGap);
       const totalPoints = Math.ceil(oHeight / yGap);
       const xStart = (width - xGap * totalLines) / 2;
       const yStart = (height - yGap * totalPoints) / 2;
-      for (let i = 0; i <= totalLines; i++) {
+      for (let index = 0; index <= totalLines; index++) {
         const pts: Point[] = [];
-        for (let j = 0; j <= totalPoints; j++) {
+        for (let index_ = 0; index_ <= totalPoints; index_++) {
           pts.push({
-            x: xStart + xGap * i,
-            y: yStart + yGap * j,
+            x: xStart + xGap * index,
+            y: yStart + yGap * index_,
             wave: { x: 0, y: 0 },
             cursor: { x: 0, y: 0, vx: 0, vy: 0 },
           });
         }
-        linesRef.current.push(pts);
+        linesReference.current.push(pts);
       }
     }
 
     function movePoints(time: number) {
-      const lines = linesRef.current;
-      const mouse = mouseRef.current;
-      const noise = noiseRef.current;
+      const lines = linesReference.current;
+      const mouse = mouseReference.current;
+      const noise = noiseReference.current;
       const {
         waveSpeedX,
         waveSpeedY,
@@ -283,7 +285,7 @@ const Waves: React.FC<WavesProps> = ({
         friction,
         tension,
         maxCursorMove,
-      } = configRef.current;
+      } = configReference.current;
       lines.forEach(pts => {
         pts.forEach(p => {
           const move =
@@ -296,11 +298,11 @@ const Waves: React.FC<WavesProps> = ({
 
           const dx = p.x - mouse.sx,
             dy = p.y - mouse.sy;
-          const dist = Math.hypot(dx, dy);
+          const distribution = Math.hypot(dx, dy);
           const l = Math.max(175, mouse.vs);
-          if (dist < l) {
-            const s = 1 - dist / l;
-            const f = Math.cos(dist * 0.001) * s;
+          if (distribution < l) {
+            const s = 1 - distribution / l;
+            const f = Math.cos(distribution * 0.001) * s;
             p.cursor.vx += Math.cos(mouse.a) * f * l * mouse.vs * 0.00065;
             p.cursor.vy += Math.sin(mouse.a) * f * l * mouse.vs * 0.00065;
           }
@@ -330,32 +332,29 @@ const Waves: React.FC<WavesProps> = ({
     }
 
     function drawLines() {
-      const { width, height } = boundingRef.current;
-      const ctx = ctxRef.current;
-      if (!ctx) return;
-      ctx.clearRect(0, 0, width, height);
-      ctx.beginPath();
-      ctx.strokeStyle = configRef.current.lineColor;
-      linesRef.current.forEach(points => {
+      const { width, height } = boundingReference.current;
+      const context = contextReference.current;
+      if (!context) return;
+      context.clearRect(0, 0, width, height);
+      context.beginPath();
+      context.strokeStyle = configReference.current.lineColor;
+      linesReference.current.forEach(points => {
         let p1 = moved(points[0], false);
-        ctx.moveTo(p1.x, p1.y);
-        points.forEach((p, idx) => {
-          const isLast = idx === points.length - 1;
+        context.moveTo(p1.x, p1.y);
+        points.forEach((p, index) => {
+          const isLast = index === points.length - 1;
           p1 = moved(p, !isLast);
-          const p2 = moved(
-            points[idx + 1] || points[points.length - 1],
-            !isLast
-          );
-          ctx.lineTo(p1.x, p1.y);
-          if (isLast) ctx.moveTo(p2.x, p2.y);
+          const p2 = moved(points[index + 1] || points.at(-1), !isLast);
+          context.lineTo(p1.x, p1.y);
+          if (isLast) context.moveTo(p2.x, p2.y);
         });
       });
-      ctx.stroke();
+      context.stroke();
     }
 
     function tick(t: number) {
       if (!container) return;
-      const mouse = mouseRef.current;
+      const mouse = mouseReference.current;
       mouse.sx += (mouse.x - mouse.sx) * 0.1;
       mouse.sy += (mouse.y - mouse.sy) * 0.1;
       const dx = mouse.x - mouse.lx,
@@ -372,7 +371,7 @@ const Waves: React.FC<WavesProps> = ({
 
       movePoints(t);
       drawLines();
-      frameIdRef.current = requestAnimationFrame(tick);
+      frameIdReference.current = requestAnimationFrame(tick);
     }
 
     function onResize() {
@@ -387,8 +386,8 @@ const Waves: React.FC<WavesProps> = ({
       updateMouse(touch.clientX, touch.clientY);
     }
     function updateMouse(x: number, y: number) {
-      const mouse = mouseRef.current;
-      const b = boundingRef.current;
+      const mouse = mouseReference.current;
+      const b = boundingReference.current;
       mouse.x = x - b.left;
       mouse.y = y - b.top;
       if (!mouse.set) {
@@ -402,24 +401,24 @@ const Waves: React.FC<WavesProps> = ({
 
     setSize();
     setLines();
-    frameIdRef.current = requestAnimationFrame(tick);
+    frameIdReference.current = requestAnimationFrame(tick);
     window.addEventListener("resize", onResize);
-    window.addEventListener("mousemove", onMouseMove);
-    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    globalThis.addEventListener("mousemove", onMouseMove);
+    globalThis.addEventListener("touchmove", onTouchMove, { passive: false });
 
     return () => {
       window.removeEventListener("resize", onResize);
-      window.removeEventListener("mousemove", onMouseMove);
-      window.removeEventListener("touchmove", onTouchMove);
-      if (frameIdRef.current !== null) {
-        cancelAnimationFrame(frameIdRef.current);
+      globalThis.removeEventListener("mousemove", onMouseMove);
+      globalThis.removeEventListener("touchmove", onTouchMove);
+      if (frameIdReference.current !== null) {
+        cancelAnimationFrame(frameIdReference.current);
       }
     };
   }, []);
 
   return (
     <div
-      ref={containerRef}
+      ref={containerReference}
       className={`waves ${className}`}
       style={{
         position: "absolute",
@@ -434,7 +433,7 @@ const Waves: React.FC<WavesProps> = ({
         ...style,
       }}
     >
-      <canvas ref={canvasRef} className="waves-canvas" />
+      <canvas ref={canvasReference} className="waves-canvas" />
     </div>
   );
 };

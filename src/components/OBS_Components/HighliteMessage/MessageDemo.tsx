@@ -14,7 +14,7 @@ import {
 import commonStyles from "../OBSCommon.module.scss";
 import styles from "./Message.module.scss";
 
-interface DemoMessageProps {
+interface DemoMessageProperties {
   message: ChatMessage;
   color: string;
   faceImage: FaceAsset;
@@ -26,18 +26,20 @@ function DemoMessage({
   color,
   faceImage,
   onRemove,
-}: DemoMessageProps) {
-  const divRef = useRef<HTMLDivElement>(null);
+}: DemoMessageProperties) {
+  const divReference = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (divRef.current) {
-        divRef.current.onanimationend = () => {
-          onRemove();
-        };
-        divRef.current.className =
-          styles.container + " " + animate.fadeOut + " " + animate.animated;
+      if (!divReference.current) {
+        return;
       }
+
+      divReference.current.addEventListener("animationend", () => {
+        onRemove();
+      });
+      divReference.current.className =
+        styles.container + " " + animate.fadeOut + " " + animate.animated;
     }, 5000);
 
     return () => clearTimeout(timer);
@@ -50,7 +52,7 @@ function DemoMessage({
       className={
         styles.container + " " + animate.fadeIn + " " + animate.animated
       }
-      ref={divRef}
+      ref={divReference}
     >
       {/* IMAGE */}
       <div className={styles["buble-image"]}>
@@ -140,11 +142,13 @@ export default function MessageDemo() {
 
     const randomMessage =
       demoMessages[Math.floor(Math.random() * demoMessages.length)];
-    setMessages(prev => [...prev, randomMessage]);
+    setMessages(previous => [...previous, randomMessage]);
   };
 
   const removeMessage = (id: string) => {
-    setMessages(prev => prev.filter(msg => msg.message.id !== id));
+    setMessages(previous =>
+      previous.filter(message => message.message.id !== id)
+    );
   };
 
   useEffect(() => {

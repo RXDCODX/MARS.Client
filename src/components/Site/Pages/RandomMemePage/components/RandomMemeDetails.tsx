@@ -16,11 +16,11 @@ import { RandomMeme } from "@/shared/api";
 
 import styles from "../RandomMemePage.module.scss";
 import {
-  RandomMemeOrderDetailsProps,
-  RandomMemeTypeDetailsProps,
+  RandomMemeOrderDetailsProps as RandomMemeOrderDetailsProperties,
+  RandomMemeTypeDetailsProps as RandomMemeTypeDetailsProperties,
 } from "../RandomMemePage.types";
 
-const RandomMemeTypeDetails: React.FC<RandomMemeTypeDetailsProps> = ({
+const RandomMemeTypeDetails: React.FC<RandomMemeTypeDetailsProperties> = ({
   memeType,
   isLoading,
   onBack,
@@ -189,7 +189,7 @@ const RandomMemeTypeDetails: React.FC<RandomMemeTypeDetailsProps> = ({
   </div>
 );
 
-const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
+const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProperties> = ({
   memeOrder,
   isLoading,
   onBack,
@@ -234,9 +234,11 @@ const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
 
     if (imageExtensions.includes(extension || "")) {
       return "image";
-    } else if (videoExtensions.includes(extension || "")) {
+    }
+    if (videoExtensions.includes(extension || "")) {
       return "video";
-    } else if (audioExtensions.includes(extension || "")) {
+    }
+    if (audioExtensions.includes(extension || "")) {
       return "audio";
     }
 
@@ -403,7 +405,7 @@ const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
                   const mediaType = getMediaType(memeOrder.filePath);
 
                   switch (mediaType) {
-                    case "image":
+                    case "image": {
                       return (
                         <img
                           src={memeImageUrl}
@@ -418,8 +420,9 @@ const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
                           }}
                         />
                       );
+                    }
 
-                    case "video":
+                    case "video": {
                       return (
                         <video
                           src={memeImageUrl}
@@ -436,8 +439,9 @@ const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
                           Ваш браузер не поддерживает видео элемент.
                         </video>
                       );
+                    }
 
-                    case "audio":
+                    case "audio": {
                       return (
                         <Flex vertical align="center">
                           <div style={{ marginBottom: 12 }}>
@@ -455,8 +459,9 @@ const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
                           </audio>
                         </Flex>
                       );
+                    }
 
-                    default:
+                    default: {
                       return (
                         <Flex vertical align="center">
                           <div style={{ marginBottom: 12 }}>
@@ -480,6 +485,7 @@ const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
                           </Button>
                         </Flex>
                       );
+                    }
                   }
                 })()}
               </div>
@@ -500,9 +506,9 @@ const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
                     const extension =
                       memeOrder.filePath.split(".").pop() || "file";
                     link.download = `meme_${memeOrder.order}.${extension}`;
-                    document.body.appendChild(link);
+                    document.body.append(link);
                     link.click();
-                    document.body.removeChild(link);
+                    link.remove();
                   }}
                   style={{ display: "flex", alignItems: "center", gap: 6 }}
                 >
@@ -803,14 +809,13 @@ const RandomMemeOrderDetails: React.FC<RandomMemeOrderDetailsProps> = ({
 };
 
 const RandomMemeDetails: React.FC<
-  RandomMemeTypeDetailsProps | RandomMemeOrderDetailsProps
-> = props => {
-  if ("memeType" in props) {
-    return <RandomMemeTypeDetails {...props} />;
-  } else {
-    return <RandomMemeOrderDetails {...props} />;
-  }
-};
+  RandomMemeTypeDetailsProperties | RandomMemeOrderDetailsProperties
+> = properties =>
+  "memeType" in properties ? (
+    <RandomMemeTypeDetails {...properties} />
+  ) : (
+    <RandomMemeOrderDetails {...properties} />
+  );
 
 export default RandomMemeDetails;
 export { RandomMemeTypeDetails, RandomMemeOrderDetails };

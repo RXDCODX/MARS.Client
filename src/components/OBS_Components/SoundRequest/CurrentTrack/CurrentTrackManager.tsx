@@ -110,8 +110,9 @@ export function CurrentTrackManager() {
             incomingTrack: null,
           };
         }
-        default:
+        default: {
           return s;
+        }
       }
     },
     {
@@ -130,16 +131,19 @@ export function CurrentTrackManager() {
   const animationTimer = useRef<number | null>(null);
   useEffect(() => {
     if (state.isAnimating) {
-      if (animationTimer.current) window.clearTimeout(animationTimer.current);
-      animationTimer.current = window.setTimeout(() => {
+      if (animationTimer.current)
+        globalThis.clearTimeout(animationTimer.current);
+      animationTimer.current = globalThis.setTimeout(() => {
         dispatch({ type: "ANIMATION_END" });
       }, ANIMATION_TOTAL_MS);
     }
     return () => {
-      if (animationTimer.current) {
-        window.clearTimeout(animationTimer.current);
-        animationTimer.current = null;
+      if (!animationTimer.current) {
+        return;
       }
+
+      globalThis.clearTimeout(animationTimer.current);
+      animationTimer.current = null;
     };
   }, [state.isAnimating]);
 

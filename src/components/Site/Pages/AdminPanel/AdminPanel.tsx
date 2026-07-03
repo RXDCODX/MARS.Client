@@ -3,55 +3,63 @@ import React, { useState } from "react";
 
 import Dashboard from "../Dashboard/Dashboard";
 import styles from "./AdminPanel.module.scss";
-import { AdminPanelProps } from "./AdminPanel.types";
+import { AdminPanelProps as AdminPanelProperties } from "./AdminPanel.types";
 import SpotifyAuthManager from "./sections/SpotifyAuthManager";
 
-const AdminPanel: React.FC<AdminPanelProps> = () => {
+const AdminPanel: React.FC<AdminPanelProperties> = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
 
   const renderContent = () => {
     switch (activeTab) {
-      case "dashboard":
+      case "dashboard": {
         return <Dashboard />;
-      case "spotify":
+      }
+      case "spotify": {
         return <SpotifyAuthManager />;
-      case "servers":
+      }
+      case "servers": {
         return (
           <div className={styles.placeholder}>
             <h2>🖥️ Управление серверами</h2>
             <p>Здесь будет интерфейс для управления серверами</p>
           </div>
         );
-      case "logs":
+      }
+      case "logs": {
         return (
           <div className={styles.placeholder}>
             <h2>📝 Системные логи</h2>
             <p>Здесь будет детальный просмотр логов</p>
           </div>
         );
-      case "users":
+      }
+      case "users": {
         return (
           <div className={styles.placeholder}>
             <h2>👥 Управление пользователями</h2>
             <p>Здесь будет интерфейс для управления пользователями</p>
           </div>
         );
-      case "performance":
+      }
+      case "performance": {
         return (
           <div className={styles.placeholder}>
             <h2>⚡ Детальная производительность</h2>
             <p>Здесь будут расширенные метрики производительности</p>
           </div>
         );
-      case "settings":
+      }
+      case "settings": {
         return (
           <div className={styles.placeholder}>
             <h2>⚙️ Настройки системы</h2>
             <p>Здесь будут настройки админ панели</p>
           </div>
         );
-      default:
+      }
+      default: {
         return <Dashboard />;
+      }
     }
   };
 

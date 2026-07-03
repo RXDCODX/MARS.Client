@@ -1,6 +1,6 @@
 import { Spin as AntSpin } from "antd";
 
-interface SpinnerProps {
+interface SpinnerProperties {
   animation?: string;
   size?: "sm" | "md" | "lg";
   className?: string;
@@ -12,7 +12,7 @@ const sizeMap: Record<string, "small" | "default" | "large"> = {
   lg: "large",
 };
 
-const Spinner = ({ size = "md", className }: SpinnerProps) => (
+const Spinner = ({ size = "md", className }: SpinnerProperties) => (
   <AntSpin size={sizeMap[size] ?? "default"} className={className} />
 );
 

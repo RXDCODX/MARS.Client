@@ -12,27 +12,31 @@ declare global {
   }
 }
 
-interface Props {
+interface Properties {
   mediaInfo: MediaDto;
   callback: () => void;
   isHighPrior?: boolean;
 }
 
-export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
+export function Voice({ mediaInfo, callback, isHighPrior }: Properties) {
   const { metaInfo, fileInfo, textInfo } = mediaInfo.mediaInfo;
-  const bellSrc = import.meta.env.VITE_BASE_PATH + "Alerts/bell.wav";
-  const voiceSrc = fileInfo.filePath;
-  const imageSrc = import.meta.env.VITE_BASE_PATH + textInfo.text;
+  const bellSource = import.meta.env.VITE_BASE_PATH + "Alerts/bell.wav";
+  const voiceSource = fileInfo.filePath;
+  const imageSource = import.meta.env.VITE_BASE_PATH + textInfo.text;
 
   const [isBellPlayed, setIsBellPlayed] = useState(false);
-  const bellAudioRef = useRef<HTMLAudioElement>(null);
-  const voiceAudioRef = useRef<HTMLAudioElement>(null);
-  const bellAudioContextRef = useRef<AudioContext | null>(null);
-  const voiceAudioContextRef = useRef<AudioContext | null>(null);
-  const bellGainNodeRef = useRef<GainNode | null>(null);
-  const voiceGainNodeRef = useRef<GainNode | null>(null);
-  const bellSourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
-  const voiceSourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
+  const bellAudioReference = useRef<HTMLAudioElement>(null);
+  const voiceAudioReference = useRef<HTMLAudioElement>(null);
+  const bellAudioContextReference = useRef<AudioContext | null>(null);
+  const voiceAudioContextReference = useRef<AudioContext | null>(null);
+  const bellGainNodeReference = useRef<GainNode | null>(null);
+  const voiceGainNodeReference = useRef<GainNode | null>(null);
+  const bellSourceNodeReference = useRef<MediaElementAudioSourceNode | null>(
+    null
+  );
+  const voiceSourceNodeReference = useRef<MediaElementAudioSourceNode | null>(
+    null
+  );
 
   const unmuteAll = useCallback(() => {
     if (isHighPrior) {
@@ -43,7 +47,7 @@ export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
   const error = useCallback(() => {
     unmuteAll();
     callback();
-    throw Error("Failed to play audio");
+    throw new Error("Failed to play audio");
   }, [callback, unmuteAll]);
 
   const muteAll = useCallback(() => {
@@ -67,82 +71,86 @@ export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
   }, [isFreezeRequired]);
 
   const setupBellAudioContext = useCallback(() => {
-    if (!bellAudioRef.current) return;
+    if (!bellAudioReference.current) return;
 
     try {
       // Создаем AudioContext если его еще нет
-      if (!bellAudioContextRef.current) {
+      if (!bellAudioContextReference.current) {
         const AudioContextClass =
-          window.AudioContext || window.webkitAudioContext;
+          globalThis.AudioContext || globalThis.webkitAudioContext;
         if (AudioContextClass) {
-          bellAudioContextRef.current = new AudioContextClass();
+          bellAudioContextReference.current = new AudioContextClass();
         } else {
           throw new Error("AudioContext is not supported in this browser");
         }
       }
 
       // Создаем источник из audio элемента
-      if (!bellSourceNodeRef.current) {
-        bellSourceNodeRef.current =
-          bellAudioContextRef.current.createMediaElementSource(
-            bellAudioRef.current
+      if (!bellSourceNodeReference.current) {
+        bellSourceNodeReference.current =
+          bellAudioContextReference.current.createMediaElementSource(
+            bellAudioReference.current
           );
       }
 
       // Создаем GainNode если его еще нет
-      if (!bellGainNodeRef.current) {
-        bellGainNodeRef.current = bellAudioContextRef.current.createGain();
+      if (!bellGainNodeReference.current) {
+        bellGainNodeReference.current =
+          bellAudioContextReference.current.createGain();
       }
 
       // Подключаем цепочку: источник -> GainNode -> выход
-      bellSourceNodeRef.current.connect(bellGainNodeRef.current);
-      bellGainNodeRef.current.connect(bellAudioContextRef.current.destination);
+      bellSourceNodeReference.current.connect(bellGainNodeReference.current);
+      bellGainNodeReference.current.connect(
+        bellAudioContextReference.current.destination
+      );
 
       // Устанавливаем громкость (поддерживаем значения больше 100%)
       const volume = metaInfo.volume / 100;
-      bellGainNodeRef.current.gain.value = volume;
+      bellGainNodeReference.current.gain.value = volume;
     } catch (error) {
       console.warn("Failed to setup AudioContext for bell:", error);
     }
   }, [metaInfo.volume]);
 
   const setupVoiceAudioContext = useCallback(() => {
-    if (!voiceAudioRef.current) return;
+    if (!voiceAudioReference.current) return;
 
     try {
       // Создаем AudioContext если его еще нет
-      if (!voiceAudioContextRef.current) {
+      if (!voiceAudioContextReference.current) {
         const AudioContextClass =
-          window.AudioContext || window.webkitAudioContext;
+          globalThis.AudioContext || globalThis.webkitAudioContext;
         if (AudioContextClass) {
-          voiceAudioContextRef.current = new AudioContextClass();
+          voiceAudioContextReference.current = new AudioContextClass();
         } else {
           throw new Error("AudioContext is not supported in this browser");
         }
       }
 
       // Создаем источник из audio элемента
-      if (!voiceSourceNodeRef.current) {
-        voiceSourceNodeRef.current =
-          voiceAudioContextRef.current.createMediaElementSource(
-            voiceAudioRef.current
+      if (!voiceSourceNodeReference.current) {
+        voiceSourceNodeReference.current =
+          voiceAudioContextReference.current.createMediaElementSource(
+            voiceAudioReference.current
           );
       }
 
       // Создаем GainNode если его еще нет
-      if (!voiceGainNodeRef.current) {
-        voiceGainNodeRef.current = voiceAudioContextRef.current.createGain();
+      if (!voiceGainNodeReference.current) {
+        voiceGainNodeReference.current =
+          voiceAudioContextReference.current.createGain();
       }
 
       // Подключаем цепочку: источник -> GainNode -> выход
-      voiceSourceNodeRef.current.connect(voiceGainNodeRef.current);
-      voiceGainNodeRef.current.connect(
-        voiceAudioContextRef.current.destination
+      voiceSourceNodeReference.current.connect(voiceGainNodeReference.current);
+      voiceGainNodeReference.current.connect(
+        voiceAudioContextReference.current.destination
       );
 
       // Устанавливаем громкость (поддерживаем значения больше 100%)
       const volume = metaInfo.volume / 100;
-      voiceGainNodeRef.current.gain.value = volume;
+      voiceGainNodeReference.current.gain.value = volume;
     } catch (error) {
       console.warn("Failed to setup AudioContext for voice:", error);
     }
@@ -151,11 +159,11 @@ export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
   // Очистка ресурсов при размонтировании
   useEffect(
     () => () => {
-      if (bellAudioContextRef.current) {
-        bellAudioContextRef.current.close();
+      if (bellAudioContextReference.current) {
+        bellAudioContextReference.current.close();
       }
-      if (voiceAudioContextRef.current) {
-        voiceAudioContextRef.current.close();
+      if (voiceAudioContextReference.current) {
+        voiceAudioContextReference.current.close();
       }
     },
     []
@@ -165,28 +173,28 @@ export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
     <>
       {!isBellPlayed && (
         <audio
-          ref={bellAudioRef}
+          ref={bellAudioReference}
           autoPlay
-          src={bellSrc}
+          src={bellSource}
           onCanPlay={e => {
             // Настраиваем AudioContext и GainNode
             setupBellAudioContext();
 
             // Устанавливаем базовую громкость на 1.0, так как реальная громкость контролируется GainNode
-            e.currentTarget.volume = 1.0;
+            e.currentTarget.volume = 1;
           }}
           onEnded={() => setIsBellPlayed(true)}
           onError={() => {
             SignalRContext.invoke(
               "LogError",
-              `RandomMem: failed to play VOICE path=${voiceSrc}`
+              `RandomMem: failed to play VOICE path=${voiceSource}`
             );
             error();
           }}
           onErrorCapture={() => {
             SignalRContext.invoke(
               "LogError",
-              `RandomMem: failed to play VOICE path=${voiceSrc}`
+              `RandomMem: failed to play VOICE path=${voiceSource}`
             );
             error();
           }}
@@ -198,15 +206,15 @@ export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
       )}
       {isBellPlayed && (
         <audio
-          ref={voiceAudioRef}
+          ref={voiceAudioReference}
           autoPlay
-          src={voiceSrc}
+          src={voiceSource}
           onCanPlay={e => {
             // Настраиваем AudioContext и GainNode
             setupVoiceAudioContext();
 
             // Устанавливаем базовую громкость на 1.0, так как реальная громкость контролируется GainNode
-            e.currentTarget.volume = 1.0;
+            e.currentTarget.volume = 1;
           }}
           onEnded={() => {
             unmuteAll();
@@ -229,7 +237,7 @@ export function Voice({ mediaInfo, callback, isHighPrior }: Props) {
           </div>
           <div className={styles.block}>
             <Textfit forceSingleModeWidth max={2000} min={1}>
-              Сейчас говорит <img className="emote" src={imageSrc} />
+              Сейчас говорит <img className="emote" src={imageSource} />
               {metaInfo.displayName}
             </Textfit>
           </div>

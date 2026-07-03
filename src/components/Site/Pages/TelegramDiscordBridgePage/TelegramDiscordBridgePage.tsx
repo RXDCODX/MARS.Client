@@ -127,10 +127,10 @@ const TelegramDiscordBridgePage: React.FC = () => {
       setStates(
         Array.isArray(statesResult.data.data) ? statesResult.data.data : []
       );
-    } catch (e) {
+    } catch (error_) {
       const message =
-        e instanceof Error
-          ? e.message
+        error_ instanceof Error
+          ? error_.message
           : "Не удалось загрузить данные моста Telegram ↔ Discord";
       setError(message);
       showToast({ success: false, message });
@@ -164,9 +164,11 @@ const TelegramDiscordBridgePage: React.FC = () => {
           ? discordChannelsResult.data.data
           : []
       );
-    } catch (e) {
+    } catch (error_) {
       const message =
-        e instanceof Error ? e.message : "Не удалось загрузить списки каналов";
+        error_ instanceof Error
+          ? error_.message
+          : "Не удалось загрузить списки каналов";
       setError(message);
       showToast({ success: false, message });
     } finally {
@@ -207,13 +209,7 @@ const TelegramDiscordBridgePage: React.FC = () => {
         telegramChannelId !== 0 &&
         discordChannelId > 0;
 
-      if (!isValidIds) {
-        const message =
-          "Не удалось создать привязку: выберите корректные Telegram и Discord каналы";
-        setError(message);
-        showToast({ success: false, message });
-        setCreating(false);
-      } else {
+      if (isValidIds) {
         const payload: TelegramDiscordBindingCreateRequest = {
           telegramChannelId,
           discordChannelId,
@@ -225,14 +221,22 @@ const TelegramDiscordBridgePage: React.FC = () => {
           setForm({ ...defaultForm });
           setShowCreateModal(false);
           await loadData();
-        } catch (e) {
+        } catch (error_) {
           const message =
-            e instanceof Error ? e.message : "Не удалось создать привязку";
+            error_ instanceof Error
+              ? error_.message
+              : "Не удалось создать привязку";
           setError(message);
           showToast({ success: false, message });
         } finally {
           setCreating(false);
         }
+      } else {
+        const message =
+          "Не удалось создать привязку: выберите корректные Telegram и Discord каналы";
+        setError(message);
+        showToast({ success: false, message });
+        setCreating(false);
       }
     },
     [api, form, showToast, loadData]
@@ -244,18 +248,20 @@ const TelegramDiscordBridgePage: React.FC = () => {
         return;
       }
 
-      setProcessingIds(prev => ({ ...prev, [id]: true }));
+      setProcessingIds(previous => ({ ...previous, [id]: true }));
       try {
         const result = await api.telegramDiscordBridgeBindingsDelete(id);
         showToast(result.data);
         await loadData();
-      } catch (e) {
+      } catch (error_) {
         const message =
-          e instanceof Error ? e.message : "Не удалось удалить привязку";
+          error_ instanceof Error
+            ? error_.message
+            : "Не удалось удалить привязку";
         setError(message);
         showToast({ success: false, message });
       } finally {
-        setProcessingIds(prev => ({ ...prev, [id]: false }));
+        setProcessingIds(previous => ({ ...previous, [id]: false }));
       }
     },
     [api, loadData, showToast]
@@ -267,7 +273,7 @@ const TelegramDiscordBridgePage: React.FC = () => {
         return;
       }
 
-      setProcessingIds(prev => ({ ...prev, [binding.id]: true }));
+      setProcessingIds(previous => ({ ...previous, [binding.id]: true }));
       try {
         const result = await api.telegramDiscordBridgeBindingsEnabledUpdate(
           binding.id,
@@ -277,15 +283,15 @@ const TelegramDiscordBridgePage: React.FC = () => {
         );
         showToast(result.data);
         await loadData();
-      } catch (e) {
+      } catch (error_) {
         const message =
-          e instanceof Error
-            ? e.message
+          error_ instanceof Error
+            ? error_.message
             : "Не удалось обновить статус привязки";
         setError(message);
         showToast({ success: false, message });
       } finally {
-        setProcessingIds(prev => ({ ...prev, [binding.id!]: false }));
+        setProcessingIds(previous => ({ ...previous, [binding.id!]: false }));
       }
     },
     [api, loadData, showToast]
@@ -451,10 +457,10 @@ const TelegramDiscordBridgePage: React.FC = () => {
               </label>
               <Select
                 value={form.telegramChannelId || undefined}
-                onChange={val =>
+                onChange={value =>
                   setForm(previous => ({
                     ...previous,
-                    telegramChannelId: val,
+                    telegramChannelId: value,
                   }))
                 }
                 options={telegramOptions}
@@ -470,10 +476,10 @@ const TelegramDiscordBridgePage: React.FC = () => {
               </label>
               <Select
                 value={form.discordChannelId || undefined}
-                onChange={val =>
+                onChange={value =>
                   setForm(previous => ({
                     ...previous,
-                    discordChannelId: val,
+                    discordChannelId: value,
                   }))
                 }
                 options={discordOptions}

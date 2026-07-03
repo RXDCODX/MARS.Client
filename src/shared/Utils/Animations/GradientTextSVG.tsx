@@ -13,7 +13,7 @@ interface StrokeConfig {
 
 type SpeedPreset = "very-slow" | "slow" | "normal" | "fast" | "very-fast";
 
-interface GradientTextProps {
+interface GradientTextProperties {
   text: string;
   colors?: string[];
   speed?: SpeedPreset;
@@ -23,7 +23,7 @@ interface GradientTextProps {
   stroke?: StrokeConfig;
 }
 
-const GradientTextSVG: React.FC<GradientTextProps> = ({
+const GradientTextSVG: React.FC<GradientTextProperties> = ({
   text,
   colors = [
     "#ff00cc",

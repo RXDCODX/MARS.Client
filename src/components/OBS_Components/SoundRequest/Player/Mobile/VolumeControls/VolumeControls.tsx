@@ -43,27 +43,35 @@ function VolumeControlsComponent() {
 
   const videoIcon = useMemo(() => {
     switch (videoState) {
-      case PlayerStateVideoStateEnum.Video:
+      case PlayerStateVideoStateEnum.Video: {
         return <Video size={18} />;
-      case PlayerStateVideoStateEnum.NoVideo:
+      }
+      case PlayerStateVideoStateEnum.NoVideo: {
         return <VideoOff size={18} />;
-      case PlayerStateVideoStateEnum.AudioOnly:
+      }
+      case PlayerStateVideoStateEnum.AudioOnly: {
         return <Music size={18} />;
-      default:
+      }
+      default: {
         return <Video size={18} />;
+      }
     }
   }, [videoState]);
 
   const videoButtonType = useMemo(() => {
     switch (videoState) {
-      case PlayerStateVideoStateEnum.Video:
+      case PlayerStateVideoStateEnum.Video: {
         return "primary";
-      case PlayerStateVideoStateEnum.NoVideo:
+      }
+      case PlayerStateVideoStateEnum.NoVideo: {
         return "default";
-      case PlayerStateVideoStateEnum.AudioOnly:
+      }
+      case PlayerStateVideoStateEnum.AudioOnly: {
         return "primary";
-      default:
+      }
+      default: {
         return "primary";
+      }
     }
   }, [videoState]);
 

@@ -5,11 +5,13 @@ import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
 import styles from "../CinemaQueuePage.module.scss";
 
-interface StatisticsCardsProps {
+interface StatisticsCardsProperties {
   statistics: CinemaQueueStatistics;
 }
 
-const StatisticsCards: React.FC<StatisticsCardsProps> = ({ statistics }) => {
+const StatisticsCards: React.FC<StatisticsCardsProperties> = ({
+  statistics,
+}) => {
   const colors = useSiteColors();
 
   const cardStyles = {

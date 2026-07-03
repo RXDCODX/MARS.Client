@@ -15,24 +15,34 @@ const useAntdTheme = () => {
 
   const isDark = antdStyle === "geek" || siteTheme === "dark";
 
-  const illustrationProps = useIllustrationTheme(isDark);
-  const muiProps = useMuiTheme(isDark);
-  const cartoonProps = useCartoonTheme(isDark);
-  const geekProps = useGeekTheme(isDark);
+  const illustrationProperties = useIllustrationTheme(isDark);
+  const muiProperties = useMuiTheme(isDark);
+  const cartoonProperties = useCartoonTheme(isDark);
+  const geekProperties = useGeekTheme(isDark);
 
   return useMemo<ConfigProviderProps>(() => {
     switch (antdStyle) {
-      case "mui":
-        return muiProps;
-      case "cartoon":
-        return cartoonProps;
-      case "geek":
-        return geekProps;
+      case "mui": {
+        return muiProperties;
+      }
+      case "cartoon": {
+        return cartoonProperties;
+      }
+      case "geek": {
+        return geekProperties;
+      }
       case "illustration":
-      default:
-        return illustrationProps;
+      default: {
+        return illustrationProperties;
+      }
     }
-  }, [antdStyle, illustrationProps, muiProps, cartoonProps, geekProps]);
+  }, [
+    antdStyle,
+    illustrationProperties,
+    muiProperties,
+    cartoonProperties,
+    geekProperties,
+  ]);
 };
 
 export default useAntdTheme;

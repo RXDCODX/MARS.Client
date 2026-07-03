@@ -36,30 +36,34 @@ export default function PyroAlerts() {
     };
 
     switch (message.mediaInfo.metaInfo.priority) {
-      case MediaMetaInfoPriorityEnum.High:
-        setHighPriorityQueue(prev => [...prev, parsedMessage]); // Добавляем в очередь высокоприоритетных
+      case MediaMetaInfoPriorityEnum.High: {
+        setHighPriorityQueue(previous => [...previous, parsedMessage]); // Добавляем в очередь высокоприоритетных
         setMessages([]);
         break;
+      }
       case MediaMetaInfoPriorityEnum.Low:
-      case MediaMetaInfoPriorityEnum.Normal:
-        setMessages(prev => [...prev, parsedMessage]);
+      case MediaMetaInfoPriorityEnum.Normal: {
+        setMessages(previous => [...previous, parsedMessage]);
         break;
+      }
     }
   }, []);
 
   const remove = useCallback((message: MediaDto) => {
-    setMessages(prev =>
-      prev.filter(m => m.mediaInfo.id !== message.mediaInfo.id)
+    setMessages(previous =>
+      previous.filter(m => m.mediaInfo.id !== message.mediaInfo.id)
     );
   }, []);
 
   const removeHighPrior = useCallback(
     (message: MediaDto) => {
-      setHighPriorityQueue(prev => {
-        prev = prev.filter(m => m.mediaInfo.id !== message.mediaInfo.id);
-        const newPriority = prev.some(e => e) ? prev[0] : null;
+      setHighPriorityQueue(previous => {
+        previous = previous.filter(
+          m => m.mediaInfo.id !== message.mediaInfo.id
+        );
+        const newPriority = previous.some(Boolean) ? previous[0] : null;
         setCurrentHighPriority(newPriority);
-        return prev;
+        return previous;
       });
     },
     [setHighPriorityQueue]
@@ -67,20 +71,22 @@ export default function PyroAlerts() {
 
   // Эффект для обработки очереди высокоприоритетных алертов
   useEffect(() => {
-    if (highPriorityQueue.length > 0 && !currentHighPriority) {
-      // Берем первый алерт из очереди
-      const nextAlert = highPriorityQueue[0];
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setCurrentHighPriority(nextAlert);
-
-      // Удаляем его из очереди через 2 секунды (время показа)
-      const timer = setTimeout(() => {
-        setHighPriorityQueue(prev => prev.slice(1));
-        setCurrentHighPriority(null);
-      }, 2000);
-
-      return () => clearTimeout(timer);
+    if (highPriorityQueue.length === 0 || currentHighPriority) {
+      return;
     }
+
+    // Берем первый алерт из очереди
+    const nextAlert = highPriorityQueue[0];
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setCurrentHighPriority(nextAlert);
+
+    // Удаляем его из очереди через 2 секунды (время показа)
+    const timer = setTimeout(() => {
+      setHighPriorityQueue(previous => previous.slice(1));
+      setCurrentHighPriority(null);
+    }, 2000);
+
+    return () => clearTimeout(timer);
   }, [highPriorityQueue, currentHighPriority]);
 
   useInjectStyles(`
@@ -115,10 +121,10 @@ export default function PyroAlerts() {
 
       {/* Рендерим обычные алерты, если нет высокоприоритетных */}
       {!currentHighPriority &&
-        messages.map(messageProps => (
+        messages.map(messageProperties => (
           <Alert
-            key={messageProps.mediaInfo.id}
-            message={messageProps}
+            key={messageProperties.mediaInfo.id}
+            message={messageProperties}
             remove={remove}
           />
         ))}

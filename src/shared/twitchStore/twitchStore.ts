@@ -1,5 +1,4 @@
 import emoticons from "@mkody/twitch-emoticons";
-import type {} from "@redux-devtools/extension";
 import { ApiClient, HelixChatBadgeSet, HelixUser } from "@twurple/api";
 import { AppTokenAuthProvider } from "@twurple/auth";
 import { ChatMessage } from "@twurple/chat";
@@ -12,7 +11,7 @@ interface Actions {
   init: (clientId: string, clientSecret: string) => void;
   setBadges: (badges: HelixChatBadgeSet[]) => void;
   parse: (text: string, size?: number) => string;
-  sendMsgToPyrokxnezxz: (msg: string) => Promise<void>;
+  sendMsgToPyrokxnezxz: (message: string) => Promise<void>;
   getStreamerInfo: (userId: string) => Promise<HelixUser | null>;
   getStreamerChatColor: (userId: string) => Promise<string | null>;
 }
@@ -46,8 +45,8 @@ export const useTwitchStore = create<State & Actions>()(
           );
           getBadges(client)
             .then(badges => set({ badges }))
-            .catch(err => {
-              console.error(err);
+            .catch(error => {
+              console.error(error);
               set({ badges: [] });
             });
 
@@ -55,13 +54,13 @@ export const useTwitchStore = create<State & Actions>()(
             // Twitch global
             fetcher.fetchTwitchEmotes(),
             // Twitch channel
-            fetcher.fetchTwitchEmotes(785975641),
+            fetcher.fetchTwitchEmotes(785_975_641),
             //BTTV global
             fetcher.fetchBTTVEmotes(),
             // 7TV global
             fetcher.fetchSevenTVEmotes(),
             // 7TV channel
-            fetcher.fetchSevenTVEmotes(785975641),
+            fetcher.fetchSevenTVEmotes(785_975_641),
             // FFZ global
             fetcher.fetchFFZEmotes(),
           ])
@@ -74,9 +73,9 @@ export const useTwitchStore = create<State & Actions>()(
                 parseToLink: newParser,
               });
             })
-            .catch(err => {
+            .catch(error => {
               console.error("Error loading emotes...");
-              console.error(err);
+              console.error(error);
               set({
                 fetcher,
                 parser,
@@ -98,8 +97,8 @@ export const useTwitchStore = create<State & Actions>()(
         if (!parser) return text;
         return parser.parse(text, size);
       },
-      sendMsgToPyrokxnezxz: async (msg: string) => {
-        await connection.invoke("TwitchMsg", msg);
+      sendMsgToPyrokxnezxz: async (message: string) => {
+        await connection.invoke("TwitchMsg", message);
       },
       getStreamerInfo: async (userId: string) => {
         const client = get().twitchApiClient;
@@ -149,7 +148,7 @@ function initialization(clientId: string, clientSecret: string) {
 }
 
 async function getBadges(apiClient: ApiClient) {
-  const badges = await apiClient.chat.getChannelBadges(785975641);
+  const badges = await apiClient.chat.getChannelBadges(785_975_641);
   const globalBadges: HelixChatBadgeSet[] =
     await apiClient.chat.getGlobalBadges();
 

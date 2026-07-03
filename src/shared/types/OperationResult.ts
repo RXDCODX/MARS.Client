@@ -20,12 +20,12 @@ export interface OperationResult<TData = unknown> {
 /**
  * Проверяет, является ли объект OperationResult
  */
-export function isOperationResult(obj: unknown): obj is OperationResult {
+export function isOperationResult(object: unknown): object is OperationResult {
   return (
-    typeof obj === "object" &&
-    obj !== null &&
-    "success" in obj &&
-    typeof (obj as OperationResult).success === "boolean"
+    typeof object === "object" &&
+    object !== null &&
+    "success" in object &&
+    typeof (object as OperationResult).success === "boolean"
   );
 }
 

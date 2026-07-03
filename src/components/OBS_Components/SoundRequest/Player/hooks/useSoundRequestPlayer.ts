@@ -26,14 +26,14 @@ export const useSoundRequestPlayer = () => {
 
   const { showToast } = useToastModal();
   const soundRequestApi = useMemo(() => new SoundRequest(defaultApiConfig), []);
-  const connectionRef = useRef<HubConnection | null>(null);
+  const connectionReference = useRef<HubConnection | null>(null);
 
   // Ref'ы для управления изменением громкости
-  const isVolumeChangingRef = useRef(false);
-  const volumeIgnoreTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const isVolumeChangingReference = useRef(false);
+  const volumeIgnoreTimerReference = useRef<NodeJS.Timeout | null>(null);
 
   // Ref для актуального состояния плеера (чтобы избежать зависимости в useCallback)
-  const playerStateRef = useRef<PlayerState | null>(null);
+  const playerStateReference = useRef<PlayerState | null>(null);
 
   // Методы стора для управления громкостью
   const setVolume = usePlayerStore(state => state.setVolume);
@@ -41,7 +41,7 @@ export const useSoundRequestPlayer = () => {
   // Инициализация SignalR подключения
   useEffect(() => {
     const connection = SoundRequestHubSignalRConnectionBuilder.build();
-    connectionRef.current = connection;
+    connectionReference.current = connection;
 
     // Подписка на события от сервера
     connection.on("PlayerStateChange", (state: PlayerState) => {
@@ -51,19 +51,19 @@ export const useSoundRequestPlayer = () => {
           currentTrack: state?.currentQueueItem?.track?.trackName,
           nextTrack: state?.nextQueueItem?.track?.trackName,
           state: state?.state,
-          isVolumeChanging: isVolumeChangingRef.current,
+          isVolumeChanging: isVolumeChangingReference.current,
         }
       );
 
       // Игнорируем обновления во время изменения громкости
-      if (isVolumeChangingRef.current) {
+      if (isVolumeChangingReference.current) {
         console.log(
           "[useSoundRequestPlayer] Обновление PlayerState проигнорировано - меняется громкость"
         );
         return;
       }
 
-      playerStateRef.current = state;
+      playerStateReference.current = state;
       setPlayerState(state);
       if (typeof state.volume === "number" && Number.isFinite(state.volume)) {
         setVolume(state.volume);
@@ -104,13 +104,13 @@ export const useSoundRequestPlayer = () => {
     return () => {
       connection.off("PlayerStateChange");
       connection.off("QueueChanged");
-      connection.stop().catch(() => undefined);
-      if (connectionRef.current === connection) {
-        connectionRef.current = null;
+      connection.stop().catch(() => {});
+      if (connectionReference.current === connection) {
+        connectionReference.current = null;
       }
       // Очищаем таймеры при размонтировании
-      if (volumeIgnoreTimerRef.current) {
-        clearTimeout(volumeIgnoreTimerRef.current);
+      if (volumeIgnoreTimerReference.current) {
+        clearTimeout(volumeIgnoreTimerReference.current);
       }
     };
   }, []);
@@ -197,7 +197,7 @@ export const useSoundRequestPlayer = () => {
         return;
       }
 
-      playerStateRef.current = response.data.data;
+      playerStateReference.current = response.data.data;
       setPlayerState(response.data.data);
       if (
         typeof response.data.data.volume === "number" &&
@@ -297,14 +297,14 @@ export const useSoundRequestPlayer = () => {
   // Вспомогательная функция для отправки изменений состояния через SignalR
   const updatePlayerState = useCallback(
     async (updates: Partial<PlayerState>) => {
-      if (!connectionRef.current || !playerStateRef.current) {
+      if (!connectionReference.current || !playerStateReference.current) {
         console.warn("[useSoundRequestPlayer] Нет подключения или состояния");
         return;
       }
 
       try {
         const newState: PlayerState = {
-          ...playerStateRef.current,
+          ...playerStateReference.current,
           ...updates,
         };
 
@@ -312,7 +312,7 @@ export const useSoundRequestPlayer = () => {
           "[useSoundRequestPlayer] Отправка FrontStateChange:",
           newState
         );
-        await connectionRef.current.invoke("FrontStateChange", newState);
+        await connectionReference.current.invoke("FrontStateChange", newState);
       } catch (error) {
         console.error(
           "[useSoundRequestPlayer] Ошибка при отправке FrontStateChange:",
@@ -343,7 +343,7 @@ export const useSoundRequestPlayer = () => {
   const handleTogglePlayPause = useCallback(async () => {
     usePlayerStore.getState().setLoading(true);
     const newState =
-      playerStateRef.current?.state === PlayerStateStateEnum.Playing
+      playerStateReference.current?.state === PlayerStateStateEnum.Playing
         ? PlayerStateStateEnum.Paused
         : PlayerStateStateEnum.Playing;
     await updatePlayerState({ state: newState });
@@ -358,7 +358,7 @@ export const useSoundRequestPlayer = () => {
 
   // Управление переключением треков через SignalR
   const handleSkip = useCallback(async () => {
-    if (!connectionRef.current) {
+    if (!connectionReference.current) {
       console.warn("[useSoundRequestPlayer] Нет подключения к SignalR");
       showToast({
         success: false,
@@ -370,7 +370,7 @@ export const useSoundRequestPlayer = () => {
     try {
       usePlayerStore.getState().setLoading(true);
       console.log("[useSoundRequestPlayer] Отправка SkipTrack");
-      await connectionRef.current.invoke("SkipTrack");
+      await connectionReference.current.invoke("SkipTrack");
 
       // Обновляем очередь и историю после переключения
       console.log(
@@ -393,7 +393,7 @@ export const useSoundRequestPlayer = () => {
   }, [handleSkip]);
 
   const handlePlayPrevious = useCallback(async () => {
-    if (!connectionRef.current) {
+    if (!connectionReference.current) {
       console.warn("[useSoundRequestPlayer] Нет подключения к SignalR");
       showToast({
         success: false,
@@ -405,7 +405,7 @@ export const useSoundRequestPlayer = () => {
     try {
       usePlayerStore.getState().setLoading(true);
       console.log("[useSoundRequestPlayer] Отправка PlayPrevious");
-      await connectionRef.current.invoke("PlayPrevious");
+      await connectionReference.current.invoke("PlayPrevious");
 
       // Обновляем очередь и историю после переключения
       console.log(
@@ -433,19 +433,19 @@ export const useSoundRequestPlayer = () => {
       setVolume(newVolume);
 
       // Устанавливаем флаг игнорирования обновлений от бэкенда
-      isVolumeChangingRef.current = true;
+      isVolumeChangingReference.current = true;
 
       // Отменяем предыдущие таймеры
-      if (volumeIgnoreTimerRef.current) {
-        clearTimeout(volumeIgnoreTimerRef.current);
+      if (volumeIgnoreTimerReference.current) {
+        clearTimeout(volumeIgnoreTimerReference.current);
       }
 
       // Отправляем на бэкенд сразу, без debounce
       void updatePlayerState({ volume: newVolume });
 
       // Устанавливаем таймер для снятия флага игнорирования (300ms - даём время на обработку)
-      volumeIgnoreTimerRef.current = setTimeout(() => {
-        isVolumeChangingRef.current = false;
+      volumeIgnoreTimerReference.current = setTimeout(() => {
+        isVolumeChangingReference.current = false;
         console.log(
           "[useSoundRequestPlayer] Флаг isVolumeChanging снят - принимаем обновления от бэкенда"
         );
@@ -455,14 +455,15 @@ export const useSoundRequestPlayer = () => {
   );
 
   const handleMute = useCallback(async () => {
-    const isMuted = playerStateRef.current?.isMuted ?? false;
+    const isMuted = playerStateReference.current?.isMuted ?? false;
     await updatePlayerState({ isMuted: !isMuted });
   }, [updatePlayerState]);
 
   // Переключение режима отображения видео
   const handleToggleVideoState = useCallback(async () => {
     const currentVideoState =
-      playerStateRef.current?.videoState ?? PlayerStateVideoStateEnum.Video;
+      playerStateReference.current?.videoState ??
+      PlayerStateVideoStateEnum.Video;
 
     // Циклическое переключение: Video -> NoVideo -> AudioOnly -> Video
     const nextVideoState =
@@ -509,7 +510,7 @@ export const useSoundRequestPlayer = () => {
   }, [playerState, queue]);
 
   // Регистрируем actions в store - используем ref для актуальных функций
-  const actionsRef = useRef({
+  const actionsReference = useRef({
     handlePlayPrevious,
     handleTogglePlayPause,
     handleStop,
@@ -520,7 +521,7 @@ export const useSoundRequestPlayer = () => {
   });
 
   // Обновляем ref при изменении функций
-  actionsRef.current = {
+  actionsReference.current = {
     handlePlayPrevious,
     handleTogglePlayPause,
     handleStop,
@@ -534,14 +535,16 @@ export const useSoundRequestPlayer = () => {
   useEffect(() => {
     // Создаем proxy объект, который всегда вызывает актуальные функции из ref
     const actionsProxy = {
-      handlePlayPrevious: () => actionsRef.current.handlePlayPrevious(),
-      handleTogglePlayPause: () => actionsRef.current.handleTogglePlayPause(),
-      handleStop: () => actionsRef.current.handleStop(),
-      handleSkip: () => actionsRef.current.handleSkip(),
-      handleMute: () => actionsRef.current.handleMute(),
+      handlePlayPrevious: () => actionsReference.current.handlePlayPrevious(),
+      handleTogglePlayPause: () =>
+        actionsReference.current.handleTogglePlayPause(),
+      handleStop: () => actionsReference.current.handleStop(),
+      handleSkip: () => actionsReference.current.handleSkip(),
+      handleMute: () => actionsReference.current.handleMute(),
       handleVolumeChange: (volume: number) =>
-        actionsRef.current.handleVolumeChange(volume),
-      handleToggleVideoState: () => actionsRef.current.handleToggleVideoState(),
+        actionsReference.current.handleVolumeChange(volume),
+      handleToggleVideoState: () =>
+        actionsReference.current.handleToggleVideoState(),
     };
 
     usePlayerStore.getState().registerActions(actionsProxy);

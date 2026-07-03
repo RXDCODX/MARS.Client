@@ -3,7 +3,7 @@ import "./Orb.css";
 import { Mesh, Program, Renderer, Triangle, Vec3 } from "ogl";
 import { useEffect, useRef } from "react";
 
-interface OrbProps {
+interface OrbProperties {
   hue?: number;
   hoverIntensity?: number;
   rotateOnHover?: boolean;
@@ -17,7 +17,7 @@ export default function Orb({
   rotateOnHover = true,
   forceHoverState = false,
   backgroundColor = "#000000",
-}: OrbProps) {
+}: OrbProperties) {
   const ctnDom = useRef<HTMLDivElement>(null);
 
   const vert = /* glsl */ `
@@ -200,7 +200,7 @@ export default function Orb({
     const renderer = new Renderer({ alpha: true, premultipliedAlpha: false });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
-    container.appendChild(gl.canvas);
+    container.append(gl.canvas);
 
     const geometry = new Triangle(gl);
     const program = new Program(gl, {
@@ -256,14 +256,10 @@ export default function Orb({
       const size = Math.min(width, height);
       const centerX = width / 2;
       const centerY = height / 2;
-      const uvX = ((x - centerX) / size) * 2.0;
-      const uvY = ((y - centerY) / size) * 2.0;
+      const uvX = ((x - centerX) / size) * 2;
+      const uvY = ((y - centerY) / size) * 2;
 
-      if (Math.sqrt(uvX * uvX + uvY * uvY) < 0.8) {
-        targetHover = 1;
-      } else {
-        targetHover = 0;
-      }
+      targetHover = Math.hypot(uvX, uvY) < 0.8 ? 1 : 0;
     };
 
     const handleMouseLeave = () => {
@@ -301,7 +297,7 @@ export default function Orb({
       window.removeEventListener("resize", resize);
       container.removeEventListener("mousemove", handleMouseMove);
       container.removeEventListener("mouseleave", handleMouseLeave);
-      container.removeChild(gl.canvas);
+      gl.canvas.remove();
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, [hue, hoverIntensity, rotateOnHover, forceHoverState, backgroundColor]);
@@ -336,9 +332,9 @@ function hslToRgb(h: number, s: number, l: number) {
 
 function hexToVec3(color: string) {
   if (color.startsWith("#")) {
-    const r = parseInt(color.slice(1, 3), 16) / 255;
-    const g = parseInt(color.slice(3, 5), 16) / 255;
-    const b = parseInt(color.slice(5, 7), 16) / 255;
+    const r = Number.parseInt(color.slice(1, 3), 16) / 255;
+    const g = Number.parseInt(color.slice(3, 5), 16) / 255;
+    const b = Number.parseInt(color.slice(5, 7), 16) / 255;
     return new Vec3(r, g, b);
   }
 

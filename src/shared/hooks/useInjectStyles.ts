@@ -14,7 +14,7 @@ import { useEffect, useRef } from "react";
  * `, 'my-custom-styles');
  */
 export const useInjectStyles = (styles: string, id?: string): void => {
-  const styleElementRef = useRef<HTMLStyleElement | null>(null);
+  const styleElementReference = useRef<HTMLStyleElement | null>(null);
 
   useEffect(() => {
     if (!styles) {
@@ -36,16 +36,16 @@ export const useInjectStyles = (styles: string, id?: string): void => {
     }
 
     // Добавляем в head
-    document.head.appendChild(styleElement);
-    styleElementRef.current = styleElement;
+    document.head.append(styleElement);
+    styleElementReference.current = styleElement;
 
     // Cleanup: удаляем элемент при размонтировании
     return () => {
       if (
-        styleElementRef.current &&
-        document.head.contains(styleElementRef.current)
+        styleElementReference.current &&
+        document.head.contains(styleElementReference.current)
       ) {
-        document.head.removeChild(styleElementRef.current);
+        styleElementReference.current.remove();
       }
     };
   }, [styles, id]);

@@ -10,7 +10,7 @@ import {
   useRef,
 } from "react";
 
-type ElectricBorderProps = PropsWithChildren<{
+type ElectricBorderProperties = PropsWithChildren<{
   color?: string;
   speed?: number;
   chaos?: number;
@@ -19,7 +19,7 @@ type ElectricBorderProps = PropsWithChildren<{
   style?: CSSProperties;
 }>;
 
-const ElectricBorder: React.FC<ElectricBorderProps> = ({
+const ElectricBorder: React.FC<ElectricBorderProperties> = ({
   children,
   color = "#5227FF",
   speed = 1,
@@ -27,20 +27,20 @@ const ElectricBorder: React.FC<ElectricBorderProps> = ({
   thickness = 2,
   className,
   style,
-}: ElectricBorderProps) => {
-  const rawId = useId().replace(/[:]/g, "");
+}: ElectricBorderProperties) => {
+  const rawId = useId().replaceAll(":", "");
   const filterId = `turbulent-displace-${rawId}`;
-  const svgRef = useRef<SVGSVGElement | null>(null);
-  const rootRef = useRef<HTMLDivElement | null>(null);
-  const strokeRef = useRef<HTMLDivElement | null>(null);
+  const svgReference = useRef<SVGSVGElement | null>(null);
+  const rootReference = useRef<HTMLDivElement | null>(null);
+  const strokeReference = useRef<HTMLDivElement | null>(null);
 
   const updateAnim = useCallback(() => {
-    const svg = svgRef.current;
-    const host = rootRef.current;
+    const svg = svgReference.current;
+    const host = rootReference.current;
     if (!svg || !host) return;
 
-    if (strokeRef.current) {
-      strokeRef.current.style.filter = `url(#${filterId})`;
+    if (strokeReference.current) {
+      strokeReference.current.style.filter = `url(#${filterId})`;
     }
 
     const width = Math.max(
@@ -52,21 +52,21 @@ const ElectricBorder: React.FC<ElectricBorderProps> = ({
       Math.round(host.clientHeight || host.getBoundingClientRect().height || 0)
     );
 
-    const dyAnims = Array.from(
-      svg.querySelectorAll<SVGAnimateElement>(
+    const dyAnims = [
+      ...svg.querySelectorAll<SVGAnimateElement>(
         'feOffset > animate[attributeName="dy"]'
-      )
-    );
+      ),
+    ];
     if (dyAnims.length >= 2) {
       dyAnims[0].setAttribute("values", `${height}; 0`);
       dyAnims[1].setAttribute("values", `0; -${height}`);
     }
 
-    const dxAnims = Array.from(
-      svg.querySelectorAll<SVGAnimateElement>(
+    const dxAnims = [
+      ...svg.querySelectorAll<SVGAnimateElement>(
         'feOffset > animate[attributeName="dx"]'
-      )
-    );
+      ),
+    ];
     if (dxAnims.length >= 2) {
       dxAnims[0].setAttribute("values", `${width}; 0`);
       dxAnims[1].setAttribute("values", `0; -${width}`);
@@ -74,19 +74,19 @@ const ElectricBorder: React.FC<ElectricBorderProps> = ({
 
     const baseDur = 6;
     const dur = Math.max(0.001, baseDur / (speed || 1));
-    [...dyAnims, ...dxAnims].forEach(a => a.setAttribute("dur", `${dur}s`));
+    for (const a of [...dyAnims, ...dxAnims]) a.setAttribute("dur", `${dur}s`);
 
     const disp = svg.querySelector("feDisplacementMap");
     if (disp) disp.setAttribute("scale", String(30 * (chaos || 1)));
 
-    const filterEl = svg.querySelector<SVGFilterElement>(
+    const filterElement = svg.querySelector<SVGFilterElement>(
       "#" + CSS.escape(filterId)
     );
-    if (filterEl) {
-      filterEl.setAttribute("x", "-200%");
-      filterEl.setAttribute("y", "-200%");
-      filterEl.setAttribute("width", "500%");
-      filterEl.setAttribute("height", "500%");
+    if (filterElement) {
+      filterElement.setAttribute("x", "-200%");
+      filterElement.setAttribute("y", "-200%");
+      filterElement.setAttribute("width", "500%");
+      filterElement.setAttribute("height", "500%");
     }
 
     requestAnimationFrame(() => {
@@ -108,25 +108,25 @@ const ElectricBorder: React.FC<ElectricBorderProps> = ({
   }, [updateAnim]);
 
   useLayoutEffect(() => {
-    if (!rootRef.current) return;
+    if (!rootReference.current) return;
     const ro = new ResizeObserver(() => updateAnim());
-    ro.observe(rootRef.current);
+    ro.observe(rootReference.current);
     updateAnim();
     return () => ro.disconnect();
   }, [updateAnim]);
 
-  const vars = {
+  const variables = {
     "--electric-border-color": color,
     "--eb-border-width": `${thickness}px`,
   } as CSSProperties;
 
   return (
     <div
-      ref={rootRef}
+      ref={rootReference}
       className={`electric-border ${className ?? ""}`}
-      style={{ ...vars, ...style }}
+      style={{ ...variables, ...style }}
     >
-      <svg ref={svgRef} className="eb-svg" aria-hidden focusable="false">
+      <svg ref={svgReference} className="eb-svg" aria-hidden focusable="false">
         <defs>
           <filter
             id={filterId}
@@ -224,7 +224,7 @@ const ElectricBorder: React.FC<ElectricBorderProps> = ({
       </svg>
 
       <div className="eb-layers">
-        <div ref={strokeRef} className="eb-stroke" />
+        <div ref={strokeReference} className="eb-stroke" />
         <div className="eb-glow-1" />
         <div className="eb-glow-2" />
         <div className="eb-background-glow" />

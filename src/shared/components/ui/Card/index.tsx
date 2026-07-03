@@ -1,11 +1,14 @@
-import type { CardProps as AntCardProps } from "antd";
+import type { CardProps as AntCardProperties } from "antd";
 import { Card as AntCard } from "antd";
 
-const Card = (props: AntCardProps) => <AntCard {...props} />;
+const Card = (properties: AntCardProperties) => <AntCard {...properties} />;
 
 export const CardBody = AntCard.Body;
-export const CardHeader = AntCard;
-export const CardFooter = AntCard;
-export const CardTitle = AntCard;
 
 export default Card;
+
+export {
+  Card as CardHeader,
+  Card as CardFooter,
+  Card as CardTitle,
+} from "antd";

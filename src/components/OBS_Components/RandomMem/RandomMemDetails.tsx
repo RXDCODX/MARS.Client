@@ -2,7 +2,7 @@ import { Button } from "antd";
 
 import { MediaDto, MediaFileInfoTypeEnum } from "@/shared/api";
 
-interface RandomMemDetailsProps {
+interface RandomMemDetailsProperties {
   item: MediaDto;
   onClose: () => void;
 }
@@ -10,9 +10,9 @@ interface RandomMemDetailsProps {
 export default function RandomMemDetails({
   item,
   onClose,
-}: RandomMemDetailsProps) {
+}: RandomMemDetailsProperties) {
   const { fileInfo, metaInfo, textInfo } = item.mediaInfo;
-  const src = fileInfo.filePath;
+  const source = fileInfo.filePath;
 
   const baseStyle: React.CSSProperties = {
     position: "absolute",
@@ -32,37 +32,41 @@ export default function RandomMemDetails({
   const renderMediaPreview = () => {
     switch (fileInfo.type) {
       case MediaFileInfoTypeEnum.Image:
-      case MediaFileInfoTypeEnum.Gif:
+      case MediaFileInfoTypeEnum.Gif: {
         return (
           <img
-            src={src}
+            src={source}
             alt={fileInfo.fileName}
             style={{ width: "100%", height: "auto", borderRadius: 6 }}
           />
         );
+      }
 
-      case MediaFileInfoTypeEnum.Video:
+      case MediaFileInfoTypeEnum.Video: {
         return (
           <video
-            src={src}
+            src={source}
             controls
             style={{ width: "100%", borderRadius: 6 }}
           />
         );
+      }
 
       case MediaFileInfoTypeEnum.Audio:
-      case MediaFileInfoTypeEnum.Voice:
-        return <audio src={src} controls style={{ width: "100%" }} />;
+      case MediaFileInfoTypeEnum.Voice: {
+        return <audio src={source} controls style={{ width: "100%" }} />;
+      }
 
-      default:
+      default: {
         return (
           <div>
             <div>Тип: {fileInfo.type}</div>
-            <a href={src} target="_blank" rel="noreferrer">
+            <a href={source} target="_blank" rel="noreferrer">
               Открыть файл
             </a>
           </div>
         );
+      }
     }
   };
 

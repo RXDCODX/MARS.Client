@@ -29,7 +29,7 @@ export default function WaifuAlerts() {
   const [isRouletted, setIsRouletted] = useState(false);
   const [rouletteIndex, setRouletteIndex] = useState(-1);
   const sendMessage = useTwitchStore(state => state.sendMsgToPyrokxnezxz);
-  const imageLoadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const imageLoadTimeoutReference = useRef<NodeJS.Timeout | null>(null);
 
   // Используем отдельный store для призов
   const prizes = useWaifuPrizesStore(useShallow(state => state.prizes));
@@ -46,94 +46,101 @@ export default function WaifuAlerts() {
   }, [dequeueCurrent]);
 
   useEffect(() => {
-    if (currentMessage) {
-      console.log("Current message changed:", {
-        waifuId: currentMessage.waifu.shikiId,
-        waifuName: currentMessage.waifu.name,
-        hasTwitchUser: !!currentMessage.waifuHusband?.twitchUser,
-        twitchUserId: currentMessage.waifuHusband?.twitchUser?.twitchId,
-      });
-      console.log("Prizes available:", prizes.length);
+    if (!currentMessage) {
+      return;
+    }
 
-      if (prizes && prizes.length > 0) {
-        const index = prizes.findIndex(
-          prize => prize.id === currentMessage.waifu.shikiId
-        );
-        console.log(
-          "Found prize index:",
-          index,
-          "for waifu:",
-          currentMessage.waifu.shikiId
-        );
+    console.log("Current message changed:", {
+      waifuId: currentMessage.waifu.shikiId,
+      waifuName: currentMessage.waifu.name,
+      hasTwitchUser: !!currentMessage.waifuHusband?.twitchUser,
+      twitchUserId: currentMessage.waifuHusband?.twitchUser?.twitchId,
+    });
+    console.log("Prizes available:", prizes.length);
 
-        if (index === -1) {
-          console.warn("⚠️ Waifu not found in prizes list! Skipping roulette.");
-          // Если вайфу нет в списке призов, сразу показываем алерт
-          queueMicrotask(() => {
-            setRouletteIndex(-1);
-            setIsRouletted(true);
-          });
-        } else if (!currentMessage.waifuHusband?.twitchUser) {
-          console.warn("⚠️ TwitchUser not loaded! Skipping roulette.");
-          // Если TwitchUser не загружен, показываем алерт без рулетки
-          queueMicrotask(() => {
-            setRouletteIndex(-1);
-            setIsRouletted(true);
-          });
-        } else {
-          queueMicrotask(() => {
-            setRouletteIndex(index);
-          });
-        }
-      } else {
-        console.log("No prizes available, waiting for UpdateWaifuPrizes...");
+    if (prizes && prizes.length > 0) {
+      const index = prizes.findIndex(
+        prize => prize.id === currentMessage.waifu.shikiId
+      );
+      console.log(
+        "Found prize index:",
+        index,
+        "for waifu:",
+        currentMessage.waifu.shikiId
+      );
+
+      if (index === -1) {
+        console.warn("⚠️ Waifu not found in prizes list! Skipping roulette.");
+        // Если вайфу нет в списке призов, сразу показываем алерт
         queueMicrotask(() => {
           setRouletteIndex(-1);
-        });
-
-        // Если призы не загружены, ждем 5 секунд и показываем алерт
-        const timeout = setTimeout(() => {
-          console.warn(
-            "⚠️ Prizes timeout after 5 seconds! Showing alert directly."
-          );
           setIsRouletted(true);
-        }, 5000);
-
-        return () => clearTimeout(timeout);
+        });
+      } else if (currentMessage.waifuHusband?.twitchUser) {
+        queueMicrotask(() => {
+          setRouletteIndex(index);
+        });
+      } else {
+        console.warn("⚠️ TwitchUser not loaded! Skipping roulette.");
+        // Если TwitchUser не загружен, показываем алерт без рулетки
+        queueMicrotask(() => {
+          setRouletteIndex(-1);
+          setIsRouletted(true);
+        });
       }
+    } else {
+      console.log("No prizes available, waiting for UpdateWaifuPrizes...");
+      queueMicrotask(() => {
+        setRouletteIndex(-1);
+      });
+
+      // Если призы не загружены, ждем 5 секунд и показываем алерт
+      const timeout = setTimeout(() => {
+        console.warn(
+          "⚠️ Prizes timeout after 5 seconds! Showing alert directly."
+        );
+        setIsRouletted(true);
+      }, 5000);
+
+      return () => clearTimeout(timeout);
     }
   }, [prizes, currentMessage]);
 
   useEffect(() => {
-    if (currentMessage) {
-      if (currentMessage.waifu.isMerged || currentMessage.waifu.isAdded) {
-        queueMicrotask(() => {
-          setIsRouletted(true);
-        });
-      }
+    if (
+      currentMessage &&
+      (currentMessage.waifu.isMerged || currentMessage.waifu.isAdded)
+    ) {
+      queueMicrotask(() => {
+        setIsRouletted(true);
+      });
     }
   }, [currentMessage]);
 
   // Таймаут для загрузки изображения (10 секунд)
   useEffect(() => {
-    if (currentMessage && isRouletted && !currentMessage.waifu.isMerged) {
-      imageLoadTimeoutRef.current = setTimeout(() => {
-        console.warn(
-          "Таймаут загрузки изображения waifu:",
-          currentMessage.waifu.imageUrl
-        );
-        handleRemoveEvent();
-        setRouletteIndex(-1);
-        setIsRouletted(false);
-      }, 10000);
-
-      return () => {
-        if (imageLoadTimeoutRef.current) {
-          clearTimeout(imageLoadTimeoutRef.current);
-          imageLoadTimeoutRef.current = null;
-        }
-      };
+    if (!(currentMessage && isRouletted) || currentMessage.waifu.isMerged) {
+      return;
     }
+
+    imageLoadTimeoutReference.current = setTimeout(() => {
+      console.warn(
+        "Таймаут загрузки изображения waifu:",
+        currentMessage.waifu.imageUrl
+      );
+      handleRemoveEvent();
+      setRouletteIndex(-1);
+      setIsRouletted(false);
+    }, 10_000);
+
+    return () => {
+      if (!imageLoadTimeoutReference.current) {
+        return;
+      }
+
+      clearTimeout(imageLoadTimeoutReference.current);
+      imageLoadTimeoutReference.current = null;
+    };
   }, [currentMessage, isRouletted, handleRemoveEvent]);
 
   const invokeHub = useTelegramusHubStore(state => state.invoke);
@@ -148,32 +155,32 @@ export default function WaifuAlerts() {
   const error = useCallback(() => {
     unmuteAll();
     handleRemoveEvent();
-    throw Error("Failed to play audio");
+    throw new Error("Failed to play audio");
   }, [unmuteAll, handleRemoveEvent]);
 
   // Отслеживание изменений prizes
-  const prevPrizesLengthRef = useRef(prizes.length);
+  const previousPrizesLengthReference = useRef(prizes.length);
 
   useEffect(() => {
-    const prevLength = prevPrizesLengthRef.current;
+    const previousLength = previousPrizesLengthReference.current;
     const currentLength = prizes.length;
 
-    if (prevLength !== currentLength) {
+    if (previousLength !== currentLength) {
       debugger; // eslint-disable-line no-debugger
       console.log("🔍 PRIZES ИЗМЕНИЛИСЬ:", {
-        было: prevLength,
+        было: previousLength,
         стало: currentLength,
-        разница: currentLength - prevLength,
+        разница: currentLength - previousLength,
         стекТрейс: new Error().stack,
       });
 
-      if (currentLength === 0 && prevLength > 0) {
+      if (currentLength === 0 && previousLength > 0) {
         debugger; // eslint-disable-line no-debugger
-        console.error("❌❌❌ ПРИЗЫ ОБНУЛИЛИСЬ! Было:", prevLength);
+        console.error("❌❌❌ ПРИЗЫ ОБНУЛИЛИСЬ! Было:", previousLength);
         console.trace("Stack trace при обнулении");
       }
 
-      prevPrizesLengthRef.current = currentLength;
+      previousPrizesLengthReference.current = currentLength;
     }
 
     console.log("WaifuAlerts render state:", {
@@ -269,18 +276,18 @@ export default function WaifuAlerts() {
                 style={{ height: "498px", width: "320px" }}
                 onLoad={() => {
                   // Очищаем таймаут, так как изображение загрузилось
-                  if (imageLoadTimeoutRef.current) {
-                    clearTimeout(imageLoadTimeoutRef.current);
-                    imageLoadTimeoutRef.current = null;
+                  if (imageLoadTimeoutReference.current) {
+                    clearTimeout(imageLoadTimeoutReference.current);
+                    imageLoadTimeoutReference.current = null;
                   }
 
                   setTimeout(() => {
-                    divHard.current!.onanimationend = () => {
+                    divHard.current!.addEventListener("animationend", () => {
                       handleRemoveEvent();
                       setRouletteIndex(-1);
                       setIsRouletted(false);
                       shufflePrizes();
-                    };
+                    });
 
                     divHard.current!.className =
                       styles.baza +
@@ -297,9 +304,9 @@ export default function WaifuAlerts() {
                 }}
                 onError={() => {
                   // Очищаем таймаут, так как произошла ошибка
-                  if (imageLoadTimeoutRef.current) {
-                    clearTimeout(imageLoadTimeoutRef.current);
-                    imageLoadTimeoutRef.current = null;
+                  if (imageLoadTimeoutReference.current) {
+                    clearTimeout(imageLoadTimeoutReference.current);
+                    imageLoadTimeoutReference.current = null;
                   }
 
                   console.error(

@@ -43,7 +43,7 @@ export const prefetchNonCriticalComponents = (): Promise<PrefetchResult> => {
         .then(() => {
           result.loaded++;
           // Планируем загрузку следующего компонента когда браузер будет свободен
-          if ("requestIdleCallback" in window) {
+          if ("requestIdleCallback" in globalThis) {
             requestIdleCallback(() => loadNext(), { timeout: 2000 });
           } else {
             // Fallback для браузеров без requestIdleCallback
@@ -54,7 +54,7 @@ export const prefetchNonCriticalComponents = (): Promise<PrefetchResult> => {
           result.errors.push(error);
           console.warn("Failed to prefetch component:", error);
           // Продолжаем загрузку следующего компонента даже при ошибке
-          if ("requestIdleCallback" in window) {
+          if ("requestIdleCallback" in globalThis) {
             requestIdleCallback(() => loadNext(), { timeout: 2000 });
           } else {
             setTimeout(loadNext, 100);
@@ -63,7 +63,7 @@ export const prefetchNonCriticalComponents = (): Promise<PrefetchResult> => {
     };
 
     // Начинаем загрузку с небольшой задержкой после первого рендера
-    if ("requestIdleCallback" in window) {
+    if ("requestIdleCallback" in globalThis) {
       requestIdleCallback(() => loadNext(), { timeout: 2000 });
     } else {
       setTimeout(loadNext, 100);

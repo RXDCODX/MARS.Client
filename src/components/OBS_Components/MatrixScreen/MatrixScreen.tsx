@@ -247,74 +247,77 @@ export default function MatrixScreen({
 }: MatrixScreenProps) {
   // Формируем URL с параметрами
 
-  const params = new URLSearchParams();
+  const parameters = new URLSearchParams();
 
   if (options) {
     // Обрабатываем boolean параметры
     if (options.skipIntro !== undefined)
-      params.set("skipIntro", String(options.skipIntro));
+      parameters.set("skipIntro", String(options.skipIntro));
     if (options.glyphFlip !== undefined)
-      params.set("glyphFlip", String(options.glyphFlip));
+      parameters.set("glyphFlip", String(options.glyphFlip));
     if (options.volumetric !== undefined)
-      params.set("volumetric", String(options.volumetric));
+      parameters.set("volumetric", String(options.volumetric));
     if (options.camera !== undefined)
-      params.set("camera", String(options.camera));
-    if (options.loops !== undefined) params.set("loops", String(options.loops));
+      parameters.set("camera", String(options.camera));
+    if (options.loops !== undefined)
+      parameters.set("loops", String(options.loops));
     if (options.suppressWarnings !== undefined)
-      params.set("suppressWarnings", String(options.suppressWarnings));
+      parameters.set("suppressWarnings", String(options.suppressWarnings));
 
     // Обрабатываем строковые параметры
-    if (options.version) params.set("version", options.version);
-    if (options.font) params.set("font", options.font);
-    if (options.effect) params.set("effect", options.effect);
-    if (options.stripeColors) params.set("stripeColors", options.stripeColors);
-    if (options.palette) params.set("palette", options.palette);
+    if (options.version) parameters.set("version", options.version);
+    if (options.font) parameters.set("font", options.font);
+    if (options.effect) parameters.set("effect", options.effect);
+    if (options.stripeColors)
+      parameters.set("stripeColors", options.stripeColors);
+    if (options.palette) parameters.set("palette", options.palette);
     if (options.backgroundColor)
-      params.set("backgroundColor", options.backgroundColor);
-    if (options.cursorColor) params.set("cursorColor", options.cursorColor);
-    if (options.glintColor) params.set("glintColor", options.glintColor);
-    if (options.paletteHSL) params.set("paletteHSL", options.paletteHSL);
-    if (options.stripeHSL) params.set("stripeHSL", options.stripeHSL);
+      parameters.set("backgroundColor", options.backgroundColor);
+    if (options.cursorColor) parameters.set("cursorColor", options.cursorColor);
+    if (options.glintColor) parameters.set("glintColor", options.glintColor);
+    if (options.paletteHSL) parameters.set("paletteHSL", options.paletteHSL);
+    if (options.stripeHSL) parameters.set("stripeHSL", options.stripeHSL);
     if (options.backgroundHSL)
-      params.set("backgroundHSL", options.backgroundHSL);
-    if (options.cursorHSL) params.set("cursorHSL", options.cursorHSL);
-    if (options.glintHSL) params.set("glintHSL", options.glintHSL);
-    if (options.url) params.set("url", options.url);
+      parameters.set("backgroundHSL", options.backgroundHSL);
+    if (options.cursorHSL) parameters.set("cursorHSL", options.cursorHSL);
+    if (options.glintHSL) parameters.set("glintHSL", options.glintHSL);
+    if (options.url) parameters.set("url", options.url);
 
     // Обрабатываем числовые параметры
     if (options.numColumns !== undefined)
-      params.set("numColumns", String(options.numColumns));
+      parameters.set("numColumns", String(options.numColumns));
     if (options.glyphRotation !== undefined)
-      params.set("glyphRotation", String(options.glyphRotation));
+      parameters.set("glyphRotation", String(options.glyphRotation));
     if (options.density !== undefined)
-      params.set("density", String(options.density));
+      parameters.set("density", String(options.density));
     if (options.forwardSpeed !== undefined)
-      params.set("forwardSpeed", String(options.forwardSpeed));
-    if (options.slant !== undefined) params.set("slant", String(options.slant));
+      parameters.set("forwardSpeed", String(options.forwardSpeed));
+    if (options.slant !== undefined)
+      parameters.set("slant", String(options.slant));
     if (options.bloomSize !== undefined)
-      params.set("bloomSize", String(options.bloomSize));
+      parameters.set("bloomSize", String(options.bloomSize));
     if (options.bloomStrength !== undefined)
-      params.set("bloomStrength", String(options.bloomStrength));
+      parameters.set("bloomStrength", String(options.bloomStrength));
     if (options.ditherMagnitude !== undefined)
-      params.set("ditherMagnitude", String(options.ditherMagnitude));
+      parameters.set("ditherMagnitude", String(options.ditherMagnitude));
     if (options.resolution !== undefined)
-      params.set("resolution", String(options.resolution));
+      parameters.set("resolution", String(options.resolution));
     if (options.raindropLength !== undefined)
-      params.set("raindropLength", String(options.raindropLength));
+      parameters.set("raindropLength", String(options.raindropLength));
     if (options.animationSpeed !== undefined)
-      params.set("animationSpeed", String(options.animationSpeed));
+      parameters.set("animationSpeed", String(options.animationSpeed));
     if (options.fallSpeed !== undefined)
-      params.set("fallSpeed", String(options.fallSpeed));
+      parameters.set("fallSpeed", String(options.fallSpeed));
     if (options.cycleSpeed !== undefined)
-      params.set("cycleSpeed", String(options.cycleSpeed));
+      parameters.set("cycleSpeed", String(options.cycleSpeed));
     if (options.cursorIntensity !== undefined)
-      params.set("cursorIntensity", String(options.cursorIntensity));
+      parameters.set("cursorIntensity", String(options.cursorIntensity));
     if (options.glintIntensity !== undefined)
-      params.set("glintIntensity", String(options.glintIntensity));
-    if (options.fps !== undefined) params.set("fps", String(options.fps));
+      parameters.set("glintIntensity", String(options.glintIntensity));
+    if (options.fps !== undefined) parameters.set("fps", String(options.fps));
   }
 
-  const src = `${baseUrl}?${params.toString()}`;
+  const source = `${baseUrl}?${parameters.toString()}`;
 
   return (
     <div
@@ -323,7 +326,7 @@ export default function MatrixScreen({
       data-testid="obs-matrix-screen"
     >
       <iframe
-        src={src}
+        src={source}
         title="Matrix"
         style={{ width: "100%", height: "100%", border: "none" }}
         allow="autoplay; clipboard-write"

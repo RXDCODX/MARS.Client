@@ -145,7 +145,7 @@ export const ImagesOnly: Story = {
     expect(images.length).toBeGreaterThan(0);
 
     // Проверяем, что изображения загружены
-    for (const img of Array.from(images)) {
+    for (const img of images) {
       expect(img).toHaveAttribute("src");
       expect(img).toHaveAttribute("alt");
     }
@@ -177,7 +177,7 @@ export const VideosOnly: Story = {
     expect(videos.length).toBeGreaterThan(0);
 
     // Проверяем, что видео настроены правильно
-    for (const video of Array.from(videos)) {
+    for (const video of videos) {
       expect(video).toHaveAttribute("src");
       expect(video).toHaveAttribute("autoPlay");
       expect(video).toHaveAttribute("loop");

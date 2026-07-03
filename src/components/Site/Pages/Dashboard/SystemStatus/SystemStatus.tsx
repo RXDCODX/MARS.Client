@@ -14,27 +14,35 @@ const SystemStatus: React.FC = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "online":
+      case "online": {
         return "🟢";
-      case "warning":
+      }
+      case "warning": {
         return "🟡";
-      case "error":
+      }
+      case "error": {
         return "🔴";
-      default:
+      }
+      default: {
         return "⚪";
+      }
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "online":
+      case "online": {
         return styles.online;
-      case "warning":
+      }
+      case "warning": {
         return styles.warning;
-      case "error":
+      }
+      case "error": {
         return styles.error;
-      default:
+      }
+      default: {
         return styles.offline;
+      }
     }
   };
 

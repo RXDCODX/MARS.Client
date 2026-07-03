@@ -32,7 +32,7 @@ function MikuMondayContent() {
 
   // Получаем выигрышный трек из рулетки
   const winnerTrack = useMemo(() => {
-    if (!currentAlert) return undefined;
+    if (!currentAlert) return;
 
     const winnerGroup = rouletteGroups.find(group => group.hasWinner);
     if (!winnerGroup) {
@@ -77,11 +77,11 @@ function MikuMondayContent() {
   const [isVideoVisible, setIsVideoVisible] = useState(false);
   const [backgroundTrack, setBackgroundTrack] = useState<MikuTrackDto>();
   const [backgroundVolume, setBackgroundVolume] = useState(0);
-  const waitingTimeoutRef = useRef<number | null>(null);
-  const stageSyncTimeoutRef = useRef<number | null>(null);
-  const videoRef = useRef<HTMLVideoElement | null>(null);
-  const backgroundAudioFadeIntervalRef = useRef<number | null>(null);
-  const backgroundVolumeRef = useRef(0);
+  const waitingTimeoutReference = useRef<number | null>(null);
+  const stageSyncTimeoutReference = useRef<number | null>(null);
+  const videoReference = useRef<HTMLVideoElement | null>(null);
+  const backgroundAudioFadeIntervalReference = useRef<number | null>(null);
+  const backgroundVolumeReference = useRef(0);
 
   const shouldPlayBackgroundAudio =
     Boolean(currentAlert) && stage !== "waiting";
@@ -112,25 +112,27 @@ function MikuMondayContent() {
   );
 
   const clearBackgroundAudioFadeInterval = useCallback(() => {
-    if (backgroundAudioFadeIntervalRef.current !== null) {
-      window.clearInterval(backgroundAudioFadeIntervalRef.current);
-      backgroundAudioFadeIntervalRef.current = null;
+    if (backgroundAudioFadeIntervalReference.current === null) {
+      return;
     }
+
+    globalThis.clearInterval(backgroundAudioFadeIntervalReference.current);
+    backgroundAudioFadeIntervalReference.current = null;
   }, []);
 
   useEffect(() => {
-    backgroundVolumeRef.current = backgroundVolume;
+    backgroundVolumeReference.current = backgroundVolume;
   }, [backgroundVolume]);
 
   const fadeBackgroundAudioTo = useCallback(
     (targetVolume: number, durationMs: number, onComplete?: () => void) => {
       clearBackgroundAudioFadeInterval();
 
-      const startVolume = backgroundVolumeRef.current;
+      const startVolume = backgroundVolumeReference.current;
       const volumeDelta = targetVolume - startVolume;
       if (Math.abs(volumeDelta) < 0.001 || durationMs <= 0) {
         const nextVolume = Math.max(0, Math.min(1, targetVolume));
-        backgroundVolumeRef.current = nextVolume;
+        backgroundVolumeReference.current = nextVolume;
         setBackgroundVolume(nextVolume);
         onComplete?.();
         return;
@@ -142,21 +144,24 @@ function MikuMondayContent() {
       );
       let currentStep = 0;
 
-      backgroundAudioFadeIntervalRef.current = window.setInterval(() => {
-        currentStep += 1;
-        const progress = Math.min(1, currentStep / steps);
-        const nextVolume = Math.max(
-          0,
-          Math.min(1, startVolume + volumeDelta * progress)
-        );
-        backgroundVolumeRef.current = nextVolume;
-        setBackgroundVolume(nextVolume);
+      backgroundAudioFadeIntervalReference.current = globalThis.setInterval(
+        () => {
+          currentStep += 1;
+          const progress = Math.min(1, currentStep / steps);
+          const nextVolume = Math.max(
+            0,
+            Math.min(1, startVolume + volumeDelta * progress)
+          );
+          backgroundVolumeReference.current = nextVolume;
+          setBackgroundVolume(nextVolume);
 
-        if (progress >= 1) {
-          clearBackgroundAudioFadeInterval();
-          onComplete?.();
-        }
-      }, BACKGROUND_AUDIO_FADE_TICK_MS);
+          if (progress >= 1) {
+            clearBackgroundAudioFadeInterval();
+            onComplete?.();
+          }
+        },
+        BACKGROUND_AUDIO_FADE_TICK_MS
+      );
     },
     [clearBackgroundAudioFadeInterval]
   );
@@ -168,7 +173,7 @@ function MikuMondayContent() {
 
     void requestMuteOtherAudio();
     clearBackgroundAudioFadeInterval();
-    backgroundVolumeRef.current = 0;
+    backgroundVolumeReference.current = 0;
     setBackgroundVolume(0);
     fadeBackgroundAudioTo(
       BACKGROUND_AUDIO_TARGET_VOLUME,
@@ -182,14 +187,14 @@ function MikuMondayContent() {
 
   const stopBackgroundAudio = useCallback(() => {
     fadeBackgroundAudioTo(0, BACKGROUND_AUDIO_FADE_OUT_MS, () => {
-      backgroundVolumeRef.current = 0;
+      backgroundVolumeReference.current = 0;
       setBackgroundVolume(0);
     });
   }, [fadeBackgroundAudioTo]);
 
   // Предзагружаем видео при монтировании компонента
   useEffect(() => {
-    const video = videoRef.current;
+    const video = videoReference.current;
     if (video) {
       video.load(); // Начинаем загрузку видео
     }
@@ -197,13 +202,13 @@ function MikuMondayContent() {
 
   // Управление воспроизведением видео
   useEffect(() => {
-    const video = videoRef.current;
+    const video = videoReference.current;
     if (!video) return;
 
     if (isVideoVisible) {
       video.currentTime = 0; // Сбрасываем на начало
-      video.play().catch(err => {
-        console.warn("[MikuMonday] Не удалось воспроизвести видео:", err);
+      video.play().catch(error => {
+        console.warn("[MikuMonday] Не удалось воспроизвести видео:", error);
       });
     } else {
       video.pause();
@@ -212,13 +217,13 @@ function MikuMondayContent() {
 
   useEffect(
     () => () => {
-      if (waitingTimeoutRef.current !== null) {
-        window.clearTimeout(waitingTimeoutRef.current);
-        waitingTimeoutRef.current = null;
+      if (waitingTimeoutReference.current !== null) {
+        globalThis.clearTimeout(waitingTimeoutReference.current);
+        waitingTimeoutReference.current = null;
       }
-      if (stageSyncTimeoutRef.current !== null) {
-        window.clearTimeout(stageSyncTimeoutRef.current);
-        stageSyncTimeoutRef.current = null;
+      if (stageSyncTimeoutReference.current !== null) {
+        globalThis.clearTimeout(stageSyncTimeoutReference.current);
+        stageSyncTimeoutReference.current = null;
       }
       clearBackgroundAudioFadeInterval();
     },
@@ -226,7 +231,7 @@ function MikuMondayContent() {
   );
 
   useEffect(() => {
-    const updateBackgroundTrackId = window.setTimeout(() => {
+    const updateBackgroundTrackId = globalThis.setTimeout(() => {
       if (!currentAlert) {
         if (backgroundTrack) {
           setBackgroundTrack(undefined);
@@ -267,13 +272,13 @@ function MikuMondayContent() {
           backgroundTrackNumber: nextBackgroundTrack.number,
           backgroundTrackArtist: nextBackgroundTrack.artist,
           backgroundTrackTitle: nextBackgroundTrack.title,
-          excludedTrackIds: Array.from(excludedBackgroundTrackIds),
+          excludedTrackIds: [...excludedBackgroundTrackIds],
         }
       );
     }, 0);
 
     return () => {
-      window.clearTimeout(updateBackgroundTrackId);
+      globalThis.clearTimeout(updateBackgroundTrackId);
     };
   }, [
     currentAlert,
@@ -284,31 +289,31 @@ function MikuMondayContent() {
   ]);
 
   useEffect(() => {
-    if (stageSyncTimeoutRef.current !== null) {
-      window.clearTimeout(stageSyncTimeoutRef.current);
-      stageSyncTimeoutRef.current = null;
+    if (stageSyncTimeoutReference.current !== null) {
+      globalThis.clearTimeout(stageSyncTimeoutReference.current);
+      stageSyncTimeoutReference.current = null;
     }
 
     if (currentAlert) {
-      if (waitingTimeoutRef.current !== null) {
-        window.clearTimeout(waitingTimeoutRef.current);
-        waitingTimeoutRef.current = null;
+      if (waitingTimeoutReference.current !== null) {
+        globalThis.clearTimeout(waitingTimeoutReference.current);
+        waitingTimeoutReference.current = null;
       }
-      stageSyncTimeoutRef.current = window.setTimeout(() => {
+      stageSyncTimeoutReference.current = globalThis.setTimeout(() => {
         setStage(previousStage =>
           previousStage === "waiting" ? "intro" : previousStage
         );
         setIsVideoVisible(true);
-        stageSyncTimeoutRef.current = null;
+        stageSyncTimeoutReference.current = null;
       }, 0);
       return;
     }
 
-    stageSyncTimeoutRef.current = window.setTimeout(() => {
+    stageSyncTimeoutReference.current = globalThis.setTimeout(() => {
       setStage(previousStage =>
-        previousStage !== "waiting" ? "waiting" : previousStage
+        previousStage === "waiting" ? previousStage : "waiting"
       );
-      stageSyncTimeoutRef.current = null;
+      stageSyncTimeoutReference.current = null;
     }, 0);
   }, [currentAlert?.queueId, currentAlert]);
 
@@ -359,15 +364,15 @@ function MikuMondayContent() {
     });
     setIsVideoVisible(false);
     setStage("waiting");
-    if (waitingTimeoutRef.current !== null) {
-      window.clearTimeout(waitingTimeoutRef.current);
+    if (waitingTimeoutReference.current !== null) {
+      globalThis.clearTimeout(waitingTimeoutReference.current);
     }
 
-    waitingTimeoutRef.current = window.setTimeout(() => {
+    waitingTimeoutReference.current = globalThis.setTimeout(() => {
       console.log("[MikuMonday] Вызываем dequeueCurrent после паузы", {
         pauseMs: QUEUE_PAUSE_MS,
       });
-      waitingTimeoutRef.current = null;
+      waitingTimeoutReference.current = null;
       dequeueCurrent();
       const nextAlert = useMikuMondayStore.getState().currentAlert;
       console.log("[MikuMonday] Текущий статус после деквеу", {
@@ -385,7 +390,7 @@ function MikuMondayContent() {
       className={`${styles.videoBackground} ${isVideoVisible ? styles.videoVisible : styles.videoHidden}`}
     >
       <video
-        ref={videoRef}
+        ref={videoReference}
         src="/static/miku.mp4"
         preload="auto"
         muted

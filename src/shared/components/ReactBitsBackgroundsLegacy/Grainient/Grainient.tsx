@@ -3,7 +3,7 @@ import "./Grainient.css";
 import { Mesh, Program, Renderer, Triangle } from "ogl";
 import React, { useEffect, useRef } from "react";
 
-interface GrainientProps {
+interface GrainientProperties {
   timeSpeed?: number;
   colorBalance?: number;
   warpStrength?: number;
@@ -33,9 +33,9 @@ const hexToRgb = (hex: string): [number, number, number] => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   if (!result) return [1, 1, 1];
   return [
-    parseInt(result[1], 16) / 255,
-    parseInt(result[2], 16) / 255,
-    parseInt(result[3], 16) / 255,
+    Number.parseInt(result[1], 16) / 255,
+    Number.parseInt(result[2], 16) / 255,
+    Number.parseInt(result[3], 16) / 255,
   ];
 };
 
@@ -130,35 +130,35 @@ void main(){
 }
 `;
 
-const Grainient: React.FC<GrainientProps> = ({
+const Grainient: React.FC<GrainientProperties> = ({
   timeSpeed = 0.25,
-  colorBalance = 0.0,
-  warpStrength = 1.0,
-  warpFrequency = 5.0,
-  warpSpeed = 2.0,
-  warpAmplitude = 50.0,
-  blendAngle = 0.0,
+  colorBalance = 0,
+  warpStrength = 1,
+  warpFrequency = 5,
+  warpSpeed = 2,
+  warpAmplitude = 50,
+  blendAngle = 0,
   blendSoftness = 0.05,
-  rotationAmount = 500.0,
-  noiseScale = 2.0,
+  rotationAmount = 500,
+  noiseScale = 2,
   grainAmount = 0.1,
-  grainScale = 2.0,
+  grainScale = 2,
   grainAnimated = false,
   contrast = 1.5,
-  gamma = 1.0,
-  saturation = 1.0,
-  centerX = 0.0,
-  centerY = 0.0,
+  gamma = 1,
+  saturation = 1,
+  centerX = 0,
+  centerY = 0,
   zoom = 0.9,
   color1 = "#FF9FFC",
   color2 = "#5227FF",
   color3 = "#B19EEF",
   className = "",
 }) => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const containerReference = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerReference.current) return;
 
     const renderer = new Renderer({
       webgl: 2,
@@ -173,8 +173,8 @@ const Grainient: React.FC<GrainientProps> = ({
     canvas.style.height = "100%";
     canvas.style.display = "block";
 
-    const container = containerRef.current;
-    container.appendChild(canvas);
+    const container = containerReference.current;
+    container.append(canvas);
 
     const geometry = new Triangle(gl);
     const program = new Program(gl, {
@@ -195,7 +195,7 @@ const Grainient: React.FC<GrainientProps> = ({
         uNoiseScale: { value: noiseScale },
         uGrainAmount: { value: grainAmount },
         uGrainScale: { value: grainScale },
-        uGrainAnimated: { value: grainAnimated ? 1.0 : 0.0 },
+        uGrainAnimated: { value: grainAnimated ? 1 : 0 },
         uContrast: { value: contrast },
         uGamma: { value: gamma },
         uSaturation: { value: saturation },
@@ -237,7 +237,7 @@ const Grainient: React.FC<GrainientProps> = ({
       cancelAnimationFrame(raf);
       ro.disconnect();
       try {
-        container.removeChild(canvas);
+        canvas.remove();
       } catch {
         // Ignore
       }
@@ -269,7 +269,7 @@ const Grainient: React.FC<GrainientProps> = ({
 
   return (
     <div
-      ref={containerRef}
+      ref={containerReference}
       className={`grainient-container ${className}`.trim()}
     />
   );

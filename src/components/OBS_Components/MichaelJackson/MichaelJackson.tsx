@@ -86,16 +86,18 @@ const videoReducer = (state: VideoState, action: VideoAction): VideoState => {
       };
     }
 
-    case "VIDEO_ENDED":
+    case "VIDEO_ENDED": {
       return {
         ...state,
         isPlaying: false,
         isActive: false,
         currentVideo: null,
       };
+    }
 
-    default:
+    default: {
       return state;
+    }
   }
 };
 

@@ -9,7 +9,7 @@ import { usePlayerStore } from "../../stores/usePlayerStore";
 import { QueueItem } from "../QueueItem";
 import styles from "./QueueList.module.scss";
 
-interface QueueListProps {
+interface QueueListProperties {
   title: string;
   limit?: number;
   showPlayButton?: boolean;
@@ -28,7 +28,7 @@ function QueueListComponent({
   showDeleteButton = false,
   collapsible = false,
   defaultExpanded = true,
-}: QueueListProps) {
+}: QueueListProperties) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const { handleDeleteFromQueue, deletingId } = useQueueActions();
 
@@ -46,7 +46,7 @@ function QueueListComponent({
 
   const toggleExpanded = useCallback(() => {
     if (collapsible) {
-      setIsExpanded(prev => !prev);
+      setIsExpanded(previous => !previous);
     }
   }, [collapsible]);
 

@@ -6,7 +6,7 @@ import { CinemaMediaItemDto } from "@/shared/api";
 
 import styles from "../CinemaQueuePage.module.scss";
 
-interface MediaItemsTableProps {
+interface MediaItemsTableProperties {
   mediaItems: CinemaMediaItemDto[];
   loading: boolean;
   onMarkAsNext: (id: string) => void;
@@ -22,7 +22,7 @@ const statusColorMap: Record<string, string> = {
   Postponed: "cyan",
 };
 
-const MediaItemsTable: React.FC<MediaItemsTableProps> = ({
+const MediaItemsTable: React.FC<MediaItemsTableProperties> = ({
   mediaItems,
   loading,
   onMarkAsNext,
@@ -94,15 +94,15 @@ const MediaItemsTable: React.FC<MediaItemsTableProps> = ({
       dataIndex: "scheduledFor",
       key: "scheduledFor",
       width: 200,
-      render: (val: string) =>
-        val ? new Date(val).toLocaleString() : "Not scheduled",
+      render: (value: string) =>
+        value ? new Date(value).toLocaleString() : "Not scheduled",
     },
     {
       title: "Created",
       dataIndex: "createdAt",
       key: "createdAt",
       width: 120,
-      render: (val: string) => new Date(val).toLocaleDateString(),
+      render: (value: string) => new Date(value).toLocaleDateString(),
     },
     {
       title: "Actions",

@@ -8,7 +8,7 @@ import commonStyles from "../../../OBSCommon.module.scss";
 import styles from "../../MikuMonday.module.scss";
 import MarqueeTrackTitle from "../MarqueeTrackTitle";
 
-interface ResultStageProps {
+interface ResultStageProperties {
   track: MikuTrackDto;
   twitchUser: TwitchUser;
   durationMs?: number;
@@ -23,19 +23,21 @@ export default function ResultStage({
   twitchUser,
   durationMs = DEFAULT_RESULT_DURATION,
   onComplete,
-}: ResultStageProps) {
+}: ResultStageProperties) {
   const [isFadingOut, setIsFadingOut] = useState(false);
-  const messageSentRef = useRef(false);
+  const messageSentReference = useRef(false);
   const sendMessage = useTwitchStore(state => state.sendMsgToPyrokxnezxz);
 
   useEffect(() => {
     // Отправляем сообщение о выпавшем треке только один раз
-    if (!messageSentRef.current) {
-      sendMessage(
-        `@${twitchUser.displayName}, выпал трек: ${track.artist} - ${track.title} (#${track.number}) ${track.url}`
-      );
-      messageSentRef.current = true;
+    if (messageSentReference.current) {
+      return;
     }
+
+    sendMessage(
+      `@${twitchUser.displayName}, выпал трек: ${track.artist} - ${track.title} (#${track.number}) ${track.url}`
+    );
+    messageSentReference.current = true;
   }, [
     track.id,
     twitchUser.displayName,
@@ -47,15 +49,15 @@ export default function ResultStage({
   ]);
 
   useEffect(() => {
-    const fadeOutTimerId = window.setTimeout(() => {
+    const fadeOutTimerId = globalThis.setTimeout(() => {
       setIsFadingOut(true);
     }, durationMs - FADE_OUT_DURATION);
 
-    const completeTimerId = window.setTimeout(onComplete, durationMs);
+    const completeTimerId = globalThis.setTimeout(onComplete, durationMs);
 
     return () => {
-      window.clearTimeout(fadeOutTimerId);
-      window.clearTimeout(completeTimerId);
+      globalThis.clearTimeout(fadeOutTimerId);
+      globalThis.clearTimeout(completeTimerId);
     };
   }, [durationMs, onComplete]);
 

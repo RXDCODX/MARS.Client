@@ -1,3 +1,1 @@
-import PhonkLayoutManager from "./PhonkLayoutManager";
-
-export default PhonkLayoutManager;
+export { default } from "./PhonkLayoutManager";

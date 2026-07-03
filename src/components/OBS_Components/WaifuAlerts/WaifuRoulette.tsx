@@ -11,7 +11,7 @@ import styles2 from "../OBSCommon.module.scss";
 import WaifuRoulettePrizeItem from "./components/WaifuRoulettePrizeItem";
 import styles from "./WaifuAlerts.module.scss";
 
-interface Props {
+interface Properties {
   rouletteIndex: number;
   prizes: PrizeType[];
   callback: () => void;
@@ -27,7 +27,7 @@ export default function WaifuRoulette({
   twitchUser,
   shuffle,
   wide,
-}: Props) {
+}: Properties) {
   if (prizes.length === 0) {
     throw new Error("Prizes is empty");
   }
@@ -113,11 +113,11 @@ export default function WaifuRoulette({
           onPrizeDefined={() => {
             setVisible(false);
             const div = rouletteDiv.current!;
-            div.onanimationend = () => {
+            div.addEventListener("animationend", () => {
               callback();
-            };
-            setBaseStyle(prev => ({
-              ...prev,
+            });
+            setBaseStyle(previous => ({
+              ...previous,
               animationDuration: "1.5s",
             }));
             div.className = " " + animate.animated + " " + animate.fadeOut;

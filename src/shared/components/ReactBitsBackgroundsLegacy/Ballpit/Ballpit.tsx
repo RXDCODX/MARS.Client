@@ -102,9 +102,9 @@ class X {
     if (this.#config.canvas) {
       this.canvas = this.#config.canvas;
     } else if (this.#config.id) {
-      const elem = document.getElementById(this.#config.id);
-      if (elem instanceof HTMLCanvasElement) {
-        this.canvas = elem;
+      const element = document.getElementById(this.#config.id);
+      if (element instanceof HTMLCanvasElement) {
+        this.canvas = element;
       } else {
         console.error("Three: Missing canvas or id parameter");
       }
@@ -115,7 +115,7 @@ class X {
     const rendererOptions: WebGLRendererParameters = {
       canvas: this.canvas,
       powerPreference: "high-performance",
-      ...(this.#config.rendererOptions ?? {}),
+      ...this.#config.rendererOptions,
     };
     this.renderer = new WebGLRenderer(rendererOptions);
     this.renderer.outputColorSpace = SRGBColorSpace;
@@ -146,7 +146,7 @@ class X {
 
   #onResize() {
     if (this.#resizeTimer) clearTimeout(this.#resizeTimer);
-    this.#resizeTimer = window.setTimeout(this.resize.bind(this), 100);
+    this.#resizeTimer = globalThis.setTimeout(this.resize.bind(this), 100);
   }
 
   resize() {
@@ -254,11 +254,13 @@ class X {
   }
 
   #stopAnimation() {
-    if (this.#isVisible) {
-      cancelAnimationFrame(this.#animationFrameId);
-      this.#isVisible = false;
-      this.#clock.stop();
+    if (!this.#isVisible) {
+      return;
     }
+
+    cancelAnimationFrame(this.#animationFrameId);
+    this.#isVisible = false;
+    this.#clock.stop();
   }
 
   #render() {
@@ -266,25 +268,28 @@ class X {
   }
 
   clear() {
-    this.scene.traverse(obj => {
+    this.scene.traverse(object => {
       if (
-        (obj as any).isMesh &&
-        typeof (obj as any).material === "object" &&
-        (obj as any).material !== null
+        !(
+          (object as any).isMesh && typeof (object as any).material === "object"
+        ) ||
+        (object as any).material === null
       ) {
-        Object.keys((obj as any).material).forEach(key => {
-          const matProp = (obj as any).material[key];
-          if (
-            matProp &&
-            typeof matProp === "object" &&
-            typeof matProp.dispose === "function"
-          ) {
-            matProp.dispose();
-          }
-        });
-        (obj as any).material.dispose();
-        (obj as any).geometry.dispose();
+        return;
       }
+
+      Object.keys((object as any).material).forEach(key => {
+        const matProperty = (object as any).material[key];
+        if (
+          matProperty &&
+          typeof matProperty === "object" &&
+          typeof matProperty.dispose === "function"
+        ) {
+          matProperty.dispose();
+        }
+      });
+      (object as any).material.dispose();
+      (object as any).geometry.dispose();
     });
     this.scene.clear();
   }
@@ -346,56 +351,56 @@ class W {
   #initializePositions() {
     const { config, positionData } = this;
     this.center.toArray(positionData, 0);
-    for (let i = 1; i < config.count; i++) {
-      const idx = 3 * i;
-      positionData[idx] = MathUtils.randFloatSpread(2 * config.maxX);
-      positionData[idx + 1] = MathUtils.randFloatSpread(2 * config.maxY);
-      positionData[idx + 2] = MathUtils.randFloatSpread(2 * config.maxZ);
+    for (let index = 1; index < config.count; index++) {
+      const index_ = 3 * index;
+      positionData[index_] = MathUtils.randFloatSpread(2 * config.maxX);
+      positionData[index_ + 1] = MathUtils.randFloatSpread(2 * config.maxY);
+      positionData[index_ + 2] = MathUtils.randFloatSpread(2 * config.maxZ);
     }
   }
 
   setSizes() {
     const { config, sizeData } = this;
     sizeData[0] = config.size0;
-    for (let i = 1; i < config.count; i++) {
-      sizeData[i] = MathUtils.randFloat(config.minSize, config.maxSize);
+    for (let index = 1; index < config.count; index++) {
+      sizeData[index] = MathUtils.randFloat(config.minSize, config.maxSize);
     }
   }
 
   update(deltaInfo: { delta: number }) {
     const { config, center, positionData, sizeData, velocityData } = this;
-    let startIdx = 0;
+    let startIndex = 0;
     if (config.controlSphere0) {
-      startIdx = 1;
+      startIndex = 1;
       const firstVec = new Vector3().fromArray(positionData, 0);
       firstVec.lerp(center, 0.1).toArray(positionData, 0);
       new Vector3(0, 0, 0).toArray(velocityData, 0);
     }
-    for (let idx = startIdx; idx < config.count; idx++) {
-      const base = 3 * idx;
+    for (let index = startIndex; index < config.count; index++) {
+      const base = 3 * index;
       const pos = new Vector3().fromArray(positionData, base);
       const vel = new Vector3().fromArray(velocityData, base);
-      vel.y -= deltaInfo.delta * config.gravity * sizeData[idx];
+      vel.y -= deltaInfo.delta * config.gravity * sizeData[index];
       vel.multiplyScalar(config.friction);
       vel.clampLength(0, config.maxVelocity);
       pos.add(vel);
       pos.toArray(positionData, base);
       vel.toArray(velocityData, base);
     }
-    for (let idx = startIdx; idx < config.count; idx++) {
-      const base = 3 * idx;
+    for (let index = startIndex; index < config.count; index++) {
+      const base = 3 * index;
       const pos = new Vector3().fromArray(positionData, base);
       const vel = new Vector3().fromArray(velocityData, base);
-      const radius = sizeData[idx];
-      for (let jdx = idx + 1; jdx < config.count; jdx++) {
+      const radius = sizeData[index];
+      for (let jdx = index + 1; jdx < config.count; jdx++) {
         const otherBase = 3 * jdx;
         const otherPos = new Vector3().fromArray(positionData, otherBase);
         const otherVel = new Vector3().fromArray(velocityData, otherBase);
         const diff = new Vector3().copy(otherPos).sub(pos);
-        const dist = diff.length();
+        const distribution = diff.length();
         const sumRadius = radius + sizeData[jdx];
-        if (dist < sumRadius) {
-          const overlap = sumRadius - dist;
+        if (distribution < sumRadius) {
+          const overlap = sumRadius - distribution;
           const correction = diff.normalize().multiplyScalar(0.5 * overlap);
           const velCorrection = correction
             .clone()
@@ -461,8 +466,8 @@ class Y extends MeshPhysicalMaterial {
   };
   defines: { USE_UV: string };
 
-  constructor(params: any) {
-    super(params);
+  constructor(parameters: any) {
+    super(parameters);
     this.defines = { USE_UV: "" };
     this.onBeforeCompile = shader => {
       Object.assign(shader.uniforms, this.uniforms);
@@ -511,7 +516,7 @@ class Y extends MeshPhysicalMaterial {
 const XConfig = {
   count: 200,
   colors: [0, 0, 0],
-  ambientColor: 0xffffff,
+  ambientColor: 0xff_ff_ff,
   ambientIntensity: 1,
   lightIntensity: 200,
   materialParams: {
@@ -536,7 +541,7 @@ const XConfig = {
 
 const U = new Object3D();
 
-let globalPointerActive = false;
+let isGlobalPointerActive = false;
 const pointerPosition = new Vector2();
 
 interface PointerData {
@@ -569,7 +574,7 @@ function createPointerData(
   };
   if (!pointerMap.has(options.domElement)) {
     pointerMap.set(options.domElement, defaultData);
-    if (!globalPointerActive) {
+    if (!isGlobalPointerActive) {
       document.body.addEventListener(
         "pointermove",
         onPointerMove as EventListener
@@ -598,7 +603,7 @@ function createPointerData(
         onTouchEnd as EventListener,
         { passive: false }
       );
-      globalPointerActive = true;
+      isGlobalPointerActive = true;
     }
   }
   defaultData.dispose = () => {
@@ -633,7 +638,7 @@ function createPointerData(
         "touchcancel",
         onTouchEnd as EventListener
       );
-      globalPointerActive = false;
+      isGlobalPointerActive = false;
     }
   };
   return defaultData;
@@ -645,8 +650,8 @@ function onPointerMove(e: PointerEvent) {
 }
 
 function processPointerInteraction() {
-  for (const [elem, data] of pointerMap) {
-    const rect = elem.getBoundingClientRect();
+  for (const [element, data] of pointerMap) {
+    const rect = element.getBoundingClientRect();
     if (isInside(rect)) {
       updatePointerData(data, rect);
       if (!data.hover) {
@@ -662,61 +667,67 @@ function processPointerInteraction() {
 }
 
 function onTouchStart(e: TouchEvent) {
-  if (e.touches.length > 0) {
-    e.preventDefault();
-    pointerPosition.set(e.touches[0].clientX, e.touches[0].clientY);
-    for (const [elem, data] of pointerMap) {
-      const rect = elem.getBoundingClientRect();
-      if (isInside(rect)) {
-        data.touching = true;
-        updatePointerData(data, rect);
-        if (!data.hover) {
-          data.hover = true;
-          data.onEnter(data);
-        }
-        data.onMove(data);
+  if (e.touches.length === 0) {
+    return;
+  }
+
+  e.preventDefault();
+  pointerPosition.set(e.touches[0].clientX, e.touches[0].clientY);
+  for (const [element, data] of pointerMap) {
+    const rect = element.getBoundingClientRect();
+    if (isInside(rect)) {
+      data.touching = true;
+      updatePointerData(data, rect);
+      if (!data.hover) {
+        data.hover = true;
+        data.onEnter(data);
       }
+      data.onMove(data);
     }
   }
 }
 
 function onTouchMove(e: TouchEvent) {
-  if (e.touches.length > 0) {
-    e.preventDefault();
-    pointerPosition.set(e.touches[0].clientX, e.touches[0].clientY);
-    for (const [elem, data] of pointerMap) {
-      const rect = elem.getBoundingClientRect();
-      updatePointerData(data, rect);
-      if (isInside(rect)) {
-        if (!data.hover) {
-          data.hover = true;
-          data.touching = true;
-          data.onEnter(data);
-        }
-        data.onMove(data);
-      } else if (data.hover && data.touching) {
-        data.onMove(data);
+  if (e.touches.length === 0) {
+    return;
+  }
+
+  e.preventDefault();
+  pointerPosition.set(e.touches[0].clientX, e.touches[0].clientY);
+  for (const [element, data] of pointerMap) {
+    const rect = element.getBoundingClientRect();
+    updatePointerData(data, rect);
+    if (isInside(rect)) {
+      if (!data.hover) {
+        data.hover = true;
+        data.touching = true;
+        data.onEnter(data);
       }
+      data.onMove(data);
+    } else if (data.hover && data.touching) {
+      data.onMove(data);
     }
   }
 }
 
 function onTouchEnd() {
   for (const [, data] of pointerMap) {
-    if (data.touching) {
-      data.touching = false;
-      if (data.hover) {
-        data.hover = false;
-        data.onLeave(data);
-      }
+    if (!data.touching) {
+      continue;
+    }
+
+    data.touching = false;
+    if (data.hover) {
+      data.hover = false;
+      data.onLeave(data);
     }
   }
 }
 
 function onPointerClick(e: PointerEvent) {
   pointerPosition.set(e.clientX, e.clientY);
-  for (const [elem, data] of pointerMap) {
-    const rect = elem.getBoundingClientRect();
+  for (const [element, data] of pointerMap) {
+    const rect = element.getBoundingClientRect();
     updatePointerData(data, rect);
     if (isInside(rect)) data.onClick(data);
   }
@@ -724,10 +735,12 @@ function onPointerClick(e: PointerEvent) {
 
 function onPointerLeave() {
   for (const data of pointerMap.values()) {
-    if (data.hover) {
-      data.hover = false;
-      data.onLeave(data);
+    if (!data.hover) {
+      continue;
     }
+
+    data.hover = false;
+    data.onLeave(data);
   }
 }
 
@@ -757,13 +770,19 @@ class Z extends InstancedMesh {
   ambientLight: AmbientLight | undefined;
   light: PointLight | undefined;
 
-  constructor(renderer: WebGLRenderer, params: Partial<typeof XConfig> = {}) {
-    const config = { ...XConfig, ...params };
-    const roomEnv = new RoomEnvironment();
+  constructor(
+    renderer: WebGLRenderer,
+    parameters: Partial<typeof XConfig> = {}
+  ) {
+    const config = { ...XConfig, ...parameters };
+    const roomEnvironment = new RoomEnvironment();
     const pmrem = new PMREMGenerator(renderer);
-    const envTexture = pmrem.fromScene(roomEnv).texture;
+    const environmentTexture = pmrem.fromScene(roomEnvironment).texture;
     const geometry = new SphereGeometry();
-    const material = new Y({ envMap: envTexture, ...config.materialParams });
+    const material = new Y({
+      envMap: environmentTexture,
+      ...config.materialParams,
+    });
     material.envMapRotation.x = -Math.PI / 2;
     super(geometry, material, config.count);
     this.config = config;
@@ -786,60 +805,59 @@ class Z extends InstancedMesh {
   }
 
   setColors(colors: number[]) {
-    if (Array.isArray(colors) && colors.length > 1) {
-      const colorUtils = (function (colorsArr: number[]) {
-        let baseColors: number[] = colorsArr;
-        let colorObjects: Color[] = [];
-        baseColors.forEach(col => {
-          colorObjects.push(new Color(col));
-        });
-        return {
-          setColors: (cols: number[]) => {
-            baseColors = cols;
-            colorObjects = [];
-            baseColors.forEach(col => {
-              colorObjects.push(new Color(col));
-            });
-          },
-          getColorAt: (ratio: number, out: Color = new Color()) => {
-            const clamped = Math.max(0, Math.min(1, ratio));
-            const scaled = clamped * (baseColors.length - 1);
-            const idx = Math.floor(scaled);
-            const start = colorObjects[idx];
-            if (idx >= baseColors.length - 1) return start.clone();
-            const alpha = scaled - idx;
-            const end = colorObjects[idx + 1];
-            out.r = start.r + alpha * (end.r - start.r);
-            out.g = start.g + alpha * (end.g - start.g);
-            out.b = start.b + alpha * (end.b - start.b);
-            return out;
-          },
-        };
-      })(colors);
-      for (let idx = 0; idx < this.count; idx++) {
-        this.setColorAt(idx, colorUtils.getColorAt(idx / this.count));
-        if (idx === 0) {
-          this.light!.color.copy(colorUtils.getColorAt(idx / this.count));
-        }
-      }
-
-      if (!this.instanceColor) return;
-      this.instanceColor.needsUpdate = true;
+    if (!(Array.isArray(colors) && colors.length > 1)) {
+      return;
     }
+
+    const colorUtilities = (function (colorsArray: number[]) {
+      let baseColors: number[] = colorsArray;
+      let colorObjects: Color[] = Array.from(baseColors, col => new Color(col));
+      return {
+        setColors: (cols: number[]) => {
+          baseColors = cols;
+          colorObjects = [];
+          for (const col of baseColors) {
+            colorObjects.push(new Color(col));
+          }
+        },
+        getColorAt: (ratio: number, out: Color = new Color()) => {
+          const clamped = Math.max(0, Math.min(1, ratio));
+          const scaled = clamped * (baseColors.length - 1);
+          const index = Math.floor(scaled);
+          const start = colorObjects[index];
+          if (index >= baseColors.length - 1) return start.clone();
+          const alpha = scaled - index;
+          const end = colorObjects[index + 1];
+          out.r = start.r + alpha * (end.r - start.r);
+          out.g = start.g + alpha * (end.g - start.g);
+          out.b = start.b + alpha * (end.b - start.b);
+          return out;
+        },
+      };
+    })(colors);
+    for (let index = 0; index < this.count; index++) {
+      this.setColorAt(index, colorUtilities.getColorAt(index / this.count));
+      if (index === 0) {
+        this.light!.color.copy(colorUtilities.getColorAt(index / this.count));
+      }
+    }
+
+    if (!this.instanceColor) return;
+    this.instanceColor.needsUpdate = true;
   }
 
   update(deltaInfo: { delta: number }) {
     this.physics.update(deltaInfo);
-    for (let idx = 0; idx < this.count; idx++) {
-      U.position.fromArray(this.physics.positionData, 3 * idx);
-      if (idx === 0 && this.config.followCursor === false) {
+    for (let index = 0; index < this.count; index++) {
+      U.position.fromArray(this.physics.positionData, 3 * index);
+      if (index === 0 && this.config.followCursor === false) {
         U.scale.setScalar(0);
       } else {
-        U.scale.setScalar(this.physics.sizeData[idx]);
+        U.scale.setScalar(this.physics.sizeData[index]);
       }
       U.updateMatrix();
-      this.setMatrixAt(idx, U.matrix);
-      if (idx === 0) this.light!.position.copy(U.position);
+      this.setMatrixAt(index, U.matrix);
+      if (index === 0) this.light!.position.copy(U.position);
     }
     this.instanceMatrix.needsUpdate = true;
   }
@@ -891,12 +909,12 @@ function createBallpit(
       spheres.config.controlSphere0 = false;
     },
   });
-  function initialize(cfg: any) {
+  function initialize(config_: any) {
     if (spheres) {
       threeInstance.clear();
       threeInstance.scene.remove(spheres);
     }
-    spheres = new Z(threeInstance.renderer, cfg);
+    spheres = new Z(threeInstance.renderer, config_);
     threeInstance.scene.add(spheres);
   }
   threeInstance.onBeforeRender = deltaInfo => {
@@ -924,32 +942,32 @@ function createBallpit(
   };
 }
 
-interface BallpitProps {
+interface BallpitProperties {
   className?: string;
   followCursor?: boolean;
   [key: string]: any;
 }
 
-const Ballpit: React.FC<BallpitProps> = ({
+const Ballpit: React.FC<BallpitProperties> = ({
   className = "",
   followCursor = true,
-  ...props
+  ...properties
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const spheresInstanceRef = useRef<CreateBallpitReturn | null>(null);
+  const canvasReference = useRef<HTMLCanvasElement>(null);
+  const spheresInstanceReference = useRef<CreateBallpitReturn | null>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = canvasReference.current;
     if (!canvas) return;
 
-    spheresInstanceRef.current = createBallpit(canvas, {
+    spheresInstanceReference.current = createBallpit(canvas, {
       followCursor,
-      ...props,
+      ...properties,
     });
 
     return () => {
-      if (spheresInstanceRef.current) {
-        spheresInstanceRef.current.dispose();
+      if (spheresInstanceReference.current) {
+        spheresInstanceReference.current.dispose();
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -958,7 +976,7 @@ const Ballpit: React.FC<BallpitProps> = ({
   return (
     <canvas
       className={className}
-      ref={canvasRef}
+      ref={canvasReference}
       style={{ width: "100%", height: "100%" }}
     />
   );

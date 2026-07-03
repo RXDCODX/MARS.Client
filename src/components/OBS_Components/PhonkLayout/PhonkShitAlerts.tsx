@@ -10,9 +10,9 @@ export default function PhonkShitAlerts({
 }: {
   callback: () => void;
 }) {
-  const [imageSrc] = useState<string>(getRandomImage());
-  const [audioSrc] = useState<string>(getRandomAudio());
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [imageSource] = useState<string>(getRandomImage());
+  const [audioSource] = useState<string>(getRandomAudio());
+  const audioReference = useRef<HTMLAudioElement | null>(null);
 
   useInjectStyles(`
     body {
@@ -31,18 +31,18 @@ export default function PhonkShitAlerts({
 
       {/* Невидимый audio элемент в дереве для управления через реф */}
       <audio
-        ref={audioRef}
+        ref={audioReference}
         autoPlay
         onPlay={event => {
           event.currentTarget.volume = 0.22;
         }}
         onEnded={callback}
         style={{ display: "none" }}
-        src={audioSrc}
+        src={audioSource}
       />
 
       {/* Random image positioned 22% from bottom, centered horizontally */}
-      {imageSrc && <img src={imageSrc} alt="" className={styles.image} />}
+      {imageSource && <img src={imageSource} alt="" className={styles.image} />}
     </div>
   );
 }

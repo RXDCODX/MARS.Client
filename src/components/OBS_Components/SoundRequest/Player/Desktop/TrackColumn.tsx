@@ -28,12 +28,15 @@ import { TrackListViewMode, usePlayerStore } from "../stores/usePlayerStore";
 import styles from "./SoundRequestPlayerDesktop.module.scss";
 import { TrackItem } from "./TrackItem";
 
-interface TrackColumnProps {
+interface TrackColumnProperties {
   scrollListRef?: RefObject<HTMLDivElement>;
   onScroll?: UIEventHandler<HTMLDivElement>;
 }
 
-function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
+function TrackColumnComponent({
+  scrollListRef,
+  onScroll,
+}: TrackColumnProperties) {
   // Получаем данные напрямую из стора - ТОЛЬКО нужные поля
   const {
     currentTrack,
@@ -80,7 +83,7 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
     const trackItems: JSX.Element[] = [];
 
     switch (viewMode) {
-      case TrackListViewMode.Default:
+      case TrackListViewMode.Default: {
         // Обычный режим: текущий трек -> вся очередь
         if (current) {
           trackItems.push(
@@ -116,6 +119,7 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
         });
 
         break;
+      }
 
       case TrackListViewMode.WithHistory: {
         const MAX_QUEUE_IN_HISTORY_MODE = 4;
@@ -152,7 +156,7 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
         break;
       }
 
-      case TrackListViewMode.Reversed:
+      case TrackListViewMode.Reversed: {
         history.toReversed().forEach((item, index) => {
           if (item.track) {
             trackItems.push(
@@ -182,6 +186,7 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
           );
         }
         break;
+      }
     }
 
     return trackItems;
@@ -210,8 +215,8 @@ function TrackColumnComponent({ scrollListRef, onScroll }: TrackColumnProps) {
     const active = event.active?.id as string | undefined;
     const over = event.over?.id as string | undefined;
     if (active && over && active !== over) {
-      const from = ids.findIndex(i => i === active);
-      let to = ids.findIndex(i => i === over);
+      const from = ids.indexOf(active);
+      let to = ids.indexOf(over);
       if (from !== -1 && to !== -1) {
         // call reorder (handles optimistic update)
         if (to == 0) {

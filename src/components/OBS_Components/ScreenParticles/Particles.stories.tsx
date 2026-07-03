@@ -100,7 +100,7 @@ export const ConfettyEffect: StoryObj = {
     expect(activeConfettiCanvas.length).toBeGreaterThan(0);
 
     // Ждем завершения эффекта
-    await new Promise(resolve => setTimeout(resolve, 10500));
+    await new Promise(resolve => setTimeout(resolve, 10_500));
 
     // Проверяем, что эффект завершился
     const finalCanvas = canvasElement.querySelectorAll("canvas");
@@ -154,7 +154,7 @@ export const FireworkEffect: StoryObj = {
     expect(activeFireworkCanvas.length).toBeGreaterThan(0);
 
     // Ждем завершения эффекта
-    await new Promise(resolve => setTimeout(resolve, 10500));
+    await new Promise(resolve => setTimeout(resolve, 10_500));
 
     // Проверяем, что эффект завершился
     const finalCanvas = canvasElement.querySelectorAll("canvas");
@@ -208,7 +208,7 @@ export const EmojiParticlesEffect: StoryObj = {
     expect(activeEmojiCanvas.length).toBeGreaterThan(0);
 
     // Ждем завершения эффекта
-    await new Promise(resolve => setTimeout(resolve, 12000));
+    await new Promise(resolve => setTimeout(resolve, 12_000));
 
     // Проверяем, что эффект завершился
     const finalCanvas = canvasElement.querySelectorAll("canvas");

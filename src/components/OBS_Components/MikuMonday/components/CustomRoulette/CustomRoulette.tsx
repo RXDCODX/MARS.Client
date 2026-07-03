@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import type { RoulettePrize } from "../../types";
 import styles from "./CustomRoulette.module.scss";
 
-interface CustomRouletteProps {
+interface CustomRouletteProperties {
   prizes: RoulettePrize[];
   prizeIndex: number;
   isReversed?: boolean;
@@ -23,8 +23,8 @@ export default function CustomRoulette({
   start,
   spinningTime = SPIN_DURATION,
   onComplete,
-}: CustomRouletteProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+}: CustomRouletteProperties) {
+  const containerReference = useRef<HTMLDivElement>(null);
   const [translateX, setTranslateX] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
 
@@ -42,7 +42,7 @@ export default function CustomRoulette({
     const frameId = requestAnimationFrame(() => setIsSpinning(true));
 
     // Создаем зацикленный массив призов (повторяем 5 раз для плавной прокрутки)
-    const containerWidth = containerRef.current?.offsetWidth || 1000;
+    const containerWidth = containerReference.current?.offsetWidth || 1000;
     const totalPrizeWidth = PRIZE_WIDTH + PRIZE_GAP;
 
     // Центр контейнера
@@ -99,10 +99,10 @@ export default function CustomRoulette({
   ]);
 
   // Создаем повторяющийся массив призов
-  const repeatedPrizes = Array(5).fill(prizes).flat();
+  const repeatedPrizes = Array.from({ length: 5 }).fill(prizes).flat();
 
   return (
-    <div className={styles.roulette} ref={containerRef}>
+    <div className={styles.roulette} ref={containerReference}>
       <div
         className={styles.track}
         style={{

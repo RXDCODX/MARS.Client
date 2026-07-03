@@ -17,7 +17,7 @@ export default function HighPriorityAlert(alert: AlertDestination) {
 
   switch (alert.type) {
     case MediaFileInfoTypeEnum.Image:
-    case MediaFileInfoTypeEnum.Gif:
+    case MediaFileInfoTypeEnum.Gif: {
       return (
         <Image
           key={message.mediaInfo.id}
@@ -25,7 +25,8 @@ export default function HighPriorityAlert(alert: AlertDestination) {
           callBack={callback}
         />
       );
-    case MediaFileInfoTypeEnum.Video:
+    }
+    case MediaFileInfoTypeEnum.Video: {
       return (
         <Video
           key={message.mediaInfo.id}
@@ -34,7 +35,8 @@ export default function HighPriorityAlert(alert: AlertDestination) {
           isHighPrior
         />
       );
-    case MediaFileInfoTypeEnum.Audio:
+    }
+    case MediaFileInfoTypeEnum.Audio: {
       return (
         <Audio
           key={message.mediaInfo.id}
@@ -43,7 +45,8 @@ export default function HighPriorityAlert(alert: AlertDestination) {
           isHighPrior
         />
       );
-    case MediaFileInfoTypeEnum.Voice:
+    }
+    case MediaFileInfoTypeEnum.Voice: {
       return (
         <Voice
           key={message.mediaInfo.id}
@@ -52,7 +55,8 @@ export default function HighPriorityAlert(alert: AlertDestination) {
           isHighPrior
         />
       );
-    case MediaFileInfoTypeEnum.TelegramSticker:
+    }
+    case MediaFileInfoTypeEnum.TelegramSticker: {
       return (
         <TelegramSticker
           key={message.mediaInfo.id}
@@ -60,7 +64,9 @@ export default function HighPriorityAlert(alert: AlertDestination) {
           callBack={callback}
         />
       );
-    default:
+    }
+    default: {
       return null;
+    }
   }
 }

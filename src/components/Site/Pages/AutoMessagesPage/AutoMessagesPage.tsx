@@ -34,9 +34,11 @@ const AutoMessagesPage: React.FC = () => {
       const result = await api.autoMessagesList();
       const data = Array.isArray(result.data.data) ? result.data.data : [];
       setItems(data);
-    } catch (e) {
+    } catch (error_) {
       const text =
-        e instanceof Error ? e.message : "Не удалось загрузить автосообщения";
+        error_ instanceof Error
+          ? error_.message
+          : "Не удалось загрузить автосообщения";
       setError(text);
       showToast({ success: false, message: text });
     } finally {
@@ -79,10 +81,10 @@ const AutoMessagesPage: React.FC = () => {
 
       resetForm();
       await loadItems();
-    } catch (e) {
+    } catch (error_) {
       const text =
-        e instanceof Error
-          ? e.message
+        error_ instanceof Error
+          ? error_.message
           : editingId
             ? "Не удалось обновить автосообщение"
             : "Не удалось создать автосообщение";
@@ -99,7 +101,7 @@ const AutoMessagesPage: React.FC = () => {
   };
 
   const handleDelete = async (id: string) => {
-    const isConfirmed = window.confirm("Удалить это автосообщение?");
+    const isConfirmed = globalThis.confirm("Удалить это автосообщение?");
     if (!isConfirmed) {
       return;
     }
@@ -116,9 +118,11 @@ const AutoMessagesPage: React.FC = () => {
       }
 
       await loadItems();
-    } catch (e) {
+    } catch (error_) {
       const text =
-        e instanceof Error ? e.message : "Не удалось удалить автосообщение";
+        error_ instanceof Error
+          ? error_.message
+          : "Не удалось удалить автосообщение";
       setError(text);
       showToast({ success: false, message: text });
     } finally {

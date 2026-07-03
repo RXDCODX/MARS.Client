@@ -4,18 +4,18 @@ import { TunaMusicData } from "@/shared/api";
 
 import styles from "./CurrentTrack.module.scss";
 
-interface Props {
+interface Properties {
   track: TunaMusicData;
 }
 
-const ProgressBarComponent = ({ track }: Props) => {
+const ProgressBarComponent = ({ track }: Properties) => {
   const [progress, setProgress] = useState(0);
-  const animationRef = useRef<number | null>(null);
-  const startTimeRef = useRef<number>(0);
-  const pausedTimeRef = useRef<number>(0);
-  const isPausedRef = useRef<boolean>(false);
-  const lastTrackKeyRef = useRef<string>("");
-  const lastExternalProgressRef = useRef<number>(0);
+  const animationReference = useRef<number | null>(null);
+  const startTimeReference = useRef<number>(0);
+  const pausedTimeReference = useRef<number>(0);
+  const isPausedReference = useRef<boolean>(false);
+  const lastTrackKeyReference = useRef<string>("");
+  const lastExternalProgressReference = useRef<number>(0);
 
   // Создаем уникальный ключ для трека
   const trackKey = `${track.artists.join(",")}-${track.title}-${track.duration}`;
@@ -28,7 +28,7 @@ const ProgressBarComponent = ({ track }: Props) => {
     const externalProgressSeconds = track.progress || 0;
     const externalProgress =
       track.duration > 0 ? externalProgressSeconds / track.duration : 0;
-    const lastProgress = lastExternalProgressRef.current;
+    const lastProgress = lastExternalProgressReference.current;
     const progressDiff = externalProgress - lastProgress;
 
     // Проверяем значительные изменения вперед (перемотка вперед на 3+ секунд в процентах)
@@ -85,69 +85,70 @@ const ProgressBarComponent = ({ track }: Props) => {
         fromSeconds: progress * track.duration,
         toSeconds: externalProgressSeconds,
       });
-      lastExternalProgressRef.current = externalProgress;
+      lastExternalProgressReference.current = externalProgress;
       setProgress(externalProgress);
 
       // Пересчитываем время начала для корректного продолжения анимации
       if (track.status === "playing") {
-        startTimeRef.current = Date.now() - externalProgressSeconds * 1000;
+        startTimeReference.current =
+          Date.now() - externalProgressSeconds * 1000;
       }
     } else {
       // Если изменение незначительное, просто обновляем отслеживаемое значение
       // но не синхронизируемся, чтобы избежать бликов
-      lastExternalProgressRef.current = externalProgress;
+      lastExternalProgressReference.current = externalProgress;
     }
   }, [track.progress, track.duration, track.status, progress]);
 
   useEffect(() => {
     if (!track.duration || track.duration === 0) {
       setProgress(0);
-      lastExternalProgressRef.current = 0;
+      lastExternalProgressReference.current = 0;
       return;
     }
 
     // Очищаем предыдущую анимацию
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
+    if (animationReference.current) {
+      cancelAnimationFrame(animationReference.current);
     }
 
     // Если это новый трек, сбрасываем все состояния
-    if (lastTrackKeyRef.current !== trackKey) {
+    if (lastTrackKeyReference.current !== trackKey) {
       console.log("🟠 NEW TRACK DETECTED:", {
-        oldTrackKey: lastTrackKeyRef.current,
+        oldTrackKey: lastTrackKeyReference.current,
         newTrackKey: trackKey,
         initialProgress: track.progress || 0,
         trackStatus: track.status,
         trackDuration: track.duration,
       });
 
-      lastTrackKeyRef.current = trackKey;
+      lastTrackKeyReference.current = trackKey;
       const initialProgressSeconds = track.progress || 0;
       const initialProgress =
         track.duration > 0 ? initialProgressSeconds / track.duration : 0;
       setProgress(initialProgress);
-      lastExternalProgressRef.current = initialProgress;
-      isPausedRef.current = false;
-      pausedTimeRef.current = 0;
-      startTimeRef.current = Date.now() - initialProgressSeconds * 1000;
+      lastExternalProgressReference.current = initialProgress;
+      isPausedReference.current = false;
+      pausedTimeReference.current = 0;
+      startTimeReference.current = Date.now() - initialProgressSeconds * 1000;
     }
 
     // Если трек остановлен, сбрасываем прогресс
     if (track.status === "stopped") {
       console.log("🔴 TRACK STOPPED - resetting progress");
       setProgress(0);
-      lastExternalProgressRef.current = 0;
-      isPausedRef.current = false;
-      pausedTimeRef.current = 0;
+      lastExternalProgressReference.current = 0;
+      isPausedReference.current = false;
+      pausedTimeReference.current = 0;
       return;
     }
 
     // Если трек на паузе
     if (track.status === "paused") {
-      if (!isPausedRef.current) {
+      if (!isPausedReference.current) {
         console.log("⏸️ TRACK PAUSED");
-        isPausedRef.current = true;
-        pausedTimeRef.current = Date.now();
+        isPausedReference.current = true;
+        pausedTimeReference.current = Date.now();
       }
       return;
     }
@@ -155,16 +156,16 @@ const ProgressBarComponent = ({ track }: Props) => {
     // Если трек играет
     if (track.status === "playing") {
       // Если был на паузе, корректируем время начала
-      if (isPausedRef.current) {
-        const pauseDuration = Date.now() - pausedTimeRef.current;
+      if (isPausedReference.current) {
+        const pauseDuration = Date.now() - pausedTimeReference.current;
         console.log("▶️ TRACK RESUMED after pause:", { pauseDuration });
-        startTimeRef.current += pauseDuration;
-        isPausedRef.current = false;
+        startTimeReference.current += pauseDuration;
+        isPausedReference.current = false;
       }
 
       const animate = () => {
         const currentTime = Date.now();
-        const elapsed = (currentTime - startTimeRef.current) / 1000;
+        const elapsed = (currentTime - startTimeReference.current) / 1000;
         const newProgress = Math.min(elapsed / track.duration, 1);
 
         // Логируем изменения прогресса в анимации
@@ -177,7 +178,7 @@ const ProgressBarComponent = ({ track }: Props) => {
             elapsed,
             trackDuration: track.duration,
             trackStatus: track.status,
-            startTime: startTimeRef.current,
+            startTime: startTimeReference.current,
             currentTime,
           });
         }
@@ -185,16 +186,16 @@ const ProgressBarComponent = ({ track }: Props) => {
         setProgress(newProgress);
 
         if (newProgress < 1 && track.status === "playing") {
-          animationRef.current = requestAnimationFrame(animate);
+          animationReference.current = requestAnimationFrame(animate);
         }
       };
 
-      animationRef.current = requestAnimationFrame(animate);
+      animationReference.current = requestAnimationFrame(animate);
     }
 
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
+      if (animationReference.current) {
+        cancelAnimationFrame(animationReference.current);
       }
     };
   }, [track.status, track.duration, trackKey, track.progress, progress]);
@@ -202,8 +203,8 @@ const ProgressBarComponent = ({ track }: Props) => {
   // Очищаем анимацию при размонтировании
   useEffect(
     () => () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
+      if (animationReference.current) {
+        cancelAnimationFrame(animationReference.current);
       }
     },
     []
@@ -221,13 +222,13 @@ const ProgressBarComponent = ({ track }: Props) => {
         externalProgressSeconds: track.progress,
         externalProgressPercent:
           track.duration > 0 ? (track.progress || 0) / track.duration : 0,
-        lastExternalProgress: lastExternalProgressRef.current,
-        isPaused: isPausedRef.current,
-        startTime: startTimeRef.current,
+        lastExternalProgress: lastExternalProgressReference.current,
+        isPaused: isPausedReference.current,
+        startTime: startTimeReference.current,
         currentTime: Date.now(),
-        elapsed: (Date.now() - startTimeRef.current) / 1000,
+        elapsed: (Date.now() - startTimeReference.current) / 1000,
         trackKey,
-        lastTrackKey: lastTrackKeyRef.current,
+        lastTrackKey: lastTrackKeyReference.current,
       });
     }
   }, [

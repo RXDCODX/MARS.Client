@@ -10,7 +10,7 @@ import {
 } from "../../utils";
 import styles from "./QueueItem.module.scss";
 
-interface QueueItemProps {
+interface QueueItemProperties {
   item: QueueItemType;
   index: number;
   showPlayButton?: boolean;
@@ -33,7 +33,7 @@ function QueueItemComponent({
   onDelete,
   isDeleting = false,
   isLoading = false,
-}: QueueItemProps) {
+}: QueueItemProperties) {
   const handlePlay = useCallback(() => {
     if (onPlay && !isLoading) {
       onPlay(item);

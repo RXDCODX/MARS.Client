@@ -6,7 +6,7 @@ import animate from "@/shared/styles/animate.module.scss";
 import commonStyles from "../../../OBSCommon.module.scss";
 import styles from "../../MikuMonday.module.scss";
 
-interface IntroStageProps {
+interface IntroStageProperties {
   twitchUser: TwitchUser;
   fallbackAvatar?: string;
   durationMs?: number;
@@ -21,19 +21,19 @@ export default function IntroStage({
   fallbackAvatar,
   durationMs = DEFAULT_INTRO_DURATION,
   onComplete,
-}: IntroStageProps) {
+}: IntroStageProperties) {
   const [isFadingOut, setIsFadingOut] = useState(false);
 
   useEffect(() => {
-    const fadeOutTimerId = window.setTimeout(() => {
+    const fadeOutTimerId = globalThis.setTimeout(() => {
       setIsFadingOut(true);
     }, durationMs - FADE_OUT_DURATION);
 
-    const completeTimerId = window.setTimeout(onComplete, durationMs);
+    const completeTimerId = globalThis.setTimeout(onComplete, durationMs);
 
     return () => {
-      window.clearTimeout(fadeOutTimerId);
-      window.clearTimeout(completeTimerId);
+      globalThis.clearTimeout(fadeOutTimerId);
+      globalThis.clearTimeout(completeTimerId);
     };
   }, [durationMs, onComplete]);
 

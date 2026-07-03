@@ -4,17 +4,17 @@ import { logger } from "@/shared/logger";
 
 export const SoundRequestHubSignalRContext = signalR.createSignalRContext({});
 
-interface SoundRequestHubProps {
+interface SoundRequestHubProperties {
   children: React.ReactNode;
 }
 
 export function SoundRequestHubSignalRHubWrapper({
   children,
-}: SoundRequestHubProps) {
+}: SoundRequestHubProperties) {
   return (
     <SoundRequestHubSignalRContext.Provider
       automaticReconnect={true}
-      onError={error => new Promise(resolve => resolve(console.log(error)))}
+      onError={error => Promise.try(() => console.log(error))}
       onClosed={event => console.log(event)}
       onOpen={event => console.log(event)}
       logger={logger}

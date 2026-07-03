@@ -12,12 +12,15 @@ import { TrackListViewMode, usePlayerStore } from "../stores/usePlayerStore";
 import styles from "./SoundRequestPlayerDesktop.module.scss";
 import { UserItem } from "./UserItem";
 
-interface UserColumnProps {
+interface UserColumnProperties {
   scrollListRef?: RefObject<HTMLDivElement>;
   onScroll?: UIEventHandler<HTMLDivElement>;
 }
 
-function UserColumnComponent({ scrollListRef, onScroll }: UserColumnProps) {
+function UserColumnComponent({
+  scrollListRef,
+  onScroll,
+}: UserColumnProperties) {
   // Получаем данные напрямую из стора - ТОЛЬКО нужные поля
   const {
     currentTrack,
@@ -52,7 +55,7 @@ function UserColumnComponent({ scrollListRef, onScroll }: UserColumnProps) {
     const userItems: JSX.Element[] = [];
 
     switch (viewMode) {
-      case TrackListViewMode.Default:
+      case TrackListViewMode.Default: {
         // Обычный режим: текущий пользователь -> пользователи очереди (до 8)
         if (current) {
           userItems.push(
@@ -84,6 +87,7 @@ function UserColumnComponent({ scrollListRef, onScroll }: UserColumnProps) {
           }
         });
         break;
+      }
 
       case TrackListViewMode.WithHistory: {
         // С историей: история -> текущий трек -> очередь (ограниченная)
@@ -142,7 +146,7 @@ function UserColumnComponent({ scrollListRef, onScroll }: UserColumnProps) {
         break;
       }
 
-      case TrackListViewMode.Reversed:
+      case TrackListViewMode.Reversed: {
         // Обратный режим: пустые UserItem для истории -> текущий пользователь
         // Не разворачиваем, так как column-reverse сделает за нас
         history.forEach((item, index) => {
@@ -178,6 +182,7 @@ function UserColumnComponent({ scrollListRef, onScroll }: UserColumnProps) {
           );
         }
         break;
+      }
     }
 
     return userItems;

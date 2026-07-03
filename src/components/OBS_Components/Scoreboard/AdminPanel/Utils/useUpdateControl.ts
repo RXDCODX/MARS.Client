@@ -11,28 +11,28 @@ export interface UpdateControl {
 }
 
 export const useUpdateControl = (): UpdateControl => {
-  const isUpdatingRef = useRef<boolean>(false);
-  const lastUpdateTimeRef = useRef<number>(0);
-  const pendingUpdatesRef = useRef<Set<string>>(new Set());
+  const isUpdatingReference = useRef<boolean>(false);
+  const lastUpdateTimeReference = useRef<number>(0);
+  const pendingUpdatesReference = useRef<Set<string>>(new Set());
 
   const generateUpdateId = useCallback(
-    () => `update_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    () => `update_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`,
     []
   );
 
   const startUpdate = useCallback((updateId?: string): boolean => {
     // Проверяем, не отправляем ли мы уже обновление
-    if (isUpdatingRef.current) {
+    if (isUpdatingReference.current) {
       console.log("Update already in progress, skipping");
       return false;
     }
 
     // Устанавливаем флаг обновления
-    isUpdatingRef.current = true;
-    lastUpdateTimeRef.current = Date.now();
+    isUpdatingReference.current = true;
+    lastUpdateTimeReference.current = Date.now();
 
     if (updateId) {
-      pendingUpdatesRef.current.add(updateId);
+      pendingUpdatesReference.current.add(updateId);
     }
 
     console.log(`Starting update${updateId ? `: ${updateId}` : ""}`);
@@ -42,9 +42,9 @@ export const useUpdateControl = (): UpdateControl => {
   const finishUpdate = useCallback((updateId?: string) => {
     // Сбрасываем флаг через задержку для предотвращения рекурсии
     setTimeout(() => {
-      isUpdatingRef.current = false;
+      isUpdatingReference.current = false;
       if (updateId) {
-        pendingUpdatesRef.current.delete(updateId);
+        pendingUpdatesReference.current.delete(updateId);
       }
       console.log(`Finished update${updateId ? `: ${updateId}` : ""}`);
     }, 300);
@@ -52,13 +52,13 @@ export const useUpdateControl = (): UpdateControl => {
 
   const shouldIgnoreUpdate = useCallback((timestamp: number): boolean => {
     // Игнорируем обновления, если мы сами отправляем данные на сервер
-    if (isUpdatingRef.current) {
+    if (isUpdatingReference.current) {
       console.log("Ignoring server update while local update is in progress");
       return true;
     }
 
     // Игнорируем обновления, которые пришли слишком быстро после нашего обновления
-    if (timestamp - lastUpdateTimeRef.current < 500) {
+    if (timestamp - lastUpdateTimeReference.current < 500) {
       console.log("Ignoring server update - too soon after local update");
       return true;
     }
@@ -67,9 +67,9 @@ export const useUpdateControl = (): UpdateControl => {
   }, []);
 
   return {
-    isUpdating: isUpdatingRef.current,
-    lastUpdateTime: lastUpdateTimeRef.current,
-    pendingUpdates: pendingUpdatesRef.current,
+    isUpdating: isUpdatingReference.current,
+    lastUpdateTime: lastUpdateTimeReference.current,
+    pendingUpdates: pendingUpdatesReference.current,
     startUpdate,
     finishUpdate,
     shouldIgnoreUpdate,

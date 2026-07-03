@@ -37,10 +37,10 @@ const RandomMemeDetailsPage: React.FC = () => {
       if (!response.data.data) {
         setError("Мем с указанным ID не найден");
       }
-    } catch (e) {
-      console.error("Ошибка загрузки деталей мема:", e);
+    } catch (error_) {
+      console.error("Ошибка загрузки деталей мема:", error_);
       const errorMessage =
-        e instanceof Error ? e.message : "Неизвестная ошибка";
+        error_ instanceof Error ? error_.message : "Неизвестная ошибка";
       setError(errorMessage);
       showToast({
         success: false,
@@ -72,8 +72,8 @@ const RandomMemeDetailsPage: React.FC = () => {
       const result = await api.randomMemeOrdersDelete(memeOrder.id);
       showToast(result.data);
       navigate("/random-meme");
-    } catch (e) {
-      console.error("Ошибка удаления заказа:", e);
+    } catch (error_) {
+      console.error("Ошибка удаления заказа:", error_);
       showToast({
         success: false,
         message: "Ошибка удаления заказа мема",

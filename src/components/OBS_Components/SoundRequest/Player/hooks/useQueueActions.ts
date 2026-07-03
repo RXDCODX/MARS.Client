@@ -22,13 +22,11 @@ export const useQueueActions = () => {
     (trackId: string | undefined, isEnter: boolean) => {
       if (!trackId) return;
 
-      const items = document.querySelectorAll(`[data-track-id="${trackId}"]`);
+      const items = document.querySelectorAll(
+        `[data-track-id="${CSS.escape(trackId)}"]`
+      );
       items.forEach(item => {
-        if (isEnter) {
-          item.classList.add(styles.pairHovered);
-        } else {
-          item.classList.remove(styles.pairHovered);
-        }
+        item.classList.toggle(styles.pairHovered, isEnter);
       });
     },
     []
@@ -115,11 +113,11 @@ export const useQueueActions = () => {
 
       // Оптимистичное обновление локальной очереди
       const currentQueue = previousQueue;
-      const index = currentQueue.findIndex(i => i.id === queueItemId);
+      const index = currentQueue.findIndex(index_ => index_.id === queueItemId);
       if (index === -1) return;
 
       const item = currentQueue[index];
-      const updated = currentQueue.slice();
+      const updated = [...currentQueue];
       // Удаляем элемент
       updated.splice(index, 1);
       // Вставляем на новую позицию (ограничиваем границы)
@@ -155,9 +153,9 @@ export const useQueueActions = () => {
   const handleMoveUp = useCallback(
     (queueItemId: string) => {
       const queue = usePlayerStore.getState().queue;
-      const idx = queue.findIndex(i => i.id === queueItemId);
-      if (idx <= 0) return;
-      handleMoveTo(queueItemId, idx - 1);
+      const index = queue.findIndex(index_ => index_.id === queueItemId);
+      if (index <= 0) return;
+      handleMoveTo(queueItemId, index - 1);
     },
     [handleMoveTo]
   );
@@ -165,9 +163,9 @@ export const useQueueActions = () => {
   const handleMoveDown = useCallback(
     (queueItemId: string) => {
       const queue = usePlayerStore.getState().queue;
-      const idx = queue.findIndex(i => i.id === queueItemId);
-      if (idx === -1 || idx >= queue.length - 1) return;
-      handleMoveTo(queueItemId, idx + 1);
+      const index = queue.findIndex(index_ => index_.id === queueItemId);
+      if (index === -1 || index >= queue.length - 1) return;
+      handleMoveTo(queueItemId, index + 1);
     },
     [handleMoveTo]
   );

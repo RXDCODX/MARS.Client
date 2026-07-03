@@ -72,8 +72,8 @@ const CinemaQueuePage: React.FC = () => {
       const response = await cinemaQueueApi.cinemaQueueList();
       setMediaItems(response.data.data ?? []);
     } catch (error) {
-      const msg = "Ошибка при загрузке медиа элементов";
-      showToast({ success: false, message: msg });
+      const message = "Ошибка при загрузке медиа элементов";
+      showToast({ success: false, message: message });
       console.error("Error:", error);
     } finally {
       setLoading(false);
@@ -158,7 +158,7 @@ const CinemaQueuePage: React.FC = () => {
       setEditFormData({});
       fetchMediaItems();
       fetchStatistics();
-    } catch (error) {
+    } catch {
       showToast({
         success: false,
         message: "Ошибка при обновлении медиа элемента",
@@ -172,7 +172,7 @@ const CinemaQueuePage: React.FC = () => {
       showToast(response.data);
       fetchMediaItems();
       fetchStatistics();
-    } catch (error) {
+    } catch {
       showToast({
         success: false,
         message: "Ошибка при удалении медиа элемента",
@@ -185,7 +185,7 @@ const CinemaQueuePage: React.FC = () => {
       const response = await cinemaQueueApi.cinemaQueueMarkAsNextCreate(id);
       showToast(response.data);
       fetchMediaItems();
-    } catch (error) {
+    } catch {
       showToast({
         success: false,
         message: "Ошибка при отметке медиа элемента как следующего",
@@ -197,14 +197,14 @@ const CinemaQueuePage: React.FC = () => {
     field: keyof CreateMediaItemRequest,
     value: string | number
   ) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(previous => ({ ...previous, [field]: value }));
   };
 
   const handleEditInputChange = (
     field: keyof UpdateMediaItemRequest,
     value: string | number | boolean
   ) => {
-    setEditFormData(prev => ({ ...prev, [field]: value }));
+    setEditFormData(previous => ({ ...previous, [field]: value }));
   };
 
   const openEditModal = (item: CinemaMediaItemDto) => {

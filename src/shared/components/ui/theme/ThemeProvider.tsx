@@ -3,14 +3,14 @@ import type { ReactNode } from "react";
 
 import useAntdTheme from "./useAntdTheme";
 
-interface ThemeProviderProps {
+interface ThemeProviderProperties {
   children: ReactNode;
 }
 
-const AntdThemeProvider = ({ children }: ThemeProviderProps) => {
-  const configProps = useAntdTheme();
+const AntdThemeProvider = ({ children }: ThemeProviderProperties) => {
+  const configProperties = useAntdTheme();
 
-  return <ConfigProvider {...configProps}>{children}</ConfigProvider>;
+  return <ConfigProvider {...configProperties}>{children}</ConfigProvider>;
 };
 
 export default AntdThemeProvider;

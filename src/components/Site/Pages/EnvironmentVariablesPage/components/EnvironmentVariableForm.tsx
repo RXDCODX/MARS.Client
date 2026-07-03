@@ -77,7 +77,7 @@ const EnvironmentVariableForm: React.FC = () => {
               size="small"
               onClick={handleSubmit}
               loading={isSubmitting}
-              icon={!isSubmitting ? <Save size={16} /> : undefined}
+              icon={isSubmitting ? undefined : <Save size={16} />}
             >
               Сохранить
             </Button>

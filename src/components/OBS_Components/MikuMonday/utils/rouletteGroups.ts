@@ -17,7 +17,7 @@ function ensureNoAdjacentImages(
     const arranged: RoulettePrize[] = [];
 
     while (pool.length > 0) {
-      const lastPrize = arranged[arranged.length - 1];
+      const lastPrize = arranged.at(-1);
       const candidates = pool.filter(
         prize => !lastPrize || prizeImageKey(prize) !== prizeImageKey(lastPrize)
       );
@@ -35,13 +35,12 @@ function ensureNoAdjacentImages(
 
     if (
       arranged.length === prizes.length &&
-      prizeImageKey(arranged[0]) !==
-        prizeImageKey(arranged[arranged.length - 1])
+      prizeImageKey(arranged[0]) !== prizeImageKey(arranged.at(-1))
     ) {
       const winnerIndex = arranged.findIndex(prize => prize.id === winnerId);
       return {
         prizes: arranged,
-        winnerIndex: winnerIndex >= 0 ? winnerIndex : 0,
+        winnerIndex: Math.max(winnerIndex, 0),
       };
     }
   }
@@ -49,7 +48,7 @@ function ensureNoAdjacentImages(
   const fallbackIndex = prizes.findIndex(prize => prize.id === winnerId);
   return {
     prizes,
-    winnerIndex: fallbackIndex >= 0 ? fallbackIndex : 0,
+    winnerIndex: Math.max(fallbackIndex, 0),
   };
 }
 
@@ -105,10 +104,10 @@ export function divideTracksIntoGroups(
   const selectedTrackIndex = allTracks.findIndex(
     track => track.id === selectedTrack.id
   );
-  if (selectedTrackIndex >= 0) {
-    allTracks[selectedTrackIndex] = selectedTrack;
-  } else {
+  if (selectedTrackIndex === -1) {
     allTracks.push(selectedTrack);
+  } else {
+    allTracks[selectedTrackIndex] = selectedTrack;
   }
 
   const sortedTracks = [...allTracks].sort(
@@ -154,20 +153,20 @@ export function divideTracksIntoGroups(
   );
   const winnerGroupIndex = Math.floor(selectedIndex / prizesPerGroup);
 
-  for (let i = 0; i < roulettesCount; i++) {
-    const startIdx = i * prizesPerGroup;
-    const endIdx = Math.min(startIdx + prizesPerGroup, allPrizes.length);
-    const groupPrizes = allPrizes.slice(startIdx, endIdx);
+  for (let index = 0; index < roulettesCount; index++) {
+    const startIndex = index * prizesPerGroup;
+    const endIndex = Math.min(startIndex + prizesPerGroup, allPrizes.length);
+    const groupPrizes = allPrizes.slice(startIndex, endIndex);
 
-    const hasWinner = i === winnerGroupIndex;
+    const hasWinner = index === winnerGroupIndex;
     const localPrizeIndex = hasWinner
-      ? selectedIndex - startIdx
+      ? selectedIndex - startIndex
       : groupPrizes.length > 0
         ? groupPrizes.length - 1
         : 0;
 
-    const isReversed = i % 2 !== 0;
-    const filledPrizes = fillPrizesToTwenty(groupPrizes, i);
+    const isReversed = index % 2 !== 0;
+    const filledPrizes = fillPrizesToTwenty(groupPrizes, index);
     const { prizes: spacedPrizes, winnerIndex } = ensureNoAdjacentImages(
       filledPrizes,
       String(groupPrizes[localPrizeIndex]?.id ?? "")
@@ -183,16 +182,16 @@ export function divideTracksIntoGroups(
 
   // Перемешиваем группы, чтобы выигрышная не всегда была внизу
   if (groups.length > 1) {
-    for (let i = groups.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [groups[i], groups[j]] = [groups[j], groups[i]];
+    for (let index = groups.length - 1; index > 0; index--) {
+      const index_ = Math.floor(Math.random() * (index + 1));
+      [groups[index], groups[index_]] = [groups[index_], groups[index]];
     }
   }
 
   console.log(
     "[divideTracksIntoGroups] Готовые группы:",
-    groups.map((g, idx) => ({
-      groupIndex: idx,
+    groups.map((g, index) => ({
+      groupIndex: index,
       hasWinner: g.hasWinner,
       prizeIndex: g.prizeIndex,
       winningPrizeId: g.prizes[g.prizeIndex]?.id,

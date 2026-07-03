@@ -25,7 +25,7 @@ enum StateStatus {
   remove,
 }
 
-const MESSAGE_LIFETIME_MS = import.meta.env.DEV ? 12000 : 7000;
+const MESSAGE_LIFETIME_MS = import.meta.env.DEV ? 12_000 : 7000;
 
 export interface HighliteMessageProps {
   message: ChatMessage;
@@ -44,7 +44,7 @@ function reducer(
   action: { type: StateStatus; messageProps: HighliteMessageProps }
 ): State {
   switch (action.type) {
-    case StateStatus.add:
+    case StateStatus.add: {
       if (!state.isMessageShowing) {
         return {
           messages: [...state.messages],
@@ -54,8 +54,9 @@ function reducer(
       }
 
       return { ...state, messages: [...state.messages, action.messageProps] };
+    }
 
-    case StateStatus.remove:
+    case StateStatus.remove: {
       if (state.messages.length > 0) {
         const newArray = state.messages.filter(
           message => message.message.id !== action.messageProps.message.id
@@ -83,6 +84,7 @@ function reducer(
         isMessageShowing: false,
         messages: [],
       };
+    }
   }
 }
 
@@ -114,9 +116,9 @@ export default function Message() {
   const startHideAnimation = useCallback(
     (message: HighliteMessageProps) => {
       setTimeout(() => {
-        divHard.current!.onanimationend = () => {
+        divHard.current!.addEventListener("animationend", () => {
           handleRemoveEvent(message);
-        };
+        });
         divHard.current!.className =
           styles.container + " " + animate.fadeOut + " " + animate.animated;
       }, MESSAGE_LIFETIME_MS);

@@ -1,6 +1,3 @@
-import ThemeProvider from "./theme/ThemeProvider";
-
-export { ThemeProvider };
 export { AntdStyleProvider, useAntdStyle } from "./theme/AntdStyleContext";
 export type { AntdStyle } from "./theme/AntdStyleContext";
 export { default as Button } from "./Button";
@@ -22,3 +19,5 @@ export { Navbar, NavTabs, NavLinks } from "./Nav";
 export { default as InputGroup } from "./InputGroup";
 export { default as ButtonGroup } from "./ButtonGroup";
 export { default as Stack } from "./Stack";
+
+export { default as ThemeProvider } from "./theme/ThemeProvider";

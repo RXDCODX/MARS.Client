@@ -6,12 +6,15 @@ import { CommandCarousel, InfoBar, UnifiedPlayerView } from "./components";
 import { useVideoScreenStore } from "./store/useVideoScreenStore";
 import styles from "./VideoScreen.module.scss";
 
-interface Props {
+interface Properties {
   groupName?: string;
   className?: string;
 }
 
-export function VideoScreen({ className, groupName = "mainplayer" }: Props) {
+export function VideoScreen({
+  className,
+  groupName = "mainplayer",
+}: Properties) {
   const isMainPlayer = groupName === "mainplayer";
 
   const currentQueueItem = useVideoScreenStore(

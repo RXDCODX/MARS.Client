@@ -239,11 +239,11 @@ function hexToRgb(hex: string): [number, number, number] {
       .split("")
       .map(c => c + c)
       .join("");
-  const num = parseInt(h, 16);
+  const number_ = Number.parseInt(h, 16);
   return [
-    ((num >> 16) & 255) / 255,
-    ((num >> 8) & 255) / 255,
-    (num & 255) / 255,
+    ((number_ >> 16) & 255) / 255,
+    ((number_ >> 8) & 255) / 255,
+    (number_ & 255) / 255,
   ];
 }
 
@@ -270,15 +270,15 @@ export default function FaultyTerminal({
   style,
   ...rest
 }: FaultyTerminalProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const programRef = useRef<Program | null>(null);
-  const rendererRef = useRef<Renderer | null>(null);
-  const mouseRef = useRef({ x: 0.5, y: 0.5 });
-  const smoothMouseRef = useRef({ x: 0.5, y: 0.5 });
-  const frozenTimeRef = useRef(0);
-  const rafRef = useRef<number>(0);
-  const loadAnimationStartRef = useRef<number>(0);
-  const timeOffsetRef = useRef<number>(Math.random() * 100);
+  const containerReference = useRef<HTMLDivElement>(null);
+  const programReference = useRef<Program | null>(null);
+  const rendererReference = useRef<Renderer | null>(null);
+  const mouseReference = useRef({ x: 0.5, y: 0.5 });
+  const smoothMouseReference = useRef({ x: 0.5, y: 0.5 });
+  const frozenTimeReference = useRef(0);
+  const rafReference = useRef<number>(0);
+  const loadAnimationStartReference = useRef<number>(0);
+  const timeOffsetReference = useRef<number>(Math.random() * 100);
 
   const tintVec = useMemo(() => hexToRgb(tint), [tint]);
 
@@ -288,20 +288,20 @@ export default function FaultyTerminal({
   );
 
   const handleMouseMove = useCallback((e: MouseEvent) => {
-    const ctn = containerRef.current;
+    const ctn = containerReference.current;
     if (!ctn) return;
     const rect = ctn.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width;
     const y = 1 - (e.clientY - rect.top) / rect.height;
-    mouseRef.current = { x, y };
+    mouseReference.current = { x, y };
   }, []);
 
   useEffect(() => {
-    const ctn = containerRef.current;
+    const ctn = containerReference.current;
     if (!ctn) return;
 
     const renderer = new Renderer({ dpr });
-    rendererRef.current = renderer;
+    rendererReference.current = renderer;
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 1);
 
@@ -333,8 +333,8 @@ export default function FaultyTerminal({
         uTint: { value: new Color(tintVec[0], tintVec[1], tintVec[2]) },
         uMouse: {
           value: new Float32Array([
-            smoothMouseRef.current.x,
-            smoothMouseRef.current.y,
+            smoothMouseReference.current.x,
+            smoothMouseReference.current.y,
           ]),
         },
         uMouseStrength: { value: mouseStrength },
@@ -344,7 +344,7 @@ export default function FaultyTerminal({
         uBrightness: { value: brightness },
       },
     });
-    programRef.current = program;
+    programReference.current = program;
 
     const mesh = new Mesh(gl, { geometry, program });
 
@@ -363,31 +363,31 @@ export default function FaultyTerminal({
     resize();
 
     const update = (t: number) => {
-      rafRef.current = requestAnimationFrame(update);
+      rafReference.current = requestAnimationFrame(update);
 
-      if (pageLoadAnimation && loadAnimationStartRef.current === 0) {
-        loadAnimationStartRef.current = t;
+      if (pageLoadAnimation && loadAnimationStartReference.current === 0) {
+        loadAnimationStartReference.current = t;
       }
 
-      if (!pause) {
-        const elapsed = (t * 0.001 + timeOffsetRef.current) * timeScale;
-        program.uniforms.iTime.value = elapsed;
-        frozenTimeRef.current = elapsed;
+      if (pause) {
+        program.uniforms.iTime.value = frozenTimeReference.current;
       } else {
-        program.uniforms.iTime.value = frozenTimeRef.current;
+        const elapsed = (t * 0.001 + timeOffsetReference.current) * timeScale;
+        program.uniforms.iTime.value = elapsed;
+        frozenTimeReference.current = elapsed;
       }
 
-      if (pageLoadAnimation && loadAnimationStartRef.current > 0) {
+      if (pageLoadAnimation && loadAnimationStartReference.current > 0) {
         const animationDuration = 2000;
-        const animationElapsed = t - loadAnimationStartRef.current;
+        const animationElapsed = t - loadAnimationStartReference.current;
         const progress = Math.min(animationElapsed / animationDuration, 1);
         program.uniforms.uPageLoadProgress.value = progress;
       }
 
       if (mouseReact) {
         const dampingFactor = 0.08;
-        const smoothMouse = smoothMouseRef.current;
-        const mouse = mouseRef.current;
+        const smoothMouse = smoothMouseReference.current;
+        const mouse = mouseReference.current;
         smoothMouse.x += (mouse.x - smoothMouse.x) * dampingFactor;
         smoothMouse.y += (mouse.y - smoothMouse.y) * dampingFactor;
 
@@ -398,19 +398,19 @@ export default function FaultyTerminal({
 
       renderer.render({ scene: mesh });
     };
-    rafRef.current = requestAnimationFrame(update);
-    ctn.appendChild(gl.canvas);
+    rafReference.current = requestAnimationFrame(update);
+    ctn.append(gl.canvas);
 
     if (mouseReact) ctn.addEventListener("mousemove", handleMouseMove);
 
     return () => {
-      cancelAnimationFrame(rafRef.current);
+      cancelAnimationFrame(rafReference.current);
       resizeObserver.disconnect();
       if (mouseReact) ctn.removeEventListener("mousemove", handleMouseMove);
-      if (gl.canvas.parentElement === ctn) ctn.removeChild(gl.canvas);
+      if (gl.canvas.parentElement === ctn) gl.canvas.remove();
       gl.getExtension("WEBGL_lose_context")?.loseContext();
-      loadAnimationStartRef.current = 0;
-      timeOffsetRef.current = Math.random() * 100;
+      loadAnimationStartReference.current = 0;
+      timeOffsetReference.current = Math.random() * 100;
     };
   }, [
     dpr,
@@ -436,7 +436,7 @@ export default function FaultyTerminal({
 
   return (
     <div
-      ref={containerRef}
+      ref={containerReference}
       className={`faulty-terminal-container ${className}`}
       style={style}
       {...rest}

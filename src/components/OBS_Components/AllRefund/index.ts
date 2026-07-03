@@ -1,3 +1,1 @@
-import AllRefundManager from "./AllRefundManager";
-
-export default AllRefundManager;
+export { default } from "./AllRefundManager";

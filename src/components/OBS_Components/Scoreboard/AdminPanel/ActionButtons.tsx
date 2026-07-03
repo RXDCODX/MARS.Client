@@ -1,13 +1,13 @@
 import { Button, Flex } from "antd";
 import { ArrowLeftRight, RotateCw as ArrowRepeat } from "lucide-react";
 
-type ActionButtonsProps = {
+type ActionButtonsProperties = {
   onSwapNames: () => void;
   onSwapPlayers: () => void;
   onReset: () => void;
 };
 
-const ActionButtons: React.FC<ActionButtonsProps> = ({
+const ActionButtons: React.FC<ActionButtonsProperties> = ({
   onSwapNames,
   onSwapPlayers,
   onReset,

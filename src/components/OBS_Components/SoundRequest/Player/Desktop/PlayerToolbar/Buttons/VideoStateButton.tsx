@@ -26,27 +26,35 @@ function VideoStateButtonComponent() {
 
   const videoIcon = useMemo(() => {
     switch (videoState) {
-      case PlayerStateVideoStateEnum.Video:
+      case PlayerStateVideoStateEnum.Video: {
         return <Video />;
-      case PlayerStateVideoStateEnum.NoVideo:
+      }
+      case PlayerStateVideoStateEnum.NoVideo: {
         return <VideoOff />;
-      case PlayerStateVideoStateEnum.AudioOnly:
+      }
+      case PlayerStateVideoStateEnum.AudioOnly: {
         return <Music />;
-      default:
+      }
+      default: {
         return <Video />;
+      }
     }
   }, [videoState]);
 
   const videoTitle = useMemo(() => {
     switch (videoState) {
-      case PlayerStateVideoStateEnum.Video:
+      case PlayerStateVideoStateEnum.Video: {
         return "Режим: Видео (переключить на Без видео)";
-      case PlayerStateVideoStateEnum.NoVideo:
+      }
+      case PlayerStateVideoStateEnum.NoVideo: {
         return "Режим: Без видео (переключить на Только аудио)";
-      case PlayerStateVideoStateEnum.AudioOnly:
+      }
+      case PlayerStateVideoStateEnum.AudioOnly: {
         return "Режим: Только аудио (переключить на Видео)";
-      default:
+      }
+      default: {
         return "Переключить режим отображения";
+      }
     }
   }, [videoState]);
 

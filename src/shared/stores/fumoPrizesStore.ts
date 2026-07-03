@@ -1,4 +1,3 @@
-import type {} from "@redux-devtools/extension";
 import { PrizeType } from "react-roulette-pro";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
@@ -24,9 +23,8 @@ export const useFumoPrizesStore = create<State & Actions>()(
 
       addPrizes: (newPrizes: PrizeType[]) => {
         const currentPrizes = get().prizes;
-        const prizesToAdd = newPrizes.filter(
-          newPrize =>
-            !currentPrizes.some(existing => existing.id === newPrize.id)
+        const prizesToAdd = newPrizes.filter(newPrize =>
+          currentPrizes.every(existing => existing.id !== newPrize.id)
         );
 
         if (prizesToAdd.length === 0) {
@@ -34,10 +32,12 @@ export const useFumoPrizesStore = create<State & Actions>()(
         }
 
         prizesToAdd.forEach(prize => {
-          if (prize.image) {
-            const img = new Image();
-            img.src = prize.image;
+          if (!prize.image) {
+            return;
           }
+
+          const img = new Image();
+          img.src = prize.image;
         });
 
         set({ prizes: [...currentPrizes, ...prizesToAdd] });

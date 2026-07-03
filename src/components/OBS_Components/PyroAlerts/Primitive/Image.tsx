@@ -13,12 +13,12 @@ import peelStyles from "../Animations/StickerPeel/StickerPeel.module.scss";
 import styles from "./Media.module.scss";
 import { getMediaFrameStyle } from "./mediaFrameStyle";
 
-interface Props {
+interface Properties {
   callBack: () => void;
   mediaInfo: MediaDto;
 }
 
-export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
+export function Image({ mediaInfo: MediaInfo, callBack }: Properties) {
   const mediaInfo = MediaInfo.mediaInfo;
   const fileInfo = mediaInfo.fileInfo;
   const id = mediaInfo.id;
@@ -70,7 +70,7 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
     return () => clearTimeout(timer);
   }, [isDisappearing, callBack, unfreeze]);
 
-  const ref = useRef<HTMLDivElement>(null);
+  const reference = useRef<HTMLDivElement>(null);
 
   const [containerStyle, setContainerStyle] = useState<CSSProperties>({
     display: "inline-flex",
@@ -102,13 +102,13 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Props) {
     return {
       ...coordinates,
       ...rotation,
-      ...(transform ? { transform } : {}),
+      ...(transform && { transform }),
     };
   };
 
   return (
     <div
-      ref={ref}
+      ref={reference}
       className={`${styles["imageContainer"]} ${isDisappearing ? peelStyles.peelOff : ""}`}
       style={containerStyle}
       data-testid="pyro-alert-image"

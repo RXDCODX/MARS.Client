@@ -171,7 +171,7 @@ void main() {
 }
 `;
 
-interface PixelSnowProps {
+interface PixelSnowProperties {
   color?: string;
   flakeSize?: number;
   minFlakeSize?: number;
@@ -203,17 +203,17 @@ export default function PixelSnow({
   direction = 125,
   className = "",
   style = {},
-}: PixelSnowProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const animationRef = useRef<number>(0);
-  const isVisibleRef = useRef(true);
-  const rendererRef = useRef<WebGLRenderer | null>(null);
-  const materialRef = useRef<ShaderMaterial | null>(null);
-  const resizeTimeoutRef = useRef<number | null>(null);
+}: PixelSnowProperties) {
+  const containerReference = useRef<HTMLDivElement>(null);
+  const animationReference = useRef<number>(0);
+  const isVisibleReference = useRef(true);
+  const rendererReference = useRef<WebGLRenderer | null>(null);
+  const materialReference = useRef<ShaderMaterial | null>(null);
+  const resizeTimeoutReference = useRef<number | null>(null);
 
   // Memoize shader variant value
   const variantValue = useMemo(
-    () => (variant === "round" ? 1.0 : variant === "snowflake" ? 2.0 : 0.0),
+    () => (variant === "round" ? 1 : variant === "snowflake" ? 2 : 0),
     [variant]
   );
 
@@ -225,13 +225,13 @@ export default function PixelSnow({
 
   // Debounced resize handler
   const handleResize = useCallback(() => {
-    if (resizeTimeoutRef.current) {
-      clearTimeout(resizeTimeoutRef.current);
+    if (resizeTimeoutReference.current) {
+      clearTimeout(resizeTimeoutReference.current);
     }
-    resizeTimeoutRef.current = window.setTimeout(() => {
-      const container = containerRef.current;
-      const renderer = rendererRef.current;
-      const material = materialRef.current;
+    resizeTimeoutReference.current = globalThis.setTimeout(() => {
+      const container = containerReference.current;
+      const renderer = rendererReference.current;
+      const material = materialReference.current;
       if (!container || !renderer || !material) return;
 
       const w = container.offsetWidth;
@@ -243,12 +243,12 @@ export default function PixelSnow({
 
   // Visibility observer
   useEffect(() => {
-    const container = containerRef.current;
+    const container = containerReference.current;
     if (!container) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        isVisibleRef.current = entry.isIntersecting;
+        isVisibleReference.current = entry.isIntersecting;
       },
       { threshold: 0 }
     );
@@ -259,7 +259,7 @@ export default function PixelSnow({
 
   // Main Three.js setup - only runs once
   useEffect(() => {
-    const container = containerRef.current;
+    const container = containerReference.current;
     if (!container) return;
 
     const scene = new Scene();
@@ -275,9 +275,9 @@ export default function PixelSnow({
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(container.offsetWidth, container.offsetHeight);
-    renderer.setClearColor(0x000000, 0);
-    container.appendChild(renderer.domElement);
-    rendererRef.current = renderer;
+    renderer.setClearColor(0x00_00_00, 0);
+    container.append(renderer.domElement);
+    rendererReference.current = renderer;
 
     const material = new ShaderMaterial({
       vertexShader,
@@ -302,7 +302,7 @@ export default function PixelSnow({
       },
       transparent: true,
     });
-    materialRef.current = material;
+    materialReference.current = material;
 
     const geometry = new PlaneGeometry(2, 2);
     scene.add(new Mesh(geometry, material));
@@ -311,10 +311,10 @@ export default function PixelSnow({
 
     const startTime = performance.now();
     const animate = () => {
-      animationRef.current = requestAnimationFrame(animate);
+      animationReference.current = requestAnimationFrame(animate);
 
       // Only render if visible
-      if (isVisibleRef.current) {
+      if (isVisibleReference.current) {
         material.uniforms.uTime.value = (performance.now() - startTime) * 0.001;
         renderer.render(scene, camera);
       }
@@ -322,20 +322,20 @@ export default function PixelSnow({
     animate();
 
     return () => {
-      cancelAnimationFrame(animationRef.current);
+      cancelAnimationFrame(animationReference.current);
       window.removeEventListener("resize", handleResize);
-      if (resizeTimeoutRef.current) {
-        clearTimeout(resizeTimeoutRef.current);
+      if (resizeTimeoutReference.current) {
+        clearTimeout(resizeTimeoutReference.current);
       }
       if (container.contains(renderer.domElement)) {
-        container.removeChild(renderer.domElement);
+        renderer.domElement.remove();
       }
       renderer.dispose();
       renderer.forceContextLoss();
       geometry.dispose();
       material.dispose();
-      rendererRef.current = null;
-      materialRef.current = null;
+      rendererReference.current = null;
+      materialReference.current = null;
     };
   }, [
     brightness,
@@ -355,7 +355,7 @@ export default function PixelSnow({
 
   // Update material uniforms when props change
   useEffect(() => {
-    const material = materialRef.current;
+    const material = materialReference.current;
     if (!material) return;
 
     material.uniforms.uFlakeSize.value = flakeSize;
@@ -387,7 +387,7 @@ export default function PixelSnow({
 
   return (
     <div
-      ref={containerRef}
+      ref={containerReference}
       className={`pixel-snow-container ${className}`}
       style={style}
     />

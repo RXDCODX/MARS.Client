@@ -3,7 +3,7 @@ import { CSSProperties } from "react";
 import { ChatMessage } from "@/shared/api";
 import type { ContentPart } from "@/shared/Utils";
 
-interface Props {
+interface Properties {
   className?: string;
   style?: CSSProperties;
   part: ContentPart;
@@ -14,10 +14,10 @@ interface Props {
 function replaceLinksWithStub(text: string) {
   // Простейший паттерн для ссылок (http/https/ftp)
   const urlRegex = /(https?:\/\/[^\s]+|ftp:\/\/[^\s]+)/gi;
-  return text.split(urlRegex).map((part, idx) => {
+  return text.split(urlRegex).map((part, index) => {
     if (urlRegex.test(part)) {
       return (
-        <span key={idx} className="linkStub">
+        <span key={index} className="linkStub">
           ссылка
         </span>
       );
@@ -26,7 +26,7 @@ function replaceLinksWithStub(text: string) {
   });
 }
 
-export default function ContentPart({ part, style, className }: Props) {
+export default function ContentPart({ part, style, className }: Properties) {
   if (part.type === "text") {
     return (
       <div className={className} style={style}>

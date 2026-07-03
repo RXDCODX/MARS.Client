@@ -9,7 +9,7 @@ import type { RouletteGroup } from "../../types";
 import CustomRouletteGroupList from "../CustomRouletteGroupList/CustomRouletteGroupList";
 import RoulettePointer from "../RoulettePointer";
 
-interface RouletteStageProps {
+interface RouletteStageProperties {
   rouletteGroups: RouletteGroup[];
   shouldSkipAvailableTracksUpdate: boolean;
   decrementAvailableTrack: () => Promise<void>;
@@ -23,7 +23,7 @@ export default function RouletteStage({
   shouldSkipAvailableTracksUpdate,
   decrementAvailableTrack,
   onComplete,
-}: RouletteStageProps) {
+}: RouletteStageProperties) {
   const { showToast } = useToastModal();
   const [isFadingOut, setIsFadingOut] = useState(false);
 

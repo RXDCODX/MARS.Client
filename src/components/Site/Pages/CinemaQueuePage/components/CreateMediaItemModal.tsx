@@ -2,7 +2,7 @@ import { Button, DatePicker, Flex, Form, Input, Modal, Select } from "antd";
 
 import { CreateMediaItemRequest } from "@/shared/api";
 
-interface CreateMediaItemModalProps {
+interface CreateMediaItemModalProperties {
   open: boolean;
   onCancel: () => void;
   onSubmit: (e: React.FormEvent) => void;
@@ -13,7 +13,7 @@ interface CreateMediaItemModalProps {
   ) => void;
 }
 
-const CreateMediaItemModal: React.FC<CreateMediaItemModalProps> = ({
+const CreateMediaItemModal: React.FC<CreateMediaItemModalProperties> = ({
   open,
   onCancel,
   onSubmit,

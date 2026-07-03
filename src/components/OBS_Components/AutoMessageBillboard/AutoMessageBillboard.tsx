@@ -13,54 +13,56 @@ interface AutoMessageData {
   timestamp: number;
 }
 
-interface AutoMessageBillboardProps {
+interface AutoMessageBillboardProperties {
   messages?: string[];
 }
 
 export default function AutoMessageBillboard({
   messages: externalMessages,
-}: AutoMessageBillboardProps) {
+}: AutoMessageBillboardProperties) {
   const [messageQueue, setMessageQueue] = useState<AutoMessageData[]>([]);
   const [currentMessage, setCurrentMessage] = useState<AutoMessageData | null>(
     null
   );
   const [isAnounced, setAnounced] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const isProcessingRef = useRef(false);
+  const timeoutReference = useRef<NodeJS.Timeout | null>(null);
+  const isProcessingReference = useRef(false);
 
   // Инициализация с внешними сообщениями (для Storybook)
   useEffect(() => {
-    if (externalMessages && externalMessages.length > 0) {
-      const initialQueue = externalMessages.map(msg => ({
-        id: uuidv4(),
-        message: msg,
-        timestamp: Date.now(),
-      }));
-      setMessageQueue(initialQueue);
+    if (!(externalMessages && externalMessages.length > 0)) {
+      return;
     }
+
+    const initialQueue = externalMessages.map(message => ({
+      id: uuidv4(),
+      message: message,
+      timestamp: Date.now(),
+    }));
+    setMessageQueue(initialQueue);
   }, [externalMessages]);
 
   // Обработка очереди сообщений
   const processNextMessage = useCallback(() => {
-    if (isProcessingRef.current) {
+    if (isProcessingReference.current) {
       return;
     }
 
-    setMessageQueue(prevQueue => {
-      if (prevQueue.length === 0) {
-        return prevQueue;
+    setMessageQueue(previousQueue => {
+      if (previousQueue.length === 0) {
+        return previousQueue;
       }
 
-      isProcessingRef.current = true;
-      const nextMessage = prevQueue[0];
+      isProcessingReference.current = true;
+      const nextMessage = previousQueue[0];
 
       // Устанавливаем текущее сообщение
       setCurrentMessage(nextMessage);
 
       // Через 8 секунд переходим к следующему сообщению
-      timeoutRef.current = setTimeout(() => {
+      timeoutReference.current = setTimeout(() => {
         setCurrentMessage(null);
-        isProcessingRef.current = false;
+        isProcessingReference.current = false;
 
         // Задержка 2 секунды перед следующим сообщением
         setTimeout(() => {
@@ -69,7 +71,7 @@ export default function AutoMessageBillboard({
       }, 8000);
 
       // Возвращаем очередь без первого элемента
-      return prevQueue.slice(1);
+      return previousQueue.slice(1);
     });
   }, []);
 
@@ -78,7 +80,7 @@ export default function AutoMessageBillboard({
     if (
       messageQueue.length > 0 &&
       !currentMessage &&
-      !isProcessingRef.current
+      !isProcessingReference.current
     ) {
       processNextMessage();
     }
@@ -98,8 +100,8 @@ export default function AutoMessageBillboard({
       };
 
       // Ограничиваем очередь максимум 10 сообщениями
-      setMessageQueue(prev => {
-        const updatedQueue = [...prev, newMessage];
+      setMessageQueue(previous => {
+        const updatedQueue = [...previous, newMessage];
         // Если очередь больше 10 сообщений, удаляем самые старые
         if (updatedQueue.length > 10) {
           return updatedQueue.slice(-10);
@@ -112,11 +114,11 @@ export default function AutoMessageBillboard({
 
   const removeMessage = useCallback(() => {
     setCurrentMessage(null);
-    isProcessingRef.current = false;
+    isProcessingReference.current = false;
 
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
+    if (timeoutReference.current) {
+      clearTimeout(timeoutReference.current);
+      timeoutReference.current = null;
     }
 
     // Переходим к следующему сообщению
@@ -133,8 +135,8 @@ export default function AutoMessageBillboard({
   // Очистка таймаутов при размонтировании
   useEffect(
     () => () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
+      if (timeoutReference.current) {
+        clearTimeout(timeoutReference.current);
       }
     },
     []

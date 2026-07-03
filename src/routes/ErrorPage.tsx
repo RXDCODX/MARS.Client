@@ -2,12 +2,12 @@ import { LucideIcon } from "lucide-react";
 
 import styles from "./ErrorPage.module.scss"; // Импортируем стили
 
-interface ErrorPageProps {
+interface ErrorPageProperties {
   typeError: string;
   icon?: LucideIcon;
 }
 
-export const ErrorPage = ({ typeError, icon: Icon }: ErrorPageProps) => {
+export const ErrorPage = ({ typeError, icon: Icon }: ErrorPageProperties) => {
   const errorMessages: { [key: string]: string } = {
     "404": "Страница не найдена",
     "500": "Внутренняя ошибка сервера",
@@ -24,7 +24,7 @@ export const ErrorPage = ({ typeError, icon: Icon }: ErrorPageProps) => {
       </p>
       <button
         className={styles["error-button"]}
-        onClick={() => (window.location.pathname = "/")}
+        onClick={() => (location.pathname = "/")}
       >
         Перезагрузить страницу
       </button>

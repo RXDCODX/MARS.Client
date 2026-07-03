@@ -5,11 +5,11 @@ import { TunaMusicData } from "@/shared/api";
 
 import styles from "./CurrentTrack.module.scss";
 
-interface Props {
+interface Properties {
   track: TunaMusicData;
 }
 
-const CurrentTrackElementComponent = ({ track }: Props) => (
+const CurrentTrackElementComponent = ({ track }: Properties) => (
   <div className={styles.wrapper} data-testid="current-track-element">
     <div className={styles.cover}>
       {track.cover && (

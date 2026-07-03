@@ -1,6 +1,10 @@
 import { ChangeEvent, useEffect, useState } from "react";
 
-import { FormField, FormFieldRendererProps, SelectOption } from "./types";
+import {
+  FormField,
+  FormFieldRendererProps as FormFieldRendererProperties,
+  SelectOption,
+} from "./types";
 
 function isPromise<T>(value: unknown): value is Promise<T> {
   return (
@@ -17,7 +21,7 @@ export default function FormFieldRenderer<T>({
   onChange,
   errors,
   readOnly,
-}: FormFieldRendererProps<T>) {
+}: FormFieldRendererProperties<T>) {
   const [asyncOptions, setAsyncOptions] = useState<
     Record<string, SelectOption[]>
   >({});
@@ -33,7 +37,10 @@ export default function FormFieldRenderer<T>({
           const result = (field.options as () => Promise<SelectOption[]>)();
           const options = isPromise<SelectOption[]>(result) ? await result : [];
           if (isMounted) {
-            setAsyncOptions(prev => ({ ...prev, [field.name]: options }));
+            setAsyncOptions(previous => ({
+              ...previous,
+              [field.name]: options,
+            }));
           }
         } catch {
           // swallow to avoid breaking the form
@@ -50,7 +57,7 @@ export default function FormFieldRenderer<T>({
     if (field.hidden) {
       return null;
     }
-    const commonProps = {
+    const commonProperties = {
       id: field.name,
       name: field.name,
       placeholder: field.placeholder,
@@ -83,23 +90,27 @@ export default function FormFieldRenderer<T>({
     };
 
     switch (field.type) {
-      case "text":
-        return <input type="text" {...commonProps} />;
-      case "textarea":
-        return <textarea {...commonProps} rows={4} />;
-      case "number":
+      case "text": {
+        return <input type="text" {...commonProperties} />;
+      }
+      case "textarea": {
+        return <textarea {...commonProperties} rows={4} />;
+      }
+      case "number": {
         return (
           <input
             type="number"
-            {...commonProps}
+            {...commonProperties}
             min={field.min}
             max={field.max}
             step={field.step ?? 1}
           />
         );
-      case "date":
-        return <input type="date" {...commonProps} />;
-      case "boolean":
+      }
+      case "date": {
+        return <input type="date" {...commonProperties} />;
+      }
+      case "boolean": {
         return (
           <div className="form-check">
             <input
@@ -113,14 +124,15 @@ export default function FormFieldRenderer<T>({
             />
           </div>
         );
+      }
       case "select": {
-        const opts = Array.isArray(field.options)
+        const options = Array.isArray(field.options)
           ? field.options
           : (asyncOptions[field.name] ?? []);
         return (
-          <select {...commonProps} className="form-select">
+          <select {...commonProperties} className="form-select">
             <option value="">Выберите...</option>
-            {opts.map(o => (
+            {options.map(o => (
               <option key={String(o.value)} value={String(o.value)}>
                 {o.label}
               </option>
@@ -128,7 +140,7 @@ export default function FormFieldRenderer<T>({
           </select>
         );
       }
-      case "file":
+      case "file": {
         return (
           <input
             type="file"
@@ -147,7 +159,8 @@ export default function FormFieldRenderer<T>({
             }}
           />
         );
-      case "slider":
+      }
+      case "slider": {
         return (
           <input
             type="range"
@@ -162,8 +175,10 @@ export default function FormFieldRenderer<T>({
             onChange={e => onChange(field.name, Number(e.target.value))}
           />
         );
-      default:
-        return <input type="text" {...commonProps} />;
+      }
+      default: {
+        return <input type="text" {...commonProperties} />;
+      }
     }
   };
 

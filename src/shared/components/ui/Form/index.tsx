@@ -1,12 +1,12 @@
-import type { FormProps as AntFormProps } from "antd";
+import type { FormProps as AntFormProperties } from "antd";
 import { Form as AntForm, Input, Select, Switch } from "antd";
 import type { ReactNode } from "react";
 
-type FormProps = AntFormProps;
+type FormProperties = AntFormProperties;
 
-const Form = (props: FormProps) => <AntForm {...props} />;
+const Form = (properties: FormProperties) => <AntForm {...properties} />;
 
-interface FormItemProps {
+interface FormItemProperties {
   label?: string;
   children: ReactNode;
   name?: string;
@@ -22,21 +22,21 @@ const FormItem = ({
   rules,
   className,
   required,
-  ...props
-}: FormItemProps) => (
+  ...properties
+}: FormItemProperties) => (
   <AntForm.Item
     label={label}
     name={name}
     rules={rules}
     className={className}
     required={required}
-    {...props}
+    {...properties}
   >
     {children as React.ReactElement}
   </AntForm.Item>
 );
 
-interface FormInputProps {
+interface FormInputProperties {
   type?: string;
   placeholder?: string;
   value?: string;
@@ -47,14 +47,14 @@ interface FormInputProps {
   rows?: number;
 }
 
-const FormInput = ({ as, rows, ...props }: FormInputProps) => {
+const FormInput = ({ as, rows, ...properties }: FormInputProperties) => {
   if (as === "textarea") {
-    return <Input.TextArea rows={rows} {...props} />;
+    return <Input.TextArea rows={rows} {...properties} />;
   }
-  return <Input {...props} />;
+  return <Input {...properties} />;
 };
 
-interface FormSelectProps {
+interface FormSelectProperties {
   value?: string;
   onChange?: (value: string) => void;
   children?: ReactNode;
@@ -69,24 +69,24 @@ const FormSelect = ({
   options,
   value,
   onChange,
-  ...props
-}: FormSelectProps) => (
-  <Select value={value} onChange={onChange} options={options} {...props}>
+  ...properties
+}: FormSelectProperties) => (
+  <Select value={value} onChange={onChange} options={options} {...properties}>
     {children}
   </Select>
 );
 
-const FormTextArea = (props: React.ComponentProps<typeof Input.TextArea>) => (
-  <Input.TextArea {...props} />
-);
+const FormTextArea = (
+  properties: React.ComponentProps<typeof Input.TextArea>
+) => <Input.TextArea {...properties} />;
 
-interface FormSwitchProps {
+interface FormSwitchProperties {
   checked?: boolean;
   onChange?: (checked: boolean) => void;
   disabled?: boolean;
 }
 
-const FormSwitch = ({ checked, onChange, disabled }: FormSwitchProps) => (
+const FormSwitch = ({ checked, onChange, disabled }: FormSwitchProperties) => (
   <Switch checked={checked} onChange={onChange} disabled={disabled} />
 );
 

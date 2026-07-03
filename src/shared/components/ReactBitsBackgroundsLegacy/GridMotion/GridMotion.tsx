@@ -3,18 +3,18 @@ import "./GridMotion.css";
 import { gsap } from "gsap";
 import { FC, ReactNode, useEffect, useRef } from "react";
 
-interface GridMotionProps {
+interface GridMotionProperties {
   items?: (string | ReactNode)[];
   gradientColor?: string;
 }
 
-const GridMotion: FC<GridMotionProps> = ({
+const GridMotion: FC<GridMotionProperties> = ({
   items = [],
   gradientColor = "black",
 }) => {
-  const gridRef = useRef<HTMLDivElement>(null);
-  const rowRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const mouseXRef = useRef<number>(window.innerWidth / 2);
+  const gridReference = useRef<HTMLDivElement>(null);
+  const rowReferences = useRef<(HTMLDivElement | null)[]>([]);
+  const mouseXReference = useRef<number>(window.innerWidth / 2);
 
   const totalItems = 28;
   const defaultItems = Array.from(
@@ -28,7 +28,7 @@ const GridMotion: FC<GridMotionProps> = ({
     gsap.ticker.lagSmoothing(0);
 
     const handleMouseMove = (e: MouseEvent): void => {
-      mouseXRef.current = e.clientX;
+      mouseXReference.current = e.clientX;
     };
 
     const updateMotion = (): void => {
@@ -36,36 +36,38 @@ const GridMotion: FC<GridMotionProps> = ({
       const baseDuration = 0.8;
       const inertiaFactors = [0.6, 0.4, 0.3, 0.2];
 
-      rowRefs.current.forEach((row, index) => {
-        if (row) {
-          const direction = index % 2 === 0 ? 1 : -1;
-          const moveAmount =
-            ((mouseXRef.current / window.innerWidth) * maxMoveAmount -
-              maxMoveAmount / 2) *
-            direction;
-
-          gsap.to(row, {
-            x: moveAmount,
-            duration:
-              baseDuration + inertiaFactors[index % inertiaFactors.length],
-            ease: "power3.out",
-            overwrite: "auto",
-          });
+      rowReferences.current.forEach((row, index) => {
+        if (!row) {
+          return;
         }
+
+        const direction = index % 2 === 0 ? 1 : -1;
+        const moveAmount =
+          ((mouseXReference.current / window.innerWidth) * maxMoveAmount -
+            maxMoveAmount / 2) *
+          direction;
+
+        gsap.to(row, {
+          x: moveAmount,
+          duration:
+            baseDuration + inertiaFactors[index % inertiaFactors.length],
+          ease: "power3.out",
+          overwrite: "auto",
+        });
       });
     };
 
     const removeAnimationLoop = gsap.ticker.add(updateMotion);
-    window.addEventListener("mousemove", handleMouseMove);
+    globalThis.addEventListener("mousemove", handleMouseMove);
 
     return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
+      globalThis.removeEventListener("mousemove", handleMouseMove);
       removeAnimationLoop();
     };
   }, []);
 
   return (
-    <div className="noscroll loading" ref={gridRef}>
+    <div className="noscroll loading" ref={gridReference}>
       <section
         className="intro"
         style={{
@@ -77,8 +79,8 @@ const GridMotion: FC<GridMotionProps> = ({
             <div
               key={rowIndex}
               className="row"
-              ref={el => {
-                rowRefs.current[rowIndex] = el;
+              ref={element => {
+                rowReferences.current[rowIndex] = element;
               }}
             >
               {Array.from({ length: 7 }, (_, itemIndex) => {

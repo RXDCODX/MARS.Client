@@ -9,7 +9,7 @@ declare module "react-bits/src/content/Animations/ElectricBorder/ElectricBorder"
     style?: CSSProperties;
   }
   const ElectricBorder: (
-    props: PropsWithChildren<ElectricBorderProps>
+    properties: PropsWithChildren<ElectricBorderProps>
   ) => JSX.Element;
   export default ElectricBorder;
 }
@@ -26,7 +26,7 @@ declare module "react-bits/src/ts-default/TextAnimations/GradientText/GradientTe
   }
 
   const GradientText: (
-    props: PropsWithChildren<GradientTextProps>
+    properties: PropsWithChildren<GradientTextProps>
   ) => JSX.Element;
   export default GradientText;
 }

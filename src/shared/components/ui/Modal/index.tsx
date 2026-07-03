@@ -1,13 +1,13 @@
-import type { ModalProps as AntModalProps } from "antd";
+import type { ModalProps as AntModalProperties } from "antd";
 import { Modal as AntModal } from "antd";
 
-interface ModalProps extends Omit<AntModalProps, "open"> {
+interface ModalProperties extends Omit<AntModalProperties, "open"> {
   show?: boolean;
   onHide?: () => void;
   size?: "sm" | "lg" | "xl";
 }
 
-const sizeMap: Record<string, AntModalProps["width"]> = {
+const sizeMap: Record<string, AntModalProperties["width"]> = {
   sm: 400,
   lg: 800,
   xl: 1000,
@@ -20,14 +20,14 @@ const Modal = ({
   width,
   onCancel,
   children,
-  ...props
-}: ModalProps) => (
+  ...properties
+}: ModalProperties) => (
   <AntModal
     open={show}
     onCancel={onCancel ?? onHide}
     width={width ?? sizeMap[size ?? "lg"]}
     footer={null}
-    {...props}
+    {...properties}
   >
     {children}
   </AntModal>

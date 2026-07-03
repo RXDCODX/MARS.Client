@@ -4,15 +4,15 @@ import { logger } from "@/shared/logger";
 
 export const TunaHubSignalRContext = signalR.createSignalRContext({});
 
-interface TunaHubProps {
+interface TunaHubProperties {
   children: React.ReactNode;
 }
 
-export function TunaHubSignalRHubWrapper({ children }: TunaHubProps) {
+export function TunaHubSignalRHubWrapper({ children }: TunaHubProperties) {
   return (
     <TunaHubSignalRContext.Provider
       automaticReconnect={true}
-      onError={error => new Promise(resolve => resolve(console.log(error)))}
+      onError={error => Promise.try(() => console.log(error))}
       onClosed={event => console.log(event)}
       onOpen={event => console.log(event)}
       logger={logger}

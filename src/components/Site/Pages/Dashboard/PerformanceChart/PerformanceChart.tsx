@@ -7,8 +7,8 @@ const PerformanceChart: React.FC = () => {
   const generateData = () => {
     const data = [];
     const now = new Date();
-    for (let i = 23; i >= 0; i--) {
-      const time = new Date(now.getTime() - i * 60 * 60 * 1000);
+    for (let index = 23; index >= 0; index--) {
+      const time = new Date(now.getTime() - index * 60 * 60 * 1000);
       data.push({
         time: time.toLocaleTimeString("ru-RU", {
           hour: "2-digit",

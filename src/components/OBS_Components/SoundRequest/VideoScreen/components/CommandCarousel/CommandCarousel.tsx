@@ -14,11 +14,11 @@ const INTERVAL_MS = DISPLAY_DURATION_MS + ANIMATION_DURATION_MS;
 
 type AnimationPhase = "entering" | "displaying" | "exiting";
 
-interface CommandCarouselProps {
+interface CommandCarouselProperties {
   compact?: boolean;
 }
 
-export function CommandCarousel({ compact }: CommandCarouselProps) {
+export function CommandCarousel({ compact }: CommandCarouselProperties) {
   const apiCommands = useSoundRequestCommands();
   const commands: CommandInfo[] =
     apiCommands.length > 0
@@ -48,7 +48,7 @@ export function CommandCarousel({ compact }: CommandCarouselProps) {
     }, DISPLAY_DURATION_MS + ANIMATION_DURATION_MS);
 
     const nextTimer = setTimeout(() => {
-      setCurrentIndex(prev => (prev + 1) % commands.length);
+      setCurrentIndex(previous => (previous + 1) % commands.length);
     }, INTERVAL_MS);
 
     return () => {

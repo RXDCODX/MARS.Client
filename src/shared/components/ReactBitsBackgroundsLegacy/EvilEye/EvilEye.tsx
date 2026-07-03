@@ -3,7 +3,7 @@ import "./EvilEye.css";
 import { Mesh, Program, Renderer, Texture, Triangle } from "ogl";
 import { useEffect, useRef } from "react";
 
-interface EvilEyeProps {
+interface EvilEyeProperties {
   eyeColor?: string;
   intensity?: number;
   pupilSize?: number;
@@ -19,9 +19,9 @@ interface EvilEyeProps {
 function hexToVec3(hex: string): [number, number, number] {
   const h = hex.replace("#", "");
   return [
-    parseInt(h.slice(0, 2), 16) / 255,
-    parseInt(h.slice(2, 4), 16) / 255,
-    parseInt(h.slice(4, 6), 16) / 255,
+    Number.parseInt(h.slice(0, 2), 16) / 255,
+    Number.parseInt(h.slice(2, 4), 16) / 255,
+    Number.parseInt(h.slice(4, 6), 16) / 255,
   ];
 }
 
@@ -29,9 +29,9 @@ function generateNoiseTexture(size = 256): Uint8Array {
   const data = new Uint8Array(size * size * 4);
 
   function hash(x: number, y: number, s: number): number {
-    let n = x * 374761393 + y * 668265263 + s * 1274126177;
-    n = Math.imul(n ^ (n >>> 13), 1274126177);
-    return ((n ^ (n >>> 16)) >>> 0) / 4294967296;
+    let n = x * 374_761_393 + y * 668_265_263 + s * 1_274_126_177;
+    n = Math.imul(n ^ (n >>> 13), 1_274_126_177);
+    return ((n ^ (n >>> 16)) >>> 0) / 4_294_967_296;
   }
 
   function noise(px: number, py: number, freq: number, seed: number): number {
@@ -68,12 +68,12 @@ function generateNoiseTexture(size = 256): Uint8Array {
       v /= totalAmp;
       v = (v - 0.5) * 2.2 + 0.5;
       v = Math.max(0, Math.min(1, v));
-      const val = Math.round(v * 255);
-      const i = (y * size + x) * 4;
-      data[i] = val;
-      data[i + 1] = val;
-      data[i + 2] = val;
-      data[i + 3] = 255;
+      const value = Math.round(v * 255);
+      const index = (y * size + x) * 4;
+      data[index] = value;
+      data[index + 1] = value;
+      data[index + 2] = value;
+      data[index + 3] = 255;
     }
   }
 
@@ -180,16 +180,16 @@ export default function EvilEye({
   irisWidth = 0.25,
   glowIntensity = 0.35,
   scale = 0.8,
-  noiseScale = 1.0,
-  pupilFollow = 1.0,
-  flameSpeed = 1.0,
+  noiseScale = 1,
+  pupilFollow = 1,
+  flameSpeed = 1,
   backgroundColor = "#000000",
-}: EvilEyeProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+}: EvilEyeProperties) {
+  const containerReference = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-    const container = containerRef.current;
+    if (!containerReference.current) return;
+    const container = containerReference.current;
     const renderer = new Renderer({ alpha: true, premultipliedAlpha: false });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
@@ -267,7 +267,7 @@ export default function EvilEye({
     });
 
     const mesh = new Mesh(gl, { geometry, program });
-    container.appendChild(gl.canvas);
+    container.append(gl.canvas);
 
     let animationFrameId: number;
 
@@ -286,7 +286,7 @@ export default function EvilEye({
       window.removeEventListener("resize", resize);
       container.removeEventListener("mousemove", onMouseMove);
       container.removeEventListener("mouseleave", onMouseLeave);
-      container.removeChild(gl.canvas);
+      gl.canvas.remove();
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, [
@@ -302,5 +302,5 @@ export default function EvilEye({
     backgroundColor,
   ]);
 
-  return <div ref={containerRef} className="evil-eye-container" />;
+  return <div ref={containerReference} className="evil-eye-container" />;
 }

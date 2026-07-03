@@ -8,12 +8,14 @@ export default function AutoMessageBillboardPage() {
   const [testMessage, setTestMessage] = useState("");
 
   const handleSendTestMessage = () => {
-    if (testMessage.trim()) {
-      // Симулируем SignalR событие
-      const event = new CustomEvent("AutoMessage", { detail: testMessage });
-      window.dispatchEvent(event);
-      setTestMessage("");
+    if (!testMessage.trim()) {
+      return;
     }
+
+    // Симулируем SignalR событие
+    const event = new CustomEvent("AutoMessage", { detail: testMessage });
+    globalThis.dispatchEvent(event);
+    setTestMessage("");
   };
 
   const sendRandomMessages = () => {
@@ -28,12 +30,12 @@ export default function AutoMessageBillboardPage() {
       "Комментарий для алгоритма!",
     ];
 
-    messages.forEach((message, index) => {
+    for (const [index, message] of messages.entries()) {
       setTimeout(() => {
         const event = new CustomEvent("AutoMessage", { detail: message });
-        window.dispatchEvent(event);
+        globalThis.dispatchEvent(event);
       }, index * 2000); // Каждые 2 секунды
-    });
+    }
   };
 
   const sendEmoteMessages = () => {
@@ -46,12 +48,12 @@ export default function AutoMessageBillboardPage() {
       "PepeHands",
     ];
 
-    emoteMessages.forEach((message, index) => {
+    for (const [index, message] of emoteMessages.entries()) {
       setTimeout(() => {
         const event = new CustomEvent("AutoMessage", { detail: message });
-        window.dispatchEvent(event);
+        globalThis.dispatchEvent(event);
       }, index * 2000); // Каждые 2 секунды
-    });
+    }
   };
 
   return (

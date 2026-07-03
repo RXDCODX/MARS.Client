@@ -2,7 +2,7 @@ import { CSSProperties, useEffect, useRef } from "react";
 
 import styles from "./GridScanLegacy.module.scss";
 
-type GridScanLegacyProps = {
+type GridScanLegacyProperties = {
   lineThickness?: number;
   linesColor?: string;
   scanColor?: string;
@@ -13,7 +13,7 @@ type GridScanLegacyProps = {
   style?: CSSProperties;
 };
 
-const GridScanLegacy: React.FC<GridScanLegacyProps> = ({
+const GridScanLegacy: React.FC<GridScanLegacyProperties> = ({
   lineThickness = 1,
   linesColor = "#392e4e",
   scanColor = "#FF9FFC",
@@ -23,14 +23,14 @@ const GridScanLegacy: React.FC<GridScanLegacyProps> = ({
   className,
   style,
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasReference = useRef<HTMLCanvasElement | null>(null);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = canvasReference.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d", { alpha: true });
-    if (!ctx) return;
+    const context = canvas.getContext("2d", { alpha: true });
+    if (!context) return;
 
     const parent = canvas.parentElement;
     if (!parent) return;
@@ -65,7 +65,7 @@ const GridScanLegacy: React.FC<GridScanLegacyProps> = ({
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      context.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
     const drawGrid = (t: number) => {
@@ -74,26 +74,26 @@ const GridScanLegacy: React.FC<GridScanLegacyProps> = ({
       const horizon = height * 0.2;
       const offset = (t * 35) % spacing;
 
-      ctx.lineWidth = Math.max(0.6, lineThickness);
-      ctx.strokeStyle = linesColor;
-      ctx.globalAlpha = 0.45;
+      context.lineWidth = Math.max(0.6, lineThickness);
+      context.strokeStyle = linesColor;
+      context.globalAlpha = 0.45;
 
       for (let y = centerY; y > horizon; y -= spacing) {
         const ratio = (centerY - y) / Math.max(1, centerY - horizon);
         const spread = width * (0.1 + ratio * 0.9);
-        ctx.beginPath();
-        ctx.moveTo((width - spread) / 2, y + offset * ratio);
-        ctx.lineTo((width + spread) / 2, y + offset * ratio);
-        ctx.stroke();
+        context.beginPath();
+        context.moveTo((width - spread) / 2, y + offset * ratio);
+        context.lineTo((width + spread) / 2, y + offset * ratio);
+        context.stroke();
       }
 
       const columns = Math.ceil(width / spacing) + 6;
-      for (let i = -columns; i <= columns; i += 1) {
-        const x = width / 2 + i * spacing;
-        ctx.beginPath();
-        ctx.moveTo(x, centerY);
-        ctx.lineTo(width / 2 + (x - width / 2) * 2.2, horizon);
-        ctx.stroke();
+      for (let index = -columns; index <= columns; index += 1) {
+        const x = width / 2 + index * spacing;
+        context.beginPath();
+        context.moveTo(x, centerY);
+        context.lineTo(width / 2 + (x - width / 2) * 2.2, horizon);
+        context.stroke();
       }
     };
 
@@ -101,7 +101,7 @@ const GridScanLegacy: React.FC<GridScanLegacyProps> = ({
       const cycle = 4;
       const phase = (t % cycle) / cycle;
       const y = height * 0.18 + phase * height * 0.65;
-      const scanGradient = ctx.createLinearGradient(0, y - 35, 0, y + 35);
+      const scanGradient = context.createLinearGradient(0, y - 35, 0, y + 35);
       scanGradient.addColorStop(0, "rgba(0, 0, 0, 0)");
       scanGradient.addColorStop(
         0.5,
@@ -109,42 +109,42 @@ const GridScanLegacy: React.FC<GridScanLegacyProps> = ({
       );
       scanGradient.addColorStop(1, "rgba(0, 0, 0, 0)");
 
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = scanGradient;
-      ctx.fillRect(0, y - 35, width, 70);
+      context.globalAlpha = 1;
+      context.fillStyle = scanGradient;
+      context.fillRect(0, y - 35, width, 70);
 
-      ctx.globalAlpha = 0.35;
-      ctx.strokeStyle = scanColor;
-      ctx.lineWidth = 1;
-      ctx.beginPath();
-      ctx.moveTo(0, y);
-      ctx.lineTo(width, y);
-      ctx.stroke();
+      context.globalAlpha = 0.35;
+      context.strokeStyle = scanColor;
+      context.lineWidth = 1;
+      context.beginPath();
+      context.moveTo(0, y);
+      context.lineTo(width, y);
+      context.stroke();
     };
 
     const drawNoise = () => {
       const noise = Math.max(0, Math.min(0.12, noiseIntensity * 0.8));
       if (noise <= 0) return;
-      ctx.globalAlpha = noise;
-      for (let i = 0; i < 140; i += 1) {
+      context.globalAlpha = noise;
+      for (let index = 0; index < 140; index += 1) {
         const x = Math.random() * width;
         const y = Math.random() * height;
         const size = Math.random() * 2 + 0.5;
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(x, y, size, size);
+        context.fillStyle = "#ffffff";
+        context.fillRect(x, y, size, size);
       }
     };
 
     const loop = (timeMs: number) => {
       const t = timeMs / 1000;
-      ctx.clearRect(0, 0, width, height);
+      context.clearRect(0, 0, width, height);
 
-      const bg = ctx.createLinearGradient(0, 0, 0, height);
+      const bg = context.createLinearGradient(0, 0, 0, height);
       bg.addColorStop(0, "rgba(3, 3, 8, 0.6)");
       bg.addColorStop(1, "rgba(0, 0, 0, 0.95)");
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = bg;
-      ctx.fillRect(0, 0, width, height);
+      context.globalAlpha = 1;
+      context.fillStyle = bg;
+      context.fillRect(0, 0, width, height);
 
       drawGrid(t);
       drawScan(t);
@@ -177,7 +177,7 @@ const GridScanLegacy: React.FC<GridScanLegacyProps> = ({
       style={style}
       aria-hidden
     >
-      <canvas ref={canvasRef} />
+      <canvas ref={canvasReference} />
     </div>
   );
 };

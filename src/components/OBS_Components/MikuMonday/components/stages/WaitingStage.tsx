@@ -4,7 +4,7 @@ import animate from "@/shared/styles/animate.module.scss";
 
 import styles from "../../MikuMonday.module.scss";
 
-interface WaitingStageProp {
+interface WaitingStageProperty {
   durationMs?: number;
   onComplete: () => void;
 }
@@ -15,19 +15,19 @@ const FADE_OUT_DURATION = 600;
 export default function WaitingStage({
   durationMs = DEFAULT_WAITING_DURATION,
   onComplete,
-}: WaitingStageProp) {
+}: WaitingStageProperty) {
   const [isFadingOut, setIsFadingOut] = useState(false);
 
   useEffect(() => {
-    const fadeOutTimerId = window.setTimeout(() => {
+    const fadeOutTimerId = globalThis.setTimeout(() => {
       setIsFadingOut(true);
     }, durationMs - FADE_OUT_DURATION);
 
-    const completeTimerId = window.setTimeout(onComplete, durationMs);
+    const completeTimerId = globalThis.setTimeout(onComplete, durationMs);
 
     return () => {
-      window.clearTimeout(fadeOutTimerId);
-      window.clearTimeout(completeTimerId);
+      globalThis.clearTimeout(fadeOutTimerId);
+      globalThis.clearTimeout(completeTimerId);
     };
   }, [durationMs, onComplete]);
 

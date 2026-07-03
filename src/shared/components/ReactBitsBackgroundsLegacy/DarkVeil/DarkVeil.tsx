@@ -75,7 +75,7 @@ void main(){
 }
 `;
 
-type Props = {
+type Properties = {
   hueShift?: number;
   noiseIntensity?: number;
   scanlineIntensity?: number;
@@ -93,10 +93,10 @@ export default function DarkVeil({
   scanlineFrequency = 0,
   warpAmount = 0,
   resolutionScale = 1,
-}: Props) {
-  const ref = useRef<HTMLCanvasElement>(null);
+}: Properties) {
+  const reference = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
-    const canvas = ref.current as HTMLCanvasElement;
+    const canvas = reference.current as HTMLCanvasElement;
     const parent = canvas.parentElement as HTMLElement;
 
     const renderer = new Renderer({
@@ -163,5 +163,5 @@ export default function DarkVeil({
     warpAmount,
     resolutionScale,
   ]);
-  return <canvas ref={ref} className="darkveil-canvas" />;
+  return <canvas ref={reference} className="darkveil-canvas" />;
 }

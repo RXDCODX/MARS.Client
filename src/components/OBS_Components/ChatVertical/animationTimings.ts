@@ -5,7 +5,7 @@
 // Время анимаций в миллисекундах
 export const ANIMATION_TIMINGS = {
   // CSS slideInLeft анимация (появление слева направо)
-  CSS_SLIDE_IN_LEFT: 10000, // 1 секунда
+  CSS_SLIDE_IN_LEFT: 10_000, // 1 секунда
 
   // CSS slideOutRight анимация (исчезновение справа налево)
   CSS_SLIDE_OUT_RIGHT: 1200, // 1 секунда
@@ -40,7 +40,7 @@ export const MOTION = {
   SPRING: {
     STIFFNESS: 160,
     DAMPING: 28,
-    MASS: 1.0,
+    MASS: 1,
   },
   ENTRY: {
     X_OFFSET: 100, // пикселей (fallback, если проценты не подойдут)

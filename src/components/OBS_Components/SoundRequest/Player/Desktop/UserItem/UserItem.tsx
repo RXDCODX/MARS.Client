@@ -4,7 +4,7 @@ import { TwitchUser } from "@/shared/api";
 
 import styles from "../SoundRequestPlayerDesktop.module.scss";
 
-interface UserItemProps {
+interface UserItemProperties {
   user?: TwitchUser;
   lastTimePlays?: string;
   trackId?: string;
@@ -20,7 +20,7 @@ function UserItemComponent({
   isCurrent = false,
   onMouseEnter,
   onMouseLeave,
-}: UserItemProps) {
+}: UserItemProperties) {
   const displayName = user?.displayName ?? user?.userLogin ?? "Неизвестно";
 
   const formattedDate = useMemo(

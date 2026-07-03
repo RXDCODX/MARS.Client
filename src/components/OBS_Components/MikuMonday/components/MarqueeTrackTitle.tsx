@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { useRef, useState } from "react";
 
-interface MarqueeTrackTitleProps {
+interface MarqueeTrackTitleProperties {
   text: string;
   className: string;
 }
@@ -12,17 +12,17 @@ const ANIMATION_DURATION = 12; // секунды на полный цикл
 export default function MarqueeTrackTitle({
   text,
   className,
-}: MarqueeTrackTitleProps) {
+}: MarqueeTrackTitleProperties) {
   const [key, setKey] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerReference = useRef<HTMLDivElement>(null);
 
   const handleAnimationComplete = () => {
-    setKey(prev => prev + 1);
+    setKey(previous => previous + 1);
   };
 
   return (
     <div
-      ref={containerRef}
+      ref={containerReference}
       className={className}
       style={{
         overflow: "hidden",

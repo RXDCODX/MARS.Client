@@ -3,7 +3,7 @@ import "./LineWaves.css";
 import { Mesh, Program, Renderer, Triangle } from "ogl";
 import { useEffect, useRef } from "react";
 
-interface LineWavesProps {
+interface LineWavesProperties {
   speed?: number;
   innerLineCount?: number;
   outerLineCount?: number;
@@ -22,9 +22,9 @@ interface LineWavesProps {
 function hexToVec3(hex: string): [number, number, number] {
   const h = hex.replace("#", "");
   return [
-    parseInt(h.slice(0, 2), 16) / 255,
-    parseInt(h.slice(2, 4), 16) / 255,
-    parseInt(h.slice(4, 6), 16) / 255,
+    Number.parseInt(h.slice(0, 2), 16) / 255,
+    Number.parseInt(h.slice(2, 4), 16) / 255,
+    Number.parseInt(h.slice(4, 6), 16) / 255,
   ];
 }
 
@@ -149,24 +149,24 @@ void main() {
 
 export default function LineWaves({
   speed = 0.3,
-  innerLineCount = 32.0,
-  outerLineCount = 36.0,
-  warpIntensity = 1.0,
+  innerLineCount = 32,
+  outerLineCount = 36,
+  warpIntensity = 1,
   rotation = -45,
-  edgeFadeWidth = 0.0,
-  colorCycleSpeed = 1.0,
+  edgeFadeWidth = 0,
+  colorCycleSpeed = 1,
   brightness = 0.2,
   color1 = "#ffffff",
   color2 = "#ffffff",
   color3 = "#ffffff",
   enableMouseInteraction = true,
-  mouseInfluence = 2.0,
-}: LineWavesProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  mouseInfluence = 2,
+}: LineWavesProperties) {
+  const containerReference = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-    const container = containerRef.current;
+    if (!containerReference.current) return;
+    const container = containerReference.current;
     const renderer = new Renderer({ alpha: true, premultipliedAlpha: false });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
@@ -179,7 +179,7 @@ export default function LineWaves({
       const rect = gl.canvas.getBoundingClientRect();
       targetMouse = [
         (e.clientX - rect.left) / rect.width,
-        1.0 - (e.clientY - rect.top) / rect.height,
+        1 - (e.clientY - rect.top) / rect.height,
       ];
     }
 
@@ -233,7 +233,7 @@ export default function LineWaves({
     });
 
     const mesh = new Mesh(gl, { geometry, program });
-    container.appendChild(gl.canvas);
+    container.append(gl.canvas);
 
     if (enableMouseInteraction) {
       gl.canvas.addEventListener("mousemove", handleMouseMove);
@@ -267,7 +267,7 @@ export default function LineWaves({
         gl.canvas.removeEventListener("mousemove", handleMouseMove);
         gl.canvas.removeEventListener("mouseleave", handleMouseLeave);
       }
-      container.removeChild(gl.canvas);
+      gl.canvas.remove();
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, [
@@ -286,5 +286,5 @@ export default function LineWaves({
     mouseInfluence,
   ]);
 
-  return <div ref={containerRef} className="line-waves-container" />;
+  return <div ref={containerReference} className="line-waves-container" />;
 }

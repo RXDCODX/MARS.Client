@@ -4,7 +4,7 @@ import type { RouletteGroup } from "../../types";
 import CustomRoulette from "../CustomRoulette/CustomRoulette";
 import styles from "./CustomRouletteGroupList.module.scss";
 
-interface CustomRouletteGroupListProps {
+interface CustomRouletteGroupListProperties {
   groups: RouletteGroup[];
   rouletteStart: boolean;
   rouletteOpacities: number[];
@@ -16,7 +16,7 @@ interface CustomRouletteGroupListProps {
 
 const CustomRouletteGroupList = forwardRef<
   HTMLDivElement,
-  CustomRouletteGroupListProps
+  CustomRouletteGroupListProperties
 >(
   (
     {
@@ -28,7 +28,7 @@ const CustomRouletteGroupList = forwardRef<
       onOthersFaded,
       onWinnerFaded,
     },
-    ref
+    reference
   ) => {
     const handleRouletteComplete = (index: number) => {
       const group = groups[index];
@@ -58,7 +58,7 @@ const CustomRouletteGroupList = forwardRef<
         } else {
           // Проверяем, все ли проигравшие затухли
           const allOthersFaded = groups.every(
-            (g, i) => g.hasWinner || rouletteOpacities[i] === 0
+            (g, index_) => g.hasWinner || rouletteOpacities[index_] === 0
           );
           if (allOthersFaded) {
             console.log(
@@ -71,7 +71,7 @@ const CustomRouletteGroupList = forwardRef<
     };
 
     return (
-      <div ref={ref} className={styles.container}>
+      <div ref={reference} className={styles.container}>
         {pointer}
         {groups.map((group, index) => {
           // Для невыигрышных рулеток добавляем случайную вариативность

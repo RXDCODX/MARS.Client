@@ -2,9 +2,9 @@ import { Spin } from "antd";
 import { BarChart3 } from "lucide-react";
 
 import styles from "../LogsPage.module.scss";
-import { LogsStatisticsProps } from "../LogsPage.types";
+import { LogsStatisticsProps as LogsStatisticsProperties } from "../LogsPage.types";
 
-const LogsStatistics: React.FC<LogsStatisticsProps> = ({
+const LogsStatistics: React.FC<LogsStatisticsProperties> = ({
   statistics,
   isLoading,
 }) => {

@@ -26,24 +26,30 @@ export function getMediaFileTypeByExtension(
     case ".jpg":
     case ".jpeg":
     case ".png":
-    case ".webp":
+    case ".webp": {
       return MediaFileInfoTypeEnum.Image;
-    case ".gif":
+    }
+    case ".gif": {
       return MediaFileInfoTypeEnum.Gif;
+    }
     case ".mp3":
     case ".wav":
     case ".ogg":
-    case ".oga":
+    case ".oga": {
       return MediaFileInfoTypeEnum.Audio;
+    }
     case ".mp4":
     case ".webm":
     case ".mov":
-    case ".avi":
+    case ".avi": {
       return MediaFileInfoTypeEnum.Video;
-    case ".tgs":
+    }
+    case ".tgs": {
       return MediaFileInfoTypeEnum.TelegramSticker;
-    default:
+    }
+    default: {
       return MediaFileInfoTypeEnum.None;
+    }
   }
 }
 
@@ -153,14 +159,14 @@ export function updateMediaInfoValue(
     current = current[key] as Record<string, unknown>;
   }
 
-  current[keys[keys.length - 1]] = value;
+  current[keys.at(-1)] = value;
 
   // If file info changed and displayName is empty, auto-fill it from filename/path
   try {
-    const fileInfoKey = keys[0] === "fileInfo";
+    const isFileInfoKey = keys[0] === "fileInfo";
     const metaInfo = (next as unknown as ApiMediaInfo).metaInfo;
 
-    if (fileInfoKey && metaInfo) {
+    if (isFileInfoKey && metaInfo) {
       const currentDisplay = metaInfo.displayName;
       if (!currentDisplay || currentDisplay.trim() === "") {
         // prefer fileName then filePath
@@ -175,16 +181,17 @@ export function updateMediaInfoValue(
             .filePath as string;
           if (fp && fp.trim() !== "") {
             const parts = fp.split(/[/\\]/).filter(Boolean);
-            base = parts.length ? parts[parts.length - 1] : fp;
+            base = parts.length > 0 ? parts.at(-1) : fp;
           }
         }
 
         if (base) {
           // strip extension
           const dotIndex = base.lastIndexOf(".");
-          const nameWithoutExt = dotIndex > 0 ? base.slice(0, dotIndex) : base;
+          const nameWithoutExtension =
+            dotIndex > 0 ? base.slice(0, dotIndex) : base;
           (next as unknown as ApiMediaInfo).metaInfo.displayName =
-            nameWithoutExt;
+            nameWithoutExtension;
         }
       }
     }

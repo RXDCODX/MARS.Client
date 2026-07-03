@@ -1,5 +1,4 @@
 import { HubConnection } from "@microsoft/signalr";
-import type {} from "@redux-devtools/extension";
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
@@ -29,7 +28,7 @@ interface MikuMondayState {
 interface MikuMondayActions {
   start: () => Promise<void>;
   stop: () => Promise<void>;
-  invoke: (methodName: string, ...args: unknown[]) => Promise<unknown>;
+  invoke: (methodName: string, ...arguments_: unknown[]) => Promise<unknown>;
 
   fetchAvailableTracks: () => Promise<void>;
   decrementAvailableTrack: () => Promise<void>;
@@ -82,11 +81,11 @@ export const useMikuMondayStore = create<MikuMondayState & MikuMondayActions>()(
             status: "connected",
           });
           await get().fetchAvailableTracks();
-        } catch (e) {
+        } catch (error) {
           const message =
-            e instanceof Error ? e.message : "Не удалось подключиться";
+            error instanceof Error ? error.message : "Не удалось подключиться";
           set({ status: "error", error: message, isConnected: false });
-          throw e;
+          throw error;
         }
       },
 
@@ -100,12 +99,12 @@ export const useMikuMondayStore = create<MikuMondayState & MikuMondayActions>()(
         }
       },
 
-      invoke: async (methodName: string, ...args: unknown[]) => {
+      invoke: async (methodName: string, ...arguments_: unknown[]) => {
         const { connection, isConnected } = get();
         if (!connection || !isConnected) {
           await get().start();
         }
-        return await get().connection!.invoke(methodName, ...args);
+        return await get().connection!.invoke(methodName, ...arguments_);
       },
 
       fetchAvailableTracks: async () => {
@@ -122,11 +121,11 @@ export const useMikuMondayStore = create<MikuMondayState & MikuMondayActions>()(
             availableTracks: tracks ?? [],
             availableTracksCount: (tracks ?? []).length,
           });
-        } catch (e) {
+        } catch (error) {
           const message =
-            e instanceof Error ? e.message : "Ошибка получения треков";
+            error instanceof Error ? error.message : "Ошибка получения треков";
           set({ error: message });
-          throw e;
+          throw error;
         }
       },
 
@@ -145,11 +144,11 @@ export const useMikuMondayStore = create<MikuMondayState & MikuMondayActions>()(
           if (newCount === 0) {
             await get().fetchAvailableTracks();
           }
-        } catch (e) {
+        } catch (error) {
           const message =
-            e instanceof Error ? e.message : "Ошибка списания трека";
+            error instanceof Error ? error.message : "Ошибка списания трека";
           set({ error: message });
-          throw e;
+          throw error;
         }
       },
 

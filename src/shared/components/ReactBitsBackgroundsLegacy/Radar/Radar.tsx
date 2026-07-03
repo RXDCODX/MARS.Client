@@ -3,7 +3,7 @@ import "./Radar.css";
 import { Mesh, Program, Renderer, Triangle } from "ogl";
 import { useEffect, useRef } from "react";
 
-interface RadarProps {
+interface RadarProperties {
   speed?: number;
   scale?: number;
   ringCount?: number;
@@ -24,9 +24,9 @@ interface RadarProps {
 function hexToVec3(hex: string): [number, number, number] {
   const h = hex.replace("#", "");
   return [
-    parseInt(h.slice(0, 2), 16) / 255,
-    parseInt(h.slice(2, 4), 16) / 255,
-    parseInt(h.slice(4, 6), 16) / 255,
+    Number.parseInt(h.slice(0, 2), 16) / 255,
+    Number.parseInt(h.slice(2, 4), 16) / 255,
+    Number.parseInt(h.slice(4, 6), 16) / 255,
   ];
 }
 
@@ -104,27 +104,27 @@ void main() {
 `;
 
 export default function Radar({
-  speed = 1.0,
+  speed = 1,
   scale = 0.5,
-  ringCount = 10.0,
-  spokeCount = 10.0,
+  ringCount = 10,
+  spokeCount = 10,
   ringThickness = 0.05,
   spokeThickness = 0.01,
-  sweepSpeed = 1.0,
-  sweepWidth = 2.0,
-  sweepLobes = 1.0,
+  sweepSpeed = 1,
+  sweepWidth = 2,
+  sweepLobes = 1,
   color = "#9f29ff",
   backgroundColor = "#000000",
-  falloff = 2.0,
-  brightness = 1.0,
+  falloff = 2,
+  brightness = 1,
   enableMouseInteraction = true,
   mouseInfluence = 0.1,
-}: RadarProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+}: RadarProperties) {
+  const containerReference = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-    const container = containerRef.current;
+    if (!containerReference.current) return;
+    const container = containerReference.current;
     const renderer = new Renderer({ alpha: true, premultipliedAlpha: false });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
@@ -137,7 +137,7 @@ export default function Radar({
       const rect = gl.canvas.getBoundingClientRect();
       targetMouse = [
         (e.clientX - rect.left) / rect.width,
-        1.0 - (e.clientY - rect.top) / rect.height,
+        1 - (e.clientY - rect.top) / rect.height,
       ];
     }
 
@@ -191,7 +191,7 @@ export default function Radar({
     });
 
     const mesh = new Mesh(gl, { geometry, program });
-    container.appendChild(gl.canvas);
+    container.append(gl.canvas);
 
     if (enableMouseInteraction) {
       gl.canvas.addEventListener("mousemove", handleMouseMove);
@@ -225,7 +225,7 @@ export default function Radar({
         gl.canvas.removeEventListener("mousemove", handleMouseMove);
         gl.canvas.removeEventListener("mouseleave", handleMouseLeave);
       }
-      container.removeChild(gl.canvas);
+      gl.canvas.remove();
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, [
@@ -246,5 +246,5 @@ export default function Radar({
     mouseInfluence,
   ]);
 
-  return <div ref={containerRef} className="radar-container" />;
+  return <div ref={containerReference} className="radar-container" />;
 }

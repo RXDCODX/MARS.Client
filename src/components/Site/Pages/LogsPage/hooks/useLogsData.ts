@@ -46,12 +46,12 @@ export const useLogsData = () => {
 
   // Обновление состояния
   const updateState = useCallback((updates: Partial<LogsPageState>) => {
-    setState(prev => ({ ...prev, ...updates }));
+    setState(previous => ({ ...previous, ...updates }));
   }, []);
 
   // Обновление фильтров
   const updateFilters = useCallback((updates: Partial<LogsFilters>) => {
-    setFilters(prev => ({ ...prev, ...updates }));
+    setFilters(previous => ({ ...previous, ...updates }));
   }, []);
 
   // Загрузка логов
@@ -228,32 +228,34 @@ export const useLogsData = () => {
   useEffect(() => {
     if (isRealtime) return;
     const interval = setInterval(() => {
-      if (!state.isLoading) {
-        loadLogs();
-        loadStatistics();
+      if (state.isLoading) {
+        return;
       }
-    }, 30000);
+
+      loadLogs();
+      loadStatistics();
+    }, 30_000);
     return () => clearInterval(interval);
   }, [isRealtime, loadLogs, loadStatistics, state.isLoading]);
 
   // Управление прямым подключением к LoggerHub в режиме real-time
-  const connectionRef = useRef<HubConnection | null>(null);
+  const connectionReference = useRef<HubConnection | null>(null);
 
   useEffect(() => {
     // При выключении realtime — останавливаем соединение, если оно есть
     if (!isRealtime) {
-      if (connectionRef.current) {
-        connectionRef.current.stop().catch(() => undefined);
-        connectionRef.current = null;
+      if (connectionReference.current) {
+        connectionReference.current.stop().catch(() => {});
+        connectionReference.current = null;
       }
       return;
     }
 
     const connection = LoggerHubSignalRConnectionBuilder.build();
-    connectionRef.current = connection;
+    connectionReference.current = connection;
 
     const onLog = (logMessage: LogMessageDto) => {
-      setState(prev => {
+      setState(previous => {
         const newLog: Log = {
           id: String(logMessage.id),
           whenLogged: new Date(logMessage.timestamp).toISOString(),
@@ -263,13 +265,13 @@ export const useLogsData = () => {
           logLevel: logMessage.logLevel as LogLogLevelEnum,
         };
 
-        const updatedLogs = [newLog, ...prev.logs];
-        const sliced = updatedLogs.slice(0, prev.pageSize);
+        const updatedLogs = [newLog, ...previous.logs];
+        const sliced = updatedLogs.slice(0, previous.pageSize);
 
         return {
-          ...prev,
+          ...previous,
           logs: sliced,
-          totalCount: prev.totalCount + 1,
+          totalCount: previous.totalCount + 1,
         };
       });
 
@@ -285,18 +287,18 @@ export const useLogsData = () => {
         await connection.start();
         retryDelay = 1000;
       } catch (error: unknown) {
-        const errMsg =
+        const errorMessage =
           error instanceof Error ? error.message : String(error ?? "");
 
         showToast({
           success: false,
           message:
             "Не удалось установить соединение для получения логов в реальном времени: " +
-            errMsg,
+            errorMessage,
         });
 
         setTimeout(() => startWithRetry(), retryDelay);
-        retryDelay = Math.min(30000, retryDelay * 2);
+        retryDelay = Math.min(30_000, retryDelay * 2);
       }
     };
 
@@ -309,8 +311,9 @@ export const useLogsData = () => {
 
     return () => {
       connection.off("Log", onLog);
-      connection.stop().catch(() => undefined);
-      if (connectionRef.current === connection) connectionRef.current = null;
+      connection.stop().catch(() => {});
+      if (connectionReference.current === connection)
+        connectionReference.current = null;
     };
   }, [isRealtime, loadStatistics, showToast]);
 

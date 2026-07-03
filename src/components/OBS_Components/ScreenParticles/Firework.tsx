@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import Fireworks from "react-canvas-confetti/dist/presets/fireworks";
 
-interface Props {
+interface Properties {
   callback: () => void;
 }
 
-export default function Firework({ callback }: Props) {
-  const duration = 10000;
+export default function Firework({ callback }: Properties) {
+  const duration = 10_000;
 
   useEffect(() => {
     setTimeout(() => callback(), duration);

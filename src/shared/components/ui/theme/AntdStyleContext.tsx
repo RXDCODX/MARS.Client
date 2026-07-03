@@ -27,11 +27,11 @@ export const useAntdStyle = () => {
   return context;
 };
 
-interface AntdStyleProviderProps {
+interface AntdStyleProviderProperties {
   children: ReactNode;
 }
 
-export const AntdStyleProvider: React.FC<AntdStyleProviderProps> = ({
+export const AntdStyleProvider: React.FC<AntdStyleProviderProperties> = ({
   children,
 }) => {
   const [antdStyle, setAntdStyleState] = useState<AntdStyle>(() => {
@@ -48,8 +48,8 @@ export const AntdStyleProvider: React.FC<AntdStyleProviderProps> = ({
     const isDark = antdStyle === "geek";
     const resolvedTheme = isDark ? "dark" : "light";
 
-    document.documentElement.setAttribute("data-bs-theme", resolvedTheme);
-    document.body.setAttribute("data-theme", resolvedTheme);
+    document.documentElement.dataset.bsTheme = resolvedTheme;
+    document.body.dataset.theme = resolvedTheme;
     localStorage.setItem("theme", resolvedTheme);
   }, [antdStyle]);
 

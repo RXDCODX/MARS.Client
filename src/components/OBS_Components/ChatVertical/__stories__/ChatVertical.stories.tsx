@@ -59,7 +59,7 @@ export const Default: Story = {
     expect(chatContainer).toBeInTheDocument();
 
     // Проверяем стили контейнера
-    const containerStyle = window.getComputedStyle(chatContainer!);
+    const containerStyle = globalThis.getComputedStyle(chatContainer!);
     expect(containerStyle.display).toBe("flex");
     expect(containerStyle.flexDirection).toBe("column-reverse");
 

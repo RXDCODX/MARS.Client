@@ -288,7 +288,7 @@ const CommandParameters: React.FC<{
       parameterValues[parameter.name] || parameter.defaultValue || "";
 
     switch (parameter.type.toLowerCase()) {
-      case "bool":
+      case "bool": {
         return (
           <div
             style={{
@@ -307,33 +307,36 @@ const CommandParameters: React.FC<{
             <span>{parameter.description}</span>
           </div>
         );
+      }
       case "int":
-      case "long":
+      case "long": {
         return (
           <InputNumber
             placeholder={parameter.description}
             value={value ? Number(value) : undefined}
-            onChange={val =>
-              onParameterChange(parameter.name, val?.toString() ?? "")
+            onChange={value_ =>
+              onParameterChange(parameter.name, value_?.toString() ?? "")
             }
             className={styles.parameterInput}
             style={{ width: "100%" }}
           />
         );
-      case "double":
+      }
+      case "double": {
         return (
           <InputNumber
             step={0.1}
             placeholder={parameter.description}
             value={value ? Number(value) : undefined}
-            onChange={val =>
-              onParameterChange(parameter.name, val?.toString() ?? "")
+            onChange={value_ =>
+              onParameterChange(parameter.name, value_?.toString() ?? "")
             }
             className={styles.parameterInput}
             style={{ width: "100%" }}
           />
         );
-      default:
+      }
+      default: {
         return (
           <Input
             placeholder={parameter.description}
@@ -342,6 +345,7 @@ const CommandParameters: React.FC<{
             className={styles.parameterInput}
           />
         );
+      }
     }
   };
 
@@ -613,7 +617,7 @@ const CommandsPage: React.FC = () => {
   const colors = useSiteColors();
   const { showToast } = useToastModal();
   const [commandsService] = useState(() => new Commands(defaultApiConfig));
-  const parametersPanelRef = useRef<HTMLDivElement>(null);
+  const parametersPanelReference = useRef<HTMLDivElement>(null);
 
   const [state, setState] = useState<CommandsPageState>({
     userCommands: [],
@@ -631,7 +635,7 @@ const CommandsPage: React.FC = () => {
   });
 
   const updateState = useCallback((updates: Partial<CommandsPageState>) => {
-    setState(prev => ({ ...prev, ...updates }));
+    setState(previous => ({ ...previous, ...updates }));
   }, []);
 
   const loadCommands = useCallback(async () => {
@@ -653,9 +657,9 @@ const CommandsPage: React.FC = () => {
         adminCommands: adminCommandsData,
         isLoading: false,
       });
-    } catch (err) {
+    } catch (error) {
       updateState({
-        error: "Ошибка при загрузке команд: " + (err as Error).message,
+        error: "Ошибка при загрузке команд: " + (error as Error).message,
         isLoading: false,
       });
     }
@@ -698,30 +702,32 @@ const CommandsPage: React.FC = () => {
       updateState({ commandParameters: parameters });
 
       setTimeout(() => {
-        if (parametersPanelRef.current) {
-          const panelElement = parametersPanelRef.current;
-          const panelRect = panelElement.getBoundingClientRect();
-          const viewportHeight = window.innerHeight;
+        if (!parametersPanelReference.current) {
+          return;
+        }
 
-          if (panelRect.height > viewportHeight) {
-            panelElement.scrollIntoView({
-              behavior: "smooth",
-              block: "start",
-              inline: "nearest",
-            });
-          } else {
-            panelElement.scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-              inline: "nearest",
-            });
-          }
+        const panelElement = parametersPanelReference.current;
+        const panelRect = panelElement.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+
+        if (panelRect.height > viewportHeight) {
+          panelElement.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+            inline: "nearest",
+          });
+        } else {
+          panelElement.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+            inline: "nearest",
+          });
         }
       }, 100);
-    } catch (err) {
+    } catch (error) {
       updateState({
         error:
-          "Ошибка при загрузке параметров команды: " + (err as Error).message,
+          "Ошибка при загрузке параметров команды: " + (error as Error).message,
       });
     }
   };
@@ -741,9 +747,9 @@ const CommandsPage: React.FC = () => {
     }
 
     const inputParts: string[] = [];
-    state.commandParameters.forEach(param => {
+    state.commandParameters.forEach(parameter => {
       const value =
-        state.parameterValues[param.name] || param.defaultValue || "";
+        state.parameterValues[parameter.name] || parameter.defaultValue || "";
       if (value) {
         inputParts.push(value);
       }
@@ -767,9 +773,9 @@ const CommandsPage: React.FC = () => {
       showToast(result.data);
 
       updateState({ isExecuting: false });
-    } catch (err) {
+    } catch (error) {
       const errorMessage =
-        "Ошибка при выполнении команды: " + (err as Error).message;
+        "Ошибка при выполнении команды: " + (error as Error).message;
 
       showToast({ success: false, message: errorMessage });
 
@@ -981,7 +987,7 @@ const CommandsPage: React.FC = () => {
         {state.showParameters && state.selectedCommand && (
           <Col lg={8}>
             <div
-              ref={parametersPanelRef}
+              ref={parametersPanelReference}
               style={{
                 position: "sticky",
                 top: 87,

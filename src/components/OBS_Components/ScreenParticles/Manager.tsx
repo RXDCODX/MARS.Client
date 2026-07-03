@@ -30,7 +30,7 @@ export default function Manager() {
     (type: TelegramusMakeScreenParticlesCreateParamsParticlesEnum) => {
       const newMessage = { type: type, id: count };
       setCount(count + 1);
-      setMessages(prev => [...prev, newMessage]);
+      setMessages(previous => [...previous, newMessage]);
     },
     []
   );
@@ -40,13 +40,13 @@ export default function Manager() {
     (mediaDto: ChatMessage) => {
       const newMessage = { input: mediaDto, id: count };
       setCount(count + 1);
-      setEmojis(prev => [...prev, newMessage]);
+      setEmojis(previous => [...previous, newMessage]);
     },
     []
   );
 
   const removeMessage = useCallback((id: number) => {
-    setMessages(prev => prev.filter(message => message.id !== id));
+    setMessages(previous => previous.filter(message => message.id !== id));
   }, []);
 
   return (
@@ -54,20 +54,22 @@ export default function Manager() {
       {messages.length > 0 &&
         messages.map(message => {
           switch (message.type) {
-            case TelegramusMakeScreenParticlesCreateParamsParticlesEnum.Confetty:
+            case TelegramusMakeScreenParticlesCreateParamsParticlesEnum.Confetty: {
               return (
                 <Confettyv2
                   key={message.id}
                   callback={() => removeMessage(message.id)}
                 />
               );
-            case TelegramusMakeScreenParticlesCreateParamsParticlesEnum.Fireworks:
+            }
+            case TelegramusMakeScreenParticlesCreateParamsParticlesEnum.Fireworks: {
               return (
                 <Firework
                   key={message.id}
                   callback={() => removeMessage(message.id)}
                 />
               );
+            }
           }
         })}
       {emojis.length > 0 &&

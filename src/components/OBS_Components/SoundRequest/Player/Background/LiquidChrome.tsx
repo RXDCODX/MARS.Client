@@ -12,12 +12,12 @@ export const LiquidChrome = () => {
     frequencyY: 3,
     interactive: false,
   };
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerReference = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerReference.current) return;
 
-    const container = containerRef.current;
+    const container = containerReference.current;
     const renderer = new Renderer({ antialias: true });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
@@ -122,15 +122,17 @@ export const LiquidChrome = () => {
     }
 
     function handleTouchMove(event: TouchEvent) {
-      if (event.touches.length > 0) {
-        const touch = event.touches[0];
-        const rect = container.getBoundingClientRect();
-        const x = (touch.clientX - rect.left) / rect.width;
-        const y = 1 - (touch.clientY - rect.top) / rect.height;
-        const mouseUniform = program.uniforms.uMouse.value;
-        mouseUniform[0] = x;
-        mouseUniform[1] = y;
+      if (event.touches.length === 0) {
+        return;
       }
+
+      const touch = event.touches[0];
+      const rect = container.getBoundingClientRect();
+      const x = (touch.clientX - rect.left) / rect.width;
+      const y = 1 - (touch.clientY - rect.top) / rect.height;
+      const mouseUniform = program.uniforms.uMouse.value;
+      mouseUniform[0] = x;
+      mouseUniform[1] = y;
     }
 
     if (interactive) {
@@ -146,7 +148,7 @@ export const LiquidChrome = () => {
     }
     animationId = requestAnimationFrame(update);
 
-    container.appendChild(gl.canvas);
+    container.append(gl.canvas);
 
     return () => {
       cancelAnimationFrame(animationId);
@@ -156,13 +158,13 @@ export const LiquidChrome = () => {
         container.removeEventListener("touchmove", handleTouchMove);
       }
       if (gl.canvas.parentElement) {
-        gl.canvas.parentElement.removeChild(gl.canvas);
+        gl.canvas.remove();
       }
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, [baseColor, speed, amplitude, frequencyX, frequencyY, interactive]);
 
-  return <div ref={containerRef} className="liquidChrome-container" />;
+  return <div ref={containerReference} className="liquidChrome-container" />;
 };
 
 export default LiquidChrome;

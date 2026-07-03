@@ -4,7 +4,7 @@ import { useVideoScreenStore } from "../../store/useVideoScreenStore";
 import { parseDurationToSeconds } from "../../utils/parseDuration";
 import styles from "./ProgressPercentLabel.module.scss";
 
-interface Props {
+interface Properties {
   trackDuration?: string;
 }
 
@@ -12,8 +12,8 @@ interface Props {
  * Компонент локального отображения прогресса в реальном времени с 60FPS.
  * Получает точное время воспроизведения из ReactPlayer через стор.
  */
-export function ProgressPercentLabel({ trackDuration }: Props) {
-  const labelRef = useRef<HTMLDivElement>(null);
+export function ProgressPercentLabel({ trackDuration }: Properties) {
+  const labelReference = useRef<HTMLDivElement>(null);
   const durationSeconds = parseDurationToSeconds(trackDuration);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export function ProgressPercentLabel({ trackDuration }: Props) {
     const updateProgress = () => {
       const getTime = useVideoScreenStore.getState().getCurrentTimeRef;
 
-      if (getTime && labelRef.current) {
+      if (getTime && labelReference.current) {
         const currentProgress = getTime();
         const calculatedProgressPercent =
           (currentProgress / durationSeconds) * 100;
@@ -33,7 +33,7 @@ export function ProgressPercentLabel({ trackDuration }: Props) {
           100
         );
 
-        labelRef.current.textContent = `${sanitizedProgress.toFixed(1)}%`;
+        labelReference.current.textContent = `${sanitizedProgress.toFixed(1)}%`;
       }
 
       frameId = requestAnimationFrame(updateProgress);
@@ -48,7 +48,7 @@ export function ProgressPercentLabel({ trackDuration }: Props) {
 
   return (
     <div className={styles.progressPercentOverlay}>
-      <div ref={labelRef} className={styles.progressPercentLabel}>
+      <div ref={labelReference} className={styles.progressPercentLabel}>
         0.0%
       </div>
     </div>

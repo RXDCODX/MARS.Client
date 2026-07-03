@@ -218,16 +218,21 @@ const DocsPage: React.FC = () => {
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case "getting-started":
+      case "getting-started": {
         return renderGettingStarted();
-      case "obs-components":
+      }
+      case "obs-components": {
         return renderObsComponents();
-      case "admin-panel":
+      }
+      case "admin-panel": {
         return renderAdminPanel();
-      case "api":
+      }
+      case "api": {
         return renderApi();
-      default:
+      }
+      default: {
         return renderGettingStarted();
+      }
     }
   };
 

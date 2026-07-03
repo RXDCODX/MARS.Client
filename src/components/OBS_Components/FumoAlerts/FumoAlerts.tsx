@@ -27,7 +27,7 @@ export default function FumoAlerts() {
   const [isRouletted, setIsRouletted] = useState(false);
   const [rouletteIndex, setRouletteIndex] = useState(-1);
   const sendMessage = useTwitchStore(state => state.sendMsgToPyrokxnezxz);
-  const imageLoadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const imageLoadTimeoutReference = useRef<NodeJS.Timeout | null>(null);
 
   const prizes = useFumoPrizesStore(useShallow(state => state.prizes));
   const shufflePrizes = useFumoPrizesStore(state => state.shuffle);
@@ -72,20 +72,24 @@ export default function FumoAlerts() {
   }, [prizes, currentFumoMessage]);
 
   useEffect(() => {
-    if (currentFumoMessage && isRouletted) {
-      imageLoadTimeoutRef.current = setTimeout(() => {
-        handleRemoveEvent();
-        setRouletteIndex(-1);
-        setIsRouletted(false);
-      }, 10000);
-
-      return () => {
-        if (imageLoadTimeoutRef.current) {
-          clearTimeout(imageLoadTimeoutRef.current);
-          imageLoadTimeoutRef.current = null;
-        }
-      };
+    if (!(currentFumoMessage && isRouletted)) {
+      return;
     }
+
+    imageLoadTimeoutReference.current = setTimeout(() => {
+      handleRemoveEvent();
+      setRouletteIndex(-1);
+      setIsRouletted(false);
+    }, 10_000);
+
+    return () => {
+      if (!imageLoadTimeoutReference.current) {
+        return;
+      }
+
+      clearTimeout(imageLoadTimeoutReference.current);
+      imageLoadTimeoutReference.current = null;
+    };
   }, [currentFumoMessage, isRouletted, handleRemoveEvent]);
 
   return (
@@ -150,18 +154,18 @@ export default function FumoAlerts() {
               src={currentFumoMessage.fumo.thumbnailUrl}
               style={{ height: "498px", width: "320px" }}
               onLoad={() => {
-                if (imageLoadTimeoutRef.current) {
-                  clearTimeout(imageLoadTimeoutRef.current);
-                  imageLoadTimeoutRef.current = null;
+                if (imageLoadTimeoutReference.current) {
+                  clearTimeout(imageLoadTimeoutReference.current);
+                  imageLoadTimeoutReference.current = null;
                 }
 
                 setTimeout(() => {
-                  divHard.current!.onanimationend = () => {
+                  divHard.current!.addEventListener("animationend", () => {
                     handleRemoveEvent();
                     setRouletteIndex(-1);
                     setIsRouletted(false);
                     shufflePrizes();
-                  };
+                  });
 
                   divHard.current!.className =
                     styles.baza +
@@ -176,9 +180,9 @@ export default function FumoAlerts() {
                 );
               }}
               onError={() => {
-                if (imageLoadTimeoutRef.current) {
-                  clearTimeout(imageLoadTimeoutRef.current);
-                  imageLoadTimeoutRef.current = null;
+                if (imageLoadTimeoutReference.current) {
+                  clearTimeout(imageLoadTimeoutReference.current);
+                  imageLoadTimeoutReference.current = null;
                 }
 
                 handleRemoveEvent();

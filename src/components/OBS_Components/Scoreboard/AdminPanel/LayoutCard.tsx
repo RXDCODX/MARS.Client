@@ -59,7 +59,7 @@ const LayoutCard: React.FC = () => {
                 min={0}
                 max={200}
                 value={layout.headerTop}
-                onChange={val => handleChange("headerTop", val)}
+                onChange={value => handleChange("headerTop", value)}
               />
               <Typography.Text type="secondary">
                 {layout.headerTop}px
@@ -74,7 +74,7 @@ const LayoutCard: React.FC = () => {
                 min={0}
                 max={100}
                 value={layout.headerLeft}
-                onChange={val => handleChange("headerLeft", val)}
+                onChange={value => handleChange("headerLeft", value)}
               />
               <Typography.Text type="secondary">
                 {layout.headerLeft}%
@@ -87,7 +87,7 @@ const LayoutCard: React.FC = () => {
                 min={0}
                 max={200}
                 value={layout.playersTop}
-                onChange={val => handleChange("playersTop", val)}
+                onChange={value => handleChange("playersTop", value)}
               />
               <Typography.Text type="secondary">
                 {layout.playersTop}px
@@ -100,7 +100,7 @@ const LayoutCard: React.FC = () => {
                 min={0}
                 max={200}
                 value={layout.playersLeft}
-                onChange={val => handleChange("playersLeft", val)}
+                onChange={value => handleChange("playersLeft", value)}
               />
               <Typography.Text type="secondary">
                 {layout.playersLeft}px
@@ -113,7 +113,7 @@ const LayoutCard: React.FC = () => {
                 min={0}
                 max={200}
                 value={layout.playersRight}
-                onChange={val => handleChange("playersRight", val)}
+                onChange={value => handleChange("playersRight", value)}
               />
               <Typography.Text type="secondary">
                 {layout.playersRight}px
@@ -132,7 +132,7 @@ const LayoutCard: React.FC = () => {
                 min={200}
                 max={800}
                 value={layout.headerWidth}
-                onChange={val => handleChange("headerWidth", val)}
+                onChange={value => handleChange("headerWidth", value)}
               />
               <Typography.Text type="secondary">
                 {layout.headerWidth}px
@@ -145,7 +145,7 @@ const LayoutCard: React.FC = () => {
                 min={10}
                 max={120}
                 value={layout.headerHeight}
-                onChange={val => handleChange("headerHeight", val)}
+                onChange={value => handleChange("headerHeight", value)}
               />
               <Typography.Text type="secondary">
                 {layout.headerHeight}px
@@ -158,7 +158,7 @@ const LayoutCard: React.FC = () => {
                 min={200}
                 max={600}
                 value={layout.playerBarWidth}
-                onChange={val => handleChange("playerBarWidth", val)}
+                onChange={value => handleChange("playerBarWidth", value)}
               />
               <Typography.Text type="secondary">
                 {layout.playerBarWidth}px
@@ -171,7 +171,7 @@ const LayoutCard: React.FC = () => {
                 min={10}
                 max={150}
                 value={layout.playerBarHeight}
-                onChange={val => handleChange("playerBarHeight", val)}
+                onChange={value => handleChange("playerBarHeight", value)}
               />
               <Typography.Text type="secondary">
                 {layout.playerBarHeight}px
@@ -184,7 +184,7 @@ const LayoutCard: React.FC = () => {
                 min={30}
                 max={80}
                 value={layout.scoreSize}
-                onChange={val => handleChange("scoreSize", val)}
+                onChange={value => handleChange("scoreSize", value)}
               />
               <Typography.Text type="secondary">
                 {layout.scoreSize}px
@@ -205,7 +205,7 @@ const LayoutCard: React.FC = () => {
                   min={5}
                   max={30}
                   value={layout.padding}
-                  onChange={val => handleChange("padding", val)}
+                  onChange={value => handleChange("padding", value)}
                 />
                 <Typography.Text type="secondary">
                   {layout.padding}px
@@ -221,7 +221,7 @@ const LayoutCard: React.FC = () => {
                   min={5}
                   max={50}
                   value={layout.spacing}
-                  onChange={val => handleChange("spacing", val)}
+                  onChange={value => handleChange("spacing", value)}
                 />
                 <Typography.Text type="secondary">
                   {layout.spacing}px

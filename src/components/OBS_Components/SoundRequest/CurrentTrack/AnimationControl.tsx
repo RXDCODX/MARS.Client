@@ -9,7 +9,7 @@ import { useEffect, useRef, useState } from "react";
 
 import styles from "./CurrentTrack.module.scss";
 
-interface Props {
+interface Properties {
   children: React.ReactNode;
   AnimationStart: boolean;
   swapTrack: () => void;
@@ -29,53 +29,60 @@ export default function AnimationControl({
   children,
   AnimationStart,
   swapTrack,
-}: Props) {
+}: Properties) {
   const [animationStage, setAnimationStage] = useState<AnimationStage>("idle");
   const [nowPlayingCount, setNowPlayingCount] = useState(0);
 
   // Запускаем анимацию ровно один раз на цикл AnimationStart=true
-  const hasTriggeredRef = useRef(false);
-  const hasSwappedRef = useRef(false);
+  const hasTriggeredReference = useRef(false);
+  const hasSwappedReference = useRef(false);
   useEffect(() => {
-    if (AnimationStart && !hasTriggeredRef.current) {
-      hasTriggeredRef.current = true;
+    if (AnimationStart && !hasTriggeredReference.current) {
+      hasTriggeredReference.current = true;
       setAnimationStage("compressIn");
       setNowPlayingCount(0);
-      hasSwappedRef.current = false;
+      hasSwappedReference.current = false;
     }
     if (!AnimationStart) {
-      hasTriggeredRef.current = false;
-      hasSwappedRef.current = false;
+      hasTriggeredReference.current = false;
+      hasSwappedReference.current = false;
     }
   }, [AnimationStart]);
 
   const handleAnimationComplete = (stage: AnimationStage) => {
     switch (stage) {
-      case "compressIn":
+      case "compressIn": {
         setAnimationStage("compressOut");
         break;
-      case "nowPlaying":
+      }
+      case "nowPlaying": {
         // цикл NOW PLAYING управляется самим блоком через AnimatePresence
         break;
-      case "compressOut":
+      }
+      case "compressOut": {
         setAnimationStage("nowPlaying");
         break;
-      case "compressInFinal":
+      }
+      case "compressInFinal": {
         setAnimationStage("compressOutFinal");
-        if (!hasSwappedRef.current) {
-          hasSwappedRef.current = true;
+        if (!hasSwappedReference.current) {
+          hasSwappedReference.current = true;
           swapTrack();
         }
         break;
-      case "compressOutFinal":
+      }
+      case "compressOutFinal": {
         setAnimationStage("showChildren");
         break;
-      case "nowPlayingExit":
+      }
+      case "nowPlayingExit": {
         setAnimationStage("compressInFinal");
         break;
-      case "showChildren":
+      }
+      case "showChildren": {
         setTimeout(() => setAnimationStage("idle"), 500);
         break;
+      }
     }
   };
 
@@ -242,7 +249,10 @@ export default function AnimationControl({
               onAnimationComplete={definition => {
                 if (definition === "visible") {
                   if (nowPlayingCount < 2) {
-                    setTimeout(() => setNowPlayingCount(prev => prev + 1), 200);
+                    setTimeout(
+                      () => setNowPlayingCount(previous => previous + 1),
+                      200
+                    );
                   } else {
                     // Запускаем выход NOW PLAYING, после onExitComplete начнётся второй цикл полос
                     setAnimationStage("nowPlayingExit");

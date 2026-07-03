@@ -140,17 +140,17 @@ const MESSAGES = [
 ];
 
 function generateRandomMessages(count: number): ChatMessage[] {
-  return Array.from({ length: count }, (_, i) => {
+  return Array.from({ length: count }, (_, index) => {
     const isVip = Math.random() < 0.2;
     const isModerator = !isVip && Math.random() < 0.2;
     const isBroadcaster = !isVip && !isModerator && Math.random() < 0.1;
     const hexColor = COLORS[getRandomInt(0, COLORS.length - 1)];
     const displayName =
-      NICKNAMES[getRandomInt(0, NICKNAMES.length - 1)] + (i + 1);
+      NICKNAMES[getRandomInt(0, NICKNAMES.length - 1)] + (index + 1);
     const message = MESSAGES[getRandomInt(0, MESSAGES.length - 1)];
     return {
       ...defaultMessage,
-      id: `${Date.now()}_${i}_${Math.random().toString(36).slice(2, 8)}`,
+      id: `${Date.now()}_${index}_${Math.random().toString(36).slice(2, 8)}`,
       message,
       displayName,
       hexColor,
@@ -201,11 +201,11 @@ export const Default: Story = {
     expect(nickname).toHaveTextContent("TestUser");
 
     // Проверяем цвет никнейма
-    const nicknameStyle = window.getComputedStyle(nickname!);
+    const nicknameStyle = globalThis.getComputedStyle(nickname!);
     expect(nicknameStyle.color).toBe("rgb(255, 0, 0)");
 
     // Проверяем стили контейнера
-    const containerStyle = window.getComputedStyle(messageElement!);
+    const containerStyle = globalThis.getComputedStyle(messageElement!);
     expect(containerStyle.display).toBe("flex");
     expect(containerStyle.minHeight).toBe("60px");
 
@@ -222,7 +222,7 @@ export const Generator: Story = {
       setMessages(generateRandomMessages(20));
     };
     const handleRemove = (id: string) => {
-      setMessages(prev => prev.filter(m => m.id !== id));
+      setMessages(previous => previous.filter(m => m.id !== id));
     };
     return (
       <div style={{ position: "relative", width: "100%", minHeight: 300 }}>
@@ -252,11 +252,11 @@ export const Generator: Story = {
             marginTop: 60,
           }}
         >
-          {messages.map(msg => (
+          {messages.map(message => (
             <Message
-              key={msg.id}
-              message={msg}
-              onRemove={() => handleRemove(msg.id!)}
+              key={message.id}
+              message={message}
+              onRemove={() => handleRemove(message.id!)}
             />
           ))}
         </div>

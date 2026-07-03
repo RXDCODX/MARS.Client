@@ -9,8 +9,8 @@ export const OBSComponentWrapper = ({
   children: React.ReactNode;
 }) => {
   useLayoutEffect(() => {
-    const prevBg = document.body.style.getPropertyValue("background-color");
-    const prevImportant =
+    const previousBg = document.body.style.getPropertyValue("background-color");
+    const previousImportant =
       document.body.style.getPropertyPriority("background-color");
     document.body.style.setProperty(
       "background-color",
@@ -21,8 +21,8 @@ export const OBSComponentWrapper = ({
     return () => {
       document.body.style.setProperty(
         "background-color",
-        prevBg,
-        prevImportant || undefined
+        previousBg,
+        previousImportant || undefined
       );
     };
   }, []);

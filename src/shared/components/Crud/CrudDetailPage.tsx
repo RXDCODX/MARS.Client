@@ -3,7 +3,7 @@ import { FormEvent, useCallback, useEffect, useState } from "react";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import FormFieldRenderer from "./FormFieldRenderer";
-import { CrudDetailPageProps } from "./types";
+import { CrudDetailPageProps as CrudDetailPageProperties } from "./types";
 
 export default function CrudDetailPage<T, TUpdate = Partial<T>>({
   title,
@@ -11,7 +11,7 @@ export default function CrudDetailPage<T, TUpdate = Partial<T>>({
   dataSource,
   formSchema,
   onSaved,
-}: CrudDetailPageProps<T, TUpdate>) {
+}: CrudDetailPageProperties<T, TUpdate>) {
   const { showToast } = useToastModal();
   const [values, setValues] = useState<Record<string, unknown>>({});
   const [loading, setLoading] = useState(true);
@@ -22,9 +22,9 @@ export default function CrudDetailPage<T, TUpdate = Partial<T>>({
     try {
       const entity = await dataSource.getById(id);
       setValues(entity as unknown as Record<string, unknown>);
-    } catch (err) {
+    } catch (error) {
       const errorMessage =
-        err instanceof Error ? err.message : "Ошибка загрузки";
+        error instanceof Error ? error.message : "Ошибка загрузки";
       showToast({
         success: false,
         message: errorMessage,
@@ -39,7 +39,7 @@ export default function CrudDetailPage<T, TUpdate = Partial<T>>({
   }, [load]);
 
   const handleChange = (name: string, value: unknown) => {
-    setValues(prev => ({ ...prev, [name]: value }));
+    setValues(previous => ({ ...previous, [name]: value }));
   };
 
   const handleSave = async (e: FormEvent) => {
@@ -52,9 +52,9 @@ export default function CrudDetailPage<T, TUpdate = Partial<T>>({
         success: true,
         message: "Сохранено",
       });
-    } catch (err) {
+    } catch (error) {
       const errorMessage =
-        err instanceof Error ? err.message : "Ошибка сохранения";
+        error instanceof Error ? error.message : "Ошибка сохранения";
       showToast({
         success: false,
         message: errorMessage,

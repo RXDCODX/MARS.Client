@@ -137,8 +137,8 @@ class RetroEffectImpl extends Effect {
   public uniforms: Map<string, THREE.Uniform<any>>;
   constructor() {
     const uniforms = new Map<string, THREE.Uniform<any>>([
-      ["colorNum", new THREE.Uniform(4.0)],
-      ["pixelSize", new THREE.Uniform(2.0)],
+      ["colorNum", new THREE.Uniform(4)],
+      ["pixelSize", new THREE.Uniform(2)],
     ]);
     super("RetroEffect", ditherFragmentShader, { uniforms });
     this.uniforms = uniforms;
@@ -160,11 +160,15 @@ class RetroEffectImpl extends Effect {
 const RetroEffect = forwardRef<
   RetroEffectImpl,
   { colorNum: number; pixelSize: number }
->((props, ref) => {
-  const { colorNum, pixelSize } = props;
+>((properties, reference) => {
+  const { colorNum, pixelSize } = properties;
   const WrappedRetroEffect = wrapEffect(RetroEffectImpl);
   return (
-    <WrappedRetroEffect ref={ref} colorNum={colorNum} pixelSize={pixelSize} />
+    <WrappedRetroEffect
+      ref={reference}
+      colorNum={colorNum}
+      pixelSize={pixelSize}
+    />
   );
 });
 
@@ -183,7 +187,7 @@ interface WaveUniforms {
   mouseRadius: THREE.Uniform<number>;
 }
 
-interface DitheredWavesProps {
+interface DitheredWavesProperties {
   waveSpeed: number;
   waveFrequency: number;
   waveAmplitude: number;
@@ -205,12 +209,12 @@ function DitheredWaves({
   disableAnimation,
   enableMouseInteraction,
   mouseRadius,
-}: DitheredWavesProps) {
+}: DitheredWavesProperties) {
   const mesh = useRef<THREE.Mesh>(null);
-  const mouseRef = useRef(new THREE.Vector2());
+  const mouseReference = useRef(new THREE.Vector2());
   const { viewport, size, gl } = useThree();
 
-  const waveUniformsRef = useRef<WaveUniforms>({
+  const waveUniformsReference = useRef<WaveUniforms>({
     time: new THREE.Uniform(0),
     resolution: new THREE.Uniform(new THREE.Vector2(0, 0)),
     waveSpeed: new THREE.Uniform(waveSpeed),
@@ -226,15 +230,15 @@ function DitheredWaves({
     const dpr = gl.getPixelRatio();
     const newWidth = Math.floor(size.width * dpr);
     const newHeight = Math.floor(size.height * dpr);
-    const currentRes = waveUniformsRef.current.resolution.value;
+    const currentRes = waveUniformsReference.current.resolution.value;
     if (currentRes.x !== newWidth || currentRes.y !== newHeight) {
       currentRes.set(newWidth, newHeight);
     }
   }, [size, gl]);
 
-  const prevColor = useRef([...waveColor]);
+  const previousColor = useRef([...waveColor]);
   useFrame(({ clock }) => {
-    const u = waveUniformsRef.current;
+    const u = waveUniformsReference.current;
 
     if (!disableAnimation) {
       u.time.value = clock.getElapsedTime();
@@ -246,16 +250,16 @@ function DitheredWaves({
     if (u.waveAmplitude.value !== waveAmplitude)
       u.waveAmplitude.value = waveAmplitude;
 
-    if (!prevColor.current.every((v, i) => v === waveColor[i])) {
+    if (previousColor.current.some((v, index) => v !== waveColor[index])) {
       u.waveColor.value.set(...waveColor);
-      prevColor.current = [...waveColor];
+      previousColor.current = [...waveColor];
     }
 
     u.enableMouseInteraction.value = enableMouseInteraction ? 1 : 0;
     u.mouseRadius.value = mouseRadius;
 
     if (enableMouseInteraction) {
-      u.mousePos.value.copy(mouseRef.current);
+      u.mousePos.value.copy(mouseReference.current);
     }
   });
 
@@ -263,7 +267,7 @@ function DitheredWaves({
     if (!enableMouseInteraction) return;
     const rect = gl.domElement.getBoundingClientRect();
     const dpr = gl.getPixelRatio();
-    mouseRef.current.set(
+    mouseReference.current.set(
       (e.clientX - rect.left) * dpr,
       (e.clientY - rect.top) * dpr
     );
@@ -276,7 +280,7 @@ function DitheredWaves({
         <shaderMaterial
           vertexShader={waveVertexShader}
           fragmentShader={waveFragmentShader}
-          uniforms={waveUniformsRef.current}
+          uniforms={waveUniformsReference.current}
         />
       </mesh>
 
@@ -297,7 +301,7 @@ function DitheredWaves({
   );
 }
 
-interface DitherProps {
+interface DitherProperties {
   waveSpeed?: number;
   waveFrequency?: number;
   waveAmplitude?: number;
@@ -314,12 +318,12 @@ export default function Dither({
   waveFrequency = 3,
   waveAmplitude = 0.3,
   waveColor = [0.5, 0.5, 0.5],
-  colorNum = 4,
+  colorNum: colorNumber = 4,
   pixelSize = 2,
   disableAnimation = false,
   enableMouseInteraction = true,
   mouseRadius = 1,
-}: DitherProps) {
+}: DitherProperties) {
   return (
     <Canvas
       className="dither-container"
@@ -332,7 +336,7 @@ export default function Dither({
         waveFrequency={waveFrequency}
         waveAmplitude={waveAmplitude}
         waveColor={waveColor}
-        colorNum={colorNum}
+        colorNum={colorNumber}
         pixelSize={pixelSize}
         disableAnimation={disableAnimation}
         enableMouseInteraction={enableMouseInteraction}

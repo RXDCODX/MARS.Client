@@ -2,7 +2,7 @@ import { Button, DatePicker, Flex, Form, Input, Modal, Select } from "antd";
 
 import { UpdateMediaItemRequest } from "@/shared/api";
 
-interface EditMediaItemModalProps {
+interface EditMediaItemModalProperties {
   open: boolean;
   onCancel: () => void;
   onSubmit: (e: React.FormEvent) => void;
@@ -13,7 +13,7 @@ interface EditMediaItemModalProps {
   ) => void;
 }
 
-const EditMediaItemModal: React.FC<EditMediaItemModalProps> = ({
+const EditMediaItemModal: React.FC<EditMediaItemModalProperties> = ({
   open,
   onCancel,
   onSubmit,

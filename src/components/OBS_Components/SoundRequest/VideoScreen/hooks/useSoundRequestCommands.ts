@@ -17,34 +17,36 @@ export function useSoundRequestCommands(): SoundRequestCommandInfo[] {
   const [commands, setCommands] = useState<SoundRequestCommandInfo[]>([]);
 
   useEffect(() => {
-    let cancelled = false;
+    let isCancelled = false;
     const api = new Commands({ baseURL: getApiBaseUrl() });
 
     api
       .commandsUserPlatformInfoList(CommandsUserPlatformInfoListParamsEnum.Api)
       .then(response => {
-        if (cancelled) {
+        if (isCancelled) {
           return;
         }
 
         const allCommands = response.data?.data ?? [];
         const filtered = allCommands
-          .filter(cmd => SOUND_REQUEST_COMMAND_NAMES.has(cmd.commandName))
-          .map(cmd => ({
-            command: `!${cmd.commandName}`,
-            description: cmd.description,
+          .filter(command =>
+            SOUND_REQUEST_COMMAND_NAMES.has(command.commandName)
+          )
+          .map(command => ({
+            command: `!${command.commandName}`,
+            description: command.description,
           }));
 
         setCommands(filtered);
       })
       .catch(() => {
-        if (!cancelled) {
+        if (!isCancelled) {
           setCommands([]);
         }
       });
 
     return () => {
-      cancelled = true;
+      isCancelled = true;
     };
   }, []);
 

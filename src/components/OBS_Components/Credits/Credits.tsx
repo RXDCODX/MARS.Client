@@ -135,39 +135,41 @@ const Credits: React.FC = () => {
     element: React.ReactElement;
   } | null>(null);
 
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const animationTimeoutRef = useRef<number | null>(null);
-  const contentReadyRef = useRef(false);
-  const runIdRef = useRef(0);
+  const containerReference = useRef<HTMLDivElement | null>(null);
+  const animationTimeoutReference = useRef<number | null>(null);
+  const contentReadyReference = useRef(false);
+  const runIdReference = useRef(0);
 
   // Аудио и WebAudio для плавного затухания
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const gainNodeRef = useRef<GainNode | null>(null);
-  const sourceNodeRef = useRef<MediaElementAudioSourceNode | null>(null);
-  const fadeTimeoutRef = useRef<number | null>(null);
-  const selectedTrackUrlRef = useRef<string | null>(null);
+  const audioReference = useRef<HTMLAudioElement | null>(null);
+  const audioContextReference = useRef<AudioContext | null>(null);
+  const gainNodeReference = useRef<GainNode | null>(null);
+  const sourceNodeReference = useRef<MediaElementAudioSourceNode | null>(null);
+  const fadeTimeoutReference = useRef<number | null>(null);
+  const selectedTrackUrlReference = useRef<string | null>(null);
 
   const ensureAudioGraph = useCallback(() => {
-    if (!audioRef.current) return;
-    if (!audioContextRef.current) {
+    if (!audioReference.current) return;
+    if (!audioContextReference.current) {
       type WindowWithWebkitAC = typeof window & {
         webkitAudioContext?: typeof AudioContext;
       };
       const AudioContextCtor =
-        (window as WindowWithWebkitAC).webkitAudioContext ?? AudioContext;
-      audioContextRef.current = new AudioContextCtor();
+        (globalThis as WindowWithWebkitAC).webkitAudioContext ?? AudioContext;
+      audioContextReference.current = new AudioContextCtor();
     }
-    const ctx = audioContextRef.current;
+    const context = audioContextReference.current;
 
-    if (!gainNodeRef.current) {
-      gainNodeRef.current = ctx.createGain();
-      gainNodeRef.current.gain.setValueAtTime(1.0, ctx.currentTime);
+    if (!gainNodeReference.current) {
+      gainNodeReference.current = context.createGain();
+      gainNodeReference.current.gain.setValueAtTime(1, context.currentTime);
     }
 
-    if (!sourceNodeRef.current && audioRef.current) {
+    if (!sourceNodeReference.current && audioReference.current) {
       try {
-        sourceNodeRef.current = ctx.createMediaElementSource(audioRef.current);
+        sourceNodeReference.current = context.createMediaElementSource(
+          audioReference.current
+        );
       } catch {
         // Источник уже создан для данного элемента, игнорируем
       }
@@ -176,50 +178,50 @@ const Credits: React.FC = () => {
     // Переподключаем граф
     try {
       // Отключаем прежние соединения
-      sourceNodeRef.current?.disconnect();
+      sourceNodeReference.current?.disconnect();
     } catch {
       // ignore
     }
     try {
-      gainNodeRef.current?.disconnect();
+      gainNodeReference.current?.disconnect();
     } catch {
       // ignore
     }
 
-    if (sourceNodeRef.current && gainNodeRef.current) {
-      sourceNodeRef.current.connect(gainNodeRef.current);
-      gainNodeRef.current.connect(ctx.destination);
+    if (sourceNodeReference.current && gainNodeReference.current) {
+      sourceNodeReference.current.connect(gainNodeReference.current);
+      gainNodeReference.current.connect(context.destination);
     }
   }, []);
 
   const stopAndCleanupAudio = useCallback(() => {
-    if (fadeTimeoutRef.current) {
-      window.clearTimeout(fadeTimeoutRef.current);
-      fadeTimeoutRef.current = null;
+    if (fadeTimeoutReference.current) {
+      globalThis.clearTimeout(fadeTimeoutReference.current);
+      fadeTimeoutReference.current = null;
     }
-    if (audioRef.current) {
+    if (audioReference.current) {
       try {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-        audioRef.current.src = "";
+        audioReference.current.pause();
+        audioReference.current.currentTime = 0;
+        audioReference.current.src = "";
       } catch {
         // ignore
       }
     }
     // Возвращаем громкость к 1 на всякий случай
-    if (audioContextRef.current && gainNodeRef.current) {
-      gainNodeRef.current.gain.cancelScheduledValues(
-        audioContextRef.current.currentTime
+    if (audioContextReference.current && gainNodeReference.current) {
+      gainNodeReference.current.gain.cancelScheduledValues(
+        audioContextReference.current.currentTime
       );
-      gainNodeRef.current.gain.setValueAtTime(
-        1.0,
-        audioContextRef.current.currentTime
+      gainNodeReference.current.gain.setValueAtTime(
+        1,
+        audioContextReference.current.currentTime
       );
     }
   }, []);
 
   const selectNextMusicUrl = useCallback(async (): Promise<string | null> => {
-    if (!musicUrls.length) return null;
+    if (musicUrls.length === 0) return null;
     let storedIndex = Number(localStorage.getItem(MUSIC_INDEX_STORAGE_KEY));
     if (Number.isNaN(storedIndex) || storedIndex < 0) storedIndex = -1;
     const nextIndex = (storedIndex + 1) % musicUrls.length;
@@ -232,20 +234,20 @@ const Credits: React.FC = () => {
   }, []);
 
   const selectRandomBackground = useCallback(() => {
-    if (!backgroundConfigs.length) return;
+    if (backgroundConfigs.length === 0) return;
 
     // В режиме разработки используем только 4 конкретных фона
-    const devBackgrounds = [
+    const developmentBackgrounds = new Set([
       "LightPillar",
       "FloatingLines",
       "ColorBends",
       "GridScan",
-    ];
+    ]);
     const availableBackgrounds = import.meta.env.DEV
-      ? backgroundConfigs.filter(bg => devBackgrounds.includes(bg.name))
+      ? backgroundConfigs.filter(bg => developmentBackgrounds.has(bg.name))
       : backgroundConfigs;
 
-    if (!availableBackgrounds.length) return;
+    if (availableBackgrounds.length === 0) return;
 
     const randomIndex = Math.floor(Math.random() * availableBackgrounds.length);
     const selected = availableBackgrounds[randomIndex];
@@ -255,20 +257,20 @@ const Credits: React.FC = () => {
 
   const playSelectedTrack = useCallback(
     async (url: string) => {
-      if (!audioRef.current) return;
+      if (!audioReference.current) return;
       ensureAudioGraph();
-      audioRef.current.src = url;
-      audioRef.current.loop = false;
-      audioRef.current.muted = false;
-      audioRef.current.preload = "auto";
+      audioReference.current.src = url;
+      audioReference.current.loop = false;
+      audioReference.current.muted = false;
+      audioReference.current.preload = "auto";
       try {
-        await audioRef.current.play();
+        await audioReference.current.play();
       } catch {
         // Автоплей может запретиться — пробуем с muted
-        audioRef.current.muted = true;
+        audioReference.current.muted = true;
         // Снимем mute как только можно
         setTimeout(() => {
-          if (audioRef.current) audioRef.current.muted = false;
+          if (audioReference.current) audioReference.current.muted = false;
         }, 200);
       }
     },
@@ -277,15 +279,15 @@ const Credits: React.FC = () => {
 
   // Ожидание загрузки всех изображений внутри контейнера
   const waitImagesLoaded = useCallback(async () => {
-    if (!containerRef.current) return;
-    const images = Array.from(containerRef.current.querySelectorAll("img"));
-    if (!images.length) return;
+    if (!containerReference.current) return;
+    const images = [...containerReference.current.querySelectorAll("img")];
+    if (images.length === 0) return;
     await Promise.all(
       images.map(img => {
         const image = img as HTMLImageElement;
         if (image.complete) return Promise.resolve(undefined);
         return new Promise<void>(resolve => {
-          image.onload = () => resolve();
+          image.addEventListener("load", () => resolve());
           image.onerror = () => resolve();
         });
       })
@@ -358,12 +360,12 @@ const Credits: React.FC = () => {
       });
 
       setContentReady(true);
-      contentReadyRef.current = true;
+      contentReadyReference.current = true;
       console.log("contentReady установлен в true");
-    } catch (e) {
-      console.error("Ошибка загрузки данных титров:", e);
+    } catch (error) {
+      console.error("Ошибка загрузки данных титров:", error);
       setContentReady(false);
-      contentReadyRef.current = false;
+      contentReadyReference.current = false;
     } finally {
       setIsLoading(false);
       console.log("Загрузка завершена, isLoading установлен в false");
@@ -372,9 +374,9 @@ const Credits: React.FC = () => {
 
   // Функция для запуска анимации титров через framer-motion + музыка
   const startCreditsAnimation = useCallback(async () => {
-    const currentRunId = runIdRef.current;
-    if (!containerRef.current) return;
-    if (!contentReadyRef.current) return;
+    const currentRunId = runIdReference.current;
+    if (!containerReference.current) return;
+    if (!contentReadyReference.current) return;
     if (isAnimating) return;
 
     setIsAnimating(true);
@@ -384,15 +386,15 @@ const Credits: React.FC = () => {
     await new Promise(resolve => requestAnimationFrame(resolve));
     await waitImagesLoaded();
 
-    if (currentRunId !== runIdRef.current) {
+    if (currentRunId !== runIdReference.current) {
       setIsAnimating(false);
       return;
     }
 
-    const el = containerRef.current;
-    const containerHeight = el.scrollHeight;
+    const element = containerReference.current;
+    const containerHeight = element.scrollHeight;
     const viewportHeight = window.innerHeight;
-    const rect = el.getBoundingClientRect();
+    const rect = element.getBoundingClientRect();
     const padding = 40;
     const startY = viewportHeight + padding - rect.top;
     const endY = -containerHeight - padding - rect.top;
@@ -400,7 +402,7 @@ const Credits: React.FC = () => {
     setIsPlaying(true);
     await controls.set({ y: startY });
 
-    if (currentRunId !== runIdRef.current) {
+    if (currentRunId !== runIdReference.current) {
       setIsPlaying(false);
       setIsAnimating(false);
       return;
@@ -410,18 +412,18 @@ const Credits: React.FC = () => {
     const animationDurationSec = 45;
 
     // Планируем экспоненциальное затухание за 5 сек до конца анимации
-    if (audioContextRef.current && gainNodeRef.current) {
-      const ctx = audioContextRef.current;
+    if (audioContextReference.current && gainNodeReference.current) {
+      const context = audioContextReference.current;
       const startDelayMs = Math.max(0, (animationDurationSec - 5) * 1000);
-      fadeTimeoutRef.current = window.setTimeout(() => {
+      fadeTimeoutReference.current = globalThis.setTimeout(() => {
         try {
           // Устанавливаем текущее значение как старт и уходим в 0.001 за 5 секунд
-          const now = ctx.currentTime;
-          const gain = gainNodeRef.current!.gain;
+          const now = context.currentTime;
+          const gain = gainNodeReference.current!.gain;
           gain.cancelScheduledValues(now);
           // Стартуем с max(текущего, маленького положительного)
-          const startVal = Math.max(0.01, gain.value || 1.0);
-          gain.setValueAtTime(startVal, now);
+          const startValue = Math.max(0.01, gain.value || 1);
+          gain.setValueAtTime(startValue, now);
           gain.exponentialRampToValueAtTime(0.001, now + 5);
         } catch {
           // ignore
@@ -434,7 +436,7 @@ const Credits: React.FC = () => {
       transition: { duration: animationDurationSec, ease: "linear" },
     });
 
-    if (currentRunId !== runIdRef.current) return;
+    if (currentRunId !== runIdReference.current) return;
 
     setIsPlaying(false);
     setIsActive(false);
@@ -451,27 +453,27 @@ const Credits: React.FC = () => {
     async () => {
       try {
         // Новый запуск
-        runIdRef.current += 1;
+        runIdReference.current += 1;
         // Сбрасываем состояние
         setIsActive(true);
         setIsPlaying(false);
         setContentReady(false);
-        contentReadyRef.current = false;
+        contentReadyReference.current = false;
 
         // Выбираем случайный фон
         selectRandomBackground();
 
         // Выбираем следующий трек (теперь async)
         const nextUrl = await selectNextMusicUrl();
-        selectedTrackUrlRef.current = nextUrl;
+        selectedTrackUrlReference.current = nextUrl;
         // На новый запуск гарантированно останавливаем предыдущий звук
         stopAndCleanupAudio();
 
         // Сразу запускаем музыку и глушим остальные источники (старт затемнения)
-        if (selectedTrackUrlRef.current) {
+        if (selectedTrackUrlReference.current) {
           try {
             TelegramusHubSignalRContext.invoke("MuteAll", []);
-            await playSelectedTrack(selectedTrackUrlRef.current);
+            await playSelectedTrack(selectedTrackUrlReference.current);
           } catch {
             // ignore
           }
@@ -481,14 +483,14 @@ const Credits: React.FC = () => {
         await loadCreditsData();
 
         // Запустить прокрутку спустя 2 секунды (время затемнения фона)
-        animationTimeoutRef.current = window.setTimeout(() => {
+        animationTimeoutReference.current = globalThis.setTimeout(() => {
           startCreditsAnimation();
         }, 2000);
 
         return () => {
-          if (animationTimeoutRef.current) {
-            window.clearTimeout(animationTimeoutRef.current);
-            animationTimeoutRef.current = null;
+          if (animationTimeoutReference.current) {
+            globalThis.clearTimeout(animationTimeoutReference.current);
+            animationTimeoutReference.current = null;
           }
           controls.stop();
           stopAndCleanupAudio();
@@ -497,7 +499,7 @@ const Credits: React.FC = () => {
       } catch {
         setIsActive(false);
         setContentReady(false);
-        contentReadyRef.current = false;
+        contentReadyReference.current = false;
       }
     },
     [
@@ -514,13 +516,13 @@ const Credits: React.FC = () => {
   // Cleanup эффект для очистки таймеров
   useEffect(
     () => () => {
-      if (animationTimeoutRef.current) {
-        window.clearTimeout(animationTimeoutRef.current);
-        animationTimeoutRef.current = null;
+      if (animationTimeoutReference.current) {
+        globalThis.clearTimeout(animationTimeoutReference.current);
+        animationTimeoutReference.current = null;
       }
-      if (fadeTimeoutRef.current) {
-        window.clearTimeout(fadeTimeoutRef.current);
-        fadeTimeoutRef.current = null;
+      if (fadeTimeoutReference.current) {
+        globalThis.clearTimeout(fadeTimeoutReference.current);
+        fadeTimeoutReference.current = null;
       }
       stopAndCleanupAudio();
       TelegramusHubSignalRContext.invoke("UnmuteSessions");
@@ -531,8 +533,7 @@ const Credits: React.FC = () => {
   const renderNames = useCallback((list: FollowerInfo[]) => {
     if (!list || list.length === 0)
       return <div className={styles.empty}>—</div>;
-    return list
-      .slice()
+    return [...list]
       .sort((a, b) =>
         (
           a.twitchUser?.displayName ||
@@ -551,7 +552,7 @@ const Credits: React.FC = () => {
       {!announced && (
         <Announce title={"Credits"} callback={() => setAnnounced(true)} />
       )}
-      <audio ref={audioRef} style={{ visibility: "hidden" }} />
+      <audio ref={audioReference} style={{ visibility: "hidden" }} />
       <div
         className={`${styles.root} ${isActive ? styles.active : ""}`}
         data-testid="obs-credits"
@@ -574,7 +575,7 @@ const Credits: React.FC = () => {
             )}
             {contentReady && (
               <motion.div
-                ref={containerRef}
+                ref={containerReference}
                 className={styles.scroll}
                 animate={controls}
                 initial={{ y: 0 }}

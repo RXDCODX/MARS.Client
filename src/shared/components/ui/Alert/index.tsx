@@ -1,13 +1,13 @@
-import type { AlertProps as AntAlertProps } from "antd";
+import type { AlertProps as AntAlertProperties } from "antd";
 import { Alert as AntAlert } from "antd";
 
-interface AlertProps extends Omit<AntAlertProps, "closable"> {
+interface AlertProperties extends Omit<AntAlertProperties, "closable"> {
   variant?: "primary" | "secondary" | "success" | "danger" | "warning" | "info";
   dismissible?: boolean;
   onClose?: () => void;
 }
 
-const typeMap: Record<string, AntAlertProps["type"]> = {
+const typeMap: Record<string, AntAlertProperties["type"]> = {
   primary: "info",
   secondary: "info",
   success: "success",
@@ -20,13 +20,13 @@ const Alert = ({
   variant = "info",
   dismissible,
   onClose,
-  ...props
-}: AlertProps) => (
+  ...properties
+}: AlertProperties) => (
   <AntAlert
     type={typeMap[variant] ?? "info"}
     closable={dismissible}
     onClose={onClose}
-    {...props}
+    {...properties}
   />
 );
 

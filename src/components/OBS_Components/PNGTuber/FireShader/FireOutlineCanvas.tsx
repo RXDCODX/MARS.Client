@@ -1,6 +1,6 @@
 import { type FC, useEffect, useRef } from "react";
 
-type FireOutlineCanvasProps = {
+type FireOutlineCanvasProperties = {
   width: number;
   height: number;
   maskUrl: string;
@@ -11,7 +11,7 @@ type FireOutlineCanvasProps = {
   style?: React.CSSProperties;
 };
 
-const vertSrc = `#version 100
+const vertSource = `#version 100
 precision mediump float;
 attribute vec2 a_pos;
 varying vec2 v_uv;
@@ -21,7 +21,7 @@ void main(){
 }`;
 
 // Edge-based flame with UV alignment to object-fit: contain
-const fragSrc = `#version 100
+const fragSource = `#version 100
 precision mediump float;
 varying vec2 v_uv;
 uniform sampler2D u_mask;
@@ -115,27 +115,32 @@ void main(){
   gl_FragColor = vec4(color, alpha);
 }`;
 
-const FireOutlineCanvas: FC<FireOutlineCanvasProps> = ({
+const FireOutlineCanvas: FC<FireOutlineCanvasProperties> = ({
   width,
   height,
   maskUrl,
-  intensity = 1.0,
+  intensity = 1,
   radiusPx = 10,
-  speed = 1.0,
+  speed = 1,
   className,
   style,
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const glRef = useRef<WebGLRenderingContext | null>(null);
-  const progRef = useRef<WebGLProgram | null>(null);
-  const texRef = useRef<WebGLTexture | null>(null);
-  const vaoRef = useRef<{ buf: WebGLBuffer | null; loc: number } | null>(null);
-  const rafRef = useRef<number | null>(null);
-  const startTimeRef = useRef<number>(0);
-  const texSizeRef = useRef<{ w: number; h: number }>({ w: width, h: height });
+  const canvasReference = useRef<HTMLCanvasElement | null>(null);
+  const glReference = useRef<WebGLRenderingContext | null>(null);
+  const progReference = useRef<WebGLProgram | null>(null);
+  const texReference = useRef<WebGLTexture | null>(null);
+  const vaoReference = useRef<{ buf: WebGLBuffer | null; loc: number } | null>(
+    null
+  );
+  const rafReference = useRef<number | null>(null);
+  const startTimeReference = useRef<number>(0);
+  const texSizeReference = useRef<{ w: number; h: number }>({
+    w: width,
+    h: height,
+  });
 
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = canvasReference.current;
     if (!canvas) return;
     canvas.width = width;
     canvas.height = height;
@@ -151,15 +156,15 @@ const FireOutlineCanvas: FC<FireOutlineCanvasProps> = ({
       ) as WebGLRenderingContext | null;
     }
     if (!gl) return;
-    glRef.current = gl;
+    glReference.current = gl;
 
     gl.enable(gl.BLEND);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     // Compile shader helper
-    const compile = (type: number, src: string) => {
+    const compile = (type: number, source: string) => {
       const s = gl.createShader(type)!;
-      gl.shaderSource(s, src);
+      gl.shaderSource(s, source);
       gl.compileShader(s);
       if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
         console.error(
@@ -170,8 +175,8 @@ const FireOutlineCanvas: FC<FireOutlineCanvasProps> = ({
       return s;
     };
 
-    const vs = compile(gl.VERTEX_SHADER, vertSrc);
-    const fs = compile(gl.FRAGMENT_SHADER, fragSrc);
+    const vs = compile(gl.VERTEX_SHADER, vertSource);
+    const fs = compile(gl.FRAGMENT_SHADER, fragSource);
     const prog = gl.createProgram()!;
     gl.attachShader(prog, vs);
     gl.attachShader(prog, fs);
@@ -184,24 +189,24 @@ const FireOutlineCanvas: FC<FireOutlineCanvasProps> = ({
     }
     gl.deleteShader(vs);
     gl.deleteShader(fs);
-    progRef.current = prog;
+    progReference.current = prog;
 
     // Fullscreen quad
-    const buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
     const quad = new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]);
     gl.bufferData(gl.ARRAY_BUFFER, quad, gl.STATIC_DRAW);
 
     const loc = gl.getAttribLocation(prog, "a_pos");
-    vaoRef.current = { buf, loc };
+    vaoReference.current = { buf: buffer, loc };
 
     // Load mask texture
     const tex = gl.createTexture();
-    texRef.current = tex;
+    texReference.current = tex;
     const img = new Image();
     img.crossOrigin = "anonymous";
-    img.onload = () => {
-      texSizeRef.current = { w: img.width, h: img.height };
+    img.addEventListener("load", () => {
+      texSizeReference.current = { w: img.width, h: img.height };
       gl.bindTexture(gl.TEXTURE_2D, tex);
       gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
@@ -209,22 +214,22 @@ const FireOutlineCanvas: FC<FireOutlineCanvasProps> = ({
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      startTimeRef.current = performance.now();
+      startTimeReference.current = performance.now();
       draw();
-    };
+    });
     img.src = maskUrl;
 
     const draw = () => {
       if (
-        !glRef.current ||
-        !progRef.current ||
-        !vaoRef.current ||
-        !texRef.current
+        !glReference.current ||
+        !progReference.current ||
+        !vaoReference.current ||
+        !texReference.current
       )
         return;
-      const glc = glRef.current;
-      const progc = progRef.current;
-      const vao = vaoRef.current;
+      const glc = glReference.current;
+      const progc = progReference.current;
+      const vao = vaoReference.current;
 
       glc.viewport(0, 0, canvas.width, canvas.height);
       glc.clearColor(0, 0, 0, 0);
@@ -236,7 +241,8 @@ const FireOutlineCanvas: FC<FireOutlineCanvasProps> = ({
       glc.enableVertexAttribArray(vao.loc);
       glc.vertexAttribPointer(vao.loc, 2, glc.FLOAT, false, 0, 0);
 
-      const t = (performance.now() - startTimeRef.current) * 0.001 * speed;
+      const t =
+        (performance.now() - startTimeReference.current) * 0.001 * speed;
 
       const uMask = glc.getUniformLocation(progc, "u_mask");
       const uTexel = glc.getUniformLocation(progc, "u_texel");
@@ -247,12 +253,12 @@ const FireOutlineCanvas: FC<FireOutlineCanvasProps> = ({
       const uIntensity = glc.getUniformLocation(progc, "u_intensity");
 
       glc.activeTexture(glc.TEXTURE0);
-      glc.bindTexture(glc.TEXTURE_2D, texRef.current);
+      glc.bindTexture(glc.TEXTURE_2D, texReference.current);
       glc.uniform1i(uMask, 0);
 
-      const texW = Math.max(1, texSizeRef.current.w);
-      const texH = Math.max(1, texSizeRef.current.h);
-      glc.uniform2f(uTexel, 1.0 / texW, 1.0 / texH);
+      const texW = Math.max(1, texSizeReference.current.w);
+      const texH = Math.max(1, texSizeReference.current.h);
+      glc.uniform2f(uTexel, 1 / texW, 1 / texH);
       glc.uniform2f(uCanvasSize, canvas.width, canvas.height);
       glc.uniform2f(uTexSize, texW, texH);
       glc.uniform1f(uTime, t);
@@ -261,27 +267,30 @@ const FireOutlineCanvas: FC<FireOutlineCanvasProps> = ({
 
       glc.drawArrays(glc.TRIANGLES, 0, 6);
 
-      rafRef.current = requestAnimationFrame(draw);
+      rafReference.current = requestAnimationFrame(draw);
     };
 
     return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      if (glRef.current) {
+      if (rafReference.current) cancelAnimationFrame(rafReference.current);
+      if (glReference.current) {
         // Cleanup GL resources
-        if (progRef.current) glRef.current.deleteProgram(progRef.current);
-        if (vaoRef.current?.buf) glRef.current.deleteBuffer(vaoRef.current.buf);
-        if (texRef.current) glRef.current.deleteTexture(texRef.current);
+        if (progReference.current)
+          glReference.current.deleteProgram(progReference.current);
+        if (vaoReference.current?.buf)
+          glReference.current.deleteBuffer(vaoReference.current.buf);
+        if (texReference.current)
+          glReference.current.deleteTexture(texReference.current);
       }
-      glRef.current = null;
-      progRef.current = null;
-      vaoRef.current = null;
-      texRef.current = null;
+      glReference.current = null;
+      progReference.current = null;
+      vaoReference.current = null;
+      texReference.current = null;
     };
   }, [width, height, maskUrl, intensity, radiusPx, speed]);
 
   return (
     <canvas
-      ref={canvasRef}
+      ref={canvasReference}
       className={className}
       style={{
         width,

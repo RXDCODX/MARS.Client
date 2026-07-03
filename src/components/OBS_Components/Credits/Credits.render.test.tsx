@@ -13,8 +13,8 @@ vi.mock("@/shared/api", () => ({
     }
   },
   TelegramusHubSignalRContext: {
-    useSignalREffect: () => undefined,
-    invoke: () => undefined,
+    useSignalREffect: () => {},
+    invoke: () => {},
   },
 }));
 

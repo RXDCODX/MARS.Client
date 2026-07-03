@@ -4,13 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import { useSiteColors } from "../../../../../shared/Utils/useSiteColors";
 import { Country, getFlagPath, searchCountries } from "./flagUtils";
 
-type FlagSelectorProps = {
+type FlagSelectorProperties = {
   selectedFlag: string;
   onFlagChange: (flagCode: string) => void;
   placeholder?: string;
 };
 
-const FlagSelector: React.FC<FlagSelectorProps> = ({
+const FlagSelector: React.FC<FlagSelectorProperties> = ({
   selectedFlag,
   onFlagChange,
   placeholder = "Выберите флаг",
@@ -19,7 +19,7 @@ const FlagSelector: React.FC<FlagSelectorProps> = ({
   const [searchQuery, setSearchQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [filteredCountries, setFilteredCountries] = useState<Country[]>([]);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputReference = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setFilteredCountries(searchCountries(searchQuery));
@@ -62,7 +62,7 @@ const FlagSelector: React.FC<FlagSelectorProps> = ({
     <div style={{ position: "relative", width: "100%" }}>
       <div style={{ position: "relative" }}>
         <Input
-          ref={inputRef as React.RefObject<import("antd").InputRef>}
+          ref={inputReference as React.RefObject<import("antd").InputRef>}
           placeholder={selectedFlag ? "" : placeholder}
           value={searchQuery}
           onChange={handleInputChange}

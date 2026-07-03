@@ -65,7 +65,7 @@ export const Default: Story = {
     expect(initialMessages.length).toBe(0);
 
     // Проверяем, что кнопка видима и кликабельна
-    const buttonStyle = window.getComputedStyle(generateButton!);
+    const buttonStyle = globalThis.getComputedStyle(generateButton!);
     expect(buttonStyle.display).not.toBe("none");
     expect(buttonStyle.visibility).not.toBe("hidden");
 
@@ -113,7 +113,7 @@ export const Default: Story = {
     expect(text).toBeInTheDocument();
 
     // Проверяем анимацию сообщений
-    const computedStyle = window.getComputedStyle(firstMessage);
+    const computedStyle = globalThis.getComputedStyle(firstMessage);
     expect(computedStyle.position).toBe("absolute");
   },
 };

@@ -67,7 +67,7 @@ export const Default: Story = {
 
     // Проверяем цвет ключевых слов
     const firstKeyword = keywords[0];
-    const computedStyle = window.getComputedStyle(firstKeyword);
+    const computedStyle = globalThis.getComputedStyle(firstKeyword);
     expect(computedStyle.color).toBe("rgb(255, 0, 0)");
   },
 };
@@ -102,7 +102,7 @@ export const WithQuotes: Story = {
 
     // Проверяем цвет ключевых слов
     const firstKeyword = keywords[0];
-    const computedStyle = window.getComputedStyle(firstKeyword);
+    const computedStyle = globalThis.getComputedStyle(firstKeyword);
     expect(computedStyle.color).toBe("rgb(0, 255, 0)");
   },
 };
@@ -131,7 +131,7 @@ export const MultipleKeywords: Story = {
 
     // Проверяем, что все ключевые слова выделены
     keywords.forEach(keyword => {
-      const computedStyle = window.getComputedStyle(keyword);
+      const computedStyle = globalThis.getComputedStyle(keyword);
       expect(computedStyle.color).toBe("rgb(0, 0, 255)");
     });
 

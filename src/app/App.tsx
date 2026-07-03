@@ -9,7 +9,7 @@ import {
   ThemeProvider as AntThemeProvider,
 } from "@/shared/components/ui";
 
-function App() {
+export default function App() {
   usePrefetchRoutes();
 
   return (
@@ -22,5 +22,3 @@ function App() {
     </ThemeProvider>
   );
 }
-
-export default App;

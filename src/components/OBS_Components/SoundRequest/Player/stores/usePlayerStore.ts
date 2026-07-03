@@ -104,12 +104,12 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
 
     // Добавляем элементы из текущей истории, пропуская дубликаты
     for (
-      let i = 0;
-      i < currentHistory.length && updatedHistory.length < MAX_HISTORY;
-      i++
+      let index = 0;
+      index < currentHistory.length && updatedHistory.length < MAX_HISTORY;
+      index++
     ) {
-      if (currentHistory[i].id !== item.id) {
-        updatedHistory.push(currentHistory[i]);
+      if (currentHistory[index].id !== item.id) {
+        updatedHistory.push(currentHistory[index]);
       }
     }
 
@@ -131,17 +131,21 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     let nextMode: TrackListViewMode;
 
     switch (currentMode) {
-      case TrackListViewMode.Default:
+      case TrackListViewMode.Default: {
         nextMode = TrackListViewMode.WithHistory;
         break;
-      case TrackListViewMode.WithHistory:
+      }
+      case TrackListViewMode.WithHistory: {
         nextMode = TrackListViewMode.Reversed;
         break;
-      case TrackListViewMode.Reversed:
+      }
+      case TrackListViewMode.Reversed: {
         nextMode = TrackListViewMode.Default;
         break;
-      default:
+      }
+      default: {
         nextMode = TrackListViewMode.Default;
+      }
     }
 
     set({ viewMode: nextMode });

@@ -4,11 +4,11 @@ import Footer from "./Footer/Footer";
 import Header from "./Header/Header";
 import styles from "./Layout.module.scss";
 
-interface LayoutProps {
+interface LayoutProperties {
   children: React.ReactNode;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
+const Layout: React.FC<LayoutProperties> = ({ children }) => {
   const colors = useSiteColors();
 
   return (

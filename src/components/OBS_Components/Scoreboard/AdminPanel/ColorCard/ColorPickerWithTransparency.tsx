@@ -2,14 +2,14 @@ import { Button, Flex, Input } from "antd";
 import { Eye, EyeOff as EyeSlash } from "lucide-react";
 import { useState } from "react";
 
-type ColorPickerWithTransparencyProps = {
+type ColorPickerWithTransparencyProperties = {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
 };
 
 const ColorPickerWithTransparency: React.FC<
-  ColorPickerWithTransparencyProps
+  ColorPickerWithTransparencyProperties
 > = ({ value, onChange, placeholder = "hex или rgba" }) => {
   const [isTransparent, setIsTransparent] = useState(false);
 
@@ -19,7 +19,7 @@ const ColorPickerWithTransparency: React.FC<
       if (match) {
         const parts = match[0].match(/[\d.]+/g);
         if (parts && parts.length >= 4) {
-          const alpha = parseFloat(parts[3]);
+          const alpha = Number.parseFloat(parts[3]);
           return alpha === 0;
         }
       }

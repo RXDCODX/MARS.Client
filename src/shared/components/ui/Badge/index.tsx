@@ -1,12 +1,12 @@
-import type { BadgeProps as AntBadgeProps } from "antd";
+import type { BadgeProps as AntBadgeProperties } from "antd";
 import { Badge as AntBadge } from "antd";
 
-interface BadgeProps extends AntBadgeProps {
+interface BadgeProperties extends AntBadgeProperties {
   bg?: string;
 }
 
-const Badge = ({ bg, color, ...props }: BadgeProps) => (
-  <AntBadge color={color ?? bg} {...props} />
+const Badge = ({ bg, color, ...properties }: BadgeProperties) => (
+  <AntBadge color={color ?? bg} {...properties} />
 );
 
 export default Badge;

@@ -55,10 +55,10 @@ const PNGTuber: FC<PNGTuberProps> = ({
   className,
   style,
 }) => {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const imageRef = useRef<HTMLImageElement | null>(null);
-  const rafRef = useRef<number | null>(null);
-  const cleanupRef = useRef<CleanupHandles>({
+  const containerReference = useRef<HTMLDivElement | null>(null);
+  const imageReference = useRef<HTMLImageElement | null>(null);
+  const rafReference = useRef<number | null>(null);
+  const cleanupReference = useRef<CleanupHandles>({
     audioContext: null,
     mediaStream: null,
     mediaStreamOwnedByComponent: false,
@@ -89,7 +89,7 @@ const PNGTuber: FC<PNGTuberProps> = ({
       try {
         // Use provided stream or request mic access
         let stream = mediaStream;
-        const ownedByComponent = !stream;
+        const isOwnedByComponent = !stream;
         if (!stream) {
           stream = await navigator.mediaDevices.getUserMedia({
             audio: true,
@@ -100,9 +100,12 @@ const PNGTuber: FC<PNGTuberProps> = ({
         if (isCancelled || !stream) return;
 
         const AudioContextCtor: typeof AudioContext =
-          window.AudioContext ||
-          (window as unknown as { webkitAudioContext?: typeof AudioContext })
-            .webkitAudioContext!;
+          globalThis.AudioContext ||
+          (
+            globalThis as unknown as {
+              webkitAudioContext?: typeof AudioContext;
+            }
+          ).webkitAudioContext!;
         const audioContext = new AudioContextCtor();
         const source = audioContext.createMediaStreamSource(stream);
         const analyser = audioContext.createAnalyser();
@@ -127,7 +130,7 @@ const PNGTuber: FC<PNGTuberProps> = ({
 
         const update = (now: number) => {
           if (isCancelled) return;
-          rafRef.current = requestAnimationFrame(update);
+          rafReference.current = requestAnimationFrame(update);
 
           if (now - lastFrameTime < minFrameInterval) {
             return;
@@ -137,8 +140,7 @@ const PNGTuber: FC<PNGTuberProps> = ({
           analyser.getFloatTimeDomainData(timeData);
           // Compute RMS as amplitude proxy
           let sumSquares = 0;
-          for (let i = 0; i < timeData.length; i++) {
-            const v = timeData[i];
+          for (const v of timeData) {
             sumSquares += v * v;
           }
           const rms = Math.sqrt(sumSquares / timeData.length);
@@ -158,10 +160,10 @@ const PNGTuber: FC<PNGTuberProps> = ({
           );
 
           // Determine if speaking
-          const speaking = level > 0.01;
+          const isSpeaking = level > 0.01;
 
           // Schedule random brief closures to mimic consonants while speaking
-          if (speaking && now >= nextClosureAt) {
+          if (isSpeaking && now >= nextClosureAt) {
             closureUntil = now + (40 + Math.random() * 60);
             nextClosureAt = now + (120 + Math.random() * 260);
           }
@@ -179,48 +181,49 @@ const PNGTuber: FC<PNGTuberProps> = ({
             Math.min(maxMouthIndex, mouthFrames.length - 1)
           );
 
-          const imgEl = imageRef.current;
-          if (imgEl) {
-            const currentSrc = imgEl.getAttribute("data-src") || "";
-            const nextSrc = mouthFrames[frameIndex].src;
-            if (currentSrc !== nextSrc) {
-              imgEl.src = nextSrc;
-              imgEl.setAttribute("data-src", nextSrc);
+          const imgElement = imageReference.current;
+          if (imgElement) {
+            const currentSource = imgElement.dataset.src || "";
+            const nextSource = mouthFrames[frameIndex].src;
+            if (currentSource !== nextSource) {
+              imgElement.src = nextSource;
+              imgElement.dataset.src = nextSource;
             }
           }
 
           // Apply gentle floating transform
-          if (enableFloating && containerRef.current) {
+          if (enableFloating && containerReference.current) {
             const t = now / 1000;
             const dx =
               Math.sin(basePhaseX + t * 2 * Math.PI * freqX) * floatingRadiusPx;
             const dy =
               Math.sin(basePhaseY + t * 2 * Math.PI * freqY) * floatingRadiusPx;
             const transformValue = `translate(${dx.toFixed(2)}px, ${dy.toFixed(2)}px)`;
-            containerRef.current.style.transform = transformValue;
+            containerReference.current.style.transform = transformValue;
           }
         };
 
-        rafRef.current = requestAnimationFrame(update);
+        rafReference.current = requestAnimationFrame(update);
 
-        cleanupRef.current.audioContext = audioContext;
-        cleanupRef.current.mediaStream = stream;
-        cleanupRef.current.mediaStreamOwnedByComponent = ownedByComponent;
-      } catch (err) {
+        cleanupReference.current.audioContext = audioContext;
+        cleanupReference.current.mediaStream = stream;
+        cleanupReference.current.mediaStreamOwnedByComponent =
+          isOwnedByComponent;
+      } catch (error) {
         // Fail gracefully to avoid crashing the UI; consider surfacing a toast elsewhere
-        console.error("[PNGTuber] Failed to initialize audio:", err);
+        console.error("[PNGTuber] Failed to initialize audio:", error);
       }
     };
 
     start();
 
     // Capture a stable reference to the cleanup object
-    const cleanup = cleanupRef.current;
+    const cleanup = cleanupReference.current;
     return () => {
       isCancelled = true;
-      if (rafRef.current) {
-        cancelAnimationFrame(rafRef.current);
-        rafRef.current = null;
+      if (rafReference.current) {
+        cancelAnimationFrame(rafReference.current);
+        rafReference.current = null;
       }
       const audioContextLocal = cleanup.audioContext;
       const mediaStreamLocal = cleanup.mediaStream;
@@ -229,8 +232,8 @@ const PNGTuber: FC<PNGTuberProps> = ({
       if (audioContextLocal) {
         try {
           audioContextLocal.close();
-        } catch (e) {
-          console.warn("[PNGTuber] AudioContext close failed:", e);
+        } catch (error) {
+          console.warn("[PNGTuber] AudioContext close failed:", error);
         }
         cleanup.audioContext = null;
       }
@@ -238,8 +241,8 @@ const PNGTuber: FC<PNGTuberProps> = ({
         for (const track of mediaStreamLocal.getTracks()) {
           try {
             track.stop();
-          } catch (e) {
-            console.warn("[PNGTuber] Stopping MediaStreamTrack failed:", e);
+          } catch (error) {
+            console.warn("[PNGTuber] Stopping MediaStreamTrack failed:", error);
           }
         }
         cleanup.mediaStream = null;
@@ -275,13 +278,13 @@ const PNGTuber: FC<PNGTuberProps> = ({
 
   return (
     <div
-      ref={containerRef}
+      ref={containerReference}
       className={className}
       style={{ ...containerStyle, position: "relative" }}
       data-testid="obs-pngtuber"
     >
       <img
-        ref={imageRef}
+        ref={imageReference}
         alt="PNGTuber"
         src={mouthFrames[0]?.src}
         data-src={mouthFrames[0]?.src}

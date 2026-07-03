@@ -74,9 +74,10 @@ export const useServiceStore = create<ServiceStoreState>((set, get) => ({
         API + "/api/ServiceManager/services"
       );
       set({ services: Array.isArray(res.data) ? res.data : [] });
-    } catch (e) {
+    } catch (error) {
       set({
-        error: e instanceof Error ? e.message : "Ошибка загрузки сервисов",
+        error:
+          error instanceof Error ? error.message : "Ошибка загрузки сервисов",
         services: [],
       });
     } finally {
@@ -103,9 +104,10 @@ export const useServiceStore = create<ServiceStoreState>((set, get) => ({
         );
       }
       await get().fetchServices();
-    } catch (e) {
+    } catch (error) {
       set({
-        error: e instanceof Error ? e.message : "Ошибка управления сервисом",
+        error:
+          error instanceof Error ? error.message : "Ошибка управления сервисом",
       });
     } finally {
       set({ actionLoading: null });
@@ -124,13 +126,14 @@ export const useServiceStore = create<ServiceStoreState>((set, get) => ({
         API + `/api/ServiceManager/service/${serviceName}/logs`
       );
       set({ logs: res.data });
-    } catch (e) {
+    } catch (error) {
       set({
         logs: [
           {
             timestamp: new Date().toISOString(),
             level: "Error",
-            message: e instanceof Error ? e.message : "Ошибка загрузки логов",
+            message:
+              error instanceof Error ? error.message : "Ошибка загрузки логов",
           },
         ],
       });

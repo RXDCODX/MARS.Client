@@ -34,7 +34,7 @@ export default function PyroAlerts() {
           },
         };
 
-        setHighPriorityQueue(prev => [...prev, parsedMessage]); // Добавляем в очередь высокоприоритетных
+        setHighPriorityQueue(previous => [...previous, parsedMessage]); // Добавляем в очередь высокоприоритетных
         setMessages([]);
         break;
       }
@@ -54,8 +54,8 @@ export default function PyroAlerts() {
           },
         };
 
-        setMessages(prev => {
-          const next = [...prev, coolMessage];
+        setMessages(previous => {
+          const next = [...previous, coolMessage];
           return next;
         });
         break;
@@ -64,18 +64,18 @@ export default function PyroAlerts() {
   }, []);
 
   const remove = useCallback((message: MediaDto) => {
-    setMessages(prev =>
-      prev.filter(m => m.mediaInfo.id !== message.mediaInfo.id)
+    setMessages(previous =>
+      previous.filter(m => m.mediaInfo.id !== message.mediaInfo.id)
     );
   }, []);
 
   const removeHighPrior = useCallback(
     (message: MediaDto) => {
-      setHighPriorityQueue(prev =>
-        prev.filter(m => m.mediaInfo.id !== message.mediaInfo.id)
+      setHighPriorityQueue(previous =>
+        previous.filter(m => m.mediaInfo.id !== message.mediaInfo.id)
       );
 
-      const newPriority = highPriorityQueue.some(e => e)
+      const newPriority = highPriorityQueue.some(Boolean)
         ? highPriorityQueue[0]
         : null;
       setCurrentHighPriority(newPriority);
@@ -85,46 +85,48 @@ export default function PyroAlerts() {
 
   // Эффект для обработки очереди высокоприоритетных алертов
   useEffect(() => {
-    if (highPriorityQueue.length > 0 && !currentHighPriority) {
-      // Берем первый алерт из очереди
-      const nextAlert = highPriorityQueue[0];
-      setCurrentHighPriority(nextAlert);
-
-      // Удаляем его из очереди через 2 секунды (время показа)
-      const timer = setTimeout(() => {
-        setHighPriorityQueue(prev => prev.slice(1));
-        setCurrentHighPriority(null);
-      }, 2000);
-
-      return () => clearTimeout(timer);
+    if (highPriorityQueue.length === 0 || currentHighPriority) {
+      return;
     }
+
+    // Берем первый алерт из очереди
+    const nextAlert = highPriorityQueue[0];
+    setCurrentHighPriority(nextAlert);
+
+    // Удаляем его из очереди через 2 секунды (время показа)
+    const timer = setTimeout(() => {
+      setHighPriorityQueue(previous => previous.slice(1));
+      setCurrentHighPriority(null);
+    }, 2000);
+
+    return () => clearTimeout(timer);
   }, [highPriorityQueue, currentHighPriority]);
 
   // Подписки на SignalR события
   SignalRContext.useSignalREffect("RandomMem", handleAlert, [handleAlert]);
 
-  const containerRef = useRef<HTMLDivElement | null>(null);
+  const containerReference = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (!containerReference.current) return;
 
     const observer = new MutationObserver(mutations => {
       for (const m of mutations) {
-        for (const node of Array.from(m.addedNodes)) {
+        for (const node of m.addedNodes) {
           if (!(node instanceof HTMLElement)) continue;
 
           // Ищем первый элемент с id внутри добавленной ноды (media id ставится на element: img/video wrapper)
-          const elemWithId =
+          const elementWithId =
             node.matches && node.matches("[id]")
               ? node
               : node.querySelector("[id]");
-          const id = elemWithId?.id;
+          const id = elementWithId?.id;
           if (!id) continue;
 
           // Через 1.5s проверяем, появился ли элемент и видим ли он
           setTimeout(() => {
-            const el = document.getElementById(id);
-            if (!el) {
+            const element = document.getElementById(id);
+            if (!element) {
               SignalRContext.invoke(
                 "LogError",
                 `RandomMem: element with id=${id} was not found after mutation`
@@ -132,11 +134,11 @@ export default function PyroAlerts() {
               return;
             }
 
-            const style = window.getComputedStyle(el);
+            const style = globalThis.getComputedStyle(element);
             const isVisible =
               style.visibility !== "hidden" &&
-              el.getBoundingClientRect().width > 0 &&
-              el.getBoundingClientRect().height > 0;
+              element.getBoundingClientRect().width > 0 &&
+              element.getBoundingClientRect().height > 0;
             if (!isVisible) {
               SignalRContext.invoke(
                 "LogError",
@@ -148,13 +150,16 @@ export default function PyroAlerts() {
       }
     });
 
-    observer.observe(containerRef.current, { childList: true, subtree: true });
+    observer.observe(containerReference.current, {
+      childList: true,
+      subtree: true,
+    });
 
     return () => observer.disconnect();
   }, []);
 
   return (
-    <div ref={containerRef} data-testid="obs-random-mem">
+    <div ref={containerReference} data-testid="obs-random-mem">
       {!announced && (
         <Announce title={"RandomMem"} callback={() => setAnnounced(true)} />
       )}
@@ -171,10 +176,10 @@ export default function PyroAlerts() {
 
       {/* Render normal alerts if no HP playing */}
       {!currentHighPriority &&
-        messages.map(messageProps => (
+        messages.map(messageProperties => (
           <Alert
-            key={messageProps.mediaInfo.id}
-            message={messageProps}
+            key={messageProperties.mediaInfo.id}
+            message={messageProperties}
             remove={remove}
           />
         ))}

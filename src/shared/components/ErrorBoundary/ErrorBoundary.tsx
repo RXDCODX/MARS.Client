@@ -1,6 +1,6 @@
 import { Component, ErrorInfo, ReactNode } from "react";
 
-interface Props {
+interface Properties {
   children: ReactNode;
   fallback?: ReactNode;
 }
@@ -10,7 +10,7 @@ interface State {
   error?: Error;
 }
 
-export class ErrorBoundary extends Component<Props, State> {
+export class ErrorBoundary extends Component<Properties, State> {
   public state: State = {
     hasError: false,
   };
@@ -30,9 +30,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className="error-boundary">
             <h2>Что-то пошло не так</h2>
             <p>Произошла ошибка в приложении. Пожалуйста, обновите страницу.</p>
-            <button onClick={() => window.location.reload()}>
-              Обновить страницу
-            </button>
+            <button onClick={() => location.reload()}>Обновить страницу</button>
           </div>
         )
       );

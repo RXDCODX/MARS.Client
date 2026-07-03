@@ -36,9 +36,9 @@ export default function MikuMondayController() {
   ]);
 
   useEffect(() => {
-    startHub().catch(err => {
+    startHub().catch(error_ => {
       showToast(
-        createErrorResult(err?.message || "Не удалось подключиться к хабу")
+        createErrorResult(error_?.message || "Не удалось подключиться к хабу")
       );
     });
 

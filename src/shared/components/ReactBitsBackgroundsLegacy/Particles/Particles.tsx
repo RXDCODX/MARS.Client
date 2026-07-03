@@ -3,7 +3,7 @@ import "./Particles.css";
 import { Camera, Geometry, Mesh, Program, Renderer } from "ogl";
 import React, { useEffect, useRef } from "react";
 
-interface ParticlesProps {
+interface ParticlesProperties {
   particleCount?: number;
   particleSpread?: number;
   speed?: number;
@@ -29,7 +29,7 @@ const hexToRgb = (hex: string): [number, number, number] => {
       .map(c => c + c)
       .join("");
   }
-  const int = parseInt(hex, 16);
+  const int = Number.parseInt(hex, 16);
   const r = ((int >> 16) & 255) / 255;
   const g = ((int >> 8) & 255) / 255;
   const b = (int & 255) / 255;
@@ -100,7 +100,7 @@ const fragment = /* glsl */ `
   }
 `;
 
-const Particles: React.FC<ParticlesProps> = ({
+const Particles: React.FC<ParticlesProperties> = ({
   particleCount = 200,
   particleSpread = 10,
   speed = 0.1,
@@ -115,11 +115,11 @@ const Particles: React.FC<ParticlesProps> = ({
   pixelRatio = 1,
   className,
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const mouseRef = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const containerReference = useRef<HTMLDivElement>(null);
+  const mouseReference = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
 
   useEffect(() => {
-    const container = containerRef.current;
+    const container = containerReference.current;
     if (!container) return;
 
     const renderer = new Renderer({
@@ -128,7 +128,7 @@ const Particles: React.FC<ParticlesProps> = ({
       alpha: true,
     });
     const gl = renderer.gl;
-    container.appendChild(gl.canvas);
+    container.append(gl.canvas);
     gl.clearColor(0, 0, 0, 0);
 
     const camera = new Camera(gl, { fov: 15 });
@@ -140,14 +140,14 @@ const Particles: React.FC<ParticlesProps> = ({
       renderer.setSize(width, height);
       camera.perspective({ aspect: gl.canvas.width / gl.canvas.height });
     };
-    window.addEventListener("resize", resize, false);
+    window.addEventListener("resize", resize, { capture: false });
     resize();
 
     const handleMouseMove = (e: MouseEvent) => {
       const rect = container.getBoundingClientRect();
       const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
       const y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
-      mouseRef.current = { x, y };
+      mouseReference.current = { x, y };
     };
 
     if (moveParticlesOnHover) {
@@ -163,22 +163,22 @@ const Particles: React.FC<ParticlesProps> = ({
         ? particleColors
         : defaultColors;
 
-    for (let i = 0; i < count; i++) {
-      let x: number, y: number, z: number, len: number;
+    for (let index = 0; index < count; index++) {
+      let x: number, y: number, z: number, length_: number;
       do {
         x = Math.random() * 2 - 1;
         y = Math.random() * 2 - 1;
         z = Math.random() * 2 - 1;
-        len = x * x + y * y + z * z;
-      } while (len > 1 || len === 0);
+        length_ = x * x + y * y + z * z;
+      } while (length_ > 1 || length_ === 0);
       const r = Math.cbrt(Math.random());
-      positions.set([x * r, y * r, z * r], i * 3);
+      positions.set([x * r, y * r, z * r], index * 3);
       randoms.set(
         [Math.random(), Math.random(), Math.random(), Math.random()],
-        i * 4
+        index * 4
       );
       const col = hexToRgb(palette[Math.floor(Math.random() * palette.length)]);
-      colors.set(col, i * 3);
+      colors.set(col, index * 3);
     }
 
     const geometry = new Geometry(gl, {
@@ -216,8 +216,8 @@ const Particles: React.FC<ParticlesProps> = ({
       program.uniforms.uTime.value = elapsed * 0.001;
 
       if (moveParticlesOnHover) {
-        particles.position.x = -mouseRef.current.x * particleHoverFactor;
-        particles.position.y = -mouseRef.current.y * particleHoverFactor;
+        particles.position.x = -mouseReference.current.x * particleHoverFactor;
+        particles.position.y = -mouseReference.current.y * particleHoverFactor;
       } else {
         particles.position.x = 0;
         particles.position.y = 0;
@@ -241,7 +241,7 @@ const Particles: React.FC<ParticlesProps> = ({
       }
       cancelAnimationFrame(animationFrameId);
       if (container.contains(gl.canvas)) {
-        container.removeChild(gl.canvas);
+        gl.canvas.remove();
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -260,7 +260,10 @@ const Particles: React.FC<ParticlesProps> = ({
   ]);
 
   return (
-    <div ref={containerRef} className={`particles-container ${className}`} />
+    <div
+      ref={containerReference}
+      className={`particles-container ${className}`}
+    />
   );
 };
 

@@ -1,7 +1,6 @@
 import { Log, LogsStatistics } from "@/shared/api";
 
 // Re-export Log type for use in other components
-export type { Log };
 
 // Состояние страницы логов
 export interface LogsPageState {
@@ -126,3 +125,5 @@ export interface LogsContextType {
     clearLogs: () => Promise<void>;
   };
 }
+
+export { type Log } from "@/shared/api";

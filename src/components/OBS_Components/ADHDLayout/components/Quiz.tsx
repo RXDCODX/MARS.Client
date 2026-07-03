@@ -12,9 +12,9 @@ interface QuizQuestion {
 // Функция для перемешивания массива (алгоритм Фишера-Йейтса)
 const shuffleArray = <T,>(array: T[]): T[] => {
   const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  for (let index = shuffled.length - 1; index > 0; index--) {
+    const index_ = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[index_]] = [shuffled[index_], shuffled[index]];
   }
   return shuffled;
 };
@@ -45,7 +45,7 @@ export function Quiz() {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showResult, setShowResult] = useState(false);
 
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timerReference = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     // Загружаем вопросы из owl.json через imageAssets и перемешиваем их
@@ -61,13 +61,13 @@ export function Quiz() {
   }, []);
 
   const nextQuestion = useCallback(() => {
-    setCurrentQuestionIndex(prevIndex => {
-      const isLastQuestion = prevIndex >= questions.length - 1;
+    setCurrentQuestionIndex(previousIndex => {
+      const isLastQuestion = previousIndex >= questions.length - 1;
 
       if (isLastQuestion) {
         // Если это последний вопрос, перемешиваем массив и начинаем сначала
-        setQuestions(prevQuestions =>
-          shuffleArray([...prevQuestions]).map(shuffleChoices)
+        setQuestions(previousQuestions =>
+          shuffleArray([...previousQuestions]).map(shuffleChoices)
         );
         setTimeLeft(30);
         setSelectedAnswer(null);
@@ -76,7 +76,7 @@ export function Quiz() {
         return 0;
       }
 
-      const nextIndex = prevIndex + 1;
+      const nextIndex = previousIndex + 1;
       setTimeLeft(30);
       setSelectedAnswer(null);
       setShowResult(false);
@@ -97,16 +97,16 @@ export function Quiz() {
 
   useEffect(() => {
     if (isActive && timeLeft > 0) {
-      timerRef.current = setTimeout(() => {
-        setTimeLeft(prev => prev - 1);
+      timerReference.current = setTimeout(() => {
+        setTimeLeft(previous => previous - 1);
       }, 1000);
     } else if (timeLeft === 0) {
       handleTimeUp();
     }
 
     return () => {
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
+      if (timerReference.current) {
+        clearTimeout(timerReference.current);
       }
     };
   }, [handleTimeUp, isActive, timeLeft]);

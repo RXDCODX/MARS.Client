@@ -1,6 +1,6 @@
 import { getRandomColor } from "../../Utils";
 
-interface Props {
+interface Properties {
   keyWordedString: string;
   keySymbol: string;
   classNameForKeyWordedSpan: string;
@@ -16,18 +16,18 @@ export function KeyWordedText({
   keyWordColor = getRandomColor(),
   textColor = "white",
   isQuouted,
-}: Props) {
+}: Properties) {
   if (keySymbol.length !== 1) {
-    return undefined;
+    return;
   }
 
   if (!keyWordedString) {
-    return undefined;
+    return;
   }
 
   const regex: RegExp = isQuouted
     ? new RegExp(`(${keySymbol}.*?${keySymbol})`, "g")
-    : new RegExp(`(${keySymbol}\\S+)`, "g");
+    : new RegExp(String.raw`(${keySymbol}\S+)`, "g");
 
   const parts = keyWordedString.split(regex);
 
