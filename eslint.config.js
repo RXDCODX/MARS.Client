@@ -11,12 +11,19 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import simpleImportSort from "eslint-plugin-simple-import-sort";
 import storybook from "eslint-plugin-storybook";
+import unicorn from "eslint-plugin-unicorn";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default tseslint.config(
   js.configs.recommended,
   tseslint.configs.recommended,
+  unicorn.configs["flat/recommended"],
+  {
+    rules: {
+      "unicorn/logical-assignment-operators": "off",
+    },
+  },
   {
     plugins: {
       prettier: prettier,
