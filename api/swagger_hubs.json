@@ -1699,6 +1699,11 @@
             "minLength": 1,
             "type": "string"
           },
+          "characterTranslit": {
+            "maxLength": 100,
+            "type": "string",
+            "nullable": true
+          },
           "origin": {
             "maxLength": 100,
             "type": "string",

@@ -7,9 +7,5 @@ export interface FumoAlertProps {
 }
 
 export function getFumoText(message: FumoAlertProps) {
-  return `тебе выпал(-а) ${message.fumo.character}`;
-}
-
-export function getFumoTitle(message: FumoAlertProps) {
-  return `Fumo ${message.fumo.character}`;
+  return `тебе выпал(-а) ${message.fumo.characterTranslit ?? message.fumo.character}`;
 }

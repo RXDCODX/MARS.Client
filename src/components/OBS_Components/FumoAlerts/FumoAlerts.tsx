@@ -10,7 +10,7 @@ import Announce from "@/shared/Utils/Announce/Announce";
 import InjectStyles from "@/shared/components/InjectStyles";
 
 import common from "../OBSCommon.module.scss";
-import { getFumoText, getFumoTitle } from "./helper";
+import { getFumoText } from "./helper";
 import styles from "../WaifuAlerts/WaifuAlerts.module.scss";
 import WaifuRoulette from "../WaifuAlerts/WaifuRoulette";
 
@@ -176,7 +176,7 @@ export default function FumoAlerts() {
                 }, 7000);
 
                 sendMessage(
-                  `@${currentFumoMessage.twitchUser.displayName}, ${getFumoText(currentFumoMessage)} ${getFumoTitle(currentFumoMessage)}!`
+                  `@${currentFumoMessage.twitchUser.displayName}, ${getFumoText(currentFumoMessage)}!`
                 );
               }}
               onError={() => {
@@ -224,16 +224,6 @@ export default function FumoAlerts() {
             >
               <Textfit min={1} max={1500} forceSingleModeWidth>
                 {getFumoText(currentFumoMessage)}
-              </Textfit>
-            </span>
-            <span
-              className={`${common.textStrokeShadow} text-shadow block-text`}
-              style={{
-                color: "hotpink",
-              }}
-            >
-              <Textfit min={1} max={1500} forceSingleModeWidth>
-                {getFumoTitle(currentFumoMessage)}
               </Textfit>
             </span>
           </div>

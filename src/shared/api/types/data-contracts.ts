@@ -1273,6 +1273,8 @@ export interface Fumo {
    * @maxLength 100
    */
   character: string;
+  /** @maxLength 100 */
+  characterTranslit?: string;
   /** @format date-time */
   lastOrder: string;
   /** @format int32 */

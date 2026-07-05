@@ -17,6 +17,7 @@
     "stylelint": "stylelint \"src/**/*.{css,scss}\" --fix",
     "stylelint:noFix": "stylelint \"src/**/*.{css,scss}\" --quiet",
     "lint:all": "yarn lint",
+    "lint:checklist": "powershell -NoProfile -File scripts/lint-to-checklist.ps1",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,json,css,scss,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,json,css,scss,md}\"",
     "type-check": "tsc --noEmit",

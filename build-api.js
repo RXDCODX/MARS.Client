@@ -845,17 +845,17 @@ import { logger } from "@/shared/logger";
 
 export const ${hub.name}SignalRContext = signalR.createSignalRContext({});
 
-interface ${hub.name}Props {
+interface ${hub.name}Properties {
   children: React.ReactNode;
 }
 
 export function ${hub.name}SignalRHubWrapper({
   children,
-}: ${hub.name}Props) {
+}: ${hub.name}Properties) {
   return (
     <${hub.name}SignalRContext.Provider
       automaticReconnect={true}
-      onError={error => new Promise(resolve => resolve(console.log(error)))}
+      onError={error => Promise.try(() => console.log(error))}
       onClosed={event => console.log(event)}
       onOpen={event => console.log(event)}
       logger={logger}
