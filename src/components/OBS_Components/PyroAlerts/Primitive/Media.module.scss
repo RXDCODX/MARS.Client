@@ -21,6 +21,12 @@
   color: red;
 }
 
+.alertText {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+}
+
 .container {
   display: flex;
   flex-direction: column;

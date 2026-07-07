@@ -82,3 +82,19 @@ export const Empty: Story = {
     expect(highPriorityAlerts.length).toBe(0);
   },
 };
+
+export const LongText: Story = {
+  args: {},
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Демонстрация переноса длинного текста в алерте. Текст не должен выходить за границы медиа.",
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    await new Promise(resolve => setTimeout(resolve, 100));
+    expect(canvasElement).toBeInTheDocument();
+  },
+};

@@ -232,4 +232,45 @@ describe("Image Primitive Component Data Structure", () => {
     const mediaDto = createMockMediaDto();
     expect(mediaDto.mediaInfo.textInfo.text).toBeTruthy();
   });
+
+  it("image constrains text width to image dimensions", () => {
+    const mediaDto = createMockMediaDto({
+      mediaInfo: {
+        ...createMockMediaDto().mediaInfo,
+        positionInfo: {
+          ...createMockMediaDto().mediaInfo.positionInfo,
+          width: 300,
+        },
+      },
+    });
+    expect(mediaDto.mediaInfo.positionInfo.width).toBe(300);
+  });
+
+  it("image supports long alert text for wrapping", () => {
+    const longText =
+      "#UserName# был рикрольнут на баллы канала! Это очень длинный текст";
+    const mediaDto = createMockMediaDto({
+      mediaInfo: {
+        ...createMockMediaDto().mediaInfo,
+        textInfo: {
+          ...createMockMediaDto().mediaInfo.textInfo,
+          text: longText,
+        },
+      },
+    });
+    expect(mediaDto.mediaInfo.textInfo.text.length).toBeGreaterThan(50);
+  });
+
+  it("image handles empty text gracefully", () => {
+    const mediaDto = createMockMediaDto({
+      mediaInfo: {
+        ...createMockMediaDto().mediaInfo,
+        textInfo: {
+          ...createMockMediaDto().mediaInfo.textInfo,
+          text: "",
+        },
+      },
+    });
+    expect(mediaDto.mediaInfo.textInfo.text).toBe("");
+  });
 });

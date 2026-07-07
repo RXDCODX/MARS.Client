@@ -6,6 +6,10 @@ import { v4 as randomUUID } from "uuid";
 
 import { HighliteMessageProps } from "@/components/OBS_Components/HighliteMessage/Message";
 import { ChatMessage, MediaInfo } from "@/shared/api";
+import {
+  AlertBounds,
+  useAlertPlacementStore,
+} from "@/shared/stores/alertPlacementStore";
 
 import { addMimeTypesToImgTags } from "../MIME_types";
 
@@ -127,7 +131,8 @@ export function getRandomInt(min: number, max: number): number {
 export function getCoordinates(
   reference: HTMLImageElement | HTMLVideoElement | HTMLDivElement,
   info: MediaInfo,
-  isInWindow: boolean = true
+  isInWindow: boolean = true,
+  alertId?: string
 ): React.CSSProperties {
   const returnObject: React.CSSProperties = {};
   const { positionInfo } = info;
@@ -150,6 +155,30 @@ export function getCoordinates(
 
   // Случайный вариант позиционирования
   if (positionInfo.randomCoordinates) {
+    const store = useAlertPlacementStore.getState();
+
+    // Try smart placement first
+    if (alertId) {
+      const freeSpace = store.findFreeSpace(elementWidth, elementHeight);
+      if (freeSpace) {
+        returnObject.left = `${freeSpace.x}px`;
+        returnObject.top = `${freeSpace.y}px`;
+        returnObject.position = "absolute";
+        return returnObject;
+      }
+
+      // No free space — find closest to death and overlay
+      const closest = store.findClosestToDeath();
+      if (closest) {
+        returnObject.left = `${closest.x}px`;
+        returnObject.top = `${closest.y}px`;
+        returnObject.position = "absolute";
+        returnObject.zIndex = 10;
+        return returnObject;
+      }
+    }
+
+    // Fallback: random position
     const maxX = Math.max(0, window.innerWidth - elementWidth);
     const maxY = Math.max(0, window.innerHeight - elementHeight);
     let left = getRandomInt(0, maxX);

@@ -17,6 +17,7 @@ import { getCoordinates, getRandomRotation } from "@/shared/Utils";
 import common from "../../OBSCommon.module.scss";
 import styles from "./Media.module.scss";
 import { getMediaFrameStyle } from "./mediaFrameStyle";
+import { useAlertLifecycle } from "./useAlertLifecycle";
 
 declare global {
   interface Window {
@@ -35,11 +36,18 @@ export function Video({ MediaInfo, callback, isHighPrior }: Properties) {
     MediaInfo.mediaInfo;
   const frameStyle = getMediaFrameStyle(MediaInfo);
   const player = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [, setBackupTimer] = useState<NodeJS.Timeout>();
   const [videoProgress, setVideoProgress] = useState(0);
   const audioContextReference = useRef<AudioContext | null>(null);
   const gainNodeReference = useRef<GainNode | null>(null);
   const sourceNodeReference = useRef<MediaElementAudioSourceNode | null>(null);
+
+  useAlertLifecycle({
+    mediaInfo: MediaInfo,
+    containerRef,
+    isEnabled: positionInfo.randomCoordinates,
+  });
 
   // Мемоизируем positionInfo для стабильности зависимостей
   const memoizedPositionInfo = useMemo<MediaPositionInfo>(
@@ -259,7 +267,12 @@ export function Video({ MediaInfo, callback, isHighPrior }: Properties) {
           positionInfo: memoizedPositionInfoForFunctions,
         };
 
-        const newCords = getCoordinates(player.current, fakeMediaInfo);
+        const newCords = getCoordinates(
+          player.current,
+          fakeMediaInfo,
+          true,
+          id
+        );
         const randomRotation = getRandomRotation(fakeMediaInfo);
 
         if (memoizedPositionInfo.isUseOriginalWidthAndHeight) {
@@ -330,6 +343,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Properties) {
 
   return (
     <div
+      ref={containerRef}
       id={memoizedId}
       key={id}
       className={styles.media}
@@ -377,11 +391,15 @@ export function Video({ MediaInfo, callback, isHighPrior }: Properties) {
         onLoadedMetadata={handleLoadedMetadata}
       />
       <Textfit
-        className={common.textStrokeShadow}
-        forceSingleModeWidth
-        mode="single"
+        className={`${common.textStrokeShadow} ${styles.alertText}`}
+        mode="multi"
         min={30}
-        style={{ justifyContent: "center", display: "flex", width: "100%" }}
+        style={{
+          justifyContent: "center",
+          display: "flex",
+          width: "100%",
+          maxWidth: memoizedPositionInfo.width + "px",
+        }}
       >
         <KeyWordText
           keyWordColor={memoizedTextInfo.keyWordsColor}

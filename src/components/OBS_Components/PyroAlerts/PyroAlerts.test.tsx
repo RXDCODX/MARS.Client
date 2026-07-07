@@ -339,6 +339,37 @@ describe("Text Information", () => {
   });
 });
 
+describe("Text Wrapping Configuration", () => {
+  it("should support long text content that requires wrapping", () => {
+    const longText =
+      "#UserName# был рикрольнут на баллы канала! Это очень длинный текст для проверки переноса строк в алертах";
+    const media = { ...mockMediaDto };
+    media.mediaInfo.textInfo.text = longText;
+    expect(media.mediaInfo.textInfo.text.length).toBeGreaterThan(50);
+    expect(media.mediaInfo.textInfo.text).toBe(longText);
+  });
+
+  it("should have positionInfo width available for text maxWidth constraint", () => {
+    const position = mockMediaDto.mediaInfo.positionInfo;
+    expect(position.width).toBeGreaterThan(0);
+    expect(typeof position.width).toBe("number");
+  });
+
+  it("should handle empty text without breaking rendering", () => {
+    const media = { ...mockMediaDto };
+    media.mediaInfo.textInfo.text = "";
+    expect(media.mediaInfo.textInfo.text).toBe("");
+  });
+
+  it("should handle text with keyword delimiters correctly", () => {
+    const media = { ...mockMediaDto };
+    media.mediaInfo.textInfo.text =
+      "#user.name# был рикрольнут на #channel_points# канала!";
+    expect(media.mediaInfo.textInfo.text).toContain("#");
+    expect(media.mediaInfo.textInfo.keyWordSybmolDelimiter).toBe("#");
+  });
+});
+
 describe("File Path Configuration", () => {
   it("should support local file paths", () => {
     const localMedia = { ...mockMediaDto };

@@ -12,6 +12,7 @@ import common from "../../OBSCommon.module.scss";
 import peelStyles from "../Animations/StickerPeel/StickerPeel.module.scss";
 import styles from "./Media.module.scss";
 import { getMediaFrameStyle } from "./mediaFrameStyle";
+import { useAlertLifecycle } from "./useAlertLifecycle";
 
 interface Properties {
   callBack: () => void;
@@ -72,6 +73,12 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Properties) {
 
   const reference = useRef<HTMLDivElement>(null);
 
+  useAlertLifecycle({
+    mediaInfo: MediaInfo,
+    containerRef: reference,
+    isEnabled: positionInfo.randomCoordinates,
+  });
+
   const [containerStyle, setContainerStyle] = useState<CSSProperties>({
     display: "inline-flex",
     flexDirection: "column",
@@ -122,7 +129,7 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Properties) {
           className={styles.media}
           style={{ ...imageStyle, ...frameStyle }}
           onLoad={event => {
-            const cords = getCoordinates(event.currentTarget, mediaInfo);
+            const cords = getCoordinates(event.currentTarget, mediaInfo, true, id);
             const rotation = getRandomRotation(mediaInfo);
             const size = { ...imageStyle };
             setContainerStyle(() => ({
@@ -176,7 +183,7 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Properties) {
             );
           }}
           onLoad={event => {
-            const cords = getCoordinates(event.currentTarget, mediaInfo);
+            const cords = getCoordinates(event.currentTarget, mediaInfo, true, id);
             const rotation = getRandomRotation(mediaInfo);
             const size = { ...imageStyle };
             setContainerStyle(() => ({
@@ -193,11 +200,15 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Properties) {
       )}
       {textInfo.text !== "" && (
         <Textfit
-          className={common.textStrokeShadow}
-          forceSingleModeWidth
-          mode="single"
+          className={`${common.textStrokeShadow} ${styles.alertText}`}
+          mode="multi"
           min={30}
-          style={{ justifyContent: "center", display: "flex", width: "100%" }}
+          style={{
+            justifyContent: "center",
+            display: "flex",
+            width: "100%",
+            maxWidth: positionInfo.width + "px",
+          }}
         >
           <KeyWordText
             keyWordColor={textInfo.keyWordsColor}

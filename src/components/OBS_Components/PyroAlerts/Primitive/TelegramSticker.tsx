@@ -16,6 +16,7 @@ import { getCoordinates, getRandomRotation } from "@/shared/Utils";
 import common from "../../OBSCommon.module.scss";
 import styles from "./Media.module.scss";
 import { getMediaFrameStyle } from "./mediaFrameStyle";
+import { useAlertLifecycle } from "./useAlertLifecycle";
 
 const Player = createComponent({
   elementClass: TGSPlayer,
@@ -56,6 +57,12 @@ export default function TelegramSticker({ mediaInfo, callBack }: Properties) {
 
   const elementReference = useRef<HTMLDivElement>(null);
 
+  useAlertLifecycle({
+    mediaInfo,
+    containerRef: elementReference,
+    isEnabled: positionInfo.randomCoordinates,
+  });
+
   const isFreezeRequired = metaInfo.isFreezeRequired;
 
   useEffect(() => {
@@ -79,7 +86,12 @@ export default function TelegramSticker({ mediaInfo, callBack }: Properties) {
       return;
     }
 
-    const cords = getCoordinates(elementReference.current, mediaInfo.mediaInfo);
+    const cords = getCoordinates(
+      elementReference.current,
+      mediaInfo.mediaInfo,
+      true,
+      Id
+    );
     const rotation = getRandomRotation(mediaInfo.mediaInfo);
     setStyle(previous => ({
       ...previous,
@@ -87,7 +99,7 @@ export default function TelegramSticker({ mediaInfo, callBack }: Properties) {
       ...rotation,
       visibility: "visible",
     }));
-  }, [mediaInfo.mediaInfo]);
+  }, [mediaInfo.mediaInfo, Id]);
 
   if (!parser || !parserToLInk) {
     return null;
@@ -111,11 +123,15 @@ export default function TelegramSticker({ mediaInfo, callBack }: Properties) {
       />
       {textInfo.text !== "" && (
         <Textfit
-          className={common.textStrokeShadow}
-          forceSingleModeWidth
-          mode="single"
+          className={`${common.textStrokeShadow} ${styles.alertText}`}
+          mode="multi"
           min={30}
-          style={{ justifyContent: "center", display: "flex", width: "100%" }}
+          style={{
+            justifyContent: "center",
+            display: "flex",
+            width: "100%",
+            maxWidth: positionInfo.width + "px",
+          }}
         >
           <KeyWordText
             keyWordColor={textInfo.keyWordsColor}
