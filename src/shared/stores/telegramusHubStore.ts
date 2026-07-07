@@ -4,10 +4,12 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
 import { FumoAlertProps } from "@/components/OBS_Components/FumoAlerts/helper";
+import { FrogAlertProps } from "@/components/OBS_Components/FrogAlerts/helper";
 import { WaifuAlertProps } from "@/components/OBS_Components/WaifuAlerts/helper";
-import { Fumo, Host, TwitchUser, Waifu } from "@/shared/api";
+import { Fumo, Frog, Host, TwitchUser, Waifu } from "@/shared/api";
 import { TelegramusHubSignalRConnectionBuilder } from "@/shared/api/signalr-clients/TelegramusHub/SignalRContext";
 import useFumoPrizesStore from "@/shared/stores/fumoPrizesStore";
+import useFrogPrizesStore from "@/shared/stores/frogPrizesStore";
 import useWaifuPrizesStore from "@/shared/stores/waifuPrizesStore";
 
 interface TelegramusHubActions {
@@ -17,6 +19,7 @@ interface TelegramusHubActions {
 
   dequeueCurrent: () => void;
   dequeueFumoCurrent: () => void;
+  dequeueFrogCurrent: () => void;
 }
 
 interface TelegramusHubState {
@@ -32,6 +35,11 @@ interface TelegramusHubState {
   fumoMessages: FumoAlertProps[];
   currentFumoMessage?: FumoAlertProps;
   isFumoShowing: boolean;
+
+  // Очередь алертов Frog
+  frogMessages: FrogAlertProps[];
+  currentFrogMessage?: FrogAlertProps;
+  isFrogShowing: boolean;
 }
 
 const initialState: TelegramusHubState = {
@@ -40,6 +48,8 @@ const initialState: TelegramusHubState = {
   isWaifuShowing: false,
   fumoMessages: [],
   isFumoShowing: false,
+  frogMessages: [],
+  isFrogShowing: false,
 };
 
 export const useTelegramusHubStore = create<
@@ -169,6 +179,39 @@ export const useTelegramusHubStore = create<
         connection.on("updatefumoprizes", handleFumoPrizesUpdate);
         connection.on("UpdateFumoPrizes", handleFumoPrizesUpdate);
 
+        // FrogRoll обработчик
+        connection.on(
+          "FrogRoll",
+          (frog: Frog, twitchUser: TwitchUser, color?: string) => {
+            const parsed: FrogAlertProps = {
+              frog,
+              twitchUser,
+              color,
+            };
+            const { frogMessages, isFrogShowing } = get();
+            if (!isFrogShowing) {
+              set({
+                frogMessages: [...frogMessages],
+                currentFrogMessage: parsed,
+                isFrogShowing: true,
+              });
+              return;
+            }
+            set({ frogMessages: [...frogMessages, parsed] });
+          }
+        );
+
+        // UpdateFrogPrizes обработчик
+        const handleFrogPrizesUpdate = (prizes: PrizeType[]) => {
+          if (!prizes || prizes.length === 0) {
+            return;
+          }
+          useFrogPrizesStore.getState().addPrizes(prizes);
+        };
+
+        connection.on("updatefrogprizes", handleFrogPrizesUpdate);
+        connection.on("UpdateFrogPrizes", handleFrogPrizesUpdate);
+
         await connection.start();
         set({ connection, isConnected: true });
       },
@@ -244,6 +287,35 @@ export const useTelegramusHubStore = create<
           fumoMessages: [],
           currentFumoMessage: undefined,
           isFumoShowing: false,
+        });
+      },
+
+      dequeueFrogCurrent: () => {
+        const { frogMessages, currentFrogMessage } = get();
+        if (frogMessages.length > 0 && currentFrogMessage) {
+          const newArray = frogMessages.filter(
+            m => m.frog.pid !== currentFrogMessage.frog.pid
+          );
+          if (newArray.length > 0) {
+            const next = newArray[0];
+            set({
+              frogMessages: newArray,
+              currentFrogMessage: next,
+              isFrogShowing: true,
+            });
+            return;
+          }
+          set({
+            frogMessages: [],
+            currentFrogMessage: undefined,
+            isFrogShowing: false,
+          });
+          return;
+        }
+        set({
+          frogMessages: [],
+          currentFrogMessage: undefined,
+          isFrogShowing: false,
         });
       },
     }),

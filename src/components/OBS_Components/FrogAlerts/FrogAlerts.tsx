@@ -3,23 +3,23 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Textfit } from "react-textfit";
 import { useShallow } from "zustand/react/shallow";
 import useTelegramusHubStore from "@/shared/stores/telegramusHubStore";
-import useFumoPrizesStore from "@/shared/stores/fumoPrizesStore";
+import useFrogPrizesStore from "@/shared/stores/frogPrizesStore";
 import animate from "@/shared/styles/animate.module.scss";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import Announce from "@/shared/Utils/Announce/Announce";
 import InjectStyles from "@/shared/components/InjectStyles";
 
 import common from "../OBSCommon.module.scss";
-import { getFumoText } from "./helper";
+import { getFrogText } from "./helper";
 import styles from "../WaifuAlerts/WaifuAlerts.module.scss";
 import WaifuRoulette from "../WaifuAlerts/WaifuRoulette";
 
-export default function FumoAlerts() {
-  const currentFumoMessage = useTelegramusHubStore(
-    useShallow(state => state.currentFumoMessage)
+export default function FrogAlerts() {
+  const currentFrogMessage = useTelegramusHubStore(
+    useShallow(state => state.currentFrogMessage)
   );
-  const dequeueFumoCurrent = useTelegramusHubStore(
-    state => state.dequeueFumoCurrent
+  const dequeueFrogCurrent = useTelegramusHubStore(
+    state => state.dequeueFrogCurrent
   );
   const startHub = useTelegramusHubStore(state => state.start);
   const [announced, setAnnounced] = useState(false);
@@ -29,22 +29,22 @@ export default function FumoAlerts() {
   const sendMessage = useTwitchStore(state => state.sendMsgToPyrokxnezxz);
   const imageLoadTimeoutReference = useRef<NodeJS.Timeout | null>(null);
 
-  const prizes = useFumoPrizesStore(useShallow(state => state.prizes));
-  const shufflePrizes = useFumoPrizesStore(state => state.shuffle);
+  const prizes = useFrogPrizesStore(useShallow(state => state.prizes));
+  const shufflePrizes = useFrogPrizesStore(state => state.shuffle);
 
   useEffect(() => {
     startHub();
   }, [startHub]);
 
   const handleRemoveEvent = useCallback(() => {
-    dequeueFumoCurrent();
-  }, [dequeueFumoCurrent]);
+    dequeueFrogCurrent();
+  }, [dequeueFrogCurrent]);
 
   useEffect(() => {
-    if (currentFumoMessage) {
+    if (currentFrogMessage) {
       if (prizes && prizes.length > 0) {
         const index = prizes.findIndex(
-          prize => prize.id === currentFumoMessage.fumo.mfcId
+          prize => prize.id === currentFrogMessage.frog.pid
         );
 
         if (index === -1) {
@@ -69,10 +69,10 @@ export default function FumoAlerts() {
         return () => clearTimeout(timeout);
       }
     }
-  }, [prizes, currentFumoMessage]);
+  }, [prizes, currentFrogMessage]);
 
   useEffect(() => {
-    if (!(currentFumoMessage && isRouletted)) {
+    if (!(currentFrogMessage && isRouletted)) {
       return;
     }
 
@@ -90,7 +90,7 @@ export default function FumoAlerts() {
       clearTimeout(imageLoadTimeoutReference.current);
       imageLoadTimeoutReference.current = null;
     };
-  }, [currentFumoMessage, isRouletted, handleRemoveEvent]);
+  }, [currentFrogMessage, isRouletted, handleRemoveEvent]);
 
   return (
     <div className={common.textStrokeShadow}>
@@ -106,17 +106,17 @@ export default function FumoAlerts() {
             flex-direction: column;
           }
         `}
-        id="fumo-alerts-styles"
+        id="frog-alerts-styles"
       />
       {!announced && (
-        <Announce title={"FumoRoll"} callback={() => setAnnounced(true)} />
+        <Announce title={"FrogRoll"} callback={() => setAnnounced(true)} />
       )}
-      {currentFumoMessage &&
+      {currentFrogMessage &&
         !isRouletted &&
         rouletteIndex !== -1 &&
         prizes.length > 0 && (
           <WaifuRoulette
-            key={currentFumoMessage.fumo.mfcId}
+            key={currentFrogMessage.frog.pid}
             shuffle={shufflePrizes}
             callback={() => {
               setIsRouletted(true);
@@ -128,22 +128,22 @@ export default function FumoAlerts() {
               id: String(p.id),
               text: p.text || "",
             }))}
-            twitchUser={currentFumoMessage.twitchUser}
+            twitchUser={currentFrogMessage.twitchUser}
             wide
           />
         )}
-      {currentFumoMessage &&
+      {currentFrogMessage &&
         !isRouletted &&
         rouletteIndex === -1 &&
         prizes.length === 0 && (
           <div className={styles["roulette-name-text"]}>
-            <span>Загрузка рулетки Fumo...</span>
+            <span>Загрузка рулетки Frog...</span>
           </div>
         )}
-      {currentFumoMessage && isRouletted && (
+      {currentFrogMessage && isRouletted && (
         <div
-          id={String(currentFumoMessage.fumo.mfcId)}
-          key={currentFumoMessage.fumo.mfcId}
+          id={String(currentFrogMessage.frog.pid)}
+          key={currentFrogMessage.frog.pid}
           ref={divHard}
           className={
             styles.baza + " " + animate.bounceIn + " " + animate.animated
@@ -151,7 +151,7 @@ export default function FumoAlerts() {
         >
           <div className={styles["alert-box"]}>
             <img
-              src={currentFumoMessage.fumo.thumbnailUrl}
+              src={currentFrogMessage.frog.thumbnailUrl}
               style={{ height: "498px", width: "320px" }}
               onLoad={() => {
                 if (imageLoadTimeoutReference.current) {
@@ -176,7 +176,7 @@ export default function FumoAlerts() {
                 }, 7000);
 
                 sendMessage(
-                  `@${currentFumoMessage.twitchUser.displayName}, ${getFumoText(currentFumoMessage)}!`
+                  `@${currentFrogMessage.twitchUser.displayName}, ${getFrogText(currentFrogMessage)}!`
                 );
               }}
               onError={() => {
@@ -192,16 +192,16 @@ export default function FumoAlerts() {
             />
           </div>
           <div className={styles["alert-box"]}>
-            {currentFumoMessage.twitchUser.profileImageUrl && (
+            {currentFrogMessage.twitchUser.profileImageUrl && (
               <img
-                src={currentFumoMessage.twitchUser.profileImageUrl}
-                alt={currentFumoMessage.twitchUser.displayName}
+                src={currentFrogMessage.twitchUser.profileImageUrl}
+                alt={currentFrogMessage.twitchUser.displayName}
                 style={{
                   width: "80px",
                   height: "80px",
                   borderRadius: "50%",
-                  border: `4px solid ${currentFumoMessage.twitchUser.chatColor || "white"}`,
-                  boxShadow: `0 0 20px ${currentFumoMessage.twitchUser.chatColor || "white"}`,
+                  border: `4px solid ${currentFrogMessage.twitchUser.chatColor || "white"}`,
+                  boxShadow: `0 0 20px ${currentFrogMessage.twitchUser.chatColor || "white"}`,
                   marginBottom: "10px",
                 }}
               />
@@ -209,11 +209,11 @@ export default function FumoAlerts() {
             <span
               className="text-shadow block-text"
               style={{
-                color: currentFumoMessage.twitchUser.chatColor || "white",
+                color: currentFrogMessage.twitchUser.chatColor || "white",
               }}
             >
               <Textfit min={1} max={1500} forceSingleModeWidth>
-                {currentFumoMessage.twitchUser.displayName.toUpperCase()}
+                {currentFrogMessage.twitchUser.displayName.toUpperCase()}
               </Textfit>
             </span>
             <span
@@ -223,7 +223,7 @@ export default function FumoAlerts() {
               }}
             >
               <Textfit min={1} max={1500} forceSingleModeWidth>
-                {getFumoText(currentFumoMessage)}
+                {getFrogText(currentFrogMessage)}
               </Textfit>
             </span>
           </div>

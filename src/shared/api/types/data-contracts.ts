@@ -1267,6 +1267,51 @@ export interface EmoteSet {
   rawEmoteSetString?: string;
 }
 
+export interface Frog {
+  /** @maxLength 50 */
+  category?: string;
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  commonName: string;
+  /** @maxLength 100 */
+  family?: string;
+  /** @maxLength 500 */
+  habits?: string;
+  /** @format date-time */
+  lastOrder: string;
+  /** @format int32 */
+  orderCount: number;
+  /** @format int32 */
+  pid: number;
+  /** @maxLength 200 */
+  russianName?: string;
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  scientificName: string;
+  /** @maxLength 50 */
+  size?: string;
+  /** @maxLength 100 */
+  status?: string;
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  thumbnailUrl: string;
+  /** @format date-time */
+  whenAdded: string;
+}
+
+export interface FrogPrizeType {
+  /** @format int32 */
+  id: number;
+  image: string;
+  text: string;
+}
+
 export interface Fumo {
   /**
    * @minLength 1

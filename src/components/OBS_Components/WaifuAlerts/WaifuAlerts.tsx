@@ -321,7 +321,7 @@ export default function WaifuAlerts() {
             </div>
             <div className={styles["alert-box"]} data-testid="waifu-alert-text">
               <span
-                className={`${common.textStrokeShadow} text-shadow block-text`}
+                className="text-shadow block-text"
                 style={{
                   color: "white",
                 }}
@@ -331,7 +331,7 @@ export default function WaifuAlerts() {
                 </Textfit>
               </span>
               <span
-                className={`${common.textStrokeShadow} text-shadow block-text`}
+                className="text-shadow block-text"
                 style={{
                   color: "cornflowerblue",
                 }}
@@ -341,7 +341,7 @@ export default function WaifuAlerts() {
                 </Textfit>
               </span>
               <span
-                className={`${common.textStrokeShadow} text-shadow block-text`}
+                className="text-shadow block-text"
                 style={{
                   color: "red",
                 }}

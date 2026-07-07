@@ -768,6 +768,37 @@
         "responses": { }
       }
     },
+    "/hubs/telegramus/FrogRoll": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "frog",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Frog"
+            }
+          },
+          {
+            "name": "twitchUser",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/TwitchUser"
+            }
+          },
+          {
+            "name": "color",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/telegramus/FumoFriday": {
       "post": {
         "tags": [
@@ -1092,6 +1123,26 @@
             "in": "query",
             "schema": {
               "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/UpdateFrogPrizes": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "prizes",
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/FrogPrizeType"
+              }
             }
           }
         ],
@@ -1667,6 +1718,103 @@
           "rawEmoteSetString": {
             "type": "string",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Frog": {
+        "required": [
+          "commonName",
+          "lastOrder",
+          "orderCount",
+          "pid",
+          "scientificName",
+          "thumbnailUrl",
+          "whenAdded"
+        ],
+        "type": "object",
+        "properties": {
+          "pid": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "commonName": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "scientificName": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "family": {
+            "maxLength": 100,
+            "type": "string",
+            "nullable": true
+          },
+          "russianName": {
+            "maxLength": 200,
+            "type": "string",
+            "nullable": true
+          },
+          "thumbnailUrl": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "size": {
+            "maxLength": 50,
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "maxLength": 100,
+            "type": "string",
+            "nullable": true
+          },
+          "category": {
+            "maxLength": 50,
+            "type": "string",
+            "nullable": true
+          },
+          "habits": {
+            "maxLength": 500,
+            "type": "string",
+            "nullable": true
+          },
+          "whenAdded": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastOrder": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "orderCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "FrogPrizeType": {
+        "required": [
+          "id",
+          "image",
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "image": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
           }
         },
         "additionalProperties": false

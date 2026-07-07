@@ -133,6 +133,10 @@ const fumoAlertsLoader = () =>
   import("@/components/OBS_Components/FumoAlerts/FumoAlerts");
 const FumoAlerts = lazy(fumoAlertsLoader);
 
+const frogAlertsLoader = () =>
+  import("@/components/OBS_Components/FrogAlerts/FrogAlerts");
+const FrogAlerts = lazy(frogAlertsLoader);
+
 const phonkEditLoader = () =>
   import("@/components/OBS_Components/PhonkLayout/PhonkLayoutManager");
 const PhonkLayoutManager = lazy(phonkEditLoader);
@@ -174,6 +178,7 @@ registerPrefetchComponents([
   managerLoader,
   waifuAlertsLoader,
   fumoAlertsLoader,
+  frogAlertsLoader,
 ]);
 
 // Массив OBS компонентов (без Layout для интеграции в OBS)
@@ -365,6 +370,18 @@ export const obsComponentRoutes: RouteConfig[] = [
       <OBSComponentWrapper>
         <Suspense fallback={<OBSLazyLoader />}>
           <FumoAlerts />
+        </Suspense>
+      </OBSComponentWrapper>
+    ),
+  },
+  {
+    path: "/frogs",
+    name: "Frog Алерты",
+    type: "obs",
+    element: (
+      <OBSComponentWrapper>
+        <Suspense fallback={<OBSLazyLoader />}>
+          <FrogAlerts />
         </Suspense>
       </OBSComponentWrapper>
     ),
