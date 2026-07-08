@@ -7,5 +7,5 @@ export interface FrogAlertProps {
 }
 
 export function getFrogText(message: FrogAlertProps) {
-  return `тебе выпал(-а) ${message.frog.russianName ?? message.frog.commonName}`;
+  return `теперь ты ${message.frog.russianName ?? message.frog.commonName}`;
 }
