@@ -3214,11 +3214,59 @@
             "minLength": 1,
             "type": "string"
           },
+          "audioId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "audio": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WaifuRollAudio"
+              }
+            ],
+            "nullable": true
+          },
           "isMerged": {
             "type": "boolean"
           },
           "isAdded": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "WaifuRollAudio": {
+        "required": [
+          "audioData",
+          "createdAt",
+          "fileExtension",
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "type": "string"
+          },
+          "audioData": {
+            "type": "string",
+            "format": "byte"
+          },
+          "fileExtension": {
+            "maxLength": 20,
+            "minLength": 1,
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false

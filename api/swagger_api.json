@@ -6364,6 +6364,597 @@
         }
       }
     },
+    "/api/WaifuRoll/waifus": {
+      "get": {
+        "tags": [
+          "WaifuRoll"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuDtoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuDtoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuDtoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "WaifuRoll"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateWaifuRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateWaifuRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/CreateWaifuRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/WaifuRoll/waifus/{shikiId}": {
+      "get": {
+        "tags": [
+          "WaifuRoll"
+        ],
+        "parameters": [
+          {
+            "name": "shikiId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "WaifuRoll"
+        ],
+        "parameters": [
+          {
+            "name": "shikiId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateWaifuRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateWaifuRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateWaifuRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "WaifuRoll"
+        ],
+        "parameters": [
+          {
+            "name": "shikiId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/WaifuRoll/husbands": {
+      "get": {
+        "tags": [
+          "WaifuRoll"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/HusbandDtoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HusbandDtoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HusbandDtoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/WaifuRoll/husbands/{twitchId}": {
+      "get": {
+        "tags": [
+          "WaifuRoll"
+        ],
+        "parameters": [
+          {
+            "name": "twitchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/HusbandDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HusbandDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HusbandDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "WaifuRoll"
+        ],
+        "parameters": [
+          {
+            "name": "twitchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateHusbandRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateHusbandRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/UpdateHusbandRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/HusbandDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HusbandDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HusbandDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "WaifuRoll"
+        ],
+        "parameters": [
+          {
+            "name": "twitchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/WaifuRoll/husbands/{twitchId}/unmerge": {
+      "post": {
+        "tags": [
+          "WaifuRoll"
+        ],
+        "parameters": [
+          {
+            "name": "twitchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/WaifuRoll/audios": {
+      "get": {
+        "tags": [
+          "WaifuRoll"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuRollAudioDtoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuRollAudioDtoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuRollAudioDtoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "WaifuRoll"
+        ],
+        "parameters": [
+          {
+            "name": "name",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuRollAudioDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuRollAudioDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WaifuRollAudioDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/WaifuRoll/audios/{id}/stream": {
+      "get": {
+        "tags": [
+          "WaifuRoll"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/WaifuRoll/audios/{id}": {
+      "delete": {
+        "tags": [
+          "WaifuRoll"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/WTelegram/relogin": {
       "post": {
         "tags": [
@@ -7336,6 +7927,50 @@
         },
         "additionalProperties": false
       },
+      "CreateWaifuRequest": {
+        "required": [
+          "age",
+          "imageUrl",
+          "name",
+          "shikiId"
+        ],
+        "type": "object",
+        "properties": {
+          "shikiId": {
+            "maxLength": 20,
+            "minLength": 1,
+            "type": "string"
+          },
+          "name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "anime": {
+            "type": "string",
+            "nullable": true
+          },
+          "manga": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageUrl": {
+            "maxLength": 200,
+            "minLength": 1,
+            "type": "string"
+          },
+          "audioId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "CustomReward": {
         "required": [
           "cost",
@@ -7682,6 +8317,72 @@
           }
         },
         "additionalProperties": false
+      },
+      "HusbandDto": {
+        "required": [
+          "isPrivated",
+          "orderCount",
+          "twitchId",
+          "whenOrdered"
+        ],
+        "type": "object",
+        "properties": {
+          "twitchId": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string",
+            "nullable": true
+          },
+          "whenOrdered": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "waifuBrideId": {
+            "type": "string",
+            "nullable": true
+          },
+          "isPrivated": {
+            "type": "boolean"
+          },
+          "orderCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "waifuRollId": {
+            "type": "string",
+            "nullable": true
+          },
+          "whenPrivated": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastWeddingCongratulatedMonths": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "HusbandDtoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
+      },
+      "HusbandDtoOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
       },
       "Image": {
         "type": "object",
@@ -9642,6 +10343,34 @@
         },
         "additionalProperties": false
       },
+      "UpdateHusbandRequest": {
+        "type": "object",
+        "properties": {
+          "waifuBrideId": {
+            "type": "string",
+            "nullable": true
+          },
+          "isPrivated": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "waifuRollId": {
+            "type": "string",
+            "nullable": true
+          },
+          "whenPrivated": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lastWeddingCongratulatedMonths": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "UpdateMediaItemRequest": {
         "type": "object",
         "properties": {
@@ -9783,6 +10512,44 @@
         },
         "additionalProperties": false
       },
+      "UpdateWaifuRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 200,
+            "type": "string",
+            "nullable": true
+          },
+          "age": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "anime": {
+            "type": "string",
+            "nullable": true
+          },
+          "manga": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageUrl": {
+            "maxLength": 200,
+            "type": "string",
+            "nullable": true
+          },
+          "isPrivated": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "audioId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ValidateFolderRequest": {
         "required": [
           "folderPath"
@@ -9824,6 +10591,129 @@
         "additionalProperties": false
       },
       "ValidateFolderResponseOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
+      },
+      "WaifuDto": {
+        "required": [
+          "age",
+          "imageUrl",
+          "isPrivated",
+          "lastOrder",
+          "name",
+          "orderCount",
+          "shikiId",
+          "whenAdded"
+        ],
+        "type": "object",
+        "properties": {
+          "shikiId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "age": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "anime": {
+            "type": "string",
+            "nullable": true
+          },
+          "manga": {
+            "type": "string",
+            "nullable": true
+          },
+          "whenAdded": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastOrder": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "orderCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isPrivated": {
+            "type": "boolean"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "audioId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "audioName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "WaifuDtoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
+      },
+      "WaifuDtoOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
+      },
+      "WaifuRollAudioDto": {
+        "required": [
+          "createdAt",
+          "fileExtension",
+          "id",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "fileExtension": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "WaifuRollAudioDtoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
+      },
+      "WaifuRollAudioDtoOperationResult": {
         "allOf": [
           {
             "$ref": "#/components/schemas/OperationResult"
@@ -9918,6 +10808,9 @@
     },
     {
       "name": "TwitchUsers"
+    },
+    {
+      "name": "WaifuRoll"
     },
     {
       "name": "WTelegram"

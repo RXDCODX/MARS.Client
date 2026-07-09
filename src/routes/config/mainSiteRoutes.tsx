@@ -82,6 +82,13 @@ const environmentVariablesPageLoader = () =>
 
 const EnvironmentVariablesPage = lazy(environmentVariablesPageLoader);
 
+const waifuRollPageLoader = () =>
+  import("@/components/Site/Pages/WaifuRollPage/WaifuRollPage").then(
+    m => ({ default: m.default })
+  );
+
+const WaifuRollPage = lazy(waifuRollPageLoader);
+
 // Регистрируем все некритичные компоненты для фоновой загрузки
 registerPrefetchComponents([
   // Часто используемые страницы
@@ -99,6 +106,7 @@ registerPrefetchComponents([
   mediaInfoCreatePageLoader,
   mediaInfoEditPageLoader,
   environmentVariablesPageLoader,
+  waifuRollPageLoader,
 ]);
 
 // Массив основных страниц сайта с Layout
@@ -111,6 +119,18 @@ export const mainSiteRoutes: RouteConfig[] = [
       <Layout>
         <Suspense fallback={<PageLoader />}>
           <EnvironmentVariablesPage />
+        </Suspense>
+      </Layout>
+    ),
+  },
+  {
+    path: "/waifu-roll",
+    name: "WaifuRoll Manager",
+    type: "control panel",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <WaifuRollPage />
         </Suspense>
       </Layout>
     ),

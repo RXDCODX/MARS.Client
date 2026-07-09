@@ -21,6 +21,9 @@ export { default as TwitchUsersPage } from "./TwitchUsersPage/TwitchUsersPage";
 export { default as TwitchUserCreatePage } from "./TwitchUsersPage/TwitchUserCreatePage";
 export { default as TwitchUserEditPage } from "./TwitchUsersPage/TwitchUserEditPage";
 
+// WaifuRoll страницы
+export { default as WaifuRollPage } from "./WaifuRollPage";
+
 // MediaInfo страницы
 export {
   MediaInfoCreatePage,

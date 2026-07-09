@@ -135,20 +135,20 @@ import type {
   TestAlertsAlertByTypeCreateParamsTypeEnum,
 } from "../types/data-contracts";
 
-export class CinemaQueue<
+export class WaifuRoll<
   SecurityDataType = unknown,
 > extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags CinemaQueue
-   * @name CinemaQueueList
-   * @request GET:/api/CinemaQueue
-   * @response `200` `OperationResult<CinemaMediaItemDto[]>` OK
+   * @tags WaifuRoll
+   * @name WaifuRollWaifusList
+   * @request GET:/api/WaifuRoll/waifus
+   * @response `200` `OperationResult<WaifuDto[]>` OK
    */
-  cinemaQueueList = (params: RequestParams = {}) =>
-    this.request<OperationResult<CinemaMediaItemDto[]>, any>({
-      path: `/api/CinemaQueue`,
+  waifuRollWaifusList = (params: RequestParams = {}) =>
+    this.request<OperationResult<WaifuDto[]>, any>({
+      path: `/api/WaifuRoll/waifus`,
       method: "GET",
       format: "json",
       ...params,
@@ -156,17 +156,17 @@ export class CinemaQueue<
   /**
    * No description
    *
-   * @tags CinemaQueue
-   * @name CinemaQueueCreate
-   * @request POST:/api/CinemaQueue
-   * @response `200` `OperationResult<CinemaMediaItemDto>` OK
+   * @tags WaifuRoll
+   * @name WaifuRollWaifusCreate
+   * @request POST:/api/WaifuRoll/waifus
+   * @response `200` `OperationResult<WaifuDto>` OK
    */
-  cinemaQueueCreate = (
-    data: CreateMediaItemRequest,
+  waifuRollWaifusCreate = (
+    data: CreateWaifuRequest,
     params: RequestParams = {}
   ) =>
-    this.request<OperationResult<CinemaMediaItemDto>, any>({
-      path: `/api/CinemaQueue`,
+    this.request<OperationResult<WaifuDto>, any>({
+      path: `/api/WaifuRoll/waifus`,
       method: "POST",
       body: data,
       type: ContentType.Json,
@@ -176,14 +176,14 @@ export class CinemaQueue<
   /**
    * No description
    *
-   * @tags CinemaQueue
-   * @name CinemaQueueDetail
-   * @request GET:/api/CinemaQueue/{id}
-   * @response `200` `OperationResult<CinemaMediaItemDto>` OK
+   * @tags WaifuRoll
+   * @name WaifuRollWaifusDetail
+   * @request GET:/api/WaifuRoll/waifus/{shikiId}
+   * @response `200` `OperationResult<WaifuDto>` OK
    */
-  cinemaQueueDetail = (id: string, params: RequestParams = {}) =>
-    this.request<OperationResult<CinemaMediaItemDto>, any>({
-      path: `/api/CinemaQueue/${id}`,
+  waifuRollWaifusDetail = (shikiId: string, params: RequestParams = {}) =>
+    this.request<OperationResult<WaifuDto>, any>({
+      path: `/api/WaifuRoll/waifus/${shikiId}`,
       method: "GET",
       format: "json",
       ...params,
@@ -191,18 +191,18 @@ export class CinemaQueue<
   /**
    * No description
    *
-   * @tags CinemaQueue
-   * @name CinemaQueueUpdate
-   * @request PUT:/api/CinemaQueue/{id}
-   * @response `200` `OperationResult<CinemaMediaItemDto>` OK
+   * @tags WaifuRoll
+   * @name WaifuRollWaifusUpdate
+   * @request PUT:/api/WaifuRoll/waifus/{shikiId}
+   * @response `200` `OperationResult<WaifuDto>` OK
    */
-  cinemaQueueUpdate = (
-    id: string,
-    data: UpdateMediaItemRequest,
+  waifuRollWaifusUpdate = (
+    shikiId: string,
+    data: UpdateWaifuRequest,
     params: RequestParams = {}
   ) =>
-    this.request<OperationResult<CinemaMediaItemDto>, any>({
-      path: `/api/CinemaQueue/${id}`,
+    this.request<OperationResult<WaifuDto>, any>({
+      path: `/api/WaifuRoll/waifus/${shikiId}`,
       method: "PUT",
       body: data,
       type: ContentType.Json,
@@ -212,14 +212,14 @@ export class CinemaQueue<
   /**
    * No description
    *
-   * @tags CinemaQueue
-   * @name CinemaQueueDelete
-   * @request DELETE:/api/CinemaQueue/{id}
+   * @tags WaifuRoll
+   * @name WaifuRollWaifusDelete
+   * @request DELETE:/api/WaifuRoll/waifus/{shikiId}
    * @response `200` `OperationResult` OK
    */
-  cinemaQueueDelete = (id: string, params: RequestParams = {}) =>
+  waifuRollWaifusDelete = (shikiId: string, params: RequestParams = {}) =>
     this.request<OperationResult, any>({
-      path: `/api/CinemaQueue/${id}`,
+      path: `/api/WaifuRoll/waifus/${shikiId}`,
       method: "DELETE",
       format: "json",
       ...params,
@@ -227,14 +227,14 @@ export class CinemaQueue<
   /**
    * No description
    *
-   * @tags CinemaQueue
-   * @name CinemaQueueNextList
-   * @request GET:/api/CinemaQueue/next
-   * @response `200` `OperationResult<CinemaMediaItemDto>` OK
+   * @tags WaifuRoll
+   * @name WaifuRollHusbandsList
+   * @request GET:/api/WaifuRoll/husbands
+   * @response `200` `OperationResult<HusbandDto[]>` OK
    */
-  cinemaQueueNextList = (params: RequestParams = {}) =>
-    this.request<OperationResult<CinemaMediaItemDto>, any>({
-      path: `/api/CinemaQueue/next`,
+  waifuRollHusbandsList = (params: RequestParams = {}) =>
+    this.request<OperationResult<HusbandDto[]>, any>({
+      path: `/api/WaifuRoll/husbands`,
       method: "GET",
       format: "json",
       ...params,
@@ -242,32 +242,68 @@ export class CinemaQueue<
   /**
    * No description
    *
-   * @tags CinemaQueue
-   * @name CinemaQueueStatusDetail
-   * @request GET:/api/CinemaQueue/status/{status}
-   * @response `200` `OperationResult<CinemaMediaItemDto[]>` OK
+   * @tags WaifuRoll
+   * @name WaifuRollHusbandsDetail
+   * @request GET:/api/WaifuRoll/husbands/{twitchId}
+   * @response `200` `OperationResult<HusbandDto>` OK
    */
-  cinemaQueueStatusDetail = (
-    status: CinemaQueueStatusDetailParamsEnum,
+  waifuRollHusbandsDetail = (twitchId: string, params: RequestParams = {}) =>
+    this.request<OperationResult<HusbandDto>, any>({
+      path: `/api/WaifuRoll/husbands/${twitchId}`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags WaifuRoll
+   * @name WaifuRollHusbandsUpdate
+   * @request PUT:/api/WaifuRoll/husbands/{twitchId}
+   * @response `200` `OperationResult<HusbandDto>` OK
+   */
+  waifuRollHusbandsUpdate = (
+    twitchId: string,
+    data: UpdateHusbandRequest,
     params: RequestParams = {}
   ) =>
-    this.request<OperationResult<CinemaMediaItemDto[]>, any>({
-      path: `/api/CinemaQueue/status/${status}`,
-      method: "GET",
+    this.request<OperationResult<HusbandDto>, any>({
+      path: `/api/WaifuRoll/husbands/${twitchId}`,
+      method: "PUT",
+      body: data,
+      type: ContentType.Json,
       format: "json",
       ...params,
     });
   /**
    * No description
    *
-   * @tags CinemaQueue
-   * @name CinemaQueueMarkAsNextCreate
-   * @request POST:/api/CinemaQueue/{id}/mark-as-next
+   * @tags WaifuRoll
+   * @name WaifuRollHusbandsDelete
+   * @request DELETE:/api/WaifuRoll/husbands/{twitchId}
    * @response `200` `OperationResult` OK
    */
-  cinemaQueueMarkAsNextCreate = (id: string, params: RequestParams = {}) =>
+  waifuRollHusbandsDelete = (twitchId: string, params: RequestParams = {}) =>
     this.request<OperationResult, any>({
-      path: `/api/CinemaQueue/${id}/mark-as-next`,
+      path: `/api/WaifuRoll/husbands/${twitchId}`,
+      method: "DELETE",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags WaifuRoll
+   * @name WaifuRollHusbandsUnmergeCreate
+   * @request POST:/api/WaifuRoll/husbands/{twitchId}/unmerge
+   * @response `200` `OperationResult<Object>` OK
+   */
+  waifuRollHusbandsUnmergeCreate = (
+    twitchId: string,
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<Object>, any>({
+      path: `/api/WaifuRoll/husbands/${twitchId}/unmerge`,
       method: "POST",
       format: "json",
       ...params,
@@ -275,56 +311,14 @@ export class CinemaQueue<
   /**
    * No description
    *
-   * @tags CinemaQueue
-   * @name CinemaQueueStatusPartialUpdate
-   * @request PATCH:/api/CinemaQueue/{id}/status
-   * @response `200` `OperationResult` OK
+   * @tags WaifuRoll
+   * @name WaifuRollAudiosList
+   * @request GET:/api/WaifuRoll/audios
+   * @response `200` `OperationResult<WaifuRollAudioDto[]>` OK
    */
-  cinemaQueueStatusPartialUpdate = (
-    id: string,
-    data: "Pending" | "InProgress" | "Completed" | "Cancelled" | "Postponed",
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult, any>({
-      path: `/api/CinemaQueue/${id}/status`,
-      method: "PATCH",
-      body: data,
-      type: ContentType.Json,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags CinemaQueue
-   * @name CinemaQueuePriorityPartialUpdate
-   * @request PATCH:/api/CinemaQueue/{id}/priority
-   * @response `200` `OperationResult` OK
-   */
-  cinemaQueuePriorityPartialUpdate = (
-    id: string,
-    data: number,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult, any>({
-      path: `/api/CinemaQueue/${id}/priority`,
-      method: "PATCH",
-      body: data,
-      type: ContentType.Json,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags CinemaQueue
-   * @name CinemaQueueStatisticsList
-   * @request GET:/api/CinemaQueue/statistics
-   * @response `200` `OperationResult<CinemaQueueStatistics>` OK
-   */
-  cinemaQueueStatisticsList = (params: RequestParams = {}) =>
-    this.request<OperationResult<CinemaQueueStatistics>, any>({
-      path: `/api/CinemaQueue/statistics`,
+  waifuRollAudiosList = (params: RequestParams = {}) =>
+    this.request<OperationResult<WaifuRollAudioDto[]>, any>({
+      path: `/api/WaifuRoll/audios`,
       method: "GET",
       format: "json",
       ...params,
@@ -332,21 +326,56 @@ export class CinemaQueue<
   /**
    * No description
    *
-   * @tags CinemaQueue
-   * @name CinemaQueueMetadataList
-   * @request GET:/api/CinemaQueue/metadata
-   * @response `200` `OperationResult<MediaMetadata>` OK
+   * @tags WaifuRoll
+   * @name WaifuRollAudiosCreate
+   * @request POST:/api/WaifuRoll/audios
+   * @response `200` `OperationResult<WaifuRollAudioDto>` OK
    */
-  cinemaQueueMetadataList = (
+  waifuRollAudiosCreate = (
+    data: {
+      /** @format binary */
+      file: File;
+    },
     query?: {
-      url: string;
+      name: string;
     },
     params: RequestParams = {}
   ) =>
-    this.request<OperationResult<MediaMetadata>, any>({
-      path: `/api/CinemaQueue/metadata`,
-      method: "GET",
+    this.request<OperationResult<WaifuRollAudioDto>, any>({
+      path: `/api/WaifuRoll/audios`,
+      method: "POST",
       query: query,
+      body: data,
+      type: ContentType.FormData,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags WaifuRoll
+   * @name WaifuRollAudiosStreamList
+   * @request GET:/api/WaifuRoll/audios/{id}/stream
+   * @response `200` `void` OK
+   */
+  waifuRollAudiosStreamList = (id: string, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/WaifuRoll/audios/${id}/stream`,
+      method: "GET",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags WaifuRoll
+   * @name WaifuRollAudiosDelete
+   * @request DELETE:/api/WaifuRoll/audios/{id}
+   * @response `200` `OperationResult` OK
+   */
+  waifuRollAudiosDelete = (id: string, params: RequestParams = {}) =>
+    this.request<OperationResult, any>({
+      path: `/api/WaifuRoll/audios/${id}`,
+      method: "DELETE",
       format: "json",
       ...params,
     });

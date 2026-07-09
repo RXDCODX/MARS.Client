@@ -34,6 +34,7 @@ export { TestLogger } from "./http-clients/TestLogger";
 export { Twitch } from "./http-clients/Twitch";
 export { TwitchRewards } from "./http-clients/TwitchRewards";
 export { TwitchUsers } from "./http-clients/TwitchUsers";
+export { WaifuRoll } from "./http-clients/WaifuRoll";
 export { WTelegram } from "./http-clients/WTelegram";
 
 // Импорты SignalR клиентов

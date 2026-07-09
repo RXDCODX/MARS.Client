@@ -267,6 +267,30 @@ export interface CreateTwitchUserRequest {
   aliasNickname?: string;
 }
 
+export interface CreateWaifuRequest {
+  /**
+   * @minLength 1
+   * @maxLength 20
+   */
+  shikiId: string;
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  name: string;
+  /** @format int64 */
+  age: number;
+  anime?: string;
+  manga?: string;
+  /**
+   * @minLength 1
+   * @maxLength 200
+   */
+  imageUrl: string;
+  /** @format uuid */
+  audioId?: string;
+}
+
 export interface CustomReward {
   broadcasterId?: string;
   broadcasterLogin?: string;
@@ -336,6 +360,23 @@ export interface GlobalCooldownSetting {
   isEnabled: boolean;
   /** @format int32 */
   globalCooldownSeconds: number;
+}
+
+export interface HusbandDto {
+  twitchId: string;
+  displayName?: string;
+  profileImageUrl?: string;
+  /** @format date-time */
+  whenOrdered: string;
+  waifuBrideId?: string;
+  isPrivated: boolean;
+  /** @format int64 */
+  orderCount: number;
+  waifuRollId?: string;
+  /** @format date-time */
+  whenPrivated?: string;
+  /** @format int32 */
+  lastWeddingCongratulatedMonths?: number;
 }
 
 export interface Image {
@@ -848,6 +889,16 @@ export interface UpdateCustomRewardRequest {
   shouldRedemptionsSkipRequestQueue?: boolean;
 }
 
+export interface UpdateHusbandRequest {
+  waifuBrideId?: string;
+  isPrivated?: boolean;
+  waifuRollId?: string;
+  /** @format date-time */
+  whenPrivated?: string;
+  /** @format int32 */
+  lastWeddingCongratulatedMonths?: number;
+}
+
 export interface UpdateMediaItemRequest {
   title?: string;
   description?: string;
@@ -899,6 +950,20 @@ export interface UpdateValueRequest {
   value: string;
 }
 
+export interface UpdateWaifuRequest {
+  /** @maxLength 200 */
+  name?: string;
+  /** @format int64 */
+  age?: number;
+  anime?: string;
+  manga?: string;
+  /** @maxLength 200 */
+  imageUrl?: string;
+  isPrivated?: boolean;
+  /** @format uuid */
+  audioId?: string;
+}
+
 export interface ValidateFolderRequest {
   folderPath: string;
 }
@@ -909,6 +974,35 @@ export interface ValidateFolderResponse {
   /** @format int32 */
   videoFilesCount: number;
   sampleFiles: string[];
+}
+
+export interface WaifuDto {
+  shikiId: string;
+  name: string;
+  /** @format int64 */
+  age: number;
+  anime?: string;
+  manga?: string;
+  /** @format date-time */
+  whenAdded: string;
+  /** @format date-time */
+  lastOrder: string;
+  /** @format int32 */
+  orderCount: number;
+  isPrivated: boolean;
+  imageUrl: string;
+  /** @format uuid */
+  audioId?: string;
+  audioName?: string;
+}
+
+export interface WaifuRollAudioDto {
+  /** @format uuid */
+  id: string;
+  name: string;
+  fileExtension: string;
+  /** @format date-time */
+  createdAt: string;
 }
 
 export enum BaseCommandAvailablePlatformsEnum {
@@ -1576,6 +1670,9 @@ export interface Waifu {
   /** @format int64 */
   age: number;
   anime?: string;
+  audio?: WaifuRollAudio;
+  /** @format uuid */
+  audioId?: string;
   /**
    * @minLength 1
    * @maxLength 200
@@ -1601,6 +1698,25 @@ export interface Waifu {
   shikiId: string;
   /** @format date-time */
   whenAdded: string;
+}
+
+export interface WaifuRollAudio {
+  /** @format byte */
+  audioData: Blob;
+  /** @format date-time */
+  createdAt: string;
+  /**
+   * @minLength 1
+   * @maxLength 20
+   */
+  fileExtension: string;
+  /** @format uuid */
+  id: string;
+  /**
+   * @minLength 1
+   * @maxLength 100
+   */
+  name: string;
 }
 
 export type TunaMusicDtoRoot = object;
