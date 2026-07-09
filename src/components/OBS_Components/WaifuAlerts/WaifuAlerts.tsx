@@ -167,7 +167,6 @@ export default function WaifuAlerts() {
     const currentLength = prizes.length;
 
     if (previousLength !== currentLength) {
-      debugger; // eslint-disable-line no-debugger
       console.log("🔍 PRIZES ИЗМЕНИЛИСЬ:", {
         было: previousLength,
         стало: currentLength,
@@ -176,7 +175,6 @@ export default function WaifuAlerts() {
       });
 
       if (currentLength === 0 && previousLength > 0) {
-        debugger; // eslint-disable-line no-debugger
         console.error("❌❌❌ ПРИЗЫ ОБНУЛИЛИСЬ! Было:", previousLength);
         console.trace("Stack trace при обнулении");
       }
