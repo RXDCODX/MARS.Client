@@ -133,7 +133,6 @@ const LogsFilters: React.FC<LogsFiltersProperties> = ({
           <div className={styles.buttonsGroup}>
             <Button
               type="submit"
-              type="primary"
               disabled={isLoading}
               style={{ display: "flex", alignItems: "center", gap: 8 }}
             >

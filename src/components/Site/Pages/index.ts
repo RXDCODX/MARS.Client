@@ -22,7 +22,7 @@ export { default as TwitchUserCreatePage } from "./TwitchUsersPage/TwitchUserCre
 export { default as TwitchUserEditPage } from "./TwitchUsersPage/TwitchUserEditPage";
 
 // WaifuRoll страницы
-export { default as WaifuRollPage } from "./WaifuRollPage";
+export { WaifuRollPage } from "./WaifuRollPage";
 
 // MediaInfo страницы
 export {
