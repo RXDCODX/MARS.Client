@@ -8,6 +8,7 @@ import useWaifuPrizesStore from "@/shared/stores/waifuPrizesStore";
 import animate from "@/shared/styles/animate.module.scss";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import { getRandomColor } from "@/shared/Utils";
+import { getApiBaseUrl } from "@/shared/api/api-config";
 import Announce from "@/shared/Utils/Announce/Announce";
 import InjectStyles from "@/shared/components/InjectStyles";
 
@@ -319,6 +320,14 @@ export default function WaifuAlerts() {
                 }}
               />
             </div>
+            {currentMessage.waifu.audioId && (
+              <audio
+                key={`waifu-audio-${currentMessage.waifu.shikiId}`}
+                autoPlay
+                controls={false}
+                src={`${getApiBaseUrl()}/api/WaifuRoll/audios/${currentMessage.waifu.audioId}/stream`}
+              />
+            )}
             <div className={styles["alert-box"]} data-testid="waifu-alert-text">
               <span
                 className="text-shadow block-text"
