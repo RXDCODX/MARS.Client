@@ -25,12 +25,19 @@ export default function MikuAlerts() {
   const [announced, setAnnounced] = useState(false);
   const divHard = useRef<HTMLDivElement>(null);
   const [isRouletted, setIsRouletted] = useState(false);
-  const [rouletteIndex, setRouletteIndex] = useState(-1);
   const sendMessage = useTwitchStore(state => state.sendMsgToPyrokxnezxz);
   const imageLoadTimeoutReference = useRef<NodeJS.Timeout | null>(null);
 
   const prizes = useMikuPrizesStore(useShallow(state => state.prizes));
   const shufflePrizes = useMikuPrizesStore(state => state.shuffle);
+
+  // Compute rouletteIndex at render time (not in useEffect) so it's always in sync with prizes
+  const rouletteIndex =
+    currentMikuMessage && prizes.length > 0
+      ? prizes.findIndex(
+          prize => prize.id === currentMikuMessage.mikuModule.pageId
+        )
+      : -1;
 
   useEffect(() => {
     startHub();
@@ -41,35 +48,24 @@ export default function MikuAlerts() {
   }, [dequeueMikuCurrent]);
 
   useEffect(() => {
-    if (currentMikuMessage) {
-      if (prizes && prizes.length > 0) {
-        const index = prizes.findIndex(
-          prize => prize.id === currentMikuMessage.mikuModule.pageId
-        );
-
-        if (index === -1) {
-          queueMicrotask(() => {
-            setRouletteIndex(-1);
-            setIsRouletted(true);
-          });
-        } else {
-          queueMicrotask(() => {
-            setRouletteIndex(index);
-          });
-        }
-      } else {
-        queueMicrotask(() => {
-          setRouletteIndex(-1);
-        });
-
-        const timeout = setTimeout(() => {
-          setIsRouletted(true);
-        }, 5000);
-
-        return () => clearTimeout(timeout);
-      }
+    if (!currentMikuMessage) {
+      return;
     }
-  }, [prizes, currentMikuMessage]);
+
+    // If prizes are loaded but the module isn't found, skip roulette
+    if (prizes.length > 0 && rouletteIndex === -1) {
+      setIsRouletted(true);
+      return;
+    }
+
+    // If no prizes yet, wait 5s then skip
+    if (prizes.length === 0) {
+      const timeout = setTimeout(() => {
+        setIsRouletted(true);
+      }, 5000);
+      return () => clearTimeout(timeout);
+    }
+  }, [currentMikuMessage, prizes, rouletteIndex]);
 
   useEffect(() => {
     if (!(currentMikuMessage && isRouletted)) {
@@ -78,7 +74,6 @@ export default function MikuAlerts() {
 
     imageLoadTimeoutReference.current = setTimeout(() => {
       handleRemoveEvent();
-      setRouletteIndex(-1);
       setIsRouletted(false);
     }, 10_000);
 
@@ -120,7 +115,6 @@ export default function MikuAlerts() {
             shuffle={shufflePrizes}
             callback={() => {
               setIsRouletted(true);
-              setRouletteIndex(-1);
             }}
             rouletteIndex={rouletteIndex}
             prizes={(prizes || []).map(p => ({
@@ -162,7 +156,6 @@ export default function MikuAlerts() {
                 setTimeout(() => {
                   divHard.current!.addEventListener("animationend", () => {
                     handleRemoveEvent();
-                    setRouletteIndex(-1);
                     setIsRouletted(false);
                     shufflePrizes();
                   });
@@ -186,7 +179,6 @@ export default function MikuAlerts() {
                 }
 
                 handleRemoveEvent();
-                setRouletteIndex(-1);
                 setIsRouletted(false);
               }}
             />
