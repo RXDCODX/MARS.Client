@@ -16,7 +16,7 @@ const initialState: State = {
   prizes: [],
 };
 
-export const useMikuModulePrizesStore = create<State & Actions>()(
+export const useMikuPrizesStore = create<State & Actions>()(
   devtools(
     (set, get) => ({
       ...initialState,
@@ -53,8 +53,8 @@ export const useMikuModulePrizesStore = create<State & Actions>()(
         set({ prizes: [] });
       },
     }),
-    { name: "MikuModulePrizesStore" }
+    { name: "MikuPrizesStore" }
   )
 );
 
-export default useMikuModulePrizesStore;
+export default useMikuPrizesStore;

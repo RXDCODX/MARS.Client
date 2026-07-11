@@ -3,23 +3,23 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Textfit } from "react-textfit";
 import { useShallow } from "zustand/react/shallow";
 import useTelegramusHubStore from "@/shared/stores/telegramusHubStore";
-import useMikuModulePrizesStore from "@/shared/stores/mikuModulePrizesStore";
+import useMikuPrizesStore from "@/shared/stores/mikuPrizesStore";
 import animate from "@/shared/styles/animate.module.scss";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import Announce from "@/shared/Utils/Announce/Announce";
 import InjectStyles from "@/shared/components/InjectStyles";
 
 import common from "../OBSCommon.module.scss";
-import { getMikuModuleText } from "./helper";
+import { getMikuText } from "./helper";
 import styles from "../WaifuAlerts/WaifuAlerts.module.scss";
 import WaifuRoulette from "../WaifuAlerts/WaifuRoulette";
 
-export default function MikuModuleAlerts() {
-  const currentMikuModuleMessage = useTelegramusHubStore(
-    useShallow(state => state.currentMikuModuleMessage)
+export default function MikuAlerts() {
+  const currentMikuMessage = useTelegramusHubStore(
+    useShallow(state => state.currentMikuMessage)
   );
-  const dequeueMikuModuleCurrent = useTelegramusHubStore(
-    state => state.dequeueMikuModuleCurrent
+  const dequeueMikuCurrent = useTelegramusHubStore(
+    state => state.dequeueMikuCurrent
   );
   const startHub = useTelegramusHubStore(state => state.start);
   const [announced, setAnnounced] = useState(false);
@@ -29,22 +29,22 @@ export default function MikuModuleAlerts() {
   const sendMessage = useTwitchStore(state => state.sendMsgToPyrokxnezxz);
   const imageLoadTimeoutReference = useRef<NodeJS.Timeout | null>(null);
 
-  const prizes = useMikuModulePrizesStore(useShallow(state => state.prizes));
-  const shufflePrizes = useMikuModulePrizesStore(state => state.shuffle);
+  const prizes = useMikuPrizesStore(useShallow(state => state.prizes));
+  const shufflePrizes = useMikuPrizesStore(state => state.shuffle);
 
   useEffect(() => {
     startHub();
   }, [startHub]);
 
   const handleRemoveEvent = useCallback(() => {
-    dequeueMikuModuleCurrent();
-  }, [dequeueMikuModuleCurrent]);
+    dequeueMikuCurrent();
+  }, [dequeueMikuCurrent]);
 
   useEffect(() => {
-    if (currentMikuModuleMessage) {
+    if (currentMikuMessage) {
       if (prizes && prizes.length > 0) {
         const index = prizes.findIndex(
-          prize => prize.id === currentMikuModuleMessage.mikuModule.pageId
+          prize => prize.id === currentMikuMessage.mikuModule.pageId
         );
 
         if (index === -1) {
@@ -69,10 +69,10 @@ export default function MikuModuleAlerts() {
         return () => clearTimeout(timeout);
       }
     }
-  }, [prizes, currentMikuModuleMessage]);
+  }, [prizes, currentMikuMessage]);
 
   useEffect(() => {
-    if (!(currentMikuModuleMessage && isRouletted)) {
+    if (!(currentMikuMessage && isRouletted)) {
       return;
     }
 
@@ -90,7 +90,7 @@ export default function MikuModuleAlerts() {
       clearTimeout(imageLoadTimeoutReference.current);
       imageLoadTimeoutReference.current = null;
     };
-  }, [currentMikuModuleMessage, isRouletted, handleRemoveEvent]);
+  }, [currentMikuMessage, isRouletted, handleRemoveEvent]);
 
   return (
     <div className={common.textStrokeShadow}>
@@ -106,20 +106,17 @@ export default function MikuModuleAlerts() {
             flex-direction: column;
           }
         `}
-        id="miku-module-alerts-styles"
+        id="miku-alerts-styles"
       />
       {!announced && (
-        <Announce
-          title={"MikuModuleRoll"}
-          callback={() => setAnnounced(true)}
-        />
+        <Announce title={"MikuRoll"} callback={() => setAnnounced(true)} />
       )}
-      {currentMikuModuleMessage &&
+      {currentMikuMessage &&
         !isRouletted &&
         rouletteIndex !== -1 &&
         prizes.length > 0 && (
           <WaifuRoulette
-            key={currentMikuModuleMessage.mikuModule.pageId}
+            key={currentMikuMessage.mikuModule.pageId}
             shuffle={shufflePrizes}
             callback={() => {
               setIsRouletted(true);
@@ -131,22 +128,22 @@ export default function MikuModuleAlerts() {
               id: String(p.id),
               text: p.text || "",
             }))}
-            twitchUser={currentMikuModuleMessage.twitchUser}
+            twitchUser={currentMikuMessage.twitchUser}
             wide
           />
         )}
-      {currentMikuModuleMessage &&
+      {currentMikuMessage &&
         !isRouletted &&
         rouletteIndex === -1 &&
         prizes.length === 0 && (
           <div className={styles["roulette-name-text"]}>
-            <span>Загрузка рулетки Miku Module...</span>
+            <span>Загрузка рулетки Miku...</span>
           </div>
         )}
-      {currentMikuModuleMessage && isRouletted && (
+      {currentMikuMessage && isRouletted && (
         <div
-          id={String(currentMikuModuleMessage.mikuModule.pageId)}
-          key={currentMikuModuleMessage.mikuModule.pageId}
+          id={String(currentMikuMessage.mikuModule.pageId)}
+          key={currentMikuMessage.mikuModule.pageId}
           ref={divHard}
           className={
             styles.baza + " " + animate.bounceIn + " " + animate.animated
@@ -154,7 +151,7 @@ export default function MikuModuleAlerts() {
         >
           <div className={styles["alert-box"]}>
             <img
-              src={currentMikuModuleMessage.mikuModule.thumbnailUrl}
+              src={currentMikuMessage.mikuModule.thumbnailUrl}
               style={{ height: "498px", width: "320px" }}
               onLoad={() => {
                 if (imageLoadTimeoutReference.current) {
@@ -179,7 +176,7 @@ export default function MikuModuleAlerts() {
                 }, 7000);
 
                 sendMessage(
-                  `@${currentMikuModuleMessage.twitchUser.displayName}, ${getMikuModuleText(currentMikuModuleMessage)}!`
+                  `@${currentMikuMessage.twitchUser.displayName}, ${getMikuText(currentMikuMessage)}!`
                 );
               }}
               onError={() => {
@@ -195,16 +192,16 @@ export default function MikuModuleAlerts() {
             />
           </div>
           <div className={styles["alert-box"]}>
-            {currentMikuModuleMessage.twitchUser.profileImageUrl && (
+            {currentMikuMessage.twitchUser.profileImageUrl && (
               <img
-                src={currentMikuModuleMessage.twitchUser.profileImageUrl}
-                alt={currentMikuModuleMessage.twitchUser.displayName}
+                src={currentMikuMessage.twitchUser.profileImageUrl}
+                alt={currentMikuMessage.twitchUser.displayName}
                 style={{
                   width: "80px",
                   height: "80px",
                   borderRadius: "50%",
-                  border: `4px solid ${currentMikuModuleMessage.twitchUser.chatColor || "white"}`,
-                  boxShadow: `0 0 20px ${currentMikuModuleMessage.twitchUser.chatColor || "white"}`,
+                  border: `4px solid ${currentMikuMessage.twitchUser.chatColor || "white"}`,
+                  boxShadow: `0 0 20px ${currentMikuMessage.twitchUser.chatColor || "white"}`,
                   marginBottom: "10px",
                 }}
               />
@@ -212,11 +209,11 @@ export default function MikuModuleAlerts() {
             <span
               className="text-shadow block-text"
               style={{
-                color: currentMikuModuleMessage.twitchUser.chatColor || "white",
+                color: currentMikuMessage.twitchUser.chatColor || "white",
               }}
             >
               <Textfit min={1} max={1500} forceSingleModeWidth>
-                {currentMikuModuleMessage.twitchUser.displayName.toUpperCase()}
+                {currentMikuMessage.twitchUser.displayName.toUpperCase()}
               </Textfit>
             </span>
             <span
@@ -226,7 +223,7 @@ export default function MikuModuleAlerts() {
               }}
             >
               <Textfit min={1} max={1500} forceSingleModeWidth>
-                {getMikuModuleText(currentMikuModuleMessage)}
+                {getMikuText(currentMikuMessage)}
               </Textfit>
             </span>
           </div>

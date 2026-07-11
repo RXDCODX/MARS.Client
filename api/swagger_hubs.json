@@ -1014,7 +1014,24 @@
         "responses": { }
       }
     },
-    "/hubs/telegramus/MikuModuleRoll": {
+    "/hubs/telegramus/MikuMonday": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "mikuMondayData",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/MikuMondayDto"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/MikuRoll": {
       "post": {
         "tags": [
           "TelegramusHub"
@@ -1039,23 +1056,6 @@
             "in": "query",
             "schema": {
               "type": "string"
-            }
-          }
-        ],
-        "responses": { }
-      }
-    },
-    "/hubs/telegramus/MikuMonday": {
-      "post": {
-        "tags": [
-          "TelegramusHub"
-        ],
-        "parameters": [
-          {
-            "name": "mikuMondayData",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/MikuMondayDto"
             }
           }
         ],
@@ -1200,7 +1200,7 @@
         "responses": { }
       }
     },
-    "/hubs/telegramus/UpdateMikuModulePrizes": {
+    "/hubs/telegramus/UpdateMikuPrizes": {
       "post": {
         "tags": [
           "TelegramusHub"

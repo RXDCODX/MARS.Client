@@ -5,13 +5,13 @@ import { devtools } from "zustand/middleware";
 
 import { FrogAlertProps } from "@/components/OBS_Components/FrogAlerts/helper";
 import { FumoAlertProps } from "@/components/OBS_Components/FumoAlerts/helper";
-import { MikuModuleAlertProps } from "@/components/OBS_Components/MikuModuleAlerts/helper";
+import { MikuAlertProps } from "@/components/OBS_Components/MikuAlerts/helper";
 import { WaifuAlertProps } from "@/components/OBS_Components/WaifuAlerts/helper";
 import { Frog, Fumo, Host, MikuModule, TwitchUser, Waifu } from "@/shared/api";
 import { TelegramusHubSignalRConnectionBuilder } from "@/shared/api/signalr-clients/TelegramusHub/SignalRContext";
 import useFrogPrizesStore from "@/shared/stores/frogPrizesStore";
 import useFumoPrizesStore from "@/shared/stores/fumoPrizesStore";
-import useMikuModulePrizesStore from "@/shared/stores/mikuModulePrizesStore";
+import useMikuPrizesStore from "@/shared/stores/mikuPrizesStore";
 import useWaifuPrizesStore from "@/shared/stores/waifuPrizesStore";
 
 interface TelegramusHubActions {
@@ -22,7 +22,7 @@ interface TelegramusHubActions {
   dequeueCurrent: () => void;
   dequeueFumoCurrent: () => void;
   dequeueFrogCurrent: () => void;
-  dequeueMikuModuleCurrent: () => void;
+  dequeueMikuCurrent: () => void;
 }
 
 interface TelegramusHubState {
@@ -44,10 +44,10 @@ interface TelegramusHubState {
   currentFrogMessage?: FrogAlertProps;
   isFrogShowing: boolean;
 
-  // Очередь алертов MikuModule
-  mikuModuleMessages: MikuModuleAlertProps[];
-  currentMikuModuleMessage?: MikuModuleAlertProps;
-  isMikuModuleShowing: boolean;
+  // Очередь алертов Miku
+  mikuMessages: MikuAlertProps[];
+  currentMikuMessage?: MikuAlertProps;
+  isMikuShowing: boolean;
 }
 
 const initialState: TelegramusHubState = {
@@ -58,8 +58,8 @@ const initialState: TelegramusHubState = {
   isFumoShowing: false,
   frogMessages: [],
   isFrogShowing: false,
-  mikuModuleMessages: [],
-  isMikuModuleShowing: false,
+  mikuMessages: [],
+  isMikuShowing: false,
 };
 
 export const useTelegramusHubStore = create<
@@ -222,38 +222,38 @@ export const useTelegramusHubStore = create<
         connection.on("updatefrogprizes", handleFrogPrizesUpdate);
         connection.on("UpdateFrogPrizes", handleFrogPrizesUpdate);
 
-        // MikuModuleRoll обработчик
+        // MikuRoll обработчик
         connection.on(
-          "MikuModuleRoll",
+          "MikuRoll",
           (mikuModule: MikuModule, twitchUser: TwitchUser, color?: string) => {
-            const parsed: MikuModuleAlertProps = {
+            const parsed: MikuAlertProps = {
               mikuModule,
               twitchUser,
               color,
             };
-            const { mikuModuleMessages, isMikuModuleShowing } = get();
-            if (!isMikuModuleShowing) {
+            const { mikuMessages, isMikuShowing } = get();
+            if (!isMikuShowing) {
               set({
-                mikuModuleMessages: [...mikuModuleMessages],
-                currentMikuModuleMessage: parsed,
-                isMikuModuleShowing: true,
+                mikuMessages: [...mikuMessages],
+                currentMikuMessage: parsed,
+                isMikuShowing: true,
               });
               return;
             }
-            set({ mikuModuleMessages: [...mikuModuleMessages, parsed] });
+            set({ mikuMessages: [...mikuMessages, parsed] });
           }
         );
 
-        // UpdateMikuModulePrizes обработчик
-        const handleMikuModulePrizesUpdate = (prizes: PrizeType[]) => {
+        // UpdateMikuPrizes обработчик
+        const handleMikuPrizesUpdate = (prizes: PrizeType[]) => {
           if (!prizes || prizes.length === 0) {
             return;
           }
-          useMikuModulePrizesStore.getState().addPrizes(prizes);
+          useMikuPrizesStore.getState().addPrizes(prizes);
         };
 
-        connection.on("updatemikumoduleprizes", handleMikuModulePrizesUpdate);
-        connection.on("UpdateMikuModulePrizes", handleMikuModulePrizesUpdate);
+        connection.on("updatemikuprizes", handleMikuPrizesUpdate);
+        connection.on("UpdateMikuPrizes", handleMikuPrizesUpdate);
 
         await connection.start();
         set({ connection, isConnected: true });
@@ -362,33 +362,32 @@ export const useTelegramusHubStore = create<
         });
       },
 
-      dequeueMikuModuleCurrent: () => {
-        const { mikuModuleMessages, currentMikuModuleMessage } = get();
-        if (mikuModuleMessages.length > 0 && currentMikuModuleMessage) {
-          const newArray = mikuModuleMessages.filter(
-            m =>
-              m.mikuModule.pageId !== currentMikuModuleMessage.mikuModule.pageId
+      dequeueMikuCurrent: () => {
+        const { mikuMessages, currentMikuMessage } = get();
+        if (mikuMessages.length > 0 && currentMikuMessage) {
+          const newArray = mikuMessages.filter(
+            m => m.mikuModule.pageId !== currentMikuMessage.mikuModule.pageId
           );
           if (newArray.length > 0) {
             const next = newArray[0];
             set({
-              mikuModuleMessages: newArray,
-              currentMikuModuleMessage: next,
-              isMikuModuleShowing: true,
+              mikuMessages: newArray,
+              currentMikuMessage: next,
+              isMikuShowing: true,
             });
             return;
           }
           set({
-            mikuModuleMessages: [],
-            currentMikuModuleMessage: undefined,
-            isMikuModuleShowing: false,
+            mikuMessages: [],
+            currentMikuMessage: undefined,
+            isMikuShowing: false,
           });
           return;
         }
         set({
-          mikuModuleMessages: [],
-          currentMikuModuleMessage: undefined,
-          isMikuModuleShowing: false,
+          mikuMessages: [],
+          currentMikuMessage: undefined,
+          isMikuShowing: false,
         });
       },
     }),

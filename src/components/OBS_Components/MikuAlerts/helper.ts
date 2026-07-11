@@ -1,11 +1,11 @@
 import { MikuModule, TwitchUser } from "@/shared/api";
 
-export interface MikuModuleAlertProps {
+export interface MikuAlertProps {
   mikuModule: MikuModule;
   twitchUser: TwitchUser;
   color?: string;
 }
 
-export function getMikuModuleText(message: MikuModuleAlertProps) {
+export function getMikuText(message: MikuAlertProps) {
   return `теперь у тебя костюм ${message.mikuModule.japaneseName ?? message.mikuModule.title}`;
 }

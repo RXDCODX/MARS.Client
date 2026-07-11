@@ -137,9 +137,9 @@ const frogAlertsLoader = () =>
   import("@/components/OBS_Components/FrogAlerts/FrogAlerts");
 const FrogAlerts = lazy(frogAlertsLoader);
 
-const mikuModuleAlertsLoader = () =>
-  import("@/components/OBS_Components/MikuModuleAlerts/MikuModuleAlerts");
-const MikuModuleAlerts = lazy(mikuModuleAlertsLoader);
+const mikuAlertsLoader = () =>
+  import("@/components/OBS_Components/MikuAlerts/MikuAlerts");
+const MikuAlerts = lazy(mikuAlertsLoader);
 
 const phonkEditLoader = () =>
   import("@/components/OBS_Components/PhonkLayout/PhonkLayoutManager");
@@ -183,7 +183,7 @@ registerPrefetchComponents([
   waifuAlertsLoader,
   fumoAlertsLoader,
   frogAlertsLoader,
-  mikuModuleAlertsLoader,
+  mikuAlertsLoader,
 ]);
 
 // Массив OBS компонентов (без Layout для интеграции в OBS)
@@ -392,13 +392,13 @@ export const obsComponentRoutes: RouteConfig[] = [
     ),
   },
   {
-    path: "/miku-modules",
-    name: "Miku Module Алерты",
+    path: "/miku-roll",
+    name: "Miku Алерты",
     type: "obs",
     element: (
       <OBSComponentWrapper>
         <Suspense fallback={<OBSLazyLoader />}>
-          <MikuModuleAlerts />
+          <MikuAlerts />
         </Suspense>
       </OBSComponentWrapper>
     ),
