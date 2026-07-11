@@ -36,7 +36,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Properties) {
     MediaInfo.mediaInfo;
   const frameStyle = getMediaFrameStyle(MediaInfo);
   const player = useRef<HTMLVideoElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerReference = useRef<HTMLDivElement>(null);
   const [, setBackupTimer] = useState<NodeJS.Timeout>();
   const [videoProgress, setVideoProgress] = useState(0);
   const audioContextReference = useRef<AudioContext | null>(null);
@@ -45,7 +45,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Properties) {
 
   useAlertLifecycle({
     mediaInfo: MediaInfo,
-    containerRef,
+    containerRef: containerReference,
     isEnabled: positionInfo.randomCoordinates,
   });
 
@@ -343,7 +343,7 @@ export function Video({ MediaInfo, callback, isHighPrior }: Properties) {
 
   return (
     <div
-      ref={containerRef}
+      ref={containerReference}
       id={memoizedId}
       key={id}
       className={styles.media}

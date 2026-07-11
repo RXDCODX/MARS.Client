@@ -59,7 +59,7 @@ function isWithinViewport(
 function getRandomInt(min: number, max: number): number {
   const buffer = new Uint32Array(1);
   crypto.getRandomValues(buffer);
-  return Math.floor((buffer[0] / (0xffffffff + 1)) * (max - min + 1)) + min;
+  return Math.floor((buffer[0] / (0xff_ff_ff_ff + 1)) * (max - min + 1)) + min;
 }
 
 export const useAlertPlacementStore = create<AlertPlacementState>()(
@@ -156,7 +156,7 @@ export const useAlertPlacementStore = create<AlertPlacementState>()(
         }
 
         // Add random candidates
-        for (let i = 0; i < 20; i++) {
+        for (let index = 0; index < 20; index++) {
           candidates.push({
             x: getRandomInt(0, maxX),
             y: getRandomInt(0, maxY),
@@ -164,9 +164,12 @@ export const useAlertPlacementStore = create<AlertPlacementState>()(
         }
 
         // Shuffle candidates for variety
-        for (let i = candidates.length - 1; i > 0; i--) {
-          const j = getRandomInt(0, i);
-          [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+        for (let index = candidates.length - 1; index > 0; index--) {
+          const index_ = getRandomInt(0, index);
+          [candidates[index], candidates[index_]] = [
+            candidates[index_],
+            candidates[index],
+          ];
         }
 
         // Find first non-overlapping candidate

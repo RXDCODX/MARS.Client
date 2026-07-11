@@ -129,7 +129,12 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Properties) {
           className={styles.media}
           style={{ ...imageStyle, ...frameStyle }}
           onLoad={event => {
-            const cords = getCoordinates(event.currentTarget, mediaInfo, true, id);
+            const cords = getCoordinates(
+              event.currentTarget,
+              mediaInfo,
+              true,
+              id
+            );
             const rotation = getRandomRotation(mediaInfo);
             const size = { ...imageStyle };
             setContainerStyle(() => ({
@@ -183,7 +188,12 @@ export function Image({ mediaInfo: MediaInfo, callBack }: Properties) {
             );
           }}
           onLoad={event => {
-            const cords = getCoordinates(event.currentTarget, mediaInfo, true, id);
+            const cords = getCoordinates(
+              event.currentTarget,
+              mediaInfo,
+              true,
+              id
+            );
             const rotation = getRandomRotation(mediaInfo);
             const size = { ...imageStyle };
             setContainerStyle(() => ({

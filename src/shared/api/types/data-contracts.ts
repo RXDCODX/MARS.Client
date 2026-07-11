@@ -1518,6 +1518,42 @@ export interface LogMessageDto {
   timestamp: string;
 }
 
+export interface MikuModule {
+  /** @maxLength 2000 */
+  description?: string;
+  /** @maxLength 200 */
+  designer?: string;
+  /** @maxLength 300 */
+  japaneseName?: string;
+  /** @format date-time */
+  lastOrder: string;
+  /** @format int32 */
+  orderCount: number;
+  /** @format int32 */
+  pageId: number;
+  /** @maxLength 500 */
+  songs?: string;
+  /**
+   * @minLength 1
+   * @maxLength 500
+   */
+  thumbnailUrl: string;
+  /**
+   * @minLength 1
+   * @maxLength 300
+   */
+  title: string;
+  /** @format date-time */
+  whenAdded: string;
+}
+
+export interface MikuModulePrizeType {
+  /** @format int32 */
+  id: number;
+  image: string;
+  text: string;
+}
+
 export interface MikuMondayDto {
   availableTracks: MikuTrackDto[];
   /** @format uuid */

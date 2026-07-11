@@ -35,13 +35,13 @@ const HusbandList: React.FC = () => {
 
     return sorted.filter(
       h =>
-        (h.displayName && h.displayName.toLowerCase().includes(normalizedQuery))
+        h.displayName && h.displayName.toLowerCase().includes(normalizedQuery)
     );
   }, [husbands, searchQuery, sortDirection]);
 
   const findWaifuForHusband = (waifuBrideId?: string | null) => {
     if (!waifuBrideId) {
-      return undefined;
+      return;
     }
     return waifus.find(w => w.shikiId === waifuBrideId);
   };
@@ -124,7 +124,9 @@ const HusbandList: React.FC = () => {
                   {husband.whenOrdered && (
                     <div className={styles.cardMeta}>
                       Последний роул:{" "}
-                      {new Date(husband.whenOrdered).toLocaleDateString("ru-RU")}
+                      {new Date(husband.whenOrdered).toLocaleDateString(
+                        "ru-RU"
+                      )}
                     </div>
                   )}
                 </div>

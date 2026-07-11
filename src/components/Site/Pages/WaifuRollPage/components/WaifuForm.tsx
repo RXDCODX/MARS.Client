@@ -1,7 +1,6 @@
-import { useEffect, useRef } from "react";
-
 import { Button, Input, InputNumber, Select, Typography } from "antd";
 import { Save, Upload, X } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
@@ -20,7 +19,7 @@ const WaifuForm: React.FC = () => {
   const cancelForm = useWaifuRollStore(s => s.cancelForm);
   const loadAudios = useWaifuRollStore(s => s.loadAudios);
   const uploadAudio = useWaifuRollStore(s => s.uploadAudio);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputReference = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (showForm && audios.length === 0) {
@@ -57,8 +56,8 @@ const WaifuForm: React.FC = () => {
       showToast(result);
     }
 
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
+    if (fileInputReference.current) {
+      fileInputReference.current.value = "";
     }
   };
 
@@ -117,7 +116,7 @@ const WaifuForm: React.FC = () => {
                 }))}
               />
               <input
-                ref={fileInputRef}
+                ref={fileInputReference}
                 type="file"
                 accept=".mp3,.wav,.ogg,.m4a,.flac"
                 onChange={handleAudioUpload}
@@ -126,7 +125,7 @@ const WaifuForm: React.FC = () => {
               />
               <Button
                 icon={<Upload size={14} />}
-                onClick={() => fileInputRef.current?.click()}
+                onClick={() => fileInputReference.current?.click()}
                 data-testid="button-upload-audio"
               >
                 Загрузить

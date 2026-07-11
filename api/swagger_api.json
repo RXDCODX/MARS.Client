@@ -8334,6 +8334,10 @@
             "type": "string",
             "nullable": true
           },
+          "profileImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
           "whenOrdered": {
             "type": "string",
             "format": "date-time"

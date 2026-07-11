@@ -8,7 +8,7 @@
  */
 export function getApiBaseUrl(): string {
   // В браузере используем import.meta.env
-  if (typeof window !== "undefined" && typeof import.meta !== "undefined") {
+  if (typeof window !== "undefined" && import.meta !== undefined) {
     const basePath = import.meta.env.VITE_BASE_PATH;
     if (basePath) {
       return basePath.replace(/\/$/, "");

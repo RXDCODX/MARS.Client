@@ -83,9 +83,9 @@ const environmentVariablesPageLoader = () =>
 const EnvironmentVariablesPage = lazy(environmentVariablesPageLoader);
 
 const waifuRollPageLoader = () =>
-  import("@/components/Site/Pages/WaifuRollPage/WaifuRollPage").then(
-    m => ({ default: m.default })
-  );
+  import("@/components/Site/Pages/WaifuRollPage/WaifuRollPage").then(m => ({
+    default: m.default,
+  }));
 
 const WaifuRollPage = lazy(waifuRollPageLoader);
 

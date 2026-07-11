@@ -39,9 +39,8 @@ const WaifuList: React.FC = () => {
     );
   }, [waifus, searchQuery, sortDirection]);
 
-  const findHusbandForWaifu = (shikiId: string) => {
-    return husbands.find(h => h.waifuBrideId === shikiId);
-  };
+  const findHusbandForWaifu = (shikiId: string) =>
+    husbands.find(h => h.waifuBrideId === shikiId);
 
   if (isLoading) {
     return (
@@ -116,9 +115,7 @@ const WaifuList: React.FC = () => {
                     {waifu.isPrivated && husband ? (
                       <span
                         className={styles.statusLink}
-                        onClick={() =>
-                          switchToHusbandAndEdit(husband.twitchId)
-                        }
+                        onClick={() => switchToHusbandAndEdit(husband.twitchId)}
                         data-testid={`link-husband-${waifu.shikiId}`}
                       >
                         Занята: {husband.displayName ?? husband.twitchId}

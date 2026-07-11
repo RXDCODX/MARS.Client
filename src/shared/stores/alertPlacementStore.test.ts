@@ -3,8 +3,10 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { AlertBounds, useAlertPlacementStore } from "./alertPlacementStore";
 
 // Mock window dimensions
-Object.defineProperty(window, "innerWidth", { value: 1920, writable: true });
-Object.defineProperty(window, "innerHeight", { value: 1080, writable: true });
+Object.defineProperties(globalThis, {
+  innerWidth: { value: 1920, writable: true },
+  innerHeight: { value: 1080, writable: true },
+});
 
 describe("alertPlacementStore", () => {
   beforeEach(() => {
@@ -125,12 +127,12 @@ describe("alertPlacementStore", () => {
     const result = useAlertPlacementStore.getState().findFreeSpace(400, 300);
     expect(result).not.toBeNull();
     // Should not overlap with the existing alert
-    const overlaps =
+    const isOverlaps =
       result!.x < alert.x + alert.width + 4 &&
       result!.x + 400 + 4 > alert.x &&
       result!.y < alert.y + alert.height + 4 &&
       result!.y + 300 + 4 > alert.y;
-    expect(overlaps).toBe(false);
+    expect(isOverlaps).toBe(false);
   });
 
   it("returns null when no free space available", () => {
@@ -250,21 +252,22 @@ describe("alertPlacementStore", () => {
     // Run multiple times to account for randomness
     let adjacentCount = 0;
     const runs = 20;
-    for (let i = 0; i < runs; i++) {
+    for (let index = 0; index < runs; index++) {
       const result = useAlertPlacementStore.getState().findFreeSpace(400, 300);
       expect(result).not.toBeNull();
 
       // Check it doesn't overlap
-      const overlaps =
+      const isOverlaps =
         result!.x < alert.x + alert.width + 4 &&
         result!.x + 400 + 4 > alert.x &&
         result!.y < alert.y + alert.height + 4 &&
         result!.y + 300 + 4 > alert.y;
-      expect(overlaps).toBe(false);
+      expect(isOverlaps).toBe(false);
 
       // Check if adjacent (within 100px of any edge)
       const isNearRight = Math.abs(result!.x - (alert.x + alert.width)) <= 100;
-      const isNearBottom = Math.abs(result!.y - (alert.y + alert.height)) <= 100;
+      const isNearBottom =
+        Math.abs(result!.y - (alert.y + alert.height)) <= 100;
       const isNearLeft = Math.abs(result!.x + 400 - alert.x) <= 100;
       const isNearTop = Math.abs(result!.y + 300 - alert.y) <= 100;
       if (isNearRight || isNearBottom || isNearLeft || isNearTop) {

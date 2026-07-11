@@ -21,8 +21,8 @@ export function useAlertLifecycle({
   const updateRemainingTime = useAlertPlacementStore(
     s => s.updateRemainingTime
   );
-  const remainingRef = useRef(metaInfo.duration);
-  const clampedRef = useRef(false);
+  const remainingReference = useRef(metaInfo.duration);
+  const clampedReference = useRef(false);
 
   // Clamp bounds: adjust CSS left/top so the container (media + text) stays within viewport
   const clampBounds = useCallback(() => {
@@ -70,8 +70,8 @@ export function useAlertLifecycle({
     }
 
     // Apply delta to CSS left/top — this moves the entire rotated bounding box
-    const currentLeft = parseFloat(container.style.left || "0");
-    const currentTop = parseFloat(container.style.top || "0");
+    const currentLeft = Number.parseFloat(container.style.left || "0");
+    const currentTop = Number.parseFloat(container.style.top || "0");
     container.style.left = `${currentLeft + deltaX}px`;
     container.style.top = `${currentTop + deltaY}px`;
 
@@ -133,11 +133,11 @@ export function useAlertLifecycle({
       return;
     }
 
-    remainingRef.current = metaInfo.duration;
+    remainingReference.current = metaInfo.duration;
 
     const timer = setInterval(() => {
-      remainingRef.current = Math.max(0, remainingRef.current - 1);
-      updateRemainingTime(id, remainingRef.current);
+      remainingReference.current = Math.max(0, remainingReference.current - 1);
+      updateRemainingTime(id, remainingReference.current);
     }, 1000);
 
     return () => clearInterval(timer);
@@ -161,17 +161,19 @@ export function useAlertLifecycle({
       return;
     }
 
-    clampedRef.current = false;
+    clampedReference.current = false;
 
     const observer = new ResizeObserver(() => {
       // Debounce: only clamp once per frame
-      if (!clampedRef.current) {
-        clampedRef.current = true;
-        requestAnimationFrame(() => {
-          clampBounds();
-          clampedRef.current = false;
-        });
+      if (clampedReference.current) {
+        return;
       }
+
+      clampedReference.current = true;
+      requestAnimationFrame(() => {
+        clampBounds();
+        clampedReference.current = false;
+      });
     });
 
     observer.observe(container);
@@ -183,12 +185,7 @@ export function useAlertLifecycle({
       observer.disconnect();
       clearTimeout(timer);
     };
-  }, [
-    isEnabled,
-    positionInfo.randomCoordinates,
-    containerRef,
-    clampBounds,
-  ]);
+  }, [isEnabled, positionInfo.randomCoordinates, containerRef, clampBounds]);
 
   return { clampBounds };
 }
