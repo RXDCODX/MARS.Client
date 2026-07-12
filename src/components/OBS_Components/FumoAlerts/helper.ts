@@ -4,6 +4,8 @@ export interface FumoAlertProps {
   fumo: Fumo;
   twitchUser: TwitchUser;
   color?: string;
+  collectedCount?: number;
+  totalCount?: number;
 }
 
 export function getFumoText(message: FumoAlertProps) {

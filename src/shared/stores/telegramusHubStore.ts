@@ -148,11 +148,19 @@ export const useTelegramusHubStore = create<
         // FumoRoll обработчик
         connection.on(
           "FumoRoll",
-          (fumo: Fumo, twitchUser: TwitchUser, color?: string) => {
+          (
+            fumo: Fumo,
+            twitchUser: TwitchUser,
+            color?: string,
+            collectedCount?: number,
+            totalCount?: number
+          ) => {
             const parsed: FumoAlertProps = {
               fumo,
               twitchUser,
               color,
+              collectedCount,
+              totalCount,
             };
             const { fumoMessages, isFumoShowing } = get();
             if (!isFumoShowing) {
@@ -225,11 +233,19 @@ export const useTelegramusHubStore = create<
         // MikuRoll обработчик
         connection.on(
           "MikuRoll",
-          (mikuModule: MikuModule, twitchUser: TwitchUser, color?: string) => {
+          (
+            mikuModule: MikuModule,
+            twitchUser: TwitchUser,
+            color?: string,
+            collectedCount?: number,
+            totalCount?: number
+          ) => {
             const parsed: MikuAlertProps = {
               mikuModule,
               twitchUser,
               color,
+              collectedCount,
+              totalCount,
             };
             const { mikuMessages, isMikuShowing } = get();
             if (!isMikuShowing) {

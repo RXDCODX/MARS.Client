@@ -120,7 +120,7 @@ export default function FumoAlerts() {
               text: p.text || "",
             }))}
             twitchUser={currentFumoMessage.twitchUser}
-            wide
+            size="xl"
           />
         )}
       {currentFumoMessage &&
@@ -215,6 +215,22 @@ export default function FumoAlerts() {
                 {getFumoText(currentFumoMessage)}
               </Textfit>
             </span>
+            {currentFumoMessage.collectedCount != null &&
+              currentFumoMessage.totalCount != null &&
+              currentFumoMessage.totalCount > 0 && (
+                <span
+                  className="text-shadow block-text"
+                  style={{
+                    color: "lightgreen",
+                    fontSize: "0.7em",
+                  }}
+                >
+                  <Textfit min={1} max={1500} forceSingleModeWidth>
+                    Коллекция: {currentFumoMessage.collectedCount}/
+                    {currentFumoMessage.totalCount}
+                  </Textfit>
+                </span>
+              )}
           </div>
         </div>
       )}

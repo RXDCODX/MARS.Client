@@ -1,30 +1,28 @@
+import { ROULETTE_SIZE_PRESETS, RouletteSize } from "./rouletteSizes";
+
 import styles from "./WaifuRoulettePrizeItem.module.scss";
 
 interface WaifuRoulettePrizeItemProperties {
   image: string;
   text?: string;
-  wide?: boolean;
+  size?: RouletteSize;
 }
-
-const PRIZE_ITEM_WIDTH = 205;
-const PRIZE_ITEM_HEIGHT = 234;
-const PRIZE_ITEM_WIDE_WIDTH = 260;
 
 export default function WaifuRoulettePrizeItem({
   image,
   text,
-  wide,
+  size = "l",
 }: WaifuRoulettePrizeItemProperties) {
   if (image) {
     const normalizedText = text?.trim();
-    const width = wide ? PRIZE_ITEM_WIDE_WIDTH : PRIZE_ITEM_WIDTH;
+    const preset = ROULETTE_SIZE_PRESETS[size];
 
     return (
       <figure
         className={styles.figure}
         style={{
-          width: `${width}px`,
-          height: `${PRIZE_ITEM_HEIGHT}px`,
+          width: `${preset.width}px`,
+          height: `${preset.height}px`,
           flexShrink: 0,
         }}
         data-testid="waifu-prize-item"

@@ -120,7 +120,7 @@ export default function FrogAlerts() {
               text: p.text || "",
             }))}
             twitchUser={currentFrogMessage.twitchUser}
-            wide
+            size="xl"
           />
         )}
       {currentFrogMessage &&

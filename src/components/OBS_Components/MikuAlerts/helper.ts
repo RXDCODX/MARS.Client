@@ -4,6 +4,8 @@ export interface MikuAlertProps {
   mikuModule: MikuModule;
   twitchUser: TwitchUser;
   color?: string;
+  collectedCount?: number;
+  totalCount?: number;
 }
 
 export function getMikuText(message: MikuAlertProps) {

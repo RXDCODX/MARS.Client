@@ -9,11 +9,8 @@ import { getRandomColor } from "@/shared/Utils";
 
 import styles2 from "../OBSCommon.module.scss";
 import WaifuRoulettePrizeItem from "./components/WaifuRoulettePrizeItem";
+import { ROULETTE_SIZE_PRESETS, RouletteSize } from "./components/rouletteSizes";
 import styles from "./WaifuAlerts.module.scss";
-
-const PRIZE_ITEM_WIDTH = 205;
-const PRIZE_ITEM_WIDE_WIDTH = 260;
-const PRIZE_ITEM_HEIGHT = 234;
 
 interface Properties {
   rouletteIndex: number;
@@ -21,7 +18,7 @@ interface Properties {
   callback: () => void;
   shuffle: () => void;
   twitchUser: TwitchUser;
-  wide?: boolean;
+  size?: RouletteSize;
 }
 
 export default function WaifuRoulette({
@@ -30,7 +27,7 @@ export default function WaifuRoulette({
   callback,
   twitchUser,
   shuffle,
-  wide,
+  size = "l",
 }: Properties) {
   if (prizes.length === 0) {
     throw new Error("Prizes is empty");
@@ -54,17 +51,17 @@ export default function WaifuRoulette({
     animationDuration: "2.2s",
   });
 
-  const itemWidth = wide ? PRIZE_ITEM_WIDE_WIDTH : PRIZE_ITEM_WIDTH;
+  const preset = ROULETTE_SIZE_PRESETS[size];
 
   const designPlugin = useCallback(
     () => ({
       topChildren: null,
       bottomChildren: null,
-      prizeItemWidth: itemWidth,
-      prizeItemHeight: PRIZE_ITEM_HEIGHT,
+      prizeItemWidth: preset.width,
+      prizeItemHeight: preset.height,
       classes: {},
     }),
-    [itemWidth]
+    [preset.width, preset.height]
   );
 
   useEffect(() => {
@@ -121,7 +118,7 @@ export default function WaifuRoulette({
             <WaifuRoulettePrizeItem
               image={prize.image}
               text={prize.text}
-              wide={wide}
+              size={size}
             />
           )}
           onPrizeDefined={() => {

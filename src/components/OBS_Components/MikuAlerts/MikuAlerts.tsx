@@ -120,7 +120,7 @@ export default function MikuAlerts() {
               text: p.text || "",
             }))}
             twitchUser={currentMikuMessage.twitchUser}
-            wide
+            size="xxxxl"
           />
         )}
       {currentMikuMessage &&
@@ -215,6 +215,22 @@ export default function MikuAlerts() {
                 {getMikuText(currentMikuMessage)}
               </Textfit>
             </span>
+            {currentMikuMessage.collectedCount != null &&
+              currentMikuMessage.totalCount != null &&
+              currentMikuMessage.totalCount > 0 && (
+                <span
+                  className="text-shadow block-text"
+                  style={{
+                    color: "lightgreen",
+                    fontSize: "0.7em",
+                  }}
+                >
+                  <Textfit min={1} max={1500} forceSingleModeWidth>
+                    Коллекция: {currentMikuMessage.collectedCount}/
+                    {currentMikuMessage.totalCount}
+                  </Textfit>
+                </span>
+              )}
           </div>
         </div>
       )}
