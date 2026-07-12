@@ -25,12 +25,18 @@ export default function FumoAlerts() {
   const [announced, setAnnounced] = useState(false);
   const divHard = useRef<HTMLDivElement>(null);
   const [isRouletted, setIsRouletted] = useState(false);
-  const [rouletteIndex, setRouletteIndex] = useState(-1);
   const sendMessage = useTwitchStore(state => state.sendMsgToPyrokxnezxz);
   const imageLoadTimeoutReference = useRef<NodeJS.Timeout | null>(null);
 
   const prizes = useFumoPrizesStore(useShallow(state => state.prizes));
   const shufflePrizes = useFumoPrizesStore(state => state.shuffle);
+
+  const rouletteIndex =
+    currentFumoMessage && prizes.length > 0
+      ? prizes.findIndex(
+          prize => prize.id === currentFumoMessage.fumo.mfcId
+        )
+      : -1;
 
   useEffect(() => {
     startHub();
@@ -41,35 +47,22 @@ export default function FumoAlerts() {
   }, [dequeueFumoCurrent]);
 
   useEffect(() => {
-    if (currentFumoMessage) {
-      if (prizes && prizes.length > 0) {
-        const index = prizes.findIndex(
-          prize => prize.id === currentFumoMessage.fumo.mfcId
-        );
-
-        if (index === -1) {
-          queueMicrotask(() => {
-            setRouletteIndex(-1);
-            setIsRouletted(true);
-          });
-        } else {
-          queueMicrotask(() => {
-            setRouletteIndex(index);
-          });
-        }
-      } else {
-        queueMicrotask(() => {
-          setRouletteIndex(-1);
-        });
-
-        const timeout = setTimeout(() => {
-          setIsRouletted(true);
-        }, 5000);
-
-        return () => clearTimeout(timeout);
-      }
+    if (!currentFumoMessage) {
+      return;
     }
-  }, [prizes, currentFumoMessage]);
+
+    if (prizes.length > 0 && rouletteIndex === -1) {
+      setIsRouletted(true);
+      return;
+    }
+
+    if (prizes.length === 0) {
+      const timeout = setTimeout(() => {
+        setIsRouletted(true);
+      }, 5000);
+      return () => clearTimeout(timeout);
+    }
+  }, [currentFumoMessage, prizes, rouletteIndex]);
 
   useEffect(() => {
     if (!(currentFumoMessage && isRouletted)) {
@@ -78,7 +71,6 @@ export default function FumoAlerts() {
 
     imageLoadTimeoutReference.current = setTimeout(() => {
       handleRemoveEvent();
-      setRouletteIndex(-1);
       setIsRouletted(false);
     }, 10_000);
 
@@ -120,7 +112,6 @@ export default function FumoAlerts() {
             shuffle={shufflePrizes}
             callback={() => {
               setIsRouletted(true);
-              setRouletteIndex(-1);
             }}
             rouletteIndex={rouletteIndex}
             prizes={(prizes || []).map(p => ({
@@ -162,7 +153,6 @@ export default function FumoAlerts() {
                 setTimeout(() => {
                   divHard.current!.addEventListener("animationend", () => {
                     handleRemoveEvent();
-                    setRouletteIndex(-1);
                     setIsRouletted(false);
                     shufflePrizes();
                   });
@@ -186,7 +176,6 @@ export default function FumoAlerts() {
                 }
 
                 handleRemoveEvent();
-                setRouletteIndex(-1);
                 setIsRouletted(false);
               }}
             />

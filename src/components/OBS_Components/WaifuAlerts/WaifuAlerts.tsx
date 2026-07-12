@@ -28,13 +28,20 @@ export default function WaifuAlerts() {
   const [announced, setAnnounced] = useState(false);
   const divHard = useRef<HTMLDivElement>(null);
   const [isRouletted, setIsRouletted] = useState(false);
-  const [rouletteIndex, setRouletteIndex] = useState(-1);
   const sendMessage = useTwitchStore(state => state.sendMsgToPyrokxnezxz);
   const imageLoadTimeoutReference = useRef<NodeJS.Timeout | null>(null);
 
   // Используем отдельный store для призов
   const prizes = useWaifuPrizesStore(useShallow(state => state.prizes));
   const shufflePrizes = useWaifuPrizesStore(state => state.shuffle);
+
+  // Compute rouletteIndex at render time so it's always in sync with prizes
+  const rouletteIndex =
+    currentMessage && prizes.length > 0
+      ? prizes.findIndex(
+          prize => prize.id === currentMessage.waifu.shikiId
+        )
+      : -1;
 
   // Инициализируем подключение к хабу при монтировании
   useEffect(() => {
@@ -51,61 +58,18 @@ export default function WaifuAlerts() {
       return;
     }
 
-    console.log("Current message changed:", {
-      waifuId: currentMessage.waifu.shikiId,
-      waifuName: currentMessage.waifu.name,
-      hasTwitchUser: !!currentMessage.waifuHusband?.twitchUser,
-      twitchUserId: currentMessage.waifuHusband?.twitchUser?.twitchId,
-    });
-    console.log("Prizes available:", prizes.length);
+    if (prizes.length > 0 && rouletteIndex === -1) {
+      setIsRouletted(true);
+      return;
+    }
 
-    if (prizes && prizes.length > 0) {
-      const index = prizes.findIndex(
-        prize => prize.id === currentMessage.waifu.shikiId
-      );
-      console.log(
-        "Found prize index:",
-        index,
-        "for waifu:",
-        currentMessage.waifu.shikiId
-      );
-
-      if (index === -1) {
-        console.warn("⚠️ Waifu not found in prizes list! Skipping roulette.");
-        // Если вайфу нет в списке призов, сразу показываем алерт
-        queueMicrotask(() => {
-          setRouletteIndex(-1);
-          setIsRouletted(true);
-        });
-      } else if (currentMessage.waifuHusband?.twitchUser) {
-        queueMicrotask(() => {
-          setRouletteIndex(index);
-        });
-      } else {
-        console.warn("⚠️ TwitchUser not loaded! Skipping roulette.");
-        // Если TwitchUser не загружен, показываем алерт без рулетки
-        queueMicrotask(() => {
-          setRouletteIndex(-1);
-          setIsRouletted(true);
-        });
-      }
-    } else {
-      console.log("No prizes available, waiting for UpdateWaifuPrizes...");
-      queueMicrotask(() => {
-        setRouletteIndex(-1);
-      });
-
-      // Если призы не загружены, ждем 5 секунд и показываем алерт
+    if (prizes.length === 0) {
       const timeout = setTimeout(() => {
-        console.warn(
-          "⚠️ Prizes timeout after 5 seconds! Showing alert directly."
-        );
         setIsRouletted(true);
       }, 5000);
-
       return () => clearTimeout(timeout);
     }
-  }, [prizes, currentMessage]);
+  }, [currentMessage, prizes, rouletteIndex]);
 
   useEffect(() => {
     if (
@@ -125,12 +89,7 @@ export default function WaifuAlerts() {
     }
 
     imageLoadTimeoutReference.current = setTimeout(() => {
-      console.warn(
-        "Таймаут загрузки изображения waifu:",
-        currentMessage.waifu.imageUrl
-      );
       handleRemoveEvent();
-      setRouletteIndex(-1);
       setIsRouletted(false);
     }, 10_000);
 
@@ -158,52 +117,6 @@ export default function WaifuAlerts() {
     handleRemoveEvent();
     throw new Error("Failed to play audio");
   }, [unmuteAll, handleRemoveEvent]);
-
-  // Отслеживание изменений prizes
-  const previousPrizesLengthReference = useRef(prizes.length);
-
-  useEffect(() => {
-    const previousLength = previousPrizesLengthReference.current;
-    const currentLength = prizes.length;
-
-    if (previousLength !== currentLength) {
-      console.log("🔍 PRIZES ИЗМЕНИЛИСЬ:", {
-        было: previousLength,
-        стало: currentLength,
-        разница: currentLength - previousLength,
-        стекТрейс: new Error().stack,
-      });
-
-      if (currentLength === 0 && previousLength > 0) {
-        console.error("❌❌❌ ПРИЗЫ ОБНУЛИЛИСЬ! Было:", previousLength);
-        console.trace("Stack trace при обнулении");
-      }
-
-      previousPrizesLengthReference.current = currentLength;
-    }
-
-    console.log("WaifuAlerts render state:", {
-      currentMessage: !!currentMessage,
-      isRouletted,
-      rouletteIndex,
-      prizesLength: prizes.length,
-      announced,
-      shouldShowRoulette:
-        currentMessage &&
-        !isRouletted &&
-        rouletteIndex !== -1 &&
-        prizes.length > 0,
-      shouldShowLoading:
-        currentMessage &&
-        !isRouletted &&
-        rouletteIndex === -1 &&
-        prizes.length === 0,
-      shouldShowAlert:
-        currentMessage &&
-        (isRouletted || prizes.length === 0) &&
-        !currentMessage.waifu.isMerged,
-    });
-  }, [announced, currentMessage, isRouletted, prizes, rouletteIndex]);
 
   return (
     <div className={common.textStrokeShadow} data-testid="obs-waifu-alerts">
@@ -235,7 +148,6 @@ export default function WaifuAlerts() {
             shuffle={shufflePrizes}
             callback={() => {
               setIsRouletted(true);
-              setRouletteIndex(-1);
             }}
             rouletteIndex={rouletteIndex}
             prizes={(prizes || []).map(p => ({
@@ -283,7 +195,6 @@ export default function WaifuAlerts() {
                   setTimeout(() => {
                     divHard.current!.addEventListener("animationend", () => {
                       handleRemoveEvent();
-                      setRouletteIndex(-1);
                       setIsRouletted(false);
                       shufflePrizes();
                     });
@@ -308,12 +219,7 @@ export default function WaifuAlerts() {
                     imageLoadTimeoutReference.current = null;
                   }
 
-                  console.error(
-                    "Ошибка загрузки изображения waifu:",
-                    currentMessage.waifu.imageUrl
-                  );
                   handleRemoveEvent();
-                  setRouletteIndex(-1);
                   setIsRouletted(false);
                 }}
               />
@@ -451,7 +357,6 @@ export default function WaifuAlerts() {
               onError={() => error()}
               onEnded={() => {
                 setIsRouletted(true);
-                setRouletteIndex(-1);
                 unmuteAll();
                 handleRemoveEvent();
               }}

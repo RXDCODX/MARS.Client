@@ -1,6 +1,6 @@
 import "react-roulette-pro/dist/index.css";
 
-import { CSSProperties, useEffect, useRef, useState } from "react";
+import { CSSProperties, useCallback, useEffect, useRef, useState } from "react";
 import RoulettePro from "react-roulette-pro";
 
 import { PrizeType, TwitchUser } from "@/shared/api";
@@ -10,6 +10,10 @@ import { getRandomColor } from "@/shared/Utils";
 import styles2 from "../OBSCommon.module.scss";
 import WaifuRoulettePrizeItem from "./components/WaifuRoulettePrizeItem";
 import styles from "./WaifuAlerts.module.scss";
+
+const PRIZE_ITEM_WIDTH = 205;
+const PRIZE_ITEM_WIDE_WIDTH = 260;
+const PRIZE_ITEM_HEIGHT = 234;
 
 interface Properties {
   rouletteIndex: number;
@@ -49,6 +53,19 @@ export default function WaifuRoulette({
     alignSelf: "center",
     animationDuration: "2.2s",
   });
+
+  const itemWidth = wide ? PRIZE_ITEM_WIDE_WIDTH : PRIZE_ITEM_WIDTH;
+
+  const designPlugin = useCallback(
+    () => ({
+      topChildren: null,
+      bottomChildren: null,
+      prizeItemWidth: itemWidth,
+      prizeItemHeight: PRIZE_ITEM_HEIGHT,
+      classes: {},
+    }),
+    [itemWidth]
+  );
 
   useEffect(() => {
     shuffle();
@@ -99,10 +116,7 @@ export default function WaifuRoulette({
           spinningTime={20}
           type="horizontal"
           options={{ withoutAnimation: true, stopInCenter: true }}
-          defaultDesignOptions={{
-            prizesWithText: true,
-            hideCenterDelimiter: true,
-          }}
+          designPlugin={designPlugin}
           prizeItemRenderFunction={prize => (
             <WaifuRoulettePrizeItem
               image={prize.image}

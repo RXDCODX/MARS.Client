@@ -31,7 +31,6 @@ export default function MikuAlerts() {
   const prizes = useMikuPrizesStore(useShallow(state => state.prizes));
   const shufflePrizes = useMikuPrizesStore(state => state.shuffle);
 
-  // Compute rouletteIndex at render time (not in useEffect) so it's always in sync with prizes
   const rouletteIndex =
     currentMikuMessage && prizes.length > 0
       ? prizes.findIndex(
@@ -52,13 +51,11 @@ export default function MikuAlerts() {
       return;
     }
 
-    // If prizes are loaded but the module isn't found, skip roulette
     if (prizes.length > 0 && rouletteIndex === -1) {
       setIsRouletted(true);
       return;
     }
 
-    // If no prizes yet, wait 5s then skip
     if (prizes.length === 0) {
       const timeout = setTimeout(() => {
         setIsRouletted(true);

@@ -25,6 +25,7 @@ export default function WaifuRoulettePrizeItem({
         style={{
           width: `${width}px`,
           height: `${PRIZE_ITEM_HEIGHT}px`,
+          flexShrink: 0,
         }}
         data-testid="waifu-prize-item"
       >
