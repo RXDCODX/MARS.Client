@@ -32,9 +32,7 @@ describe("frogPrizesStore", () => {
   });
 
   it("shuffle can reorder prizes", () => {
-    const prizes = Array.from({ length: 20 }, (_, i) =>
-      createPrize(String(i))
-    );
+    const prizes = Array.from({ length: 20 }, (_, i) => createPrize(String(i)));
     useFrogPrizesStore.setState({ prizes });
 
     let foundDifferent = false;
@@ -76,7 +74,9 @@ describe("frogPrizesStore", () => {
     const prizes = [createPrize("1"), createPrize("2")];
     useFrogPrizesStore.setState({ prizes });
 
-    useFrogPrizesStore.getState().addPrizes([createPrize("2"), createPrize("3")]);
+    useFrogPrizesStore
+      .getState()
+      .addPrizes([createPrize("2"), createPrize("3")]);
 
     const result = useFrogPrizesStore.getState().prizes;
     expect(result).toHaveLength(3);

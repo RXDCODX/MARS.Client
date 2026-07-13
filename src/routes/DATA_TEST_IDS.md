@@ -42,7 +42,7 @@ This file contains the full list of route-level components where `data-test-id` 
 | `/environment-variables`   | Переменные окружения      | `EnvironmentVariablesPage`  |
 | `/root-state`              | RootState                 | `RootStatePage`             |
 | `/twitch-users`            | Пользователи Twitch       | `TwitchUsersPage`           |
-| `/twitch-users/create`     | Создание пользователя     | `TwitchUserCreatePage`     |
+| `/twitch-users/create`     | Создание пользователя     | `TwitchUserCreatePage`      |
 | `/twitch-users/:id/edit`   | Редактирование            | `TwitchUserEditPage`        |
 | `/twitch-rewards`          | Twitch награды            | `TwitchRewardsPage`         |
 | `/auto-messages`           | Автосообщения             | `AutoMessagesPage`          |

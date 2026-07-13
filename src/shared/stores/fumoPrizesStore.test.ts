@@ -32,9 +32,7 @@ describe("fumoPrizesStore", () => {
   });
 
   it("shuffle can reorder prizes", () => {
-    const prizes = Array.from({ length: 20 }, (_, i) =>
-      createPrize(String(i))
-    );
+    const prizes = Array.from({ length: 20 }, (_, i) => createPrize(String(i)));
     useFumoPrizesStore.setState({ prizes });
 
     // Shuffle multiple times — at least one should produce a different order
@@ -78,7 +76,9 @@ describe("fumoPrizesStore", () => {
     const prizes = [createPrize("1"), createPrize("2")];
     useFumoPrizesStore.setState({ prizes });
 
-    useFumoPrizesStore.getState().addPrizes([createPrize("2"), createPrize("3")]);
+    useFumoPrizesStore
+      .getState()
+      .addPrizes([createPrize("2"), createPrize("3")]);
 
     const result = useFumoPrizesStore.getState().prizes;
     expect(result).toHaveLength(3);

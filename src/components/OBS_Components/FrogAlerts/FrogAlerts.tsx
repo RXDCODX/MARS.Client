@@ -33,9 +33,7 @@ export default function FrogAlerts() {
 
   const rouletteIndex =
     currentFrogMessage && prizes.length > 0
-      ? prizes.findIndex(
-          prize => prize.id === currentFrogMessage.frog.pid
-        )
+      ? prizes.findIndex(prize => prize.id === currentFrogMessage.frog.pid)
       : -1;
 
   useEffect(() => {

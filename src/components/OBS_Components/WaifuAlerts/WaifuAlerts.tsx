@@ -38,9 +38,7 @@ export default function WaifuAlerts() {
   // Compute rouletteIndex at render time so it's always in sync with prizes
   const rouletteIndex =
     currentMessage && prizes.length > 0
-      ? prizes.findIndex(
-          prize => prize.id === currentMessage.waifu.shikiId
-        )
+      ? prizes.findIndex(prize => prize.id === currentMessage.waifu.shikiId)
       : -1;
 
   // Инициализируем подключение к хабу при монтировании

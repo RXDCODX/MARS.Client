@@ -1,18 +1,18 @@
 /* eslint-disable simple-import-sort/imports */
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Textfit } from "react-textfit";
-import { useShallow } from "zustand/react/shallow";
-import useTelegramusHubStore from "@/shared/stores/telegramusHubStore";
+import InjectStyles from "@/shared/components/InjectStyles";
 import useFumoPrizesStore from "@/shared/stores/fumoPrizesStore";
+import useTelegramusHubStore from "@/shared/stores/telegramusHubStore";
 import animate from "@/shared/styles/animate.module.scss";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import Announce from "@/shared/Utils/Announce/Announce";
-import InjectStyles from "@/shared/components/InjectStyles";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { Textfit } from "react-textfit";
+import { useShallow } from "zustand/react/shallow";
 
 import common from "../OBSCommon.module.scss";
-import { getFumoText } from "./helper";
 import styles from "../WaifuAlerts/WaifuAlerts.module.scss";
 import WaifuRoulette from "../WaifuAlerts/WaifuRoulette";
+import { getFumoText } from "./helper";
 
 export default function FumoAlerts() {
   const currentFumoMessage = useTelegramusHubStore(
@@ -33,9 +33,7 @@ export default function FumoAlerts() {
 
   const rouletteIndex =
     currentFumoMessage && prizes.length > 0
-      ? prizes.findIndex(
-          prize => prize.id === currentFumoMessage.fumo.mfcId
-        )
+      ? prizes.findIndex(prize => prize.id === currentFumoMessage.fumo.mfcId)
       : -1;
 
   useEffect(() => {
@@ -166,7 +164,7 @@ export default function FumoAlerts() {
                 }, 7000);
 
                 sendMessage(
-                  `@${currentFumoMessage.twitchUser.displayName}, ${getFumoText(currentFumoMessage)}!`
+                  `@${currentFumoMessage.twitchUser.displayName}, ${getFumoText(currentFumoMessage)}!!${currentFumoMessage.collectedCount != undefined && currentFumoMessage.totalCount != undefined && currentFumoMessage.totalCount > 0 ? ` Твоя коллекция фум насчитывает: ${currentFumoMessage.collectedCount}/${currentFumoMessage.totalCount} уникальных плюшевых фум!` : ""}`
                 );
               }}
               onError={() => {
@@ -215,8 +213,8 @@ export default function FumoAlerts() {
                 {getFumoText(currentFumoMessage)}
               </Textfit>
             </span>
-            {currentFumoMessage.collectedCount != null &&
-              currentFumoMessage.totalCount != null &&
+            {currentFumoMessage.collectedCount != undefined &&
+              currentFumoMessage.totalCount != undefined &&
               currentFumoMessage.totalCount > 0 && (
                 <span
                   className="text-shadow block-text"

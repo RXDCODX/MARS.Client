@@ -166,7 +166,7 @@ export default function MikuAlerts() {
                 }, 7000);
 
                 sendMessage(
-                  `@${currentMikuMessage.twitchUser.displayName}, ${getMikuText(currentMikuMessage)}!`
+                  `@${currentMikuMessage.twitchUser.displayName}, ${getMikuText(currentMikuMessage)}!${currentMikuMessage.collectedCount != null && currentMikuMessage.totalCount != null && currentMikuMessage.totalCount > 0 ? ` Твоя коллекция костюмов насчитывает: ${currentMikuMessage.collectedCount}/${currentMikuMessage.totalCount} уникальных костюмов!` : ""}`
                 );
               }}
               onError={() => {
