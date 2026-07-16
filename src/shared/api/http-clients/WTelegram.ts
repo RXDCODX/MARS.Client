@@ -102,6 +102,7 @@ import type {
   UpdateWaifuRequest,
   ValidateFolderRequest,
   ValidateFolderResponse,
+  VerificationCodeRequest,
   WaifuDto,
   WaifuRollAudioDto,
   BaseCommandAvailablePlatformsEnum,
@@ -164,6 +165,25 @@ export class WTelegram<
     this.request<void, any>({
       path: `/api/WTelegram/status`,
       method: "GET",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags WTelegram
+   * @name WTelegramVerificationCodeCreate
+   * @request POST:/api/WTelegram/verification-code
+   * @response `200` `void` OK
+   */
+  wTelegramVerificationCodeCreate = (
+    data: VerificationCodeRequest,
+    params: RequestParams = {}
+  ) =>
+    this.request<void, any>({
+      path: `/api/WTelegram/verification-code`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
       ...params,
     });
 }

@@ -102,6 +102,7 @@ import type {
   UpdateWaifuRequest,
   ValidateFolderRequest,
   ValidateFolderResponse,
+  VerificationCodeRequest,
   WaifuDto,
   WaifuRollAudioDto,
   BaseCommandAvailablePlatformsEnum,

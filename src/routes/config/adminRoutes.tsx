@@ -76,6 +76,12 @@ const twitchUserEditPageLoader = () =>
   }));
 const TwitchUserEditPage = lazy(twitchUserEditPageLoader);
 
+const wTelegramPageLoader = () =>
+  import("@/components/Site/Pages").then(m => ({
+    default: m.WTelegramPage,
+  }));
+const WTelegramPage = lazy(wTelegramPageLoader);
+
 // Регистрируем админ компоненты для фоновой загрузки
 registerPrefetchComponents([
   logsPageLoader,
@@ -92,6 +98,7 @@ registerPrefetchComponents([
   twitchUsersPageLoader,
   twitchUserCreatePageLoader,
   twitchUserEditPageLoader,
+  wTelegramPageLoader,
 ]);
 
 // Массив панелей управления (с Layout)
@@ -296,6 +303,18 @@ export const adminRoutes: RouteConfig[] = [
       <Layout>
         <Suspense fallback={<PageLoader />}>
           <SpotifyAuthManager />
+        </Suspense>
+      </Layout>
+    ),
+  },
+  {
+    path: "/wtelegram",
+    name: "WTelegram",
+    type: "control panel",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <WTelegramPage />
         </Suspense>
       </Layout>
     ),

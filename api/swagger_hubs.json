@@ -849,6 +849,22 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "collectedCount",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "totalCount",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": { }
@@ -1057,6 +1073,22 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "collectedCount",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "totalCount",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
           }
         ],
         "responses": { }
@@ -1212,7 +1244,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/components/schemas/MikuModulePrizeType"
+                "$ref": "#/components/schemas/MikuPrizeType"
               }
             }
           }
@@ -2554,27 +2586,6 @@
         },
         "additionalProperties": false
       },
-      "MikuModulePrizeType": {
-        "required": [
-          "id",
-          "image",
-          "text"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "image": {
-            "type": "string"
-          },
-          "text": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
       "MikuMondayDto": {
         "required": [
           "availableTracks",
@@ -2611,6 +2622,27 @@
           },
           "skipAvailableTracksUpdate": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MikuPrizeType": {
+        "required": [
+          "id",
+          "image",
+          "text"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "image": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
           }
         },
         "additionalProperties": false

@@ -30,3 +30,6 @@ export {
   MediaInfoEditPage,
   MediaInfoListPage,
 } from "./MediaInfoPage";
+
+// WTelegram страница
+export { default as WTelegramPage } from "./WTelegramPage";

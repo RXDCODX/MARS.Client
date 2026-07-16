@@ -976,6 +976,10 @@ export interface ValidateFolderResponse {
   sampleFiles: string[];
 }
 
+export interface VerificationCodeRequest {
+  code: string;
+}
+
 export interface WaifuDto {
   shikiId: string;
   name: string;
@@ -1547,13 +1551,6 @@ export interface MikuModule {
   whenAdded: string;
 }
 
-export interface MikuModulePrizeType {
-  /** @format int32 */
-  id: number;
-  image: string;
-  text: string;
-}
-
 export interface MikuMondayDto {
   availableTracks: MikuTrackDto[];
   /** @format uuid */
@@ -1561,6 +1558,13 @@ export interface MikuMondayDto {
   selectedTrack: MikuTrackDto;
   skipAvailableTracksUpdate: boolean;
   twitchUser: TwitchUser;
+}
+
+export interface MikuPrizeType {
+  /** @format int32 */
+  id: number;
+  image: string;
+  text: string;
 }
 
 export interface MikuTrackDto {
