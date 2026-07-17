@@ -1167,6 +1167,44 @@
         "responses": { }
       }
     },
+    "/hubs/telegramus/ShowCurrentWife": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "content",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Waifu"
+            }
+          },
+          {
+            "name": "husband",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Husband"
+            }
+          },
+          {
+            "name": "avatar",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "color",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/telegramus/TikTokEdit": {
       "post": {
         "tags": [

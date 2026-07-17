@@ -1,4 +1,4 @@
-import { Host, Waifu } from "@/shared/api";
+import { Husband, Waifu } from "@/shared/api";
 import { getRandomInt } from "@/shared/Utils";
 
 export function shuffleArray<T>(array: T[]): T[] {
@@ -198,7 +198,7 @@ function getCorrectForm(
 export interface WaifuAlertProps {
   waifu: Waifu;
   displayName: string;
-  waifuHusband?: Host;
+  waifuHusband?: Husband;
   color?: string;
   isReminder?: boolean;
 }
