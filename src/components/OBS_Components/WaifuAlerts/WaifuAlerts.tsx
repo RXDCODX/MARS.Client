@@ -1,15 +1,15 @@
 /* eslint-disable simple-import-sort/imports */
-import { useCallback, useEffect, useMemo, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
+import InjectStyles from "@/shared/components/InjectStyles";
 import useTelegramusHubStore from "@/shared/stores/telegramusHubStore";
 import useWaifuPrizesStore from "@/shared/stores/waifuPrizesStore";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import Announce from "@/shared/Utils/Announce/Announce";
-import InjectStyles from "@/shared/components/InjectStyles";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 import common from "../OBSCommon.module.scss";
-import styles from "./WaifuAlerts.module.scss";
 import WaifuAddAlert from "./WaifuAddAlert";
+import styles from "./WaifuAlerts.module.scss";
 import WaifuMarriageAlert from "./WaifuMarriageAlert";
 import WaifuRoulette from "./WaifuRoulette";
 
@@ -124,6 +124,7 @@ export default function WaifuAlerts() {
             rouletteIndex={rouletteIndex}
             prizes={preparedPrizes}
             twitchUser={currentMessage.waifuHusband.twitchUser}
+            size="xxxxl"
           />
         )}
       {currentMessage &&
@@ -160,6 +161,7 @@ export default function WaifuAlerts() {
             onRemove={handleRemoveEvent}
             onMuteAll={muteAll}
             onUnmuteAll={unmuteAll}
+            onSendMessage={sendMessage}
           />
         )}
     </div>
