@@ -41,11 +41,77 @@ const startWords: string[] = [
   "Фактически",
 ];
 
+export function getMergeMarriageText(message: WaifuAlertProps): string {
+  if (
+    !message.waifuHusband?.whenPrivated ||
+    message.waifuHusband.waifuBrideId !== message.waifu.shikiId
+  ) {
+    return "";
+  }
+
+  const privatedDate = new Date(message.waifuHusband.whenPrivated);
+  const now = new Date();
+  const timeDiff = now.getTime() - privatedDate.getTime();
+
+  const span = {
+    days: Math.floor(timeDiff / (1000 * 60 * 60 * 24)),
+    hours: Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+    minutes: Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60)),
+    seconds: Math.floor((timeDiff % (1000 * 60)) / 1000),
+  };
+
+  return getMarriageDurationText(span, message.waifu);
+}
+
+function getMarriageDurationText(span: TimeSpan, waifu: Waifu): string {
+  const totalDays = span.days;
+
+  const years = Math.floor(totalDays / 365);
+  let remainingDays = totalDays % 365;
+
+  const months = Math.floor(remainingDays / 30);
+  remainingDays %= 30;
+
+  const weeks = Math.floor(remainingDays / 7);
+  remainingDays %= 7;
+
+  const parts = [
+    years > 0
+      ? `${years} ${getCorrectForm(years, "год", "года", "лет")}`
+      : null,
+    months > 0
+      ? `${months} ${getCorrectForm(months, "месяц", "месяца", "месяцев")}`
+      : null,
+    weeks > 0
+      ? `${weeks} ${getCorrectForm(weeks, "неделя", "недели", "недель")}`
+      : null,
+    remainingDays > 0
+      ? `${remainingDays} ${getCorrectForm(remainingDays, "день", "дня", "дней")}`
+      : null,
+    span.hours > 0
+      ? `${span.hours} ${getCorrectForm(span.hours, "час", "часа", "часов")}`
+      : null,
+    span.minutes > 0
+      ? `${span.minutes} ${getCorrectForm(span.minutes, "минута", "минуты", "минут")}`
+      : null,
+    span.seconds > 0
+      ? `${span.seconds} ${getCorrectForm(span.seconds, "секунда", "секунды", "секунд")}`
+      : null,
+  ].filter(Boolean);
+
+  const title = waifu.anime?.trim()
+    ? " из аниме " + waifu.anime
+    : " из манги " + waifu.manga;
+
+  return `Ты в браке с ${waifu.name}${title} уже ${parts.join(", ")}!`;
+}
+
 export function getHusbandText(message: WaifuAlertProps) {
   if (
     !message.waifuHusband ||
     !message.waifu.isPrivated ||
-    !message.waifuHusband.whenPrivated
+    !message.waifuHusband.whenPrivated ||
+    message.waifuHusband.waifuBrideId !== message.waifu.shikiId
   ) {
     return "";
   }
@@ -134,6 +200,7 @@ export interface WaifuAlertProps {
   displayName: string;
   waifuHusband?: Host;
   color?: string;
+  isReminder?: boolean;
 }
 
 interface TimeSpan {
