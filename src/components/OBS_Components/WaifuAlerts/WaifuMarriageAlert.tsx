@@ -1,13 +1,11 @@
-/* eslint-disable simple-import-sort/imports */
-import { useCallback, useEffect } from "react";
+import { useEffect, useRef } from "react";
 import SchoolPride from "react-canvas-confetti/dist/presets/pride";
 import { Textfit } from "react-textfit";
 
 import { WaifuAlertProps } from "@/components/OBS_Components/WaifuAlerts/helper";
-import { getRandomColor } from "@/shared/Utils";
+import animate from "@/shared/styles/animate.module.scss";
 
-import common from "../OBSCommon.module.scss";
-import { getMergeMarriageText, getTitle } from "./helper";
+import { getMarriageDisplayText, getMergeCongratulationText, getMergeMarriageText } from "./helper";
 import styles from "./WaifuAlerts.module.scss";
 
 interface Properties {
@@ -24,8 +22,18 @@ export default function WaifuMarriageAlert({
   onUnmuteAll,
 }: Properties) {
   const isReminder = message.isReminder === true;
+  const containerReference = useRef<HTMLDivElement>(null);
+  const timeoutReference = useRef<NodeJS.Timeout | null>(null);
 
-  // Для напоминания — автозакрытие через 10 секунд (нет аудио для триггера)
+  useEffect(() => {
+    return () => {
+      if (timeoutReference.current) {
+        clearTimeout(timeoutReference.current);
+        timeoutReference.current = null;
+      }
+    };
+  }, []);
+
   useEffect(() => {
     if (!isReminder) {
       return;
@@ -38,11 +46,11 @@ export default function WaifuMarriageAlert({
     return () => clearTimeout(timeout);
   }, [isReminder, onRemove]);
 
-  const error = useCallback(() => {
+  const error = () => {
     onUnmuteAll();
     onRemove();
     throw new Error("Failed to play audio");
-  }, [onUnmuteAll, onRemove]);
+  };
 
   return (
     <>
@@ -75,90 +83,78 @@ export default function WaifuMarriageAlert({
         </>
       )}
       <div
-        className={styles["merge-container"]}
+        id={message.waifu.shikiId}
+        ref={containerReference}
+        className={
+          styles.baza + " " + animate.bounceIn + " " + animate.animated
+        }
         data-testid="waifu-merge-container"
       >
-        <div className={styles["merge-image"]}>
+        <div className={styles["alert-box"]} data-testid="waifu-merge-image">
           <img
-            src={message.waifuHusband?.twitchUser?.profileImageUrl}
+            src={message.waifu.imageUrl}
+            style={{ height: "498px", width: "320px" }}
+            onLoad={() => {
+              if (timeoutReference.current) {
+                clearTimeout(timeoutReference.current);
+                timeoutReference.current = null;
+              }
+
+              setTimeout(() => {
+                containerReference.current!.addEventListener(
+                  "animationend",
+                  () => {
+                    onRemove();
+                  }
+                );
+
+                containerReference.current!.className =
+                  styles.baza +
+                  " " +
+                  animate.bounceOut +
+                  " " +
+                  animate.animated;
+              }, 7000);
+            }}
+            onError={() => {
+              if (timeoutReference.current) {
+                clearTimeout(timeoutReference.current);
+                timeoutReference.current = null;
+              }
+
+              onRemove();
+            }}
           />
         </div>
-        <div className={styles["merge-text"]}>
-          <Textfit
-            className={common.textStrokeShadow}
-            style={{ color: "white" }}
-            mode="multi"
-            min={1}
-            max={2000}
+        <div className={styles["alert-box"]} data-testid="waifu-merge-text">
+          <span
+            className="text-shadow block-text"
+            style={{ color: message.color ?? "white" }}
           >
-            {isReminder ? (
-              <>
-                <span
-                  className={common.textStrokeShadow}
-                  style={{ color: message.color }}
-                >
-                  {message.waifuHusband!.twitchUser?.displayName}
-                </span>{" "}
-                уже в браке с{" "}
-                <span
-                  className={common.textStrokeShadow}
-                  style={{ color: getRandomColor() }}
-                >
-                  {message.waifu.name}{" "}
-                </span>
-                из{" "}
-                <span
-                  className={common.textStrokeShadow}
-                  style={{
-                    color: message.waifu.anime ? "blue" : "gold",
-                  }}
-                >
-                  {getTitle(message)}
-                </span>
-              </>
-            ) : (
-              <>
-                Поздравляем{" "}
-                <span
-                  className={common.textStrokeShadow}
-                  style={{ color: message.color }}
-                >
-                  {message.waifuHusband!.twitchUser?.displayName}
-                </span>{" "}
-                и{" "}
-                <span
-                  className={common.textStrokeShadow}
-                  style={{ color: getRandomColor() }}
-                >
-                  {message.waifu.name}{" "}
-                </span>
-                из{" "}
-                <span
-                  className={common.textStrokeShadow}
-                  style={{
-                    color: message.waifu.anime ? "blue" : "gold",
-                  }}
-                >
-                  {getTitle(message)}
-                </span>{" "}
-                с свадьбой!
-              </>
-            )}
-          </Textfit>
-          {getMergeMarriageText(message) && (
-            <Textfit
-              className={common.textStrokeShadow}
-              style={{ color: "gold" }}
-              mode="multi"
-              min={1}
-              max={2000}
-            >
-              {getMergeMarriageText(message)}
+            <Textfit min={1} max={1500} forceSingleModeWidth>
+              {message.waifuHusband!.twitchUser?.displayName?.toUpperCase()}
             </Textfit>
+          </span>
+          <span
+            className="text-shadow block-text"
+            style={{ color: "cornflowerblue" }}
+          >
+            <Textfit min={1} max={1500} forceSingleModeWidth>
+              {isReminder
+                ? getMarriageDisplayText(message)
+                : getMergeCongratulationText(message)}
+            </Textfit>
+          </span>
+          {getMergeMarriageText(message) && (
+            <span
+              className="text-shadow block-text"
+              style={{ color: "gold" }}
+            >
+              <Textfit min={1} max={1500} forceSingleModeWidth>
+                {getMergeMarriageText(message)}
+              </Textfit>
+            </span>
           )}
-        </div>
-        <div className={styles["merge-image"]}>
-          <img src={message.waifu.imageUrl} />
         </div>
       </div>
       {!isReminder && (

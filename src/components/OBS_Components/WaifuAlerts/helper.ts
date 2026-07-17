@@ -31,6 +31,22 @@ export function getTitle(message: WaifuAlertProps) {
     : `из манги ${message.waifu.manga}`;
 }
 
+export function getMergeCongratulationText(message: WaifuAlertProps): string {
+  const husbandName = message.waifuHusband?.twitchUser?.displayName ?? message.displayName;
+  const title = message.waifu.anime
+    ? `аниме ${message.waifu.anime}`
+    : `манги ${message.waifu.manga}`;
+  return `${husbandName} поженился с ${message.waifu.name} из ${title}`;
+}
+
+export function getMarriageDisplayText(message: WaifuAlertProps): string {
+  const husbandName = message.waifuHusband?.twitchUser?.displayName ?? message.displayName;
+  const title = message.waifu.anime
+    ? `аниме ${message.waifu.anime}`
+    : `манги ${message.waifu.manga}`;
+  return `${husbandName} уже в браке с ${message.waifu.name} из ${title}`;
+}
+
 const startWords: string[] = [
   "Кстати",
   "К слову",
