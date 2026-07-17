@@ -1,5 +1,5 @@
 /* eslint-disable simple-import-sort/imports */
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 import useTelegramusHubStore from "@/shared/stores/telegramusHubStore";
 import useWaifuPrizesStore from "@/shared/stores/waifuPrizesStore";
@@ -25,6 +25,16 @@ export default function WaifuAlerts() {
 
   const prizes = useWaifuPrizesStore(useShallow(state => state.prizes));
   const shufflePrizes = useWaifuPrizesStore(state => state.shuffle);
+
+  const preparedPrizes = useMemo(
+    () =>
+      (prizes || []).map(p => ({
+        ...p,
+        id: String(p.id),
+        text: p.text || "",
+      })),
+    [prizes]
+  );
 
   const rouletteIndex =
     currentMessage && prizes.length > 0
@@ -106,17 +116,13 @@ export default function WaifuAlerts() {
         prizes.length > 0 &&
         currentMessage.waifuHusband?.twitchUser && (
           <WaifuRoulette
-            key={currentMessage.waifu.shikiId}
+            key={"roulette-" + currentMessage.waifu.shikiId}
             shuffle={shufflePrizes}
             callback={() => {
               setIsRouletted(true);
             }}
             rouletteIndex={rouletteIndex}
-            prizes={(prizes || []).map(p => ({
-              ...p,
-              id: String(p.id),
-              text: p.text || "",
-            }))}
+            prizes={preparedPrizes}
             twitchUser={currentMessage.waifuHusband.twitchUser}
           />
         )}
@@ -126,6 +132,7 @@ export default function WaifuAlerts() {
         rouletteIndex === -1 &&
         prizes.length === 0 && (
           <div
+            key={"loading-" + currentMessage.waifu.shikiId}
             className={styles["roulette-name-text"]}
             data-testid="status-loading-roulette"
           >
@@ -137,7 +144,7 @@ export default function WaifuAlerts() {
         !currentMessage.waifu.isMerged &&
         !currentMessage.isReminder && (
           <WaifuAddAlert
-            key={currentMessage.waifu.shikiId}
+            key={"add-" + currentMessage.waifu.shikiId}
             message={currentMessage}
             onRemove={handleRemoveEvent}
             onShuffle={shufflePrizes}
@@ -148,7 +155,7 @@ export default function WaifuAlerts() {
         ((isRouletted && currentMessage.waifu.isMerged) ||
           currentMessage.isReminder) && (
           <WaifuMarriageAlert
-            key={currentMessage.waifu.shikiId}
+            key={"marriage-" + currentMessage.waifu.shikiId}
             message={currentMessage}
             onRemove={handleRemoveEvent}
             onMuteAll={muteAll}
