@@ -145,6 +145,29 @@ export const useTelegramusHubStore = create<
           }
         );
 
+        connection.on(
+          "Showcurrentwife",
+          (message: Waifu, host: Host, _avatar?: string, color?: string) => {
+            const parsed: WaifuAlertProps = {
+              waifu: message,
+              displayName: host.twitchUser!.displayName!,
+              waifuHusband: host,
+              color,
+              isReminder: true,
+            };
+            const { messages, isWaifuShowing } = get();
+            if (!isWaifuShowing) {
+              set({
+                messages: [...messages],
+                currentMessage: parsed,
+                isWaifuShowing: true,
+              });
+              return;
+            }
+            set({ messages: [...messages, parsed] });
+          }
+        );
+
         // FumoRoll обработчик
         connection.on(
           "FumoRoll",

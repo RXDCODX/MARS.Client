@@ -1,5 +1,5 @@
 /* eslint-disable simple-import-sort/imports */
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import SchoolPride from "react-canvas-confetti/dist/presets/pride";
 import { Textfit } from "react-textfit";
 
@@ -24,6 +24,19 @@ export default function WaifuMarriageAlert({
   onUnmuteAll,
 }: Properties) {
   const isReminder = message.isReminder === true;
+
+  // Для напоминания — автозакрытие через 10 секунд (нет аудио для триггера)
+  useEffect(() => {
+    if (!isReminder) {
+      return;
+    }
+
+    const timeout = setTimeout(() => {
+      onRemove();
+    }, 10_000);
+
+    return () => clearTimeout(timeout);
+  }, [isReminder, onRemove]);
 
   const error = useCallback(() => {
     onUnmuteAll();
@@ -148,29 +161,31 @@ export default function WaifuMarriageAlert({
           <img src={message.waifu.imageUrl} />
         </div>
       </div>
-      <audio
-        key={message.waifu.shikiId}
-        controls={false}
-        autoPlay
-        onError={() => error()}
-        onEnded={() => {
-          onUnmuteAll();
-          onRemove();
-        }}
-        onCanPlay={event => {
-          try {
-            event.currentTarget?.play();
-          } catch {
-            event.currentTarget.muted = true;
-            event.currentTarget?.play();
-          }
-        }}
-        onCanPlayThrough={() => onMuteAll()}
-      >
-        <source
-          src={import.meta.env.VITE_BASE_PATH + "Alerts/svadba.mp3"}
-        />
-      </audio>
+      {!isReminder && (
+        <audio
+          key={message.waifu.shikiId}
+          controls={false}
+          autoPlay
+          onError={() => error()}
+          onEnded={() => {
+            onUnmuteAll();
+            onRemove();
+          }}
+          onCanPlay={event => {
+            try {
+              event.currentTarget?.play();
+            } catch {
+              event.currentTarget.muted = true;
+              event.currentTarget?.play();
+            }
+          }}
+          onCanPlayThrough={() => onMuteAll()}
+        >
+          <source
+            src={import.meta.env.VITE_BASE_PATH + "Alerts/svadba.mp3"}
+          />
+        </audio>
+      )}
     </>
   );
 }
