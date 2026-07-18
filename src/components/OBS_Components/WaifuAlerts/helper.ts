@@ -1,4 +1,4 @@
-import { Host, Waifu } from "@/shared/api";
+import { Husband, Waifu } from "@/shared/api";
 import { getRandomInt } from "@/shared/Utils";
 
 export function shuffleArray<T>(array: T[]): T[] {
@@ -31,6 +31,21 @@ export function getTitle(message: WaifuAlertProps) {
     : `из манги ${message.waifu.manga}`;
 }
 
+export function getMergeCongratulationText(message: WaifuAlertProps): string {
+  const husbandName = message.waifuHusband?.twitchUser?.displayName ?? message.displayName;
+  const title = message.waifu.anime
+    ? `аниме ${message.waifu.anime}`
+    : `манги ${message.waifu.manga}`;
+  return `${husbandName} поженился с ${message.waifu.name} из ${title}`;
+}
+
+export function getMarriageDisplayText(message: WaifuAlertProps): string {
+  const title = message.waifu.anime
+    ? `аниме ${message.waifu.anime}`
+    : `манги ${message.waifu.manga}`;
+  return `уже в браке с ${message.waifu.name} из ${title}`;
+}
+
 const startWords: string[] = [
   "Кстати",
   "К слову",
@@ -42,10 +57,7 @@ const startWords: string[] = [
 ];
 
 export function getMergeMarriageText(message: WaifuAlertProps): string {
-  if (
-    !message.waifuHusband?.whenPrivated ||
-    message.waifuHusband.waifuBrideId !== message.waifu.shikiId
-  ) {
+  if (!message.waifuHusband?.whenPrivated) {
     return "";
   }
 
@@ -99,11 +111,9 @@ function getMarriageDurationText(span: TimeSpan, waifu: Waifu): string {
       : null,
   ].filter(Boolean);
 
-  const title = waifu.anime?.trim()
-    ? " из аниме " + waifu.anime
-    : " из манги " + waifu.manga;
+  const durationText = parts.length > 0 ? parts.join(", ") : "только что";
 
-  return `Ты в браке с ${waifu.name}${title} уже ${parts.join(", ")}!`;
+  return `уже ${durationText}`;
 }
 
 export function getHusbandText(message: WaifuAlertProps) {
@@ -198,7 +208,7 @@ function getCorrectForm(
 export interface WaifuAlertProps {
   waifu: Waifu;
   displayName: string;
-  waifuHusband?: Host;
+  waifuHusband?: Husband;
   color?: string;
   isReminder?: boolean;
 }

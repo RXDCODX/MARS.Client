@@ -1,15 +1,15 @@
 /* eslint-disable simple-import-sort/imports */
-import { useCallback, useEffect, useState } from "react";
-import { useShallow } from "zustand/react/shallow";
+import InjectStyles from "@/shared/components/InjectStyles";
 import useTelegramusHubStore from "@/shared/stores/telegramusHubStore";
 import useWaifuPrizesStore from "@/shared/stores/waifuPrizesStore";
 import useTwitchStore from "@/shared/twitchStore/twitchStore";
 import Announce from "@/shared/Utils/Announce/Announce";
-import InjectStyles from "@/shared/components/InjectStyles";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 import common from "../OBSCommon.module.scss";
-import styles from "./WaifuAlerts.module.scss";
 import WaifuAddAlert from "./WaifuAddAlert";
+import styles from "./WaifuAlerts.module.scss";
 import WaifuMarriageAlert from "./WaifuMarriageAlert";
 import WaifuRoulette from "./WaifuRoulette";
 
@@ -25,6 +25,16 @@ export default function WaifuAlerts() {
 
   const prizes = useWaifuPrizesStore(useShallow(state => state.prizes));
   const shufflePrizes = useWaifuPrizesStore(state => state.shuffle);
+
+  const preparedPrizes = useMemo(
+    () =>
+      (prizes || []).map(p => ({
+        ...p,
+        id: String(p.id),
+        text: p.text || "",
+      })),
+    [prizes]
+  );
 
   const rouletteIndex =
     currentMessage && prizes.length > 0
@@ -106,18 +116,15 @@ export default function WaifuAlerts() {
         prizes.length > 0 &&
         currentMessage.waifuHusband?.twitchUser && (
           <WaifuRoulette
-            key={currentMessage.waifu.shikiId}
+            key={"roulette-" + currentMessage.waifu.shikiId}
             shuffle={shufflePrizes}
             callback={() => {
               setIsRouletted(true);
             }}
             rouletteIndex={rouletteIndex}
-            prizes={(prizes || []).map(p => ({
-              ...p,
-              id: String(p.id),
-              text: p.text || "",
-            }))}
+            prizes={preparedPrizes}
             twitchUser={currentMessage.waifuHusband.twitchUser}
+            size="xxxxl"
           />
         )}
       {currentMessage &&
@@ -126,6 +133,7 @@ export default function WaifuAlerts() {
         rouletteIndex === -1 &&
         prizes.length === 0 && (
           <div
+            key={"loading-" + currentMessage.waifu.shikiId}
             className={styles["roulette-name-text"]}
             data-testid="status-loading-roulette"
           >
@@ -137,7 +145,7 @@ export default function WaifuAlerts() {
         !currentMessage.waifu.isMerged &&
         !currentMessage.isReminder && (
           <WaifuAddAlert
-            key={currentMessage.waifu.shikiId}
+            key={"add-" + currentMessage.waifu.shikiId}
             message={currentMessage}
             onRemove={handleRemoveEvent}
             onShuffle={shufflePrizes}
@@ -148,11 +156,12 @@ export default function WaifuAlerts() {
         ((isRouletted && currentMessage.waifu.isMerged) ||
           currentMessage.isReminder) && (
           <WaifuMarriageAlert
-            key={currentMessage.waifu.shikiId}
+            key={"marriage-" + currentMessage.waifu.shikiId}
             message={currentMessage}
             onRemove={handleRemoveEvent}
             onMuteAll={muteAll}
             onUnmuteAll={unmuteAll}
+            onSendMessage={sendMessage}
           />
         )}
     </div>
