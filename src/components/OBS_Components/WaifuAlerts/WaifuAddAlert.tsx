@@ -90,11 +90,34 @@ export default function WaifuAddAlert({
         />
       )}
       <div className={styles["alert-box"]} data-testid="waifu-alert-text">
-        <span className="text-shadow block-text" style={{ color: "white" }}>
-          <Textfit min={1} max={1500} forceSingleModeWidth>
-            {message.displayName.toUpperCase()}
-          </Textfit>
-        </span>
+        <div
+          data-testid="waifu-alert-user-row"
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "15px",
+          }}
+        >
+          {message.waifuHusband?.twitchUser?.profileImageUrl && (
+            <img
+              src={message.waifuHusband.twitchUser.profileImageUrl}
+              alt={message.displayName}
+              data-testid="waifu-alert-avatar"
+              style={{
+                width: "80px",
+                height: "80px",
+                borderRadius: "50%",
+                border: `4px solid ${message.waifuHusband.twitchUser.chatColor || "white"}`,
+                boxShadow: `0 0 20px ${message.waifuHusband.twitchUser.chatColor || "white"}`,
+              }}
+            />
+          )}
+          <span className="text-shadow block-text" style={{ color: "white" }}>
+            <Textfit min={1} max={1500} forceSingleModeWidth>
+              {message.displayName.toUpperCase()}
+            </Textfit>
+          </span>
+        </div>
         <span
           className="text-shadow block-text"
           style={{ color: "cornflowerblue" }}

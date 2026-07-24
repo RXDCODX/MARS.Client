@@ -179,30 +179,39 @@ export default function FrogAlerts() {
             />
           </div>
           <div className={styles["alert-box"]}>
-            {currentFrogMessage.twitchUser.profileImageUrl && (
-              <img
-                src={currentFrogMessage.twitchUser.profileImageUrl}
-                alt={currentFrogMessage.twitchUser.displayName}
-                style={{
-                  width: "80px",
-                  height: "80px",
-                  borderRadius: "50%",
-                  border: `4px solid ${currentFrogMessage.twitchUser.chatColor || "white"}`,
-                  boxShadow: `0 0 20px ${currentFrogMessage.twitchUser.chatColor || "white"}`,
-                  marginBottom: "10px",
-                }}
-              />
-            )}
-            <span
-              className="text-shadow block-text"
+            <div
+              data-testid="frog-alert-user-row"
               style={{
-                color: currentFrogMessage.twitchUser.chatColor || "white",
+                display: "flex",
+                alignItems: "center",
+                gap: "15px",
               }}
             >
-              <Textfit min={1} max={1500} forceSingleModeWidth>
-                {currentFrogMessage.twitchUser.displayName.toUpperCase()}
-              </Textfit>
-            </span>
+              {currentFrogMessage.twitchUser.profileImageUrl && (
+                <img
+                  src={currentFrogMessage.twitchUser.profileImageUrl}
+                  alt={currentFrogMessage.twitchUser.displayName}
+                  data-testid="frog-alert-avatar"
+                  style={{
+                    width: "80px",
+                    height: "80px",
+                    borderRadius: "50%",
+                    border: `4px solid ${currentFrogMessage.twitchUser.chatColor || "white"}`,
+                    boxShadow: `0 0 20px ${currentFrogMessage.twitchUser.chatColor || "white"}`,
+                  }}
+                />
+              )}
+              <span
+                className="text-shadow block-text"
+                style={{
+                  color: currentFrogMessage.twitchUser.chatColor || "white",
+                }}
+              >
+                <Textfit min={1} max={1500} forceSingleModeWidth>
+                  {currentFrogMessage.twitchUser.displayName.toUpperCase()}
+                </Textfit>
+              </span>
+            </div>
             <span
               className="text-shadow block-text"
               style={{

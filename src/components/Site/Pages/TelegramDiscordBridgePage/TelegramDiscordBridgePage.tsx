@@ -10,6 +10,7 @@ import {
   Space,
   Spin,
   Table,
+  Tooltip,
 } from "antd";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -68,7 +69,7 @@ const TelegramDiscordBridgePage: React.FC = () => {
     () =>
       new Map(
         discordChannels.map(channel => [
-          String(channel.id),
+          channel.id,
           `${channel.guildName} / #${channel.name}`,
         ])
       ),
@@ -83,12 +84,12 @@ const TelegramDiscordBridgePage: React.FC = () => {
 
     return bindings.filter(binding => {
       const telegramId = String(binding.telegramChannelId ?? "");
-      const discordId = String(binding.discordChannelId ?? "");
+      const discordId = binding.discordChannelId ?? "";
       const telegramName = (
         telegramChannelMap.get(binding.telegramChannelId) ?? ""
       ).toLowerCase();
       const discordName = (
-        discordChannelMap.get(String(binding.discordChannelId)) ?? ""
+        discordChannelMap.get(binding.discordChannelId) ?? ""
       ).toLowerCase();
 
       return (
@@ -202,12 +203,11 @@ const TelegramDiscordBridgePage: React.FC = () => {
       setError("");
 
       const telegramChannelId = Number(form.telegramChannelId);
-      const discordChannelId = Number(form.discordChannelId);
+      const discordChannelId = form.discordChannelId;
       const isValidIds =
         Number.isFinite(telegramChannelId) &&
-        Number.isFinite(discordChannelId) &&
-        telegramChannelId !== 0 &&
-        discordChannelId > 0;
+        discordChannelId.length > 0 &&
+        telegramChannelId !== 0;
 
       if (isValidIds) {
         const payload: TelegramDiscordBindingCreateRequest = {
@@ -314,7 +314,7 @@ const TelegramDiscordBridgePage: React.FC = () => {
       key: "discord",
       render: (_: unknown, record: TelegramDiscordBindingDto) => (
         <>
-          {discordChannelMap.get(String(record.discordChannelId)) ??
+          {discordChannelMap.get(record.discordChannelId) ??
             "Неизвестный канал"}{" "}
           ({record.discordChannelId})
         </>
@@ -328,6 +328,25 @@ const TelegramDiscordBridgePage: React.FC = () => {
           {record.isEnabled ? "Включена" : "Выключена"}
         </Badge>
       ),
+    },
+    {
+      title: "Ошибка",
+      key: "lastError",
+      render: (_: unknown, record: TelegramDiscordBindingDto) =>
+        record.lastError ? (
+          <Tooltip title={record.lastError}>
+            <Badge
+              color="red"
+              text={
+                record.lastError.length > 50
+                  ? `${record.lastError.slice(0, 50)}...`
+                  : record.lastError
+              }
+            />
+          </Tooltip>
+        ) : (
+          <Badge color="green" text="OK" />
+        ),
     },
     {
       title: "Обновлено",
