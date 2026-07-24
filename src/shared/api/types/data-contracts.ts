@@ -316,6 +316,38 @@ export interface CustomReward {
   cooldownExpiresAt?: string;
 }
 
+export interface DanbooruAutoPostConfigDto {
+  /** @format uuid */
+  id: string;
+  /** @format int64 */
+  discordChannelId: number;
+  tags: string;
+  cronExpression: string;
+  isEnabled: boolean;
+  /** @format date-time */
+  lastExecutedAtUtc?: string;
+  /** @format date-time */
+  createdAtUtc: string;
+  /** @format date-time */
+  updatedAtUtc: string;
+}
+
+export interface DanbooruAutoPostCreateRequest {
+  /** @format int64 */
+  discordChannelId: number;
+  tags: string;
+  cronExpression: string;
+}
+
+export interface DanbooruAutoPostUpdateRequest {
+  /** @format uuid */
+  id: string;
+  /** @format int64 */
+  discordChannelId: number;
+  tags: string;
+  cronExpression: string;
+}
+
 export interface DefaultImage {
   url1x?: string;
   url2x?: string;
@@ -692,6 +724,10 @@ export interface ServiceLog {
   level: string;
   message: string;
   exception?: string;
+}
+
+export interface SetEnabledRequest {
+  isEnabled: boolean;
 }
 
 export interface SetEnvironmentVariableRequest {

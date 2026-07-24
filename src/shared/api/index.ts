@@ -10,6 +10,7 @@ export { AutoMessages } from "./http-clients/AutoMessages";
 export { ChannelRewardsManager } from "./http-clients/ChannelRewardsManager";
 export { CinemaQueue } from "./http-clients/CinemaQueue";
 export { Commands } from "./http-clients/Commands";
+export { DanbooruAutoPost } from "./http-clients/DanbooruAutoPost";
 export { EnvironmentVariable } from "./http-clients/EnvironmentVariable";
 export { GooglePhotos } from "./http-clients/GooglePhotos";
 export { KeyboardHook } from "./http-clients/KeyboardHook";

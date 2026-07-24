@@ -140,20 +140,20 @@ import type {
   TestAlertsAlertByTypeCreateParamsTypeEnum,
 } from "../types/data-contracts";
 
-export class RootState<
+export class DanbooruAutoPost<
   SecurityDataType = unknown,
 > extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags RootState
-   * @name RootStateList
-   * @request GET:/api/RootState
-   * @response `200` `OperationResult<RootState[]>` OK
+   * @tags DanbooruAutoPost
+   * @name DanbooruAutoPostConfigsList
+   * @request GET:/api/DanbooruAutoPost/configs
+   * @response `200` `OperationResult<DanbooruAutoPostConfigDto[]>` OK
    */
-  rootStateList = (params: RequestParams = {}) =>
-    this.request<OperationResult<RootState[]>, any>({
-      path: `/api/RootState`,
+  danbooruAutoPostConfigsList = (params: RequestParams = {}) =>
+    this.request<OperationResult<DanbooruAutoPostConfigDto[]>, any>({
+      path: `/api/DanbooruAutoPost/configs`,
       method: "GET",
       format: "json",
       ...params,
@@ -161,14 +161,17 @@ export class RootState<
   /**
    * No description
    *
-   * @tags RootState
-   * @name RootStateCreate
-   * @request POST:/api/RootState
-   * @response `200` `OperationResult<RootState>` OK
+   * @tags DanbooruAutoPost
+   * @name DanbooruAutoPostConfigsCreate
+   * @request POST:/api/DanbooruAutoPost/configs
+   * @response `200` `OperationResult<DanbooruAutoPostConfigDto>` OK
    */
-  rootStateCreate = (data: RootState, params: RequestParams = {}) =>
-    this.request<OperationResult<RootState>, any>({
-      path: `/api/RootState`,
+  danbooruAutoPostConfigsCreate = (
+    data: DanbooruAutoPostCreateRequest,
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<DanbooruAutoPostConfigDto>, any>({
+      path: `/api/DanbooruAutoPost/configs`,
       method: "POST",
       body: data,
       type: ContentType.Json,
@@ -178,29 +181,35 @@ export class RootState<
   /**
    * No description
    *
-   * @tags RootState
-   * @name RootStateDetail
-   * @request GET:/api/RootState/{name}
-   * @response `200` `OperationResult<RootState>` OK
+   * @tags DanbooruAutoPost
+   * @name DanbooruAutoPostConfigsUpdate
+   * @request PUT:/api/DanbooruAutoPost/configs/{id}
+   * @response `200` `OperationResult<DanbooruAutoPostConfigDto>` OK
    */
-  rootStateDetail = (name: string, params: RequestParams = {}) =>
-    this.request<OperationResult<RootState>, any>({
-      path: `/api/RootState/${name}`,
-      method: "GET",
+  danbooruAutoPostConfigsUpdate = (
+    id: string,
+    data: DanbooruAutoPostUpdateRequest,
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<DanbooruAutoPostConfigDto>, any>({
+      path: `/api/DanbooruAutoPost/configs/${id}`,
+      method: "PUT",
+      body: data,
+      type: ContentType.Json,
       format: "json",
       ...params,
     });
   /**
    * No description
    *
-   * @tags RootState
-   * @name RootStateDelete
-   * @request DELETE:/api/RootState/{name}
+   * @tags DanbooruAutoPost
+   * @name DanbooruAutoPostConfigsDelete
+   * @request DELETE:/api/DanbooruAutoPost/configs/{id}
    * @response `200` `OperationResult` OK
    */
-  rootStateDelete = (name: string, params: RequestParams = {}) =>
+  danbooruAutoPostConfigsDelete = (id: string, params: RequestParams = {}) =>
     this.request<OperationResult, any>({
-      path: `/api/RootState/${name}`,
+      path: `/api/DanbooruAutoPost/configs/${id}`,
       method: "DELETE",
       format: "json",
       ...params,
@@ -208,21 +217,54 @@ export class RootState<
   /**
    * No description
    *
-   * @tags RootState
-   * @name RootStateValuePartialUpdate
-   * @request PATCH:/api/RootState/{name}/value
-   * @response `200` `OperationResult<RootState>` OK
+   * @tags DanbooruAutoPost
+   * @name DanbooruAutoPostConfigsEnabledUpdate
+   * @request PUT:/api/DanbooruAutoPost/configs/{id}/enabled
+   * @response `200` `OperationResult<DanbooruAutoPostConfigDto>` OK
    */
-  rootStateValuePartialUpdate = (
-    name: string,
-    data: UpdateValueRequest,
+  danbooruAutoPostConfigsEnabledUpdate = (
+    id: string,
+    data: SetEnabledRequest,
     params: RequestParams = {}
   ) =>
-    this.request<OperationResult<RootState>, any>({
-      path: `/api/RootState/${name}/value`,
-      method: "PATCH",
+    this.request<OperationResult<DanbooruAutoPostConfigDto>, any>({
+      path: `/api/DanbooruAutoPost/configs/${id}/enabled`,
+      method: "PUT",
       body: data,
       type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags DanbooruAutoPost
+   * @name DanbooruAutoPostConfigsTriggerCreate
+   * @request POST:/api/DanbooruAutoPost/configs/{id}/trigger
+   * @response `200` `OperationResult` OK
+   */
+  danbooruAutoPostConfigsTriggerCreate = (
+    id: string,
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult, any>({
+      path: `/api/DanbooruAutoPost/configs/${id}/trigger`,
+      method: "POST",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags DanbooruAutoPost
+   * @name DanbooruAutoPostDiscordChannelsList
+   * @request GET:/api/DanbooruAutoPost/discord-channels
+   * @response `200` `OperationResult<DiscordChannelOptionDto[]>` OK
+   */
+  danbooruAutoPostDiscordChannelsList = (params: RequestParams = {}) =>
+    this.request<OperationResult<DiscordChannelOptionDto[]>, any>({
+      path: `/api/DanbooruAutoPost/discord-channels`,
+      method: "GET",
       format: "json",
       ...params,
     });
