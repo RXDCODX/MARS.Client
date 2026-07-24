@@ -532,7 +532,7 @@ const DanbooruAutoPostPage: React.FC = () => {
           setEditingId(undefined);
         }}
         title={editingId ? "Редактировать" : "Добавить конфигурацию"}
-        footer={undefined}
+        footer={false}
         centered
         width={600}
         data-testid="modal-config-form"
