@@ -166,7 +166,7 @@ export default function MikuAlerts() {
                 }, 7000);
 
                 sendMessage(
-                  `@${currentMikuMessage.twitchUser.displayName}, ${getMikuText(currentMikuMessage)}!${currentMikuMessage.collectedCount != null && currentMikuMessage.totalCount != null && currentMikuMessage.totalCount > 0 ? ` Твоя коллекция костюмов насчитывает: ${currentMikuMessage.collectedCount}/${currentMikuMessage.totalCount} уникальных костюмов!` : ""}`
+                  `@${currentMikuMessage.twitchUser.displayName}, ${getMikuText(currentMikuMessage)}!${currentMikuMessage.collectedCount != undefined && currentMikuMessage.totalCount != undefined && currentMikuMessage.totalCount > 0 ? ` Твоя коллекция костюмов насчитывает: ${currentMikuMessage.collectedCount}/${currentMikuMessage.totalCount} уникальных костюмов!` : ""}`
                 );
               }}
               onError={() => {
@@ -215,8 +215,8 @@ export default function MikuAlerts() {
                 {getMikuText(currentMikuMessage)}
               </Textfit>
             </span>
-            {currentMikuMessage.collectedCount != null &&
-              currentMikuMessage.totalCount != null &&
+            {currentMikuMessage.collectedCount != undefined &&
+              currentMikuMessage.totalCount != undefined &&
               currentMikuMessage.totalCount > 0 && (
                 <span
                   className="text-shadow block-text"

@@ -1,4 +1,3 @@
-/* eslint-disable simple-import-sort/imports */
 import { useEffect, useRef } from "react";
 import { Textfit } from "react-textfit";
 
@@ -26,22 +25,23 @@ export default function WaifuAddAlert({
   const containerReference = useRef<HTMLDivElement>(null);
   const timeoutReference = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    return () => {
-      if (timeoutReference.current) {
-        clearTimeout(timeoutReference.current);
-        timeoutReference.current = null;
+  useEffect(
+    () => () => {
+      if (!timeoutReference.current) {
+        return;
       }
-    };
-  }, []);
+
+      clearTimeout(timeoutReference.current);
+      timeoutReference.current = null;
+    },
+    []
+  );
 
   return (
     <div
       id={message.waifu.shikiId}
       ref={containerReference}
-      className={
-        styles.baza + " " + animate.bounceIn + " " + animate.animated
-      }
+      className={styles.baza + " " + animate.bounceIn + " " + animate.animated}
     >
       <div className={styles["alert-box"]} data-testid="waifu-alert-box">
         <img
@@ -63,11 +63,7 @@ export default function WaifuAddAlert({
               );
 
               containerReference.current!.className =
-                styles.baza +
-                " " +
-                animate.bounceOut +
-                " " +
-                animate.animated;
+                styles.baza + " " + animate.bounceOut + " " + animate.animated;
             }, 7000);
             if (!message.waifu.isAdded) {
               onSendMessage(
@@ -94,10 +90,7 @@ export default function WaifuAddAlert({
         />
       )}
       <div className={styles["alert-box"]} data-testid="waifu-alert-text">
-        <span
-          className="text-shadow block-text"
-          style={{ color: "white" }}
-        >
+        <span className="text-shadow block-text" style={{ color: "white" }}>
           <Textfit min={1} max={1500} forceSingleModeWidth>
             {message.displayName.toUpperCase()}
           </Textfit>
@@ -110,10 +103,7 @@ export default function WaifuAddAlert({
             {getText(message)}
           </Textfit>
         </span>
-        <span
-          className="text-shadow block-text"
-          style={{ color: "red" }}
-        >
+        <span className="text-shadow block-text" style={{ color: "red" }}>
           <Textfit min={1} max={1500} forceSingleModeWidth>
             {getTitle(message)}
           </Textfit>
