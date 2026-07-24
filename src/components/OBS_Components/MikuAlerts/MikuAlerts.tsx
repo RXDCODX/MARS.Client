@@ -166,7 +166,7 @@ export default function MikuAlerts() {
                 }, 7000);
 
                 sendMessage(
-                  `@${currentMikuMessage.twitchUser.displayName}, ${getMikuText(currentMikuMessage)}!${currentMikuMessage.collectedCount != null && currentMikuMessage.totalCount != null && currentMikuMessage.totalCount > 0 ? ` Твоя коллекция костюмов насчитывает: ${currentMikuMessage.collectedCount}/${currentMikuMessage.totalCount} уникальных костюмов!` : ""}`
+                  `@${currentMikuMessage.twitchUser.displayName}, ${getMikuText(currentMikuMessage)}!${currentMikuMessage.collectedCount != undefined && currentMikuMessage.totalCount != undefined && currentMikuMessage.totalCount > 0 ? ` Твоя коллекция костюмов насчитывает: ${currentMikuMessage.collectedCount}/${currentMikuMessage.totalCount} уникальных костюмов!` : ""}`
                 );
               }}
               onError={() => {
@@ -181,30 +181,39 @@ export default function MikuAlerts() {
             />
           </div>
           <div className={styles["alert-box"]}>
-            {currentMikuMessage.twitchUser.profileImageUrl && (
-              <img
-                src={currentMikuMessage.twitchUser.profileImageUrl}
-                alt={currentMikuMessage.twitchUser.displayName}
-                style={{
-                  width: "80px",
-                  height: "80px",
-                  borderRadius: "50%",
-                  border: `4px solid ${currentMikuMessage.twitchUser.chatColor || "white"}`,
-                  boxShadow: `0 0 20px ${currentMikuMessage.twitchUser.chatColor || "white"}`,
-                  marginBottom: "10px",
-                }}
-              />
-            )}
-            <span
-              className="text-shadow block-text"
+            <div
+              data-testid="miku-alert-user-row"
               style={{
-                color: currentMikuMessage.twitchUser.chatColor || "white",
+                display: "flex",
+                alignItems: "center",
+                gap: "15px",
               }}
             >
-              <Textfit min={1} max={1500} forceSingleModeWidth>
-                {currentMikuMessage.twitchUser.displayName.toUpperCase()}
-              </Textfit>
-            </span>
+              {currentMikuMessage.twitchUser.profileImageUrl && (
+                <img
+                  src={currentMikuMessage.twitchUser.profileImageUrl}
+                  alt={currentMikuMessage.twitchUser.displayName}
+                  data-testid="miku-alert-avatar"
+                  style={{
+                    width: "80px",
+                    height: "80px",
+                    borderRadius: "50%",
+                    border: `4px solid ${currentMikuMessage.twitchUser.chatColor || "white"}`,
+                    boxShadow: `0 0 20px ${currentMikuMessage.twitchUser.chatColor || "white"}`,
+                  }}
+                />
+              )}
+              <span
+                className="text-shadow block-text"
+                style={{
+                  color: currentMikuMessage.twitchUser.chatColor || "white",
+                }}
+              >
+                <Textfit min={1} max={1500} forceSingleModeWidth>
+                  {currentMikuMessage.twitchUser.displayName.toUpperCase()}
+                </Textfit>
+              </span>
+            </div>
             <span
               className="text-shadow block-text"
               style={{
@@ -215,8 +224,8 @@ export default function MikuAlerts() {
                 {getMikuText(currentMikuMessage)}
               </Textfit>
             </span>
-            {currentMikuMessage.collectedCount != null &&
-              currentMikuMessage.totalCount != null &&
+            {currentMikuMessage.collectedCount != undefined &&
+              currentMikuMessage.totalCount != undefined &&
               currentMikuMessage.totalCount > 0 && (
                 <span
                   className="text-shadow block-text"

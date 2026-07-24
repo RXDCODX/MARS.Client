@@ -179,30 +179,39 @@ export default function FumoAlerts() {
             />
           </div>
           <div className={styles["alert-box"]}>
-            {currentFumoMessage.twitchUser.profileImageUrl && (
-              <img
-                src={currentFumoMessage.twitchUser.profileImageUrl}
-                alt={currentFumoMessage.twitchUser.displayName}
-                style={{
-                  width: "80px",
-                  height: "80px",
-                  borderRadius: "50%",
-                  border: `4px solid ${currentFumoMessage.twitchUser.chatColor || "white"}`,
-                  boxShadow: `0 0 20px ${currentFumoMessage.twitchUser.chatColor || "white"}`,
-                  marginBottom: "10px",
-                }}
-              />
-            )}
-            <span
-              className="text-shadow block-text"
+            <div
+              data-testid="fumo-alert-user-row"
               style={{
-                color: currentFumoMessage.twitchUser.chatColor || "white",
+                display: "flex",
+                alignItems: "center",
+                gap: "15px",
               }}
             >
-              <Textfit min={1} max={1500} forceSingleModeWidth>
-                {currentFumoMessage.twitchUser.displayName.toUpperCase()}
-              </Textfit>
-            </span>
+              {currentFumoMessage.twitchUser.profileImageUrl && (
+                <img
+                  src={currentFumoMessage.twitchUser.profileImageUrl}
+                  alt={currentFumoMessage.twitchUser.displayName}
+                  data-testid="fumo-alert-avatar"
+                  style={{
+                    width: "80px",
+                    height: "80px",
+                    borderRadius: "50%",
+                    border: `4px solid ${currentFumoMessage.twitchUser.chatColor || "white"}`,
+                    boxShadow: `0 0 20px ${currentFumoMessage.twitchUser.chatColor || "white"}`,
+                  }}
+                />
+              )}
+              <span
+                className="text-shadow block-text"
+                style={{
+                  color: currentFumoMessage.twitchUser.chatColor || "white",
+                }}
+              >
+                <Textfit min={1} max={1500} forceSingleModeWidth>
+                  {currentFumoMessage.twitchUser.displayName.toUpperCase()}
+                </Textfit>
+              </span>
+            </div>
             <span
               className="text-shadow block-text"
               style={{

@@ -316,6 +316,38 @@ export interface CustomReward {
   cooldownExpiresAt?: string;
 }
 
+export interface DanbooruAutoPostConfigDto {
+  /** @format uuid */
+  id: string;
+  /** @format int64 */
+  discordChannelId: number;
+  tags: string;
+  cronExpression: string;
+  isEnabled: boolean;
+  /** @format date-time */
+  lastExecutedAtUtc?: string;
+  /** @format date-time */
+  createdAtUtc: string;
+  /** @format date-time */
+  updatedAtUtc: string;
+}
+
+export interface DanbooruAutoPostCreateRequest {
+  /** @format int64 */
+  discordChannelId: number;
+  tags: string;
+  cronExpression: string;
+}
+
+export interface DanbooruAutoPostUpdateRequest {
+  /** @format uuid */
+  id: string;
+  /** @format int64 */
+  discordChannelId: number;
+  tags: string;
+  cronExpression: string;
+}
+
 export interface DefaultImage {
   url1x?: string;
   url2x?: string;
@@ -323,11 +355,11 @@ export interface DefaultImage {
 }
 
 export interface DiscordChannelOptionDto {
-  /** @format int64 */
-  id: number;
+  /** @format uint64 */
+  id: string;
   name: string;
-  /** @format int64 */
-  guildId: number;
+  /** @format uint64 */
+  guildId: string;
   guildName: string;
 }
 
@@ -694,6 +726,10 @@ export interface ServiceLog {
   exception?: string;
 }
 
+export interface SetEnabledRequest {
+  isEnabled: boolean;
+}
+
 export interface SetEnvironmentVariableRequest {
   key: string;
   value?: string;
@@ -755,8 +791,8 @@ export interface TelegramChannelOptionDto {
 export interface TelegramDiscordBindingCreateRequest {
   /** @format int64 */
   telegramChannelId: number;
-  /** @format int64 */
-  discordChannelId: number;
+  /** @format uint64 */
+  discordChannelId: string;
 }
 
 export interface TelegramDiscordBindingDto {
@@ -764,9 +800,10 @@ export interface TelegramDiscordBindingDto {
   id: string;
   /** @format int64 */
   telegramChannelId: number;
-  /** @format int64 */
-  discordChannelId: number;
+  /** @format uint64 */
+  discordChannelId: string;
   isEnabled: boolean;
+  lastError?: string | null;
   /** @format date-time */
   createdAtUtc: string;
   /** @format date-time */

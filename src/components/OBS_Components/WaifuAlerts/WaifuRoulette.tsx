@@ -8,11 +8,11 @@ import animate from "@/shared/styles/animate.module.scss";
 import { getRandomColor } from "@/shared/Utils";
 
 import styles2 from "../OBSCommon.module.scss";
-import WaifuRoulettePrizeItem from "./components/WaifuRoulettePrizeItem";
 import {
   ROULETTE_SIZE_PRESETS,
   RouletteSize,
 } from "./components/rouletteSizes";
+import WaifuRoulettePrizeItem from "./components/WaifuRoulettePrizeItem";
 import styles from "./WaifuAlerts.module.scss";
 
 interface Properties {

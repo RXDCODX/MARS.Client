@@ -82,6 +82,10 @@ const wTelegramPageLoader = () =>
   }));
 const WTelegramPage = lazy(wTelegramPageLoader);
 
+const danbooruAutoPostPageLoader = () =>
+  import("@/components/Site/Pages/DanbooruAutoPostPage/DanbooruAutoPostPage");
+const DanbooruAutoPostPage = lazy(danbooruAutoPostPageLoader);
+
 // Регистрируем админ компоненты для фоновой загрузки
 registerPrefetchComponents([
   logsPageLoader,
@@ -99,6 +103,7 @@ registerPrefetchComponents([
   twitchUserCreatePageLoader,
   twitchUserEditPageLoader,
   wTelegramPageLoader,
+  danbooruAutoPostPageLoader,
 ]);
 
 // Массив панелей управления (с Layout)
@@ -315,6 +320,18 @@ export const adminRoutes: RouteConfig[] = [
       <Layout>
         <Suspense fallback={<PageLoader />}>
           <WTelegramPage />
+        </Suspense>
+      </Layout>
+    ),
+  },
+  {
+    path: "/danbooru-auto-post",
+    name: "Danbooru автопостинг",
+    type: "control panel",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <DanbooruAutoPostPage />
         </Suspense>
       </Layout>
     ),

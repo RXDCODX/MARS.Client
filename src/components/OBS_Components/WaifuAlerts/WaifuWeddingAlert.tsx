@@ -133,9 +133,7 @@ export default function WaifuWeddingAlert({
         }}
         onCanPlayThrough={() => onMuteAll()}
       >
-        <source
-          src={import.meta.env.VITE_BASE_PATH + "Alerts/svadba.mp3"}
-        />
+        <source src={import.meta.env.VITE_BASE_PATH + "Alerts/svadba.mp3"} />
       </audio>
     </>
   );
