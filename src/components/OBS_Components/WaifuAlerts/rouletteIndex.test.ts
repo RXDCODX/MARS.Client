@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
 
 // Simulate the shuffle logic from prizes stores
-const shuffleArray = <T extends { id: string | number }>(arr: T[]): T[] =>
-  [...arr].sort(() => Math.random() - 0.5);
+const shuffleArray = <T extends { id: string | number }>(array: T[]): T[] =>
+  [...array].sort(() => Math.random() - 0.5);
 
 // Simulate finding a prize index — the core logic used by all roulette components
 const findPrizeIndex = (
@@ -38,12 +38,12 @@ describe("roulette index logic", () => {
     });
 
     it("derived index always points to target across multiple shuffles", () => {
-      const prizes = Array.from({ length: 15 }, (_, i) =>
-        createPrize(`prize-${i}`)
+      const prizes = Array.from({ length: 15 }, (_, index) =>
+        createPrize(`prize-${index}`)
       );
       const targetId = "prize-7";
 
-      for (let i = 0; i < 50; i++) {
+      for (let index = 0; index < 50; index++) {
         const shuffled = shuffleArray(prizes);
         const index = findPrizeIndex(shuffled, targetId);
 
@@ -144,8 +144,8 @@ describe("roulette index logic", () => {
     });
 
     it("simulates full WaifuAlerts derived index flow", () => {
-      let prizes = Array.from({ length: 50 }, (_, i) =>
-        createPrize(`shiki-${i}`)
+      let prizes = Array.from({ length: 50 }, (_, index) =>
+        createPrize(`shiki-${index}`)
       );
       const targetShikiId = "shiki-42";
 

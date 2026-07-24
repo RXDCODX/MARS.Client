@@ -12,21 +12,21 @@ interface Properties {
   onRemove: () => void;
 }
 
-export default function WaifuReminderAlert({
-  message,
-  onRemove,
-}: Properties) {
+export default function WaifuReminderAlert({ message, onRemove }: Properties) {
   const containerReference = useRef<HTMLDivElement>(null);
   const timeoutReference = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    return () => {
-      if (timeoutReference.current) {
-        clearTimeout(timeoutReference.current);
-        timeoutReference.current = null;
+  useEffect(
+    () => () => {
+      if (!timeoutReference.current) {
+        return;
       }
-    };
-  }, []);
+
+      clearTimeout(timeoutReference.current);
+      timeoutReference.current = null;
+    },
+    []
+  );
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -40,9 +40,7 @@ export default function WaifuReminderAlert({
     <div
       id={message.waifu.shikiId}
       ref={containerReference}
-      className={
-        styles.baza + " " + animate.bounceIn + " " + animate.animated
-      }
+      className={styles.baza + " " + animate.bounceIn + " " + animate.animated}
       data-testid="waifu-reminder-container"
     >
       <div className={styles["alert-box"]} data-testid="waifu-reminder-image">
@@ -64,11 +62,7 @@ export default function WaifuReminderAlert({
               );
 
               containerReference.current!.className =
-                styles.baza +
-                " " +
-                animate.bounceOut +
-                " " +
-                animate.animated;
+                styles.baza + " " + animate.bounceOut + " " + animate.animated;
             }, 7000);
           }}
           onError={() => {
@@ -99,10 +93,7 @@ export default function WaifuReminderAlert({
           </Textfit>
         </span>
         {getMergeMarriageText(message) && (
-          <span
-            className="text-shadow block-text"
-            style={{ color: "gold" }}
-          >
+          <span className="text-shadow block-text" style={{ color: "gold" }}>
             <Textfit min={1} max={1500} forceSingleModeWidth>
               {getMergeMarriageText(message)}
             </Textfit>

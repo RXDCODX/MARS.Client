@@ -32,22 +32,24 @@ describe("mikuPrizesStore", () => {
   });
 
   it("shuffle can reorder prizes", () => {
-    const prizes = Array.from({ length: 20 }, (_, i) => createPrize(String(i)));
+    const prizes = Array.from({ length: 20 }, (_, index) =>
+      createPrize(String(index))
+    );
     useMikuPrizesStore.setState({ prizes });
 
-    let foundDifferent = false;
+    let isFoundDifferent = false;
     const originalOrder = prizes.map(p => p.id);
 
-    for (let i = 0; i < 10; i++) {
+    for (let index = 0; index < 10; index++) {
       useMikuPrizesStore.getState().shuffle();
       const currentOrder = useMikuPrizesStore.getState().prizes.map(p => p.id);
-      if (currentOrder.some((id, idx) => id !== originalOrder[idx])) {
-        foundDifferent = true;
+      if (currentOrder.some((id, index) => id !== originalOrder[index])) {
+        isFoundDifferent = true;
         break;
       }
     }
 
-    expect(foundDifferent).toBe(true);
+    expect(isFoundDifferent).toBe(true);
   });
 
   it("findIndex returns correct position after shuffle", () => {
@@ -61,7 +63,7 @@ describe("mikuPrizesStore", () => {
     ];
     useMikuPrizesStore.setState({ prizes });
 
-    for (let i = 0; i < 10; i++) {
+    for (let index = 0; index < 10; index++) {
       useMikuPrizesStore.getState().shuffle();
       const shuffled = useMikuPrizesStore.getState().prizes;
       const foundIndex = shuffled.findIndex(p => p.id === targetId);

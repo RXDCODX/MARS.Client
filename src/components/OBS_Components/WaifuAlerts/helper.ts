@@ -32,7 +32,8 @@ export function getTitle(message: WaifuAlertProps) {
 }
 
 export function getMergeCongratulationText(message: WaifuAlertProps): string {
-  const husbandName = message.waifuHusband?.twitchUser?.displayName ?? message.displayName;
+  const husbandName =
+    message.waifuHusband?.twitchUser?.displayName ?? message.displayName;
   const title = message.waifu.anime
     ? `аниме ${message.waifu.anime}`
     : `манги ${message.waifu.manga}`;

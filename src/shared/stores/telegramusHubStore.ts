@@ -7,7 +7,14 @@ import { FrogAlertProps } from "@/components/OBS_Components/FrogAlerts/helper";
 import { FumoAlertProps } from "@/components/OBS_Components/FumoAlerts/helper";
 import { MikuAlertProps } from "@/components/OBS_Components/MikuAlerts/helper";
 import { WaifuAlertProps } from "@/components/OBS_Components/WaifuAlerts/helper";
-import { Frog, Fumo, Husband, MikuModule, TwitchUser, Waifu } from "@/shared/api";
+import {
+  Frog,
+  Fumo,
+  Husband,
+  MikuModule,
+  TwitchUser,
+  Waifu,
+} from "@/shared/api";
 import { TelegramusHubSignalRConnectionBuilder } from "@/shared/api/signalr-clients/TelegramusHub/SignalRContext";
 import useFrogPrizesStore from "@/shared/stores/frogPrizesStore";
 import useFumoPrizesStore from "@/shared/stores/fumoPrizesStore";
@@ -80,7 +87,12 @@ export const useTelegramusHubStore = create<
         // Регистрация обработчиков событий до старта
         connection.on(
           "WaifuRoll",
-          (message: Waifu, displayName: string, host: Husband, color?: string) => {
+          (
+            message: Waifu,
+            displayName: string,
+            host: Husband,
+            color?: string
+          ) => {
             const parsed: WaifuAlertProps = {
               waifu: message,
               displayName,

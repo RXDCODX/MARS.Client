@@ -1,5 +1,4 @@
 import { ROULETTE_SIZE_PRESETS, RouletteSize } from "./rouletteSizes";
-
 import styles from "./WaifuRoulettePrizeItem.module.scss";
 
 interface WaifuRoulettePrizeItemProperties {

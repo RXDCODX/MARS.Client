@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
 import { Alert, Button, Card, Input, Space, Spin, Tag, Typography } from "antd";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type { VerificationCodeRequest } from "@/shared/api";
 import { WTelegram } from "@/shared/api/http-clients/WTelegram";
@@ -60,9 +60,9 @@ const WTelegramPage: React.FC = () => {
       const result = res.data as WTelegramOperationResult;
       showToast(result.message || "Переавторизация запущена", "success");
       await fetchStatus();
-    } catch (err: unknown) {
+    } catch (error_: unknown) {
       const message =
-        err instanceof Error ? err.message : "Ошибка переавторизации";
+        error_ instanceof Error ? error_.message : "Ошибка переавторизации";
       setError(message);
       showToast(message, "error");
     } finally {
@@ -83,9 +83,9 @@ const WTelegramPage: React.FC = () => {
       showToast(result.message || "Код отправлен", "success");
       setCode("");
       await fetchStatus();
-    } catch (err: unknown) {
+    } catch (error_: unknown) {
       const message =
-        err instanceof Error ? err.message : "Ошибка отправки кода";
+        error_ instanceof Error ? error_.message : "Ошибка отправки кода";
       setError(message);
       showToast(message, "error");
     } finally {
@@ -126,7 +126,7 @@ const WTelegramPage: React.FC = () => {
                 {status.isAuthenticated ? "Да" : "Нет"}
               </Tag>
             </div>
-            {status.userId != null && (
+            {status.userId != undefined && (
               <div data-testid="wtelegram-user-id">
                 <Text strong>User ID: </Text>
                 <Text>{status.userId}</Text>
