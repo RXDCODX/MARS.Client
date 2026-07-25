@@ -210,7 +210,6 @@ export interface WaifuAlertProps {
   waifu: Waifu;
   displayName: string;
   waifuHusband?: Husband;
-  color?: string;
   isReminder?: boolean;
 }
 
