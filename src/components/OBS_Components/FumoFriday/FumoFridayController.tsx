@@ -1,7 +1,10 @@
 import { useCallback, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-import { TelegramusHubSignalRContext as SignalRContext } from "@/shared/api";
+import {
+  TelegramusHubSignalRContext as SignalRContext,
+  TwitchUser,
+} from "@/shared/api";
 
 import { Cirno } from "./Cirno";
 import { Reimu } from "./Reimu";
@@ -22,9 +25,13 @@ export function FumoFridayController() {
 
   SignalRContext.useSignalREffect(
     "fumofriday",
-    (message: string, color: string) => {
+    (twitchUser: TwitchUser) => {
       const id = uuidv4();
-      const newMessage: Message = { id: id, message: message, color: color };
+      const newMessage: Message = {
+        id: id,
+        message: twitchUser.displayName ?? "",
+        color: twitchUser.chatColor ?? undefined,
+      };
       handleAddEvent(newMessage);
     },
     []

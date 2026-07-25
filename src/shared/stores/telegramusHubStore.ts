@@ -108,12 +108,11 @@ export const useTelegramusHubStore = create<
 
         connection.on(
           "addnewwaifu",
-          (message: Waifu, displayName: string, color?: string) => {
+          (message: Waifu, twitchUser: TwitchUser) => {
             message.isAdded = true;
             const parsed: WaifuAlertProps = {
               waifu: message,
-              displayName,
-              color,
+              displayName: twitchUser.displayName ?? "",
             };
             const { messages, isWaifuShowing } = get();
             if (!isWaifuShowing) {
