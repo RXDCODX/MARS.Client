@@ -9918,6 +9918,7 @@
           "activeServicesCount",
           "cpuUsagePercent",
           "isAudioControllerConnected",
+          "isDiscordTtsRelayEnabled",
           "isEventSubConnected",
           "isPuntoSwitcherEnabled",
           "isTtsConnected",
@@ -10002,6 +10003,9 @@
             "type": "boolean"
           },
           "isTtsFilterEnabled": {
+            "type": "boolean"
+          },
+          "isDiscordTtsRelayEnabled": {
             "type": "boolean"
           },
           "nearestWeddingAnniversaryName": {
@@ -10460,6 +10464,10 @@
           },
           "isEnabled": {
             "type": "boolean"
+          },
+          "lastError": {
+            "type": "string",
+            "nullable": true
           },
           "createdAtUtc": {
             "type": "string",

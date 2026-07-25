@@ -37,6 +37,7 @@ interface ServerStats {
   isTtsConnected: boolean;
   isPuntoSwitcherEnabled: boolean;
   isTtsFilterEnabled: boolean;
+  isDiscordTtsRelayEnabled: boolean;
   nearestWeddingAnniversaryName?: string;
   nearestWeddingAnniversaryDate?: string;
   nearestWeddingAnniversaryUser?: string;
@@ -367,6 +368,14 @@ const WelcomePage: React.FC = () => {
                 onToggle={handleTtsFilterToggle}
                 connectedText="Включено"
                 disconnectedText="Выключено"
+              />
+              <ConnectionCard
+                title="Discord TTS Relay"
+                connected={stats.isDiscordTtsRelayEnabled}
+                icon="🤖"
+                dataTestId="stat-discord-tts-relay"
+                connectedText="Активно"
+                disconnectedText="Неактивно"
               />
             </Flex>
 

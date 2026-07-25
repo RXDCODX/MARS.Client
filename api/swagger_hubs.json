@@ -562,6 +562,50 @@
         ]
       }
     },
+    "/hubs/tts/SubmitAudioForRelay": {
+      "post": {
+        "tags": [
+          "VoiceRecognitionHub"
+        ],
+        "parameters": [
+          {
+            "name": "pcmAudio",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "byte"
+            }
+          },
+          {
+            "name": "sampleRate",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "channels",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { },
+        "security": [
+          { }
+        ]
+      }
+    },
     "/hubs/tts/UnregisterAsTtsConsumer": {
       "post": {
         "tags": [

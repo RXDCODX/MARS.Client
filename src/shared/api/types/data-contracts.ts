@@ -355,11 +355,11 @@ export interface DefaultImage {
 }
 
 export interface DiscordChannelOptionDto {
-  /** @format uint64 */
-  id: string;
+  /** @format int64 */
+  id: number;
   name: string;
-  /** @format uint64 */
-  guildId: string;
+  /** @format int64 */
+  guildId: number;
   guildName: string;
 }
 
@@ -700,6 +700,7 @@ export interface ServerStatsResponse {
   isTtsConnected: boolean;
   isPuntoSwitcherEnabled: boolean;
   isTtsFilterEnabled: boolean;
+  isDiscordTtsRelayEnabled: boolean;
   nearestWeddingAnniversaryName?: string;
   /** @format date-time */
   nearestWeddingAnniversaryDate?: string;
@@ -791,8 +792,8 @@ export interface TelegramChannelOptionDto {
 export interface TelegramDiscordBindingCreateRequest {
   /** @format int64 */
   telegramChannelId: number;
-  /** @format uint64 */
-  discordChannelId: string;
+  /** @format int64 */
+  discordChannelId: number;
 }
 
 export interface TelegramDiscordBindingDto {
@@ -800,10 +801,10 @@ export interface TelegramDiscordBindingDto {
   id: string;
   /** @format int64 */
   telegramChannelId: number;
-  /** @format uint64 */
-  discordChannelId: string;
+  /** @format int64 */
+  discordChannelId: number;
   isEnabled: boolean;
-  lastError?: string | null;
+  lastError?: string;
   /** @format date-time */
   createdAtUtc: string;
   /** @format date-time */
