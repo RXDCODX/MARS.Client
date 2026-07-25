@@ -3,7 +3,6 @@ import { MikuModule, TwitchUser } from "@/shared/api";
 export interface MikuAlertProps {
   mikuModule: MikuModule;
   twitchUser: TwitchUser;
-  color?: string;
   collectedCount?: number;
   totalCount?: number;
 }

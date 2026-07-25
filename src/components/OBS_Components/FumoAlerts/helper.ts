@@ -3,7 +3,6 @@ import { Fumo, TwitchUser } from "@/shared/api";
 export interface FumoAlertProps {
   fumo: Fumo;
   twitchUser: TwitchUser;
-  color?: string;
   collectedCount?: number;
   totalCount?: number;
 }

@@ -93,14 +93,14 @@ export default function WaifuReminderAlert({ message, onRemove }: Properties) {
                 width: "80px",
                 height: "80px",
                 borderRadius: "50%",
-                border: `4px solid ${message.color || message.waifuHusband.twitchUser.chatColor || "white"}`,
-                boxShadow: `0 0 20px ${message.color || message.waifuHusband.twitchUser.chatColor || "white"}`,
+                border: `4px solid ${message.waifuHusband.twitchUser.chatColor || "white"}`,
+                boxShadow: `0 0 20px ${message.waifuHusband.twitchUser.chatColor || "white"}`,
               }}
             />
           )}
           <span
             className="text-shadow block-text"
-            style={{ color: message.color ?? "white" }}
+            style={{ color: message.waifuHusband?.twitchUser?.chatColor || "white" }}
           >
             <Textfit min={1} max={1500} forceSingleModeWidth>
               {message.waifuHusband!.twitchUser?.displayName?.toUpperCase()}

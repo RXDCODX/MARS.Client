@@ -87,17 +87,11 @@ export const useTelegramusHubStore = create<
         // Регистрация обработчиков событий до старта
         connection.on(
           "WaifuRoll",
-          (
-            message: Waifu,
-            displayName: string,
-            host: Husband,
-            color?: string
-          ) => {
+          (message: Waifu, host: Husband) => {
             const parsed: WaifuAlertProps = {
               waifu: message,
-              displayName,
+              displayName: host.twitchUser?.displayName ?? "",
               waifuHusband: host,
-              color,
             };
             const { messages, isWaifuShowing } = get();
             if (!isWaifuShowing) {
@@ -136,13 +130,12 @@ export const useTelegramusHubStore = create<
 
         connection.on(
           "Mergewaifu",
-          (message: Waifu, host: Husband, _avatar?: string, color?: string) => {
+          (message: Waifu, host: Husband) => {
             message.isMerged = true;
             const parsed: WaifuAlertProps = {
               waifu: message,
               displayName: host.twitchUser!.displayName!,
               waifuHusband: host,
-              color,
             };
             const { messages, isWaifuShowing } = get();
             if (!isWaifuShowing) {
@@ -159,12 +152,11 @@ export const useTelegramusHubStore = create<
 
         connection.on(
           "Showcurrentwife",
-          (message: Waifu, host: Husband, _avatar?: string, color?: string) => {
+          (message: Waifu, host: Husband) => {
             const parsed: WaifuAlertProps = {
               waifu: message,
               displayName: host.twitchUser!.displayName!,
               waifuHusband: host,
-              color,
               isReminder: true,
             };
             const { messages, isWaifuShowing } = get();
@@ -186,14 +178,12 @@ export const useTelegramusHubStore = create<
           (
             fumo: Fumo,
             twitchUser: TwitchUser,
-            color?: string,
             collectedCount?: number,
             totalCount?: number
           ) => {
             const parsed: FumoAlertProps = {
               fumo,
               twitchUser,
-              color,
               collectedCount,
               totalCount,
             };
@@ -235,11 +225,10 @@ export const useTelegramusHubStore = create<
         // FrogRoll обработчик
         connection.on(
           "FrogRoll",
-          (frog: Frog, twitchUser: TwitchUser, color?: string) => {
+          (frog: Frog, twitchUser: TwitchUser) => {
             const parsed: FrogAlertProps = {
               frog,
               twitchUser,
-              color,
             };
             const { frogMessages, isFrogShowing } = get();
             if (!isFrogShowing) {
@@ -271,14 +260,12 @@ export const useTelegramusHubStore = create<
           (
             mikuModule: MikuModule,
             twitchUser: TwitchUser,
-            color?: string,
             collectedCount?: number,
             totalCount?: number
           ) => {
             const parsed: MikuAlertProps = {
               mikuModule,
               twitchUser,
-              color,
               collectedCount,
               totalCount,
             };
