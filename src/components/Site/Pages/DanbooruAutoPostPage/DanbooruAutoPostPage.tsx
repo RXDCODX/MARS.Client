@@ -9,11 +9,10 @@ import {
   Select,
   Space,
   Spin,
-  Table,
   Tag,
   Tooltip,
 } from "antd";
-import { Edit3, Plus, Trash2 } from "lucide-react";
+import { Edit3, Play, Plus, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type {
@@ -410,100 +409,97 @@ const DanbooruAutoPostPage: React.FC = () => {
     );
   };
 
-  const columns = [
-    {
-      title: "Discord канал",
-      key: "channel",
-      render: (_: unknown, record: DanbooruAutoPostConfigDto) => (
-        <>
-          {discordChannelMap.get(String(record.discordChannelId)) ??
-            "Неизвестный канал"}{" "}
-          ({record.discordChannelId})
-        </>
-      ),
-    },
-    {
-      title: "Теги",
-      dataIndex: "tags",
-      key: "tags",
-      render: (text: string) => renderTags(text),
-    },
-    {
-      title: "CRON",
-      dataIndex: "cronExpression",
-      key: "cronExpression",
-      render: (text: string) => <code>{text}</code>,
-    },
-    {
-      title: "Статус",
-      key: "status",
-      render: (_: unknown, record: DanbooruAutoPostConfigDto) => (
-        <Badge color={record.isEnabled ? "green" : "default"}>
-          {record.isEnabled ? "Включён" : "Выключен"}
-        </Badge>
-      ),
-    },
-    {
-      title: "Последний запуск",
-      dataIndex: "lastExecutedAtUtc",
-      key: "lastExecutedAtUtc",
-      render: (text: string | null) =>
-        text ? new Date(text).toLocaleString() : "—",
-    },
-    {
-      title: "Действия",
-      key: "actions",
-      render: (_: unknown, record: DanbooruAutoPostConfigDto) => {
-        const isProcessing = Object.hasOwn(processingIds, record.id);
-        return (
-          <Space>
-            <Tooltip title="Триггер сейчас">
-              <Button
-                size="small"
-                type="default"
-                disabled={isProcessing}
-                onClick={() => void handleTriggerNow(record.id)}
-                data-testid={`button-trigger-${record.id}`}
-              >
-                ▶
-              </Button>
-            </Tooltip>
+  const renderConfigCard = (config: DanbooruAutoPostConfigDto) => {
+    const isProcessing = Object.hasOwn(processingIds, config.id);
+    const channelName =
+      discordChannelMap.get(String(config.discordChannelId)) ??
+      "Неизвестный канал";
+
+    return (
+      <Card
+        key={config.id}
+        className={styles.configCard}
+        data-testid={`card-${config.id}`}
+        hoverable
+      >
+        <div className={styles.cardHeader}>
+          <div className={styles.cardChannel}>
+            <span className={styles.channelName}>{channelName}</span>
+            <span className={styles.channelId}>({config.discordChannelId})</span>
+          </div>
+          <Badge
+            color={config.isEnabled ? "green" : "default"}
+            text={config.isEnabled ? "Включён" : "Выключен"}
+          />
+        </div>
+
+        <div className={styles.cardBody}>
+          <div className={styles.cardField}>
+            <span className={styles.fieldLabel}>Теги</span>
+            <div>{renderTags(config.tags ?? "")}</div>
+          </div>
+
+          <div className={styles.cardField}>
+            <span className={styles.fieldLabel}>Расписание</span>
+            <code className={styles.cronValue}>{config.cronExpression}</code>
+          </div>
+
+          <div className={styles.cardField}>
+            <span className={styles.fieldLabel}>Последний запуск</span>
+            <span className={styles.fieldValue}>
+              {config.lastExecutedAtUtc
+                ? new Date(config.lastExecutedAtUtc).toLocaleString()
+                : "—"}
+            </span>
+          </div>
+        </div>
+
+        <div className={styles.cardActions}>
+          <Tooltip title="Триггер сейчас">
             <Button
               size="small"
               type="primary"
               ghost
               disabled={isProcessing}
-              onClick={() => void handleToggleEnabled(record)}
-              data-testid={`button-toggle-${record.id}`}
-            >
-              {record.isEnabled ? "Выключить" : "Включить"}
-            </Button>
-            <Tooltip title="Редактировать">
-              <Button
-                size="small"
-                type="default"
-                disabled={isProcessing}
-                onClick={() => openEditModal(record)}
-                data-testid={`button-edit-${record.id}`}
-                icon={<Edit3 size={14} />}
-              />
-            </Tooltip>
-            <Tooltip title="Удалить">
-              <Button
-                size="small"
-                danger
-                ghost
-                disabled={isProcessing}
-                onClick={() => void handleDelete(record.id)}
-                data-testid={`button-delete-${record.id}`}
-                icon={<Trash2 size={14} />}
-              />
-            </Tooltip>
-          </Space>
-        );
-      },
-    },
-  ];
+              onClick={() => void handleTriggerNow(config.id)}
+              data-testid={`button-trigger-${config.id}`}
+              icon={<Play size={14} />}
+            />
+          </Tooltip>
+          <Button
+            size="small"
+            type={config.isEnabled ? "default" : "primary"}
+            disabled={isProcessing}
+            onClick={() => void handleToggleEnabled(config)}
+            data-testid={`button-toggle-${config.id}`}
+          >
+            {config.isEnabled ? "Выключить" : "Включить"}
+          </Button>
+          <Tooltip title="Редактировать">
+            <Button
+              size="small"
+              type="default"
+              disabled={isProcessing}
+              onClick={() => openEditModal(config)}
+              data-testid={`button-edit-${config.id}`}
+              icon={<Edit3 size={14} />}
+            />
+          </Tooltip>
+          <Tooltip title="Удалить">
+            <Button
+              size="small"
+              danger
+              ghost
+              disabled={isProcessing}
+              onClick={() => void handleDelete(config.id)}
+              data-testid={`button-delete-${config.id}`}
+              icon={<Trash2 size={14} />}
+            />
+          </Tooltip>
+        </div>
+      </Card>
+    );
+  };
 
   const discordOptions = discordChannels.map(ch => ({
     value: String(ch.id),
@@ -821,7 +817,7 @@ const DanbooruAutoPostPage: React.FC = () => {
             data-testid="input-search"
           />
         </div>
-        <div className={styles.tableWrap} style={{ padding: "0 16px" }}>
+        <div className={styles.cardsWrap}>
           {loading ? (
             <div
               style={{ textAlign: "center", padding: "16px 0" }}
@@ -837,15 +833,9 @@ const DanbooruAutoPostPage: React.FC = () => {
               data-testid="empty-state"
             />
           ) : (
-            <Table
-              columns={columns}
-              dataSource={filteredConfigs}
-              rowKey="id"
-              bordered
-              pagination={false}
-              style={{ marginBottom: 0 }}
-              data-testid="configs-table"
-            />
+            <div className={styles.cardsGrid}>
+              {filteredConfigs.map(config => renderConfigCard(config))}
+            </div>
           )}
         </div>
       </Card>
