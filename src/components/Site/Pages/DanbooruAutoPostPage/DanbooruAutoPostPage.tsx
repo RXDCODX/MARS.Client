@@ -13,7 +13,7 @@ import {
   Tag,
   Tooltip,
 } from "antd";
-import { Edit3, Plus, Trash2 } from "lucide-react";
+import { Check, Edit3, Hash, Plus, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type {
@@ -123,6 +123,8 @@ const DanbooruAutoPostPage: React.FC = () => {
     {}
   );
   const [error, setError] = useState("");
+  const [showChannelPicker, setShowChannelPicker] = useState(false);
+  const [channelSearch, setChannelSearch] = useState("");
   const [cronMode, setCronMode] = useState<"visual" | "manual">("visual");
   const [cronParts, setCronParts] = useState({
     minute: "0",
@@ -148,6 +150,26 @@ const DanbooruAutoPostPage: React.FC = () => {
       ),
     [discordChannels]
   );
+
+  const filteredPickerChannels = useMemo(() => {
+    const query = channelSearch.trim().toLowerCase();
+    if (!query) {
+      return discordChannels;
+    }
+    return discordChannels.filter(
+      ch =>
+        ch.name.toLowerCase().includes(query) ||
+        ch.guildName.toLowerCase().includes(query) ||
+        String(ch.id).includes(query)
+    );
+  }, [discordChannels, channelSearch]);
+
+  const selectedChannelName = useMemo(() => {
+    if (!form.discordChannelId) {
+      return "";
+    }
+    return discordChannelMap.get(form.discordChannelId) ?? "";
+  }, [form.discordChannelId, discordChannelMap]);
 
   const filteredConfigs = useMemo(() => {
     const query = filter.trim().toLowerCase();
@@ -497,11 +519,6 @@ const DanbooruAutoPostPage: React.FC = () => {
     },
   ];
 
-  const discordOptions = discordChannels.map(ch => ({
-    value: String(ch.id),
-    label: `${ch.guildName} / #${ch.name} (${ch.id})`,
-  }));
-
   return (
     <div className={styles.page} data-testid="danbooru-auto-post-page">
       <Flex justify="space-between" align="center" style={{ marginBottom: 12 }}>
@@ -562,23 +579,17 @@ const DanbooruAutoPostPage: React.FC = () => {
             >
               Discord канал
             </label>
-            <Select
-              value={form.discordChannelId || undefined}
-              onChange={value =>
-                setForm(previous => ({ ...previous, discordChannelId: value }))
-              }
-              options={discordOptions}
-              placeholder="Выберите Discord канал"
+            <Button
+              block
               disabled={loadingChannels || submitting}
-              style={{ width: "100%" }}
-              data-testid="select-discord-channel"
-              showSearch
-              filterOption={(input, option) =>
-                (option?.label as string)
-                  ?.toLowerCase()
-                  .includes(input.toLowerCase())
-              }
-            />
+              onClick={() => {
+                setChannelSearch("");
+                setShowChannelPicker(true);
+              }}
+              data-testid="button-open-channel-picker"
+            >
+              {selectedChannelName || "Выберите Discord канал"}
+            </Button>
           </div>
 
           <div style={{ marginBottom: 16 }}>
@@ -788,6 +799,69 @@ const DanbooruAutoPostPage: React.FC = () => {
             </Button>
           </div>
         </form>
+      </Modal>
+
+      <Modal
+        open={showChannelPicker}
+        onCancel={() => setShowChannelPicker(false)}
+        title="Выберите Discord канал"
+        footer={undefined}
+        centered
+        width={560}
+        data-testid="modal-channel-picker"
+      >
+        <Input
+          placeholder="Поиск по названию канала или сервера"
+          value={channelSearch}
+          onChange={event_ => setChannelSearch(event_.target.value)}
+          style={{ marginBottom: 12 }}
+          allowClear
+          data-testid="input-channel-search"
+        />
+        {loadingChannels ? (
+          <div style={{ textAlign: "center", padding: 24 }}>
+            <Spin />
+          </div>
+        ) : filteredPickerChannels.length === 0 ? (
+          <Alert
+            type="info"
+            message="Каналы не найдены"
+            data-testid="empty-channels"
+          />
+        ) : (
+          <div className={styles.channelGrid} data-testid="channel-grid">
+            {filteredPickerChannels.map(ch => {
+              const channelId = String(ch.id);
+              const isSelected = form.discordChannelId === channelId;
+              return (
+                <div
+                  key={ch.id}
+                  className={`${styles.channelCard} ${isSelected ? styles.channelCardSelected : ""}`}
+                  onClick={() => {
+                    setForm(previous => ({
+                      ...previous,
+                      discordChannelId: channelId,
+                    }));
+                    setShowChannelPicker(false);
+                  }}
+                  data-testid={`channel-card-${ch.id}`}
+                >
+                  <div className={styles.channelCardHeader}>
+                    <span className={styles.channelCardGuild}>
+                      {ch.guildName}
+                    </span>
+                    {isSelected && <Check size={16} />}
+                  </div>
+                  <div className={styles.channelCardName}>
+                    <Hash size={14} />
+                    {ch.name}
+                  </div>
+                  <div className={styles.channelCardId}>ID: {ch.id}</div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </Modal>
 
       <Card>
