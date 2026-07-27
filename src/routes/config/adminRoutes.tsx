@@ -345,7 +345,7 @@ export const adminRoutes: RouteConfig[] = [
   },
   {
     path: "/nsfw-booru-auto-post",
-    name: "Rule34 автопостинг",
+    name: "NSFWBooru автопостинг",
     type: "control panel",
     element: (
       <Layout>

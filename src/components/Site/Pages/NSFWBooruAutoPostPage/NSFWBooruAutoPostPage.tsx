@@ -512,7 +512,7 @@ const NSFWBooruAutoPostPage: React.FC = () => {
   return (
     <div className={styles.page} data-testid="nsfw-booru-auto-post-page">
       <Flex justify="space-between" align="center" style={{ marginBottom: 12 }}>
-        <h1>Rule34 автопостинг</h1>
+        <h1>NSFWBooru автопостинг</h1>
         <Button
           type="primary"
           onClick={openCreateModal}
@@ -596,7 +596,7 @@ const NSFWBooruAutoPostPage: React.FC = () => {
                 fontWeight: 500,
               }}
             >
-              Теги Rule34
+              Теги NSFWBooru
             </label>
             <Select
               mode="tags"
