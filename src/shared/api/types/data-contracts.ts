@@ -320,7 +320,7 @@ export interface DanbooruAutoPostConfigDto {
   /** @format uuid */
   id: string;
   /** @format int64 */
-  discordChannelId: number;
+  discordChannelId: string;
   tags: string;
   cronExpression: string;
   isEnabled: boolean;
@@ -334,7 +334,7 @@ export interface DanbooruAutoPostConfigDto {
 
 export interface DanbooruAutoPostCreateRequest {
   /** @format int64 */
-  discordChannelId: number;
+  discordChannelId: string;
   tags: string;
   cronExpression: string;
 }
@@ -343,7 +343,7 @@ export interface DanbooruAutoPostUpdateRequest {
   /** @format uuid */
   id: string;
   /** @format int64 */
-  discordChannelId: number;
+  discordChannelId: string;
   tags: string;
   cronExpression: string;
 }
@@ -356,10 +356,10 @@ export interface DefaultImage {
 
 export interface DiscordChannelOptionDto {
   /** @format int64 */
-  id: number;
+  id: string;
   name: string;
   /** @format int64 */
-  guildId: number;
+  guildId: string;
   guildName: string;
 }
 
@@ -570,6 +570,42 @@ export interface MemeTypeDto {
   name: string;
   /** @minLength 1 */
   folderPath: string;
+}
+
+export interface NSFWBooruAutoPostConfigDto {
+  /** @format uuid */
+  id: string;
+  /** @format int64 */
+  discordChannelId: string;
+  tags: string;
+  cronExpression: string;
+  isEnabled: boolean;
+  /** @format date-time */
+  lastExecutedAtUtc?: string;
+  /** @format date-time */
+  createdAtUtc: string;
+  /** @format date-time */
+  updatedAtUtc: string;
+}
+
+export interface NSFWBooruAutoPostCreateRequest {
+  /** @format int64 */
+  discordChannelId: string;
+  tags: string;
+  cronExpression: string;
+}
+
+export interface NSFWBooruAutoPostUpdateRequest {
+  /** @format uuid */
+  id: string;
+  /** @format int64 */
+  discordChannelId: string;
+  tags: string;
+  cronExpression: string;
+}
+
+export interface NSFWSetEnabledRequest {
+  isEnabled: boolean;
 }
 
 export interface Pagination {

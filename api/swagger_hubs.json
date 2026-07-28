@@ -648,17 +648,10 @@
             }
           },
           {
-            "name": "displayName",
+            "name": "twitchUser",
             "in": "query",
             "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "color",
-            "in": "query",
-            "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/TwitchUser"
             }
           }
         ],
@@ -831,13 +824,6 @@
             "schema": {
               "$ref": "#/components/schemas/TwitchUser"
             }
-          },
-          {
-            "name": "color",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": { }
@@ -850,17 +836,10 @@
         ],
         "parameters": [
           {
-            "name": "displayName",
+            "name": "twitchUser",
             "in": "query",
             "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "color",
-            "in": "query",
-            "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/TwitchUser"
             }
           }
         ],
@@ -885,13 +864,6 @@
             "in": "query",
             "schema": {
               "$ref": "#/components/schemas/TwitchUser"
-            }
-          },
-          {
-            "name": "color",
-            "in": "query",
-            "schema": {
-              "type": "string"
             }
           },
           {
@@ -1027,20 +999,6 @@
             "schema": {
               "$ref": "#/components/schemas/Husband"
             }
-          },
-          {
-            "name": "avatar",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "color",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": { }
@@ -1109,13 +1067,6 @@
             "in": "query",
             "schema": {
               "$ref": "#/components/schemas/TwitchUser"
-            }
-          },
-          {
-            "name": "color",
-            "in": "query",
-            "schema": {
-              "type": "string"
             }
           },
           {
@@ -1229,20 +1180,6 @@
             "in": "query",
             "schema": {
               "$ref": "#/components/schemas/Husband"
-            }
-          },
-          {
-            "name": "avatar",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "color",
-            "in": "query",
-            "schema": {
-              "type": "string"
             }
           }
         ],
@@ -1368,28 +1305,132 @@
             }
           },
           {
-            "name": "displayName",
+            "name": "waifuHusband",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/Husband"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/audio-controller/CommandResponse": {
+      "post": {
+        "tags": [
+          "AudioControllerHub"
+        ],
+        "parameters": [
+          {
+            "name": "correlationId",
             "in": "query",
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "waifuHusband",
+            "name": "success",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/Husband"
+              "type": "boolean"
             }
           },
           {
-            "name": "color",
+            "name": "data",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "error",
             "in": "query",
             "schema": {
               "type": "string"
             }
           }
         ],
-        "responses": { }
+        "responses": { },
+        "security": [
+          { }
+        ]
+      }
+    },
+    "/hubs/audio-controller/OnConnectedAsync": {
+      "post": {
+        "tags": [
+          "AudioControllerHub"
+        ],
+        "responses": { },
+        "security": [
+          { }
+        ]
+      }
+    },
+    "/hubs/audio-controller/OnDisconnectedAsync": {
+      "post": {
+        "tags": [
+          "AudioControllerHub"
+        ],
+        "responses": { },
+        "security": [
+          { }
+        ]
+      }
+    },
+    "/hubs/audio-controller/RegisterAsAudioController": {
+      "post": {
+        "tags": [
+          "AudioControllerHub"
+        ],
+        "responses": { },
+        "security": [
+          { }
+        ]
+      }
+    },
+    "/hubs/audio-controller/SubmitAudioForRelay": {
+      "post": {
+        "tags": [
+          "AudioControllerHub"
+        ],
+        "parameters": [
+          {
+            "name": "pcmAudio",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "byte"
+            }
+          },
+          {
+            "name": "sampleRate",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "channels",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { },
+        "security": [
+          { }
+        ]
       }
     }
   },
@@ -3537,6 +3578,9 @@
     },
     {
       "name": "VoiceRecognitionHub"
+    },
+    {
+      "name": "AudioControllerHub"
     }
   ]
 }

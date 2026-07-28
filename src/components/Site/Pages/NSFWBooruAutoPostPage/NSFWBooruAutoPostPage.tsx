@@ -20,7 +20,7 @@ import type {
   NSFWBooruAutoPostConfigDto,
 } from "@/shared/api";
 import { defaultApiConfig } from "@/shared/api/api-config";
-import { NSFWBooruAutoPost } from "@/shared/api/http-clients/NSFWBooruAutoPost";
+import { NSFWBooruAutoPost } from "@/shared/api";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import styles from "./NSFWBooruAutoPostPage.module.scss";
@@ -272,8 +272,7 @@ const NSFWBooruAutoPostPage: React.FC = () => {
       setSubmitting(true);
       setError("");
 
-      const discordChannelId = Number(form.discordChannelId);
-      if (!Number.isFinite(discordChannelId) || discordChannelId <= 0) {
+      if (!form.discordChannelId) {
         const message = "Выберите Discord канал";
         setError(message);
         showToast({ success: false, message });
@@ -301,7 +300,7 @@ const NSFWBooruAutoPostPage: React.FC = () => {
 
       try {
         const requestData = {
-          discordChannelId,
+          discordChannelId: form.discordChannelId,
           tags: form.tags.join(" ").trim(),
           cronExpression: finalCron.trim(),
         };

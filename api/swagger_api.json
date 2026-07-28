@@ -2800,6 +2800,342 @@
         }
       }
     },
+    "/api/NSFWBooruAutoPost/configs": {
+      "get": {
+        "tags": [
+          "NSFWBooruAutoPost"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "NSFWBooruAutoPost"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/NSFWBooruAutoPostCreateRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/NSFWBooruAutoPostCreateRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/NSFWBooruAutoPostCreateRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/NSFWBooruAutoPost/configs/{id}": {
+      "put": {
+        "tags": [
+          "NSFWBooruAutoPost"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/NSFWBooruAutoPostUpdateRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/NSFWBooruAutoPostUpdateRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/NSFWBooruAutoPostUpdateRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "NSFWBooruAutoPost"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/NSFWBooruAutoPost/configs/{id}/enabled": {
+      "put": {
+        "tags": [
+          "NSFWBooruAutoPost"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/NSFWSetEnabledRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/NSFWSetEnabledRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/NSFWSetEnabledRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/NSFWBooruAutoPost/configs/{id}/trigger": {
+      "post": {
+        "tags": [
+          "NSFWBooruAutoPost"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/NSFWBooruAutoPost/discord-channels": {
+      "get": {
+        "tags": [
+          "NSFWBooruAutoPost"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordChannelOptionDtoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordChannelOptionDtoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordChannelOptionDtoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Obs/status": {
       "get": {
         "tags": [
@@ -9506,6 +9842,128 @@
         "description": "Результат операции с данными типа null",
         "x-generic-type-argument": "null"
       },
+      "NSFWBooruAutoPostConfigDto": {
+        "required": [
+          "createdAtUtc",
+          "cronExpression",
+          "discordChannelId",
+          "id",
+          "isEnabled",
+          "tags",
+          "updatedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "discordChannelId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tags": {
+            "type": "string"
+          },
+          "cronExpression": {
+            "type": "string"
+          },
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "lastExecutedAtUtc": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NSFWBooruAutoPostConfigDtoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
+      },
+      "NSFWBooruAutoPostConfigDtoOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
+      },
+      "NSFWBooruAutoPostCreateRequest": {
+        "required": [
+          "cronExpression",
+          "discordChannelId",
+          "tags"
+        ],
+        "type": "object",
+        "properties": {
+          "discordChannelId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tags": {
+            "type": "string"
+          },
+          "cronExpression": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NSFWBooruAutoPostUpdateRequest": {
+        "required": [
+          "cronExpression",
+          "discordChannelId",
+          "id",
+          "tags"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "discordChannelId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tags": {
+            "type": "string"
+          },
+          "cronExpression": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "NSFWSetEnabledRequest": {
+        "required": [
+          "isEnabled"
+        ],
+        "type": "object",
+        "properties": {
+          "isEnabled": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "ObjectOperationResult": {
         "allOf": [
           {
@@ -11282,6 +11740,9 @@
     },
     {
       "name": "MediaInfoApi"
+    },
+    {
+      "name": "NSFWBooruAutoPost"
     },
     {
       "name": "Obs"

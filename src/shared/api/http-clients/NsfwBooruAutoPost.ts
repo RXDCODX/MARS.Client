@@ -144,143 +144,131 @@ import type {
   TestAlertsAlertByTypeCreateParamsTypeEnum,
 } from "../types/data-contracts";
 
-export class Logs<
+export class NsfwBooruAutoPost<
   SecurityDataType = unknown,
 > extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags Logs
-   * @name LogsList
-   * @request GET:/api/Logs
-   * @response `200` `OperationResult<LogResponse>` OK
+   * @tags NSFWBooruAutoPost
+   * @name NsfwBooruAutoPostConfigsList
+   * @request GET:/api/NSFWBooruAutoPost/configs
+   * @response `200` `OperationResult<NSFWBooruAutoPostConfigDto[]>` OK
    */
-  logsList = (
-    query?: {
-      /**
-       * @format int32
-       * @default 1
-       */
-      page: number;
-      /**
-       * @format int32
-       * @default 50
-       */
-      pageSize: number;
-      /** @default "whenlogged" */
-      sortBy: string;
-      /** @default true */
-      sortDescending: boolean;
-      logLevel: LogsListParamsLogLevelEnum;
-      /** @format date-time */
-      fromDate: string;
-      /** @format date-time */
-      toDate: string;
-      searchText: string;
-    },
+  nsfwBooruAutoPostConfigsList = (params: RequestParams = {}) =>
+    this.request<OperationResult<NSFWBooruAutoPostConfigDto[]>, any>({
+      path: `/api/NSFWBooruAutoPost/configs`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags NSFWBooruAutoPost
+   * @name NsfwBooruAutoPostConfigsCreate
+   * @request POST:/api/NSFWBooruAutoPost/configs
+   * @response `200` `OperationResult<NSFWBooruAutoPostConfigDto>` OK
+   */
+  nsfwBooruAutoPostConfigsCreate = (
+    data: NSFWBooruAutoPostCreateRequest,
     params: RequestParams = {}
   ) =>
-    this.request<OperationResult<LogResponse>, any>({
-      path: `/api/Logs`,
-      method: "GET",
-      query: query,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Logs
-   * @name LogsByLevelDetail
-   * @request GET:/api/Logs/by-level/{logLevel}
-   * @response `200` `OperationResult<Log[]>` OK
-   */
-  logsByLevelDetail = (
-    logLevel: LogsByLevelDetailParamsEnum,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<Log[]>, any>({
-      path: `/api/Logs/by-level/${logLevel}`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Logs
-   * @name LogsByDateRangeList
-   * @request GET:/api/Logs/by-date-range
-   * @response `200` `OperationResult<Log[]>` OK
-   */
-  logsByDateRangeList = (
-    query?: {
-      /** @format date-time */
-      fromDate: string;
-      /** @format date-time */
-      toDate: string;
-    },
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<Log[]>, any>({
-      path: `/api/Logs/by-date-range`,
-      method: "GET",
-      query: query,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Logs
-   * @name LogsRecentList
-   * @request GET:/api/Logs/recent
-   * @response `200` `OperationResult<Log[]>` OK
-   */
-  logsRecentList = (
-    query?: {
-      /**
-       * @format int32
-       * @default 100
-       */
-      count: number;
-    },
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<Log[]>, any>({
-      path: `/api/Logs/recent`,
-      method: "GET",
-      query: query,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Logs
-   * @name LogsStatisticsList
-   * @request GET:/api/Logs/statistics
-   * @response `200` `OperationResult<LogsStatistics>` OK
-   */
-  logsStatisticsList = (params: RequestParams = {}) =>
-    this.request<OperationResult<LogsStatistics>, any>({
-      path: `/api/Logs/statistics`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Logs
-   * @name LogsTestCreate
-   * @request POST:/api/Logs/test
-   * @response `200` `OperationResult<Object>` OK
-   */
-  logsTestCreate = (params: RequestParams = {}) =>
-    this.request<OperationResult<Object>, any>({
-      path: `/api/Logs/test`,
+    this.request<OperationResult<NSFWBooruAutoPostConfigDto>, any>({
+      path: `/api/NSFWBooruAutoPost/configs`,
       method: "POST",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags NSFWBooruAutoPost
+   * @name NsfwBooruAutoPostConfigsUpdate
+   * @request PUT:/api/NSFWBooruAutoPost/configs/{id}
+   * @response `200` `OperationResult<NSFWBooruAutoPostConfigDto>` OK
+   */
+  nsfwBooruAutoPostConfigsUpdate = (
+    id: string,
+    data: NSFWBooruAutoPostUpdateRequest,
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<NSFWBooruAutoPostConfigDto>, any>({
+      path: `/api/NSFWBooruAutoPost/configs/${id}`,
+      method: "PUT",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags NSFWBooruAutoPost
+   * @name NsfwBooruAutoPostConfigsDelete
+   * @request DELETE:/api/NSFWBooruAutoPost/configs/{id}
+   * @response `200` `OperationResult` OK
+   */
+  nsfwBooruAutoPostConfigsDelete = (id: string, params: RequestParams = {}) =>
+    this.request<OperationResult, any>({
+      path: `/api/NSFWBooruAutoPost/configs/${id}`,
+      method: "DELETE",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags NSFWBooruAutoPost
+   * @name NsfwBooruAutoPostConfigsEnabledUpdate
+   * @request PUT:/api/NSFWBooruAutoPost/configs/{id}/enabled
+   * @response `200` `OperationResult<NSFWBooruAutoPostConfigDto>` OK
+   */
+  nsfwBooruAutoPostConfigsEnabledUpdate = (
+    id: string,
+    data: NSFWSetEnabledRequest,
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<NSFWBooruAutoPostConfigDto>, any>({
+      path: `/api/NSFWBooruAutoPost/configs/${id}/enabled`,
+      method: "PUT",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags NSFWBooruAutoPost
+   * @name NsfwBooruAutoPostConfigsTriggerCreate
+   * @request POST:/api/NSFWBooruAutoPost/configs/{id}/trigger
+   * @response `200` `OperationResult` OK
+   */
+  nsfwBooruAutoPostConfigsTriggerCreate = (
+    id: string,
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult, any>({
+      path: `/api/NSFWBooruAutoPost/configs/${id}/trigger`,
+      method: "POST",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags NSFWBooruAutoPost
+   * @name NsfwBooruAutoPostDiscordChannelsList
+   * @request GET:/api/NSFWBooruAutoPost/discord-channels
+   * @response `200` `OperationResult<DiscordChannelOptionDto[]>` OK
+   */
+  nsfwBooruAutoPostDiscordChannelsList = (params: RequestParams = {}) =>
+    this.request<OperationResult<DiscordChannelOptionDto[]>, any>({
+      path: `/api/NSFWBooruAutoPost/discord-channels`,
+      method: "GET",
       format: "json",
       ...params,
     });
