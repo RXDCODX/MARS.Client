@@ -86,6 +86,12 @@ const danbooruAutoPostPageLoader = () =>
   import("@/components/Site/Pages/DanbooruAutoPostPage/DanbooruAutoPostPage");
 const DanbooruAutoPostPage = lazy(danbooruAutoPostPageLoader);
 
+const nsfwBooruAutoPostPageLoader = () =>
+  import(
+    "@/components/Site/Pages/NSFWBooruAutoPostPage/NSFWBooruAutoPostPage"
+  );
+const NSFWBooruAutoPostPage = lazy(nsfwBooruAutoPostPageLoader);
+
 // Регистрируем админ компоненты для фоновой загрузки
 registerPrefetchComponents([
   logsPageLoader,
@@ -104,6 +110,7 @@ registerPrefetchComponents([
   twitchUserEditPageLoader,
   wTelegramPageLoader,
   danbooruAutoPostPageLoader,
+  nsfwBooruAutoPostPageLoader,
 ]);
 
 // Массив панелей управления (с Layout)
@@ -332,6 +339,18 @@ export const adminRoutes: RouteConfig[] = [
       <Layout>
         <Suspense fallback={<PageLoader />}>
           <DanbooruAutoPostPage />
+        </Suspense>
+      </Layout>
+    ),
+  },
+  {
+    path: "/nsfw-booru-auto-post",
+    name: "NSFWBooru автопостинг",
+    type: "control panel",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <NSFWBooruAutoPostPage />
         </Suspense>
       </Layout>
     ),

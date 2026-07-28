@@ -16,14 +16,14 @@ import { Edit3, Play, Plus, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type {
-  DanbooruAutoPostConfigDto,
   DiscordChannelOptionDto,
+  NSFWBooruAutoPostConfigDto,
 } from "@/shared/api";
 import { defaultApiConfig } from "@/shared/api/api-config";
-import { DanbooruAutoPost } from "@/shared/api/http-clients/DanbooruAutoPost";
+import { NSFWBooruAutoPost } from "@/shared/api/http-clients/NSFWBooruAutoPost";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
-import styles from "./DanbooruAutoPostPage.module.scss";
+import styles from "./NSFWBooruAutoPostPage.module.scss";
 
 interface FormState {
   discordChannelId: string;
@@ -103,11 +103,11 @@ const cronDaysOfWeek: CronField[] = [
   { label: "вс", value: "0" },
 ];
 
-const DanbooruAutoPostPage: React.FC = () => {
+const NSFWBooruAutoPostPage: React.FC = () => {
   const { showToast } = useToastModal();
-  const api = useMemo(() => new DanbooruAutoPost(defaultApiConfig), []);
+  const api = useMemo(() => new NSFWBooruAutoPost(defaultApiConfig), []);
 
-  const [configs, setConfigs] = useState<DanbooruAutoPostConfigDto[]>([]);
+  const [configs, setConfigs] = useState<NSFWBooruAutoPostConfigDto[]>([]);
   const [discordChannels, setDiscordChannels] = useState<
     DiscordChannelOptionDto[]
   >([]);
@@ -176,7 +176,7 @@ const DanbooruAutoPostPage: React.FC = () => {
     setError("");
 
     try {
-      const result = await api.danbooruAutoPostConfigsList();
+      const result = await api.nsfwBooruAutoPostConfigsList();
       setConfigs(Array.isArray(result.data.data) ? result.data.data : []);
     } catch (error_) {
       const message =
@@ -194,7 +194,7 @@ const DanbooruAutoPostPage: React.FC = () => {
     setLoadingChannels(true);
 
     try {
-      const result = await api.danbooruAutoPostDiscordChannelsList();
+      const result = await api.nsfwBooruAutoPostDiscordChannelsList();
       setDiscordChannels(
         Array.isArray(result.data.data) ? result.data.data : []
       );
@@ -242,26 +242,29 @@ const DanbooruAutoPostPage: React.FC = () => {
     setShowModal(true);
   }, []);
 
-  const openEditModal = useCallback((config: DanbooruAutoPostConfigDto) => {
-    const tags = (config.tags ?? "").split(/\s+/).filter(Boolean);
-    const parts = (config.cronExpression ?? "").split(/\s+/);
-    const parsed = {
-      minute: parts[0] ?? "0",
-      hour: parts[1] ?? "*",
-      dayOfMonth: parts[2] ?? "*",
-      month: parts[3] ?? "*",
-      dayOfWeek: parts[4] ?? "*",
-    };
-    setCronParts(parsed);
-    setForm({
-      discordChannelId: String(config.discordChannelId),
-      tags,
-      cronExpression: config.cronExpression ?? "",
-    });
-    setEditingId(config.id);
-    setCronMode("visual");
-    setShowModal(true);
-  }, []);
+  const openEditModal = useCallback(
+    (config: NSFWBooruAutoPostConfigDto) => {
+      const tags = (config.tags ?? "").split(/\s+/).filter(Boolean);
+      const parts = (config.cronExpression ?? "").split(/\s+/);
+      const parsed = {
+        minute: parts[0] ?? "0",
+        hour: parts[1] ?? "*",
+        dayOfMonth: parts[2] ?? "*",
+        month: parts[3] ?? "*",
+        dayOfWeek: parts[4] ?? "*",
+      };
+      setCronParts(parsed);
+      setForm({
+        discordChannelId: String(config.discordChannelId),
+        tags,
+        cronExpression: config.cronExpression ?? "",
+      });
+      setEditingId(config.id);
+      setCronMode("visual");
+      setShowModal(true);
+    },
+    []
+  );
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent) => {
@@ -303,11 +306,11 @@ const DanbooruAutoPostPage: React.FC = () => {
           cronExpression: finalCron.trim(),
         };
         const result = editingId
-          ? await api.danbooruAutoPostConfigsUpdate(editingId, {
+          ? await api.nsfwBooruAutoPostConfigsUpdate(editingId, {
               ...requestData,
               id: editingId,
             })
-          : await api.danbooruAutoPostConfigsCreate(requestData);
+          : await api.nsfwBooruAutoPostConfigsCreate(requestData);
         showToast(result.data);
 
         setForm({ ...defaultForm });
@@ -332,7 +335,7 @@ const DanbooruAutoPostPage: React.FC = () => {
     async (id: string) => {
       setProcessingIds(previous => ({ ...previous, [id]: true }));
       try {
-        const result = await api.danbooruAutoPostConfigsDelete(id);
+        const result = await api.nsfwBooruAutoPostConfigsDelete(id);
         showToast(result.data);
         await loadConfigs();
       } catch (error_) {
@@ -350,10 +353,10 @@ const DanbooruAutoPostPage: React.FC = () => {
   );
 
   const handleToggleEnabled = useCallback(
-    async (config: DanbooruAutoPostConfigDto) => {
+    async (config: NSFWBooruAutoPostConfigDto) => {
       setProcessingIds(previous => ({ ...previous, [config.id]: true }));
       try {
-        const result = await api.danbooruAutoPostConfigsEnabledUpdate(
+        const result = await api.nsfwBooruAutoPostConfigsEnabledUpdate(
           config.id,
           { isEnabled: !config.isEnabled }
         );
@@ -377,7 +380,7 @@ const DanbooruAutoPostPage: React.FC = () => {
     async (id: string) => {
       setProcessingIds(previous => ({ ...previous, [id]: true }));
       try {
-        const result = await api.danbooruAutoPostConfigsTriggerCreate(id);
+        const result = await api.nsfwBooruAutoPostConfigsTriggerCreate(id);
         showToast(result.data);
       } catch (error_) {
         const message =
@@ -409,7 +412,7 @@ const DanbooruAutoPostPage: React.FC = () => {
     );
   };
 
-  const renderConfigCard = (config: DanbooruAutoPostConfigDto) => {
+  const renderConfigCard = (config: NSFWBooruAutoPostConfigDto) => {
     const isProcessing = Object.hasOwn(processingIds, config.id);
     const channelName =
       discordChannelMap.get(String(config.discordChannelId)) ??
@@ -419,7 +422,7 @@ const DanbooruAutoPostPage: React.FC = () => {
       <Card
         key={config.id}
         className={styles.configCard}
-        data-testid={`card-${config.id}`}
+        data-testid={`nsfw-booru-card-${config.id}`}
         hoverable
       >
         <div className={styles.cardHeader}>
@@ -462,7 +465,7 @@ const DanbooruAutoPostPage: React.FC = () => {
               ghost
               disabled={isProcessing}
               onClick={() => void handleTriggerNow(config.id)}
-              data-testid={`button-trigger-${config.id}`}
+              data-testid={`nsfw-booru-button-trigger-${config.id}`}
               icon={<Play size={14} />}
             />
           </Tooltip>
@@ -471,7 +474,7 @@ const DanbooruAutoPostPage: React.FC = () => {
             type={config.isEnabled ? "default" : "primary"}
             disabled={isProcessing}
             onClick={() => void handleToggleEnabled(config)}
-            data-testid={`button-toggle-${config.id}`}
+            data-testid={`nsfw-booru-button-toggle-${config.id}`}
           >
             {config.isEnabled ? "Выключить" : "Включить"}
           </Button>
@@ -481,7 +484,7 @@ const DanbooruAutoPostPage: React.FC = () => {
               type="default"
               disabled={isProcessing}
               onClick={() => openEditModal(config)}
-              data-testid={`button-edit-${config.id}`}
+              data-testid={`nsfw-booru-button-edit-${config.id}`}
               icon={<Edit3 size={14} />}
             />
           </Tooltip>
@@ -492,7 +495,7 @@ const DanbooruAutoPostPage: React.FC = () => {
               ghost
               disabled={isProcessing}
               onClick={() => void handleDelete(config.id)}
-              data-testid={`button-delete-${config.id}`}
+              data-testid={`nsfw-booru-button-delete-${config.id}`}
               icon={<Trash2 size={14} />}
             />
           </Tooltip>
@@ -507,13 +510,13 @@ const DanbooruAutoPostPage: React.FC = () => {
   }));
 
   return (
-    <div className={styles.page} data-testid="danbooru-auto-post-page">
+    <div className={styles.page} data-testid="nsfw-booru-auto-post-page">
       <Flex justify="space-between" align="center" style={{ marginBottom: 12 }}>
-        <h1>Danbooru автопостинг</h1>
+        <h1>NSFWBooru автопостинг</h1>
         <Button
           type="primary"
           onClick={openCreateModal}
-          data-testid="button-create"
+          data-testid="nsfw-booru-button-create"
           icon={<Plus size={14} />}
         >
           Добавить
@@ -525,7 +528,7 @@ const DanbooruAutoPostPage: React.FC = () => {
           type="error"
           title={error}
           style={{ marginBottom: 12 }}
-          data-testid="error-alert"
+          data-testid="nsfw-booru-error-alert"
         />
       )}
 
@@ -539,7 +542,7 @@ const DanbooruAutoPostPage: React.FC = () => {
         footer={false}
         centered
         width={600}
-        data-testid="modal-config-form"
+        data-testid="nsfw-booru-modal-config-form"
       >
         {loadingChannels && (
           <div
@@ -575,7 +578,7 @@ const DanbooruAutoPostPage: React.FC = () => {
               placeholder="Выберите Discord канал"
               disabled={loadingChannels || submitting}
               style={{ width: "100%" }}
-              data-testid="select-discord-channel"
+              data-testid="nsfw-booru-select-discord-channel"
               showSearch
               filterOption={(input, option) =>
                 (option?.label as string)
@@ -593,7 +596,7 @@ const DanbooruAutoPostPage: React.FC = () => {
                 fontWeight: 500,
               }}
             >
-              Теги Danbooru
+              Теги NSFWBooru
             </label>
             <Select
               mode="tags"
@@ -604,13 +607,13 @@ const DanbooruAutoPostPage: React.FC = () => {
               placeholder="Введите тег и нажмите Enter"
               disabled={submitting}
               style={{ width: "100%" }}
-              data-testid="input-tags"
+              data-testid="nsfw-booru-input-tags"
               tokenSeparators={[" "]}
               maxCount={2}
               maxTagCount="responsive"
             />
             <div className={styles.cronHint}>
-              Примеры: 1girl, solo, landscape, anime, scenery
+              Примеры: 1girl, solo, landscape, anime, scenery (макс. 2 тега)
             </div>
           </div>
 
@@ -629,7 +632,7 @@ const DanbooruAutoPostPage: React.FC = () => {
                 size="small"
                 type={cronMode === "visual" ? "primary" : "default"}
                 onClick={() => setCronMode("visual")}
-                data-testid="cron-mode-visual"
+                data-testid="nsfw-booru-cron-mode-visual"
               >
                 Конструктор
               </Button>
@@ -637,7 +640,7 @@ const DanbooruAutoPostPage: React.FC = () => {
                 size="small"
                 type={cronMode === "manual" ? "primary" : "default"}
                 onClick={() => setCronMode("manual")}
-                data-testid="cron-mode-manual"
+                data-testid="nsfw-booru-cron-mode-manual"
               >
                 Вручную
               </Button>
@@ -661,7 +664,7 @@ const DanbooruAutoPostPage: React.FC = () => {
                     }))}
                     style={{ flex: 1 }}
                     disabled={submitting}
-                    data-testid="cron-minute"
+                    data-testid="nsfw-booru-cron-minute"
                   />
                 </div>
                 <div className={styles.cronRow}>
@@ -677,7 +680,7 @@ const DanbooruAutoPostPage: React.FC = () => {
                     }))}
                     style={{ flex: 1 }}
                     disabled={submitting}
-                    data-testid="cron-hour"
+                    data-testid="nsfw-booru-cron-hour"
                     showSearch
                   />
                 </div>
@@ -697,7 +700,7 @@ const DanbooruAutoPostPage: React.FC = () => {
                     }))}
                     style={{ flex: 1 }}
                     disabled={submitting}
-                    data-testid="cron-day"
+                    data-testid="nsfw-booru-cron-day"
                   />
                 </div>
                 <div className={styles.cronRow}>
@@ -713,7 +716,7 @@ const DanbooruAutoPostPage: React.FC = () => {
                     }))}
                     style={{ flex: 1 }}
                     disabled={submitting}
-                    data-testid="cron-month"
+                    data-testid="nsfw-booru-cron-month"
                   />
                 </div>
                 <div className={styles.cronRow}>
@@ -732,7 +735,7 @@ const DanbooruAutoPostPage: React.FC = () => {
                     }))}
                     style={{ flex: 1 }}
                     disabled={submitting}
-                    data-testid="cron-weekday"
+                    data-testid="nsfw-booru-cron-weekday"
                   />
                 </div>
                 <div className={styles.cronPreview}>
@@ -750,7 +753,7 @@ const DanbooruAutoPostPage: React.FC = () => {
                 }
                 placeholder="*/30 * * * *"
                 disabled={submitting}
-                data-testid="input-cron"
+                data-testid="nsfw-booru-input-cron"
               />
             )}
           </div>
@@ -770,7 +773,7 @@ const DanbooruAutoPostPage: React.FC = () => {
                 setEditingId(undefined);
               }}
               disabled={submitting}
-              data-testid="button-cancel"
+              data-testid="nsfw-booru-button-cancel"
             >
               Отмена
             </Button>
@@ -778,7 +781,7 @@ const DanbooruAutoPostPage: React.FC = () => {
               type="primary"
               htmlType="submit"
               disabled={submitting}
-              data-testid="button-submit"
+              data-testid="nsfw-booru-button-submit"
             >
               {submitting ? (
                 <>
@@ -814,14 +817,14 @@ const DanbooruAutoPostPage: React.FC = () => {
             value={filter}
             onChange={event_ => setFilter(event_.target.value)}
             style={{ width: 300 }}
-            data-testid="input-search"
+            data-testid="nsfw-booru-input-search"
           />
         </div>
         <div className={styles.cardsWrap}>
           {loading ? (
             <div
               style={{ textAlign: "center", padding: "16px 0" }}
-              data-testid="loading-spinner"
+              data-testid="nsfw-booru-loading-spinner"
             >
               <Spin />
             </div>
@@ -830,7 +833,7 @@ const DanbooruAutoPostPage: React.FC = () => {
               type="info"
               title="Конфигурации не найдены"
               style={{ marginBottom: 0, marginTop: 12 }}
-              data-testid="empty-state"
+              data-testid="nsfw-booru-empty-state"
             />
           ) : (
             <div className={styles.cardsGrid}>
@@ -843,4 +846,4 @@ const DanbooruAutoPostPage: React.FC = () => {
   );
 };
 
-export default DanbooruAutoPostPage;
+export default NSFWBooruAutoPostPage;
