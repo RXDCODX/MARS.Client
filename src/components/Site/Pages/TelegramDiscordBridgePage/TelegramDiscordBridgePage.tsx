@@ -6,12 +6,12 @@ import {
   Flex,
   Input,
   Modal,
-  Select,
   Space,
   Spin,
   Table,
   Tooltip,
 } from "antd";
+import { Check, Hash } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type {
@@ -59,6 +59,10 @@ const TelegramDiscordBridgePage: React.FC = () => {
     {}
   );
   const [error, setError] = useState("");
+  const [showTelegramPicker, setShowTelegramPicker] = useState(false);
+  const [showDiscordPicker, setShowDiscordPicker] = useState(false);
+  const [telegramSearch, setTelegramSearch] = useState("");
+  const [discordSearch, setDiscordSearch] = useState("");
 
   const telegramChannelMap = useMemo(
     () => new Map(telegramChannels.map(channel => [channel.id, channel.title])),
@@ -75,6 +79,45 @@ const TelegramDiscordBridgePage: React.FC = () => {
       ),
     [discordChannels]
   );
+
+  const filteredTelegramChannels = useMemo(() => {
+    const query = telegramSearch.trim().toLowerCase();
+    if (!query) {
+      return telegramChannels;
+    }
+    return telegramChannels.filter(
+      ch =>
+        ch.title.toLowerCase().includes(query) || String(ch.id).includes(query)
+    );
+  }, [telegramChannels, telegramSearch]);
+
+  const filteredDiscordPickerChannels = useMemo(() => {
+    const query = discordSearch.trim().toLowerCase();
+    if (!query) {
+      return discordChannels;
+    }
+    return discordChannels.filter(
+      ch =>
+        ch.name.toLowerCase().includes(query) ||
+        ch.guildName.toLowerCase().includes(query) ||
+        String(ch.id).includes(query)
+    );
+  }, [discordChannels, discordSearch]);
+
+  const selectedTelegramName = useMemo(() => {
+    if (!form.telegramChannelId) {
+      return "";
+    }
+    const id = Number(form.telegramChannelId);
+    return telegramChannelMap.get(id) ?? "";
+  }, [form.telegramChannelId, telegramChannelMap]);
+
+  const selectedDiscordName = useMemo(() => {
+    if (!form.discordChannelId) {
+      return "";
+    }
+    return discordChannelMap.get(Number(form.discordChannelId)) ?? "";
+  }, [form.discordChannelId, discordChannelMap]);
 
   const filteredBindings = useMemo(() => {
     const query = filter.trim().toLowerCase();
@@ -404,16 +447,6 @@ const TelegramDiscordBridgePage: React.FC = () => {
     },
   ];
 
-  const telegramOptions = telegramChannels.map(channel => ({
-    value: String(channel.id),
-    label: `${channel.title} (${channel.id})`,
-  }));
-
-  const discordOptions = discordChannels.map(channel => ({
-    value: String(channel.id),
-    label: `${channel.guildName} / #${channel.name} (${channel.id})`,
-  }));
-
   return (
     <div className={styles.page}>
       <Flex justify="space-between" align="center" style={{ marginBottom: 12 }}>
@@ -474,38 +507,34 @@ const TelegramDiscordBridgePage: React.FC = () => {
               <label style={{ display: "block", marginBottom: 4 }}>
                 Telegram-канал
               </label>
-              <Select
-                value={form.telegramChannelId || undefined}
-                onChange={value =>
-                  setForm(previous => ({
-                    ...previous,
-                    telegramChannelId: value,
-                  }))
-                }
-                options={telegramOptions}
-                placeholder="Выберите Telegram-канал"
+              <Button
+                block
                 disabled={loadingChannelOptions || creating}
-                style={{ width: "100%" }}
-              />
+                onClick={() => {
+                  setTelegramSearch("");
+                  setShowTelegramPicker(true);
+                }}
+                data-testid="button-open-telegram-picker"
+              >
+                {selectedTelegramName || "Выберите Telegram-канал"}
+              </Button>
             </div>
 
             <div style={{ marginBottom: 12 }}>
               <label style={{ display: "block", marginBottom: 4 }}>
                 Discord-канал
               </label>
-              <Select
-                value={form.discordChannelId || undefined}
-                onChange={value =>
-                  setForm(previous => ({
-                    ...previous,
-                    discordChannelId: value,
-                  }))
-                }
-                options={discordOptions}
-                placeholder="Выберите Discord-канал"
+              <Button
+                block
                 disabled={loadingChannelOptions || creating}
-                style={{ width: "100%" }}
-              />
+                onClick={() => {
+                  setDiscordSearch("");
+                  setShowDiscordPicker(true);
+                }}
+                data-testid="button-open-discord-picker"
+              >
+                {selectedDiscordName || "Выберите Discord-канал"}
+              </Button>
             </div>
           </div>
 
@@ -536,6 +565,132 @@ const TelegramDiscordBridgePage: React.FC = () => {
             </Button>
           </div>
         </form>
+      </Modal>
+
+      <Modal
+        open={showTelegramPicker}
+        onCancel={() => setShowTelegramPicker(false)}
+        title="Выберите Telegram-канал"
+        footer={undefined}
+        centered
+        width={520}
+        data-testid="modal-telegram-picker"
+      >
+        <Input
+          placeholder="Поиск по названию канала"
+          value={telegramSearch}
+          onChange={event_ => setTelegramSearch(event_.target.value)}
+          style={{ marginBottom: 12 }}
+          allowClear
+          data-testid="input-telegram-search"
+        />
+        {loadingChannelOptions ? (
+          <div style={{ textAlign: "center", padding: 24 }}>
+            <Spin />
+          </div>
+        ) : filteredTelegramChannels.length === 0 ? (
+          <Alert
+            type="info"
+            message="Каналы не найдены"
+            data-testid="empty-telegram-channels"
+          />
+        ) : (
+          <div
+            className={styles.channelGrid}
+            data-testid="telegram-channel-grid"
+          >
+            {filteredTelegramChannels.map(ch => {
+              const channelId = String(ch.id);
+              const isSelected = form.telegramChannelId === channelId;
+              return (
+                <div
+                  key={ch.id}
+                  className={`${styles.channelCard} ${isSelected ? styles.channelCardSelected : ""}`}
+                  onClick={() => {
+                    setForm(previous => ({
+                      ...previous,
+                      telegramChannelId: channelId,
+                    }));
+                    setShowTelegramPicker(false);
+                  }}
+                  data-testid={`telegram-channel-card-${ch.id}`}
+                >
+                  <div className={styles.channelCardHeader}>
+                    <span className={styles.channelCardTitle}>{ch.title}</span>
+                    {isSelected && <Check size={16} />}
+                  </div>
+                  <div className={styles.channelCardId}>ID: {ch.id}</div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </Modal>
+
+      <Modal
+        open={showDiscordPicker}
+        onCancel={() => setShowDiscordPicker(false)}
+        title="Выберите Discord-канал"
+        footer={undefined}
+        centered
+        width={560}
+        data-testid="modal-discord-picker"
+      >
+        <Input
+          placeholder="Поиск по названию канала или сервера"
+          value={discordSearch}
+          onChange={event_ => setDiscordSearch(event_.target.value)}
+          style={{ marginBottom: 12 }}
+          allowClear
+          data-testid="input-discord-search"
+        />
+        {loadingChannelOptions ? (
+          <div style={{ textAlign: "center", padding: 24 }}>
+            <Spin />
+          </div>
+        ) : filteredDiscordPickerChannels.length === 0 ? (
+          <Alert
+            type="info"
+            message="Каналы не найдены"
+            data-testid="empty-discord-channels"
+          />
+        ) : (
+          <div
+            className={styles.channelGrid}
+            data-testid="discord-channel-grid"
+          >
+            {filteredDiscordPickerChannels.map(ch => {
+              const channelId = String(ch.id);
+              const isSelected = form.discordChannelId === channelId;
+              return (
+                <div
+                  key={ch.id}
+                  className={`${styles.channelCard} ${isSelected ? styles.channelCardSelected : ""}`}
+                  onClick={() => {
+                    setForm(previous => ({
+                      ...previous,
+                      discordChannelId: channelId,
+                    }));
+                    setShowDiscordPicker(false);
+                  }}
+                  data-testid={`discord-channel-card-${ch.id}`}
+                >
+                  <div className={styles.channelCardHeader}>
+                    <span className={styles.channelCardGuild}>
+                      {ch.guildName}
+                    </span>
+                    {isSelected && <Check size={16} />}
+                  </div>
+                  <div className={styles.channelCardName}>
+                    <Hash size={14} />
+                    {ch.name}
+                  </div>
+                  <div className={styles.channelCardId}>ID: {ch.id}</div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </Modal>
 
       <Card style={{ marginBottom: 16 }}>
