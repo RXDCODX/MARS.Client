@@ -572,6 +572,42 @@ export interface MemeTypeDto {
   folderPath: string;
 }
 
+export interface NSFWBooruAutoPostConfigDto {
+  /** @format uuid */
+  id: string;
+  /** @format int64 */
+  discordChannelId: number;
+  tags: string;
+  cronExpression: string;
+  isEnabled: boolean;
+  /** @format date-time */
+  lastExecutedAtUtc?: string;
+  /** @format date-time */
+  createdAtUtc: string;
+  /** @format date-time */
+  updatedAtUtc: string;
+}
+
+export interface NSFWBooruAutoPostCreateRequest {
+  /** @format int64 */
+  discordChannelId: number;
+  tags: string;
+  cronExpression: string;
+}
+
+export interface NSFWBooruAutoPostUpdateRequest {
+  /** @format uuid */
+  id: string;
+  /** @format int64 */
+  discordChannelId: number;
+  tags: string;
+  cronExpression: string;
+}
+
+export interface NSFWSetEnabledRequest {
+  isEnabled: boolean;
+}
+
 export interface Pagination {
   cursor?: string;
 }

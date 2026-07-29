@@ -20,7 +20,6 @@ import type {
   NSFWBooruAutoPostConfigDto,
 } from "@/shared/api";
 import { defaultApiConfig } from "@/shared/api/api-config";
-import { NSFWBooruAutoPost } from "@/shared/api/http-clients/NSFWBooruAutoPost";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
 import styles from "./NSFWBooruAutoPostPage.module.scss";
@@ -242,29 +241,26 @@ const NSFWBooruAutoPostPage: React.FC = () => {
     setShowModal(true);
   }, []);
 
-  const openEditModal = useCallback(
-    (config: NSFWBooruAutoPostConfigDto) => {
-      const tags = (config.tags ?? "").split(/\s+/).filter(Boolean);
-      const parts = (config.cronExpression ?? "").split(/\s+/);
-      const parsed = {
-        minute: parts[0] ?? "0",
-        hour: parts[1] ?? "*",
-        dayOfMonth: parts[2] ?? "*",
-        month: parts[3] ?? "*",
-        dayOfWeek: parts[4] ?? "*",
-      };
-      setCronParts(parsed);
-      setForm({
-        discordChannelId: String(config.discordChannelId),
-        tags,
-        cronExpression: config.cronExpression ?? "",
-      });
-      setEditingId(config.id);
-      setCronMode("visual");
-      setShowModal(true);
-    },
-    []
-  );
+  const openEditModal = useCallback((config: NSFWBooruAutoPostConfigDto) => {
+    const tags = (config.tags ?? "").split(/\s+/).filter(Boolean);
+    const parts = (config.cronExpression ?? "").split(/\s+/);
+    const parsed = {
+      minute: parts[0] ?? "0",
+      hour: parts[1] ?? "*",
+      dayOfMonth: parts[2] ?? "*",
+      month: parts[3] ?? "*",
+      dayOfWeek: parts[4] ?? "*",
+    };
+    setCronParts(parsed);
+    setForm({
+      discordChannelId: String(config.discordChannelId),
+      tags,
+      cronExpression: config.cronExpression ?? "",
+    });
+    setEditingId(config.id);
+    setCronMode("visual");
+    setShowModal(true);
+  }, []);
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent) => {
@@ -428,7 +424,9 @@ const NSFWBooruAutoPostPage: React.FC = () => {
         <div className={styles.cardHeader}>
           <div className={styles.cardChannel}>
             <span className={styles.channelName}>{channelName}</span>
-            <span className={styles.channelId}>({config.discordChannelId})</span>
+            <span className={styles.channelId}>
+              ({config.discordChannelId})
+            </span>
           </div>
           <Badge
             color={config.isEnabled ? "green" : "default"}
