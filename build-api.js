@@ -882,6 +882,15 @@ export function ${hub.name}SignalRHubWrapper({
 
 // Функция для создания индексного файла
 function createIndexFile() {
+  // Используем реально сгенерированные файлы: генератор нормализует имена
+  // из тегов (например, NSFWBooruAutoPost -> NsfwBooruAutoPost), поэтому
+  // экспортировать по сырым тегам нельзя - получим MISSING_EXPORT
+  const httpClientNames = fs
+    .readdirSync(OUTPUT_DIR_HTTP_CLIENTS)
+    .filter(file => file.endsWith(".ts"))
+    .map(file => file.replace(/\.ts$/, ""))
+    .filter(name => !["http-client", "data-contracts", "types"].includes(name));
+
   const indexContent = `// Автоматически сгенерированный индексный файл
 // Импорты утилит конфигурации
 export * from "./api-config";
@@ -890,7 +899,7 @@ export * from "./api-config";
 export * from "./types/data-contracts";
 
 // Импорты HTTP клиентов
-${CONTROLLERS.map(controller => `export { ${controller} } from "./http-clients/${controller}";`).join("\n")}
+${httpClientNames.map(name => `export { ${name} } from "./http-clients/${name}";`).join("\n")}
 
 // Импорты SignalR клиентов
 ${SIGNALR_HUBS.map(hub => `export { ${hub.name}SignalRConnectionBuilder } from "./signalr-clients/${hub.name}/SignalRContext";`).join("\n")}
