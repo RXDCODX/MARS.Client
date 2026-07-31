@@ -19,6 +19,7 @@ import type {
   DiscordChannelOptionDto,
   NSFWBooruAutoPostConfigDto,
 } from "@/shared/api";
+import { NSFWBooruAutoPost } from "@/shared/api";
 import { defaultApiConfig } from "@/shared/api/api-config";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 

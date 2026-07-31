@@ -1,5 +1,5 @@
 import tailwindcss from "@tailwindcss/vite";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 import path from "path";
 import { defineConfig } from "vite";
 import viteCompression from "vite-plugin-compression";
@@ -26,34 +26,31 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
-      "@/components": path.resolve(__dirname, "./src/components"),
-      "@/Site": path.resolve(__dirname, "./src/Site"),
-      "@/shared": path.resolve(__dirname, "./src/shared"),
-      "@/contexts": path.resolve(__dirname, "./src/contexts"),
-      "@/routes": path.resolve(__dirname, "./src/routes"),
-      "@/app": path.resolve(__dirname, "./src/app"),
-      "@/assets": path.resolve(__dirname, "./src/assets"),
-      "@/styles": path.resolve(__dirname, "./src/styles"),
-      "@/utils": path.resolve(__dirname, "./src/shared/Utils"),
-      "@/api": path.resolve(__dirname, "./src/shared/api"),
-      "@/types": path.resolve(__dirname, "./src/shared/types"),
+      "@": path.resolve(import.meta.dirname, "./src"),
+      "@/components": path.resolve(import.meta.dirname, "./src/components"),
+      "@/Site": path.resolve(import.meta.dirname, "./src/Site"),
+      "@/shared": path.resolve(import.meta.dirname, "./src/shared"),
+      "@/contexts": path.resolve(import.meta.dirname, "./src/contexts"),
+      "@/routes": path.resolve(import.meta.dirname, "./src/routes"),
+      "@/app": path.resolve(import.meta.dirname, "./src/app"),
+      "@/assets": path.resolve(import.meta.dirname, "./src/assets"),
+      "@/styles": path.resolve(import.meta.dirname, "./src/styles"),
+      "@/utils": path.resolve(import.meta.dirname, "./src/shared/Utils"),
+      "@/api": path.resolve(import.meta.dirname, "./src/shared/api"),
+      "@/types": path.resolve(import.meta.dirname, "./src/shared/types"),
     },
   },
   build: {
     sourcemap: false,
     // Включаем code splitting для CSS - каждый lazy компонент получит свой CSS файл
     cssCodeSplit: true,
-    rollupOptions: {
+    rolldownOptions: {
       onwarn(warning, warn) {
         const isLottieEvalWarning =
           warning.code === "EVAL" &&
           warning.id?.includes("@lottiefiles/lottie-player/dist/tgs-player.js");
-        const isSignalRPureAnnotationWarning =
-          warning.id?.includes("@microsoft/signalr/dist/esm/Utils.js") &&
-          warning.message?.includes("annotation that Rollup cannot interpret");
 
-        if (!isLottieEvalWarning && !isSignalRPureAnnotationWarning) {
+        if (!isLottieEvalWarning) {
           warn(warning);
         }
       },

@@ -17,7 +17,7 @@ export { KeyboardHook } from "./http-clients/KeyboardHook";
 export { LoggerTest } from "./http-clients/LoggerTest";
 export { Logs } from "./http-clients/Logs";
 export { MediaInfoApi } from "./http-clients/MediaInfoApi";
-export { NSFWBooruAutoPost } from "./http-clients/NSFWBooruAutoPost";
+export { NsfwBooruAutoPost as NSFWBooruAutoPost } from "./http-clients/NsfwBooruAutoPost";
 export { Obs } from "./http-clients/Obs";
 export { PyroAlerts } from "./http-clients/PyroAlerts";
 export { RandomMeme } from "./http-clients/RandomMeme";
