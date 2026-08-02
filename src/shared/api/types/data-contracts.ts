@@ -741,6 +741,18 @@ export interface ServerStatsResponse {
   /** @format date-time */
   nearestWeddingAnniversaryDate?: string;
   nearestWeddingAnniversaryUser?: string;
+  /** @format int32 */
+  danbooruAutoPostTotalPosts: number;
+  /** @format date-time */
+  danbooruAutoPostLastPostedAtUtc?: string;
+  /** @format int32 */
+  nsfwBooruAutoPostTotalPosts: number;
+  /** @format date-time */
+  nsfwBooruAutoPostLastPostedAtUtc?: string;
+  /** @format int32 */
+  telegramDiscordBridgeTotalBindings: number;
+  /** @format date-time */
+  telegramDiscordBridgeLastProcessedAtUtc?: string;
 }
 
 export interface ServiceInfo {

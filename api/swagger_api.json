@@ -10375,6 +10375,7 @@
         "required": [
           "activeServicesCount",
           "cpuUsagePercent",
+          "danbooruAutoPostTotalPosts",
           "isAudioControllerConnected",
           "isDiscordTtsRelayEnabled",
           "isEventSubConnected",
@@ -10387,9 +10388,11 @@
           "memoryPrivateBytes",
           "memoryTotalBytes",
           "memoryWorkingSetBytes",
+          "nsfwBooruAutoPostTotalPosts",
           "osVersion",
           "processorCount",
           "runtimeVersion",
+          "telegramDiscordBridgeTotalBindings",
           "threadCount",
           "totalServicesCount",
           "uptimeSeconds"
@@ -10477,6 +10480,33 @@
           },
           "nearestWeddingAnniversaryUser": {
             "type": "string",
+            "nullable": true
+          },
+          "danbooruAutoPostTotalPosts": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "danbooruAutoPostLastPostedAtUtc": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "nsfwBooruAutoPostTotalPosts": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nsfwBooruAutoPostLastPostedAtUtc": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "telegramDiscordBridgeTotalBindings": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "telegramDiscordBridgeLastProcessedAtUtc": {
+            "type": "string",
+            "format": "date-time",
             "nullable": true
           }
         },

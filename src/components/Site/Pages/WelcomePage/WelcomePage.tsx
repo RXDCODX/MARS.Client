@@ -41,6 +41,12 @@ interface ServerStats {
   nearestWeddingAnniversaryName?: string;
   nearestWeddingAnniversaryDate?: string;
   nearestWeddingAnniversaryUser?: string;
+  danbooruAutoPostTotalPosts: number;
+  danbooruAutoPostLastPostedAtUtc?: string;
+  nsfwBooruAutoPostTotalPosts: number;
+  nsfwBooruAutoPostLastPostedAtUtc?: string;
+  telegramDiscordBridgeTotalBindings: number;
+  telegramDiscordBridgeLastProcessedAtUtc?: string;
 }
 
 const formatBytes = (bytes: number): string => {
@@ -62,6 +68,21 @@ const formatUptime = (seconds: number): string => {
   if (minutes > 0) parts.push(`${minutes}м`);
   parts.push(`${secs}с`);
   return parts.join(" ");
+};
+
+const formatRelativeTime = (isoDate?: string): string => {
+  if (!isoDate) return "нет данных";
+  const date = new Date(isoDate);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffSec = Math.floor(diffMs / 1000);
+  if (diffSec < 60) return `${diffSec}с назад`;
+  const diffMin = Math.floor(diffSec / 60);
+  if (diffMin < 60) return `${diffMin}м назад`;
+  const diffH = Math.floor(diffMin / 60);
+  if (diffH < 24) return `${diffH}ч назад`;
+  const diffD = Math.floor(diffH / 24);
+  return `${diffD}д назад`;
 };
 
 const WelcomePage: React.FC = () => {
@@ -376,6 +397,30 @@ const WelcomePage: React.FC = () => {
                 dataTestId="stat-discord-tts-relay"
                 connectedText="Активно"
                 disconnectedText="Неактивно"
+              />
+            </Flex>
+
+            <Flex gap={12} wrap="wrap" style={{ marginTop: 12 }}>
+              <StatCard
+                title="Danbooru AutoPost"
+                value={String(stats.danbooruAutoPostTotalPosts)}
+                subtitle={`постов | ${formatRelativeTime(stats.danbooruAutoPostLastPostedAtUtc)}`}
+                icon="🎨"
+                dataTestId="stat-danbooru-autopost"
+              />
+              <StatCard
+                title="NSFWBooru AutoPost"
+                value={String(stats.nsfwBooruAutoPostTotalPosts)}
+                subtitle={`постов | ${formatRelativeTime(stats.nsfwBooruAutoPostLastPostedAtUtc)}`}
+                icon="🔒"
+                dataTestId="stat-nsfwbooru-autopost"
+              />
+              <StatCard
+                title="Telegram-Discord Bridge"
+                value={String(stats.telegramDiscordBridgeTotalBindings)}
+                subtitle={`связей | ${formatRelativeTime(stats.telegramDiscordBridgeLastProcessedAtUtc)}`}
+                icon="🌉"
+                dataTestId="stat-telegram-discord-bridge"
               />
             </Flex>
 
