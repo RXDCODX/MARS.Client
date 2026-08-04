@@ -19,7 +19,7 @@ import type {
   DiscordChannelOptionDto,
   NSFWBooruAutoPostConfigDto,
 } from "@/shared/api";
-import { NSFWBooruAutoPost } from "@/shared/api";
+import { NsfwBooruAutoPost } from "@/shared/api";
 import { defaultApiConfig } from "@/shared/api/api-config";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
@@ -105,7 +105,7 @@ const cronDaysOfWeek: CronField[] = [
 
 const NSFWBooruAutoPostPage: React.FC = () => {
   const { showToast } = useToastModal();
-  const api = useMemo(() => new NSFWBooruAutoPost(defaultApiConfig), []);
+  const api = useMemo(() => new NsfwBooruAutoPost(defaultApiConfig), []);
 
   const [configs, setConfigs] = useState<NSFWBooruAutoPostConfigDto[]>([]);
   const [discordChannels, setDiscordChannels] = useState<
