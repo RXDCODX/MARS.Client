@@ -1,5 +1,12 @@
 import { forwardRef, JSX, ReactNode } from "react";
-import RoulettePro from "react-roulette-pro";
+import RouletteProWrapped from "react-roulette-pro";
+
+// Rolldown (Vite 8) UMD→ESM interop не unwrappит __esModule.default,
+// поэтому RouletteProWrapped может быть объектом { default: Component }.
+const RoulettePro =
+  typeof RouletteProWrapped === "function"
+    ? RouletteProWrapped
+    : (RouletteProWrapped as Record<string, unknown>).default;
 import type PrizeType from "react-roulette-pro/dist/types/PrizeType";
 
 import styles from "../MikuMonday.module.scss";

@@ -107,6 +107,8 @@ export default defineConfig({
       "@mkody/twitch-emoticons",
       // HTML парсер - для предотвращения конфликтов инициализации
       "html-react-parser",
+      // UMD-пакет: корректная CJS→ESM конвертация в dev-режиме
+      "react-roulette-pro",
     ],
   },
 });
