@@ -1,18 +1,11 @@
 import "react-roulette-pro/dist/index.css";
 
 import { CSSProperties, useCallback, useEffect, useRef, useState } from "react";
-import RouletteProWrapped from "react-roulette-pro";
-
-// Rolldown (Vite 8) UMD→ESM interop не unwrappит __esModule.default,
-// поэтому RouletteProWrapped может быть объектом { default: Component }.
-const RoulettePro =
-  typeof RouletteProWrapped === "function"
-    ? RouletteProWrapped
-    : (RouletteProWrapped as Record<string, unknown>).default;
 
 import { PrizeType, TwitchUser } from "@/shared/api";
 import animate from "@/shared/styles/animate.module.scss";
 import { getRandomColor } from "@/shared/Utils";
+import { RoulettePro } from "@/shared/Utils/reactRoulettePro";
 
 import styles2 from "../OBSCommon.module.scss";
 import {
