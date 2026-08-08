@@ -52,27 +52,19 @@
 
 .caption {
   pointer-events: none;
-  padding: 6px 12px;
+  padding: 6px 16px;
   border-radius: 999px;
   background-color: rgb(0 0 0 / 60%);
   color: #fff;
-  font-size: 14px;
   font-weight: 600;
   letter-spacing: 0.04em;
-  text-transform: uppercase;
   box-shadow: var(--site-shadow-light);
-  transform: translateZ(45px);
+  transform: translateZ(45px) translateX(-50%);
   position: absolute;
-  bottom: 20px;
-}
-
-.caption span {
-  display: block;
-  max-width: 160px;
+  bottom: 14px;
+  left: 50%;
+  width: 85%;
   text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 @media (hover: none) {

@@ -1,3 +1,5 @@
+import { Textfit } from "react-textfit";
+
 import { ROULETTE_SIZE_PRESETS, RouletteSize } from "./rouletteSizes";
 import styles from "./WaifuRoulettePrizeItem.module.scss";
 
@@ -36,7 +38,9 @@ export default function WaifuRoulettePrizeItem({
         </div>
         {normalizedText ? (
           <figcaption className={styles.caption}>
-            <span>{normalizedText}</span>
+            <Textfit mode="single" max={48} min={8}>
+              {normalizedText}
+            </Textfit>
           </figcaption>
         ) : null}
       </figure>
