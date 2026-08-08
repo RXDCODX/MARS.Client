@@ -255,4 +255,19 @@ export class MediaInfoApi<
       method: "GET",
       ...params,
     });
+  /**
+   * No description
+   *
+   * @tags MediaInfoApi
+   * @name MediaInfoApiTestCreate
+   * @request POST:/api/MediaInfoApi/{id}/test
+   * @response `200` `OperationResult` OK
+   */
+  mediaInfoApiTestCreate = (id: string, params: RequestParams = {}) =>
+    this.request<OperationResult, any>({
+      path: `/api/MediaInfoApi/${id}/test`,
+      method: "POST",
+      format: "json",
+      ...params,
+    });
 }
