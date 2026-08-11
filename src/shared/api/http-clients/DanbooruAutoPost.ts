@@ -40,6 +40,7 @@ import type {
   DanbooruAutoPostBatchCreateRequest,
   DanbooruAutoPostConfigDto,
   DanbooruAutoPostCreateRequest,
+  DanbooruAutoPostRescheduleRequest,
   DanbooruAutoPostUpdateRequest,
   DefaultImage,
   DiscordChannelOptionDto,
@@ -204,6 +205,45 @@ export class DanbooruAutoPost<
       method: "POST",
       body: data,
       type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags DanbooruAutoPost
+   * @name DanbooruAutoPostConfigsBatchRescheduleUpdate
+   * @request PUT:/api/DanbooruAutoPost/configs/batch/{batchId}/reschedule
+   * @response `200` `OperationResult<DanbooruAutoPostConfigDto[]>` OK
+   */
+  danbooruAutoPostConfigsBatchRescheduleUpdate = (
+    batchId: string,
+    data: DanbooruAutoPostRescheduleRequest,
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<DanbooruAutoPostConfigDto[]>, any>({
+      path: `/api/DanbooruAutoPost/configs/batch/${batchId}/reschedule`,
+      method: "PUT",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags DanbooruAutoPost
+   * @name DanbooruAutoPostConfigsBatchDelete
+   * @request DELETE:/api/DanbooruAutoPost/configs/batch/{batchId}
+   * @response `200` `OperationResult` OK
+   */
+  danbooruAutoPostConfigsBatchDelete = (
+    batchId: string,
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult, any>({
+      path: `/api/DanbooruAutoPost/configs/batch/${batchId}`,
+      method: "DELETE",
       format: "json",
       ...params,
     });

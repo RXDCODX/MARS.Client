@@ -1650,6 +1650,117 @@
         }
       }
     },
+    "/api/DanbooruAutoPost/configs/batch/{batchId}/reschedule": {
+      "put": {
+        "tags": [
+          "DanbooruAutoPost"
+        ],
+        "parameters": [
+          {
+            "name": "batchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/DanbooruAutoPostRescheduleRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/DanbooruAutoPostRescheduleRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/DanbooruAutoPostRescheduleRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/DanbooruAutoPost/configs/batch/{batchId}": {
+      "delete": {
+        "tags": [
+          "DanbooruAutoPost"
+        ],
+        "parameters": [
+          {
+            "name": "batchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/DanbooruAutoPost/configs/{id}": {
       "put": {
         "tags": [
@@ -8956,9 +9067,9 @@
       },
       "DanbooruAutoPostBatchCreateRequest": {
         "required": [
-          "count",
+          "cronExpression",
           "discordChannelId",
-          "intervalHours",
+          "endAtUtc",
           "tags",
           "targetPlatform"
         ],
@@ -8983,18 +9094,12 @@
           "tags": {
             "type": "string"
           },
-          "count": {
-            "type": "integer",
-            "format": "int32"
+          "cronExpression": {
+            "type": "string"
           },
-          "intervalHours": {
-            "type": "number",
-            "format": "double"
-          },
-          "startAtUtc": {
+          "endAtUtc": {
             "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "date-time"
           }
         },
         "additionalProperties": false
@@ -9030,6 +9135,16 @@
           "telegramChannelId": {
             "type": "integer",
             "format": "int64",
+            "nullable": true
+          },
+          "batchId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "danbooruPostId": {
+            "type": "integer",
+            "format": "int32",
             "nullable": true
           },
           "tags": {
@@ -9115,6 +9230,18 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DanbooruAutoPostRescheduleRequest": {
+        "required": [
+          "newCronExpression"
+        ],
+        "type": "object",
+        "properties": {
+          "newCronExpression": {
+            "type": "string"
           }
         },
         "additionalProperties": false

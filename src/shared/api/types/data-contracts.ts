@@ -323,12 +323,9 @@ export interface DanbooruAutoPostBatchCreateRequest {
   /** @format int64 */
   telegramChannelId?: number;
   tags: string;
-  /** @format int32 */
-  count: number;
-  /** @format double */
-  intervalHours: number;
+  cronExpression: string;
   /** @format date-time */
-  startAtUtc?: string;
+  endAtUtc: string;
 }
 
 export interface DanbooruAutoPostConfigDto {
@@ -339,6 +336,10 @@ export interface DanbooruAutoPostConfigDto {
   discordChannelId: number;
   /** @format int64 */
   telegramChannelId?: number;
+  /** @format uuid */
+  batchId?: string;
+  /** @format int32 */
+  danbooruPostId?: number;
   tags: string;
   cronExpression: string;
   /** @format date-time */
@@ -362,6 +363,10 @@ export interface DanbooruAutoPostCreateRequest {
   cronExpression: string;
   /** @format date-time */
   scheduledAtUtc?: string;
+}
+
+export interface DanbooruAutoPostRescheduleRequest {
+  newCronExpression: string;
 }
 
 export interface DanbooruAutoPostUpdateRequest {

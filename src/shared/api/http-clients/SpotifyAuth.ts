@@ -40,6 +40,7 @@ import type {
   DanbooruAutoPostBatchCreateRequest,
   DanbooruAutoPostConfigDto,
   DanbooruAutoPostCreateRequest,
+  DanbooruAutoPostRescheduleRequest,
   DanbooruAutoPostUpdateRequest,
   DefaultImage,
   DiscordChannelOptionDto,

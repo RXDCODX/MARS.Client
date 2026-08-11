@@ -5,7 +5,6 @@ import {
     Card,
     DatePicker,
     Input,
-    InputNumber,
     Modal,
     Select,
     Space,
@@ -76,9 +75,10 @@ interface BatchFormState {
     discordChannelId: string;
     telegramChannelId: string;
     tags: string[];
-    count: number;
-    intervalHours: number;
-    startAt: string;
+    cronExpression: string;
+    cronMode: "visual" | "manual";
+    cronParts: CronParts;
+    endAt: string;
 }
 
 const defaultBatchForm: BatchFormState = {
@@ -86,10 +86,25 @@ const defaultBatchForm: BatchFormState = {
     discordChannelId: "",
     telegramChannelId: "",
     tags: [],
-    count: 5,
-    intervalHours: 2,
-    startAt: "",
+    cronExpression: "",
+    cronMode: "visual",
+    cronParts: {
+        minute: "0",
+        hour: "*",
+        dayOfMonth: "*",
+        month: "*",
+        dayOfWeek: "*",
+    },
+    endAt: "",
 };
+
+interface CronParts {
+    minute: string;
+    hour: string;
+    dayOfMonth: string;
+    month: string;
+    dayOfWeek: string;
+}
 
 interface CronField {
     label: string;
@@ -178,6 +193,21 @@ const DanbooruAutoPostPage: React.FC = () => {
     const [submitting, setSubmitting] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [showBatchModal, setShowBatchModal] = useState(false);
+    const [showRescheduleModal, setShowRescheduleModal] = useState(false);
+    const [rescheduleBatchId, setRescheduleBatchId] = useState<
+        string | undefined
+    >(undefined);
+    const [rescheduleCron, setRescheduleCron] = useState("");
+    const [rescheduleCronMode, setRescheduleCronMode] = useState<
+        "visual" | "manual"
+    >("visual");
+    const [rescheduleCronParts, setRescheduleCronParts] = useState<CronParts>({
+        minute: "0",
+        hour: "*",
+        dayOfMonth: "*",
+        month: "*",
+        dayOfWeek: "*",
+    });
     const [editingId, setEditingId] = useState<string | undefined>(undefined);
     const [filter, setFilter] = useState("");
     const [filterTab, setFilterTab] = useState<FilterTab>("all");
@@ -202,6 +232,18 @@ const DanbooruAutoPostPage: React.FC = () => {
         () =>
             `${cronParts.minute} ${cronParts.hour} ${cronParts.dayOfMonth} ${cronParts.month} ${cronParts.dayOfWeek}`,
         [cronParts],
+    );
+
+    const batchCronExpression = useMemo(
+        () =>
+            `${batchForm.cronParts.minute} ${batchForm.cronParts.hour} ${batchForm.cronParts.dayOfMonth} ${batchForm.cronParts.month} ${batchForm.cronParts.dayOfWeek}`,
+        [batchForm.cronParts],
+    );
+
+    const rescheduleCronExpression = useMemo(
+        () =>
+            `${rescheduleCronParts.minute} ${rescheduleCronParts.hour} ${rescheduleCronParts.dayOfMonth} ${rescheduleCronParts.month} ${rescheduleCronParts.dayOfWeek}`,
+        [rescheduleCronParts],
     );
 
     const discordChannelMap = useMemo(
@@ -577,16 +619,20 @@ const DanbooruAutoPostPage: React.FC = () => {
                 return;
             }
 
-            if (batchForm.count < 1 || batchForm.count > 50) {
-                const message = "Количество постов должно быть от 1 до 50";
+            const finalCron =
+                batchForm.cronMode === "visual"
+                    ? batchCronExpression
+                    : batchForm.cronExpression;
+            if (!finalCron.trim()) {
+                const message = "Укажите CRON выражение";
                 setError(message);
                 showToast({ success: false, message });
                 setSubmitting(false);
                 return;
             }
 
-            if (batchForm.intervalHours <= 0) {
-                const message = "Интервал должен быть больше 0";
+            if (!batchForm.endAt) {
+                const message = "Укажите дату окончания";
                 setError(message);
                 showToast({ success: false, message });
                 setSubmitting(false);
@@ -613,11 +659,8 @@ const DanbooruAutoPostPage: React.FC = () => {
                         ? Number(batchForm.telegramChannelId)
                         : undefined,
                     tags: batchForm.tags.join(" ").trim(),
-                    count: batchForm.count,
-                    intervalHours: batchForm.intervalHours,
-                    startAtUtc: batchForm.startAt
-                        ? new Date(batchForm.startAt).toISOString()
-                        : undefined,
+                    cronExpression: finalCron.trim(),
+                    endAtUtc: new Date(batchForm.endAt).toISOString(),
                 };
 
                 const result =
@@ -638,7 +681,99 @@ const DanbooruAutoPostPage: React.FC = () => {
                 setSubmitting(false);
             }
         },
-        [api, batchForm, showToast, loadConfigs],
+        [api, batchForm, batchCronExpression, showToast, loadConfigs],
+    );
+
+    const openRescheduleModal = useCallback((batchId: string) => {
+        setRescheduleBatchId(batchId);
+        setRescheduleCron("");
+        setRescheduleCronMode("visual");
+        setRescheduleCronParts({
+            minute: "0",
+            hour: "*",
+            dayOfMonth: "*",
+            month: "*",
+            dayOfWeek: "*",
+        });
+        setShowRescheduleModal(true);
+    }, []);
+
+    const handleReschedule = useCallback(
+        async (event: React.FormEvent) => {
+            event.preventDefault();
+            if (!rescheduleBatchId) return;
+
+            setSubmitting(true);
+            setError("");
+
+            const finalCron =
+                rescheduleCronMode === "visual"
+                    ? rescheduleCronExpression
+                    : rescheduleCron;
+            if (!finalCron.trim()) {
+                const message = "Укажите CRON выражение";
+                setError(message);
+                showToast({ success: false, message });
+                setSubmitting(false);
+                return;
+            }
+
+            try {
+                const result =
+                    await api.danbooruAutoPostConfigsBatchRescheduleUpdate(
+                        rescheduleBatchId,
+                        { newCronExpression: finalCron.trim() },
+                    );
+                showToast(result.data);
+
+                setShowRescheduleModal(false);
+                setRescheduleBatchId(undefined);
+                await loadConfigs();
+            } catch (error_) {
+                const message =
+                    error_ instanceof Error
+                        ? error_.message
+                        : "Не удалось перепланировать";
+                setError(message);
+                showToast({ success: false, message });
+            } finally {
+                setSubmitting(false);
+            }
+        },
+        [
+            api,
+            rescheduleBatchId,
+            rescheduleCron,
+            rescheduleCronMode,
+            rescheduleCronExpression,
+            showToast,
+            loadConfigs,
+        ],
+    );
+
+    const handleBatchDelete = useCallback(
+        async (batchId: string) => {
+            setProcessingIds(previous => ({ ...previous, [`batch_${batchId}`]: true }));
+            try {
+                const result =
+                    await api.danbooruAutoPostConfigsBatchDelete(batchId);
+                showToast(result.data);
+                await loadConfigs();
+            } catch (error_) {
+                const message =
+                    error_ instanceof Error
+                        ? error_.message
+                        : "Не удалось удалить батч";
+                setError(message);
+                showToast({ success: false, message });
+            } finally {
+                setProcessingIds(previous => ({
+                    ...previous,
+                    [`batch_${batchId}`]: false,
+                }));
+            }
+        },
+        [api, loadConfigs, showToast],
     );
 
     const handleDelete = useCallback(
@@ -809,17 +944,19 @@ const DanbooruAutoPostPage: React.FC = () => {
                 </div>
 
                 <div className={styles.cardActions}>
-                    <Tooltip title="Триггер сейчас">
-                        <Button
-                            size="small"
-                            type="primary"
-                            ghost
-                            disabled={isProcessing || isDeferred}
-                            onClick={() => void handleTriggerNow(config.id)}
-                            data-testid={`button-trigger-${config.id}`}
-                            icon={<Play size={14} />}
-                        />
-                    </Tooltip>
+                    {!config.batchId && (
+                        <Tooltip title="Триггер сейчас">
+                            <Button
+                                size="small"
+                                type="primary"
+                                ghost
+                                disabled={isProcessing || isDeferred}
+                                onClick={() => void handleTriggerNow(config.id)}
+                                data-testid={`button-trigger-${config.id}`}
+                                icon={<Play size={14} />}
+                            />
+                        </Tooltip>
+                    )}
                     <Button
                         size="small"
                         type={config.isEnabled ? "default" : "primary"}
@@ -829,27 +966,69 @@ const DanbooruAutoPostPage: React.FC = () => {
                     >
                         {config.isEnabled ? "Выключить" : "Включить"}
                     </Button>
-                    <Tooltip title="Редактировать">
-                        <Button
-                            size="small"
-                            type="default"
-                            disabled={isProcessing}
-                            onClick={() => openEditModal(config)}
-                            data-testid={`button-edit-${config.id}`}
-                            icon={<Edit3 size={14} />}
-                        />
-                    </Tooltip>
-                    <Tooltip title="Удалить">
-                        <Button
-                            size="small"
-                            danger
-                            ghost
-                            disabled={isProcessing}
-                            onClick={() => void handleDelete(config.id)}
-                            data-testid={`button-delete-${config.id}`}
-                            icon={<Trash2 size={14} />}
-                        />
-                    </Tooltip>
+                    {!config.batchId && (
+                        <Tooltip title="Редактировать">
+                            <Button
+                                size="small"
+                                type="default"
+                                disabled={isProcessing}
+                                onClick={() => openEditModal(config)}
+                                data-testid={`button-edit-${config.id}`}
+                                icon={<Edit3 size={14} />}
+                            />
+                        </Tooltip>
+                    )}
+                    {config.batchId && (
+                        <Tooltip title="Перепланировать батч">
+                            <Button
+                                size="small"
+                                type="default"
+                                disabled={
+                                    Object.hasOwn(
+                                        processingIds,
+                                        `batch_${config.batchId}`,
+                                    )
+                                }
+                                onClick={() =>
+                                    openRescheduleModal(config.batchId!)
+                                }
+                                data-testid={`button-reschedule-${config.batchId}`}
+                                icon={<CalendarClock size={14} />}
+                            />
+                        </Tooltip>
+                    )}
+                    {config.batchId ? (
+                        <Tooltip title="Удалить весь батч">
+                            <Button
+                                size="small"
+                                danger
+                                ghost
+                                disabled={
+                                    Object.hasOwn(
+                                        processingIds,
+                                        `batch_${config.batchId}`,
+                                    )
+                                }
+                                onClick={() =>
+                                    void handleBatchDelete(config.batchId!)
+                                }
+                                data-testid={`button-delete-batch-${config.batchId}`}
+                                icon={<Trash2 size={14} />}
+                            />
+                        </Tooltip>
+                    ) : (
+                        <Tooltip title="Удалить">
+                            <Button
+                                size="small"
+                                danger
+                                ghost
+                                disabled={isProcessing}
+                                onClick={() => void handleDelete(config.id)}
+                                data-testid={`button-delete-${config.id}`}
+                                icon={<Trash2 size={14} />}
+                            />
+                        </Tooltip>
+                    )}
                 </div>
             </Card>
         );
@@ -1151,18 +1330,21 @@ const DanbooruAutoPostPage: React.FC = () => {
     ]);
 
     const batchPreview = useMemo(() => {
-        const { count, intervalHours } = batchForm;
-        const totalHours = (count - 1) * intervalHours;
-        const days = Math.floor(totalHours / 24);
-        const hours = Math.round(totalHours % 24);
+        const finalCron =
+            batchForm.cronMode === "visual"
+                ? batchCronExpression
+                : batchForm.cronExpression;
+        if (!finalCron.trim() || !batchForm.endAt) {
+            return "Укажите расписание и дату окончания";
+        }
 
-        let timeDesc = "";
-        if (days > 0) timeDesc += `${days}д `;
-        if (hours > 0) timeDesc += `${hours}ч`;
-        if (!timeDesc) timeDesc = "сразу";
+        const endDate = new Date(batchForm.endAt);
+        const now = new Date();
+        const diffMs = endDate.getTime() - now.getTime();
+        const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
 
-        return `${count} постов, каждый ${intervalHours}ч. Всего: ${timeDesc}`;
-    }, [batchForm]);
+        return `Расписание: ${finalCron}. Период: ${diffDays > 0 ? `${diffDays}д` : "до"} ${endDate.toLocaleDateString()}`;
+    }, [batchForm, batchCronExpression]);
 
     return (
         <div className={styles.page} data-testid="danbooru-auto-post-page">
@@ -1485,70 +1667,213 @@ const DanbooruAutoPostPage: React.FC = () => {
 
                     <div className={styles.formField}>
                         <label className={styles.formLabel}>
-                            Количество постов
+                            Расписание (CRON)
                         </label>
-                        <InputNumber
-                            min={1}
-                            max={50}
-                            value={batchForm.count}
-                            onChange={value =>
-                                setBatchForm(previous => ({
-                                    ...previous,
-                                    count: value ?? 5,
-                                }))
-                            }
-                            disabled={submitting}
-                            style={{ width: "100%" }}
-                            data-testid="input-batch-count"
-                        />
+                        <Space style={{ marginBottom: 8 }}>
+                            <Button
+                                size="small"
+                                type={
+                                    batchForm.cronMode === "visual"
+                                        ? "primary"
+                                        : "default"
+                                }
+                                onClick={() =>
+                                    setBatchForm(previous => ({
+                                        ...previous,
+                                        cronMode: "visual",
+                                    }))
+                                }
+                                data-testid="batch-cron-mode-visual"
+                            >
+                                Конструктор
+                            </Button>
+                            <Button
+                                size="small"
+                                type={
+                                    batchForm.cronMode === "manual"
+                                        ? "primary"
+                                        : "default"
+                                }
+                                onClick={() =>
+                                    setBatchForm(previous => ({
+                                        ...previous,
+                                        cronMode: "manual",
+                                    }))
+                                }
+                                data-testid="batch-cron-mode-manual"
+                            >
+                                Вручную
+                            </Button>
+                        </Space>
+
+                        {batchForm.cronMode === "visual" ? (
+                            <div className={styles.cronBuilder}>
+                                <div className={styles.cronRow}>
+                                    <span className={styles.cronLabel}>
+                                        Минута
+                                    </span>
+                                    <Select
+                                        value={batchForm.cronParts.minute}
+                                        onChange={value =>
+                                            setBatchForm(previous => ({
+                                                ...previous,
+                                                cronParts: {
+                                                    ...previous.cronParts,
+                                                    minute: value,
+                                                },
+                                            }))
+                                        }
+                                        options={cronMinutes.map(o => ({
+                                            value: o.value,
+                                            label: `${o.value} — ${o.label}`,
+                                        }))}
+                                        style={{ flex: 1 }}
+                                        disabled={submitting}
+                                        data-testid="batch-cron-minute"
+                                    />
+                                </div>
+                                <div className={styles.cronRow}>
+                                    <span className={styles.cronLabel}>
+                                        Час
+                                    </span>
+                                    <Select
+                                        value={batchForm.cronParts.hour}
+                                        onChange={value =>
+                                            setBatchForm(previous => ({
+                                                ...previous,
+                                                cronParts: {
+                                                    ...previous.cronParts,
+                                                    hour: value,
+                                                },
+                                            }))
+                                        }
+                                        options={cronHours.map(o => ({
+                                            value: o.value,
+                                            label: `${o.value} — ${o.label}`,
+                                        }))}
+                                        style={{ flex: 1 }}
+                                        disabled={submitting}
+                                        data-testid="batch-cron-hour"
+                                        showSearch
+                                    />
+                                </div>
+                                <div className={styles.cronRow}>
+                                    <span className={styles.cronLabel}>
+                                        День месяца
+                                    </span>
+                                    <Select
+                                        value={batchForm.cronParts.dayOfMonth}
+                                        onChange={value =>
+                                            setBatchForm(previous => ({
+                                                ...previous,
+                                                cronParts: {
+                                                    ...previous.cronParts,
+                                                    dayOfMonth: value,
+                                                },
+                                            }))
+                                        }
+                                        options={cronDaysOfMonth.map(o => ({
+                                            value: o.value,
+                                            label: o.label,
+                                        }))}
+                                        style={{ flex: 1 }}
+                                        disabled={submitting}
+                                        data-testid="batch-cron-day"
+                                    />
+                                </div>
+                                <div className={styles.cronRow}>
+                                    <span className={styles.cronLabel}>
+                                        Месяц
+                                    </span>
+                                    <Select
+                                        value={batchForm.cronParts.month}
+                                        onChange={value =>
+                                            setBatchForm(previous => ({
+                                                ...previous,
+                                                cronParts: {
+                                                    ...previous.cronParts,
+                                                    month: value,
+                                                },
+                                            }))
+                                        }
+                                        options={cronMonths.map(o => ({
+                                            value: o.value,
+                                            label: o.label,
+                                        }))}
+                                        style={{ flex: 1 }}
+                                        disabled={submitting}
+                                        data-testid="batch-cron-month"
+                                    />
+                                </div>
+                                <div className={styles.cronRow}>
+                                    <span className={styles.cronLabel}>
+                                        День недели
+                                    </span>
+                                    <Select
+                                        value={batchForm.cronParts.dayOfWeek}
+                                        onChange={value =>
+                                            setBatchForm(previous => ({
+                                                ...previous,
+                                                cronParts: {
+                                                    ...previous.cronParts,
+                                                    dayOfWeek: value,
+                                                },
+                                            }))
+                                        }
+                                        options={cronDaysOfWeek.map(o => ({
+                                            value: o.value,
+                                            label: `${o.value} — ${o.label}`,
+                                        }))}
+                                        style={{ flex: 1 }}
+                                        disabled={submitting}
+                                        data-testid="batch-cron-weekday"
+                                    />
+                                </div>
+                                <div className={styles.cronPreview}>
+                                    <code>{batchCronExpression}</code>
+                                </div>
+                            </div>
+                        ) : (
+                            <Input
+                                value={batchForm.cronExpression}
+                                onChange={event_ =>
+                                    setBatchForm(previous => ({
+                                        ...previous,
+                                        cronExpression: event_.target.value,
+                                    }))
+                                }
+                                placeholder="*/2 * * * *"
+                                disabled={submitting}
+                                data-testid="input-batch-cron"
+                            />
+                        )}
                     </div>
 
                     <div className={styles.formField}>
                         <label className={styles.formLabel}>
-                            Интервал (часов)
-                        </label>
-                        <InputNumber
-                            min={0.5}
-                            max={168}
-                            step={0.5}
-                            value={batchForm.intervalHours}
-                            onChange={value =>
-                                setBatchForm(previous => ({
-                                    ...previous,
-                                    intervalHours: value ?? 2,
-                                }))
-                            }
-                            disabled={submitting}
-                            style={{ width: "100%" }}
-                            data-testid="input-batch-interval"
-                        />
-                    </div>
-
-                    <div className={styles.formField}>
-                        <label className={styles.formLabel}>
-                            Начать с (необязательно)
+                            Период до (обязательно)
                         </label>
                         <DatePicker
                             showTime
                             format="DD.MM.YYYY HH:mm"
-                            placeholder="Сейчас"
+                            placeholder="Дата окончания"
                             disabled={submitting}
                             style={{ width: "100%" }}
                             value={
-                                batchForm.startAt
-                                    ? (batchForm.startAt as any)
+                                batchForm.endAt
+                                    ? (batchForm.endAt as any)
                                     : undefined
                             }
                             onChange={(_, dateString) =>
                                 setBatchForm(previous => ({
                                     ...previous,
-                                    startAt:
+                                    endAt:
                                         typeof dateString === "string"
                                             ? dateString
                                             : "",
                                 }))
                             }
-                            data-testid="input-batch-start"
+                            data-testid="input-batch-end"
                         />
                     </div>
 
@@ -1587,6 +1912,154 @@ const DanbooruAutoPostPage: React.FC = () => {
                             ) : (
                                 "Создать пакет"
                             )}
+                        </Button>
+                    </div>
+                </form>
+            </Modal>
+
+            {/* Reschedule Modal */}
+            <Modal
+                open={showRescheduleModal}
+                onCancel={() => {
+                    setShowRescheduleModal(false);
+                    setRescheduleBatchId(undefined);
+                }}
+                title="Перепланировать батч"
+                footer={false}
+                centered
+                width={500}
+                data-testid="modal-reschedule"
+            >
+                <form onSubmit={event_ => void handleReschedule(event_)}>
+                    <div className={styles.formField}>
+                        <label className={styles.formLabel}>
+                            Новое расписание (CRON)
+                        </label>
+                        <Space style={{ marginBottom: 8 }}>
+                            <Button
+                                size="small"
+                                type={
+                                    rescheduleCronMode === "visual"
+                                        ? "primary"
+                                        : "default"
+                                }
+                                onClick={() =>
+                                    setRescheduleCronMode("visual")
+                                }
+                                data-testid="reschedule-cron-mode-visual"
+                            >
+                                Конструктор
+                            </Button>
+                            <Button
+                                size="small"
+                                type={
+                                    rescheduleCronMode === "manual"
+                                        ? "primary"
+                                        : "default"
+                                }
+                                onClick={() =>
+                                    setRescheduleCronMode("manual")
+                                }
+                                data-testid="reschedule-cron-mode-manual"
+                            >
+                                Вручную
+                            </Button>
+                        </Space>
+
+                        {rescheduleCronMode === "visual" ? (
+                            <div className={styles.cronBuilder}>
+                                <div className={styles.cronRow}>
+                                    <span className={styles.cronLabel}>
+                                        Минута
+                                    </span>
+                                    <Select
+                                        value={rescheduleCronParts.minute}
+                                        onChange={value =>
+                                            setRescheduleCronParts(
+                                                previous => ({
+                                                    ...previous,
+                                                    minute: value,
+                                                }),
+                                            )
+                                        }
+                                        options={cronMinutes.map(o => ({
+                                            value: o.value,
+                                            label: `${o.value} — ${o.label}`,
+                                        }))}
+                                        style={{ flex: 1 }}
+                                        disabled={submitting}
+                                        data-testid="reschedule-cron-minute"
+                                    />
+                                </div>
+                                <div className={styles.cronRow}>
+                                    <span className={styles.cronLabel}>
+                                        Час
+                                    </span>
+                                    <Select
+                                        value={rescheduleCronParts.hour}
+                                        onChange={value =>
+                                            setRescheduleCronParts(
+                                                previous => ({
+                                                    ...previous,
+                                                    hour: value,
+                                                }),
+                                            )
+                                        }
+                                        options={cronHours.map(o => ({
+                                            value: o.value,
+                                            label: `${o.value} — ${o.label}`,
+                                        }))}
+                                        style={{ flex: 1 }}
+                                        disabled={submitting}
+                                        data-testid="reschedule-cron-hour"
+                                        showSearch
+                                    />
+                                </div>
+                                <div className={styles.cronPreview}>
+                                    <code>
+                                        {rescheduleCronExpression}
+                                    </code>
+                                </div>
+                            </div>
+                        ) : (
+                            <Input
+                                value={rescheduleCron}
+                                onChange={event_ =>
+                                    setRescheduleCron(event_.target.value)
+                                }
+                                placeholder="*/4 * * * *"
+                                disabled={submitting}
+                                data-testid="input-reschedule-cron"
+                            />
+                        )}
+                    </div>
+
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                            marginTop: 16,
+                            gap: 8,
+                        }}
+                    >
+                        <Button
+                            type="default"
+                            onClick={() => {
+                                setShowRescheduleModal(false);
+                                setRescheduleBatchId(undefined);
+                            }}
+                            disabled={submitting}
+                            data-testid="button-reschedule-cancel"
+                        >
+                            Отмена
+                        </Button>
+                        <Button
+                            type="primary"
+                            htmlType="submit"
+                            disabled={submitting}
+                            data-testid="button-reschedule-submit"
+                        >
+                            {submitting ? "Перепланирование..." : "Перепланировать"}
                         </Button>
                     </div>
                 </form>
