@@ -1590,6 +1590,66 @@
         }
       }
     },
+    "/api/DanbooruAutoPost/configs/batch": {
+      "post": {
+        "tags": [
+          "DanbooruAutoPost"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/DanbooruAutoPostBatchCreateRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/DanbooruAutoPostBatchCreateRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/DanbooruAutoPostBatchCreateRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/DanbooruAutoPost/configs/{id}": {
       "put": {
         "tags": [
@@ -1832,6 +1892,35 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DiscordChannelOptionDtoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/DanbooruAutoPost/telegram-channels": {
+      "get": {
+        "tags": [
+          "DanbooruAutoPost"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
                 }
               }
             }
@@ -8865,6 +8954,51 @@
         "description": "Результат операции с данными типа null",
         "x-generic-type-argument": "null"
       },
+      "DanbooruAutoPostBatchCreateRequest": {
+        "required": [
+          "count",
+          "discordChannelId",
+          "intervalHours",
+          "tags",
+          "targetPlatform"
+        ],
+        "type": "object",
+        "properties": {
+          "targetPlatform": {
+            "enum": [
+              "Discord",
+              "Telegram"
+            ],
+            "type": "string"
+          },
+          "discordChannelId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "telegramChannelId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "tags": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "intervalHours": {
+            "type": "number",
+            "format": "double"
+          },
+          "startAtUtc": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "DanbooruAutoPostConfigDto": {
         "required": [
           "createdAtUtc",
@@ -8873,6 +9007,7 @@
           "id",
           "isEnabled",
           "tags",
+          "targetPlatform",
           "updatedAtUtc"
         ],
         "type": "object",
@@ -8881,15 +9016,32 @@
             "type": "string",
             "format": "uuid"
           },
+          "targetPlatform": {
+            "enum": [
+              "Discord",
+              "Telegram"
+            ],
+            "type": "string"
+          },
           "discordChannelId": {
             "type": "integer",
             "format": "int64"
+          },
+          "telegramChannelId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
           },
           "tags": {
             "type": "string"
           },
           "cronExpression": {
             "type": "string"
+          },
+          "scheduledAtUtc": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           },
           "isEnabled": {
             "type": "boolean"
@@ -8932,19 +9084,37 @@
         "required": [
           "cronExpression",
           "discordChannelId",
-          "tags"
+          "tags",
+          "targetPlatform"
         ],
         "type": "object",
         "properties": {
+          "targetPlatform": {
+            "enum": [
+              "Discord",
+              "Telegram"
+            ],
+            "type": "string"
+          },
           "discordChannelId": {
             "type": "integer",
             "format": "int64"
+          },
+          "telegramChannelId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
           },
           "tags": {
             "type": "string"
           },
           "cronExpression": {
             "type": "string"
+          },
+          "scheduledAtUtc": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -8954,7 +9124,8 @@
           "cronExpression",
           "discordChannelId",
           "id",
-          "tags"
+          "tags",
+          "targetPlatform"
         ],
         "type": "object",
         "properties": {
@@ -8962,15 +9133,32 @@
             "type": "string",
             "format": "uuid"
           },
+          "targetPlatform": {
+            "enum": [
+              "Discord",
+              "Telegram"
+            ],
+            "type": "string"
+          },
           "discordChannelId": {
             "type": "integer",
             "format": "int64"
+          },
+          "telegramChannelId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
           },
           "tags": {
             "type": "string"
           },
           "cronExpression": {
             "type": "string"
+          },
+          "scheduledAtUtc": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         },
         "additionalProperties": false

@@ -37,6 +37,7 @@ import type {
   CreateTwitchUserRequest,
   CreateWaifuRequest,
   CustomReward,
+  DanbooruAutoPostBatchCreateRequest,
   DanbooruAutoPostConfigDto,
   DanbooruAutoPostCreateRequest,
   DanbooruAutoPostUpdateRequest,
@@ -116,6 +117,10 @@ import type {
   BaseCommandAvailablePlatformsEnum,
   BaseCommandVisibilityEnum,
   CinemaMediaItemDtoStatusEnum,
+  DanbooruAutoPostBatchCreateRequestTargetPlatformEnum,
+  DanbooruAutoPostConfigDtoTargetPlatformEnum,
+  DanbooruAutoPostCreateRequestTargetPlatformEnum,
+  DanbooruAutoPostUpdateRequestTargetPlatformEnum,
   LogLogLevelEnum,
   MediaFileInfoTypeEnum,
   MediaMetaInfoPriorityEnum,
@@ -176,6 +181,26 @@ export class DanbooruAutoPost<
   ) =>
     this.request<OperationResult<DanbooruAutoPostConfigDto>, any>({
       path: `/api/DanbooruAutoPost/configs`,
+      method: "POST",
+      body: data,
+      type: ContentType.Json,
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags DanbooruAutoPost
+   * @name DanbooruAutoPostConfigsBatchCreate
+   * @request POST:/api/DanbooruAutoPost/configs/batch
+   * @response `200` `OperationResult<DanbooruAutoPostConfigDto[]>` OK
+   */
+  danbooruAutoPostConfigsBatchCreate = (
+    data: DanbooruAutoPostBatchCreateRequest,
+    params: RequestParams = {}
+  ) =>
+    this.request<OperationResult<DanbooruAutoPostConfigDto[]>, any>({
+      path: `/api/DanbooruAutoPost/configs/batch`,
       method: "POST",
       body: data,
       type: ContentType.Json,
@@ -268,6 +293,21 @@ export class DanbooruAutoPost<
   danbooruAutoPostDiscordChannelsList = (params: RequestParams = {}) =>
     this.request<OperationResult<DiscordChannelOptionDto[]>, any>({
       path: `/api/DanbooruAutoPost/discord-channels`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags DanbooruAutoPost
+   * @name DanbooruAutoPostTelegramChannelsList
+   * @request GET:/api/DanbooruAutoPost/telegram-channels
+   * @response `200` `OperationResult<TelegramChannelOptionDto[]>` OK
+   */
+  danbooruAutoPostTelegramChannelsList = (params: RequestParams = {}) =>
+    this.request<OperationResult<TelegramChannelOptionDto[]>, any>({
+      path: `/api/DanbooruAutoPost/telegram-channels`,
       method: "GET",
       format: "json",
       ...params,

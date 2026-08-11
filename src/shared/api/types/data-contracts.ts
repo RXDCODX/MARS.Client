@@ -316,13 +316,33 @@ export interface CustomReward {
   cooldownExpiresAt?: string;
 }
 
+export interface DanbooruAutoPostBatchCreateRequest {
+  targetPlatform: DanbooruAutoPostBatchCreateRequestTargetPlatformEnum;
+  /** @format int64 */
+  discordChannelId: number;
+  /** @format int64 */
+  telegramChannelId?: number;
+  tags: string;
+  /** @format int32 */
+  count: number;
+  /** @format double */
+  intervalHours: number;
+  /** @format date-time */
+  startAtUtc?: string;
+}
+
 export interface DanbooruAutoPostConfigDto {
   /** @format uuid */
   id: string;
+  targetPlatform: DanbooruAutoPostConfigDtoTargetPlatformEnum;
   /** @format int64 */
   discordChannelId: number;
+  /** @format int64 */
+  telegramChannelId?: number;
   tags: string;
   cronExpression: string;
+  /** @format date-time */
+  scheduledAtUtc?: string;
   isEnabled: boolean;
   /** @format date-time */
   lastExecutedAtUtc?: string;
@@ -333,19 +353,29 @@ export interface DanbooruAutoPostConfigDto {
 }
 
 export interface DanbooruAutoPostCreateRequest {
+  targetPlatform: DanbooruAutoPostCreateRequestTargetPlatformEnum;
   /** @format int64 */
   discordChannelId: number;
+  /** @format int64 */
+  telegramChannelId?: number;
   tags: string;
   cronExpression: string;
+  /** @format date-time */
+  scheduledAtUtc?: string;
 }
 
 export interface DanbooruAutoPostUpdateRequest {
   /** @format uuid */
   id: string;
+  targetPlatform: DanbooruAutoPostUpdateRequestTargetPlatformEnum;
   /** @format int64 */
   discordChannelId: number;
+  /** @format int64 */
+  telegramChannelId?: number;
   tags: string;
   cronExpression: string;
+  /** @format date-time */
+  scheduledAtUtc?: string;
 }
 
 export interface DefaultImage {
@@ -1119,6 +1149,26 @@ export enum CinemaMediaItemDtoStatusEnum {
   Completed = "Completed",
   Cancelled = "Cancelled",
   Postponed = "Postponed",
+}
+
+export enum DanbooruAutoPostBatchCreateRequestTargetPlatformEnum {
+  Discord = "Discord",
+  Telegram = "Telegram",
+}
+
+export enum DanbooruAutoPostConfigDtoTargetPlatformEnum {
+  Discord = "Discord",
+  Telegram = "Telegram",
+}
+
+export enum DanbooruAutoPostCreateRequestTargetPlatformEnum {
+  Discord = "Discord",
+  Telegram = "Telegram",
+}
+
+export enum DanbooruAutoPostUpdateRequestTargetPlatformEnum {
+  Discord = "Discord",
+  Telegram = "Telegram",
 }
 
 export enum LogLogLevelEnum {
