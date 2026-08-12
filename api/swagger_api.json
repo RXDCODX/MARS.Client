@@ -8873,6 +8873,8 @@
           "id",
           "isEnabled",
           "tags",
+          "targetPlatform",
+          "targetPostCount",
           "updatedAtUtc"
         ],
         "type": "object",
@@ -8881,15 +8883,41 @@
             "type": "string",
             "format": "uuid"
           },
+          "targetPlatform": {
+            "enum": [
+              "Discord",
+              "Telegram"
+            ],
+            "type": "string"
+          },
           "discordChannelId": {
             "type": "integer",
             "format": "int64"
+          },
+          "telegramChannelId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
+          },
+          "targetPostCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "danbooruPostId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
           },
           "tags": {
             "type": "string"
           },
           "cronExpression": {
             "type": "string"
+          },
+          "scheduledAtUtc": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           },
           "isEnabled": {
             "type": "boolean"
@@ -8932,19 +8960,37 @@
         "required": [
           "cronExpression",
           "discordChannelId",
-          "tags"
+          "tags",
+          "targetPlatform"
         ],
         "type": "object",
         "properties": {
+          "targetPlatform": {
+            "enum": [
+              "Discord",
+              "Telegram"
+            ],
+            "type": "string"
+          },
           "discordChannelId": {
             "type": "integer",
             "format": "int64"
+          },
+          "telegramChannelId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
           },
           "tags": {
             "type": "string"
           },
           "cronExpression": {
             "type": "string"
+          },
+          "scheduledAtUtc": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -8954,7 +9000,8 @@
           "cronExpression",
           "discordChannelId",
           "id",
-          "tags"
+          "tags",
+          "targetPlatform"
         ],
         "type": "object",
         "properties": {
@@ -8962,15 +9009,32 @@
             "type": "string",
             "format": "uuid"
           },
+          "targetPlatform": {
+            "enum": [
+              "Discord",
+              "Telegram"
+            ],
+            "type": "string"
+          },
           "discordChannelId": {
             "type": "integer",
             "format": "int64"
+          },
+          "telegramChannelId": {
+            "type": "integer",
+            "format": "int64",
+            "nullable": true
           },
           "tags": {
             "type": "string"
           },
           "cronExpression": {
             "type": "string"
+          },
+          "scheduledAtUtc": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         },
         "additionalProperties": false
