@@ -27,17 +27,14 @@ import {
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import type {
-    DanbooruAutoPostBatchCreateRequest,
     DanbooruAutoPostConfigDto,
     DanbooruAutoPostCreateRequest,
     DanbooruAutoPostUpdateRequest,
     DiscordChannelOptionDto,
-    TelegramChannelOptionDto,
 } from "@/shared/api";
 import { defaultApiConfig } from "@/shared/api/api-config";
 import { DanbooruAutoPost } from "@/shared/api/http-clients/DanbooruAutoPost";
 import {
-    DanbooruAutoPostBatchCreateRequestTargetPlatformEnum,
     DanbooruAutoPostConfigDtoTargetPlatformEnum,
     DanbooruAutoPostCreateRequestTargetPlatformEnum,
     DanbooruAutoPostUpdateRequestTargetPlatformEnum,
@@ -68,34 +65,6 @@ const defaultForm: FormState = {
     cronExpression: "",
     publishType: "cron",
     scheduledAt: "",
-};
-
-interface BatchFormState {
-    targetPlatform: Platform;
-    discordChannelId: string;
-    telegramChannelId: string;
-    tags: string[];
-    cronExpression: string;
-    cronMode: "visual" | "manual";
-    cronParts: CronParts;
-    endAt: string;
-}
-
-const defaultBatchForm: BatchFormState = {
-    targetPlatform: "Discord",
-    discordChannelId: "",
-    telegramChannelId: "",
-    tags: [],
-    cronExpression: "",
-    cronMode: "visual",
-    cronParts: {
-        minute: "0",
-        hour: "*",
-        dayOfMonth: "*",
-        month: "*",
-        dayOfWeek: "*",
-    },
-    endAt: "",
 };
 
 interface CronParts {
@@ -184,30 +153,11 @@ const DanbooruAutoPostPage: React.FC = () => {
         TelegramChannelOptionDto[]
     >([]);
     const [form, setForm] = useState<FormState>({ ...defaultForm });
-    const [batchForm, setBatchForm] = useState<BatchFormState>({
-        ...defaultBatchForm,
-    });
     const [loading, setLoading] = useState(true);
     const [loadingDiscord, setLoadingDiscord] = useState(false);
     const [loadingTelegram, setLoadingTelegram] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [showModal, setShowModal] = useState(false);
-    const [showBatchModal, setShowBatchModal] = useState(false);
-    const [showRescheduleModal, setShowRescheduleModal] = useState(false);
-    const [rescheduleBatchId, setRescheduleBatchId] = useState<
-        string | undefined
-    >(undefined);
-    const [rescheduleCron, setRescheduleCron] = useState("");
-    const [rescheduleCronMode, setRescheduleCronMode] = useState<
-        "visual" | "manual"
-    >("visual");
-    const [rescheduleCronParts, setRescheduleCronParts] = useState<CronParts>({
-        minute: "0",
-        hour: "*",
-        dayOfMonth: "*",
-        month: "*",
-        dayOfWeek: "*",
-    });
     const [editingId, setEditingId] = useState<string | undefined>(undefined);
     const [filter, setFilter] = useState("");
     const [filterTab, setFilterTab] = useState<FilterTab>("all");

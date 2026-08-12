@@ -37,10 +37,8 @@ import type {
   CreateTwitchUserRequest,
   CreateWaifuRequest,
   CustomReward,
-  DanbooruAutoPostBatchCreateRequest,
   DanbooruAutoPostConfigDto,
   DanbooruAutoPostCreateRequest,
-  DanbooruAutoPostRescheduleRequest,
   DanbooruAutoPostUpdateRequest,
   DefaultImage,
   DiscordChannelOptionDto,
@@ -118,7 +116,6 @@ import type {
   BaseCommandAvailablePlatformsEnum,
   BaseCommandVisibilityEnum,
   CinemaMediaItemDtoStatusEnum,
-  DanbooruAutoPostBatchCreateRequestTargetPlatformEnum,
   DanbooruAutoPostConfigDtoTargetPlatformEnum,
   DanbooruAutoPostCreateRequestTargetPlatformEnum,
   DanbooruAutoPostUpdateRequestTargetPlatformEnum,
@@ -185,65 +182,6 @@ export class DanbooruAutoPost<
       method: "POST",
       body: data,
       type: ContentType.Json,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags DanbooruAutoPost
-   * @name DanbooruAutoPostConfigsBatchCreate
-   * @request POST:/api/DanbooruAutoPost/configs/batch
-   * @response `200` `OperationResult<DanbooruAutoPostConfigDto[]>` OK
-   */
-  danbooruAutoPostConfigsBatchCreate = (
-    data: DanbooruAutoPostBatchCreateRequest,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<DanbooruAutoPostConfigDto[]>, any>({
-      path: `/api/DanbooruAutoPost/configs/batch`,
-      method: "POST",
-      body: data,
-      type: ContentType.Json,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags DanbooruAutoPost
-   * @name DanbooruAutoPostConfigsBatchRescheduleUpdate
-   * @request PUT:/api/DanbooruAutoPost/configs/batch/{batchId}/reschedule
-   * @response `200` `OperationResult<DanbooruAutoPostConfigDto[]>` OK
-   */
-  danbooruAutoPostConfigsBatchRescheduleUpdate = (
-    batchId: string,
-    data: DanbooruAutoPostRescheduleRequest,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<DanbooruAutoPostConfigDto[]>, any>({
-      path: `/api/DanbooruAutoPost/configs/batch/${batchId}/reschedule`,
-      method: "PUT",
-      body: data,
-      type: ContentType.Json,
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags DanbooruAutoPost
-   * @name DanbooruAutoPostConfigsBatchDelete
-   * @request DELETE:/api/DanbooruAutoPost/configs/batch/{batchId}
-   * @response `200` `OperationResult` OK
-   */
-  danbooruAutoPostConfigsBatchDelete = (
-    batchId: string,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult, any>({
-      path: `/api/DanbooruAutoPost/configs/batch/${batchId}`,
-      method: "DELETE",
       format: "json",
       ...params,
     });
@@ -333,21 +271,6 @@ export class DanbooruAutoPost<
   danbooruAutoPostDiscordChannelsList = (params: RequestParams = {}) =>
     this.request<OperationResult<DiscordChannelOptionDto[]>, any>({
       path: `/api/DanbooruAutoPost/discord-channels`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags DanbooruAutoPost
-   * @name DanbooruAutoPostTelegramChannelsList
-   * @request GET:/api/DanbooruAutoPost/telegram-channels
-   * @response `200` `OperationResult<TelegramChannelOptionDto[]>` OK
-   */
-  danbooruAutoPostTelegramChannelsList = (params: RequestParams = {}) =>
-    this.request<OperationResult<TelegramChannelOptionDto[]>, any>({
-      path: `/api/DanbooruAutoPost/telegram-channels`,
       method: "GET",
       format: "json",
       ...params,

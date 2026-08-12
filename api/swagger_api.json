@@ -1590,177 +1590,6 @@
         }
       }
     },
-    "/api/DanbooruAutoPost/configs/batch": {
-      "post": {
-        "tags": [
-          "DanbooruAutoPost"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DanbooruAutoPostBatchCreateRequest"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DanbooruAutoPostBatchCreateRequest"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DanbooruAutoPostBatchCreateRequest"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoListOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoListOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoListOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/DanbooruAutoPost/configs/batch/{batchId}/reschedule": {
-      "put": {
-        "tags": [
-          "DanbooruAutoPost"
-        ],
-        "parameters": [
-          {
-            "name": "batchId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DanbooruAutoPostRescheduleRequest"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DanbooruAutoPostRescheduleRequest"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DanbooruAutoPostRescheduleRequest"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoListOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoListOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoListOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/DanbooruAutoPost/configs/batch/{batchId}": {
-      "delete": {
-        "tags": [
-          "DanbooruAutoPost"
-        ],
-        "parameters": [
-          {
-            "name": "batchId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/DanbooruAutoPost/configs/{id}": {
       "put": {
         "tags": [
@@ -2003,35 +1832,6 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/DiscordChannelOptionDtoListOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/DanbooruAutoPost/telegram-channels": {
-      "get": {
-        "tags": [
-          "DanbooruAutoPost"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
                 }
               }
             }
@@ -9065,45 +8865,6 @@
         "description": "Результат операции с данными типа null",
         "x-generic-type-argument": "null"
       },
-      "DanbooruAutoPostBatchCreateRequest": {
-        "required": [
-          "cronExpression",
-          "discordChannelId",
-          "endAtUtc",
-          "tags",
-          "targetPlatform"
-        ],
-        "type": "object",
-        "properties": {
-          "targetPlatform": {
-            "enum": [
-              "Discord",
-              "Telegram"
-            ],
-            "type": "string"
-          },
-          "discordChannelId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "telegramChannelId": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
-          },
-          "tags": {
-            "type": "string"
-          },
-          "cronExpression": {
-            "type": "string"
-          },
-          "endAtUtc": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
       "DanbooruAutoPostConfigDto": {
         "required": [
           "createdAtUtc",
@@ -9113,6 +8874,7 @@
           "isEnabled",
           "tags",
           "targetPlatform",
+          "targetPostCount",
           "updatedAtUtc"
         ],
         "type": "object",
@@ -9137,10 +8899,9 @@
             "format": "int64",
             "nullable": true
           },
-          "batchId": {
-            "type": "string",
-            "format": "uuid",
-            "nullable": true
+          "targetPostCount": {
+            "type": "integer",
+            "format": "int32"
           },
           "danbooruPostId": {
             "type": "integer",
@@ -9230,18 +8991,6 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "DanbooruAutoPostRescheduleRequest": {
-        "required": [
-          "newCronExpression"
-        ],
-        "type": "object",
-        "properties": {
-          "newCronExpression": {
-            "type": "string"
           }
         },
         "additionalProperties": false

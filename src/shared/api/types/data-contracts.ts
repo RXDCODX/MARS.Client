@@ -316,18 +316,6 @@ export interface CustomReward {
   cooldownExpiresAt?: string;
 }
 
-export interface DanbooruAutoPostBatchCreateRequest {
-  targetPlatform: DanbooruAutoPostBatchCreateRequestTargetPlatformEnum;
-  /** @format int64 */
-  discordChannelId: number;
-  /** @format int64 */
-  telegramChannelId?: number;
-  tags: string;
-  cronExpression: string;
-  /** @format date-time */
-  endAtUtc: string;
-}
-
 export interface DanbooruAutoPostConfigDto {
   /** @format uuid */
   id: string;
@@ -336,8 +324,8 @@ export interface DanbooruAutoPostConfigDto {
   discordChannelId: number;
   /** @format int64 */
   telegramChannelId?: number;
-  /** @format uuid */
-  batchId?: string;
+  /** @format int32 */
+  targetPostCount: number;
   /** @format int32 */
   danbooruPostId?: number;
   tags: string;
@@ -363,10 +351,6 @@ export interface DanbooruAutoPostCreateRequest {
   cronExpression: string;
   /** @format date-time */
   scheduledAtUtc?: string;
-}
-
-export interface DanbooruAutoPostRescheduleRequest {
-  newCronExpression: string;
 }
 
 export interface DanbooruAutoPostUpdateRequest {
@@ -1154,11 +1138,6 @@ export enum CinemaMediaItemDtoStatusEnum {
   Completed = "Completed",
   Cancelled = "Cancelled",
   Postponed = "Postponed",
-}
-
-export enum DanbooruAutoPostBatchCreateRequestTargetPlatformEnum {
-  Discord = "Discord",
-  Telegram = "Telegram",
 }
 
 export enum DanbooruAutoPostConfigDtoTargetPlatformEnum {
