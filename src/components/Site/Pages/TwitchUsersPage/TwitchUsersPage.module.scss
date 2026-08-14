@@ -37,12 +37,12 @@
     transform 0.2s ease,
     box-shadow 0.2s ease;
   border-left: 4px solid transparent;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 4px rgb(0 0 0 / 10%);
   background: var(--site-bg-secondary);
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px rgb(0 0 0 / 15%);
   }
 }
 
@@ -78,7 +78,7 @@
   border-top: 1px solid var(--site-border-primary, #303030);
 
   &:hover {
-    background: rgba(255, 77, 79, 0.1) !important;
+    background: rgb(255 77 79 / 10%) !important;
   }
 }
 
@@ -92,7 +92,7 @@
   background: linear-gradient(
     135deg,
     var(--site-bg-secondary) 0%,
-    rgba(114, 46, 209, 0.06) 100%
+    rgb(114 46 209 / 6%) 100%
   );
 }
 
@@ -101,7 +101,7 @@
   background: linear-gradient(
     135deg,
     var(--site-bg-secondary) 0%,
-    rgba(22, 119, 255, 0.06) 100%
+    rgb(22 119 255 / 6%) 100%
   );
 }
 
@@ -110,7 +110,7 @@
   background: linear-gradient(
     135deg,
     var(--site-bg-secondary) 0%,
-    rgba(255, 77, 79, 0.06) 100%
+    rgb(255 77 79 / 6%) 100%
   );
 }
 
@@ -119,7 +119,7 @@
   background: linear-gradient(
     135deg,
     var(--site-bg-secondary) 0%,
-    rgba(207, 19, 34, 0.08) 100%
+    rgb(207 19 34 / 8%) 100%
   );
   opacity: 0.85;
 }
@@ -149,6 +149,7 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }

@@ -12,6 +12,7 @@
   --media-accent: var(--site-text-accent);
   --media-accent-2: var(--site-text-accent);
   --media-danger: var(--site-text-danger);
+
   position: relative;
   padding: 28px;
   max-width: 1540px;
@@ -57,7 +58,7 @@
   .media-info-hero,
   .card-shell {
     backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
   }
 
   .media-info-hero {

@@ -67,7 +67,7 @@ function InfoBarComponent() {
   const trackDuration = currentTrack?.duration;
 
   return (
-    <div className={styles.infoBar}>
+    <div className={styles.infoBar} style={{ backgroundColor: userColor }}>
       <div className={styles.silkBackground} />
       <div className={styles.infoBarContent}>
         <div className={styles.mainMarqueeContainer}>
@@ -88,7 +88,7 @@ function InfoBarComponent() {
 
             <span className={styles.contentSeparator}>•</span>
             <span className={styles.trackNameBlock}>
-              <span className={styles.trackName}>
+              <span className={styles.trackName} style={{ color: userColor }}>
                 {artistName ? `${artistName} - ${trackName}` : trackName}
               </span>
             </span>

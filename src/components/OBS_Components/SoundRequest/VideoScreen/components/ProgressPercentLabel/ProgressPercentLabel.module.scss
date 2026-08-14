@@ -33,13 +33,13 @@
     rgb(0 0 0) 1.92034px -0.558831px 0;
 }
 
-@media (max-width: 1200px) {
+@media (width <= 1200px) {
   .progressPercentLabel {
     font-size: 2rem;
   }
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .progressPercentOverlay {
     right: 20px;
   }
