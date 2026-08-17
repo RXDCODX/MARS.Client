@@ -275,4 +275,19 @@ export class DanbooruAutoPost<
       format: "json",
       ...params,
     });
+  /**
+   * No description
+   *
+   * @tags DanbooruAutoPost
+   * @name DanbooruAutoPostTelegramChannelsList
+   * @request GET:/api/DanbooruAutoPost/telegram-channels
+   * @response `200` `OperationResult<TelegramChannelOptionDto[]>` OK
+   */
+  danbooruAutoPostTelegramChannelsList = (params: RequestParams = {}) =>
+    this.request<OperationResult<TelegramChannelOptionDto[]>, any>({
+      path: `/api/DanbooruAutoPost/telegram-channels`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
 }
