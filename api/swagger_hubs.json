@@ -1432,6 +1432,26 @@
           { }
         ]
       }
+    },
+    "/hubs/audio-controller/WaifuChatResponse": {
+      "post": {
+        "tags": [
+          "AudioControllerHub"
+        ],
+        "parameters": [
+          {
+            "name": "response",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/WaifuChatResponse"
+            }
+          }
+        ],
+        "responses": { },
+        "security": [
+          { }
+        ]
+      }
     }
   },
   "components": {
@@ -3519,6 +3539,30 @@
           },
           "isAdded": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "WaifuChatResponse": {
+        "required": [
+          "correlationId",
+          "response",
+          "twitchId"
+        ],
+        "type": "object",
+        "properties": {
+          "correlationId": {
+            "type": "string"
+          },
+          "twitchId": {
+            "type": "string"
+          },
+          "response": {
+            "type": "string"
+          },
+          "messageId": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

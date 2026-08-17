@@ -36,6 +36,7 @@ export { TestLogger } from "./http-clients/TestLogger";
 export { Twitch } from "./http-clients/Twitch";
 export { TwitchRewards } from "./http-clients/TwitchRewards";
 export { TwitchUsers } from "./http-clients/TwitchUsers";
+export { WaifuChat } from "./http-clients/WaifuChat";
 export { WaifuRoll } from "./http-clients/WaifuRoll";
 export { WTelegram } from "./http-clients/WTelegram";
 

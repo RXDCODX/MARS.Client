@@ -1839,6 +1839,35 @@
         }
       }
     },
+    "/api/DanbooruAutoPost/telegram-channels": {
+      "get": {
+        "tags": [
+          "DanbooruAutoPost"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/EnvironmentVariable": {
       "get": {
         "tags": [
@@ -7076,6 +7105,71 @@
         }
       }
     },
+    "/api/waifu-chat/facts": {
+      "post": {
+        "tags": [
+          "WaifuChat"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/StoreFactRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/StoreFactRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/StoreFactRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/waifu-chat/facts/{twitchId}": {
+      "get": {
+        "tags": [
+          "WaifuChat"
+        ],
+        "parameters": [
+          {
+            "name": "twitchId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/WaifuRoll/waifus": {
       "get": {
         "tags": [
@@ -8872,6 +8966,8 @@
           "discordChannelId",
           "id",
           "isEnabled",
+          "pendingPostsCount",
+          "planningHorizonDays",
           "tags",
           "targetPlatform",
           "targetPostCount",
@@ -8891,12 +8987,10 @@
             "type": "string"
           },
           "discordChannelId": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           },
           "telegramChannelId": {
-            "type": "integer",
-            "format": "int64",
+            "type": "string",
             "nullable": true
           },
           "targetPostCount": {
@@ -8914,7 +9008,15 @@
           "cronExpression": {
             "type": "string"
           },
-          "scheduledAtUtc": {
+          "planningHorizonDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pendingPostsCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nextScheduledAtUtc": {
             "type": "string",
             "format": "date-time",
             "nullable": true
@@ -8960,26 +9062,15 @@
         "required": [
           "cronExpression",
           "discordChannelId",
+          "planningHorizonDays",
           "tags",
-          "targetPlatform"
+          "targetPlatform",
+          "telegramChannelId"
         ],
         "type": "object",
         "properties": {
-          "targetPlatform": {
-            "enum": [
-              "Discord",
-              "Telegram"
-            ],
-            "type": "string"
-          },
           "discordChannelId": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "telegramChannelId": {
-            "type": "integer",
-            "format": "int64",
-            "nullable": true
+            "type": "string"
           },
           "tags": {
             "type": "string"
@@ -8987,10 +9078,19 @@
           "cronExpression": {
             "type": "string"
           },
-          "scheduledAtUtc": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+          "targetPlatform": {
+            "enum": [
+              "Discord",
+              "Telegram"
+            ],
+            "type": "string"
+          },
+          "telegramChannelId": {
+            "type": "string"
+          },
+          "planningHorizonDays": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -9000,11 +9100,22 @@
           "cronExpression",
           "discordChannelId",
           "id",
+          "planningHorizonDays",
           "tags",
-          "targetPlatform"
+          "targetPlatform",
+          "telegramChannelId"
         ],
         "type": "object",
         "properties": {
+          "discordChannelId": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "string"
+          },
+          "cronExpression": {
+            "type": "string"
+          },
           "id": {
             "type": "string",
             "format": "uuid"
@@ -9016,25 +9127,12 @@
             ],
             "type": "string"
           },
-          "discordChannelId": {
-            "type": "integer",
-            "format": "int64"
-          },
           "telegramChannelId": {
+            "type": "string"
+          },
+          "planningHorizonDays": {
             "type": "integer",
-            "format": "int64",
-            "nullable": true
-          },
-          "tags": {
-            "type": "string"
-          },
-          "cronExpression": {
-            "type": "string"
-          },
-          "scheduledAtUtc": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
+            "format": "int32"
           }
         },
         "additionalProperties": false
@@ -9070,15 +9168,13 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           },
           "name": {
             "type": "string"
           },
           "guildId": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           },
           "guildName": {
             "type": "string"
@@ -9963,8 +10059,7 @@
             "format": "uuid"
           },
           "discordChannelId": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           },
           "tags": {
             "type": "string"
@@ -10018,8 +10113,7 @@
         "type": "object",
         "properties": {
           "discordChannelId": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           },
           "tags": {
             "type": "string"
@@ -10039,19 +10133,18 @@
         ],
         "type": "object",
         "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
           "discordChannelId": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           },
           "tags": {
             "type": "string"
           },
           "cronExpression": {
             "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "additionalProperties": false
@@ -10895,6 +10988,27 @@
         "description": "Результат операции с данными типа null",
         "x-generic-type-argument": "null"
       },
+      "StoreFactRequest": {
+        "required": [
+          "fact",
+          "importance",
+          "twitchId"
+        ],
+        "type": "object",
+        "properties": {
+          "twitchId": {
+            "type": "string"
+          },
+          "fact": {
+            "type": "string"
+          },
+          "importance": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
       "StreamArchiveConfig": {
         "required": [
           "checkSpan",
@@ -10995,8 +11109,7 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64"
+            "type": "string"
           },
           "title": {
             "type": "string"
@@ -11931,6 +12044,9 @@
     },
     {
       "name": "TwitchUsers"
+    },
+    {
+      "name": "WaifuChat"
     },
     {
       "name": "WaifuRoll"

@@ -77,7 +77,7 @@ function InfoBarComponent() {
             )}
 
             <span className={styles.userNameBlock}>
-              <span className={styles.userName} style={{ color: userColor }}>
+              <span className={styles.userName}>
                 {userName}
               </span>
             </span>
@@ -88,7 +88,7 @@ function InfoBarComponent() {
 
             <span className={styles.contentSeparator}>•</span>
             <span className={styles.trackNameBlock}>
-              <span className={styles.trackName} style={{ color: userColor }}>
+              <span className={styles.trackName}>
                 {artistName ? `${artistName} - ${trackName}` : trackName}
               </span>
             </span>

@@ -320,18 +320,20 @@ export interface DanbooruAutoPostConfigDto {
   /** @format uuid */
   id: string;
   targetPlatform: DanbooruAutoPostConfigDtoTargetPlatformEnum;
-  /** @format int64 */
-  discordChannelId: number;
-  /** @format int64 */
-  telegramChannelId?: number;
+  discordChannelId: string;
+  telegramChannelId?: string;
   /** @format int32 */
   targetPostCount: number;
   /** @format int32 */
   danbooruPostId?: number;
   tags: string;
   cronExpression: string;
+  /** @format int32 */
+  planningHorizonDays: number;
+  /** @format int32 */
+  pendingPostsCount: number;
   /** @format date-time */
-  scheduledAtUtc?: string;
+  nextScheduledAtUtc?: string;
   isEnabled: boolean;
   /** @format date-time */
   lastExecutedAtUtc?: string;
@@ -342,29 +344,25 @@ export interface DanbooruAutoPostConfigDto {
 }
 
 export interface DanbooruAutoPostCreateRequest {
-  targetPlatform: DanbooruAutoPostCreateRequestTargetPlatformEnum;
-  /** @format int64 */
-  discordChannelId: number;
-  /** @format int64 */
-  telegramChannelId?: number;
+  discordChannelId: string;
   tags: string;
   cronExpression: string;
-  /** @format date-time */
-  scheduledAtUtc?: string;
+  targetPlatform: DanbooruAutoPostCreateRequestTargetPlatformEnum;
+  telegramChannelId: string;
+  /** @format int32 */
+  planningHorizonDays: number;
 }
 
 export interface DanbooruAutoPostUpdateRequest {
+  discordChannelId: string;
+  tags: string;
+  cronExpression: string;
   /** @format uuid */
   id: string;
   targetPlatform: DanbooruAutoPostUpdateRequestTargetPlatformEnum;
-  /** @format int64 */
-  discordChannelId: number;
-  /** @format int64 */
-  telegramChannelId?: number;
-  tags: string;
-  cronExpression: string;
-  /** @format date-time */
-  scheduledAtUtc?: string;
+  telegramChannelId: string;
+  /** @format int32 */
+  planningHorizonDays: number;
 }
 
 export interface DefaultImage {
@@ -374,11 +372,9 @@ export interface DefaultImage {
 }
 
 export interface DiscordChannelOptionDto {
-  /** @format int64 */
-  id: number;
+  id: string;
   name: string;
-  /** @format int64 */
-  guildId: number;
+  guildId: string;
   guildName: string;
 }
 
@@ -594,8 +590,7 @@ export interface MemeTypeDto {
 export interface NSFWBooruAutoPostConfigDto {
   /** @format uuid */
   id: string;
-  /** @format int64 */
-  discordChannelId: number;
+  discordChannelId: string;
   tags: string;
   cronExpression: string;
   isEnabled: boolean;
@@ -608,19 +603,17 @@ export interface NSFWBooruAutoPostConfigDto {
 }
 
 export interface NSFWBooruAutoPostCreateRequest {
-  /** @format int64 */
-  discordChannelId: number;
+  discordChannelId: string;
   tags: string;
   cronExpression: string;
 }
 
 export interface NSFWBooruAutoPostUpdateRequest {
-  /** @format uuid */
-  id: string;
-  /** @format int64 */
-  discordChannelId: number;
+  discordChannelId: string;
   tags: string;
   cronExpression: string;
+  /** @format uuid */
+  id: string;
 }
 
 export interface NSFWSetEnabledRequest {
@@ -837,6 +830,13 @@ export interface SpotifyAuthStatusResult {
   message: string;
 }
 
+export interface StoreFactRequest {
+  twitchId: string;
+  fact: string;
+  /** @format int32 */
+  importance: number;
+}
+
 export interface StreamArchiveConfig {
   /** @format uuid */
   id: string;
@@ -851,8 +851,7 @@ export interface StreamArchiveConfig {
 }
 
 export interface TelegramChannelOptionDto {
-  /** @format int64 */
-  id: number;
+  id: string;
   title: string;
 }
 
@@ -1858,6 +1857,13 @@ export interface Waifu {
   shikiId: string;
   /** @format date-time */
   whenAdded: string;
+}
+
+export interface WaifuChatResponse {
+  correlationId: string;
+  messageId?: string;
+  response: string;
+  twitchId: string;
 }
 
 export interface WaifuRollAudio {

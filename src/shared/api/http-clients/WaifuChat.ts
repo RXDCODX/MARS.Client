@@ -148,145 +148,37 @@ import type {
   TestAlertsAlertByTypeCreateParamsTypeEnum,
 } from "../types/data-contracts";
 
-export class Commands<
+export class WaifuChat<
   SecurityDataType = unknown,
 > extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags Commands
-   * @name CommandsUserList
-   * @request GET:/api/Commands/user
-   * @response `200` `OperationResult<String>` OK
+   * @tags WaifuChat
+   * @name WaifuChatFactsCreate
+   * @request POST:/api/waifu-chat/facts
+   * @response `200` `void` OK
    */
-  commandsUserList = (params: RequestParams = {}) =>
-    this.request<OperationResult<String>, any>({
-      path: `/api/Commands/user`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Commands
-   * @name CommandsAdminList
-   * @request GET:/api/Commands/admin
-   * @response `200` `OperationResult<String>` OK
-   */
-  commandsAdminList = (params: RequestParams = {}) =>
-    this.request<OperationResult<String>, any>({
-      path: `/api/Commands/admin`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Commands
-   * @name CommandsUserPlatformDetail
-   * @request GET:/api/Commands/user/platform/{platform}
-   * @response `200` `OperationResult<String[]>` OK
-   */
-  commandsUserPlatformDetail = (
-    platform: CommandsUserPlatformDetailParamsEnum,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<String[]>, any>({
-      path: `/api/Commands/user/platform/${platform}`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Commands
-   * @name CommandsAdminPlatformDetail
-   * @request GET:/api/Commands/admin/platform/{platform}
-   * @response `200` `OperationResult<String[]>` OK
-   */
-  commandsAdminPlatformDetail = (
-    platform: CommandsAdminPlatformDetailParamsEnum,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<String[]>, any>({
-      path: `/api/Commands/admin/platform/${platform}`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Commands
-   * @name CommandsUserPlatformInfoList
-   * @request GET:/api/Commands/user/platform/{platform}/info
-   * @response `200` `OperationResult<BaseCommand[]>` OK
-   */
-  commandsUserPlatformInfoList = (
-    platform: CommandsUserPlatformInfoListParamsEnum,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<BaseCommand[]>, any>({
-      path: `/api/Commands/user/platform/${platform}/info`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Commands
-   * @name CommandsAdminPlatformInfoList
-   * @request GET:/api/Commands/admin/platform/{platform}/info
-   * @response `200` `OperationResult<BaseCommand[]>` OK
-   */
-  commandsAdminPlatformInfoList = (
-    platform: CommandsAdminPlatformInfoListParamsEnum,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<BaseCommand[]>, any>({
-      path: `/api/Commands/admin/platform/${platform}/info`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Commands
-   * @name CommandsParametersList
-   * @request GET:/api/Commands/{commandName}/parameters
-   * @response `200` `OperationResult<CommandParameterInfo[]>` OK
-   */
-  commandsParametersList = (commandName: string, params: RequestParams = {}) =>
-    this.request<OperationResult<CommandParameterInfo[]>, any>({
-      path: `/api/Commands/${commandName}/parameters`,
-      method: "GET",
-      format: "json",
-      ...params,
-    });
-  /**
-   * No description
-   *
-   * @tags Commands
-   * @name CommandsExecuteCreate
-   * @request POST:/api/Commands/{commandName}/execute
-   * @response `200` `OperationResult<String>` OK
-   */
-  commandsExecuteCreate = (
-    commandName: string,
-    data: string,
-    params: RequestParams = {}
-  ) =>
-    this.request<OperationResult<String>, any>({
-      path: `/api/Commands/${commandName}/execute`,
+  waifuChatFactsCreate = (data: StoreFactRequest, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/waifu-chat/facts`,
       method: "POST",
       body: data,
       type: ContentType.Json,
-      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags WaifuChat
+   * @name WaifuChatFactsDetail
+   * @request GET:/api/waifu-chat/facts/{twitchId}
+   * @response `200` `void` OK
+   */
+  waifuChatFactsDetail = (twitchId: string, params: RequestParams = {}) =>
+    this.request<void, any>({
+      path: `/api/waifu-chat/facts/${twitchId}`,
+      method: "GET",
       ...params,
     });
 }

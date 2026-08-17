@@ -88,6 +88,7 @@ import type {
   SpotifyAuthStartRequest,
   SpotifyAuthStartResult,
   SpotifyAuthStatusResult,
+  StoreFactRequest,
   StreamArchiveConfig,
   StringServiceStatusDictionary,
   TelegramChannelOptionDto,

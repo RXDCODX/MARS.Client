@@ -3,7 +3,6 @@ import {
     Badge,
     Button,
     Card,
-    DatePicker,
     Input,
     Modal,
     Select,
@@ -13,8 +12,8 @@ import {
     Tooltip,
 } from "antd";
 import {
-    CalendarClock,
     Check,
+    Clock,
     Edit3,
     Hash,
     MessageCircle,
@@ -44,7 +43,6 @@ import { useToastModal } from "@/shared/Utils/ToastModal";
 import styles from "./DanbooruAutoPostPage.module.scss";
 
 type Platform = "Discord" | "Telegram";
-type PublishType = "cron" | "deferred";
 type FilterTab = "all" | "discord" | "telegram";
 
 interface FormState {
@@ -53,8 +51,7 @@ interface FormState {
     telegramChannelId: string;
     tags: string[];
     cronExpression: string;
-    publishType: PublishType;
-    scheduledAt: string;
+    planningHorizonDays: number;
 }
 
 const defaultForm: FormState = {
@@ -63,8 +60,7 @@ const defaultForm: FormState = {
     telegramChannelId: "",
     tags: [],
     cronExpression: "",
-    publishType: "cron",
-    scheduledAt: "",
+    planningHorizonDays: 60,
 };
 
 interface CronParts {
@@ -350,7 +346,7 @@ const DanbooruAutoPostPage: React.FC = () => {
     }, [loadTelegramChannels]);
 
     useEffect(() => {
-        if (showModal && form.publishType === "cron") {
+        if (showModal) {
             setForm(previous => ({
                 ...previous,
                 cronExpression:
@@ -359,7 +355,7 @@ const DanbooruAutoPostPage: React.FC = () => {
                         : previous.cronExpression,
             }));
         }
-    }, [cronExpression, cronMode, showModal, form.publishType]);
+    }, [cronExpression, cronMode, showModal]);
 
     const openCreateModal = useCallback(() => {
         setForm({ ...defaultForm });
@@ -399,8 +395,7 @@ const DanbooruAutoPostPage: React.FC = () => {
                 : "",
             tags,
             cronExpression: config.cronExpression ?? "",
-            publishType: config.scheduledAtUtc ? "deferred" : "cron",
-            scheduledAt: config.scheduledAtUtc ?? "",
+            planningHorizonDays: config.planningHorizonDays ?? 60,
         });
         setEditingId(config.id);
         setCronMode("visual");
@@ -442,15 +437,10 @@ const DanbooruAutoPostPage: React.FC = () => {
 
             const finalCron =
                 cronMode === "visual" ? cronExpression : form.cronExpression;
-            const hasCron =
-                form.publishType === "cron" && finalCron.trim().length > 0;
-            const hasScheduled =
-                form.publishType === "deferred" &&
-                form.scheduledAt.length > 0;
+            const hasCron = finalCron.trim().length > 0;
 
-            if (!hasCron && !hasScheduled) {
-                const message =
-                    "Укажите CRON выражение или дату отложенной публикации";
+            if (!hasCron) {
+                const message = "Укажите CRON выражение";
                 setError(message);
                 showToast({ success: false, message });
                 setSubmitting(false);
@@ -473,16 +463,14 @@ const DanbooruAutoPostPage: React.FC = () => {
                 const baseData = {
                     targetPlatform,
                     discordChannelId: isTelegram
-                        ? 0
-                        : Number(form.discordChannelId),
+                        ? "0"
+                        : form.discordChannelId,
                     telegramChannelId: isTelegram
-                        ? Number(form.telegramChannelId)
+                        ? form.telegramChannelId
                         : undefined,
                     tags: form.tags.join(" ").trim(),
                     cronExpression: hasCron ? finalCron.trim() : "",
-                    scheduledAtUtc: hasScheduled
-                        ? new Date(form.scheduledAt).toISOString()
-                        : undefined,
+                    planningHorizonDays: form.planningHorizonDays,
                 };
 
                 if (editingId) {
@@ -622,7 +610,6 @@ const DanbooruAutoPostPage: React.FC = () => {
         const isTelegram =
             config.targetPlatform ===
             DanbooruAutoPostConfigDtoTargetPlatformEnum.Telegram;
-        const isDeferred = !!config.scheduledAtUtc;
 
         return (
             <Card
@@ -667,19 +654,21 @@ const DanbooruAutoPostPage: React.FC = () => {
 
                     <div className={styles.cardField}>
                         <span className={styles.fieldLabel}>Расписание</span>
-                        {isDeferred ? (
-                            <div className={styles.scheduledBadge}>
-                                <CalendarClock size={14} />
-                                {new Date(
-                                    config.scheduledAtUtc!,
-                                ).toLocaleString()}
-                            </div>
-                        ) : (
-                            <code className={styles.cronValue}>
-                                {config.cronExpression || "—"}
-                            </code>
-                        )}
+                        <code className={styles.cronValue}>
+                            {config.cronExpression || "—"}
+                        </code>
                     </div>
+
+                    {config.planningHorizonDays > 0 && (
+                        <div className={styles.cardField}>
+                            <span className={styles.fieldLabel}>
+                                Горизонт планирования
+                            </span>
+                            <span className={styles.fieldValue}>
+                                {config.planningHorizonDays} дн.
+                            </span>
+                        </div>
+                    )}
 
                     <div className={styles.cardField}>
                         <span className={styles.fieldLabel}>
@@ -701,7 +690,7 @@ const DanbooruAutoPostPage: React.FC = () => {
                             size="small"
                             type="primary"
                             ghost
-                            disabled={isProcessing || isDeferred}
+                            disabled={isProcessing}
                             onClick={() => void handleTriggerNow(config.id)}
                             data-testid={`button-trigger-${config.id}`}
                             icon={<Play size={14} />}
@@ -1114,117 +1103,74 @@ const DanbooruAutoPostPage: React.FC = () => {
 
                     <div className={styles.formField}>
                         <label className={styles.formLabel}>
-                            Тип публикации
+                            Расписание (CRON)
                         </label>
-                        <div className={styles.publishTypeSelector}>
-                            <button
-                                type="button"
-                                className={`${styles.publishTypeButton} ${form.publishType === "cron" ? styles.publishTypeActive : ""}`}
-                                onClick={() =>
+                        <Space style={{ marginBottom: 8 }}>
+                            <Button
+                                size="small"
+                                type={
+                                    cronMode === "visual"
+                                        ? "primary"
+                                        : "default"
+                                }
+                                onClick={() => setCronMode("visual")}
+                                data-testid="cron-mode-visual"
+                            >
+                                Конструктор
+                            </Button>
+                            <Button
+                                size="small"
+                                type={
+                                    cronMode === "manual"
+                                        ? "primary"
+                                        : "default"
+                                }
+                                onClick={() => setCronMode("manual")}
+                                data-testid="cron-mode-manual"
+                            >
+                                Вручную
+                            </Button>
+                        </Space>
+
+                        {cronMode === "visual" ? (
+                            renderCronBuilder()
+                        ) : (
+                            <Input
+                                value={form.cronExpression}
+                                onChange={event_ =>
                                     setForm(previous => ({
                                         ...previous,
-                                        publishType: "cron",
+                                        cronExpression:
+                                            event_.target.value,
                                     }))
                                 }
-                                data-testid="publish-type-cron"
-                            >
-                                По расписанию
-                            </button>
-                            <button
-                                type="button"
-                                className={`${styles.publishTypeButton} ${form.publishType === "deferred" ? styles.publishTypeActive : ""}`}
-                                onClick={() =>
-                                    setForm(previous => ({
-                                        ...previous,
-                                        publishType: "deferred",
-                                    }))
-                                }
-                                data-testid="publish-type-deferred"
-                            >
-                                Отложенная
-                            </button>
-                        </div>
+                                placeholder="*/30 * * * *"
+                                disabled={submitting}
+                                data-testid="input-cron"
+                            />
+                        )}
                     </div>
 
-                    {form.publishType === "cron" ? (
-                        <div className={styles.formField}>
-                            <label className={styles.formLabel}>
-                                Расписание (CRON)
-                            </label>
-                            <Space style={{ marginBottom: 8 }}>
-                                <Button
-                                    size="small"
-                                    type={
-                                        cronMode === "visual"
-                                            ? "primary"
-                                            : "default"
-                                    }
-                                    onClick={() => setCronMode("visual")}
-                                    data-testid="cron-mode-visual"
-                                >
-                                    Конструктор
-                                </Button>
-                                <Button
-                                    size="small"
-                                    type={
-                                        cronMode === "manual"
-                                            ? "primary"
-                                            : "default"
-                                    }
-                                    onClick={() => setCronMode("manual")}
-                                    data-testid="cron-mode-manual"
-                                >
-                                    Вручную
-                                </Button>
-                            </Space>
-
-                            {cronMode === "visual" ? (
-                                renderCronBuilder()
-                            ) : (
-                                <Input
-                                    value={form.cronExpression}
-                                    onChange={event_ =>
-                                        setForm(previous => ({
-                                            ...previous,
-                                            cronExpression:
-                                                event_.target.value,
-                                        }))
-                                    }
-                                    placeholder="*/30 * * * *"
-                                    disabled={submitting}
-                                    data-testid="input-cron"
-                                />
-                            )}
-                        </div>
-                    ) : (
-                        <div className={styles.formField}>
-                            <label className={styles.formLabel}>
-                                Дата и время публикации
-                            </label>
-                            <DatePicker
-                                showTime
-                                format="DD.MM.YYYY HH:mm"
-                                placeholder="Выберите дату и время"
-                                disabled={submitting}
-                                style={{ width: "100%" }}
-                                value={
-                                    form.scheduledAt
-                                        ? (form.scheduledAt as any)
-                                        : undefined
-                                }
-                                onChange={(_, dateString) =>
-                                    setForm(previous => ({
-                                        ...previous,
-                                        scheduledAt:
-                                            typeof dateString === "string"
-                                                ? dateString
-                                                : "",
-                                    }))
-                                }
-                                data-testid="input-scheduled-at"
-                            />
-                        </div>
-                    )}
+                    <div className={styles.formField}>
+                        <label className={styles.formLabel}>
+                            Горизонт планирования (дней)
+                        </label>
+                        <Input
+                            type="number"
+                            min={1}
+                            max={365}
+                            value={form.planningHorizonDays}
+                            onChange={event_ =>
+                                setForm(previous => ({
+                                    ...previous,
+                                    planningHorizonDays:
+                                        Number(event_.target.value) || 60,
+                                }))
+                            }
+                            disabled={submitting}
+                            data-testid="input-planning-horizon"
+                        />
+                    </div>
 
                     <div
                         style={{
