@@ -455,6 +455,19 @@ const DanbooruAutoPostPage: React.FC = () => {
                 return;
             }
 
+            if (
+                !form.planningHorizonDays ||
+                form.planningHorizonDays < 1 ||
+                form.planningHorizonDays > 365
+            ) {
+                const message =
+                    "Горизонт планирования должен быть от 1 до 365 дней";
+                setError(message);
+                showToast({ success: false, message });
+                setSubmitting(false);
+                return;
+            }
+
             try {
                 const targetPlatform = isTelegram
                     ? DanbooruAutoPostCreateRequestTargetPlatformEnum.Telegram
