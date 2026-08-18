@@ -9,14 +9,15 @@ import { ADHDPage } from "./ADHDPage";
 interface ADHDState {
   isVisible: boolean;
   duration: number;
-  remainingTime: number;
+  elapsedTime: number;
+  isPermanent: boolean;
 }
 
 type ADHDAction =
   | { type: "SHOW"; payload: { duration: number } }
+  | { type: "SHOW_PERMANENT" }
   | { type: "HIDE" }
-  | { type: "TICK" }
-  | { type: "EXTEND"; payload: { duration: number } };
+  | { type: "TICK" };
 
 const adhdReducer = (state: ADHDState, action: ADHDAction): ADHDState => {
   switch (action.type) {
@@ -24,27 +25,34 @@ const adhdReducer = (state: ADHDState, action: ADHDAction): ADHDState => {
       return {
         isVisible: true,
         duration: action.payload.duration,
-        remainingTime: action.payload.duration,
+        elapsedTime: 0,
+        isPermanent: false,
+      };
+    }
+    case "SHOW_PERMANENT": {
+      // Повторный вызов без параметра — выключение перманентного режима
+      if (state.isVisible && state.isPermanent) {
+        return initialState;
+      }
+
+      return {
+        isVisible: true,
+        duration: 0,
+        elapsedTime: 0,
+        isPermanent: true,
       };
     }
     case "HIDE": {
-      return {
-        ...state,
-        isVisible: false,
-        remainingTime: 0,
-      };
+      return initialState;
     }
     case "TICK": {
+      const nextElapsed = state.elapsedTime + 1;
+
       return {
         ...state,
-        remainingTime: state.remainingTime - 1,
-      };
-    }
-    case "EXTEND": {
-      return {
-        ...state,
-        duration: state.duration + action.payload.duration,
-        remainingTime: state.remainingTime + action.payload.duration,
+        elapsedTime: state.isPermanent
+          ? nextElapsed
+          : Math.min(nextElapsed, state.duration),
       };
     }
     default: {
@@ -56,59 +64,46 @@ const adhdReducer = (state: ADHDState, action: ADHDAction): ADHDState => {
 const initialState: ADHDState = {
   isVisible: false,
   duration: 0,
-  remainingTime: 0,
+  elapsedTime: 0,
+  isPermanent: false,
+};
+
+// Функция форматирования времени в формат MM:SS
+const formatTime = (seconds: number): string => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
+    .toString()
+    .padStart(2, "0")}`;
 };
 
 export function ADHDController() {
   const [announced, setAnnounced] = useState<boolean>(false);
   const [state, dispatch] = useReducer(adhdReducer, initialState);
-  const [pendingExtensions, setPendingExtensions] = useState<number[]>([]);
   const intervalReference = useRef<NodeJS.Timeout | null>(null);
 
-  // Функция форматирования времени в формат MM:SS
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
-  };
-
-  const handleMessage = (duration: number) => {
-    duration = import.meta.env.DEV ? 10 : duration;
-
-    if (state.isVisible && state.remainingTime > 0) {
-      // Если показывается и время еще есть, продлеваем время
-      dispatch({ type: "EXTEND", payload: { duration } });
-    } else if (state.isVisible && state.remainingTime === 0) {
-      // Если показывается, но время истекло (идет взрыв), добавляем в очередь продлений
-      setPendingExtensions(previous => [...previous, duration]);
-    } else {
-      // Если не показывается, начинаем показ
+  const handleMessage = (seconds?: number) => {
+    if (typeof seconds === "number" && seconds > 0) {
+      const duration = import.meta.env.DEV ? 10 : seconds;
       dispatch({ type: "SHOW", payload: { duration } });
+    } else {
+      // Без параметра — перманентный toggle оверлея
+      dispatch({ type: "SHOW_PERMANENT" });
     }
   };
 
   // Подписка на SignalR события
-  SignalRContext.useSignalREffect("adhd", handleMessage, [
-    handleMessage,
-    state.isVisible,
-    state.remainingTime,
-  ]);
+  SignalRContext.useSignalREffect("adhd", handleMessage, [handleMessage]);
 
+  // Тикаем каждую секунду, пока оверлей видим
   useEffect(() => {
-    if (state.isVisible && state.remainingTime > 0) {
-      intervalReference.current = setInterval(() => {
-        dispatch({ type: "TICK" });
-      }, 1000);
-    } else if (state.isVisible && state.remainingTime === 0) {
-      // Когда время истекло, вызываем взрыв через SignalR
-      SignalRContext.invoke("ExplosionGo");
-      // Не скрываем сразу, ждем 2 секунды
-    } else {
-      if (intervalReference.current) {
-        clearInterval(intervalReference.current);
-        intervalReference.current = null;
-      }
+    if (!state.isVisible) {
+      return;
     }
+
+    intervalReference.current = setInterval(() => {
+      dispatch({ type: "TICK" });
+    }, 1000);
 
     return () => {
       if (!intervalReference.current) {
@@ -118,32 +113,32 @@ export function ADHDController() {
       clearInterval(intervalReference.current);
       intervalReference.current = null;
     };
-  }, [state.isVisible, state.remainingTime]);
+  }, [state.isVisible]);
 
-  // Обработка скрытия через 2 секунды после взрыва и очереди продлений
+  // Обработка окончания времени в timed режиме — взрыв и скрытие
   useEffect(() => {
-    if (!(state.isVisible && state.remainingTime === 0)) {
+    if (
+      !(
+        state.isVisible &&
+        !state.isPermanent &&
+        state.elapsedTime >= state.duration
+      )
+    ) {
       return;
     }
 
+    // Когда время истекло, вызываем взрыв через SignalR
+    SignalRContext.invoke("ExplosionGo");
+
+    // Не скрываем сразу, ждем 2 секунды
     const hideTimer = setTimeout(() => {
       dispatch({ type: "HIDE" });
-
-      // Проверяем очередь продлений
-      if (pendingExtensions.length > 0) {
-        const totalExtension = pendingExtensions.reduce(
-          (sum, extension) => sum + extension,
-          0
-        );
-        setPendingExtensions([]);
-        dispatch({ type: "SHOW", payload: { duration: totalExtension } });
-      }
     }, 2000);
 
     return () => {
       clearTimeout(hideTimer);
     };
-  }, [state.isVisible, state.remainingTime, pendingExtensions]);
+  }, [state.isVisible, state.isPermanent, state.elapsedTime, state.duration]);
 
   return (
     <>
@@ -159,7 +154,7 @@ export function ADHDController() {
                 className={styles.timerValue}
                 data-testid="text-adhd-timer-value"
               >
-                {formatTime(state.remainingTime)}
+                {formatTime(state.elapsedTime)}
               </span>
             </div>
           </div>
