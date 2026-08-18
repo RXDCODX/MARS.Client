@@ -46,7 +46,7 @@ export default function WaifuAddAlert({
       <div className={styles["alert-box"]} data-testid="waifu-alert-box">
         <img
           src={message.waifu.imageUrl}
-          style={{ height: "498px", width: "320px" }}
+          style={{ height: "747px", width: "480px" }}
           onLoad={() => {
             if (timeoutReference.current) {
               clearTimeout(timeoutReference.current);

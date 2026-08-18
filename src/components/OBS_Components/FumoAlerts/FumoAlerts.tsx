@@ -118,7 +118,7 @@ export default function FumoAlerts() {
               text: p.text || "",
             }))}
             twitchUser={currentFumoMessage.twitchUser}
-            size="xxxxl"
+            size="fill"
           />
         )}
       {currentFumoMessage &&
@@ -141,7 +141,7 @@ export default function FumoAlerts() {
           <div className={styles["alert-box"]}>
             <img
               src={currentFumoMessage.fumo.thumbnailUrl}
-              style={{ height: "498px", width: "320px" }}
+              style={{ height: "747px", width: "480px" }}
               onLoad={() => {
                 if (imageLoadTimeoutReference.current) {
                   clearTimeout(imageLoadTimeoutReference.current);

@@ -1,6 +1,13 @@
 import "react-roulette-pro/dist/index.css";
 
-import { CSSProperties, useCallback, useEffect, useRef, useState } from "react";
+import {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { PrizeType, TwitchUser } from "@/shared/api";
 import animate from "@/shared/styles/animate.module.scss";
@@ -10,10 +17,26 @@ import { RoulettePro } from "@/shared/Utils/reactRoulettePro";
 import styles2 from "../OBSCommon.module.scss";
 import {
   ROULETTE_SIZE_PRESETS,
-  RouletteSize,
+  RouletteSizePreset,
+  RouletteSizeWithFill,
 } from "./components/rouletteSizes";
 import WaifuRoulettePrizeItem from "./components/WaifuRoulettePrizeItem";
 import styles from "./WaifuAlerts.module.scss";
+
+const LABEL_HEIGHT = 200;
+const FILL_HEIGHT_RATIO = 0.85;
+
+function getFillPreset(): RouletteSizePreset {
+  const availableHeight = window.innerHeight - LABEL_HEIGHT;
+  const referencePreset = ROULETTE_SIZE_PRESETS["xxxxl"];
+  const ratio = referencePreset.width / referencePreset.height;
+  const height = Math.max(
+    Math.round(availableHeight * FILL_HEIGHT_RATIO),
+    referencePreset.height
+  );
+  const width = Math.round(height * ratio);
+  return { width, height };
+}
 
 interface Properties {
   rouletteIndex: number;
@@ -21,7 +44,7 @@ interface Properties {
   callback: () => void;
   shuffle: () => void;
   twitchUser: TwitchUser;
-  size?: RouletteSize;
+  size?: RouletteSizeWithFill;
 }
 
 export default function WaifuRoulette({
@@ -54,7 +77,10 @@ export default function WaifuRoulette({
     animationDuration: "2.2s",
   });
 
-  const preset = ROULETTE_SIZE_PRESETS[size];
+  const preset = useMemo(
+    () => (size === "fill" ? getFillPreset() : ROULETTE_SIZE_PRESETS[size]),
+    [size]
+  );
 
   const designPlugin = useCallback(
     () => ({
@@ -88,7 +114,7 @@ export default function WaifuRoulette({
         style={{
           width: "100%",
           margin: "0 auto",
-          height: "100%",
+          ...(size === "fill" ? { flex: 1, minHeight: 0 } : { height: "100%" }),
           alignSelf: "center",
           position: "relative",
         }}
@@ -122,6 +148,8 @@ export default function WaifuRoulette({
               image={prize.image}
               text={prize.text}
               size={size}
+              width={preset.width}
+              height={preset.height}
             />
           )}
           onPrizeDefined={() => {
@@ -142,6 +170,7 @@ export default function WaifuRoulette({
         className={
           styles["roulette-name-text"] + " " + styles2.textStrokeShadow
         }
+        style={size === "fill" ? { flexShrink: 0 } : undefined}
       >
         <span>рулетка для</span>
         <div

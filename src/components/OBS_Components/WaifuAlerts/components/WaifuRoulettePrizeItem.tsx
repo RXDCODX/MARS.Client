@@ -1,29 +1,35 @@
 import { Textfit } from "react-textfit";
 
-import { ROULETTE_SIZE_PRESETS, RouletteSize } from "./rouletteSizes";
+import { ROULETTE_SIZE_PRESETS, RouletteSizeWithFill } from "./rouletteSizes";
 import styles from "./WaifuRoulettePrizeItem.module.scss";
 
 interface WaifuRoulettePrizeItemProperties {
   image: string;
   text?: string;
-  size?: RouletteSize;
+  size?: RouletteSizeWithFill;
+  width?: number;
+  height?: number;
 }
 
 export default function WaifuRoulettePrizeItem({
   image,
   text,
   size = "l",
+  width,
+  height,
 }: WaifuRoulettePrizeItemProperties) {
   if (image) {
     const normalizedText = text?.trim();
-    const preset = ROULETTE_SIZE_PRESETS[size];
+    const preset = size !== "fill" ? ROULETTE_SIZE_PRESETS[size] : undefined;
+    const itemWidth = width ?? preset?.width ?? ROULETTE_SIZE_PRESETS["l"].width;
+    const itemHeight = height ?? preset?.height ?? ROULETTE_SIZE_PRESETS["l"].height;
 
     return (
       <figure
         className={styles.figure}
         style={{
-          width: `${preset.width}px`,
-          height: `${preset.height}px`,
+          width: `${itemWidth}px`,
+          height: `${itemHeight}px`,
           flexShrink: 0,
         }}
         data-testid="waifu-prize-item"

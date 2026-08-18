@@ -120,7 +120,7 @@ export default function MikuAlerts() {
               text: p.text || "",
             }))}
             twitchUser={currentMikuMessage.twitchUser}
-            size="xxxxl"
+            size="fill"
           />
         )}
       {currentMikuMessage &&
@@ -143,7 +143,7 @@ export default function MikuAlerts() {
           <div className={styles["alert-box"]}>
             <img
               src={currentMikuMessage.mikuModule.thumbnailUrl}
-              style={{ height: "498px", width: "320px" }}
+              style={{ height: "747px", width: "480px" }}
               onLoad={() => {
                 if (imageLoadTimeoutReference.current) {
                   clearTimeout(imageLoadTimeoutReference.current);

@@ -124,7 +124,7 @@ export default function WaifuAlerts() {
             rouletteIndex={rouletteIndex}
             prizes={preparedPrizes}
             twitchUser={currentMessage.waifuHusband.twitchUser}
-            size="xxxxl"
+            size="fill"
           />
         )}
       {currentMessage &&

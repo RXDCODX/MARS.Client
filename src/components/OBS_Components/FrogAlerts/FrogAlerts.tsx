@@ -118,7 +118,7 @@ export default function FrogAlerts() {
               text: p.text || "",
             }))}
             twitchUser={currentFrogMessage.twitchUser}
-            size="xxxl"
+            size="fill"
           />
         )}
       {currentFrogMessage &&
@@ -141,7 +141,7 @@ export default function FrogAlerts() {
           <div className={styles["alert-box"]}>
             <img
               src={currentFrogMessage.frog.thumbnailUrl}
-              style={{ height: "498px", width: "320px" }}
+              style={{ height: "747px", width: "480px" }}
               onLoad={() => {
                 if (imageLoadTimeoutReference.current) {
                   clearTimeout(imageLoadTimeoutReference.current);

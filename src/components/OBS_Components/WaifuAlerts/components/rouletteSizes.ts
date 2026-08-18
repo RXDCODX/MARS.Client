@@ -8,6 +8,8 @@ export type RouletteSize =
   | "xxxl"
   | "xxxxl";
 
+export type RouletteSizeWithFill = RouletteSize | "fill";
+
 export interface RouletteSizePreset {
   width: number;
   height: number;
