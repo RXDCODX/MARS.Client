@@ -4,6 +4,47 @@
     "title": "Telegramus Hubs"
   },
   "paths": {
+    "/hubs/adhd/GetCurrentConfig": {
+      "post": {
+        "tags": [
+          "AdhdHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/adhd/OnConnectedAsync": {
+      "post": {
+        "tags": [
+          "AdhdHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/adhd/OnDisconnectedAsync": {
+      "post": {
+        "tags": [
+          "AdhdHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/adhd/UpdateConfig": {
+      "post": {
+        "tags": [
+          "AdhdHub"
+        ],
+        "parameters": [
+          {
+            "name": "config",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/AdhdLayoutConfigDto"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/scoreboard/ForceProcessPendingUpdates": {
       "post": {
         "tags": [
@@ -1457,6 +1498,70 @@
   },
   "components": {
     "schemas": {
+      "AdhdLayoutConfigDto": {
+        "required": [
+          "showBreakingNews",
+          "showCatisa",
+          "showDVDLogos",
+          "showFitnessVideo",
+          "showGTAVideo",
+          "showHydraulicMobileVideo",
+          "showLOFIGirl",
+          "showMukbangVideo",
+          "showNotifications",
+          "showQuiz",
+          "showRainEffect",
+          "showSlimeVideo",
+          "showStreamerVideo",
+          "showSurfer"
+        ],
+        "type": "object",
+        "properties": {
+          "showRainEffect": {
+            "type": "boolean"
+          },
+          "showDVDLogos": {
+            "type": "boolean"
+          },
+          "showBreakingNews": {
+            "type": "boolean"
+          },
+          "showStreamerVideo": {
+            "type": "boolean"
+          },
+          "showFitnessVideo": {
+            "type": "boolean"
+          },
+          "showGTAVideo": {
+            "type": "boolean"
+          },
+          "showHydraulicMobileVideo": {
+            "type": "boolean"
+          },
+          "showSlimeVideo": {
+            "type": "boolean"
+          },
+          "showMukbangVideo": {
+            "type": "boolean"
+          },
+          "showQuiz": {
+            "type": "boolean"
+          },
+          "showSurfer": {
+            "type": "boolean"
+          },
+          "showLOFIGirl": {
+            "type": "boolean"
+          },
+          "showCatisa": {
+            "type": "boolean"
+          },
+          "showNotifications": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "AudioQuizRoundDto": {
         "required": [
           "roundSeconds",
@@ -3606,6 +3711,9 @@
     }
   },
   "tags": [
+    {
+      "name": "AdhdHub"
+    },
     {
       "name": "LoggerHub"
     },

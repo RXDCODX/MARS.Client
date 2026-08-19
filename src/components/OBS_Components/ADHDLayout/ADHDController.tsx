@@ -70,8 +70,9 @@ const initialState: ADHDState = {
 
 // Функция форматирования времени в формат MM:SS
 const formatTime = (seconds: number): string => {
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = seconds % 60;
+  const safeSeconds = Math.max(0, seconds);
+  const minutes = Math.floor(safeSeconds / 60);
+  const remainingSeconds = safeSeconds % 60;
   return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
     .toString()
     .padStart(2, "0")}`;
@@ -80,7 +81,7 @@ const formatTime = (seconds: number): string => {
 export function ADHDController() {
   const [announced, setAnnounced] = useState<boolean>(false);
   const [state, dispatch] = useReducer(adhdReducer, initialState);
-  const intervalReference = useRef<NodeJS.Timeout | null>(null);
+  const intervalReference = useRef<NodeJS.Timeout | undefined>(undefined);
 
   const handleMessage = (seconds?: number) => {
     if (typeof seconds === "number" && seconds > 0) {
@@ -111,7 +112,7 @@ export function ADHDController() {
       }
 
       clearInterval(intervalReference.current);
-      intervalReference.current = null;
+      intervalReference.current = undefined;
     };
   }, [state.isVisible]);
 
@@ -151,10 +152,18 @@ export function ADHDController() {
           <div className={styles.timerOverlay} data-testid="adhd-timer">
             <div className={styles.timerContent}>
               <span
-                className={styles.timerValue}
+                className={`${styles.timerValue} ${
+                  state.isPermanent
+                    ? styles.timerStopwatch
+                    : styles.timerCountdown
+                }`}
                 data-testid="text-adhd-timer-value"
               >
-                {formatTime(state.elapsedTime)}
+                {formatTime(
+                  state.isPermanent
+                    ? state.elapsedTime
+                    : state.duration - state.elapsedTime
+                )}
               </span>
             </div>
           </div>

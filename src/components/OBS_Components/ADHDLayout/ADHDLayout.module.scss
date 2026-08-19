@@ -167,6 +167,34 @@
   animation: timerPulse 2s ease-in-out infinite alternate;
 }
 
+.timerCountdown {
+  color: #f00;
+}
+
+.timerStopwatch {
+  color: #00e5ff;
+  text-shadow:
+    2px 2px 4px rgb(0 0 0 / 80%),
+    -2px -2px 4px rgb(0 0 0 / 80%),
+    2px -2px 4px rgb(0 0 0 / 80%),
+    -2px 2px 4px rgb(0 0 0 / 80%),
+    0 0 8px rgb(0 229 255 / 60%),
+    0 0 16px rgb(0 229 255 / 40%),
+    0 0 24px rgb(0 229 255 / 30%),
+    0 0 32px rgb(0 229 255 / 20%);
+  animation: timerStopwatchPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes timerStopwatchPulse {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.15);
+  }
+}
+
 @keyframes timerPulse {
   0% {
     transform: scale(1);
