@@ -2,8 +2,8 @@ import { HubConnection, HubConnectionState } from "@microsoft/signalr";
 import { create } from "zustand";
 
 import {
-  AdhdHubSignalRConnectionBuilder,
   AdhdLayoutConfigDto,
+  TelegramusHubSignalRConnectionBuilder,
 } from "@/shared/api";
 
 type PendingServerCommand = {
@@ -58,7 +58,7 @@ const queueServerCommand = (config: AdhdLayoutConfigDto) => {
 };
 
 const initialState: AdhdLayoutState = {
-  _connection: AdhdHubSignalRConnectionBuilder.build(),
+  _connection: TelegramusHubSignalRConnectionBuilder.build(),
   config: { ...defaultConfig },
 };
 

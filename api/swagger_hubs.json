@@ -4,47 +4,6 @@
     "title": "Telegramus Hubs"
   },
   "paths": {
-    "/hubs/adhd/GetCurrentConfig": {
-      "post": {
-        "tags": [
-          "AdhdHub"
-        ],
-        "responses": { }
-      }
-    },
-    "/hubs/adhd/OnConnectedAsync": {
-      "post": {
-        "tags": [
-          "AdhdHub"
-        ],
-        "responses": { }
-      }
-    },
-    "/hubs/adhd/OnDisconnectedAsync": {
-      "post": {
-        "tags": [
-          "AdhdHub"
-        ],
-        "responses": { }
-      }
-    },
-    "/hubs/adhd/UpdateConfig": {
-      "post": {
-        "tags": [
-          "AdhdHub"
-        ],
-        "parameters": [
-          {
-            "name": "config",
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/AdhdLayoutConfigDto"
-            }
-          }
-        ],
-        "responses": { }
-      }
-    },
     "/hubs/scoreboard/ForceProcessPendingUpdates": {
       "post": {
         "tags": [
@@ -288,6 +247,14 @@
         "responses": { }
       }
     },
+    "/hubs/telegramus/GetCurrentConfig": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/telegramus/LogError": {
       "post": {
         "tags": [
@@ -420,6 +387,23 @@
       "post": {
         "tags": [
           "TelegramusHub"
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/UpdateConfig": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "config",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/AdhdLayoutConfigDto"
+            }
+          }
         ],
         "responses": { }
       }
@@ -814,6 +798,23 @@
         "responses": { }
       }
     },
+    "/hubs/telegramus/ConfigUpdated": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "config",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/AdhdLayoutConfigDto"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
     "/hubs/telegramus/Credits": {
       "post": {
         "tags": [
@@ -1198,6 +1199,23 @@
             "in": "query",
             "schema": {
               "$ref": "#/components/schemas/MediaDto"
+            }
+          }
+        ],
+        "responses": { }
+      }
+    },
+    "/hubs/telegramus/ReceiveConfig": {
+      "post": {
+        "tags": [
+          "TelegramusHub"
+        ],
+        "parameters": [
+          {
+            "name": "config",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/AdhdLayoutConfigDto"
             }
           }
         ],
@@ -3711,9 +3729,6 @@
     }
   },
   "tags": [
-    {
-      "name": "AdhdHub"
-    },
     {
       "name": "LoggerHub"
     },
