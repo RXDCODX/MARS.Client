@@ -15,6 +15,12 @@ const MAX_PENDING_SERVER_COMMANDS = 40;
 
 export type AdhdComponentKey = keyof AdhdLayoutConfigDto;
 
+export type AdhdBooleanComponentKey = {
+  [Key in AdhdComponentKey]: AdhdLayoutConfigDto[Key] extends boolean
+    ? Key
+    : never;
+}[AdhdComponentKey];
+
 const defaultConfig: AdhdLayoutConfigDto = {
   showRainEffect: true,
   showDVDLogos: true,
@@ -30,6 +36,8 @@ const defaultConfig: AdhdLayoutConfigDto = {
   showLOFIGirl: true,
   showCatisa: true,
   showNotifications: true,
+  showTimer: true,
+  dvdLogosCount: 12,
 };
 
 interface AdhdLayoutState {
@@ -39,8 +47,9 @@ interface AdhdLayoutState {
 
 interface AdhdLayoutActions {
   setConfig: (config: AdhdLayoutConfigDto) => void;
-  toggleComponent: (key: AdhdComponentKey) => void;
+  toggleComponent: (key: AdhdBooleanComponentKey) => void;
   setAllComponents: (isEnabled: boolean) => void;
+  setDvdLogosCount: (count: number) => void;
   resetToDefaults: () => void;
   handleReceiveConfig: (config: AdhdLayoutConfigDto) => void;
   handleConfigUpdated: (config: AdhdLayoutConfigDto) => void;
@@ -118,11 +127,27 @@ export const useAdhdLayoutStore = create<AdhdLayoutStore>((set, get) => {
       void get()._sendToServer(updatedConfig);
     },
     setAllComponents: isEnabled => {
-      const updatedConfig = { ...defaultConfig };
+      const updatedConfig = {
+        ...defaultConfig,
+        dvdLogosCount: get().config.dvdLogosCount,
+      };
 
-      for (const key of Object.keys(defaultConfig) as AdhdComponentKey[]) {
+      for (const key of Object.keys(
+        defaultConfig
+      ) as AdhdBooleanComponentKey[]) {
         updatedConfig[key] = isEnabled;
       }
+
+      set({ config: updatedConfig });
+      void get()._sendToServer(updatedConfig);
+    },
+    setDvdLogosCount: count => {
+      const currentConfig = get().config;
+      const clampedCount = Math.min(20, Math.max(1, Math.round(count)));
+      const updatedConfig = {
+        ...currentConfig,
+        dvdLogosCount: clampedCount,
+      };
 
       set({ config: updatedConfig });
       void get()._sendToServer(updatedConfig);
@@ -170,9 +195,15 @@ export const useAdhdConfig = () => useAdhdLayoutStore(state => state.config);
 export const useAdhdConfigActions = () => {
   const toggleComponent = useAdhdLayoutStore(state => state.toggleComponent);
   const setAllComponents = useAdhdLayoutStore(state => state.setAllComponents);
+  const setDvdLogosCount = useAdhdLayoutStore(state => state.setDvdLogosCount);
   const resetToDefaults = useAdhdLayoutStore(state => state.resetToDefaults);
 
-  return { toggleComponent, setAllComponents, resetToDefaults };
+  return {
+    toggleComponent,
+    setAllComponents,
+    setDvdLogosCount,
+    resetToDefaults,
+  };
 };
 
 export { defaultConfig };

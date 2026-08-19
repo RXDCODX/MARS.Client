@@ -20,7 +20,7 @@ export function ADHDPage() {
   return (
     <>
       {config.showRainEffect && <RainEffect />}
-      {config.showDVDLogos && <DVDLogos />}
+      {config.showDVDLogos && <DVDLogos count={config.dvdLogosCount} />}
       {config.showBreakingNews && <BreakingNews />}
       {config.showStreamerVideo && <StreamerVideo />}
       {config.showFitnessVideo && <FitnessVideo />}

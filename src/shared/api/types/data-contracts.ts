@@ -1385,6 +1385,8 @@ export enum TestAlertsAlertByTypeCreateParamsPriorityEnum {
 // ========================================
 
 export interface AdhdLayoutConfigDto {
+  /** @format int32 */
+  dvdLogosCount: number;
   showBreakingNews: boolean;
   showCatisa: boolean;
   showDVDLogos: boolean;
@@ -1399,6 +1401,7 @@ export interface AdhdLayoutConfigDto {
   showSlimeVideo: boolean;
   showStreamerVideo: boolean;
   showSurfer: boolean;
+  showTimer: boolean;
 }
 
 export interface AudioQuizRoundDto {

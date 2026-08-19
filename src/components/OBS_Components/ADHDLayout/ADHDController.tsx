@@ -5,6 +5,7 @@ import Announce from "@/shared/Utils/Announce/Announce";
 
 import styles from "./ADHDLayout.module.scss";
 import { ADHDPage } from "./ADHDPage";
+import { useAdhdConfig } from "./store/adhdLayoutStore";
 
 interface ADHDState {
   isVisible: boolean;
@@ -82,6 +83,7 @@ export function ADHDController() {
   const [announced, setAnnounced] = useState<boolean>(false);
   const [state, dispatch] = useReducer(adhdReducer, initialState);
   const intervalReference = useRef<NodeJS.Timeout | undefined>(undefined);
+  const config = useAdhdConfig();
 
   const handleMessage = (seconds?: number) => {
     if (typeof seconds === "number" && seconds > 0) {
@@ -149,24 +151,26 @@ export function ADHDController() {
       {state.isVisible && (
         <div className={styles.adhdControllerContainer} data-testid="obs-adhd">
           <ADHDPage />
-          <div className={styles.timerOverlay} data-testid="adhd-timer">
-            <div className={styles.timerContent}>
-              <span
-                className={`${styles.timerValue} ${
-                  state.isPermanent
-                    ? styles.timerStopwatch
-                    : styles.timerCountdown
-                }`}
-                data-testid="text-adhd-timer-value"
-              >
-                {formatTime(
-                  state.isPermanent
-                    ? state.elapsedTime
-                    : state.duration - state.elapsedTime
-                )}
-              </span>
+          {config.showTimer && (
+            <div className={styles.timerOverlay} data-testid="adhd-timer">
+              <div className={styles.timerContent}>
+                <span
+                  className={`${styles.timerValue} ${
+                    state.isPermanent
+                      ? styles.timerStopwatch
+                      : styles.timerCountdown
+                  }`}
+                  data-testid="text-adhd-timer-value"
+                >
+                  {formatTime(
+                    state.isPermanent
+                      ? state.elapsedTime
+                      : state.duration - state.elapsedTime
+                  )}
+                </span>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
     </>

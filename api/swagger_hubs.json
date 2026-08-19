@@ -1518,6 +1518,7 @@
     "schemas": {
       "AdhdLayoutConfigDto": {
         "required": [
+          "dvdLogosCount",
           "showBreakingNews",
           "showCatisa",
           "showDVDLogos",
@@ -1531,7 +1532,8 @@
           "showRainEffect",
           "showSlimeVideo",
           "showStreamerVideo",
-          "showSurfer"
+          "showSurfer",
+          "showTimer"
         ],
         "type": "object",
         "properties": {
@@ -1576,6 +1578,13 @@
           },
           "showNotifications": {
             "type": "boolean"
+          },
+          "showTimer": {
+            "type": "boolean"
+          },
+          "dvdLogosCount": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

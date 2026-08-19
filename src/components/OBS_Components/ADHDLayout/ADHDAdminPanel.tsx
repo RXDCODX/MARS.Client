@@ -1,14 +1,17 @@
-import { Button, Card, Flex, Switch, Typography } from "antd";
+import { Button, Card, Flex, Slider, Switch, Typography } from "antd";
 
-import { AdhdLayoutConfigDto } from "@/shared/api";
 import { useSiteColors } from "@/shared/Utils/useSiteColors";
 
 import ThemeToggle from "../../ThemeToggle";
 import styles from "./ADHDAdminPanel.module.scss";
-import { useAdhdConfig, useAdhdConfigActions } from "./store/adhdLayoutStore";
+import {
+  type AdhdBooleanComponentKey,
+  useAdhdConfig,
+  useAdhdConfigActions,
+} from "./store/adhdLayoutStore";
 
 interface ComponentToggle {
-  key: keyof AdhdLayoutConfigDto;
+  key: AdhdBooleanComponentKey;
   label: string;
   description: string;
 }
@@ -76,13 +79,22 @@ const componentToggles: ComponentToggle[] = [
     label: "Уведомления",
     description: "Фейковые email-уведомления",
   },
+  {
+    key: "showTimer",
+    label: "Таймер",
+    description: "Отображение таймера (счёт продолжается)",
+  },
 ];
 
 export function ADHDAdminPanel() {
   const colors = useSiteColors();
   const config = useAdhdConfig();
-  const { toggleComponent, setAllComponents, resetToDefaults } =
-    useAdhdConfigActions();
+  const {
+    toggleComponent,
+    setAllComponents,
+    setDvdLogosCount,
+    resetToDefaults,
+  } = useAdhdConfigActions();
 
   const enabledCount = componentToggles.filter(
     toggle => config[toggle.key]
@@ -147,6 +159,35 @@ export function ADHDAdminPanel() {
               Сброс
             </Button>
           </Flex>
+        </Flex>
+
+        <Flex
+          align="center"
+          justify="space-between"
+          className={styles.toggleRow}
+          style={{ marginBottom: 16 }}
+          data-testid="row-adhd-dvd-count"
+        >
+          <div>
+            <Typography.Text strong style={{ color: colors.text.primary }}>
+              Количество DVD-логотипов
+            </Typography.Text>
+            <br />
+            <Typography.Text
+              type="secondary"
+              style={{ color: colors.text.secondary }}
+            >
+              Летающих логотипов: {config.dvdLogosCount} (от 1 до 20)
+            </Typography.Text>
+          </div>
+          <Slider
+            min={1}
+            max={20}
+            value={config.dvdLogosCount}
+            onChange={setDvdLogosCount}
+            style={{ width: 240 }}
+            data-testid="slider-adhd-dvd-count"
+          />
         </Flex>
 
         <Flex vertical gap={8}>
