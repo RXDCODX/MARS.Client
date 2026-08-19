@@ -9,8 +9,9 @@ interface DVDLogo {
   color: string;
 }
 
-// Константа для количества DVD элементов
-const DVD_COUNT = 12;
+// Максимальное количество DVD элементов
+const DVD_COUNT_LIMIT = 20;
+const DEFAULT_DVD_COUNT = 12;
 const MAX_SPEED = 4;
 const MIN_SPEED = 2;
 
@@ -68,7 +69,11 @@ const getRandomUniqueColors = (count: number) => {
 // Функция для получения случайного цвета
 const getRandomColor = () => colors[Math.floor(Math.random() * colors.length)];
 
-export function DVDLogos() {
+interface DVDLogosProperties {
+  count?: number;
+}
+
+export function DVDLogos({ count = DEFAULT_DVD_COUNT }: DVDLogosProperties) {
   const canvasReference = useRef<HTMLCanvasElement>(null);
   const animationReference = useRef<number | undefined>(undefined);
   const logosReference = useRef<DVDLogo[]>([]);
@@ -80,6 +85,8 @@ export function DVDLogos() {
     const context = canvas.getContext("2d");
     if (!context) return;
 
+    const dvdCount = Math.min(DVD_COUNT_LIMIT, Math.max(1, Math.round(count)));
+
     // Устанавливаем размер canvas равным размеру окна
     const resizeCanvas = () => {
       canvas.width = window.innerWidth;
@@ -90,10 +97,10 @@ export function DVDLogos() {
     window.addEventListener("resize", resizeCanvas);
 
     // Получаем случайные неповторяющиеся цвета
-    const initialColors = getRandomUniqueColors(DVD_COUNT);
+    const initialColors = getRandomUniqueColors(dvdCount);
 
     // Инициализация DVD логотипов
-    logosReference.current = Array.from({ length: DVD_COUNT }, (_, index) => ({
+    logosReference.current = Array.from({ length: dvdCount }, (_, index) => ({
       id: index + 1,
       x: 100 + index * 100,
       y: 100 + index * 50,
@@ -156,7 +163,7 @@ export function DVDLogos() {
         cancelAnimationFrame(animationReference.current);
       }
     };
-  }, []);
+  }, [count]);
 
   // Функция для отрисовки DVD логотипа (как в примере)
   const drawDVDLogo = (

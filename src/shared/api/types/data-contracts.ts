@@ -1384,6 +1384,26 @@ export enum TestAlertsAlertByTypeCreateParamsPriorityEnum {
 // SignalR-специфичные типы
 // ========================================
 
+export interface AdhdLayoutConfigDto {
+  /** @format int32 */
+  dvdLogosCount: number;
+  showBreakingNews: boolean;
+  showCatisa: boolean;
+  showDVDLogos: boolean;
+  showFitnessVideo: boolean;
+  showGTAVideo: boolean;
+  showHydraulicMobileVideo: boolean;
+  showLOFIGirl: boolean;
+  showMukbangVideo: boolean;
+  showNotifications: boolean;
+  showQuiz: boolean;
+  showRainEffect: boolean;
+  showSlimeVideo: boolean;
+  showStreamerVideo: boolean;
+  showSurfer: boolean;
+  showTimer: boolean;
+}
+
 export interface AudioQuizRoundDto {
   artworkUrl?: string;
   /** @format int32 */
