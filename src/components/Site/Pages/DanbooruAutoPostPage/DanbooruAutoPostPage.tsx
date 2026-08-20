@@ -684,6 +684,28 @@ const DanbooruAutoPostPage: React.FC = () => {
           )}
 
           <div className={styles.cardField}>
+            <span className={styles.fieldLabel}>Отложено</span>
+            <span
+              className={styles.fieldValue}
+              data-testid={`field-pending-count-${config.id}`}
+            >
+              {config.pendingPostsCount > 0 ? config.pendingPostsCount : "—"}
+            </span>
+          </div>
+
+          <div className={styles.cardField}>
+            <span className={styles.fieldLabel}>Следующий пост</span>
+            <span
+              className={styles.fieldValue}
+              data-testid={`field-next-scheduled-${config.id}`}
+            >
+              {config.nextScheduledAtUtc
+                ? new Date(config.nextScheduledAtUtc).toLocaleString()
+                : "—"}
+            </span>
+          </div>
+
+          <div className={styles.cardField}>
             <span className={styles.fieldLabel}>Последний запуск</span>
             <span className={styles.fieldValue}>
               {config.lastExecutedAtUtc
