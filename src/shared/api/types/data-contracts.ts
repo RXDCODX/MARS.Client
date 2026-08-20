@@ -334,6 +334,8 @@ export interface DanbooruAutoPostConfigDto {
   pendingPostsCount: number;
   /** @format date-time */
   nextScheduledAtUtc?: string;
+  message: string;
+  telegramParseMode: DanbooruAutoPostConfigDtoTelegramParseModeEnum;
   isEnabled: boolean;
   /** @format date-time */
   lastExecutedAtUtc?: string;
@@ -347,22 +349,26 @@ export interface DanbooruAutoPostCreateRequest {
   discordChannelId: string;
   tags: string;
   cronExpression: string;
+  message: string;
   targetPlatform: DanbooruAutoPostCreateRequestTargetPlatformEnum;
   telegramChannelId: string;
   /** @format int32 */
   planningHorizonDays: number;
+  telegramParseMode: DanbooruAutoPostCreateRequestTelegramParseModeEnum;
 }
 
 export interface DanbooruAutoPostUpdateRequest {
   discordChannelId: string;
   tags: string;
   cronExpression: string;
+  message: string;
   /** @format uuid */
   id: string;
   targetPlatform: DanbooruAutoPostUpdateRequestTargetPlatformEnum;
   telegramChannelId: string;
   /** @format int32 */
   planningHorizonDays: number;
+  telegramParseMode: DanbooruAutoPostUpdateRequestTelegramParseModeEnum;
 }
 
 export interface DefaultImage {
@@ -594,6 +600,7 @@ export interface NSFWBooruAutoPostConfigDto {
   tags: string;
   cronExpression: string;
   isEnabled: boolean;
+  message: string;
   /** @format date-time */
   lastExecutedAtUtc?: string;
   /** @format date-time */
@@ -606,12 +613,14 @@ export interface NSFWBooruAutoPostCreateRequest {
   discordChannelId: string;
   tags: string;
   cronExpression: string;
+  message: string;
 }
 
 export interface NSFWBooruAutoPostUpdateRequest {
   discordChannelId: string;
   tags: string;
   cronExpression: string;
+  message: string;
   /** @format uuid */
   id: string;
 }
@@ -1144,14 +1153,32 @@ export enum DanbooruAutoPostConfigDtoTargetPlatformEnum {
   Telegram = "Telegram",
 }
 
+export enum DanbooruAutoPostConfigDtoTelegramParseModeEnum {
+  Default = "Default",
+  Html = "Html",
+  Markdown = "Markdown",
+}
+
 export enum DanbooruAutoPostCreateRequestTargetPlatformEnum {
   Discord = "Discord",
   Telegram = "Telegram",
 }
 
+export enum DanbooruAutoPostCreateRequestTelegramParseModeEnum {
+  Default = "Default",
+  Html = "Html",
+  Markdown = "Markdown",
+}
+
 export enum DanbooruAutoPostUpdateRequestTargetPlatformEnum {
   Discord = "Discord",
   Telegram = "Telegram",
+}
+
+export enum DanbooruAutoPostUpdateRequestTelegramParseModeEnum {
+  Default = "Default",
+  Html = "Html",
+  Markdown = "Markdown",
 }
 
 export enum LogLogLevelEnum {

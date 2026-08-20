@@ -29,12 +29,14 @@ interface FormState {
   discordChannelId: string;
   tags: string[];
   cronExpression: string;
+  message: string;
 }
 
 const defaultForm: FormState = {
   discordChannelId: [],
   tags: [],
   cronExpression: "",
+  message: "",
 };
 
 interface CronField {
@@ -257,6 +259,7 @@ const NSFWBooruAutoPostPage: React.FC = () => {
       discordChannelId: String(config.discordChannelId),
       tags,
       cronExpression: config.cronExpression ?? "",
+      message: config.message ?? "",
     });
     setEditingId(config.id);
     setCronMode("visual");
@@ -300,6 +303,7 @@ const NSFWBooruAutoPostPage: React.FC = () => {
           discordChannelId: form.discordChannelId,
           tags: form.tags.join(" ").trim(),
           cronExpression: finalCron.trim(),
+          message: form.message,
         };
         const result = editingId
           ? await api.nsfwBooruAutoPostConfigsUpdate(editingId, {
@@ -444,6 +448,13 @@ const NSFWBooruAutoPostPage: React.FC = () => {
             <span className={styles.fieldLabel}>Расписание</span>
             <code className={styles.cronValue}>{config.cronExpression}</code>
           </div>
+
+          {config.message && (
+            <div className={styles.cardField}>
+              <span className={styles.fieldLabel}>Сообщение</span>
+              <span className={styles.fieldValue}>{config.message}</span>
+            </div>
+          )}
 
           <div className={styles.cardField}>
             <span className={styles.fieldLabel}>Последний запуск</span>
@@ -754,6 +765,27 @@ const NSFWBooruAutoPostPage: React.FC = () => {
                 data-testid="nsfw-booru-input-cron"
               />
             )}
+          </div>
+
+          <div className={styles.formField}>
+            <label className={styles.formLabel}>Сообщение (капшн)</label>
+            <Input.TextArea
+              value={form.message}
+              onChange={event_ =>
+                setForm(previous => ({
+                  ...previous,
+                  message: event_.target.value,
+                }))
+              }
+              placeholder="Текст сообщения. Переменные: {tags}, {id}, {rating}, {score}, {width}, {height}"
+              disabled={submitting}
+              rows={3}
+              data-testid="nsfw-booru-input-message"
+            />
+            <div className={styles.cronHint}>
+              Используйте переменные: {"{tags}"} {"{id}"} {"{rating}"}{" "}
+              {"{score}"} {"{width}"} {"{height}"}
+            </div>
           </div>
 
           <div
