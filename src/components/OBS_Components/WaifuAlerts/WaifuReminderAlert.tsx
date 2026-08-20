@@ -100,7 +100,9 @@ export default function WaifuReminderAlert({ message, onRemove }: Properties) {
           )}
           <span
             className="text-shadow block-text"
-            style={{ color: message.waifuHusband?.twitchUser?.chatColor || "white" }}
+            style={{
+              color: message.waifuHusband?.twitchUser?.chatColor || "white",
+            }}
           >
             <Textfit min={1} max={1500} forceSingleModeWidth>
               {message.waifuHusband!.twitchUser?.displayName?.toUpperCase()}

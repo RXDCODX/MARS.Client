@@ -77,9 +77,7 @@ function InfoBarComponent() {
             )}
 
             <span className={styles.userNameBlock}>
-              <span className={styles.userName}>
-                {userName}
-              </span>
+              <span className={styles.userName}>{userName}</span>
             </span>
 
             {userAvatar && (

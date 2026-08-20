@@ -90,7 +90,9 @@ export default function WaifuWeddingAlert({
             Поздравляем{" "}
             <span
               className={common.textStrokeShadow}
-              style={{ color: message.waifuHusband?.twitchUser?.chatColor || "white" }}
+              style={{
+                color: message.waifuHusband?.twitchUser?.chatColor || "white",
+              }}
             >
               {message.waifuHusband!.twitchUser?.displayName}
             </span>{" "}

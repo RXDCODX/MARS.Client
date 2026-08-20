@@ -87,9 +87,7 @@ const danbooruAutoPostPageLoader = () =>
 const DanbooruAutoPostPage = lazy(danbooruAutoPostPageLoader);
 
 const nsfwBooruAutoPostPageLoader = () =>
-  import(
-    "@/components/Site/Pages/NSFWBooruAutoPostPage/NSFWBooruAutoPostPage"
-  );
+  import("@/components/Site/Pages/NSFWBooruAutoPostPage/NSFWBooruAutoPostPage");
 const NSFWBooruAutoPostPage = lazy(nsfwBooruAutoPostPageLoader);
 
 // Регистрируем админ компоненты для фоновой загрузки

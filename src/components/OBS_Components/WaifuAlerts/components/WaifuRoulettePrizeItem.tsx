@@ -20,9 +20,11 @@ export default function WaifuRoulettePrizeItem({
 }: WaifuRoulettePrizeItemProperties) {
   if (image) {
     const normalizedText = text?.trim();
-    const preset = size !== "fill" ? ROULETTE_SIZE_PRESETS[size] : undefined;
-    const itemWidth = width ?? preset?.width ?? ROULETTE_SIZE_PRESETS["l"].width;
-    const itemHeight = height ?? preset?.height ?? ROULETTE_SIZE_PRESETS["l"].height;
+    const preset = size === "fill" ? undefined : ROULETTE_SIZE_PRESETS[size];
+    const itemWidth =
+      width ?? preset?.width ?? ROULETTE_SIZE_PRESETS["l"].width;
+    const itemHeight =
+      height ?? preset?.height ?? ROULETTE_SIZE_PRESETS["l"].height;
 
     return (
       <figure

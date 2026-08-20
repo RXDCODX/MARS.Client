@@ -85,26 +85,23 @@ export const useTelegramusHubStore = create<
         const connection = TelegramusHubSignalRConnectionBuilder.build();
 
         // Регистрация обработчиков событий до старта
-        connection.on(
-          "WaifuRoll",
-          (message: Waifu, host: Husband) => {
-            const parsed: WaifuAlertProps = {
-              waifu: message,
-              displayName: host.twitchUser?.displayName ?? "",
-              waifuHusband: host,
-            };
-            const { messages, isWaifuShowing } = get();
-            if (!isWaifuShowing) {
-              set({
-                messages: [...messages],
-                currentMessage: parsed,
-                isWaifuShowing: true,
-              });
-              return;
-            }
-            set({ messages: [...messages, parsed] });
+        connection.on("WaifuRoll", (message: Waifu, host: Husband) => {
+          const parsed: WaifuAlertProps = {
+            waifu: message,
+            displayName: host.twitchUser?.displayName ?? "",
+            waifuHusband: host,
+          };
+          const { messages, isWaifuShowing } = get();
+          if (!isWaifuShowing) {
+            set({
+              messages: [...messages],
+              currentMessage: parsed,
+              isWaifuShowing: true,
+            });
+            return;
           }
-        );
+          set({ messages: [...messages, parsed] });
+        });
 
         connection.on(
           "addnewwaifu",
@@ -127,49 +124,43 @@ export const useTelegramusHubStore = create<
           }
         );
 
-        connection.on(
-          "Mergewaifu",
-          (message: Waifu, host: Husband) => {
-            message.isMerged = true;
-            const parsed: WaifuAlertProps = {
-              waifu: message,
-              displayName: host.twitchUser!.displayName!,
-              waifuHusband: host,
-            };
-            const { messages, isWaifuShowing } = get();
-            if (!isWaifuShowing) {
-              set({
-                messages: [...messages],
-                currentMessage: parsed,
-                isWaifuShowing: true,
-              });
-              return;
-            }
-            set({ messages: [...messages, parsed] });
+        connection.on("Mergewaifu", (message: Waifu, host: Husband) => {
+          message.isMerged = true;
+          const parsed: WaifuAlertProps = {
+            waifu: message,
+            displayName: host.twitchUser!.displayName!,
+            waifuHusband: host,
+          };
+          const { messages, isWaifuShowing } = get();
+          if (!isWaifuShowing) {
+            set({
+              messages: [...messages],
+              currentMessage: parsed,
+              isWaifuShowing: true,
+            });
+            return;
           }
-        );
+          set({ messages: [...messages, parsed] });
+        });
 
-        connection.on(
-          "Showcurrentwife",
-          (message: Waifu, host: Husband) => {
-            const parsed: WaifuAlertProps = {
-              waifu: message,
-              displayName: host.twitchUser!.displayName!,
-              waifuHusband: host,
-              isReminder: true,
-            };
-            const { messages, isWaifuShowing } = get();
-            if (!isWaifuShowing) {
-              set({
-                messages: [...messages],
-                currentMessage: parsed,
-                isWaifuShowing: true,
-              });
-              return;
-            }
-            set({ messages: [...messages, parsed] });
+        connection.on("Showcurrentwife", (message: Waifu, host: Husband) => {
+          const parsed: WaifuAlertProps = {
+            waifu: message,
+            displayName: host.twitchUser!.displayName!,
+            waifuHusband: host,
+            isReminder: true,
+          };
+          const { messages, isWaifuShowing } = get();
+          if (!isWaifuShowing) {
+            set({
+              messages: [...messages],
+              currentMessage: parsed,
+              isWaifuShowing: true,
+            });
+            return;
           }
-        );
+          set({ messages: [...messages, parsed] });
+        });
 
         // FumoRoll обработчик
         connection.on(
@@ -222,25 +213,22 @@ export const useTelegramusHubStore = create<
         connection.on("UpdateFumoPrizes", handleFumoPrizesUpdate);
 
         // FrogRoll обработчик
-        connection.on(
-          "FrogRoll",
-          (frog: Frog, twitchUser: TwitchUser) => {
-            const parsed: FrogAlertProps = {
-              frog,
-              twitchUser,
-            };
-            const { frogMessages, isFrogShowing } = get();
-            if (!isFrogShowing) {
-              set({
-                frogMessages: [...frogMessages],
-                currentFrogMessage: parsed,
-                isFrogShowing: true,
-              });
-              return;
-            }
-            set({ frogMessages: [...frogMessages, parsed] });
+        connection.on("FrogRoll", (frog: Frog, twitchUser: TwitchUser) => {
+          const parsed: FrogAlertProps = {
+            frog,
+            twitchUser,
+          };
+          const { frogMessages, isFrogShowing } = get();
+          if (!isFrogShowing) {
+            set({
+              frogMessages: [...frogMessages],
+              currentFrogMessage: parsed,
+              isFrogShowing: true,
+            });
+            return;
           }
-        );
+          set({ frogMessages: [...frogMessages, parsed] });
+        });
 
         // UpdateFrogPrizes обработчик
         const handleFrogPrizesUpdate = (prizes: PrizeType[]) => {
