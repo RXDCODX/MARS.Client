@@ -90,6 +90,10 @@ const nsfwBooruAutoPostPageLoader = () =>
   import("@/components/Site/Pages/NSFWBooruAutoPostPage/NSFWBooruAutoPostPage");
 const NSFWBooruAutoPostPage = lazy(nsfwBooruAutoPostPageLoader);
 
+const booruAutoPostPageLoader = () =>
+  import("@/components/Site/Pages/BooruAutoPostPage/BooruAutoPostPage");
+const BooruAutoPostPage = lazy(booruAutoPostPageLoader);
+
 // Регистрируем админ компоненты для фоновой загрузки
 registerPrefetchComponents([
   logsPageLoader,
@@ -109,6 +113,7 @@ registerPrefetchComponents([
   wTelegramPageLoader,
   danbooruAutoPostPageLoader,
   nsfwBooruAutoPostPageLoader,
+  booruAutoPostPageLoader,
 ]);
 
 // Массив панелей управления (с Layout)
@@ -349,6 +354,18 @@ export const adminRoutes: RouteConfig[] = [
       <Layout>
         <Suspense fallback={<PageLoader />}>
           <NSFWBooruAutoPostPage />
+        </Suspense>
+      </Layout>
+    ),
+  },
+  {
+    path: "/booru-auto-post",
+    name: "Booru автопостинг",
+    type: "control panel",
+    element: (
+      <Layout>
+        <Suspense fallback={<PageLoader />}>
+          <BooruAutoPostPage />
         </Suspense>
       </Layout>
     ),
