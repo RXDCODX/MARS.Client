@@ -238,6 +238,371 @@
         }
       }
     },
+    "/api/BooruAutoPost/configs": {
+      "get": {
+        "tags": [
+          "BooruAutoPost"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooruAutoPostConfigDtoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooruAutoPostConfigDtoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooruAutoPostConfigDtoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "BooruAutoPost"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/BooruAutoPostCreateRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/BooruAutoPostCreateRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/BooruAutoPostCreateRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooruAutoPostConfigDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooruAutoPostConfigDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooruAutoPostConfigDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/BooruAutoPost/configs/{id}": {
+      "put": {
+        "tags": [
+          "BooruAutoPost"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/BooruAutoPostUpdateRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/BooruAutoPostUpdateRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/BooruAutoPostUpdateRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooruAutoPostConfigDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooruAutoPostConfigDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooruAutoPostConfigDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "BooruAutoPost"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/BooruAutoPost/configs/{id}/enabled": {
+      "put": {
+        "tags": [
+          "BooruAutoPost"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/BooruSetEnabledRequest"
+                  }
+                ]
+              }
+            },
+            "text/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/BooruSetEnabledRequest"
+                  }
+                ]
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/BooruSetEnabledRequest"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooruAutoPostConfigDtoOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooruAutoPostConfigDtoOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BooruAutoPostConfigDtoOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/BooruAutoPost/configs/{id}/trigger": {
+      "post": {
+        "tags": [
+          "BooruAutoPost"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/BooruAutoPost/discord-channels": {
+      "get": {
+        "tags": [
+          "BooruAutoPost"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordChannelOptionDtoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordChannelOptionDtoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscordChannelOptionDtoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/BooruAutoPost/telegram-channels": {
+      "get": {
+        "tags": [
+          "BooruAutoPost"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/ChannelRewardsManager": {
       "get": {
         "tags": [
@@ -1503,371 +1868,6 @@
         }
       }
     },
-    "/api/DanbooruAutoPost/configs": {
-      "get": {
-        "tags": [
-          "DanbooruAutoPost"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoListOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoListOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoListOperationResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "DanbooruAutoPost"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DanbooruAutoPostCreateRequest"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DanbooruAutoPostCreateRequest"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DanbooruAutoPostCreateRequest"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/DanbooruAutoPost/configs/{id}": {
-      "put": {
-        "tags": [
-          "DanbooruAutoPost"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DanbooruAutoPostUpdateRequest"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DanbooruAutoPostUpdateRequest"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/DanbooruAutoPostUpdateRequest"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoOperationResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "DanbooruAutoPost"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/DanbooruAutoPost/configs/{id}/enabled": {
-      "put": {
-        "tags": [
-          "DanbooruAutoPost"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/SetEnabledRequest"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/SetEnabledRequest"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/SetEnabledRequest"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DanbooruAutoPostConfigDtoOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/DanbooruAutoPost/configs/{id}/trigger": {
-      "post": {
-        "tags": [
-          "DanbooruAutoPost"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/DanbooruAutoPost/discord-channels": {
-      "get": {
-        "tags": [
-          "DanbooruAutoPost"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DiscordChannelOptionDtoListOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DiscordChannelOptionDtoListOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DiscordChannelOptionDtoListOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/DanbooruAutoPost/telegram-channels": {
-      "get": {
-        "tags": [
-          "DanbooruAutoPost"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TelegramChannelOptionDtoListOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/EnvironmentVariable": {
       "get": {
         "tags": [
@@ -2862,342 +2862,6 @@
               "text/json": {
                 "schema": {
                   "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/NSFWBooruAutoPost/configs": {
-      "get": {
-        "tags": [
-          "NSFWBooruAutoPost"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoListOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoListOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoListOperationResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "tags": [
-          "NSFWBooruAutoPost"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NSFWBooruAutoPostCreateRequest"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NSFWBooruAutoPostCreateRequest"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NSFWBooruAutoPostCreateRequest"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/NSFWBooruAutoPost/configs/{id}": {
-      "put": {
-        "tags": [
-          "NSFWBooruAutoPost"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NSFWBooruAutoPostUpdateRequest"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NSFWBooruAutoPostUpdateRequest"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NSFWBooruAutoPostUpdateRequest"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "NSFWBooruAutoPost"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/NSFWBooruAutoPost/configs/{id}/enabled": {
-      "put": {
-        "tags": [
-          "NSFWBooruAutoPost"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NSFWSetEnabledRequest"
-                  }
-                ]
-              }
-            },
-            "text/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NSFWSetEnabledRequest"
-                  }
-                ]
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/NSFWSetEnabledRequest"
-                  }
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/NSFWBooruAutoPostConfigDtoOperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/NSFWBooruAutoPost/configs/{id}/trigger": {
-      "post": {
-        "tags": [
-          "NSFWBooruAutoPost"
-        ],
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/OperationResult"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/NSFWBooruAutoPost/discord-channels": {
-      "get": {
-        "tags": [
-          "NSFWBooruAutoPost"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "$ref": "#/components/schemas/DiscordChannelOptionDtoListOperationResult"
-                }
-              },
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DiscordChannelOptionDtoListOperationResult"
-                }
-              },
-              "text/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DiscordChannelOptionDtoListOperationResult"
                 }
               }
             }
@@ -8230,6 +7894,279 @@
         "description": "Результат операции с данными типа boolean",
         "x-generic-type-argument": "boolean"
       },
+      "BooruAutoPostConfigDto": {
+        "required": [
+          "createdAtUtc",
+          "cronExpression",
+          "discordChannelId",
+          "id",
+          "isEnabled",
+          "message",
+          "pendingPostsCount",
+          "planningHorizonDays",
+          "source",
+          "tags",
+          "targetPlatform",
+          "targetPostCount",
+          "telegramParseMode",
+          "updatedAtUtc"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source": {
+            "enum": [
+              "Danbooru",
+              "Rule34"
+            ],
+            "type": "string"
+          },
+          "targetPlatform": {
+            "enum": [
+              "Discord",
+              "Telegram"
+            ],
+            "type": "string"
+          },
+          "discordChannelId": {
+            "type": "string"
+          },
+          "telegramChannelId": {
+            "type": "string",
+            "nullable": true
+          },
+          "targetPostCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "specificPostId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "tags": {
+            "type": "string"
+          },
+          "cronExpression": {
+            "type": "string"
+          },
+          "planningHorizonDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pendingPostsCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "nextScheduledAtUtc": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "message": {
+            "type": "string"
+          },
+          "telegramParseMode": {
+            "enum": [
+              "Default",
+              "Html",
+              "Markdown"
+            ],
+            "type": "string"
+          },
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "lastExecutedAtUtc": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "createdAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAtUtc": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "BooruAutoPostConfigDtoListOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа any",
+        "x-generic-type-argument": "any"
+      },
+      "BooruAutoPostConfigDtoOperationResult": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/OperationResult"
+          }
+        ],
+        "description": "Результат операции с данными типа null",
+        "x-generic-type-argument": "null"
+      },
+      "BooruAutoPostCreateRequest": {
+        "required": [
+          "cronExpression",
+          "discordChannelId",
+          "message",
+          "planningHorizonDays",
+          "source",
+          "tags",
+          "targetPlatform",
+          "targetPostCount",
+          "telegramChannelId",
+          "telegramParseMode"
+        ],
+        "type": "object",
+        "properties": {
+          "discordChannelId": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "string"
+          },
+          "cronExpression": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "source": {
+            "enum": [
+              "Danbooru",
+              "Rule34"
+            ],
+            "type": "string"
+          },
+          "targetPlatform": {
+            "enum": [
+              "Discord",
+              "Telegram"
+            ],
+            "type": "string"
+          },
+          "telegramChannelId": {
+            "type": "string"
+          },
+          "planningHorizonDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "targetPostCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "specificPostId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "telegramParseMode": {
+            "enum": [
+              "Default",
+              "Html",
+              "Markdown"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "BooruAutoPostUpdateRequest": {
+        "required": [
+          "cronExpression",
+          "discordChannelId",
+          "id",
+          "message",
+          "planningHorizonDays",
+          "source",
+          "tags",
+          "targetPlatform",
+          "targetPostCount",
+          "telegramChannelId",
+          "telegramParseMode"
+        ],
+        "type": "object",
+        "properties": {
+          "discordChannelId": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "string"
+          },
+          "cronExpression": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source": {
+            "enum": [
+              "Danbooru",
+              "Rule34"
+            ],
+            "type": "string"
+          },
+          "targetPlatform": {
+            "enum": [
+              "Discord",
+              "Telegram"
+            ],
+            "type": "string"
+          },
+          "telegramChannelId": {
+            "type": "string"
+          },
+          "planningHorizonDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "targetPostCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "specificPostId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "telegramParseMode": {
+            "enum": [
+              "Default",
+              "Html",
+              "Markdown"
+            ],
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "BooruSetEnabledRequest": {
+        "required": [
+          "isEnabled"
+        ],
+        "type": "object",
+        "properties": {
+          "isEnabled": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "ChannelRewardDefinition": {
         "required": [
           "cost",
@@ -8958,223 +8895,6 @@
         ],
         "description": "Результат операции с данными типа null",
         "x-generic-type-argument": "null"
-      },
-      "DanbooruAutoPostConfigDto": {
-        "required": [
-          "createdAtUtc",
-          "cronExpression",
-          "discordChannelId",
-          "id",
-          "isEnabled",
-          "message",
-          "pendingPostsCount",
-          "planningHorizonDays",
-          "tags",
-          "targetPlatform",
-          "targetPostCount",
-          "telegramParseMode",
-          "updatedAtUtc"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "targetPlatform": {
-            "enum": [
-              "Discord",
-              "Telegram"
-            ],
-            "type": "string"
-          },
-          "discordChannelId": {
-            "type": "string"
-          },
-          "telegramChannelId": {
-            "type": "string",
-            "nullable": true
-          },
-          "targetPostCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "danbooruPostId": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "tags": {
-            "type": "string"
-          },
-          "cronExpression": {
-            "type": "string"
-          },
-          "planningHorizonDays": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pendingPostsCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "nextScheduledAtUtc": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "message": {
-            "type": "string"
-          },
-          "telegramParseMode": {
-            "enum": [
-              "Default",
-              "Html",
-              "Markdown"
-            ],
-            "type": "string"
-          },
-          "isEnabled": {
-            "type": "boolean"
-          },
-          "lastExecutedAtUtc": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "createdAtUtc": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAtUtc": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
-      "DanbooruAutoPostConfigDtoListOperationResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/OperationResult"
-          }
-        ],
-        "description": "Результат операции с данными типа any",
-        "x-generic-type-argument": "any"
-      },
-      "DanbooruAutoPostConfigDtoOperationResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/OperationResult"
-          }
-        ],
-        "description": "Результат операции с данными типа null",
-        "x-generic-type-argument": "null"
-      },
-      "DanbooruAutoPostCreateRequest": {
-        "required": [
-          "cronExpression",
-          "discordChannelId",
-          "message",
-          "planningHorizonDays",
-          "tags",
-          "targetPlatform",
-          "telegramChannelId",
-          "telegramParseMode"
-        ],
-        "type": "object",
-        "properties": {
-          "discordChannelId": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "string"
-          },
-          "cronExpression": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "targetPlatform": {
-            "enum": [
-              "Discord",
-              "Telegram"
-            ],
-            "type": "string"
-          },
-          "telegramChannelId": {
-            "type": "string"
-          },
-          "planningHorizonDays": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "telegramParseMode": {
-            "enum": [
-              "Default",
-              "Html",
-              "Markdown"
-            ],
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "DanbooruAutoPostUpdateRequest": {
-        "required": [
-          "cronExpression",
-          "discordChannelId",
-          "id",
-          "message",
-          "planningHorizonDays",
-          "tags",
-          "targetPlatform",
-          "telegramChannelId",
-          "telegramParseMode"
-        ],
-        "type": "object",
-        "properties": {
-          "discordChannelId": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "string"
-          },
-          "cronExpression": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "targetPlatform": {
-            "enum": [
-              "Discord",
-              "Telegram"
-            ],
-            "type": "string"
-          },
-          "telegramChannelId": {
-            "type": "string"
-          },
-          "planningHorizonDays": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "telegramParseMode": {
-            "enum": [
-              "Default",
-              "Html",
-              "Markdown"
-            ],
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
       },
       "DefaultImage": {
         "type": "object",
@@ -10081,137 +9801,6 @@
         "description": "Результат операции с данными типа null",
         "x-generic-type-argument": "null"
       },
-      "NSFWBooruAutoPostConfigDto": {
-        "required": [
-          "createdAtUtc",
-          "cronExpression",
-          "discordChannelId",
-          "id",
-          "isEnabled",
-          "message",
-          "tags",
-          "updatedAtUtc"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "discordChannelId": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "string"
-          },
-          "cronExpression": {
-            "type": "string"
-          },
-          "isEnabled": {
-            "type": "boolean"
-          },
-          "message": {
-            "type": "string"
-          },
-          "lastExecutedAtUtc": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "createdAtUtc": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "updatedAtUtc": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "additionalProperties": false
-      },
-      "NSFWBooruAutoPostConfigDtoListOperationResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/OperationResult"
-          }
-        ],
-        "description": "Результат операции с данными типа any",
-        "x-generic-type-argument": "any"
-      },
-      "NSFWBooruAutoPostConfigDtoOperationResult": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/OperationResult"
-          }
-        ],
-        "description": "Результат операции с данными типа null",
-        "x-generic-type-argument": "null"
-      },
-      "NSFWBooruAutoPostCreateRequest": {
-        "required": [
-          "cronExpression",
-          "discordChannelId",
-          "message",
-          "tags"
-        ],
-        "type": "object",
-        "properties": {
-          "discordChannelId": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "string"
-          },
-          "cronExpression": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          }
-        },
-        "additionalProperties": false
-      },
-      "NSFWBooruAutoPostUpdateRequest": {
-        "required": [
-          "cronExpression",
-          "discordChannelId",
-          "id",
-          "message",
-          "tags"
-        ],
-        "type": "object",
-        "properties": {
-          "discordChannelId": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "string"
-          },
-          "cronExpression": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          },
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          }
-        },
-        "additionalProperties": false
-      },
-      "NSFWSetEnabledRequest": {
-        "required": [
-          "isEnabled"
-        ],
-        "type": "object",
-        "properties": {
-          "isEnabled": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
-      },
       "ObjectOperationResult": {
         "allOf": [
           {
@@ -10866,18 +10455,6 @@
         ],
         "description": "Результат операции с данными типа any",
         "x-generic-type-argument": "any"
-      },
-      "SetEnabledRequest": {
-        "required": [
-          "isEnabled"
-        ],
-        "type": "object",
-        "properties": {
-          "isEnabled": {
-            "type": "boolean"
-          }
-        },
-        "additionalProperties": false
       },
       "SetEnvironmentVariableRequest": {
         "required": [
@@ -12010,6 +11587,9 @@
       "name": "AutoMessages"
     },
     {
+      "name": "BooruAutoPost"
+    },
+    {
       "name": "ChannelRewardsManager"
     },
     {
@@ -12017,9 +11597,6 @@
     },
     {
       "name": "Commands"
-    },
-    {
-      "name": "DanbooruAutoPost"
     },
     {
       "name": "EnvironmentVariable"
@@ -12038,9 +11615,6 @@
     },
     {
       "name": "MediaInfoApi"
-    },
-    {
-      "name": "NSFWBooruAutoPost"
     },
     {
       "name": "Obs"

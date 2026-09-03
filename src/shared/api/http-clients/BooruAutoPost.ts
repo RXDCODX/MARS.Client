@@ -24,6 +24,10 @@ import type {
   BaseCommand,
   BaseTrackInfo,
   Boolean,
+  BooruAutoPostConfigDto,
+  BooruAutoPostCreateRequest,
+  BooruAutoPostUpdateRequest,
+  BooruSetEnabledRequest,
   ChannelRewardDefinition,
   ChannelRewardRecord,
   CinemaMediaItemDto,
@@ -37,9 +41,6 @@ import type {
   CreateTwitchUserRequest,
   CreateWaifuRequest,
   CustomReward,
-  DanbooruAutoPostConfigDto,
-  DanbooruAutoPostCreateRequest,
-  DanbooruAutoPostUpdateRequest,
   DefaultImage,
   DiscordChannelOptionDto,
   EnvironmentVariable,
@@ -65,10 +66,6 @@ import type {
   MediaTypeStringArrayDictionary,
   MemeOrderDto,
   MemeTypeDto,
-  NSFWBooruAutoPostConfigDto,
-  NSFWBooruAutoPostCreateRequest,
-  NSFWBooruAutoPostUpdateRequest,
-  NSFWSetEnabledRequest,
   OperationResult,
   Pagination,
   PlayerState,
@@ -82,7 +79,6 @@ import type {
   ServerStatsResponse,
   ServiceInfo,
   ServiceLog,
-  SetEnabledRequest,
   SetEnvironmentVariableRequest,
   SpotifyAuthCompleteResult,
   SpotifyAuthStartRequest,
@@ -116,13 +112,16 @@ import type {
   WaifuRollAudioDto,
   BaseCommandAvailablePlatformsEnum,
   BaseCommandVisibilityEnum,
+  BooruAutoPostConfigDtoSourceEnum,
+  BooruAutoPostConfigDtoTargetPlatformEnum,
+  BooruAutoPostConfigDtoTelegramParseModeEnum,
+  BooruAutoPostCreateRequestSourceEnum,
+  BooruAutoPostCreateRequestTargetPlatformEnum,
+  BooruAutoPostCreateRequestTelegramParseModeEnum,
+  BooruAutoPostUpdateRequestSourceEnum,
+  BooruAutoPostUpdateRequestTargetPlatformEnum,
+  BooruAutoPostUpdateRequestTelegramParseModeEnum,
   CinemaMediaItemDtoStatusEnum,
-  DanbooruAutoPostConfigDtoTargetPlatformEnum,
-  DanbooruAutoPostConfigDtoTelegramParseModeEnum,
-  DanbooruAutoPostCreateRequestTargetPlatformEnum,
-  DanbooruAutoPostCreateRequestTelegramParseModeEnum,
-  DanbooruAutoPostUpdateRequestTargetPlatformEnum,
-  DanbooruAutoPostUpdateRequestTelegramParseModeEnum,
   LogLogLevelEnum,
   MediaFileInfoTypeEnum,
   MediaMetaInfoPriorityEnum,
@@ -151,20 +150,20 @@ import type {
   TestAlertsAlertByTypeCreateParamsTypeEnum,
 } from "../types/data-contracts";
 
-export class NsfwBooruAutoPost<
+export class BooruAutoPost<
   SecurityDataType = unknown,
 > extends HttpClient<SecurityDataType> {
   /**
    * No description
    *
-   * @tags NSFWBooruAutoPost
-   * @name NsfwBooruAutoPostConfigsList
-   * @request GET:/api/NSFWBooruAutoPost/configs
-   * @response `200` `OperationResult<NSFWBooruAutoPostConfigDto[]>` OK
+   * @tags BooruAutoPost
+   * @name BooruAutoPostConfigsList
+   * @request GET:/api/BooruAutoPost/configs
+   * @response `200` `OperationResult<BooruAutoPostConfigDto[]>` OK
    */
-  nsfwBooruAutoPostConfigsList = (params: RequestParams = {}) =>
-    this.request<OperationResult<NSFWBooruAutoPostConfigDto[]>, any>({
-      path: `/api/NSFWBooruAutoPost/configs`,
+  booruAutoPostConfigsList = (params: RequestParams = {}) =>
+    this.request<OperationResult<BooruAutoPostConfigDto[]>, any>({
+      path: `/api/BooruAutoPost/configs`,
       method: "GET",
       format: "json",
       ...params,
@@ -172,17 +171,17 @@ export class NsfwBooruAutoPost<
   /**
    * No description
    *
-   * @tags NSFWBooruAutoPost
-   * @name NsfwBooruAutoPostConfigsCreate
-   * @request POST:/api/NSFWBooruAutoPost/configs
-   * @response `200` `OperationResult<NSFWBooruAutoPostConfigDto>` OK
+   * @tags BooruAutoPost
+   * @name BooruAutoPostConfigsCreate
+   * @request POST:/api/BooruAutoPost/configs
+   * @response `200` `OperationResult<BooruAutoPostConfigDto>` OK
    */
-  nsfwBooruAutoPostConfigsCreate = (
-    data: NSFWBooruAutoPostCreateRequest,
+  booruAutoPostConfigsCreate = (
+    data: BooruAutoPostCreateRequest,
     params: RequestParams = {}
   ) =>
-    this.request<OperationResult<NSFWBooruAutoPostConfigDto>, any>({
-      path: `/api/NSFWBooruAutoPost/configs`,
+    this.request<OperationResult<BooruAutoPostConfigDto>, any>({
+      path: `/api/BooruAutoPost/configs`,
       method: "POST",
       body: data,
       type: ContentType.Json,
@@ -192,18 +191,18 @@ export class NsfwBooruAutoPost<
   /**
    * No description
    *
-   * @tags NSFWBooruAutoPost
-   * @name NsfwBooruAutoPostConfigsUpdate
-   * @request PUT:/api/NSFWBooruAutoPost/configs/{id}
-   * @response `200` `OperationResult<NSFWBooruAutoPostConfigDto>` OK
+   * @tags BooruAutoPost
+   * @name BooruAutoPostConfigsUpdate
+   * @request PUT:/api/BooruAutoPost/configs/{id}
+   * @response `200` `OperationResult<BooruAutoPostConfigDto>` OK
    */
-  nsfwBooruAutoPostConfigsUpdate = (
+  booruAutoPostConfigsUpdate = (
     id: string,
-    data: NSFWBooruAutoPostUpdateRequest,
+    data: BooruAutoPostUpdateRequest,
     params: RequestParams = {}
   ) =>
-    this.request<OperationResult<NSFWBooruAutoPostConfigDto>, any>({
-      path: `/api/NSFWBooruAutoPost/configs/${id}`,
+    this.request<OperationResult<BooruAutoPostConfigDto>, any>({
+      path: `/api/BooruAutoPost/configs/${id}`,
       method: "PUT",
       body: data,
       type: ContentType.Json,
@@ -213,14 +212,14 @@ export class NsfwBooruAutoPost<
   /**
    * No description
    *
-   * @tags NSFWBooruAutoPost
-   * @name NsfwBooruAutoPostConfigsDelete
-   * @request DELETE:/api/NSFWBooruAutoPost/configs/{id}
+   * @tags BooruAutoPost
+   * @name BooruAutoPostConfigsDelete
+   * @request DELETE:/api/BooruAutoPost/configs/{id}
    * @response `200` `OperationResult` OK
    */
-  nsfwBooruAutoPostConfigsDelete = (id: string, params: RequestParams = {}) =>
+  booruAutoPostConfigsDelete = (id: string, params: RequestParams = {}) =>
     this.request<OperationResult, any>({
-      path: `/api/NSFWBooruAutoPost/configs/${id}`,
+      path: `/api/BooruAutoPost/configs/${id}`,
       method: "DELETE",
       format: "json",
       ...params,
@@ -228,18 +227,18 @@ export class NsfwBooruAutoPost<
   /**
    * No description
    *
-   * @tags NSFWBooruAutoPost
-   * @name NsfwBooruAutoPostConfigsEnabledUpdate
-   * @request PUT:/api/NSFWBooruAutoPost/configs/{id}/enabled
-   * @response `200` `OperationResult<NSFWBooruAutoPostConfigDto>` OK
+   * @tags BooruAutoPost
+   * @name BooruAutoPostConfigsEnabledUpdate
+   * @request PUT:/api/BooruAutoPost/configs/{id}/enabled
+   * @response `200` `OperationResult<BooruAutoPostConfigDto>` OK
    */
-  nsfwBooruAutoPostConfigsEnabledUpdate = (
+  booruAutoPostConfigsEnabledUpdate = (
     id: string,
-    data: NSFWSetEnabledRequest,
+    data: BooruSetEnabledRequest,
     params: RequestParams = {}
   ) =>
-    this.request<OperationResult<NSFWBooruAutoPostConfigDto>, any>({
-      path: `/api/NSFWBooruAutoPost/configs/${id}/enabled`,
+    this.request<OperationResult<BooruAutoPostConfigDto>, any>({
+      path: `/api/BooruAutoPost/configs/${id}/enabled`,
       method: "PUT",
       body: data,
       type: ContentType.Json,
@@ -249,17 +248,17 @@ export class NsfwBooruAutoPost<
   /**
    * No description
    *
-   * @tags NSFWBooruAutoPost
-   * @name NsfwBooruAutoPostConfigsTriggerCreate
-   * @request POST:/api/NSFWBooruAutoPost/configs/{id}/trigger
+   * @tags BooruAutoPost
+   * @name BooruAutoPostConfigsTriggerCreate
+   * @request POST:/api/BooruAutoPost/configs/{id}/trigger
    * @response `200` `OperationResult` OK
    */
-  nsfwBooruAutoPostConfigsTriggerCreate = (
+  booruAutoPostConfigsTriggerCreate = (
     id: string,
     params: RequestParams = {}
   ) =>
     this.request<OperationResult, any>({
-      path: `/api/NSFWBooruAutoPost/configs/${id}/trigger`,
+      path: `/api/BooruAutoPost/configs/${id}/trigger`,
       method: "POST",
       format: "json",
       ...params,
@@ -267,14 +266,29 @@ export class NsfwBooruAutoPost<
   /**
    * No description
    *
-   * @tags NSFWBooruAutoPost
-   * @name NsfwBooruAutoPostDiscordChannelsList
-   * @request GET:/api/NSFWBooruAutoPost/discord-channels
+   * @tags BooruAutoPost
+   * @name BooruAutoPostDiscordChannelsList
+   * @request GET:/api/BooruAutoPost/discord-channels
    * @response `200` `OperationResult<DiscordChannelOptionDto[]>` OK
    */
-  nsfwBooruAutoPostDiscordChannelsList = (params: RequestParams = {}) =>
+  booruAutoPostDiscordChannelsList = (params: RequestParams = {}) =>
     this.request<OperationResult<DiscordChannelOptionDto[]>, any>({
-      path: `/api/NSFWBooruAutoPost/discord-channels`,
+      path: `/api/BooruAutoPost/discord-channels`,
+      method: "GET",
+      format: "json",
+      ...params,
+    });
+  /**
+   * No description
+   *
+   * @tags BooruAutoPost
+   * @name BooruAutoPostTelegramChannelsList
+   * @request GET:/api/BooruAutoPost/telegram-channels
+   * @response `200` `OperationResult<TelegramChannelOptionDto[]>` OK
+   */
+  booruAutoPostTelegramChannelsList = (params: RequestParams = {}) =>
+    this.request<OperationResult<TelegramChannelOptionDto[]>, any>({
+      path: `/api/BooruAutoPost/telegram-channels`,
       method: "GET",
       format: "json",
       ...params,

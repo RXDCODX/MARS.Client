@@ -82,14 +82,6 @@ const wTelegramPageLoader = () =>
   }));
 const WTelegramPage = lazy(wTelegramPageLoader);
 
-const danbooruAutoPostPageLoader = () =>
-  import("@/components/Site/Pages/DanbooruAutoPostPage/DanbooruAutoPostPage");
-const DanbooruAutoPostPage = lazy(danbooruAutoPostPageLoader);
-
-const nsfwBooruAutoPostPageLoader = () =>
-  import("@/components/Site/Pages/NSFWBooruAutoPostPage/NSFWBooruAutoPostPage");
-const NSFWBooruAutoPostPage = lazy(nsfwBooruAutoPostPageLoader);
-
 const booruAutoPostPageLoader = () =>
   import("@/components/Site/Pages/BooruAutoPostPage/BooruAutoPostPage");
 const BooruAutoPostPage = lazy(booruAutoPostPageLoader);
@@ -111,8 +103,6 @@ registerPrefetchComponents([
   twitchUserCreatePageLoader,
   twitchUserEditPageLoader,
   wTelegramPageLoader,
-  danbooruAutoPostPageLoader,
-  nsfwBooruAutoPostPageLoader,
   booruAutoPostPageLoader,
 ]);
 
@@ -330,30 +320,6 @@ export const adminRoutes: RouteConfig[] = [
       <Layout>
         <Suspense fallback={<PageLoader />}>
           <WTelegramPage />
-        </Suspense>
-      </Layout>
-    ),
-  },
-  {
-    path: "/danbooru-auto-post",
-    name: "Danbooru автопостинг",
-    type: "control panel",
-    element: (
-      <Layout>
-        <Suspense fallback={<PageLoader />}>
-          <DanbooruAutoPostPage />
-        </Suspense>
-      </Layout>
-    ),
-  },
-  {
-    path: "/nsfw-booru-auto-post",
-    name: "NSFWBooru автопостинг",
-    type: "control panel",
-    element: (
-      <Layout>
-        <Suspense fallback={<PageLoader />}>
-          <NSFWBooruAutoPostPage />
         </Suspense>
       </Layout>
     ),

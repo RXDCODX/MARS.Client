@@ -7,17 +7,16 @@ export * from "./types/data-contracts";
 
 // Импорты HTTP клиентов
 export { AutoMessages } from "./http-clients/AutoMessages";
+export { BooruAutoPost } from "./http-clients/BooruAutoPost";
 export { ChannelRewardsManager } from "./http-clients/ChannelRewardsManager";
 export { CinemaQueue } from "./http-clients/CinemaQueue";
 export { Commands } from "./http-clients/Commands";
-export { DanbooruAutoPost } from "./http-clients/DanbooruAutoPost";
 export { EnvironmentVariable } from "./http-clients/EnvironmentVariable";
 export { GooglePhotos } from "./http-clients/GooglePhotos";
 export { KeyboardHook } from "./http-clients/KeyboardHook";
 export { LoggerTest } from "./http-clients/LoggerTest";
 export { Logs } from "./http-clients/Logs";
 export { MediaInfoApi } from "./http-clients/MediaInfoApi";
-export { NsfwBooruAutoPost } from "./http-clients/NsfwBooruAutoPost";
 export { Obs } from "./http-clients/Obs";
 export { PyroAlerts } from "./http-clients/PyroAlerts";
 export { RandomMeme } from "./http-clients/RandomMeme";

@@ -24,7 +24,6 @@ import {
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-// TODO: Update imports after running `yarn build:api` with the new OpenAPI spec
 import type {
   BooruAutoPostConfigDto,
   BooruAutoPostCreateRequest,
@@ -42,7 +41,6 @@ import {
   BooruAutoPostCreateRequestTelegramParseModeEnum,
   BooruAutoPostCreateRequestSourceEnum,
   BooruAutoPostUpdateRequestTargetPlatformEnum,
-  BooruAutoPostUpdateRequestTelegramParseModeEnum,
 } from "@/shared/api/types/data-contracts";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 

@@ -108,6 +108,76 @@ export interface BaseTrackInfo {
   title: string;
 }
 
+export interface BooruAutoPostConfigDto {
+  /** @format uuid */
+  id: string;
+  source: BooruAutoPostConfigDtoSourceEnum;
+  targetPlatform: BooruAutoPostConfigDtoTargetPlatformEnum;
+  discordChannelId: string;
+  telegramChannelId?: string;
+  /** @format int32 */
+  targetPostCount: number;
+  /** @format int32 */
+  specificPostId?: number;
+  tags: string;
+  cronExpression: string;
+  /** @format int32 */
+  planningHorizonDays: number;
+  /** @format int32 */
+  pendingPostsCount: number;
+  /** @format date-time */
+  nextScheduledAtUtc?: string;
+  message: string;
+  telegramParseMode: BooruAutoPostConfigDtoTelegramParseModeEnum;
+  isEnabled: boolean;
+  /** @format date-time */
+  lastExecutedAtUtc?: string;
+  /** @format date-time */
+  createdAtUtc: string;
+  /** @format date-time */
+  updatedAtUtc: string;
+}
+
+export interface BooruAutoPostCreateRequest {
+  discordChannelId: string;
+  tags: string;
+  cronExpression: string;
+  message: string;
+  source: BooruAutoPostCreateRequestSourceEnum;
+  targetPlatform: BooruAutoPostCreateRequestTargetPlatformEnum;
+  telegramChannelId: string;
+  /** @format int32 */
+  planningHorizonDays: number;
+  /** @format int32 */
+  targetPostCount: number;
+  /** @format int32 */
+  specificPostId?: number;
+  telegramParseMode: BooruAutoPostCreateRequestTelegramParseModeEnum;
+}
+
+export interface BooruAutoPostUpdateRequest {
+  discordChannelId: string;
+  tags: string;
+  cronExpression: string;
+  message: string;
+  /** @format uuid */
+  id: string;
+  source: BooruAutoPostUpdateRequestSourceEnum;
+  targetPlatform: BooruAutoPostUpdateRequestTargetPlatformEnum;
+  telegramChannelId: string;
+  /** @format int32 */
+  planningHorizonDays: number;
+  /** @format int32 */
+  targetPostCount: number;
+  /** @format int32 */
+  specificPostId?: number;
+  telegramParseMode: BooruAutoPostUpdateRequestTelegramParseModeEnum;
+}
+
+export interface BooruSetEnabledRequest {
+  isEnabled: boolean;
+}
+
 export interface ChannelRewardDefinition {
   title: string;
   /** @format int32 */
@@ -314,61 +384,6 @@ export interface CustomReward {
   /** @format int32 */
   redemptionsRedeemedCurrentStream?: number;
   cooldownExpiresAt?: string;
-}
-
-export interface DanbooruAutoPostConfigDto {
-  /** @format uuid */
-  id: string;
-  targetPlatform: DanbooruAutoPostConfigDtoTargetPlatformEnum;
-  discordChannelId: string;
-  telegramChannelId?: string;
-  /** @format int32 */
-  targetPostCount: number;
-  /** @format int32 */
-  danbooruPostId?: number;
-  tags: string;
-  cronExpression: string;
-  /** @format int32 */
-  planningHorizonDays: number;
-  /** @format int32 */
-  pendingPostsCount: number;
-  /** @format date-time */
-  nextScheduledAtUtc?: string;
-  message: string;
-  telegramParseMode: DanbooruAutoPostConfigDtoTelegramParseModeEnum;
-  isEnabled: boolean;
-  /** @format date-time */
-  lastExecutedAtUtc?: string;
-  /** @format date-time */
-  createdAtUtc: string;
-  /** @format date-time */
-  updatedAtUtc: string;
-}
-
-export interface DanbooruAutoPostCreateRequest {
-  discordChannelId: string;
-  tags: string;
-  cronExpression: string;
-  message: string;
-  targetPlatform: DanbooruAutoPostCreateRequestTargetPlatformEnum;
-  telegramChannelId: string;
-  /** @format int32 */
-  planningHorizonDays: number;
-  telegramParseMode: DanbooruAutoPostCreateRequestTelegramParseModeEnum;
-}
-
-export interface DanbooruAutoPostUpdateRequest {
-  discordChannelId: string;
-  tags: string;
-  cronExpression: string;
-  message: string;
-  /** @format uuid */
-  id: string;
-  targetPlatform: DanbooruAutoPostUpdateRequestTargetPlatformEnum;
-  telegramChannelId: string;
-  /** @format int32 */
-  planningHorizonDays: number;
-  telegramParseMode: DanbooruAutoPostUpdateRequestTelegramParseModeEnum;
 }
 
 export interface DefaultImage {
@@ -593,42 +608,6 @@ export interface MemeTypeDto {
   folderPath: string;
 }
 
-export interface NSFWBooruAutoPostConfigDto {
-  /** @format uuid */
-  id: string;
-  discordChannelId: string;
-  tags: string;
-  cronExpression: string;
-  isEnabled: boolean;
-  message: string;
-  /** @format date-time */
-  lastExecutedAtUtc?: string;
-  /** @format date-time */
-  createdAtUtc: string;
-  /** @format date-time */
-  updatedAtUtc: string;
-}
-
-export interface NSFWBooruAutoPostCreateRequest {
-  discordChannelId: string;
-  tags: string;
-  cronExpression: string;
-  message: string;
-}
-
-export interface NSFWBooruAutoPostUpdateRequest {
-  discordChannelId: string;
-  tags: string;
-  cronExpression: string;
-  message: string;
-  /** @format uuid */
-  id: string;
-}
-
-export interface NSFWSetEnabledRequest {
-  isEnabled: boolean;
-}
-
 export interface Pagination {
   cursor?: string;
 }
@@ -794,10 +773,6 @@ export interface ServiceLog {
   level: string;
   message: string;
   exception?: string;
-}
-
-export interface SetEnabledRequest {
-  isEnabled: boolean;
 }
 
 export interface SetEnvironmentVariableRequest {
@@ -1140,45 +1115,60 @@ export enum BaseCommandVisibilityEnum {
   All = "All",
 }
 
+export enum BooruAutoPostConfigDtoSourceEnum {
+  Danbooru = "Danbooru",
+  Rule34 = "Rule34",
+}
+
+export enum BooruAutoPostConfigDtoTargetPlatformEnum {
+  Discord = "Discord",
+  Telegram = "Telegram",
+}
+
+export enum BooruAutoPostConfigDtoTelegramParseModeEnum {
+  Default = "Default",
+  Html = "Html",
+  Markdown = "Markdown",
+}
+
+export enum BooruAutoPostCreateRequestSourceEnum {
+  Danbooru = "Danbooru",
+  Rule34 = "Rule34",
+}
+
+export enum BooruAutoPostCreateRequestTargetPlatformEnum {
+  Discord = "Discord",
+  Telegram = "Telegram",
+}
+
+export enum BooruAutoPostCreateRequestTelegramParseModeEnum {
+  Default = "Default",
+  Html = "Html",
+  Markdown = "Markdown",
+}
+
+export enum BooruAutoPostUpdateRequestSourceEnum {
+  Danbooru = "Danbooru",
+  Rule34 = "Rule34",
+}
+
+export enum BooruAutoPostUpdateRequestTargetPlatformEnum {
+  Discord = "Discord",
+  Telegram = "Telegram",
+}
+
+export enum BooruAutoPostUpdateRequestTelegramParseModeEnum {
+  Default = "Default",
+  Html = "Html",
+  Markdown = "Markdown",
+}
+
 export enum CinemaMediaItemDtoStatusEnum {
   Pending = "Pending",
   InProgress = "InProgress",
   Completed = "Completed",
   Cancelled = "Cancelled",
   Postponed = "Postponed",
-}
-
-export enum DanbooruAutoPostConfigDtoTargetPlatformEnum {
-  Discord = "Discord",
-  Telegram = "Telegram",
-}
-
-export enum DanbooruAutoPostConfigDtoTelegramParseModeEnum {
-  Default = "Default",
-  Html = "Html",
-  Markdown = "Markdown",
-}
-
-export enum DanbooruAutoPostCreateRequestTargetPlatformEnum {
-  Discord = "Discord",
-  Telegram = "Telegram",
-}
-
-export enum DanbooruAutoPostCreateRequestTelegramParseModeEnum {
-  Default = "Default",
-  Html = "Html",
-  Markdown = "Markdown",
-}
-
-export enum DanbooruAutoPostUpdateRequestTargetPlatformEnum {
-  Discord = "Discord",
-  Telegram = "Telegram",
-}
-
-export enum DanbooruAutoPostUpdateRequestTelegramParseModeEnum {
-  Default = "Default",
-  Html = "Html",
-  Markdown = "Markdown",
 }
 
 export enum LogLogLevelEnum {
