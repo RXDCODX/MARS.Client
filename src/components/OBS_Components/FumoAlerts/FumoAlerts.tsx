@@ -141,7 +141,7 @@ export default function FumoAlerts() {
           <div className={styles["alert-box"]}>
             <img
               src={currentFumoMessage.fumo.thumbnailUrl}
-              style={{ height: "747px", width: "480px" }}
+              style={{ height: "620px", width: "480px" }}
               onLoad={() => {
                 if (imageLoadTimeoutReference.current) {
                   clearTimeout(imageLoadTimeoutReference.current);

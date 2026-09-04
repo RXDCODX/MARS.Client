@@ -1,6 +1,6 @@
 import {
-  CommandInfo,
-  CommandInfoAvailablePlatformsEnum,
+  BaseCommand,
+  BaseCommandAvailablePlatformsEnum,
   CommandParameterInfo,
 } from "@/shared/api";
 
@@ -18,9 +18,9 @@ export interface ParameterState {
 
 // Основное состояние страницы команд
 export interface CommandsPageState {
-  userCommands: CommandInfo[];
-  adminCommands: CommandInfo[];
-  selectedCommand: CommandInfo | null;
+  userCommands: BaseCommand[];
+  adminCommands: BaseCommand[];
+  selectedCommand: BaseCommand | null;
   commandParameters: CommandParameterInfo[];
   parameterValues: Record<string, string>;
   isExecuting: boolean;
@@ -33,29 +33,29 @@ export interface CommandsPageState {
 }
 
 // Тип платформы
-export type PlatformType = CommandInfoAvailablePlatformsEnum;
+export type PlatformType = BaseCommandAvailablePlatformsEnum;
 
 // Пропсы для компонента ListView
 export interface ListViewProps {
-  commands: CommandInfo[];
-  selectedCommand: CommandInfo | null;
-  onCommandSelect: (command: CommandInfo) => void;
+  commands: BaseCommand[];
+  selectedCommand: BaseCommand | null;
+  onCommandSelect: (command: BaseCommand) => void;
   colors: any; // ReturnType<typeof useSiteColors>
   styles: Record<string, string>;
 }
 
 // Пропсы для компонента GridView
 export interface GridViewProps {
-  commands: CommandInfo[];
-  selectedCommand: CommandInfo | null;
-  onCommandSelect: (command: CommandInfo) => void;
+  commands: BaseCommand[];
+  selectedCommand: BaseCommand | null;
+  onCommandSelect: (command: BaseCommand) => void;
   colors: any; // ReturnType<typeof useSiteColors>
   styles: Record<string, string>;
 }
 
 // Пропсы для компонента CommandParameters
 export interface CommandParametersProps {
-  command: CommandInfo;
+  command: BaseCommand;
   parameters: CommandParameterInfo[];
   parameterValues: Record<string, string>;
   onParameterChange: (name: string, value: string) => void;
@@ -81,14 +81,14 @@ export interface DisplayModeToggleProps {
 }
 
 // Типы для событий
-export type CommandSelectHandler = (command: CommandInfo) => void;
+export type CommandSelectHandler = (command: BaseCommand) => void;
 export type ParameterChangeHandler = (name: string, value: string) => void;
 export type DisplayModeChangeHandler = (mode: "list" | "grid") => void;
 export type SearchChangeHandler = (query: string) => void;
 
 // Интерфейс для результатов поиска
 export interface SearchResult {
-  commands: CommandInfo[];
+  commands: BaseCommand[];
   totalCount: number;
   query: string;
 }

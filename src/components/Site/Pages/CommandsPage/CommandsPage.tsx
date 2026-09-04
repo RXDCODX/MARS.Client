@@ -31,7 +31,7 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import {
-  CommandInfo,
+  BaseCommand,
   CommandParameterInfo,
   Commands,
   CommandsAdminPlatformInfoListParamsEnum,
@@ -44,9 +44,9 @@ import { useSiteColors } from "@/shared/Utils/useSiteColors";
 import styles from "./CommandsPage.module.scss";
 
 interface CommandsPageState {
-  userCommands: CommandInfo[];
-  adminCommands: CommandInfo[];
-  selectedCommand: CommandInfo | null;
+  userCommands: BaseCommand[];
+  adminCommands: BaseCommand[];
+  selectedCommand: BaseCommand | null;
   commandParameters: CommandParameterInfo[];
   parameterValues: Record<string, string>;
   isExecuting: boolean;
@@ -59,20 +59,20 @@ interface CommandsPageState {
 }
 
 const ListView: React.FC<{
-  commands: CommandInfo[];
-  selectedCommand: CommandInfo | null;
-  onCommandSelect: (command: CommandInfo) => void;
+  commands: BaseCommand[];
+  selectedCommand: BaseCommand | null;
+  onCommandSelect: (command: BaseCommand) => void;
   colors: ReturnType<typeof useSiteColors>;
   styles: Record<string, string>;
 }> = ({ commands, selectedCommand, onCommandSelect, colors, styles }) => {
-  const renderCommandCard = (command: CommandInfo) => (
+  const renderCommandCard = (command: BaseCommand) => (
     <Card
-      key={command.name}
-      className={`${styles.commandCard} ${selectedCommand?.name === command.name ? styles.selectedCommand : ""}`}
+      key={command.commandName}
+      className={`${styles.commandCard} ${selectedCommand?.commandName === command.commandName ? styles.selectedCommand : ""}`}
       style={{
         marginBottom: 12,
         backgroundColor:
-          selectedCommand?.name === command.name
+          selectedCommand?.commandName === command.commandName
             ? colors.background.accent
             : colors.background.card,
         borderColor: colors.border.primary,
@@ -106,7 +106,7 @@ const ListView: React.FC<{
                 ...colors.utils.getTextStyle("primary"),
               }}
             >
-              /{command.name}
+              /{command.commandName}
             </h6>
           </div>
           <p
@@ -158,20 +158,20 @@ const ListView: React.FC<{
 };
 
 const GridView: React.FC<{
-  commands: CommandInfo[];
-  selectedCommand: CommandInfo | null;
-  onCommandSelect: (command: CommandInfo) => void;
+  commands: BaseCommand[];
+  selectedCommand: BaseCommand | null;
+  onCommandSelect: (command: BaseCommand) => void;
   colors: ReturnType<typeof useSiteColors>;
   styles: Record<string, string>;
 }> = ({ commands, selectedCommand, onCommandSelect, colors, styles }) => {
-  const renderCommandGridCard = (command: CommandInfo) => (
+  const renderCommandGridCard = (command: BaseCommand) => (
     <Card
-      key={command.name}
-      className={`${styles.commandCard} ${selectedCommand?.name === command.name ? styles.selectedCommand : ""}`}
+      key={command.commandName}
+      className={`${styles.commandCard} ${selectedCommand?.commandName === command.commandName ? styles.selectedCommand : ""}`}
       style={{
         height: "100%",
         backgroundColor:
-          selectedCommand?.name === command.name
+          selectedCommand?.commandName === command.commandName
             ? colors.background.accent
             : colors.background.card,
         borderColor: colors.border.primary,
@@ -205,7 +205,7 @@ const GridView: React.FC<{
             ...colors.utils.getTextStyle("primary"),
           }}
         >
-          /{command.name}
+          /{command.commandName}
         </h6>
         {command.isAdminCommand && (
           <Badge
@@ -256,7 +256,7 @@ const GridView: React.FC<{
   return (
     <Row gutter={[16, 16]}>
       {commands.map(command => (
-        <Col key={command.name} xs={24} sm={12} lg={8}>
+        <Col key={command.commandName} xs={24} sm={12} lg={8}>
           {renderCommandGridCard(command)}
         </Col>
       ))}
@@ -265,7 +265,7 @@ const GridView: React.FC<{
 };
 
 const CommandParameters: React.FC<{
-  command: CommandInfo;
+  command: BaseCommand;
   parameters: CommandParameterInfo[];
   parameterValues: Record<string, string>;
   onParameterChange: (name: string, value: string) => void;
@@ -377,7 +377,7 @@ const CommandParameters: React.FC<{
               ...colors.utils.getTextStyle("primary"),
             }}
           >
-            <Terminal size={20} />/{command.name}
+            <Terminal size={20} />/{command.commandName}
           </h5>
           <small style={colors.utils.getTextStyle("secondary")}>
             {command.description}
@@ -678,7 +678,7 @@ const CommandsPage: React.FC = () => {
     const query = state.searchQuery.toLowerCase();
     return allCommands.filter(
       command =>
-        command.name.toLowerCase().includes(query) ||
+        command.commandName.toLowerCase().includes(query) ||
         command.description.toLowerCase().includes(query)
     );
   }, [
@@ -688,7 +688,7 @@ const CommandsPage: React.FC = () => {
     state.searchQuery,
   ]);
 
-  const handleCommandSelect = async (command: CommandInfo) => {
+  const handleCommandSelect = async (command: BaseCommand) => {
     try {
       updateState({
         selectedCommand: command,
@@ -697,7 +697,7 @@ const CommandsPage: React.FC = () => {
         showParameters: true,
       });
 
-      const result = await commandsService.commandsParametersList(command.name);
+      const result = await commandsService.commandsParametersList(command.commandName);
       const parameters = result.data.data;
       updateState({ commandParameters: parameters });
 
@@ -766,7 +766,7 @@ const CommandsPage: React.FC = () => {
 
       const input = buildCommandInput();
       const result = await commandsService.commandsExecuteCreate(
-        state.selectedCommand.name,
+        state.selectedCommand.commandName,
         input
       );
 

@@ -143,7 +143,7 @@ export default function MikuAlerts() {
           <div className={styles["alert-box"]}>
             <img
               src={currentMikuMessage.mikuModule.thumbnailUrl}
-              style={{ height: "747px", width: "480px" }}
+              style={{ height: "630px", width: "480px" }}
               onLoad={() => {
                 if (imageLoadTimeoutReference.current) {
                   clearTimeout(imageLoadTimeoutReference.current);
