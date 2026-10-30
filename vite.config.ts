@@ -1,6 +1,6 @@
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
-import path from "path";
+import path from "node:path";
 import { defineConfig } from "vite";
 import viteCompression from "vite-plugin-compression";
 
@@ -96,7 +96,7 @@ export default defineConfig({
     },
   },
   server: {
-    port: 44478,
+    port: 44_478,
   },
   optimizeDeps: {
     include: [

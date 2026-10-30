@@ -697,7 +697,9 @@ const CommandsPage: React.FC = () => {
         showParameters: true,
       });
 
-      const result = await commandsService.commandsParametersList(command.commandName);
+      const result = await commandsService.commandsParametersList(
+        command.commandName
+      );
       const parameters = result.data.data;
       updateState({ commandParameters: parameters });
 

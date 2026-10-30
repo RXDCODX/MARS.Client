@@ -2298,6 +2298,7 @@
         "required": [
           "husbandCoolDown",
           "husbandGreetings",
+          "isAutoHelloEnabled",
           "isPrivated",
           "orderCount",
           "twitchId",
@@ -2325,6 +2326,9 @@
             "nullable": true
           },
           "isPrivated": {
+            "type": "boolean"
+          },
+          "isAutoHelloEnabled": {
             "type": "boolean"
           },
           "orderCount": {

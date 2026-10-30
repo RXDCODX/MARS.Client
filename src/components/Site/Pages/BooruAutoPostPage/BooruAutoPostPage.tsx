@@ -13,7 +13,6 @@ import {
 } from "antd";
 import {
   Check,
-  Clock,
   Edit3,
   Hash,
   MessageCircle,
@@ -34,13 +33,11 @@ import type {
 import { defaultApiConfig } from "@/shared/api/api-config";
 import { BooruAutoPost } from "@/shared/api/http-clients/BooruAutoPost";
 import {
-  BooruAutoPostConfigDtoTargetPlatformEnum,
-  BooruAutoPostConfigDtoTelegramParseModeEnum,
   BooruAutoPostConfigDtoSourceEnum,
+  BooruAutoPostConfigDtoTargetPlatformEnum,
+  BooruAutoPostCreateRequestSourceEnum,
   BooruAutoPostCreateRequestTargetPlatformEnum,
   BooruAutoPostCreateRequestTelegramParseModeEnum,
-  BooruAutoPostCreateRequestSourceEnum,
-  BooruAutoPostUpdateRequestTargetPlatformEnum,
 } from "@/shared/api/types/data-contracts";
 import { useToastModal } from "@/shared/Utils/ToastModal";
 
@@ -243,14 +240,12 @@ const BooruAutoPostPage: React.FC = () => {
     if (filterTab === "discord") {
       result = result.filter(
         c =>
-          c.targetPlatform ===
-          BooruAutoPostConfigDtoTargetPlatformEnum.Discord
+          c.targetPlatform === BooruAutoPostConfigDtoTargetPlatformEnum.Discord
       );
     } else if (filterTab === "telegram") {
       result = result.filter(
         c =>
-          c.targetPlatform ===
-          BooruAutoPostConfigDtoTargetPlatformEnum.Telegram
+          c.targetPlatform === BooruAutoPostConfigDtoTargetPlatformEnum.Telegram
       );
     }
 
@@ -576,10 +571,9 @@ const BooruAutoPostPage: React.FC = () => {
         [config.id]: true,
       }));
       try {
-        const result = await api.booruAutoPostConfigsEnabledUpdate(
-          config.id,
-          { isEnabled: !config.isEnabled }
-        );
+        const result = await api.booruAutoPostConfigsEnabledUpdate(config.id, {
+          isEnabled: !config.isEnabled,
+        });
         showToast(result.data);
         await loadConfigs();
       } catch (error_) {
