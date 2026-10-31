@@ -86,12 +86,27 @@ export const useTelegramusHubStore = create<
 
         // Регистрация обработчиков событий до старта
         connection.on("WaifuRoll", (message: Waifu, host: Husband) => {
+          console.warn("[TelegramusStore] WaifuRoll HANDLER FIRED", {
+            waifuId: message?.shikiId,
+            waifuName: message?.name,
+            hostId: host?.twitchId,
+            twitchUser: host?.twitchUser?.displayName,
+            hasTwitchUser: !!host?.twitchUser,
+          });
+
+          console.warn("[WAIFU SIGNALR HANDLER FIRED]", {
+            waifuId: message?.shikiId,
+            host: host?.twitchUser?.displayName,
+          });
+
           const parsed: WaifuAlertProps = {
             waifu: message,
-            displayName: host.twitchUser?.displayName ?? "",
+            displayName: host?.twitchUser?.displayName ?? "",
             waifuHusband: host,
           };
+
           const { messages, isWaifuShowing } = get();
+
           if (!isWaifuShowing) {
             set({
               messages: [...messages],
@@ -100,6 +115,7 @@ export const useTelegramusHubStore = create<
             });
             return;
           }
+
           set({ messages: [...messages, parsed] });
         });
 

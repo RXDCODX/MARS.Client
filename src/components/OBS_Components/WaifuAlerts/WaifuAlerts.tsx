@@ -81,6 +81,22 @@ export default function WaifuAlerts() {
     }
   }, [currentMessage]);
 
+  useEffect(() => {
+    console.warn("[WAIFU ROULETTE DIAGNOSTICS]", {
+      currentMessage: currentMessage?.waifu.name,
+      waifuId: currentMessage?.waifu.shikiId,
+      isRouletted,
+      isMerged: currentMessage?.waifu.isMerged,
+      isAdded: currentMessage?.waifu.isAdded,
+      hasTwitchUser: !!currentMessage?.waifuHusband?.twitchUser,
+      prizesCount: prizes.length,
+      rouletteIndex,
+      matchingPrize: prizes.some(
+        p => String(p.id) === String(currentMessage?.waifu.shikiId)
+      ),
+    });
+  }, [currentMessage, isRouletted, prizes, rouletteIndex]);
+
   const invokeHub = useTelegramusHubStore(state => state.invoke);
   const muteAll = useCallback(() => {
     invokeHub("MuteAll", []);
